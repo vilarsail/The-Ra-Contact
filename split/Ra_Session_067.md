@@ -4,14 +4,20 @@
 August 15, 1981
 (英文待翻译)
 
+## (67.0)
+
 (67.0) Ra I am Ra and I greet you in the love and in the light of the One Infinite Creator. I communicate now.
 (英文待翻译)
+
+## (67.1)
 
 (67.1) Questioner Could you first give us the instrument’s condition, please?
 (英文待翻译)
 
 Ra I am Ra. The vital energies are more closely aligned with the amount of distortion normal to this entity than previous asking showed. The physical complex energy levels are somewhat less strong than at the previous asking. The psychic attack component is exceptionally strong at this particular nexus.
 (英文待翻译)
+
+## (67.2)
 
 (67.2) Questioner Can you describe what you call the psychic attack component and tell me why it is strong at this particular time?
 (英文待翻译)
@@ -28,11 +34,15 @@ It is fortunate for the ongoing vitality of this contact that the instrument is 
 However, this particular entity is adapting well to the situation without undue distortions towards fear. Thus the psychic attack is not successful but does have some draining influence upon the instrument.
 (英文待翻译)
 
+## (67.3)
+
 (67.3) Questioner I will ask if I am correct in this analysis. We would consider that the entity making this so-called attack is offering its service with respect to its distortion in our polarized condition now so that we may more fully appreciate its polarity, and we are appreciative and thank this entity for its attempt to serve our One Creator in bringing to us knowledge in, shall I say, a more complete sense. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. There is no correctness or incorrectness to your statement. It is an expression of a positively polarized and balanced view of negatively polarized actions which has the effect of debilitating the strength of the negatively polarized actions.
 (英文待翻译)
+
+## (67.4)
 
 (67.4) Questioner We would welcome the services of the entity who uses, and I will use the misnomer, you might say, of attack, since I do not consider this an attack but an offering of service, and we welcome this offering of service—but we would be able, I believe, to make more full use of the service if it were not physically disabling the instrument in a minor way. For with a greater physical ability she would be able to more appreciate the service. We would greatly appreciate it if the service was carried on in some manner which we could welcome in even greater love than at present. This, I assume, would be some service that would not include the dizzying effect.
 (英文待翻译)
@@ -46,17 +56,23 @@ I am guessing that this particular entity is a member of the Orion Confederation
 Ra I am Ra. The statement is substantially correct.
 (英文待翻译)
 
+## (67.5)
+
 (67.5) Questioner Would you rather not give me information as to the specifics of my statement?
 (英文待翻译)
 
 Ra I am Ra. We did not perceive a query in further detail. Please re-question.
 (英文待翻译)
 
+## (67.6)
+
 (67.6) Questioner Which body, with respect to the colors, does the entity use to travel to us?
 (英文待翻译)
 
 Ra I am Ra. This query is not particularly simple to answer due to the transdimensional nature, not only of space/time to time/space, but from density to density. The time/space light or fifth-density body is used while the space/time fifth-density body remains in fifth density. The assumption that the consciousness is projected thereby is correct. The assumption that this conscious vehicle, attached to the space/time fifth-density physical complex, is that vehicle which works in this particular service is correct.
 (英文待翻译)
+
+## (67.7)
 
 (67.7) Questioner I undoubtedly will ask several very uninformed and poor questions. However, I was trying to understand certain concepts having to do with the illusion, I shall say, of the polarization that seems to exist at certain density levels in the creation and how can the mechanism of interaction of consciousness— It is a very difficult subject for me and therefore I ask your forgiveness for my poor questions, but it seems to me that the fifth-density entity is attracted in some way to our group by the polarization of this group which acts, somehow, as a beacon to the entity. Am I correct?
 (英文待翻译)
@@ -70,6 +86,8 @@ In the case of this particular group, each was given a full range of temptations
 At this point one of the fifth-density entities over-seeing such detuning processes determined that it would be necessary to terminate the group by what you might call magical means, as you understand ritual magic. We have previously discussed the potential for the removal of one of this group by such attack and have noted that, by far, the most vulnerable is the instrument due to its pre-incarnative physical-complex distortions.
 (英文待翻译)
 
+## (67.8)
+
 (67.8) Questioner In order for this group to be fully in service to the Creator, since we recognize this fifth-density entity as the Creator, we must also attempt to serve, in any way we can, this entity. Is it possible for you to communicate to us the desires of this entity, if there are any, in addition to simply ceasing the reception and dissemination of that which you provide for us?
 (英文待翻译)
 
@@ -79,11 +97,15 @@ Ra I am Ra. This entity has two desires. The first, and foremost, is to, shall w
 May we say that although we of Ra have limited understanding, it is our belief that sending this entity love and light, which each of the group is doing, is the most helpful catalyst which the group may offer to this entity.
 (英文待翻译)
 
+## (67.9)
+
 (67.9) Questioner We find a— I’m sorry, continue if you wish to continue with it.
 (英文待翻译)
 
 Ra I am Ra. We were about to note that this entity has been as neutralized as possible, in our estimation, by this love offering, and thus its continued presence is, perhaps, the understandable limit for each polarity of the various views of service which each may render to the other.
 (英文待翻译)
+
+## (67.10)
 
 (67.10) Questioner We have a paradoxical situation in that in order to fully serve the Creator at this level in the polarized section, you might say, of the creation, we have requests from those whom we serve in this density for Ra’s information. In fact, I just had one by telephone a short while ago. However, we have requests from, in this particular case, another density not to disseminate this information. We have the Creator, in fact, requesting two seemingly opposite activities of this group.
 (英文待翻译)
@@ -93,6 +115,8 @@ It would be very helpful if we could reach a condition of full, total, complete 
 
 Ra I am Ra. It is quite possible.
 (英文待翻译)
+
+## (67.11)
 
 (67.11) Questioner Then how could we solve this paradox?
 (英文待翻译)
@@ -115,11 +139,15 @@ Could you, then, serve a negative entity by offering the instrument’s life? It
 Thus you may see, in many cases, the loving balance being achieved: the love being offered, light being sent, and the service of the service-to-self oriented entity gratefully acknowledged while being rejected as not being useful in your journey at this time. Thus you serve One Creator without paradox.
 (英文待翻译)
 
+## (67.12)
+
 (67.12) Questioner This particular entity is able to create, with its service, a dizzying effect on the instrument. Could you describe the mechanics of such a service?
 (英文待翻译)
 
 Ra I am Ra. This instrument, in the small times of its incarnation, had the distortion in the area of the otic complex of many infections which caused great difficulties at this small age, as you would call it. The scars of these distortions remain, and, indeed, that which you call the sinus system remains distorted. Thus the entity works with these distortions to produce a loss of the balance and a slight lack of ability to use the optic apparatus.
 (英文待翻译)
+
+## (67.13)
 
 (67.13) Questioner I was wondering about the magical, shall I say, principles behind the fifth-density entity giving this service and his ability to give it. Why is he able to utilize these particular physical distortions from a philosophical or magical point of view?
 (英文待翻译)
@@ -136,11 +164,15 @@ However, there is a predisposition of the physical complex which this entity is 
 The magical principles, shall we say, may be loosely translated into your system of magic whereby symbols are used and traced and visualized in order to develop the power of the light.
 (英文待翻译)
 
+## (67.14)
+
 (67.14) Questioner Do you mean then that this fifth-density entity visualizes certain symbols? I am assuming that these symbols are of a nature where their continued use would have some power or charge. Am I correct?
 (英文待翻译)
 
 Ra I am Ra. You are correct. In fifth density light is as visible a tool as your pencil’s writing.
 (英文待翻译)
+
+## (67.15)
 
 (67.15) Questioner Then am I correct in assuming this entity configures the light into symbology, that is what we would call a physical presence? Is this correct?
 (英文待翻译)
@@ -148,11 +180,15 @@ Ra I am Ra. You are correct. In fifth density light is as visible a tool as your
 Ra I am Ra. This is incorrect. The light is used to create a sufficient purity of environment for the entity to place its consciousness in a carefully created light vehicle which then uses the tools of light to do its working. The will and presence are those of the entity doing the working.
 (英文待翻译)
 
+## (67.16)
+
 (67.16) Questioner Are you familiar with a book that the instrument and I wrote approximately twelve years ago called The Crucifixion Of Esmerelda Sweetwater, in particular the banishing ritual used to bring the entities to Earth?
 (英文待翻译)
 
 Ra I am Ra. This is correct.
 (英文待翻译)
+
+## (67.17)
 
 (67.17) Questioner Were there any incorrectnesses in our writing with respect to the way this was performed?
 (英文待翻译)
@@ -160,11 +196,15 @@ Ra I am Ra. This is correct.
 Ra I am Ra. The incorrectnesses occurred only due to the difficulty an author would have in describing the length of training necessary to enable the ones known in that particular writing as Theodore and Pablo in the necessary disciplines.
 (英文待翻译)
 
+## (67.18)
+
 (67.18) Questioner It has seemed to me that that book has, somehow, in its entirety, been a link to many of those whom we have met since we wrote it and to many of the activities we have experienced. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. This is quite so.
 (英文待翻译)
+
+## (67.19)
 
 (67.19) Questioner I will ask about that in a later session—since I don’t want to get off the track—because it has something to do with the mechanics of time, which I am very puzzled about.
 (英文待翻译)
@@ -175,11 +215,15 @@ But I would ask then: the fifth-density entity in coming here to offer us servic
 Ra I am Ra. This was done through a very slight window which less magically oriented entities or groups could not have used to advantage.
 (英文待翻译)
 
+## (67.20)
+
 (67.20) Questioner Now, the main point of this line of questioning has to do with the First Distortion and the fact that this window existed. Was this, shall I say, a portion of the random window effect? And are we experiencing the same type of balancing in receiving the offerings of this entity as the planet in general receives because of the window effect?
 (英文待翻译)
 
 Ra I am Ra. This is precisely correct. As the planetary sphere accepts more highly evolved positive entities or groups with information to offer, the same opportunity must be offered to similarly wise negatively oriented entities or groups.
 (英文待翻译)
+
+## (67.21)
 
 (67.21) Questioner Then we experience in this seeming difficulty the, what I would call, effect of the wisdom of the First Distortion, and for that reason must fully accept the wisdom of that which we experience. This is my personal view. Is it congruent with Ra’s?
 (英文待翻译)
@@ -193,11 +237,15 @@ Similarly it offers a continual opportunity for each in the group to express sup
 Thus the opportunities are quite noticeable as well as the distortions caused by this circumstance.
 (英文待翻译)
 
+## (67.22)
+
 (67.22) Questioner Thank you. Is this so-called attack offered to myself and Jim as well as the instrument?
 (英文待翻译)
 
 Ra I am Ra. This is correct
 (英文待翻译)
+
+## (67.23)
 
 (67.23) Questioner I personally have felt no effect that I am aware of. Is it possible for you to tell me how we are offered this service?
 (英文待翻译)
@@ -211,17 +259,23 @@ The scribe is under constant surveillance and has been offered numerous opportun
 This is the particular cause of the great intensification and constancy of the surveillance of the instrument, for it is the weak link due to factors beyond its control within this incarnation.
 (英文待翻译)
 
+## (67.24)
+
 (67.24) Questioner Is it within the First Distortion to tell me why the instrument experienced so many physical distortions during the new times of its incarnation?
 (英文待翻译)
 
 Ra I am Ra. This is correct.
 (英文待翻译)
 
+## (67.25)
+
 (67.25) Questioner In that case can you answer me as to why the instrument experienced so much during its early years?
 (英文待翻译)
 
 Ra I am Ra. We were affirming the correctness of your assumption that such answers would be breaking the Way of Confusion. It is not appropriate for such answers to be laid out as a table spread for dinner. It is appropriate that the complexes of opportunity involved be contemplated.
 (英文待翻译)
+
+## (67.26)
 
 (67.26) Questioner Then there is no other service that we can at this time offer that fifth-density entity of the Orion group who is so constantly with us. As I see it now there is nothing that we can do for him from your point of view? Is this correct?
 (英文待翻译)
@@ -235,11 +289,15 @@ On the other hand, if you allowed it to be of service by removing this instrumen
 You have here a balanced and polarized view of the Creator: two services offered, mutually rejected, and in a state of equilibrium in which free will is preserved and each allowed to go upon its own path of experiencing the One Infinite Creator.
 (英文待翻译)
 
+## (67.27)
+
 (67.27) Questioner Thank you. In closing that part of the discussion I would just say that if there is anything that we can do that is within our ability—and I understand that there are many things such as the ones that you just mentioned that are not within our ability—that we could do for this particular entity, if you would in the future communicate its requests to us, we will at least consider them because we would like to serve in every respect. Is this agreeable to you?
 (英文待翻译)
 
 Ra I am Ra. We perceive that we have not been able to clarify your service versus its desire for service. You need, in our humble opinion, to look at the humor of the situation and relinquish your desire to serve where no service is requested. The magnet will attract or repel. Glory in the strength of your polarization, and allow others of opposite polarity to similarly do so, seeing the great humor of this polarity and its complications in view of the unification in sixth density of these two paths.
 (英文待翻译)
+
+## (67.28)
 
 (67.28) Questioner Thank you very much. I have a statement here that I will quickly read and have you comment on the accuracy or inaccuracy. In general, the archetypical mind is a representation of facets of the One Infinite Creator.[22]
 (英文待翻译)
@@ -262,11 +320,15 @@ Will you please comment on the accuracy of these observations and correct any er
 Ra I am Ra. The entity has been using transferred energy for most of this session due to its depleted physical levels. We shall begin this rather complex answer, which is interesting, but do not expect to finish it. Those portions which we do not respond to we ask that you re-question us upon at a working in your future.
 (英文待翻译)
 
+## (67.29)
+
 (67.29) Questioner Perhaps it would be better to start the next session with the answer to this question. Would that be appropriate or is the energy already fixed?
 (英文待翻译)
 
 Ra I am Ra. The energy is, as always, allotted. The choice, as always, is yours.
 (英文待翻译)
+
+## (67.30)
 
 (67.30) Questioner In that case, continue.
 (英文待翻译)
@@ -282,6 +344,8 @@ An example of this would be the observation of the questioner that the Fool is d
 
 At this time we shall again request that the query be restated at the next working, and we shall, at this time, cease using this instrument. Before we leave may we ask if there may be any short questions?[23]
 (英文待翻译)
+
+## (67.31)
 
 (67.31) Questioner Only if there is anything that we can do to make the instrument more comfortable or to improve the contact?
 (英文待翻译)

@@ -4,6 +4,8 @@
 February 3, 1981
 (英文待翻译)
 
+## (17.0)
+
 (17.0) Ra I am Ra. I greet you in the love and the light of the Infinite Creator.
 (英文待翻译)
 
@@ -15,6 +17,8 @@ The error we have discovered concerns one of the arrivals of both the Orion grou
 
 We communicate now.
 (英文待翻译)
+
+## (17.1)
 
 (17.1) Questioner Thank you very much. I wish to say again . . . consider it an honor, great honor, and also a privilege, as my [inaudible]. And I would like to reiterate that my questions may sometimes go a little off because I keep going on something that I had already started to work into the applications of the Law of One to better understand primarily the free-will principle and further distortions that we discover.
 (英文待翻译)
@@ -40,6 +44,8 @@ There will also be a sharp increase in the short run of negatively oriented, or 
 Those who remain in fourth density upon this plane will be of the so-called positive orientation. Many will come from elsewhere, for it would appear that with all of the best efforts of the Confederation, which includes those from your peoples’ inner planes, inner civilizations, and those from other dimensions, the harvest will still be much less than that which this planetary sphere is capable of comfortably supporting in service.
 (英文待翻译)
 
+## (17.2)
+
 (17.2) Questioner Is it possible to help an entity to reach fourth-density level in these last days?
 (英文待翻译)
 
@@ -55,11 +61,15 @@ We encourage a dispassionate attempt to share information without concern for nu
 We cannot offer shortcuts to enlightenment. Enlightenment is of the moment, is an opening to intelligent infinity. It can only be accomplished by the self, for the self. Another self cannot teach/learn enlightenment, but only teach/learn information, inspiration, or a sharing of love, of mystery, of the unknown that makes the other-self reach out and begin the seeking process that ends in a moment. But who can know when an entity will open the gate to the present?
 (英文待翻译)
 
+## (17.3)
+
 (17.3) Questioner In meditation a few nights ago I had the impression of a question about a crater in Russia. I believe it was in Tunguska. Can you tell me what caused the crater?
 (英文待翻译)
 
 Ra I am Ra. The destruction of a fission reactor caused this crater.
 (英文待翻译)
+
+## (17.4)
 
 (17.4) Questioner Whose reactor?
 (英文待翻译)
@@ -67,11 +77,15 @@ Ra I am Ra. The destruction of a fission reactor caused this crater.
 Ra I am Ra. This was what you may call a “drone” sent by Confederation which malfunctioned. It was moved to an area where its destruction would not cause infringement upon the will of mind/body/spirit complexes. It was then detonated.
 (英文待翻译)
 
+## (17.5)
+
 (17.5) Questioner What was its purpose in coming here?
 (英文待翻译)
 
 Ra It was a drone designed to listen to the various signals of your peoples. You were, at that time, beginning work in a more technical sphere. We were interested in determining the extent and the rapidity of your advances. This drone was powered by a simple fission motor, or engine, as you would call it. It was not that type which you now know, but was very small. However, it has the same destructive effect upon third-density molecular structures. Thus as it malfunctioned, we felt it was best to pick a place for its destruction rather than attempt to retrieve it, for the possibility/probability modes of this maneuver looked very, very minute.
 (英文待翻译)
+
+## (17.6)
 
 (17.6) Questioner Was its danger both blast and radiation?
 (英文待翻译)
@@ -79,11 +93,15 @@ Ra It was a drone designed to listen to the various signals of your peoples. You
 Ra I am Ra. There is very little radiation, as you know of it, in this particular type of device. There is radiation which is localized, but the localization is such that it does not drift with the winds as does the emission of your somewhat primitive weapons.
 (英文待翻译)
 
+## (17.7)
+
 (17.7) Questioner I believe that an analysis of the trees in that area has shown a low radiation level. Is this the reason for such a low radiation level in the trees?
 (英文待翻译)
 
 Ra I am Ra. This is correct. The amount of radiation is very localized. However, the energy which is released is powerful enough to cause difficulties.
 (英文待翻译)
+
+## (17.8)
 
 (17.8) Questioner Then was the Confederation responsible for Earth receiving nuclear power?
 (英文待翻译)
@@ -91,11 +109,15 @@ Ra I am Ra. This is correct. The amount of radiation is very localized. However,
 Ra I am Ra. It is a point which one cannot judge what is cause. The basic equation which preceded this work was an equation brought through by a wanderer dedicated to service to the planet. That this work should have become foundation for instruments of destruction was not intended and was not given.
 (英文待翻译)
 
+## (17.9)
+
 (17.9) Questioner Can you tell me who that wanderer was that brought through the equation?
 (英文待翻译)
 
 Ra I am Ra. This information seems harmless as this entity is no longer of your planetary third density. This entity was named, sound vibration complex, Albert.
 (英文待翻译)
+
+## (17.10)
 
 (17.10) Questioner Thank you. Can you tell me who, before incarnation into this density, was the one known as Jesus of Nazareth?
 (英文待翻译)
@@ -103,11 +125,15 @@ Ra I am Ra. This information seems harmless as this entity is no longer of your 
 Ra I am Ra. I have difficulty with this question as it is phrased. Can you discover another form for this query?
 (英文待翻译)
 
+## (17.11)
+
 (17.11) Questioner Yes. What I meant to say was can you tell me if Jesus of Nazareth came from the Confederation before incarnation here?
 (英文待翻译)
 
 Ra I am Ra. The one known to you as Jesus of Nazareth did not have a name. This entity was a member of fifth[29] density of the highest level of that sub-octave. This entity was desirous of entering this planetary sphere in order to share the love vibration in as pure a manner as possible. Thus, this entity received permission to perform this mission. This entity was then a wanderer of no name, of Confederation origins, of fifth density, representing the fifth-density understanding of the vibration of understanding or love.
 (英文待翻译)
+
+## (17.12)
 
 (17.12) Questioner Did you say the fifth vibration was that of love? Fifth density was that of love?
 (英文待翻译)
@@ -115,11 +141,15 @@ Ra I am Ra. The one known to you as Jesus of Nazareth did not have a name. This 
 Ra I am Ra. I have made an error. The fourth-density being is that which we intended to say, the highest level of fourth density going into the fifth. This entity could have gone on to the fifth but chose instead to return to third for this particular mission. This entity was of the highest sub-octave of the vibration of love. This is fourth density.
 (英文待翻译)
 
+## (17.13)
+
 (17.13) Questioner When I am communicating with you as Ra, are you at times an individualized entity, or am I speaking to the entire complex?
 (英文待翻译)
 
 Ra I am Ra. You speak with Ra. There is no separation. You would call it a social memory complex thus indicating many-ness. To our understanding, you are speaking to an individualized portion of consciousness.
 (英文待翻译)
+
+## (17.14)
 
 (17.14) Questioner Do I always speak to the same individualized portion of consciousness in each of the sessions?
 (英文待翻译)
@@ -127,17 +157,23 @@ Ra I am Ra. You speak with Ra. There is no separation. You would call it a socia
 Ra I am Ra. You speak to the same entity through a channel or instrument. This instrument is at times lower in vital energy. This will sometimes hamper our proceedings. However, this instrument has a great deal of faithfulness to the task and gives whatever it has to this task. Therefore, we may continue even when energy is low. This is why we usually speak to the ending of the session due to our estimation of the instrument’s levels of vital energy.
 (英文待翻译)
 
+## (17.15)
+
 (17.15) Questioner I would like to make a point clear now that I am sure of myself. People of this planet, following any religion or no religion at all, or having no intellectual knowledge of the Law of One or of anything at all, can still be harvested into the fourth density if they are of that vibration. Is this not correct?
 (英文待翻译)
 
 Ra I am Ra. This is correct. However, you will find few who are harvestable whose radiance does not cause others to be aware of their, what you may call, spirituality, the quality of the mind/body/spirit-complex distortion. Thus, it is not particularly probable that an entity would be completely unknown to his immediate acquaintances as an unusually radiant personality, even were this individual not caught up in any of the distortions of your so-called religious systems.
 (英文待翻译)
 
+## (17.16)
+
 (17.16) Questioner When Jesus of Nazareth incarnated, was there an attempt by the Orion group to discredit him in some way?
 (英文待翻译)
 
 Ra I am Ra. This is correct.
 (英文待翻译)
+
+## (17.17)
 
 (17.17) Questioner Can you tell me what the Orion group did in order to try to cause his downfall?
 (英文待翻译)
@@ -150,6 +186,8 @@ This eventually led to many challenges of the entity known as Jesus. It eventual
 
 This entity, Judas, felt that, if pushed into a corner, the entity you call Jesus would then be able to see the wisdom of using the power of intelligent infinity in order to rule others. The one you call Judas was mistaken in this estimation of the reaction of the entity, Jesus, whose teach/learning was not oriented towards this distortion. This resulted in the destruction of the bodily complex of the one known as Jesus to you.
 (英文待翻译)
+
+## (17.18)
 
 (17.18) Questioner Then if the entity Jesus was fourth density, and there are wanderers on the planet today who came from fifth and sixth density, what was it that Jesus did that enabled him to be such a good healer, and could these fifth- and sixth-density beings here today do the same?
 (英文待翻译)
@@ -166,6 +204,8 @@ Know then, first, the mind and the body. Then as the spirit is integrated and sy
 True healing is simply the radiance of the self causing an environment in which a catalyst may occur which initiates the recognition of self, by self, of the self-healing properties of the self.
 (英文待翻译)
 
+## (17.19)
+
 (17.19) Questioner How did Jesus learn this during his incarnation?
 (英文待翻译)
 
@@ -174,6 +214,8 @@ Ra I am Ra. This entity learned the ability by a natural kind of remembering at 
 
 Thus the one known as Jesus became aware that there dwelt in him a terrible potential. This entity determined to discover how to use this energy for the good, not for the negative. This entity was extremely positively polarized and remembered more than most wanderers do.
 (英文待翻译)
+
+## (17.20)
 
 (17.20) Questioner How did this aggressive action against a playmate affect Jesus in his spiritual growth? Where did he go after his physical death?
 (英文待翻译)
@@ -190,11 +232,15 @@ When the entity had become able to integrate or synthesize all experiences, the 
 The entity was absolved karmically of the destruction of an other-self when it was in its last portion of lifetime and spoke upon what you would call a cross saying, “Father, forgive them, for they know not what they do.” In forgiveness lies the stoppage of the wheel of action, or what you call karma.
 (英文待翻译)
 
+## (17.21)
+
 (17.21) Questioner Then in which density does the entity known as Jesus now reside?
 (英文待翻译)
 
 Ra I am Ra. This information is harmless though unimportant. This entity studies now the lessons of the wisdom vibration, the fifth density, also called the light vibration.
 (英文待翻译)
+
+## (17.22)
 
 (17.22) Questioner In our culture there is a great saying that he will return. Can you tell me if this is planned?
 (英文待翻译)
@@ -205,6 +251,8 @@ Ra I am Ra. I will attempt to sort out this question. It is difficult. This enti
 The particular mind/body/spirit complex you call Jesus is, as what you would call an entity, not to return except as a member of the Confederation occasionally speaking through a channel. However, there are others of the identical congruency of consciousness that will welcome those to the fourth density. This is the meaning of the returning.
 (英文待翻译)
 
+## (17.23)
+
 (17.23) Questioner You spoke of the alleviation of karma being forgiveness. Are . . . I’m having a hard time phrasing this question. I think I’ll have to come back to it. I’ll ask this other question.
 (英文待翻译)
 
@@ -214,11 +262,15 @@ Can you tell me why the earth will be fourth-density positive instead of fourth-
 Ra I am Ra. The earth seems to be negative. That is due to the quiet, shall we say, horror which is the common distortion which those good, or positively oriented, entities have towards the occurrences which are of your space/time present. However, those oriented and harvestable in the ways of service to others greatly outnumber those whose orientation towards service to self has become that of harvestable quality.
 (英文待翻译)
 
+## (17.24)
+
 (17.24) Questioner In other words, there will be fewer negative entities being harvested into fourth density than there will be positive. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. This is correct. The great majority of your peoples will repeat third density.
 (英文待翻译)
+
+## (17.25)
 
 (17.25) Questioner How did Taras Bulba, Genghis Khan, and Rasputin get harvested prior to the harvest?
 (英文待翻译)
@@ -226,11 +278,15 @@ Ra I am Ra. This is correct. The great majority of your peoples will repeat thir
 Ra I am Ra. It is the right/privilege/duty of those opening consciously the gate to intelligent infinity to choose the manner of their leaving of the density. Those of negative orientation who so achieve this right/duty most often choose to move forward in their learn/teaching of service to self.
 (英文待翻译)
 
+## (17.26)
+
 (17.26) Questioner Is this the reason for what we call spontaneous combustion?
 (英文待翻译)
 
 Ra I am Ra. This is not correct.
 (英文待翻译)
+
+## (17.27)
 
 (17.27) Questioner Can you tell me what causes that phenomenon?
 (英文待翻译)
@@ -238,17 +294,23 @@ Ra I am Ra. This is not correct.
 Ra I am Ra. Picture, if you will, a forest. One tree is struck by lightning. It burns. Lightning does not strike elsewhere. Elsewhere does not burn. There are random occurrences which do not have to do with the entity but with the window phenomenon of which we spoke.
 (英文待翻译)
 
+## (17.28)
+
 (17.28) Questioner Are these particular entities all uniquely the same, or are they just random entities?
 (英文待翻译)
 
 Ra I am Ra. The latter is correct.
 (英文待翻译)
 
+## (17.29)
+
 (17.29) Questioner Am I to understand that the harvest will occur in the year 2011, or will it be spread?
 (英文待翻译)
 
 Ra I am Ra. This is an approximation. We have stated we have difficulty with your time/space. This is an appropriate probable/possible time/space nexus for harvest. Those who are not in incarnation at this time will be included in the harvest.
 (英文待翻译)
+
+## (17.30)
 
 (17.30) Questioner Well, if an entity wants to learn ways of it, wants to be of service to others rather than service to self while he is in this third density, are there best ways of being of service to others, or is any way just as good as any other way?
 (英文待翻译)
@@ -262,6 +324,8 @@ The best way of service to others is the constant attempt to seek to share the l
 Speaking to the intention of your question, the best way for each seeker in third density to be of service to others is unique to that mind/body/spirit complex. This means that the mind/body/spirit complex must then seek within itself the intelligence of its own discernment as to the way it may best serve other-selves. This will be different for each. There is no best. There is no generalization. Nothing is known.
 (英文待翻译)
 
+## (17.31)
+
 (17.31) Questioner Thank you very much. I don’t wish to take up extra time by asking questions over again. Some are so important I try to ask some similar questions in different ways to expand on the answer. Seems to be [inaudible] what we’re getting at, maybe not.
 (英文待翻译)
 
@@ -271,11 +335,15 @@ In the book Oahspe it states that if an individual is more than fifty percent fo
 Ra I am Ra. This is correct if the harvesting is to be for the positive fourth-dimensional level.
 (英文待翻译)
 
+## (17.32)
+
 (17.32) Questioner What must be the entity’s percentage, shall we say, if he is to be harvested for the negative?
 (英文待翻译)
 
 Ra I am Ra. The entity who wishes to pursue the path of service to self must attain a grade of five—that is five percent service to others, ninety-five percent service to self. It must approach totality. The negative path is quite difficult to attain harvestability upon and requires great dedication.
 (英文待翻译)
+
+## (17.33)
 
 (17.33) Questioner Why is the negative path so much more difficult a path to attain harvestability upon than the positive?
 (英文待翻译)
@@ -283,11 +351,15 @@ Ra I am Ra. The entity who wishes to pursue the path of service to self must att
 Ra I am Ra. This is due to a distortion of the Law of One which indicates that the gateway to intelligent infinity be a gateway at the end of a strait and narrow path,[31] as you may call it. To attain fifty-one percent dedication to the welfare of other-selves is as difficult as attaining a grade of five percent dedication to other-selves. The, shall we say, sinkhole of indifference is between those two.
 (英文待翻译)
 
+## (17.34)
+
 (17.34) Questioner Well, then if an entity is harvested into fourth density with a grade, let’s say, of fifty-one percent for others, forty-nine percent for self, what level of the fourth density would he go into? I’m assuming there are different levels of the fourth density.
 (英文待翻译)
 
 Ra I am Ra. This is correct. Each enters the sub-density which vibrates in accordance with the entity’s understanding.
 (英文待翻译)
+
+## (17.35)
 
 (17.35) Questioner How many levels do we have here in the third density at this time?
 (英文待翻译)
@@ -295,11 +367,15 @@ Ra I am Ra. This is correct. Each enters the sub-density which vibrates in accor
 Ra I am Ra. The third density has an infinite number of levels.
 (英文待翻译)
 
+## (17.36)
+
 (17.36) Questioner I’ve heard that there are seven astral and seven devachanic primary levels. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. You speak of some of the more large distinctions in levels in your inner planes. That is correct.
 (英文待翻译)
+
+## (17.37)
 
 (17.37) Questioner Well, who inhabit the astral, and who inhabit the devachanic planes?
 (英文待翻译)
@@ -313,6 +389,8 @@ In the devachanic planes, as you call them, are those whose vibrations are even 
 Beyond these planes there are others.
 (英文待翻译)
 
+## (17.38)
+
 (17.38) Questioner Well, does each . . . does . . . this is difficult. Our physical plane—are there seven sub-planes to what we call our physical plane here?
 (英文待翻译)
 
@@ -325,6 +403,8 @@ There are an infinite number of planes. In your particular space/time-continuum 
 The invisible, or inner, third-density planes are inhabited by those who are not of body complex natures such as yours; that is, they do not collect about their spirit/mind complexes a chemical body. Nevertheless, these entities are divided in what you may call an artificial dream within a dream into various levels. In the upper levels desire to communicate knowledge back down to the outer planes of existence becomes less, due to the intensive learn/teaching which occurs upon these levels.
 (英文待翻译)
 
+## (17.39)
+
 (17.39) Questioner Then is it necessary to penetrate one plane at a time as we move from what we call third-density physical through these planes?
 (英文待翻译)
 
@@ -334,11 +414,15 @@ Ra I am Ra. It has been our experience that some penetrate several planes at one
 You will find ill health, as you call this distortion, to frequently be the result of a subtle mismatch of energies in which some of the higher energy levels are being activated by the conscious attempts of the entity while the entity has not penetrated the lower energy centers, or sub-densities, of this density.
 (英文待翻译)
 
+## (17.40)
+
 (17.40) Questioner Is there a best way to meditate?
 (英文待翻译)
 
 Ra I am Ra. No.
 (英文待翻译)
+
+## (17.41)
 
 (17.41) Questioner At this time, near the end of the cycle, how are reincarnations into the physical allocated, shall I say, on this planet? In our own [inaudible].
 (英文待翻译)
@@ -346,11 +430,15 @@ Ra I am Ra. No.
 Ra I am Ra. Entities wishing to obtain critically needed experience in order to become harvestable are incarnated with priority over those who will, without too much probable/possible doubt, need to re-experience this density.
 (英文待翻译)
 
+## (17.42)
+
 (17.42) Questioner How long has this been going on, this type of allocation?
 (英文待翻译)
 
 Ra I am Ra. This has been going on since the first individual entity became conscious of its need to learn the lessons of this density. This was the beginning of what you may call a seniority by vibration.
 (英文待翻译)
+
+## (17.43)
 
 (17.43) Questioner Can you explain what you mean by a seniority by vibration?
 (英文待翻译)
@@ -364,6 +452,8 @@ The seniority by vibration is the preferential treatment, shall we say, which fo
 May we ask at this time if there are any questions?
 (英文待翻译)
 
+## (17.44)
+
 (17.44) Questioner My only question: is there anything we can do to make the instrument [inaudible]?
 (英文待翻译)
 
@@ -372,6 +462,8 @@ Ra I am Ra. This instrument is not wearing the appropriate apparel for this work
 
 May we answer any other brief questions?
 (英文待翻译)
+
+## (17.45)
 
 (17.45) Questioner Just—we want to put heavier clothing on the feet. Is this correct?
 (英文待翻译)

@@ -4,8 +4,12 @@
 January 23, 1981
 (英文待翻译)
 
+## (5.0)
+
 (5.0) Ra I am Ra. I greet you in the love and the light of the Infinite Creator. I communicate now.
 (英文待翻译)
+
+## (5.1)
 
 (5.1) Questioner The last time we communicated we were speaking of learning of healing. It is my impression that from what you gave to us in the earlier session that it is necessary to first purify the self by certain disciplines and exercises. Then in order to heal a patient, it is necessary, by example, and possibly certain exercises, to create a mental configuration in the patient that allows him to heal himself. Am I correct?
 (英文待翻译)
@@ -18,6 +22,8 @@ It is not by example that the healer does the working. The working exists in and
 
 The healing working is congruent in that it is a form of channeling some distortion of the intelligent infinity.
 (英文待翻译)
+
+## (5.2)
 
 (5.2) Questioner We have decided to accept, if offered, the honor/duty of learning/teaching the healing process. I would ask as to the first step which we should accomplish in becoming effective healers.
 (英文待翻译)
@@ -60,6 +66,8 @@ At this time we would suggest closing the description until the next time of wor
 
 We can answer a query if it is a short one before we leave this instrument.
 (英文待翻译)
+
+## (5.3)
 
 (5.3) Questioner Is the instrument comfortable? Is there any other thing that would increase the instrument’s comfort? That’s all.
 (英文待翻译)

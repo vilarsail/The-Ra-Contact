@@ -4,8 +4,12 @@
 February 23, 1981
 (英文待翻译)
 
+## (29.0)
+
 (29.0) Ra I am Ra. I greet you in the love and in the light of the Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (29.1)
 
 (29.1) Questioner Is our sun (this planetary system) as we know it a sub-Logos, or the physical manifestation of a sub-Logos?
 (英文待翻译)
@@ -13,11 +17,15 @@ February 23, 1981
 Ra I am Ra. This is correct.
 (英文待翻译)
 
+## (29.2)
+
 (29.2) Questioner Then I am assuming this sub-Logos created this planetary system in all of its densities. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. This is incorrect. The sub-Logos of your solar entity differentiated some experiential components within the patterns of intelligent energy set in motion by the Logos, which created the basic conditions and vibratory rates consistent throughout your, what you have called, major galaxy.
 (英文待翻译)
+
+## (29.3)
 
 (29.3) Questioner Then is this sub-Logos which is our sun the same sub-Logos but just manifesting in different parts through the galaxy which is . . . is it all the stars in this galaxy?
 (英文待翻译)
@@ -25,11 +33,15 @@ Ra I am Ra. This is incorrect. The sub-Logos of your solar entity differentiated
 Ra I am Ra. Please restate.
 (英文待翻译)
 
+## (29.4)
+
 (29.4) Questioner What I’m saying is there are roughly 250 billion stars, or suns, something like ours in this major galaxy. Are they all part of the same sub-Logos?
 (英文待翻译)
 
 Ra I am Ra. They are all part of the same Logos. Your solar system, as you would call it, is a manifestation, somewhat and slightly different, due to the presence of a sub-Logos.
 (英文待翻译)
+
+## (29.5)
 
 (29.5) Questioner Now, all of these— Let me be sure I’m right then. Then our sun is a sub-Logos of the Logos that is the major galactic Logos. Correct?
 (英文待翻译)
@@ -37,11 +49,15 @@ Ra I am Ra. They are all part of the same Logos. Your solar system, as you would
 Ra I am Ra. This is correct.
 (英文待翻译)
 
+## (29.6)
+
 (29.6) Questioner Are there any sub-sub-Logos that are found in our planetary system that are “sub” to our sun?
 (英文待翻译)
 
 Ra I am Ra. This is correct.
 (英文待翻译)
+
+## (29.7)
 
 (29.7) Questioner Would you tell me what one of those— Would you give me an example of one of those, I’ll call sub-sub-Logos?
 (英文待翻译)
@@ -49,17 +65,23 @@ Ra I am Ra. This is correct.
 Ra I am Ra. One example is your mind/body/spirit complex.
 (英文待翻译)
 
+## (29.8)
+
 (29.8) Questioner Then every entity that exists would be some type of sub- or sub-sub-Logos. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. This is correct down to the limits of any observation, for the entire creation is alive.
 (英文待翻译)
 
+## (29.9)
+
 (29.9) Questioner Then the planet which we walk upon here would be some form of sub-sub-Logos. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. A planetary entity is so named only as Logos if it is working in harmonic fashion with entities, or mind/body complexes, upon its surface or within its electromagnetic field.
 (英文待翻译)
+
+## (29.10)
 
 (29.10) Questioner Okay. Do the sub-Logos, such as our sun, do any of them—in our major galaxy—do they have a metaphysical polarity, shall we say, positive or negative as we’ve been using the term?
 (英文待翻译)
@@ -70,6 +92,8 @@ Ra I am Ra. As you use the term, this is not so. Entities through the level of p
 The creation of the One Infinite Creator does not have the polarity you speak of.
 (英文待翻译)
 
+## (29.11)
+
 (29.11) Questioner Thank you. Yesterday you stated that planets in first density are in a timeless state to begin with. Can you tell me how the effect we appreciate as time comes into being?
 (英文待翻译)
 
@@ -79,11 +103,15 @@ Ra I am Ra. We have just described to you the state of beingness of each Logos. 
 At the point at which this coalescence is at the livingness or beingness point—the point, or fountainhead, of beginning—space/time then begins to unroll its scroll of livingness.
 (英文待翻译)
 
+## (29.12)
+
 (29.12) Questioner As the Love creates the vibration— I will make this statement first. Let me say, I believe that Love creates the vibration in space/time in order to form the photon. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. This is essentially correct.
 (英文待翻译)
+
+## (29.13)
 
 (29.13) Questioner Then the continued application of Love—I will assume this is directed by a sub-Logos or a sub-sub-Logos—this continued application of Love creates rotations of these vibrations which are in discrete units of angular velocity. This then creates chemical elements in our physical illusion and, I will assume, the elements in the other, or what we would call nonphysical, or other densities in the illusion. Is this correct?
 (英文待翻译)
@@ -91,11 +119,15 @@ Ra I am Ra. This is essentially correct.
 Ra I am Ra. The Logos creates all densities. Your question was unclear. However, we shall state the Logos does create both the space/time densities and the accompanying time/space densities.
 (英文待翻译)
 
+## (29.14)
+
 (29.14) Questioner What I am assuming is that the rotations, the quantized incremental rotations of the vibrations, show up as the material of these densities. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. This is essentially correct.
 (英文待翻译)
+
+## (29.15)
 
 (29.15) Questioner Well, then because of these rotations there is an inward motion of these particles which is opposite the direction of space/time progression, the way I understand it, and this inward progression then is seen by us as what we call gravity. Is this correct?
 (英文待翻译)
@@ -103,17 +135,23 @@ Ra I am Ra. This is essentially correct.
 Ra I am Ra. This is incorrect.
 (英文待翻译)
 
+## (29.16)
+
 (29.16) Questioner Can you tell me how the gravity comes about?
 (英文待翻译)
 
 Ra I am Ra. This that you speak of as gravity may be seen as the pressing towards the inner light/love, the seeking towards the spiral line of light which progresses towards the Creator. This is a manifestation of a spiritual event or condition of livingness.
 (英文待翻译)
 
+## (29.17)
+
 (29.17) Questioner Now, gravity we know now on our moon is less than it is upon our planet here. Is there a metaphysical principle behind this that you could explain?
 (英文待翻译)
 
 Ra I am Ra. The metaphysical and physical are inseparable. Thus that of which you spoke which attempts to explain this phenomenon is able to, shall we say, calculate the gravitational force of most objects due to the various physical aspects such as what you know of as mass. However, we felt it was necessary to indicate the corresponding and equally important metaphysical nature of gravity.
 (英文待翻译)
+
+## (29.18)
 
 (29.18) Questioner I sometimes have difficulty in getting, you might say, a foothold into what I am looking for in trying to seek out the metaphysical principles, you might say, behind our physical illusion.
 (英文待翻译)
@@ -127,11 +165,15 @@ Ra I am Ra. The gravity, shall we say, the attractive force which we also descri
 This point only becomes important when you consider that when all of creation in its infinity has reached a spiritual gravitational mass of sufficient nature, the entire creation infinitely coalesces, the light seeking and finding its source, and thusly ending the creation, and beginning a new creation—much as you consider the black hole, as you call it, with its conditions of infinitely great mass at the zero point from which no light may be seen, as it has been absorbed.
 (英文待翻译)
 
+## (29.19)
+
 (29.19) Questioner Then the black hole would be a point . . . am I correct in saying it would be a point at which the environmental material had succeeded in uniting with unity or the Creator? Is this correct?
 (英文待翻译)
 
 Ra I am Ra. The black hole which manifests third density is the physical complex manifestation of this spiritual, or metaphysical, state. This is correct.
 (英文待翻译)
+
+## (29.20)
 
 (29.20) Questioner Thank you. Then when our planet Earth here gets fully into fourth density, will there be a greater gravity?
 (英文待翻译)
@@ -139,17 +181,23 @@ Ra I am Ra. The black hole which manifests third density is the physical complex
 Ra I am Ra. There will be a greater spiritual gravity thus causing a denser illusion.
 (英文待翻译)
 
+## (29.21)
+
 (29.21) Questioner This denser illusion, then, I will assume would increase the gravitational acceleration above the measured 32.2 feet per second squared that we now experience. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. Your entities do not have the instrumentation to measure spiritual gravity but only to observe a few of its extreme manifestations.
 (英文待翻译)
 
+## (29.22)
+
 (29.22) Questioner This I know, that we can’t measure spiritual gravity, but I was just wondering if the . . . the physical effect would be measurable as an increase in the gravitational constant? That was my question.
 (英文待翻译)
 
 Ra I am Ra. The increase measurable by existing instrumentation would, and will be, statistical in nature only and not significant.
 (英文待翻译)
+
+## (29.23)
 
 (29.23) Questioner OK. Now, as the creation is formed, as the atoms form from rotations of the vibration which is light, they coalesce in a certain manner sometimes. They find distances, inter-atomic distances, from each other at precise distance and produce a lattice structure which we call crystalline.
 (英文待翻译)
@@ -160,6 +208,8 @@ I am guessing that because of the formation from intelligent energy of the preci
 Ra I am Ra. This is correct only insofar as the crystalline physical structure is charged by a correspondingly crystallized, or regularized, or balanced, mind/body/spirit complex.
 (英文待翻译)
 
+## (29.24)
+
 (29.24) Questioner I don’t wish to get off on subjects of no importance or subjects that don’t lead us to a better understanding of our mechanism of growth, which lead us to things that are not transient, but it’s difficult sometimes to see precisely what direction to go in. I would like to investigate a little bit more this idea of crystals and how they are used.
 (英文待翻译)
 
@@ -169,17 +219,23 @@ I’m assuming then from what you said that in order to use the crystal to tap i
 Ra I am Ra. This is specifically correct.
 (英文待翻译)
 
+## (29.25)
+
 (29.25) Questioner There must be a point at which the removal of distortion reaches a minimum for use of the crystal in tapping intelligent energy. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. This is correct only if it is understood, shall we say, that each mind/body/spirit complex has an unique such point.
 (英文待翻译)
 
+## (29.26)
+
 (29.26) Questioner Can you tell me why each mind/body/spirit complex has this unique point of distortion-ridding?
 (英文待翻译)
 
 Ra I am Ra. Each mind/body/spirit complex is an unique portion of the One Creator.
 (英文待翻译)
+
+## (29.27)
 
 (29.27) Questioner Then you are saying that there is no single level of, shall we say, purity required to tap intelligent energy through crystals, but there can be a wide variation in the amount of distortion that an entity may have. But each entity has to reach his particular point of, what I might call, energizing the ability. Is this right?
 (英文待翻译)
@@ -190,11 +246,15 @@ Ra I am Ra. This is incorrect. The necessity is for the mind/body/spirit complex
 This balance is what is necessary for work to be done in seeking the gateway to intelligent infinity through the use of crystals or through any other use. No two mind/body/spirit crystallized natures are the same. The distortion requirements, vibrationally speaking, are set.
 (英文待翻译)
 
+## (29.28)
+
 (29.28) Questioner I see. Then if you are able to read the violet ray of an entity, to see that ray, is it possible then to immediately determine whether the entity could use crystals to tap intelligent energy?
 (英文待翻译)
 
 Ra I am Ra. It is possible for one of fifth density or above to do this.
 (英文待翻译)
+
+## (29.29)
 
 (29.29) Questioner Is it possible for you to tell me how a crystal is used by an entity who has satisfactorily achieved necessary violet-ray qualification, I will say, how it is possible for the entity to use the crystal or how he should use the crystal?
 (英文待翻译)
@@ -202,17 +262,23 @@ Ra I am Ra. It is possible for one of fifth density or above to do this.
 Ra I am Ra. The gateway to intelligent infinity is born of, shall we say, the sympathetic vibration, in balanced state, accompanying the will to serve, the will to seek.
 (英文待翻译)
 
+## (29.30)
+
 (29.30) Questioner But can you tell me precisely what the entity would do with the crystal to use it for the purpose of seeking the intelligent infinity?
 (英文待翻译)
 
 Ra I am Ra. The use of the crystal in physical manifestation is that use wherein the entity of crystalline nature charges the regularized physical crystal with this seeking, thus enabling it to vibrate harmonically, and also become the catalyst, or gateway, whereby intelligent infinity may thus become intelligent energy, this crystal serving as an analog of the violet ray of mind/body/spirit in relatively undistorted form.
 (英文待翻译)
 
+## (29.31)
+
 (29.31) Questioner Is it possible at all for you to instruct us in specific uses of crystals?
 (英文待翻译)
 
 Ra I am Ra. It is possible. There are, we consider, things which are not efficacious to tell you due to possible infringement upon your free will. Entities of the Confederation have erred in this in the past. The uses of the crystal, as you know, include the uses for healing, for power, and even for the development of life-forms. We feel that it is unwise to offer instruction at this time as your peoples have shown a tendency to use peaceful sources of power for disharmonious reasons.
 (英文待翻译)
+
+## (29.32)
 
 (29.32) Questioner I guess what we’d better get to then—now that we have traced the path of creation at least down to the crystalline structure—we’d better concentrate on the evolution of thought and its seeking path to intelligent infinity.
 (英文待翻译)
@@ -229,6 +295,8 @@ The particular Logos of your major galaxy has used a large portion of Its coales
 Does this fulfill the requirements of your query?
 (英文待翻译)
 
+## (29.33)
+
 (29.33) Questioner I’ll study it and possibly have something tomorrow since I don’t want to overtire the instrument. The instrument had a question if you have time for a short question, and I will read it.
 (英文待翻译)
 
@@ -243,6 +311,8 @@ This entity has a[n] experiential history of healing on levels other than the so
 
 Is there any short query further before we close?
 (英文待翻译)
+
+## (29.34)
 
 (29.34) Questioner Is there anything that we can do to make the instrument more comfortable or improve the contact?
 (英文待翻译)

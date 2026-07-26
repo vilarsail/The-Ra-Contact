@@ -4,8 +4,12 @@
 June 9, 1982
 (英文待翻译)
 
+## (89.0)
+
 (89.0) Ra I am Ra. I greet you in the love and in the light of the One Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (89.1)
 
 (89.1) Questioner Could you first please give me the condition of the instrument?
 (英文待翻译)
@@ -13,11 +17,15 @@ June 9, 1982
 Ra I am Ra. It is as previously stated.
 (英文待翻译)
 
+## (89.2)
+
 (89.2) Questioner I have two questions of a personal nature. First, during the last intensive meditation the instrument experienced very strong conditioning from an entity which did not identify itself and which did not leave when she asked it to. Will you tell us what was occurring then?
 (英文待翻译)
 
 Ra I am Ra. We find the instrument to have been given the opportunity to become a channel for a previously known friend. This entity was not able to answer the questioning of spirits in the name of Christ, as is this instrument’s distortion of the means of differentiating betwixt those of positive and those of negative orientation. Therefore, after some resistance, the entity found the need to take its leave.
 (英文待翻译)
+
+## (89.3)
 
 (89.3) Questioner Was this particular entity the fifth-density visitor that we have had quite often previously?
 (英文待翻译)
@@ -25,11 +33,15 @@ Ra I am Ra. We find the instrument to have been given the opportunity to become 
 Ra I am Ra. This is correct.
 (英文待翻译)
 
+## (89.4)
+
 (89.4) Questioner Is he back with us at this time?
 (英文待翻译)
 
 Ra I am Ra. No. The attempt to speak was due to the vigilant eye of the minions of this entity which noted what one may call a surge of natural telepathic ability upon the part of the instrument. This ability is cyclical, of the eighteen diurnal period cycle, as we have mentioned aforetimes.[91] Thusly, this entity determined to attempt another means of access to the instrument by free will.
 (英文待翻译)
+
+## (89.5)
 
 (89.5) Questioner Was this what I might refer to as an increase of ability to receive telepathically over a broader range of basic frequencies so as to include not only the Confederation but this particular entity?
 (英文待翻译)
@@ -37,11 +49,15 @@ Ra I am Ra. No. The attempt to speak was due to the vigilant eye of the minions 
 Ra I am Ra. This is incorrect. The high point of the cycle sharpens the ability to pick up the signal but does not change the basic nature of the carrier wave. Shall we say, there is greater power in the receiving antenna.
 (英文待翻译)
 
+## (89.6)
+
 (89.6) Questioner This question may be meaningless, but would a fifth-density entity of the Confederation who was positively polarized transmit on the same frequency as our negatively polarized fifth-density companion?
 (英文待翻译)
 
 Ra I am Ra. This is correct and is the reason that the questioning of all contacts is welcomed by the Confederation of Planets in the Service of the Infinite Creator.
 (英文待翻译)
+
+## (89.7)
 
 (89.7) Questioner Question two: Jim has also felt very strong conditioning which was unbidden while channeling Latwii recently and in his personal meditations. Would you also tell us what occurred in these cases?
 (英文待翻译)
@@ -52,11 +68,15 @@ Ra I am Ra. The entity which has been your companion has a vibratory frequency�
 Therefore, this same companion has been attempting the contact of this instrument also. Although this instrument would have great difficulty in distinguishing the actual contact due to the lack of experience of your companion at this type of service, nevertheless, it is well that this instrument also choose some manner of the challenging of contacts.
 (英文待翻译)
 
+## (89.8)
+
 (89.8) Questioner How many of our years ago was Ra’s third density ended?
 (英文待翻译)
 
 Ra I am Ra. The calculations necessary for establishing this point are difficult since so much of what you call time is taken up before and after third density, as you see the progress of time from your vantage point. We may say, in general, that the time of our enjoyment of the choice-making was approximately 2.6 million of your sun-years in your past. However—we correct this instrument. Your term is billion, 2.6 billion of your years in your past. However, this time, as you call it, is not meaningful, for our intervening space/time has been experienced in a manner quite unlike your third-density experience of space/time.
 (英文待翻译)
+
+## (89.9)
 
 (89.9) Questioner It appears that the end of Ra’s third density coincided with the beginning of this planet’s second density. Is that correct?
 (英文待翻译)
@@ -64,11 +84,15 @@ Ra I am Ra. The calculations necessary for establishing this point are difficult
 Ra I am Ra. This is roughly correct.
 (英文待翻译)
 
+## (89.10)
+
 (89.10) Questioner Did the planet Venus become a fourth-density planet at that time?
 (英文待翻译)
 
 Ra I am Ra. This is so.
 (英文待翻译)
+
+## (89.11)
 
 (89.11) Questioner Did it later, then, become a fifth-density planet?
 (英文待翻译)
@@ -76,11 +100,15 @@ Ra I am Ra. This is so.
 Ra I am Ra. It later became a fourth/fifth-density planet; then, later a fifth-density planet for a large measure of your time. Both fourth- and fifth-density experiences were possible upon the planetary influence of what you call Venus.
 (英文待翻译)
 
+## (89.12)
+
 (89.12) Questioner What is its density at present?
 (英文待翻译)
 
 Ra I am Ra. Its core vibrational frequency is sixth density. However we, as a social memory complex, had elected to leave that influence. Therefore, the beings inhabiting this planetary influence at this space/time are fifth-density entities. The planet may be considered a fifth/sixth-density planet.
 (英文待翻译)
+
+## (89.13)
 
 (89.13) Questioner What was your reason for leaving?
 (英文待翻译)
@@ -88,11 +116,15 @@ Ra I am Ra. Its core vibrational frequency is sixth density. However we, as a so
 Ra I am Ra. We wished to be of service.
 (英文待翻译)
 
+## (89.14)
+
 (89.14) Questioner I have here a deck of twenty-two tarot cards which have been copied, according to information we have, from the walls of, I would suspect, the large pyramid at Giza. If necessary we can duplicate these cards in the book that we are preparing. I would ask Ra if these cards represent an exact replica of that which is in the Great Pyramid?
 (英文待翻译)
 
 Ra I am Ra. The resemblance is substantial.
 (英文待翻译)
+
+## (89.15)
 
 (89.15) Questioner In other words, you might say that these were better than, say, 95% correct as far as representing what is on the walls of the Great Pyramid?
 (英文待翻译)
@@ -100,11 +132,15 @@ Ra I am Ra. The resemblance is substantial.
 Ra I am Ra. Yes.
 (英文待翻译)
 
+## (89.16)
+
 (89.16) Questioner The way I understand this, then: Ra gave these archetypical concepts to the priests of Egypt who then drew them upon the walls of one of the chambers of the Great Pyramid. What was the technique of transmission of this information to the priests? At this time was Ra walking the surface among the Egyptians, or was this done through some form of channeling?
 (英文待翻译)
 
 Ra I am Ra. This was done partially through old teachings and partially through visions.
 (英文待翻译)
+
+## (89.17)
 
 (89.17) Questioner Then at this particular time Ra had long since vacated the planet as far as walking among the Egyptians. Is this correct?
 (英文待翻译)
@@ -112,11 +148,15 @@ Ra I am Ra. This was done partially through old teachings and partially through 
 Ra I am Ra. Yes.
 (英文待翻译)
 
+## (89.18)
+
 (89.18) Questioner I would like to question Ra on each of these cards in order to better understand the archetypes. Is this agreeable?
 (英文待翻译)
 
 Ra I am Ra. As we have previously stated,[92] these archetypical concept complexes are a tool for learn/teaching. Thusly, if we were to offer information that were not a response to observations of the student we would be infringing upon the free will of the learn/teacher by being teach/learner and learn/teacher at once.
 (英文待翻译)
+
+## (89.19)
 
 (89.19) Questioner In that case I’ll ask you: you stated that Ra used the tarot to develop the magical personality. Was this done by the system of learning to become, in mind, the essence of each archetype, and in this way develop the magical personality?
 (英文待翻译)
@@ -130,6 +170,8 @@ The concept complexes which together are intended to represent the architecture 
 If these are studied there comes the moment when the deep threnodies and joyful ditties of the deep mind can successfully be brought forward to intensify, articulate, and heighten some aspect of the magical personality.[93]
 (英文待翻译)
 
+## (89.20)
+
 (89.20) Questioner You stated that each archetype is a concept complex. Would you please define what you mean by that statement?
 (英文待翻译)
 
@@ -142,17 +184,23 @@ Just in this way each archetype has within it several root atoms of organization
 However, just as it is most useful in grasping the potentials in your physical systems of the constituting nature of water, so in grasping the nature of an archetype it is useful to have a sense of its component concepts.
 (英文待翻译)
 
+## (89.21)
+
 (89.21) Questioner In Archetype Number One, represented by tarot card number one, the Matrix of the Mind seems to me to have four basic parts to the complex. Looking at the card we have, first and most obvious, the Magician as a part, and what seems to be an approaching star. A stork or similar bird seems to be in a cage. On top of the cage we have something that is very difficult to discern. Am I in any way correct in this analysis?
 (英文待翻译)
 
 Ra I am Ra. You are competent at viewing pictures. You have not yet grasped the nature of the Matrix of the Mind as fully as is reliably possible upon contemplation. We would note that the representations drawn by priests were somewhat distorted by acquaintance with and dependence upon the astrologically based teachings of the Chaldees.
 (英文待翻译)
 
+## (89.22)
+
 (89.22) Questioner When Ra originally trained or taught the Egyptians about the tarot, did Ra act as teach/learners to a degree that Ra became learn/teachers?
 (英文待翻译)
 
 Ra I am Ra. This distortion we were spared.
 (英文待翻译)
+
+## (89.23)
 
 (89.23) Questioner Then could you tell me what information you gave to the Egyptian priest, or Egyptian, who first was contacted or taught with respect to the first archetype? Is that possible for you to do within the limits of the First Distortion?
 (英文待翻译)
@@ -166,11 +214,15 @@ We may note, with sympathy, that you undoubtedly feel choked by the opposite dif
 We would note at this time that the instrument is having almost continuous pain flares. Therefore, we ask that each of the support group be especially aware of any misinformation in order that we may correct any distortions of information the soonest possible.
 (英文待翻译)
 
+## (89.24)
+
 (89.24) Questioner Now as I understand it, what you suggest as far as the tarot goes is to study the writings that we have available and from those formulate questions. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. No.
 (英文待翻译)
+
+## (89.25)
 
 (89.25) Questioner Sorry, I didn’t understand exactly what you meant with respect to that. Would it be appropriate then for me to answer the questions with respect to what I think is the meaning of the three items that you spoke of for Card One and then Card Eight, etc.? Is this what you meant?
 (英文待翻译)
@@ -184,6 +236,8 @@ The queries having to do with the archetypes as found in the tarot, after this p
 Any observations made by a student which has fulfilled these considerations will receive our comments in return. Our great avoidance of interpreting, for the first time, for the learn/teacher various elements of a picture upon a piece of pasteboard is involved both with the Law of Confusion and with the difficulties of the distortions of the pictures upon the pasteboard. Therefore, we may suggest a conscientious review of that which we have already given concerning this subject as opposed to the major reliance being either upon any rendition of the archetype pictures, or any system which has been arranged as a means of studying these pictures.
 (英文待翻译)
 
+## (89.26)
+
 (89.26) Questioner All right, we’ll attempt to do that. Ra stated that a major breakthrough was made when proper emphasis was put on Arcanum Twenty-Two. This didn’t happen until after Ra had completed third density. I assume from this that Ra, being polarized positively, probably had some of the same difficulty that occurred prior to the veil in that the negative polarity was not appreciated. That’s a guess. Is this correct?
 (英文待翻译)
 
@@ -193,17 +247,23 @@ Ra I am Ra. In one way it is precisely correct. Our harvest was overwhelmingly p
 However, we were intending to suggest that (in the use of the system known to you as the tarot for advancing the spiritual evolution of the self) a proper understanding, if we may use this misnomer, of Archetype Twenty-Two is greatly helpful in sharpening the basic view of the Significator of Mind, Body, and Spirit; and, further, throws into starker relief the Transformation and Great Way of Mind, Body, and Spirit complexes.
 (英文待翻译)
 
+## (89.27)
+
 (89.27) Questioner Were some of Ra’s population negatively harvested at the end of Ra’s third density?
 (英文待翻译)
 
 Ra I am Ra. We had no negative harvest as such, although there had been two entities which had harvested themselves during the third density in the negative or service-to-self path. There were, however, those upon the planetary surface during third density whose vibratory patterns were in the negative range but were not harvestable.
 (英文待翻译)
 
+## (89.28)
+
 (89.28) Questioner What was Ra’s average total population incarnate on Venus in third density, the number?
 (英文待翻译)
 
 Ra I am Ra. We were a small population which dwelt upon what you would consider difficult conditions. Our harvest was approximately 6 million 500 thousand mind/body/spirit complexes. There were approximately 32 million mind/body/spirit complexes repeating third density elsewhere.
 (英文待翻译)
+
+## (89.29)
 
 (89.29) Questioner What was the attitude just prior to harvest of those harvestable entities of Ra with respect to those who were obviously unharvestable?
 (英文待翻译)
@@ -214,11 +274,15 @@ Ra I am Ra. Those of us which had the gift of polarity felt deep compassion for 
 There was every attempt made to reach out with whatever seemed to be needed. However, those upon the positive path have the comfort of companions, and we of Ra spent a great deal of our attention upon the possibilities of achieving spiritual or metaphysical adepthood, or work in indigo ray, through the means of relationships with other-selves. Consequently, the compassion for those in darkness was balanced by the appreciation of the light.
 (英文待翻译)
 
+## (89.30)
+
 (89.30) Questioner Would Ra’s attitude toward the same unharvestable entities be different at this nexus than at the time of harvest of third density?
 (英文待翻译)
 
 Ra I am Ra. Not substantially. To those who wish to sleep we could only offer those comforts designed for the sleeping. Service is only possible to the extent it is requested. We were ready to serve in whatever way we could. This still seems satisfactory as a means of dealing with other-selves in third density. It is our feeling that to be each entity which one attempts to serve is to simplify the grasp of what service is necessary or possible.
 (英文待翻译)
+
+## (89.31)
 
 (89.31) Questioner What techniques did the two negatively harvested entities use for negative polarization on such a positively polarized planet?
 (英文待翻译)
@@ -226,11 +290,15 @@ Ra I am Ra. Not substantially. To those who wish to sleep we could only offer th
 Ra I am Ra. The technique of control over others and domination unto the physical death was used in both cases. Upon a planetary influence much unused to slaughter these entities were able to polarize by this means. Upon your third-density environment at the time of your experiencing, such entities would merely be considered, shall we say, ruthless despots which waged the holy war.
 (英文待翻译)
 
+## (89.32)
+
 (89.32) Questioner Did these two entities evolve from the second density of the planet Venus along with the rest of the population of Venus that became Ra, from second density to third?
 (英文待翻译)
 
 Ra I am Ra. No.
 (英文待翻译)
+
+## (89.33)
 
 (89.33) Questioner What was the origin of the two entities of which you speak?
 (英文待翻译)
@@ -238,11 +306,15 @@ Ra I am Ra. No.
 Ra I am Ra. These entities were wanderers from early positive fifth density.
 (英文待翻译)
 
+## (89.34)
+
 (89.34) Questioner And yet, though they had already evolved through a positive fourth density they, shall we say, flipped polarity in the reincarnating in third density. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. This is correct.
 (英文待翻译)
+
+## (89.35)
 
 (89.35) Questioner What was the catalyst for their change?
 (英文待翻译)
@@ -256,11 +328,15 @@ First one entity began its work. Quickly the second found the first. These entit
 The end of this was the graduation into fourth-density negative of the wanderers, which had much power of personality, and some small deepening of the negatively polarized element of those not polarizing positively. There was no negative harvest as such.
 (英文待翻译)
 
+## (89.36)
+
 (89.36) Questioner What was the reason for the wandering of these two wanderers, and were they male and female?
 (英文待翻译)
 
 Ra I am Ra. All wanderers come to be of assistance in serving the Creator, each in its own way. The wanderers of which we have been speaking were indeed incarnated male and female as this is by far the most efficient system of partnership.
 (英文待翻译)
+
+## (89.37)
 
 (89.37) Questioner As a wild guess, one of these entities wouldn’t be the one who has been our companion here for some time in our sessions, would it?
 (英文待翻译)
@@ -268,11 +344,15 @@ Ra I am Ra. All wanderers come to be of assistance in serving the Creator, each 
 Ra I am Ra. No.
 (英文待翻译)
 
+## (89.38)
+
 (89.38) Questioner Then from what you say I am guessing that these wanderers returned or wandered to Ra’s third density to possibly seed greater wisdom into what they saw as an overabundance of compassion in the Ra culture. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. This is incorrect in the sense that before incarnation it was the desire of the wanderers only to aid in service to others. The query has correctness when seen from the viewpoint of the wanderers within that incarnation.
 (英文待翻译)
+
+## (89.39)
 
 (89.39) Questioner I just can’t understand why they would think that a planet that was doing as well as Ra was doing, as far as I can tell, would need wanderers in order to help with a harvest. Was this at an early point in Ra’s third density?
 (英文待翻译)
@@ -280,11 +360,15 @@ Ra I am Ra. This is incorrect in the sense that before incarnation it was the de
 Ra I am Ra. It was in the second cycle of 25,000 years. We had a harvest of six out of thirty, to speak roughly, millions of mind/body/spirit complexes, less than 20%. Wanderers are always drawn to whatever percentage has not yet polarized and come when there is a call. There was a call from those which were not positively polarized as such but which sought to be positively polarized and sought wisdom, feeling the compassion of other-selves upon Venus as complacent or pitying towards other-selves.
 (英文待翻译)
 
+## (89.40)
+
 (89.40) Questioner What was the attitude of these two entities after they graduated into fourth-density negative and, the veil being removed, they realized that they had switched polarities?
 (英文待翻译)
 
 Ra I am Ra. They were disconcerted.
 (英文待翻译)
+
+## (89.41)
 
 (89.41) Questioner Then did they continue striving to polarize negatively for a fifth-density negative harvest, or did they do something else?
 (英文待翻译)
@@ -292,17 +376,23 @@ Ra I am Ra. They were disconcerted.
 Ra I am Ra. They worked with the fourth-density negative for some period until, within this framework, the previously learned patterns of the self had been recaptured and the polarity was, with great effort, reversed. There was a great deal of fourth-density positive work then to be retraced.
 (英文待翻译)
 
+## (89.42)
+
 (89.42) Questioner How is Ra aware of this information? By what means does Ra know the precise orientation of these two entities in fourth-density negative, etc.?
 (英文待翻译)
 
 Ra I am Ra. These entities joined Ra in fourth-density positive for a portion of the cycle which we experienced.
 (英文待翻译)
 
+## (89.43)
+
 (89.43) Questioner I assume, then, that they came in late. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. Yes.
 (英文待翻译)
+
+## (89.44)
 
 (89.44) Questioner I didn’t mean to get so far off the track of my original direction of questioning, but I think some of these excursions are very enlightening and will help in understanding of the basic mechanisms that we are so interested in in evolution.
 (英文待翻译)
@@ -324,6 +414,8 @@ This is more nearly acceptable to one negatively polarized. However, the more ca
 
 May we ask if there are any brief queries before we leave this working?
 (英文待翻译)
+
+## (89.45)
 
 (89.45) Questioner I’ll just make the statement that I perceive that a negative polarity harvest is possible with less negativity in the environment like Ra’s environment than in the environment such as we have at present and ask if that is correct, and then is there anything that we can do to improve the contact or the comfort of the instrument?
 (英文待翻译)

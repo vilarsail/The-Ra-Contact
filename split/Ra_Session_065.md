@@ -4,14 +4,20 @@
 August 8, 1981
 (英文待翻译)
 
+## (65.0)
+
 (65.0) Ra I am Ra. I greet you in the love and in the light of the One Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (65.1)
 
 (65.1) Questioner Could you first please give us an indication of the instrument’s condition and the level of vital and physical energies?
 (英文待翻译)
 
 Ra I am Ra. This instrument’s vital energies are as previously stated. The physical energies are greatly distorted towards weakness at this space/time due to the distortion complexes symptomatic of that which you call the arthritic condition. The level of psychic attack is constant but is being dealt with by this instrument in such a way as to eliminate serious difficulties due to its fidelity and that of the support group.
 (英文待翻译)
+
+## (65.2)
 
 (65.2) Questioner I may be re-covering a little ground already covered in previous questioning today, but I am trying to get a clearer picture of some things that I don’t understand and possibly develop a plan of my own for activity in the future.
 (英文待翻译)
@@ -22,11 +28,15 @@ I have the impression that in the near future the seeking will increase by many 
 Ra I am Ra. The generalities of expression can never be completely correct. However, we may note that when faced with a hole in the curtain, an entity’s eyes may well peer for the first time through the window beyond. This tendency is probable given the possibility/probability vortices active within your space/time and time/space continua at this nexus.
 (英文待翻译)
 
+## (65.3)
+
 (65.3) Questioner I have assumed that the reason that so many wanderers, and those harvested third-density entities who have been transferred here, find it a privilege and an exceptionally beneficial time to be incarnate upon this planet is that the effect that I just spoke of gives them the opportunity to be more fully of service because of the increased seeking. Is this, in general, correct?
 (英文待翻译)
 
 Ra I am Ra. This is the intention which wanderers had prior to incarnation. There are many wanderers whose dysfunction with regard to the planetary ways of your peoples have caused, to some extent, a condition of being caught up in a configuration of mind complex activity which, to the corresponding extent, may prohibit the intended service.
 (英文待翻译)
+
+## (65.4)
 
 (65.4) Questioner I noticed that you are speaking more slowly than usual. Is there a reason for this?
 (英文待翻译)
@@ -34,11 +44,15 @@ Ra I am Ra. This is the intention which wanderers had prior to incarnation. Ther
 Ra I am Ra. This instrument is somewhat weak and, although strong in vital energy and well able to function at this time, is somewhat more fragile than the usual condition we find. We may note a continuing bearing of the physical distortion called pain which has a weakening effect upon physical energy. In order to use the considerable store of available energy without harming the instrument we are attempting to channel even more narrow-band than is our wont.
 (英文待翻译)
 
+## (65.5)
+
 (65.5) Questioner Thank you. Now, have I properly analyzed the condition that creates the possibility of greater service as follows: One, seniority by vibration of incarnation has greatly polarized those upon the surface now, and the influx of wanderers has greatly increased the mental configuration, I might say, toward things of a more spiritual nature. This, I would assume, would be one of the factors creating a better atmosphere for service. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. This is correct.
 (英文待翻译)
+
+## (65.6)
 
 (65.6) Questioner Would the coming changes as we progress into fourth density—I’m speaking of changes not only in the physical third-density planet due to the heating effect but also the changes that are heralding fourth-density vibrations, such as the ability of people to perform what we term paranormal activities—I’m assuming that both of these are also and will act as catalyst to create a greater seeking. Is this correct?
 (英文待翻译)
@@ -52,6 +66,8 @@ The correct portion of your statements is the greater opportunity for service du
 Moreover, there exist probability/possibility vortices which spiral towards your bellicose actions. Many of these vortices are not of the nuclear war but of the less annihilatory but more lengthy so-called conventional war. This situation, if formed in your illusion, would offer many opportunities for seeking and for service.
 (英文待翻译)
 
+## (65.7)
+
 (65.7) Questioner How would conventional warfare offer the opportunities for seeking and service?
 (英文待翻译)
 
@@ -64,11 +80,15 @@ In this scenario, which is being considered at this time/space nexus, the idea o
 In this ongoing struggle the light of freedom would burn within the mind/body/spirit complexes capable of such polarization. Lacking the opportunity for overt expression of the love of freedom, the seeking for inner knowledge would take root, aided by those of the Brothers and Sisters of Sorrow which remember their calling upon this sphere.
 (英文待翻译)
 
+## (65.8)
+
 (65.8) Questioner Are you saying then that this possible condition of war would be much more greatly spread across the surface of the globe than anything we have experienced in the past and, therefore, touch a larger percentage of the population in this form of catalyst?
 (英文待翻译)
 
 Ra I am Ra. This is correct. There are those now experimenting with one of the major weapons of this scenario, that is the so-called psychotronic group of devices, which are being experimentally used to cause such alterations in wind and weather as will result in eventual famine. If this program is not countered and proves experimentally satisfactory, the methods in this scenario would be made public. There would then be what those whom you call Russians hope to be a bloodless invasion of their personnel in this and every land deemed valuable. However, the peoples of your culture have little propensity for bloodless surrender.
 (英文待翻译)
+
+## (65.9)
 
 (65.9) Questioner We would seem to have dual catalysts operating, and the question is which one is going to act first. The prophecies, I will call them, made by Edgar Cayce indicated many earth changes, and I am wondering about the mechanics of describing what we call the future.
 (英文待翻译)
@@ -88,11 +108,15 @@ We see the same vortex, but also see many others. Edgar’s material could be li
 The value of prophecy must be realized to be only that of expressing possibilities. Moreover, it must be, in our humble opinion, carefully taken into consideration that any time/space viewing—whether by one of your time/space, or by one such as we who view the time/space from a dimension, shall we say, exterior to it—will have a quite difficult time expressing time measurement values. Thus prophecy given in specific terms is more interesting for the content, or type, of possibility predicted than for the space/time nexus of its supposed occurrence.
 (英文待翻译)
 
+## (65.10)
+
 (65.10) Questioner So we have the distinct possibility of two different types of catalyst creating an atmosphere of seeking that is greater than that which we experience at present. There will be much confusion, especially in the scenario of earth changes, simply because there have been many predictions of these changes by many groups giving various and sundry reasons for the changes. Can you comment on the effectiveness of this type of catalyst and the rather wide pre-knowledge of the coming changes, but also the rather wide variation in, shall I say, explanation for these changes?
 (英文待翻译)
 
 Ra I am Ra. Given the amount of strength of the possibility/probability vortex which posits the expression by the planet itself of the difficult birthing of the planetary self into fourth density, it would be greatly surprising were not many which have some access to space/time[17] able to perceive this vortex. The amount of this cold cereal in the grocery, to use our previous analogy, is disproportionately large. Each which prophesies does so from an unique level, position, or vibratory configuration. Thus biases and distortions will accompany much prophecy.
 (英文待翻译)
+
+## (65.11)
 
 (65.11) Questioner Well, this entire scenario over the next, shall I say, twenty years seems to be aimed at producing an increase in seeking and an increase in the awareness of the natural creation, but also a terrific amount of confusion. Was it the pre-incarnative objective of many of the wanderers to attempt to reduce this confusion?
 (英文待翻译)
@@ -102,6 +126,8 @@ Ra I am Ra. It was the aim of wanderers to serve the entities of this planet in 
 
 Specific intentions such as aiding in a situation not yet manifest are not the aim of wanderers. Light and love go where they are sought and needed, and their direction is not planned aforetimes.
 (英文待翻译)
+
+## (65.12)
 
 (65.12) Questioner Then each of the wanderers here acts as a function of the biases he has developed in any way he sees fit to communicate—or simply be in his polarity—to aid the total consciousness of the planet.
 (英文待翻译)
@@ -124,6 +150,8 @@ Thus wanderers have three basic functions once the forgetting is penetrated, the
 We may note at this point while you ponder the possibility/probability vortices, that although you have many, many items which cause distress and thus offer seeking and service opportunities, there is always one container in that store of peace, love, light, and joy. This vortex may be very small, but to turn one’s back upon it is to forget the infinite possibilities of the present moment. Could your planet polarize towards harmony in one fine, strong moment of inspiration? Yes, my friends. It is not probable; but it is ever possible.
 (英文待翻译)
 
+## (65.13)
+
 (65.13) Questioner How common in the universe is a mixed harvest for a planet of both positively and negatively oriented mind/body/spirit complexes?
 (英文待翻译)
 
@@ -133,11 +161,15 @@ Ra I am Ra. Among planetary harvests which yield an harvest of mind/body/spirit 
 In the event of mixed harvest it is almost unknown for the majority of the harvest to be negative. When a planet moves strongly towards the negative there is almost no opportunity for harvestable positive polarization.
 (英文待翻译)
 
+## (65.14)
+
 (65.14) Questioner Can you tell me why there is almost no opportunity in that case?
 (英文待翻译)
 
 Ra The ability to polarize positively requires a certain degree of self-determination.
 (英文待翻译)
+
+## (65.15)
 
 (65.15) Questioner Then as these final days of the cycle transpire, if the harvest were to occur now, today, it would have a certain number harvested positively and negatively, and a certain number of repeaters. I am going to assume that because of the catalyst which will be experienced between now and the actual harvesting time these numbers of harvestable entities will increase.
 (英文待翻译)
@@ -151,11 +183,15 @@ Ra I am Ra. In the event of mixed harvest there is nearly always disharmony and,
 It is the Confederation’s desire to serve those who may, indeed, seek more intensely because of this added catalyst. We do not choose to attempt to project the success of added numbers to the harvest, for this would not be appropriate. We are servants. If we are called, we shall serve with all our strength. To count the numbers is without virtue.
 (英文待翻译)
 
+## (65.16)
+
 (65.16) Questioner Now the added catalyst at the end of the cycle is a function specifically of the orientation of the consciousness that inhabits the planet. The consciousness has provided the catalyst for itself in orienting its thinking in the way it has oriented it, thus acting upon itself the same as catalyst of bodily pain and disease act upon the single mind/body/spirit complex. I made this analogy once before but reiterate it at this time to clarify my own thinking in seeing the planetary entity as somewhat of a single entity made up of billions of mind/body/spirit complexes. Is my viewpoint correct?
 (英文待翻译)
 
 Ra I am Ra. You are quite correct.
 (英文待翻译)
+
+## (65.17)
 
 (65.17) Questioner Then we deal with an entity that has not yet formed a social memory but is yet an entity, just as one of us can be called a single entity. Can we continue this observation of the, shall I say, conglomerate entity through the galactic entity, or shall I say, small planetary system type of entity? Let me try to phrase it this way. Could I look at a single sun in its planetary system as an entity and then look at a major galaxy with its billions of stars as an entity? Can I continue this extrapolation in this way?
 (英文待翻译)
@@ -172,11 +208,15 @@ You may begin to see your relationship to the Logos, or sun, with which you are 
 When this realization occurs you may then widen the field of “eyeshot,” if you will, infinitely recognizing parts of the Logos throughout the One Infinite Creation and feeling—with the roots of mind informing the intuition—the parents aiding their planets in evolution in reaches vast and unknown in the creation, for this process occurs many, many times in the evolution of the creation as an whole.
 (英文待翻译)
 
+## (65.18)
+
 (65.18) Questioner The wanderer goes through the forgetting process. You mentioned that those who have both third- and fourth-density bodies activated now do not have the forgetting that the wanderer has. I was just wondering if, say, a sixth-density wanderer were here with a third-density body activated, would he have gone through a forgetting that was in sections, shall I say, with a forgetting of fourth, fifth, and sixth densities? And if he were to have his fourth-density body activated, he would have a partial additional memory? And then another partial if his fifth were activated? And then the full memory if he had the sixth activated? Does this make any sense?
 (英文待翻译)
 
 Ra I am Ra. No.
 (英文待翻译)
+
+## (65.19)
 
 (65.19) Questioner [chuckles] Thank you. The forgetting process was puzzling me because you said that the fourth-density activated people, who were here who had been harvestable, did not have the same forgetting problem. Could you tell me why the wanderer loses his memory?
 (英文待翻译)
@@ -196,17 +236,23 @@ The forgetting process can be penetrated to the extent of the wanderer rememberi
 The new fourth-density entities which are becoming able to demonstrate various newer abilities are doing so as a result of the present experience, not as a result of memory. There are always a few exceptions, and we ask your forgiveness for constant barrages of over-generalization.
 (英文待翻译)
 
+## (65.20)
+
 (65.20) Questioner I don’t know if this question is related to what I am trying to get at or not, but I’ll ask it and see. You mentioned in speaking of the pyramids that the resonating chamber was used so that the adept could meet the self. Would you explain what you meant by that?
 (英文待翻译)
 
 Ra I am Ra. One meets the self in the center, or deeps, of the being. The so-called resonating chamber may be likened unto the symbology of the burial and resurrection of the body wherein the entity dies to self, and, through this confrontation of apparent loss and realization of essential gain, is transmuted into a new and risen being.
 (英文待翻译)
 
+## (65.21)
+
 (65.21) Questioner Could I make the analogy of, in this apparent death, losing the desires that are the illusory, common desires of third density, and gaining the desires of total service to others?
 (英文待翻译)
 
 Ra I am Ra. You are perceptive. This was the purpose and intent of this chamber as well as forming a necessary portion of the King’s Chamber position’s effectiveness.
 (英文待翻译)
+
+## (65.22)
 
 (65.22) Questioner Can you tell me what this chamber did to the entity to create this awareness in him?
 (英文待翻译)
@@ -216,6 +262,8 @@ Ra I am Ra. This chamber worked upon the mind and the body. The mind was affecte
 
 This will be the last full query of this working. May we ask if there are any brief queries at this time?
 (英文待翻译)
+
+## (65.23)
 
 (65.23) Questioner Is there anything that we can do to make the instrument more comfortable or improve the contact?
 (英文待翻译)

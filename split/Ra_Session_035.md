@@ -4,8 +4,12 @@
 March 6, 1981
 (英文待翻译)
 
+## (35.0)
+
 (35.0) Ra I am Ra. I greet you in the love and in the light of the One Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (35.1)
 
 (35.1) Questioner I would like to say that we consider this a great privilege to be doing this work, and hope that we are going to question in a direction that will be of value to the readers of this material.
 (英文待翻译)
@@ -34,11 +38,15 @@ The limitation of the non-movement of a portion of the physical vehicle opened o
 This entity was not of a bellicose nature, but rather, during the conflict, continued to vibrate in green ray working with the blue-ray energies. The entity who was the one known as Franklin’s teacher also functioned greatly during this period as blue-ray activator, not only for its mate but also in a more universal expression. This entity polarized continuously in a positive fashion in the universal sense while, in a less universal sense, developing a pattern of what may be called karma; this karma having to do with inharmonious-relationship distortions with the mate/teacher.
 (英文待翻译)
 
+## (35.2)
+
 (35.2) Questioner Two things I would like to clear up. Then Franklin’s teacher was his wife? Is this correct?
 (英文待翻译)
 
 Ra I am Ra. This is correct.
 (英文待翻译)
+
+## (35.3)
 
 (35.3) Questioner Secondly, did Franklin place the limitation on his physical body himself?
 (英文待翻译)
@@ -48,6 +56,8 @@ Ra I am Ra. This is partially correct. The basic guidelines for the lessons and 
 
 However, the desire to serve and to grow was strong in this programming, and when the opportunities began to cease due to these distortions towards love of power, the entity’s limiting factor was activated.
 (英文待翻译)
+
+## (35.4)
 
 (35.4) Questioner I would now like to ask for the same type of information with respect to Adolf Hitler. You have given a little of this already. It is not necessary to re-cover what you have already given, but if you could complete that information it would be helpful.
 (英文待翻译)
@@ -64,11 +74,15 @@ This entity followed the pattern of negative polarization which suggests the eli
 We have advised and suggested caution and patience in previous communications and do so again, using this entity as an example of the over-hasty opening of polarization without due attention to the synthesized and integrated mind/body/spirit complex. To know yourself is to have the foundation upon firm ground.
 (英文待翻译)
 
+## (35.5)
+
 (35.5) Questioner Thank you. An important example, I believe. I was wondering if any of those who were subordinate to Adolf at that time were able to polarize in a harvestable nature on the negative path?
 (英文待翻译)
 
 Ra I am Ra. We can speak only of two entities who may be harvestable in a negative sense, others still being in the physical incarnation: one known to you as Hermann; the other known, as it preferred to be called, Himmler.
 (英文待翻译)
+
+## (35.6)
 
 (35.6) Questioner Thank you. Earlier we discussed Abraham Lincoln as a rather unique case.[54] Is it possible for you to tell us what the orientation was and why the fourth-density being used Abraham’s body, and when this took place with respect to the activities that were occurring in our society at that time?
 (英文待翻译)
@@ -76,11 +90,15 @@ Ra I am Ra. We can speak only of two entities who may be harvestable in a negati
 Ra I am Ra. This is possible.
 (英文待翻译)
 
+## (35.7)
+
 (35.7) Questioner Would it be of value for the reader to know this in your estimation?
 (英文待翻译)
 
 Ra I am Ra. You must shape your queries according to your discernment.
 (英文待翻译)
+
+## (35.8)
 
 (35.8) Questioner Well in that case I would like to know the motivation for this use of Abraham Lincoln’s body at that time?
 (英文待翻译)
@@ -105,6 +123,8 @@ This entity did not gain or lose karma by these activities due to its detachment
 
 May we ask if this is the information you requested, or if we may supply any further information?
 (英文待翻译)
+
+## (35.9)
 
 (35.9) Questioner If there are any further questions I will ask them in the next period which should occur in about four days. I do not want to overtire the instrument. I will only ask if there is anything that we can do to make the instrument more comfortable or improve the contact?
 (英文待翻译)

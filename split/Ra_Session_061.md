@@ -4,14 +4,20 @@
 July 8, 1981
 (英文待翻译)
 
+## (61.0)
+
 (61.0) Ra I am Ra. I greet you, my friends, in the love and in the light of the Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (61.1)
 
 (61.1) Questioner Could you give me an indication of the instrument’s condition?
 (英文待翻译)
 
 Ra I am Ra. This instrument’s vital energies are improving. The physical-complex distortions are quite marked at this space/time, and there is a decrease in physical-complex energies.
 (英文待翻译)
+
+## (61.2)
 
 (61.2) Questioner Is there anything in particular that the instrument could do to improve the physical condition?
 (英文待翻译)
@@ -28,6 +34,8 @@ The second ramification of condition is that which we might call the degree of m
 This instrument, unlike some entities, has some further distortion due to the use of pre-incarnative conditions.
 (英文待翻译)
 
+## (61.3)
+
 (61.3) Questioner Can you expand on what you meant by the “cycling instreamings of energy?”
 (英文待翻译)
 
@@ -39,6 +47,8 @@ There is a fourth cycle which we may call the cycle of gateway of magic of the a
 
 The cosmic patterns are also a function of the moment of incarnative entrance and have to do with your satellite you call the moon, your planets of this galaxy, the galactic sun, and in some cases the instreamings from the major galactic points of energy flow.[5]
 (英文待翻译)
+
+## (61.4)
 
 (61.4) Questioner Would it be helpful to plot the cycles for the instrument and attempt to have these sessions at the most favorable points with respect to the cycle?
 (英文待翻译)
@@ -58,11 +68,15 @@ It is to be noted that psychic attack continues upon this entity although it is 
 We may suggest that it is always of some interest to observe the road map, both of the cycles and of the planetary and other cosmic influences, in that one may see certain wide roads or possibilities. However, we remind that this group is an unit.
 (英文待翻译)
 
+## (61.5)
+
 (61.5) Questioner Is there some way that we could, as a unit, then, do something to reduce the effect of the psychic attack on the instrument and optimize the communicative opportunity?
 (英文待翻译)
 
 Ra I am Ra. We have given you the information concerning that which aids this particular mind/body/spirit complex. We can speak no further. It is our opinion, which we humbly offer, that each is in remarkable harmony with each for this particular third-density illusion at this space/time nexus.
 (英文待翻译)
+
+## (61.6)
 
 (61.6) Questioner I want to ask a few questions Jim had here about the healing exercises. The first is, in the healing exercise concerning the body, what do you mean by the disciplines of the body having to do with the balance between love and wisdom in the use of the body in its natural functions?
 (英文待翻译)
@@ -88,6 +102,8 @@ It is well to know the body complex so that it is an ally, balanced and ready to
 No matter what the behavior, the important balancing is the understanding of each interaction on this level with other-selves, so that whether the balance may be love/wisdom or wisdom/love, the other-self is seen by the self in a balanced configuration, and the self is, thus, freed for further work.
 (英文待翻译)
 
+## (61.7)
+
 (61.7) Questioner Second question: could you give an example of how feelings affect portions of the body and the sensations of the body?
 (英文待翻译)
 
@@ -106,6 +122,8 @@ In the case of the scribe we see a weariness and numbness of feelings ensuing fr
 We would note at this time that the totally efficient use of catalyst upon your plane is extremely rare.
 (英文待翻译)
 
+## (61.8)
+
 (61.8) Questioner Could you tell me how you are able to give us information like this with respect to the First Distortion, or Law of Confusion?
 (英文待翻译)
 
@@ -117,6 +135,8 @@ Any other reader may extract the heart of meaning from this discussion without i
 
 It is interesting that in many of your queries you ask for confirmation, rather than information. This is acceptable to us.
 (英文待翻译)
+
+## (61.9)
 
 (61.9) Questioner This brings out the point of the purpose for the physical incarnation, I believe. And that is to reach a conviction through your own thought processes as to a solution to problems and understandings in a totally unbiased, or totally free, situation with no proof at all or anything that you would consider proof—proof being a very poor word in itself. Can you expand on my concept?
 (英文待翻译)
@@ -130,6 +150,8 @@ This is not a dimension of knowing, even subjectively, due to the lack of overvi
 That known as the subjective knowing without proof is, in some degree, a poor friend, for there will be anomalies no matter how much information is garnered due to the distortions which form third density.
 (英文待翻译)
 
+## (61.10)
+
 (61.10) Questioner OK. The third question I have here is, could you give examples of bodily polarity?
 (英文待翻译)
 
@@ -139,11 +161,15 @@ Ra I am Ra. Within the body there are many polarities which relate to the balanc
 Each entity is, of course, a potential polarized portion of an other-self.
 (英文待翻译)
 
+## (61.11)
+
 (61.11) Questioner It says here it would seem the proper balancing exercises for all the sensations of the body would be some form of inactivity such as meditation or contemplation. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. This is largely incorrect. The balancing requires a meditative state in order for the work to be done. However, the balancing of sensation has to do with an analysis of the sensation with especial respect to any unbalanced leaning between the love and the wisdom, or the positive and the negative. Then whatever is lacking in the balanced sensation is, as in all balancing, allowed to come into the being after the sensation is remembered and recalled in such detail as to overwhelm the senses.
 (英文待翻译)
+
+## (61.12)
 
 (61.12) Questioner Could you tell me why it is important for the appurtenances, and other things, to be so carefully aligned with respect to the instrument, and why just a small ruffle in the sheet by the instrument causes a problem with the reception of Ra?
 (英文待翻译)
@@ -166,6 +192,8 @@ This would not aid another group as it was designed for this particular system o
 There is enough energy transferred for one more long query. We do not wish to deplete this instrument.
 (英文待翻译)
 
+## (61.13)
+
 (61.13) Questioner OK, then I will ask this one. Could you tell us the purpose of the frontal lobes of the brain and the conditions necessary for their activation?
 (英文待翻译)
 
@@ -177,6 +205,8 @@ The primary mental/emotive condition of this large area of the so-called brain i
 
 Are there any queries before we leave this instrument?
 (英文待翻译)
+
+## (61.14)
 
 (61.14) Questioner Only is there anything we can do to make the instrument more comfortable or improve the contact?
 (英文待翻译)

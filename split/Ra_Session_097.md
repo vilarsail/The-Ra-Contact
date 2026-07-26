@@ -4,8 +4,12 @@
 September 15, 1982
 (英文待翻译)
 
+## (97.0)
+
 (97.0) Ra I am Ra. I greet you in the love and in the light of the One Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (97.1)
 
 (97.1) Questioner Could you first please give me the condition of the instrument?
 (英文待翻译)
@@ -13,11 +17,15 @@ September 15, 1982
 Ra I am Ra. It is as previously stated.
 (英文待翻译)
 
+## (97.2)
+
 (97.2) Questioner What’s the situation with our fifth-density negative friend?
 (英文待翻译)
 
 Ra I am Ra. It is as previously stated.
 (英文待翻译)
+
+## (97.3)
 
 (97.3) Questioner I’ve been doing some consideration of the appearance of the hawk and have made this analysis of the bird in Card Three:
 (英文待翻译)
@@ -28,11 +36,15 @@ The bird is a message from the higher self, and the position of the wings in Car
 Ra I am Ra. No.
 (英文待翻译)
 
+## (97.4)
+
 (97.4) Questioner Is the reason for this lack of comment the First Distortion?
 (英文待翻译)
 
 Ra I am Ra. This is correct.
 (英文待翻译)
+
+## (97.5)
 
 (97.5) Questioner I have analyzed the hawk that I saw immediately after returning from the house in Atlanta as a message (most probably from my higher self) indicating that the plan of moving was not the best, was not too appropriate since, without the hawk, everything would have continued as planned with no added catalyst. This single catalyst of a remarkable nature then, logically, from my point of view, could only mean that there was a message as to the inappropriateness of the plan for some reason yet to be discovered. Would Ra comment on that?
 (英文待翻译)
@@ -43,6 +55,8 @@ Ra I am Ra. We tread as close as possible to the Law of Confusion in suggesting 
 These subjectively interesting shared phenomena then act as a means of communication, the nature of which cannot be discussed by those outside of the shared incarnational experience without the interference with the free will of each entity involved in the complex of subjectively meaningful events.
 (英文待翻译)
 
+## (97.6)
+
 (97.6) Questioner Can Ra please tell us the source of the unusual odor in this room this morning?
 (英文待翻译)
 
@@ -51,6 +65,8 @@ Ra I am Ra. There are two components to this odor. One is, as has been surmised,
 
 The cleansing of the room and the burning of the incense has discouraged the elemental. The process of decomposition shall, in a short period of your space/time, remove the less than harmonious sensations provided for the nose.
 (英文待翻译)
+
+## (97.7)
 
 (97.7) Questioner I find myself presently in a difficult position of decision, primarily because of the appearance of the aforementioned hawk after our return from Atlanta. The only objective of any value at all is the work that we are doing, which includes not only the contact but communication and dissemination of information to those who might request it.
 (英文待翻译)
@@ -61,11 +77,15 @@ Since the move was connected with that, and since the hawk was, to me, obviously
 Ra I am Ra. The questioner presumes much, and to comment is an infringement upon its free will. We may suggest the pondering of our previous comments regarding the wingèd creatures of which you speak. We repeat that any place of working, properly prepared by this group, is acceptable to Ra. The discrimination of choice is yours.
 (英文待翻译)
 
+## (97.8)
+
 (97.8) Questioner Are there any items in the first four cards not of Ra’s intention that we could remove to present a less confusing card as we make our new drawings?
 (英文待翻译)
 
 Ra I am Ra. We find much material in this query which would constitute repetition. May we suggest rephrasing the query?
 (英文待翻译)
+
+## (97.9)
 
 (97.9) Questioner Possibly I didn’t phrase that the way I meant to, which was: we already have determined the items that should be removed from the first four cards. The question was: have I missed anything that should be removed which were not of Ra’s original intention in the last few sessions of determining what should be removed?
 (英文待翻译)
@@ -88,11 +108,15 @@ Therefore, may we ask the student to look up from inward working and behold the 
 We are not messengers of the complex. We bring the message of unity. In this perspective only may we affirm the value to the seeker of adepthood of the grasping, articulating, and use of this resource of the deep mind exemplified by the concept complexes of the archetypes.
 (英文待翻译)
 
+## (97.10)
+
 (97.10) Questioner Thank you. Card Number Five, the Significator of the Mind, indicates, firstly, as I see it, simply a male within a rectangularly structured form. This suggests to me that the Significator of the Mind in third density is well-bounded within the illusion, as is also suggested by the fact that the base of the male is a rectangular form showing no ability for movement. Would Ra comment on that?
 (英文待翻译)
 
 Ra I am Ra. O student, you have grasped the barest essence of the nature of the Significator’s complete envelopment within the rectangle. Consider for the self, O student, whether your thoughts can walk. The abilities of the most finely honed mentality shall not be known without the use of the physical vehicle which you call the body. Through the mouth the mind may speak. Through the limbs the mind may effect action.
 (英文待翻译)
+
+## (97.11)
 
 (97.11) Questioner The entity looks to the left, indicating that the mind has the tendency to notice more easily the negative catalyst or negative essence of its environment. Would Ra comment on that observation?
 (英文待翻译)
@@ -100,17 +124,23 @@ Ra I am Ra. O student, you have grasped the barest essence of the nature of the 
 Ra I am Ra. This is substantially correct.
 (英文待翻译)
 
+## (97.12)
+
 (97.12) Questioner There are two small entities at the bottom of the seat, one black and one white. I would first ask Ra: is this drawing correct in the coloring? Is the black one in the proper position with respect to Ra’s original drawings?
 (英文待翻译)
 
 Ra I am Ra. That which you perceive as black was first red. Other than this difference the beings in the concept complex are placed correctly.
 (英文待翻译)
 
+## (97.13)
+
 (97.13) Questioner The red coloration is a mystery to me then. We had originally decided that these represented polarization of the mind, either positive or negative, as its significant self would be either significant as one or the other polarity. Would Ra comment on that?
 (英文待翻译)
 
 Ra I am Ra. The indications of polarity are as presumed by the questioner. The symbolism of old for the left-hand path was the russet coloration.
 (英文待翻译)
+
+## (97.14)
 
 (97.14) Questioner Would—
 (英文待翻译)
@@ -130,6 +160,8 @@ Ra We shall pause at this time if the questioner will be patient. There are fair
 I am Ra. Please continue.
 (英文待翻译)
 
+## (97.15)
+
 (97.15) Questioner What was the nature of the problem? What caused it?
 (英文待翻译)
 
@@ -144,6 +176,8 @@ At this juncture the previous potential for the tightening of the throat was som
 
 We would appreciate your reminding us to cause this instrument to cough before or after each query for the remainder of this working. Once conscious, this instrument should have no serious difficulty.
 (英文待翻译)
+
+## (97.16)
 
 (97.16) Questioner I was wondering why the dark entity was on the right side of the card as far as the male figure, which is the Significator, is concerned, and the light white entity is on the left. If you could comment on that after making the instrument cough, please?
 (英文待翻译)
@@ -163,17 +197,23 @@ The nature of polarity is interesting in that those experiences offered to the S
 You may note that the hands of the central image indicate the appropriate bias for right- and left-hand working; that is, the right hand gestures in service to others, offering its light outward. The left hand attempts to absorb the power of the spirit and point it for its use alone.
 (英文待翻译)
 
+## (97.17)
+
 (97.17) Questioner The eight cartouches at the bottom would possibly signify the energy centers and the evolution through those centers . . . possibility for either the positive or negative polarization because of the white and black coloration of the figures. Would Ra comment on that after making the instrument cough?
 (英文待翻译)
 
 Ra [Cough.] I am Ra. The observations of the student are perceptive. It is informative to continue the study of octaves in association with this concept complex. Many are the octaves of a mind/body/spirit complex’s beingness. There is not one that does not profit from being pondered in connection with the considerations of the nature of the development of polarity exemplified by the concept complex of your Card Number Five.
 (英文待翻译)
 
+## (97.18)
+
 (97.18) Questioner Do the symbols on the face of each of these little cartouches such as the birds and the other symbols have a meaning in this card that is of value in considering the archetype? Would you answer that after making the instrument cough, please?
 (英文待翻译)
 
 Ra [Cough.] I am Ra. These symbols are letters and words much as your language would receive such an entablature. They are, to a great extent, enculturated by a people not of your generation. Let us, in the rough, suggest that the information written upon these cartouches be understood to be such as the phrase, “And you shall be born again to eternal life.”
 (英文待翻译)
+
+## (97.19)
 
 (97.19) Questioner Thank you. I thought that the wings at the top of the card might indicate the protection of the spirit over the process of evolution. Would Ra comment on that after having the instrument cough?
 (英文待翻译)
@@ -183,6 +223,8 @@ Ra [Cough.] I am Ra. We shall end this session for we are having considerable di
 
 Is there any brief query before we leave this instrument?
 (英文待翻译)
+
+## (97.20)
 
 (97.20) Questioner It’s not necessary to answer this if you want to end right now for the instrument’s benefit, but is there anything we can do to improve the contact or make the instrument more comfortable?
 (英文待翻译)

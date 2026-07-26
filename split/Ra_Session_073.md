@@ -4,8 +4,12 @@
 October 21, 1981
 (英文待翻译)
 
+## (73.0)
+
 (73.0) Ra I am Ra. I greet you in the love and in the light of the One Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (73.1)
 
 (73.1) Questioner Could you please give me an indication of the instrument’s condition?
 (英文待翻译)
@@ -13,11 +17,15 @@ October 21, 1981
 Ra I am Ra. It is as previously stated with the exception of the vital energy level which is distorted more nearly towards that which is normal for this entity.
 (英文待翻译)
 
+## (73.2)
+
 (73.2) Questioner Has the banishing ritual that we have performed been helpful for this contact?
 (英文待翻译)
 
 Ra I am Ra. The ritual described has gained with each working in making efficacious the purity of contact needed, not only for the Ra contact, but for any working of the adept.
 (英文待翻译)
+
+## (73.3)
 
 (73.3) Questioner Thank you. We would like to thank Ra at this time for the opportunity to be of service to those on this sphere who would like to have the information that we gain here in this [inaudible].
 (英文待翻译)
@@ -28,6 +36,8 @@ You stated that free will, one-pointed in service to others, had the potential o
 Ra I am Ra. This is incorrect but subtly so. In invocation and evocation of what may be termed negative entities or qualities, the expression alerts the positively oriented equivalent. However, those upon the service-to-others path wait to be called and can only send love.
 (英文待翻译)
 
+## (73.4)
+
 (73.4) Questioner What I was trying to get at was that this alerting of light strength is, as I see it, a process that must be totally a function of free will, as you say. And as the desire, and will, and purity of desire of the adept or operator increases, the alerting of light strength increases. Is this part of it the same for both positive and negative potentials, and am I correct with this statement?
 (英文待翻译)
 
@@ -36,6 +46,8 @@ Ra I am Ra. To avoid confusion we shall simply restate for clarity your correct 
 
 Those who are upon the service-to-others path may call upon the light strength in direct proportion to the strength and purity of their will to serve. Those upon the service-to-self path may call upon the dark strength in direct proportion to the strength and purity of their will to serve.
 (英文待翻译)
+
+## (73.5)
 
 (73.5) Questioner I will undoubtedly make many errors in my statements today because what I am going to do is try to guess at how this works and let you correct me.
 (英文待翻译)
@@ -46,11 +58,15 @@ In considering the exercise of the Middle Pillar I have thought it to be wrong i
 Ra I am Ra. No.
 (英文待翻译)
 
+## (73.6)
+
 (73.6) Questioner Could you tell me how I am wrong in that statement?
 (英文待翻译)
 
 Ra I am Ra. Yes.
 (英文待翻译)
+
+## (73.7)
 
 (73.7) Questioner Would you please do that?
 (英文待翻译)
@@ -67,17 +83,23 @@ The second station is the evocation of the great cross of life. This is an exten
 Again, all invocations and evocations are drawn through the violet energy center. This may then be continued towards whatever energy centers are desired to be used.
 (英文待翻译)
 
+## (73.8)
+
 (73.8) Questioner Then will you speak of the difference between the spiraling light that enters through the feet and the light invoked through the crown chakra?
 (英文待翻译)
 
 Ra I am Ra. The action of the upward spiraling light drawn by the will to meet the inner light of the One Infinite Creator may be likened to the beating of the heart and the movement of the muscles surrounding the lungs and all the other functions of the parasympathetic nervous system. The calling of the adept may be likened to those nerve and muscle actions over which the mind/body/spirit complex has conscious control.
 (英文待翻译)
 
+## (73.9)
+
 (73.9) Questioner Previously you stated[32]—I believe I’m correct in saying this—that where the two directions meet you have a measure, let us say, of the development of any particular mind/body/spirit complex. Am I correct?
 (英文待翻译)
 
 Ra I am Ra. This is correct.
 (英文待翻译)
+
+## (73.10)
 
 (73.10) Questioner In invoking the alerted light, then, it would seem to me that the visualization of the invocation would be dependent upon what the use was to be of the light. The use could be for healing, could be for communication, or it could be for the general awareness, you might say, of the creation and the Creator. Would you please speak on this process and my correctness in making this assumption?
 (英文待翻译)
@@ -94,11 +116,15 @@ We would further note a point which is both subtile and of some interest.[33] Th
 More importantly, the time/space mind/body/spirit analog, which is evoked as the magical personality, has its only opportunity to gain rapidly from the experience of the catalytic action available to the third-density space/time mind/body/spirit. Thus the adept is aiding the Creator greatly by offering great catalyst to a greater portion of the creation which is identified as the mind/body/spirit totality of an entity.
 (英文待翻译)
 
+## (73.11)
+
 (73.11) Questioner Desire and will are key factors in the process. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. We would add one quality. In the magical personality desire, will, and polarity are the keys.
 (英文待翻译)
+
+## (73.12)
 
 (73.12) Questioner I would then assume that the many so-called evangelists which we have in our society at present, many have great desire and very great will, and possibly great polarity. It seems to me that in some cases that there is a lack of information, or awareness, that creates a less-than-effective working in the magical sense. Am I correct in this analysis?
 (英文待翻译)
@@ -106,11 +132,15 @@ Ra I am Ra. We would add one quality. In the magical personality desire, will, a
 Ra I am Ra. You are partially correct. In examining the polarity of a service-to-others working, the free will must be seen as paramount. Those entities of which you speak are attempting to generate positive changes in consciousness while abridging free will. This causes the blockage of the magical nature of the working except in those cases wherein an entity freely desires to accept the working of the evangelist, as you have called it.
 (英文待翻译)
 
+## (73.13)
+
 (73.13) Questioner What was the orientation with respect to this type of communication for the one known as Jesus of Nazareth?
 (英文待翻译)
 
 Ra I am Ra. You may have read some of this entity’s workings. It offered itself as teacher to those mind/body/spirit complexes which gathered to hear, and even then spoke as through a veil so as to leave room for those not wishing to hear. When this entity was asked to heal, it oft times did so, always ending the working with two admonitions: firstly, that the entity healed had been healed by its faith, that is, its ability to allow and accept changes through the violet ray into the gateway of intelligent energy; secondly, saying always, “Tell no one.” These are the workings which attempt a maximal quality of free will while maintaining fidelity to the positive purity of the working.
 (英文待翻译)
+
+## (73.14)
 
 (73.14) Questioner An observation of the working itself by another entity would seem to me to partially abridge free will in that a seemingly magical occurrence had taken place as a result of the working of an adept. This could be extended to any phenomenon which is other than normally acceptable. Could you speak on this paradox that is immediately the problem of anyone doing healing?
 (英文待翻译)
@@ -121,11 +151,15 @@ Ra I am Ra. We are humble messengers of the Law of One. To us there are no parad
 Infringement upon free will occurs in this circumstance only if the entity doing the working ascribes the authorship of this event to its self or its own skills. Those who state that no working comes from it but only through it is [not] infringing upon free will.[34]
 (英文待翻译)
 
+## (73.15)
+
 (73.15) Questioner You said that if the entity says that no working comes from it but only through it, it is also infringing. Is that correct?
 (英文待翻译)
 
 Ra I am Ra. This is incorrect. We said that in that event there is no infringement.
 (英文待翻译)
+
+## (73.16)
 
 (73.16) Questioner The one known as Jesus accumulated twelve disciples. What was his purpose in having these disciples with him?
 (英文待翻译)
@@ -135,6 +169,8 @@ Ra I am Ra. What is the purpose of teach/learning if there be no learn/teachers?
 
 [There is a 43-second pause between the end of this answer and the beginning of the next question.]
 (英文待翻译)
+
+## (73.17)
 
 (73.17) Questioner In the exercise of the fire, then, I assume that the healer would be working with the same energy that we spoke of as entering through the crown chakra. Is this correct?
 (英文待翻译)
@@ -148,6 +184,8 @@ As the green-ray center becomes more brilliant—and we would note this brillian
 Thus the in-coming body energy, crystallized, regularized, and channeled by the adept’s personality, reaching to the green-ray energy center, may then pour out the combined energies of the adept which is incarnate, thus offering the service of healing to an entity requesting that service. This basic situation is accomplished as well when there is an entity which is working through a channel to heal.
 (英文待翻译)
 
+## (73.18)
+
 (73.18) Questioner Could you tell me how this transfer of light, I believe it would be, would affect the patient to be healed?
 (英文待翻译)
 
@@ -156,6 +194,8 @@ Ra I am Ra. The effect is that of polarization. The entity may or may not accept
 
 It may be seen that the King’s Chamber effect is not attempted in this form of working but, rather, the addition to one whose energies are low the opportunity for the building up of those energies. Many of your distortions called illnesses may be aided by such means.
 (英文待翻译)
+
+## (73.19)
 
 (73.19) Questioner I’ll make a general statement which you can correct. The way I see the overall picture of healer and patient is that the one to be healed has, because of a blockage in one of the energy centers or more—but we will just consider one particular problem—because of this energy center blockage, the upward spiraling light that creates one of the seven bodies has been blocked from the maintenance of that body, and this has resulted in a distortion from the perfection of that body that we call disease, or a bodily anomaly, which is other than perfect.
 (英文待翻译)
@@ -172,17 +212,23 @@ We might note further that when the one wishing to be healed, though sincere, re
 Other than these notes we do not wish to further comment upon your statement at this working.
 (英文待翻译)
 
+## (73.20)
+
 (73.20) Questioner It seems to me that the primary thing of importance for those on the service-to-others path is the development of an attitude which I can only describe as vibration. This attitude would be developed through meditation, ritual, and a developing appreciation for the creation or Creator which results in a state of mind that can only by me be expressed as an increase in vibration or oneness with all. Could you expand and correct that statement?
 (英文待翻译)
 
 Ra I am Ra. We shall not correct this statement but shall expand upon it by suggesting that to those qualities you may add the living day by day, and moment by moment, for the true adept lives more and more as it is.
 (英文待翻译)
 
+## (73.21)
+
 (73.21) Questioner Thank you. Could you tell me of the number of possible energy transfers between two or more mind/body/spirit complexes. Is it very large, or are there few [inaudible]?
 (英文待翻译)
 
 Ra I am Ra. The number is infinite, for is not each mind/body/spirit complex unique?
 (英文待翻译)
+
+## (73.22)
 
 (73.22) Questioner Could you define this statement “energy transfer between two mind/body/spirit complexes?”
 (英文待翻译)
@@ -213,6 +259,8 @@ The spiritual energy transfers are at the heart of all energy transfers, as a kn
 
 Are there any brief queries before we leave this working?
 (英文待翻译)
+
+## (73.23)
 
 (73.23) Questioner Only if there is anything we can do to improve the comfort of the instrument or the contact, and secondly, is there anything that you wish not published in today’s session?
 (英文待翻译)

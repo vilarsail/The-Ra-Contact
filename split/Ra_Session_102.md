@@ -4,14 +4,20 @@
 March 22, 1983
 (英文待翻译)
 
+## (102.0)
+
 (102.0) Ra I am Ra. I greet you in the love and in the light of the One Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (102.1)
 
 (102.1) Questioner Would you first please give me the condition of the instrument?
 (英文待翻译)
 
 Ra I am Ra. The physical energy deficit of this entity is the most substantial across which we have come. The mental and mental/emotional distortions are near to balance, and the vital energy of the instrument as a whole is distorted towards health, or strength/weakness, due to the will of the instrument.
 (英文待翻译)
+
+## (102.2)
 
 (102.2) Questioner Will Ra please tell us what caused the pain and cramping in the instrument’s stomach, and what could be done to heal it?
 (英文待翻译)
@@ -37,17 +43,23 @@ We may note that the instrument has remained centered upon the Creator at a perc
 There are stronger anti-spasmodic drugs which the one not known to this instrument, but known as Arthur, may aid by the offering. The recommendation to do this—being as it is that which does not retain or remove life, and does further remove from the instrument its opportunities for study in this situation—needs must be withheld. We are not in a position to recommend treatment at this space/time beyond the watching of the types of foodstuffs ingested.
 (英文待翻译)
 
+## (102.3)
+
 (102.3) Questioner I’m not quite sure I understood everything you said. Can you give me the last name of this Arthur, and where he is located?
 (英文待翻译)
 
 Ra I am Ra. We can.
 (英文待翻译)
 
+## (102.4)
+
 (102.4) Questioner Will you please do that?
 (英文待翻译)
 
 Ra I am Ra. The entity, sound vibration Arthur, has a surname Schoen, and is of your locality.
 (英文待翻译)
+
+## (102.5)
 
 (102.5) Questioner What foods should the instrument eliminate from her diet in order to alleviate these painful attacks?
 (英文待翻译)
@@ -64,11 +76,15 @@ There is a complex addiction, due to long-standing eating habits, to your sugars
 It is further suggested that, since this instrument has been using sugars for carbohydrates, that a small amount of carbohydrate, low in sugar, be ingested approximately one to two of your hours before the sleeping period.
 (英文待翻译)
 
+## (102.6)
+
 (102.6) Questioner As I understand what you say, the instrument is to have no sugar until late in the afternoon. Is that correct?
 (英文待翻译)
 
 Ra I am Ra. No.
 (英文待翻译)
+
+## (102.7)
 
 (102.7) Questioner I didn’t fully understand what you meant about when she should have the sugar. Could you clear that up, please?
 (英文待翻译)
@@ -76,17 +92,23 @@ Ra I am Ra. No.
 Ra I am Ra. The concentrated sugar; that is, the dessert, the ice cream, the cookie, should be ingested at that time. Small amounts of the fructose, maple, or raw honey may be ingested periodically, for, as we have said, the chemistry of this yellow-ray body is such that the sugar is being used by blood enzymes as would carbohydrates in a less distorted yellow-ray, physical vehicle.
 (英文待翻译)
 
+## (102.8)
+
 (102.8) Questioner I’m sorry that I am so slow at picking up precisely what we’re getting at here, but I want to be sure we get this right, so I’ll probably ask a few more stupid questions. Was the spasm that caused the extreme pain a spasm of the ileum?
 (英文待翻译)
 
 Ra I am Ra. Partially. The transverse colon also spasmed, as did the ducts to the liver in its lower portion. There were also muscle spasms from the bronchial coverings down through the pelvis and from shoulder blades to hips. These sympathetic spasms are a symptom of the exhaustion of the entity’s physical vehicle.
 (英文待翻译)
 
+## (102.9)
+
 (102.9) Questioner Then these spasms, of course, were originally— The opening was made by yellow-ray blockage, but these spasms then are triggered, I am assuming, by the foodstuff which has to do with the ingestion of sugar, as I understand it. Am I correct?
 (英文待翻译)
 
 Ra I am Ra. You are partially correct.
 (英文待翻译)
+
+## (102.10)
 
 (102.10) Questioner Then what else causes the spasm?
 (英文待翻译)
@@ -100,11 +122,15 @@ The first or proximate cause was a meal with too much oil and too large a burden
 The second cause—and this shall be stated clearly—is the energizing of any pre-existing condition in order to keep this group from functioning by means of removing the instrument from the ranks of those able to work with those of Ra.
 (英文待翻译)
 
+## (102.11)
+
 (102.11) Questioner Now, is there— The two areas then that the instrument can look to for curing this problem . . . I understand that the yellow-ray blockage problem has completely repaired, shall I say. If this is not correct, could you make suggestions on that please?
 (英文待翻译)
 
 Ra I am Ra. Each entity must, in order to completely unblock yellow ray, love all which are in relationship to it, with hope only of the other-selves’ joy, peace, and comfort.
 (英文待翻译)
+
+## (102.12)
 
 (102.12) Questioner The second thing that the instrument must do to effect this cure is to be careful of diet which includes all that Ra has just stated and what Bob recommends from his readings.
 (英文待翻译)
@@ -115,11 +141,15 @@ There seem to be so many different things that could cause this spasm. I was jus
 Ra I am Ra. No.
 (英文待翻译)
 
+## (102.13)
+
 (102.13) Questioner Is this because of the First Distortion?
 (英文待翻译)
 
 Ra I am Ra. No.
 (英文待翻译)
+
+## (102.14)
 
 (102.14) Questioner Why cannot Ra do that?
 (英文待翻译)
@@ -127,17 +157,23 @@ Ra I am Ra. No.
 Ra I am Ra. There are no foods which this instrument can take with total confidence that no spasm shall occur. The spasming portions of the vehicle have become sensitized through great distortions towards that which you call pain.
 (英文待翻译)
 
+## (102.15)
+
 (102.15) Questioner Is there a group of foods which is most likely not to cause the spasming condition, or any foods that Ra could mention that are highly probable not to cause spasm?
 (英文待翻译)
 
 Ra I am Ra. Yes.
 (英文待翻译)
 
+## (102.16)
+
 (102.16) Questioner Would Ra please mention which foods are highly probable in not causing any spasming in the instrument’s digestive system?
 (英文待翻译)
 
 Ra I am Ra. The liquids not containing carbonation, the well-cooked vegetable which is most light and soft, the well-cooked grains, the non-fatted meat such as the fish. You may note that some recommended foodstuffs overlap allergies and sensitivities due to the juvenile-rheumatoid-arthritic distortions. Further, although sugar, such as is in your sweetened desserts, represents a potential, we may suggest that it be included at this period for aforementioned reasons.
 (英文待翻译)
+
+## (102.17)
 
 (102.17) Questioner Would Ra please estimate the length of time in our time periods for the probability of this problem, if we follow these curative measures, for the probability of this problem to continue in any extreme severity?
 (英文待翻译)
@@ -148,17 +184,23 @@ Ra I am Ra. One of your moon’s revolutions has a good possibility/probability 
 We may suggest, again, that the one known as Bob may be of aid. The one known as Stuart could, if it wished, discover the infection which is only marginally detectable, but may prefer not to do so. In this case it would be well to request physical aid from an allopathic specialist such as that which has been mentioned.
 (英文待翻译)
 
+## (102.18)
+
 (102.18) Questioner Do you mean by that Arthur Schoen?
 (英文待翻译)
 
 Ra I am Ra. That is correct.
 (英文待翻译)
 
+## (102.19)
+
 (102.19) Questioner You mentioned the possibility of surgery. What would be the surgery to be done, specifically?
 (英文待翻译)
 
 Ra I am Ra. The body cannot long bear the extreme acidity which is the environment of such spasms and will develop the holes or ulcerations which then do appear upon the allopathic testings and suggest to the chirurgeon that which is to be excised.
 (英文待翻译)
+
+## (102.20)
 
 (102.20) Questioner In other words, the removal of ulcers. Would this be a duodenic ulcer? Would this be the type of operation that you would perform for a duodenic ulcer?
 (英文待翻译)
@@ -168,6 +210,8 @@ Ra I am Ra. If the ulceration occurs, it shall be past the jejunum and most like
 
 May we ask for one more query of normal length as this entity, though filled with enough transferred energy, has the most fragile framework through which we may channel this and our energies.
 (英文待翻译)
+
+## (102.21)
 
 (102.21) Questioner Obviously we would very much like to not get to the point of surgery, and the only other alternative that comes to mind—other than the diet and the instrument’s personal mental work—is healing through a healer. And I would like Ra’s recommendation with respect to a non-allopathic type healer and any recommendations Ra could make for either Jim or myself to act in that capacity, or anyone else Ra could recommend so that we wouldn’t have to go through this surgical operation if it seems to become necessary. And if we could start working on one of these other approaches right away I think it might be highly recommended.
 (英文待翻译)
@@ -180,6 +224,8 @@ Ra I am Ra. We salute the opening of compassion circuitry in the questioner but 
 
 Therefore, look not to a healing but to the joy of companionship, for each is strong and has its feet set upon the way. The moon casts its shadows. What shall you see? Link hands and walk towards the sun. In this instance this is the greatest healing. For the physical vehicle we can suggest far less than you had hoped.
 (英文待翻译)
+
+## (102.22)
 
 (102.22) Questioner I’ll just ask then if there’s anything we can do to make the instrument more comfortable or improve the contact?
 (英文待翻译)

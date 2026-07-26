@@ -4,14 +4,20 @@
 May 29, 1982
 (英文待翻译)
 
+## (88.0)
+
 (88.0) Ra I am Ra. I greet you in the love and in the light of the One Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (88.1)
 
 (88.1) Questioner Could you first please give me the condition of the instrument?
 (英文待翻译)
 
 Ra I am Ra. The physical complex energy deficit is considerable at this space/time. There has been also a significant loss of the vital energies. However, these energies are still well within the distortion you may call strength.
 (英文待翻译)
+
+## (88.2)
 
 (88.2) Questioner Of all of the things that you have mentioned before for replenishing these energies, at this particular space/time which would be most appropriate for the replenishing of both of these energies?
 (英文待翻译)
@@ -25,17 +31,23 @@ We would single out one physical distortion for discussion. The fourth-density n
 As this instrument will not appreciate this suggestion we suggest the appropriate discussion.
 (英文待翻译)
 
+## (88.3)
+
 (88.3) Questioner I assume from this that our fifth-density negative companion is still on R and R. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. Your fifth-density companion is not accompanying you at this time. However, it is not resting.
 (英文待翻译)
 
+## (88.4)
+
 (88.4) Questioner Is the censer we have provided all right? They do go out prior to the end of the session. Would it be better if it did not go out prior to the end of the session?
 (英文待翻译)
 
 Ra I am Ra. The new configuration of the censer is quite helpful to the more subtle patterns of energy surrounding these workings. It would be helpful to have a continuously burning amount of cense. However, the difficulty is in providing this without overpowering this enclosure with the amount of effluvium and physical product of combustion. Having to choose betwixt allowing the censer to finish its burning and having an overabundance of the smoke, we would suggest the former as being more helpful.
 (英文待翻译)
+
+## (88.5)
 
 (88.5) Questioner The instrument has mentioned what she refers to as bleed-through or being aware, during these sessions sometimes, of the communication. Would you comment on this?
 (英文待翻译)
@@ -45,6 +57,8 @@ Ra I am Ra. We have the mind/body/spirit complex of the instrument with us. As t
 
 The experience should be expected to continue, and is an appropriate outgrowth of the nature of these workings and of the method by which this instrument has made itself available to our words.
 (英文待翻译)
+
+## (88.6)
 
 (88.6) Questioner The instrument mentioned a recurrence of the need for going to the bathroom prior to this session. Is this because of the low vital energy?
 (英文待翻译)
@@ -58,11 +72,15 @@ Due to concern for this entity such activities have been discouraged. This has f
 The will to be of service to the Creator through the means of offering itself as instrument in these workings, therefore, was given an opportunity for the testing of resolve. This entity used some vital energy to fuel and replenish the will. No physical energy has been used by the instrument, but the vital energies were tapped so that this entity might have the opportunity to once again consciously choose to serve the One Infinite Creator.
 (英文待翻译)
 
+## (88.7)
+
 (88.7) Questioner Is the small crystal that the instrument uses upon her during the session of any benefit or detriment?
 (英文待翻译)
 
 Ra I am Ra. This crystal is beneficial as long as he who has charged it is functioning in a positively oriented manner.
 (英文待翻译)
+
+## (88.8)
 
 (88.8) Questioner Who charged the crystal?
 (英文待翻译)
@@ -70,11 +88,15 @@ Ra I am Ra. This crystal is beneficial as long as he who has charged it is funct
 Ra I am Ra. This crystal was charged for use by this instrument by the one known as Neil.
 (英文待翻译)
 
+## (88.9)
+
 (88.9) Questioner It would be an abridgment of the First Distortion to tell us whether he is still functioning in a positive manner, would it not?
 (英文待翻译)
 
 Ra I am Ra. We perceive you have replied to your own query.
 (英文待翻译)
+
+## (88.10)
 
 (88.10) Questioner Our publisher requests pictures for the book, The Law of One, that is going to press at this time.[89] Would you comment on the advisability, benefit or detriment, magical or otherwise, of us using pictures of this particular setup, the instrument, and the appurtenances in the book?
 (英文待翻译)
@@ -88,11 +110,15 @@ Firstly, if pictures be taken of a working, the visual image must needs be that 
 Secondly, it is inadvisable to photograph the instrument or any portion of the working room while the instrument is in trance. This is a narrow-band contact, and we wish to keep electrical and electromagnetic energies constant when their presence is necessary, and not present at all otherwise.
 (英文待翻译)
 
+## (88.11)
+
 (88.11) Questioner From what you. . . I’m sorry. Go ahead. If you meant to continue, continue. If not, I’ll ask a question.
 (英文待翻译)
 
 Ra I am Ra. We wished to state, thirdly, that once the instrument is aware that the picture-taking will be performed, that during the entire picture-taking, whether before or after the working, the instrument be required to continuously respond to speech, thus assuring that no trance is imminent.
 (英文待翻译)
+
+## (88.12)
 
 (88.12) Questioner From what you have told me, then, I have planned the following: We will, after a session is complete and the instrument has been awakened, before moving the instrument, have the instrument continually talk to us while I take pictures of the configuration the instrument is in at this time. In addition to this, I will take some other pictures of the instrument in the other room, and probably ourselves, too, just for additional pictures of us as requested by the publisher. Is this the optimal or one of the optimal fillings of this requirement?
 (英文待翻译)
@@ -103,11 +129,15 @@ Ra I am Ra. Yes. We ask that any photographs tell the truth, that they be dated 
 We come as humble messengers of the Law of One, desiring to decrease distortions. We ask that you, who have been our friends, work with any considerations such as above discussed, not with the thought of quickly removing an unimportant detail, but, as in all ways, regard such as another opportunity to, as the adept must, be yourselves and offer that which is in and with you without pretense of any kind.
 (英文待翻译)
 
+## (88.13)
+
 (88.13) Questioner Thank you. I would like to ask you, as to the initial production of the tarot, where this concept was first formed, and where the tarot was first recorded, where did this . . . the very first concept?
 (英文待翻译)
 
 Ra I am Ra. The concept of the tarot originated within the planetary influence you call Venus.
 (英文待翻译)
+
+## (88.14)
 
 (88.14) Questioner Was the concept given to . . . let me ask . . . you say it originated there . . . was this concept devised for a training tool for those inhabiting Venus at that time, or was it devised by those of Venus as a training tool for those of Earth?
 (英文待翻译)
@@ -118,11 +148,15 @@ Ra I am Ra. The tarot was devised by the third-density population of Venus a gre
 As we have noted, the third-density experience of those of Venus dealt far more deeply and harmoniously with what you would call relationships with other-selves, sexual energy transfer work, and philosophical or metaphysical research. The product of many, many generations of work upon what we conceived to be the archetypical mind produced the tarot which was used by our peoples as a training aid in developing the magical personality.
 (英文待翻译)
 
+## (88.15)
+
 (88.15) Questioner I’ll make a guess that those of Venus third density who were the initial ones to partially penetrate the veil gleaned information as to the nature of the archetypical mind and the veiling process, and from this designed the tarot as a method of teaching others. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. It is so.
 (英文待翻译)
+
+## (88.16)
 
 (88.16) Questioner I will also assume, which may not be correct, that the present list that I have of the twenty-two names of the tarot cards are not in exact agreement with Ra’s original generation of the tarot. Could you describe the original tarot, first telling me if there were twenty-two archetypes? That must have been the same. And if they were the same as the list that I have read you in a previous session, or if there were differences?
 (英文待翻译)
@@ -132,6 +166,8 @@ Ra I am Ra. As we have stated previously,[90] each archetype is a concept comple
 
 The one great breakthrough which was made after our work in third density was done was the proper emphasis given to the Arcanum Number Twenty-Two which we have called The Choice. In our own experience we were aware that such an unifying archetype existed but did not give that archetype the proper complex of concepts in order to most efficaciously use that archetype in order to promote our evolution.
 (英文待翻译)
+
+## (88.17)
 
 (88.17) Questioner I will make this statement as to my understanding of some of the archetypes and let you correct this statement. It seems to me that the Significator of Mind, Body, and Spirit are acted upon in each of these by the Catalyst. This produces Experience which then leads to the Transformation and produces the Great Way. This is the same process for mind, the body, and spirit. The archetypes are just repeated but act in a different way as catalyst because of the differences of mind, body, and spirit.
 (英文待翻译)
@@ -157,11 +193,15 @@ We ask that you consider that the archetypical mind informs those thoughts which
 Rather than continue beyond the boundaries of your prior statement we would appreciate the opportunity for your re-questioning at this time so that we may answer you more precisely.
 (英文待翻译)
 
+## (88.18)
+
 (88.18) Questioner I will ask the following questions to clear up . . . possibly . . . only . . . the method of teaching these concepts which may give me important clues to understanding the concepts themselves. Did Ra use cards similar to the tarot cards for the training purpose in third density?
 (英文待翻译)
 
 Ra I am Ra. No.
 (英文待翻译)
+
+## (88.19)
 
 (88.19) Questioner What did Ra use in third density?
 (英文待翻译)
@@ -172,11 +212,15 @@ Ra I am Ra. You are aware in your attempts at magical visualization of the menta
 These concepts were occasionally drawn. However, the concept of one visualization per card was not thought of by us.
 (英文待翻译)
 
+## (88.20)
+
 (88.20) Questioner Well, how did the teacher relay information to the student with respect to visualization?
 (英文待翻译)
 
 Ra I am Ra. The process was cabalistic; that is, of the oral tradition of mouth to ear.
 (英文待翻译)
+
+## (88.21)
 
 (88.21) Questioner Then when Ra attempted to teach the Egyptians the concept of the tarot, was the same process used or a different one?
 (英文待翻译)
@@ -184,11 +228,15 @@ Ra I am Ra. The process was cabalistic; that is, of the oral tradition of mouth 
 Ra I am Ra. The same process was used. However, those which were teach/learners after us first drew these images to the best of their ability within the place of initiation and later began the use of what you call cards bearing these visualizations’ representations.
 (英文待翻译)
 
+## (88.22)
+
 (88.22) Questioner Were the Court Arcana and the Minor Arcana a portion of Ra’s teachings, or was this something that came along later?
 (英文待翻译)
 
 Ra I am Ra. Those cards of which you speak were the product of the influence of those of Chaldea and Sumer.
 (英文待翻译)
+
+## (88.23)
 
 (88.23) Questioner You mentioned earlier that the tarot was a method of divination. Would you explain that?
 (英文待翻译)
@@ -213,6 +261,8 @@ When the archetypes are shuffled into the mix of astrologically oriented cards w
 
 Oft times such archetypical representations will appear in such a manner as to have seemingly interesting results, meaningful in configuration to the questioner. In and of themselves the Major Arcana have no rightful place in divination, but rather are tools for the further knowledge of the self by the self for the purpose of entering a more profoundly, acutely realized present moment.
 (英文待翻译)
+
+## (88.24)
 
 (88.24) Questioner Ra must have had a, shall we say, lesson plan or course of training for the twenty-two archetypes to be given either to those of third density of Ra or, later on, to those in Egypt. Would you describe this scenario for the training course?
 (英文待翻译)
@@ -279,6 +329,8 @@ As you can see, much work was done creatively by each initiate. We have no dogma
 
 May we ask if there are any brief queries before we leave this working?
 (英文待翻译)
+
+## (88.25)
 
 (88.25) Questioner Is there anything that we can do to improve the contact or make the instrument more comfortable?
 (英文待翻译)

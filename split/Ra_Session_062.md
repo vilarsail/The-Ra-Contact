@@ -4,6 +4,8 @@
 July 13, 1981
 (英文待翻译)
 
+## (62.0)
+
 (62.0) Ra I am Ra. I greet you in the love and in the light of the One Infinite Creator.
 (英文待翻译)
 
@@ -22,6 +24,8 @@ I am Ra. We appreciate your kind cooperation. Please recheck the alignment of pe
 I am Ra. We communicate now.
 (英文待翻译)
 
+## (62.1)
+
 (62.1) Questioner Could you tell me what was wrong, or what caused the necessity for the re-walking of the circle and the purpose of the expelling of breath?
 (英文待翻译)
 
@@ -31,11 +35,15 @@ Ra I am Ra. This instrument was under specific psychic attack at the time of the
 Thus the circle was properly walked. The breath of righteousness expelled the thought-form, and the circle again walked.
 (英文待翻译)
 
+## (62.2)
+
 (62.2) Questioner What was the nature of the thought-form or its affiliation?
 (英文待翻译)
 
 Ra I am Ra. This thought-form was of Orion affiliation.
 (英文待翻译)
+
+## (62.3)
 
 (62.3) Questioner Was the attack successful in creating any further distortion of the instrument’s physical complex?
 (英文待翻译)
@@ -43,17 +51,23 @@ Ra I am Ra. This thought-form was of Orion affiliation.
 Ra I am Ra. This is correct.
 (英文待翻译)
 
+## (62.4)
+
 (62.4) Questioner What is the nature of this distortion?
 (英文待翻译)
 
 Ra This thought-form sought to put an end to this instrument’s incarnation by working with the renal distortions which—although corrected upon time/space—are vulnerable to one which knows the way to separate time/space molding and space/time distortions which are being unmolded, vulnerable as before the, shall we say, healing.
 (英文待翻译)
 
+## (62.5)
+
 (62.5) Questioner What detrimental effect has been done?
 (英文待翻译)
 
 Ra I am Ra. There will be some discomfort. However, we were fortunate in that this instrument was very open to us and well-tuned. Had we not been able to reach this instrument and instruct you, the instrument’s physical vehicle would soon be unviable.
 (英文待翻译)
+
+## (62.6)
 
 (62.6) Questioner Will there be any lasting effect from this attack as far as the instrument’s physical vehicle is concerned?
 (英文待翻译)
@@ -67,6 +81,8 @@ The healer was strong, and the bonds taking effect in the remolding of these ren
 It is at this point a question of two forms of the leavings of what you may call a spell or a magic working—the healer’s distortions versus the attempt at Orion distortions: the healer’s distortions full of love, the Orion distortions also pure in separation. It seems that all is well except for some possible discomfort which shall be attended if persistent.
 (英文待翻译)
 
+## (62.7)
+
 (62.7) Questioner Was the opening that was made in the protective circle planned to be made by the Orion entity? Was it a specific planned attempt to make an opening, or was this something that just happened by accident?
 (英文待翻译)
 
@@ -76,11 +92,15 @@ Ra I am Ra. This entity was, as your people put it, looking for a target of oppo
 We might suggest in the, shall we say, future, as you measure space/time, as you begin a working be aware that this instrument is likely being watched for any opportunity. Thus if the circle is walked with some imperfection it is well to immediately repeat. The expelling of breath is also appropriate, always to the left.
 (英文待翻译)
 
+## (62.8)
+
 (62.8) Questioner Would you expand on what you just said about the expelling of breath? I wasn’t quite sure what you meant.
 (英文待翻译)
 
 Ra I am Ra. The repetition of that performed well at this working is advisable if the circle is walked in less than the appropriate configuration.
 (英文待翻译)
+
+## (62.9)
 
 (62.9) Questioner But you mentioned the expelling of the breath to the left, I believe. Would you tell me what you meant by that?
 (英文待翻译)
@@ -88,11 +108,15 @@ Ra I am Ra. The repetition of that performed well at this working is advisable i
 Ra I am Ra. It is as you have just accomplished, the breath being sent above the instrument’s head from its right side to its left.
 (英文待翻译)
 
+## (62.10)
+
 (62.10) Questioner Is there anything we can do for the instrument after she comes out of trance to help her recover from this attack?
 (英文待翻译)
 
 Ra I am Ra. There is little to be done. You may watch to see if distortions persist and see that the appropriate healers are brought into contact with this mind/body/spirit complex in the event that difficulty persists. It may not. This battle is even now being accomplished. Each may counsel the instrument to continue its work as outlined previously.
 (英文待翻译)
+
+## (62.11)
 
 (62.11) Questioner Who would the appropriate healers be, and how would we bring them in contact with the instrument?
 (英文待翻译)
@@ -100,11 +124,15 @@ Ra I am Ra. There is little to be done. You may watch to see if distortions pers
 Ra I am Ra. There are four. The difficulty being at all noticed as bodily distortion, the one known as Don and the one known as Jim may work upon the instrument’s bodily complex by means of the practices which are developing in each entity. Given persistence of distortion, the one known as Stuart shall be seen. Given the continued difficulty past the point of one of your cycles called the fortnight, the one known as Douglas shall be seen.
 (英文待翻译)
 
+## (62.12)
+
 (62.12) Questioner Does the instrument know who these people are, Stuart and Douglas? I don’t know who they are.
 (英文待翻译)
 
 Ra I am Ra. This is correct.
 (英文待翻译)
+
+## (62.13)
 
 (62.13) Questioner Is that the sum total of what we can do to aid the instrument?
 (英文待翻译)
@@ -112,11 +140,15 @@ Ra I am Ra. This is correct.
 Ra I am Ra. This is correct. We may note that the harmonies and loving social intercourse which prevails habitually in this group create a favorable environment for each of you to do your work.
 (英文待翻译)
 
+## (62.14)
+
 (62.14) Questioner What priority, shall I say, does the Orion group place upon the reduction of effectiveness, or elimination of effectiveness, of this group with respect to activities on planet Earth at this time? Can you tell me that?
 (英文待翻译)
 
 Ra I am Ra. This group, as all positive channels and supporting groups, is a greatly high priority with the Orion group. This instrument’s bodily distortions are its most easily unbound, or unloosed, distortion dissolving the mind/body/spirit complex if the Orion group is successful—this particular group having learned to be without serious chinks, may we say, in mind and spirit complex vibratory patterns. In other channels other chinks may be more in evidence.
 (英文待翻译)
+
+## (62.15)
 
 (62.15) Questioner I’ll make this statement, and you correct me. The Orion group has as an objective the bringing of service-to-self polarized entities to harvest, as great a harvest as possible. This harvest will build their potential, or their ability to do work in consciousness, as given by the distortion of the Law of One called the Law of Squares or Doubling. Is this correct?
 (英文待翻译)
@@ -124,11 +156,15 @@ Ra I am Ra. This group, as all positive channels and supporting groups, is a gre
 Ra I am Ra. This is correct.
 (英文待翻译)
 
+## (62.16)
+
 (62.16) Questioner Are there other groups of those who are on the service-to-self path joined with those from the Orion constellation? For instance, those of Southern Cross, are they presently working for the same type of harvest with respect to Earth?
 (英文待翻译)
 
 Ra I am Ra. These you mention of Southern Cross are members of the Orion group. It is not, shall we say, according to understood wording that a group from various galaxies should be named by one. However, those planetary social memory complexes of the so-called Orion constellation have the upper hand and thus rule the other members. You must recall that in negative thinking there is always the pecking order, shall we say, and the power against power in separation.
 (英文待翻译)
+
+## (62.17)
 
 (62.17) Questioner By creating as large a harvest as possible of negatively oriented entities from Earth, then, the social memory complex of the Orion group gains in strength. Am I correct in assuming this strength then is in the total strength of the complex, the pecking order remaining approximately the same, and those at the top gaining in strength with respect to the total strength of the social memory complex? Is this correct?
 (英文待翻译)
@@ -136,17 +172,23 @@ Ra I am Ra. These you mention of Southern Cross are members of the Orion group. 
 Ra I am Ra. This is correct. To the stronger go the greater shares of polarity.
 (英文待翻译)
 
+## (62.18)
+
 (62.18) Questioner Then what do the ones at the top of the pecking order of the Orion group— Well, let me first ask this: Are we talking about the fourth-density group now?
 (英文待翻译)
 
 Ra I am Ra. There are fourth and a few fifth-density members of the Orion group.
 (英文待翻译)
 
+## (62.19)
+
 (62.19) Questioner Then is the top of the pecking order fifth-density?
 (英文待翻译)
 
 Ra I am Ra. This is correct.
 (英文待翻译)
+
+## (62.20)
 
 (62.20) Questioner What is the objective—what does the, shall we say, the leader, the one at the very top of the pecking order in fifth-density Orion, have as an objective? I would like to understand his philosophy with respect to his objectives and plans for what we might call the future or his future?
 (英文待翻译)
@@ -163,6 +205,8 @@ Dealing with a plane such as this third density at this harvesting it will see t
 The fifth density sees the difficulties posed by the light and in this way directs entities of this vibration to the seeking of targets of opportunity such as this one. If fourth-density temptations, shall we say, towards distortion of ego, etc., are not successful, the fifth-density entity then thinks in terms of the removal of light.
 (英文待翻译)
 
+## (62.21)
+
 (62.21) Questioner When the Orion entity who waits us, seeking the opportunity to attack, is with us here, can you describe his method of coming here, what he looks like, and how he waits? I know that this isn’t too important, but it might give me a little insight into what we are talking about.
 (英文待翻译)
 
@@ -178,11 +222,15 @@ This instrument was aware of extreme coldness in the past diurnal cycle and spen
 This instrument did mention a feeling of discomfort but was nourished by this group and was able to dismiss it. Had it not been for a random mishap, all would have been well, for you have learned to live in love and light and do not neglect to remember the One Infinite Creator.
 (英文待翻译)
 
+## (62.22)
+
 (62.22) Questioner Then it was a fifth-density entity that made this particular attack on the instrument today?
 (英文待翻译)
 
 Ra I am Ra. This is correct.
 (英文待翻译)
+
+## (62.23)
 
 (62.23) Questioner Isn’t this unusual that a fifth-density then would bother to do this rather than sending a fourth-density servant, shall I say?
 (英文待翻译)
@@ -193,17 +241,23 @@ Ra I am Ra. This is correct. Nearly all positive channels and groups may be less
 These distortions remove the focus from the One Infinite Source of love and light, of which we are all messengers, humble and knowing that we, of ourselves, are but the tiniest portion of the Creator, a small part of a magnificent entirety of infinite intelligence.
 (英文待翻译)
 
+## (62.24)
+
 (62.24) Questioner Is there something that the instrument could do or we could do for the instrument to eliminate the problem she has as she continually experiences the cold feeling of these attacks?
 (英文待翻译)
 
 Ra I am Ra. Yes.
 (英文待翻译)
 
+## (62.25)
+
 (62.25) Questioner Would you tell me what we could do?
 (英文待翻译)
 
 Ra I am Ra. You could cease in your attempts to be channels for the love and the light of the One Infinite Creator.
 (英文待翻译)
+
+## (62.26)
 
 (62.26) Questioner Have I missed anything now that we can do at all to aid the instrument during, before, or after a session, or at any time?
 (英文待翻译)
@@ -214,17 +268,23 @@ Ra I am Ra. The love and devotion of this group misses nothing. Be at peace. The
 Rest, then, in that peace and love, and do as you will, as you wish, as you feel. Let there be an end to worry when this is accomplished. The great healer of distortions is love.
 (英文待翻译)
 
+## (62.27)
+
 (62.27) Questioner I have a question that I couldn’t properly answer last night. It was asked by Morris. It has to do with the vibrations of the densities. I understand that first density is composed of core atomic vibrations that are in the red spectrum, second in the orange, etc. Am I to understand that the core vibrations of our planet are still in the red and that second-density beings are still in the orange at this time/space, or space/time, right now? And that each density as it exists on our planet at this time has a different core vibration, or is this incorrect?
 (英文待翻译)
 
 Ra I am Ra. This is precisely correct.
 (英文待翻译)
 
+## (62.28)
+
 (62.28) Questioner Then as the fourth-density vibrations come in, this means that the planet can support entities of fourth-density core vibration. Will the planet then still be first-density core vibration, and will there be second-density entities on it with second-density vibrations, and will there be third-density entities with third-density vibrations?
 (英文待翻译)
 
 Ra I am Ra. This will be the last full query of this working. There is energy, but the distortions of the instrument suggest to us it would be well to shorten this working, with your permission.
 (英文待翻译)
+
+## (62.29)
 
 (62.29) Questioner Yes.
 (英文待翻译)
@@ -237,6 +297,8 @@ Thus in fourth density the red, orange, and green energy nexi of your planet wil
 
 May we ask at this time if there be any brief queries?
 (英文待翻译)
+
+## (62.30)
 
 (62.30) Questioner Is there anything that we can do to make the instrument more comfortable or improve the contact?
 (英文待翻译)

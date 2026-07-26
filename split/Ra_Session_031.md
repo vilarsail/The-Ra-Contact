@@ -4,14 +4,20 @@
 February 25, 1981
 (英文待翻译)
 
+## (31.0)
+
 (31.0) Ra I am Ra. I greet you in the love and in the light of the One Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (31.1)
 
 (31.1) Questioner I would like to ask a question first for the instrument herself. She requests to know if it would be advisable for her to walk alone now that she feels better.[50]
 (英文待翻译)
 
 Ra I am Ra. This is acceptable.
 (英文待翻译)
+
+## (31.2)
 
 (31.2) Questioner OK. What I’m going to do is use the information that we did at the end of the previous book that you suggested would be more appropriate for more advanced material. We will put it in the book at this point, as we are talking about bisexual reproduction, and I would like to expand on this material a little bit to get some definitions and better understandings.
 (英文待翻译)
@@ -61,6 +67,8 @@ The other potential advantage of bisexual reproductive acts is the possibility o
 These are two advantages of this particular method of the Creator experiencing Itself. As we have said before, the corollary of the strength of this particular energy transfer is that it opens the door, shall we say, to the individual mind/body/spirit complex’s desire to serve in an infinite number of ways an other-self, thus polarizing towards positive.
 (英文待翻译)
 
+## (31.4)
+
 (31.4) Questioner Can you expand somewhat on the concept that this action not only allows the Creator to know Itself better but also creates, in our density, an offspring or makes available the pathway for another entity to enter the density?
 (英文待翻译)
 
@@ -73,6 +81,8 @@ This gives the two who were engaged in this bisexual reproductive energy transfe
 It shall be of interest at this point to note that there is always the possibility of using these opportunities to polarize towards the negative, and this has been aided by the gradual building up, over many thousands of your years, of social-complex distortions which create a tendency towards confusion, shall we say, or baffling of the service-to-others aspect of this energy transfer and subsequent opportunities for service to other-selves.
 (英文待翻译)
 
+## (31.5)
+
 (31.5) Questioner If a sexual energy transfer occurs in green ray—and I am assuming in this case that there is no red-ray energy transfer—does this mean it is impossible then for this particular transfer to include fertilization and the birthing of an entity?
 (英文待翻译)
 
@@ -82,11 +92,15 @@ Ra I am Ra. This is incorrect. There is always the red-ray energy transfer due t
 The green-ray energy transfer occurs due to the vibratory rate of each entity being undistorted in any vital sense by the yellow- or orange-ray energies; thus the gift, shall we say, being given freely, no payment being requested either of the body, of the mind, or of the spirit. The green ray is one of complete universality of love. This is a giving without expectation of return.
 (英文待翻译)
 
+## (31.6)
+
 (31.6) Questioner I was wondering if there was some principle behind the fact that a sexual union does not necessarily lead to fertilization. I’m not interested in the chemical, or physical, principles of it. I’m interested in whether or not there is some metaphysical principle that leads to the couple having a child or not, or is it purely random?
 (英文待翻译)
 
 Ra I am Ra. This is random within certain limits. If an entity has reached the seniority whereby it chooses the basic structure of the life experience, this entity may then choose to incarnate in a physical complex which is not capable of reproduction. Thus we find some entities which have chosen to be unfertile. Other entities, through free will, make use of various devices to insure nonfertility. Except for these conditions, the condition is random.
 (英文待翻译)
+
+## (31.7)
 
 (31.7) Questioner Thank you. In the material earlier you mentioned “magnetic attraction.” Could you define and expand upon that term?
 (英文待翻译)
@@ -97,11 +111,15 @@ Ra I am Ra. We used the term to indicate that in your bisexual natures there is 
 This is the strength of the bisexual mechanism. It does not take an act of will to decide to feel attraction for one who is oppositely polarized sexually. It will occur in an inevitable sense, giving the free flow of energy a proper, shall we say, avenue. This avenue may be blocked by some distortion towards a belief/condition which states to the entity that this attraction is not desired. However, the basic mechanism functions as simply as would, shall we say, the magnet and the iron.
 (英文待翻译)
 
+## (31.8)
+
 (31.8) Questioner We have what seems to be an increasing number of entities incarnate here now who have what is called a homosexual orientation in this respect. Could you explain and expand upon that concept?
 (英文待翻译)
 
 Ra I am Ra. Entities of this condition experience a great deal of distortion due to the fact that they have experienced many incarnations as biological male and as biological female. This would not suggest what you call homosexuality in an active phase were it not for the difficult vibratory condition of your planetary sphere. There is what you may call great aura infringement among your crowded urban areas in your more populous countries, as you call portions of your planetary surface. Under these conditions the confusions will occur.
 (英文待翻译)
+
+## (31.9)
 
 (31.9) Questioner Why does density of population create these confusions?
 (英文待翻译)
@@ -115,6 +133,8 @@ In an over-crowded situation where each mind/body/spirit complex is under a cons
 In an uncrowded atmosphere this same entity would, through the stimulus of feeling the solitude about it, then have much more desire to seek out someone to whom it may be of service thus regularizing the sexual reproductive function.
 (英文待翻译)
 
+## (31.10)
+
 (31.10) Questioner Roughly how many previous incarnations, shall we say, would a male entity in this incarnation have had to have had in the past as a female to have a highly homosexual orientation in this incarnation? Just roughly.
 (英文待翻译)
 
@@ -123,6 +143,8 @@ Ra I am Ra. If an entity has had roughly 65% of its incarnations in the sexual/b
 
 It is to be noted at this juncture that although it is much more difficult, it is possible in this type of association for an entity to be of great service to another in fidelity and sincere green-ray love of a nonsexual nature, thus adjusting or lessening the distortions of its sexual impairment.[51]
 (英文待翻译)
+
+## (31.11)
 
 (31.11) Questioner Timothy Leary, doing research, wrote that at the time of puberty, and up through that time, there is an imprint occurring on the DNA coding of an entity and that, for instance, sexual biases are imprinted due to early sexual experiences or some of the first sexual experiences of the entity. Does anything like this actually happen?
 (英文待翻译)
@@ -136,17 +158,23 @@ This is similarly true with some of the encounters which might be seen as homose
 However, it is quite accurate that the first experience in which the mind/body/spirit complex is intensely involved will indeed imprint upon the entity, for that life experience, a set of preferences.
 (英文待翻译)
 
+## (31.12)
+
 (31.12) Questioner Does the Orion group use this, shall we say, as a gateway to impressing upon entities, shall we say, preferences which could create negative polarization?
 (英文待翻译)
 
 Ra I am Ra. Just as we of the Confederation attempt to beam our love and light whenever given the opportunity, including sexual opportunities, so the Orion group will use an opportunity, if it is negatively oriented, or if the individual is negatively oriented.
 (英文待翻译)
 
+## (31.13)
+
 (31.13) Questioner Is there any emotional bias that has nothing to do with male/female sexual polarity that can create sexual energy buildup in an entity?
 (英文待翻译)
 
 Ra I am Ra. The sexual energy buildup is extremely unlikely to occur without sexual bias upon the part of the entity. Perhaps we did not understand your question, but it seems obvious that it would take an entity with the potential for sexual activity to experience a sexual energy buildup.
 (英文待翻译)
+
+## (31.14)
 
 (31.14) Questioner I was thinking more of the possibility of the Orion group having influenced, say, certain members of the Third Reich who I have read reports of having sexual gratification from the observation of the, in some cases, the gassing and killing of entities in the gas chambers.
 (英文待翻译)
@@ -160,6 +188,8 @@ In this case the desire would continue unabated and be virtually unquenchable.
 You will find, if you observe the entire spectrum of sexual practices among your peoples, that there are those who experience such gratification from domination over others either from rape or from other means of domination. In each case this is an example of energy blockage which is sexual in its nature.
 (英文待翻译)
 
+## (31.15)
+
 (31.15) Questioner Would the Orion group then be able, shall we say, to impress on entities this orange-ray effect? Or did they— Is this the way that this came about, is what I’m trying to get at. Is this the way these concepts came about on this planet? Because if we go back to the beginning of third density, there must be a primal cause of this.
 (英文待翻译)
 
@@ -172,11 +202,15 @@ The sexual energy transfers and blockages are more a manifestation, or example, 
 This will be the final question unless we may speak further upon this question to clarify, or answer any short queries before we close.
 (英文待翻译)
 
+## (31.16)
+
 (31.16) Questioner I just need to know if this then works through the racial memory to infect the entire population in some way. Does that sort of thing happen?
 (英文待翻译)
 
 Ra I am Ra. The racial memory contains all that has been experienced. Thus there is some, shall we say, contamination even of the sexual, this showing mostly in your own culture as the various predispositions to adversary relationships—or, as you call them, marriages—rather than the free giving one to another in the love and the light of the Infinite Creator.
 (英文待翻译)
+
+## (31.17)
 
 (31.17) Questioner That was precisely the point which I was trying to make. Thank you very much. Not to tire the instrument, I will just ask, then, if there is anything we can do to make the instrument more comfortable or to improve the contact?
 (英文待翻译)

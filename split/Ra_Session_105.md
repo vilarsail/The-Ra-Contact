@@ -4,14 +4,20 @@
 October 19, 1983
 (英文待翻译)
 
+## (105.0)
+
 (105.0) Ra I am Ra. I greet you, my friends, in the love and in the light of the One Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (105.1)
 
 (105.1) Questioner Could you first please give me the condition of the instrument?
 (英文待翻译)
 
 Ra I am Ra. The vital energies of this instrument are in a much more biased state than the previous asking, with the faculties of will and faith having regained their prominent place in this entity’s existence and balance. The physical deficit continues.
 (英文待翻译)
+
+## (105.2)
 
 (105.2) Questioner Sorry that we have to ask so many maintenance questions. We seem to be in a confused condition now with respect to our abilities to continue in the direction we wish to with questioning on the archetypical mind.
 (英文待翻译)
@@ -40,11 +46,15 @@ Thusly, this instrument has had its immunal defenses breached and its lymphatic 
 We speak not of diet, not because it might not aid, but because this entity ingests small quantities of any substance and is already avoiding certain substances, notably fresh milk and oil.
 (英文待翻译)
 
+## (105.3)
+
 (105.3) Questioner Is there any particular place the integument should be vigorously rubbed?
 (英文待翻译)
 
 Ra I am Ra. No.
 (英文待翻译)
+
+## (105.4)
 
 (105.4) Questioner Could you please tell me what caused Jim’s kidney problem to return, and what could be done to heal it?
 (英文待翻译)
@@ -61,11 +71,15 @@ The body complex, which was not yet fully recovered from the nephrotic syndrome,
 The healing is taking place in manifestation of an affirmation of body complex health which, barring untoward circumstance, shall be completely efficacious.
 (英文待翻译)
 
+## (105.5)
+
 (105.5) Questioner Is there any consideration of the appropriateness of the house at Lake Lanier, which we intend to move to, or special preparation other than that planned advisable?
 (英文待翻译)
 
 Ra I am Ra. We believe you have queried obliquely. Please re-query.
 (英文待翻译)
+
+## (105.6)
 
 (105.6) Questioner We planned to cleanse the property at the Lake Lanier location using the techniques prescribed by Ra in earlier sessions having to do with salt for 36 hours, etc. I would like to know if this is sufficient, or if there is any salient problem with respect to moving to that house that Ra could advise upon at this time, please.
 (英文待翻译)
@@ -85,11 +99,15 @@ Secondly, the exterior of the dwelling facing the road, and centering about the 
 Thirdly, there is the matter of the boathouse. We suggest weekly cleansings of that area with garlic, the cut onion, and the walking of a light-filled perimeter. The garlic and onion, renewed weekly, should remain permanently hung, suspended from string or wire between workings.
 (英文待翻译)
 
+## (105.7)
+
 (105.7) Questioner Just so I don’t make a mistake in interpreting your directions with respect to the second area outside the house, could you give me a distance and magnetic compass heading from, say, the exact center of the dwelling to that position?
 (英文待翻译)
 
 Ra I am Ra. We may only be approximate but would suggest a distance of 37 feet, a magnetic heading of 84 to 92 degrees.
 (英文待翻译)
+
+## (105.8)
 
 (105.8) Questioner I know it’s unimportant for our purposes, but from a philosophical point of view I don’t want to do anything to upset the Law of Confusion, so don’t feel that it is necessary to answer this, but I was wondering what the condition was that created the necessity for such continual cleansing of the boathouse?
 (英文待翻译)
@@ -97,17 +115,23 @@ Ra I am Ra. We may only be approximate but would suggest a distance of 37 feet, 
 Ra I am Ra. The intent is to create a perimeter within which the apiary denizens will not find it necessary to sting and, indeed, will not find it promising to inhabit.
 (英文待翻译)
 
+## (105.9)
+
 (105.9) Questioner Are you speaking of bees or wasps or creatures of that type?
 (英文待翻译)
 
 Ra I am Ra. That is so.
 (英文待翻译)
 
+## (105.10)
+
 (105.10) Questioner Are Jim’s plans and ritual for deconsecrating this dwelling sufficient, or should something be added or changed?
 (英文待翻译)
 
 Ra I am Ra. No change is necessary. The points necessary to be included in consecration or deconsecration of a place are covered. We may suggest that each second-density, woody plant which you have invested during your tenancy within this dwelling be thanked and blessed.
 (英文待翻译)
+
+## (105.11)
 
 (105.11) Questioner Is there any other suggestion that Ra could make with respect to any part of this move that is planned? And will we have any problems at all in contacting Ra in the new dwelling, and if so, would Ra tell us about those, and what we could do to alleviate any problems in contacting Ra in the new [location]?
 (英文待翻译)
@@ -121,11 +145,15 @@ Any physical aid upon the part of the instrument in the packing and unpacking wi
 There is no difficulty in resuming contact through this tuned instrument with the social memory complex, Ra, in the chosen dwelling, or, indeed, in any place whatsoever once physical and metaphysical cleansing has been accomplished.
 (英文待翻译)
 
+## (105.12)
+
 (105.12) Questioner I have come to the conclusion that the meaning of the hawk that we had about a year ago when we started to move the first time had to do with the non-benign nature, in the metaphysical sense, of the house which I had picked for the move. If it isn’t a problem with the Law of Confusion I think that it’d be philosophically interesting to know if I am correct with respect to that.
 (英文待翻译)
 
 Ra I am Ra. What bird comes to affirm for Ra? What bird would be chosen to warn? We ask the questioner to ponder these queries.
 (英文待翻译)
+
+## (105.13)
 
 (105.13) Questioner We have been, you might say, experimentally determining a lot of things about the body—the next portion of the tarot—and have been experiencing some of the feedback effects, I might say, between the mind and the body. I sense, from everything that we have done so far with respect to these effects, that the great value of the third-density, yellow-ray body at this time is as a device that feeds back catalyst to a mind to create the polarization.
 (英文待翻译)
@@ -136,11 +164,15 @@ I would say that this is the major value of the third-density body here, and wou
 Ra I am Ra. The description which began your query is suitable for the function of the mind/body/spirit or the mind/body/spirit complex. The position in creation of physical manifestation changed not one whit when the veil of forgetting was dropped.
 (英文待翻译)
 
+## (105.14)
+
 (105.14) Questioner Then the yellow-ray body, from the very beginning, was designed as what Ra has called an athanor for the mind: a device, you might say, to accelerate the evolution of the mind. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. It is perhaps more accurate to note that the yellow-ray, physical vehicle is a necessity without which the mind/body/spirit complex cannot pursue evolution at any pace.
 (英文待翻译)
+
+## (105.15)
 
 (105.15) Questioner Then you are saying that the evolution of that portion of the individual that is not yellow-ray is not possible without the clothing, at intervals, in the yellow-ray body. Is this correct?
 (英文待翻译)
@@ -148,17 +180,23 @@ Ra I am Ra. It is perhaps more accurate to note that the yellow-ray, physical ve
 Ra I am Ra. No.
 (英文待翻译)
 
+## (105.16)
+
 (105.16) Questioner Would you clear up my thinking on that? I didn’t quite understand your statement.
 (英文待翻译)
 
 Ra I am Ra. Each mind/body/spirit, or mind/body/spirit complex, has an existence simultaneous with that of creation. It is not dependent upon any physical vehicle. However, in order to evolve, change, learn, and manifest the Creator, the physical vehicles appropriate to each density are necessary. Your query implied that physical vehicles accelerated growth. The more accurate description is that they permit growth.
 (英文待翻译)
 
+## (105.17)
+
 (105.17) Questioner Now, as an example I would like to take the distortion of a disease or bodily malfunction prior to the veil and compare it to that after the veil. Let us assume that the conditions that Jim, for instance, experienced with respect to his kidney malfunction had been an experience that occurred prior to the veil. Would this experience have occurred prior to the veil? Would it have been different? And if so, how?
 (英文待翻译)
 
 Ra I am Ra. The anger of separation is impossible without the veil. The lack of awareness of the body’s need for liquid is unlikely without the veil. The decision to contemplate perfection in discipline is quite improbable without the veil.
 (英文待翻译)
+
+## (105.18)
 
 (105.18) Questioner Now, I would like to, then, examine a sample, shall we say, bodily distortion prior to the veil and how it would affect the mind. Could Ra give an example of that, please?
 (英文待翻译)
@@ -169,11 +207,15 @@ Ra I am Ra. This general area has been covered.[142] We shall recapitulate here.
 The patterns of illness, disease, and death are a benignant demesne within the plan of incarnational experience.[143] As such, some healing would occur by decision of mind/body/spirits, and incarnations were experienced with the normal ending of illness to death, accepted as such since, without the veil, it is clear that the mind/body/spirit continues. Thusly, the experiences, both good and bad, or joyful and sad, of the mind/body/spirit before veiling would be pale, without vibrancy or the keen edge of interest that such brings in the post-veiling mind/body/spirit complex.
 (英文待翻译)
 
+## (105.19)
+
 (105.19) Questioner At the end of an incarnation, before veiling, did the entity appear physically to have aged, say like entities at the normal end of incarnation in our present illusion— Did they . . . were they wrinkled and old, did they . . . did the Significator look like that?
 (英文待翻译)
 
 Ra I am Ra. The Significator of Mind, Body, or Spirit is a portion of the archetypical mind and looks as each envisions such to appear. The body of a mind/body/spirit before veiling showed all the signs of aging which acquaint you now with the process leading to the removal from third-density incarnation of the mind/body/spirit complex. It is well to recall that the difference betwixt mind/body/spirits and mind/body/spirit complexes is a forgetting within the deeper mind. Physical appearances and surface and instinctual activities are much the same.
 (英文待翻译)
+
+## (105.20)
 
 (105.20) Questioner Then I was wondering the root reason for the change in appearance that we see as the aging process? I am trying to uncover a basic philosophical premise here that I may be shooting in the dark at and not questioning on correctly, but I am trying to get at the reason behind the design of this change in appearance when it seems to me that it was just as possible for the mind/body/spirit, or mind/body/spirit complex, just to simply look the same throughout an incarnation. Could Ra explain the reason for this change?
 (英文待翻译)
@@ -183,6 +225,8 @@ Ra I am Ra. When the discipline of the personality has led the mind/body/spirit 
 
 Within third density, not to build into the physical vehicle its ending would be counterproductive to the mind/body/spirit complexes therein residing; for within the illusion it seems more lovely to be within the illusion than to drop the garment which has carried the mind/body/spirit complex and move on.
 (英文待翻译)
+
+## (105.21)
 
 (105.21) Questioner I see, then, that it is, shall we say, when an individual reaches a very old age, then it becomes apparent to him in third density that he’s worn out. Therefore, he’s not attached to this vehicle as firmly, with a desire to stay in it, as he would be with a good-looking, well-functioning one.
 (英文待翻译)
@@ -195,6 +239,8 @@ Ra I am Ra. Yes.
 
 You may ask one more full query.
 (英文待翻译)
+
+## (105.22)
 
 (105.22) Questioner I believe that I should ask at this time . . . is there anything that we can do to make the instrument more comfortable or improve the contact? (Since last session I wasn’t able to get that in, and I think it’s important.)
 (英文待翻译)

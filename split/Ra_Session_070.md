@@ -4,8 +4,12 @@
 September 9, 1981
 (英文待翻译)
 
+## (70.0)
+
 (70.0) Ra I am Ra. I greet you in the love and in the light of the One Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (70.1)
 
 (70.1) Questioner Could you please give me an indication of the condition of the instrument?
 (英文待翻译)
@@ -13,17 +17,23 @@ September 9, 1981
 Ra I am Ra. We are gratified to say that it is as previously stated.
 (英文待翻译)
 
+## (70.2)
+
 (70.2) Questioner Why do you say you are gratified to say that?
 (英文待翻译)
 
 Ra I am Ra. We say this due to a sense of gratitude at the elements which have enabled this instrument to maintain, against great odds, its vital energy at normal vibratory strength. As long as this complex of energies is satisfactory we may use this instrument without depletion regardless of the distortions previously mentioned.
 (英文待翻译)
 
+## (70.3)
+
 (70.3) Questioner The instrument has complained of intensive psychic attack for the past diurnal period, approximately. Is there a reason for the intensification of this at this time?
 (英文待翻译)
 
 Ra I am Ra. Yes.
 (英文待翻译)
+
+## (70.4)
 
 (70.4) Questioner Can you tell me what this reason is, please?
 (英文待翻译)
@@ -37,6 +47,8 @@ In the general case, pain—as you call this distortion, and the various exagger
 This instrument guards its vital energy due to previous errors upon its part. Its subconscious will, which is preternaturally strong for this density, has put a ward upon this energy complex. Thus the Orion visitor strives with more and more intensity to disturb this vital energy as this group intensifies its dedication to service through enlightenment.
 (英文待翻译)
 
+## (70.5)
+
 (70.5) Questioner I have an extra little question that I want to throw in at this time. Is regressive hypnosis of an individual to reveal to them memories of previous incarnations a service or a disservice to them?
 (英文待翻译)
 
@@ -46,11 +58,15 @@ Ra I am Ra. We scan your query and find you shall apply the answer to your futur
 There is an infinite range of possibility of service/disservice in the situation of time-regression hypnosis, as you term this means of aiding memory. It has nothing to do with the hypnotist. It has only to do with the use which the entity so hypnotized makes of the information so gleaned. If the hypnotist desires to serve, and if such a service is performed only upon sincere request, the hypnotist is attempting to be of service.
 (英文待翻译)
 
+## (70.6)
+
 (70.6) Questioner In the last session Ra stated that “the path back from sixth-density negative time/space revolves, firstly, about the higher self’s reluctance to enter negative time/space.”[28] Could you explain the higher self’s position with respect to positive and negative time/space, and why it is so reluctant to enter negative time/space that it is necessary for the mind/body/spirit complex to incarnate in negative space/time to find its path back?
 (英文待翻译)
 
 Ra I am Ra. In brief, you have answered your own query. Please question further for more precise information.
 (英文待翻译)
+
+## (70.7)
 
 (70.7) Questioner Why is the higher self reluctant to enter negative time/space?
 (英文待翻译)
@@ -58,11 +74,15 @@ Ra I am Ra. In brief, you have answered your own query. Please question further 
 Ra I am Ra. The higher self is reluctant to allow its mind/body/spirit complex to enter negative time/space for the same basic reason an entity of your societal complex would be reluctant to enter a prison.
 (英文待翻译)
 
+## (70.8)
+
 (70.8) Questioner What I am trying to understand here is more about the higher self and its relationship with the mind/body/spirit complex. Does the higher self have a sixth-density mind/body/spirit complex that is a separate unit from the mind/body/spirit complex that is, in this case, displaced to negative time/space?
 (英文待翻译)
 
 Ra I am Ra. This is correct. The higher self is the entity of mid-sixth density which, turning back, offers this service to its self.
 (英文待翻译)
+
+## (70.9)
 
 (70.9) Questioner I think I have an erroneous concept of the mind/body/spirit complex (for instance, that I represent here in this density) and my higher self. The concept probably comes from my concept of space and time. I am going to try to unscramble it.
 (英文待翻译)
@@ -73,11 +93,15 @@ The way I see it right now is that I am existing in two different locations, her
 Ra I am Ra. You are existing at all levels simultaneously. It is specifically correct that your higher self is you in mid-sixth density and, in your way of measuring what you know of as time, your higher self is your self in your future.
 (英文待翻译)
 
+## (70.10)
+
 (70.10) Questioner Am I correct in assuming that all of the mind/body/spirit complexes that exist in the levels below mid-sixth density have a higher self in mid-sixth density? Is this correct?
 (英文待翻译)
 
 Ra I am Ra. This is correct.
 (英文待翻译)
+
+## (70.11)
 
 (70.11) Questioner Would an analogy for this situation be that the individual’s higher self is manipulating to some extent, shall I say, the mind/body/spirit complex that is its analog, you might say, to move it through the lower densities for purposes of gaining experience, and then finally transferring that experience or amalgamating it, you might say, in mid-sixth density with the higher self?
 (英文待翻译)
@@ -85,17 +109,23 @@ Ra I am Ra. This is correct.
 Ra I am Ra. This is incorrect. The higher self does not manipulate its past selves. It protects when possible and guides when asked, but the force of free will is paramount. The seeming contradictions of determinism and free will melt when it is accepted that there is such a thing as true simultaneity. The higher self is the end result of all the development experienced by the mind/body/spirit complex to that point.
 (英文待翻译)
 
+## (70.12)
+
 (70.12) Questioner Then what we are looking at is a long path of experience through the densities up to mid-sixth density which is a function totally of free will and results in the awareness of the higher self in mid-sixth density. But since time is illusory and there is a, shall I say, unification of time and space, or an eradication of what we think of as time, then all of this experience that results in the higher self—the cause of evolvement through the densities—is existing while the evolvement takes place, since it’s all simultaneous. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. We refrain from speaking of correctness due to our understanding of the immense difficulty of absorbing the concepts of metaphysical existence. In time/space, which is precisely as much of your self as is space/time, all times are simultaneous just as in your geography your cities and villages are all functioning, bustling, and alive with entities going about their business at once. So it is in time/space with the self.
 (英文待翻译)
 
+## (70.13)
+
 (70.13) Questioner The higher self existing in mid-sixth density seems to be at the point where the negative and positive paths of experience merge into one. Is there a reason for this?
 (英文待翻译)
 
 Ra I am Ra. We have covered this material previously.[29]
 (英文待翻译)
+
+## (70.14)
 
 (70.14) Questioner Oh yes. Sorry about that. It slipped my mind. Now, if a positive entity is displaced to negative time/space, I understand that the higher self is reluctant to enter the negative time/space. And for some reason this makes it necessary for the mind/body/spirit complex to incarnate in negative space/time. Why is it necessary for this incarnation in negative space/time?
 (英文待翻译)
@@ -106,17 +136,23 @@ Ra I am Ra. Firstly, let us remove the concept of reluctance from the equation a
 Each time/space is an analog of a particular sort, or vibration, of space/time. When a negative time/space is entered by an entity, the next experience will be that of the appropriate space/time. This is normally done by the form-making body of a mind/body/spirit complex which places the entity in the proper time/space for incarnation.
 (英文待翻译)
 
+## (70.15)
+
 (70.15) Questioner I think to try and clear up this point I’m going to ask a few questions that are related that will possibly enable me to understand this better, because I am really confused about this, and I think it is a very important point in understanding the creation and the Creator in general, you might say. If a wanderer of fourth, fifth, or sixth density dies from this third-density state in which we presently find ourselves, does he then find himself in third-density time/space after death?
 (英文待翻译)
 
 Ra I am Ra. This will depend upon the plan which has been approved by the Council of Nine. Some wanderers offer themselves for but one incarnation, while others offer themselves for varying lengths of your time up to and including the last two cycles of 25,000 years. If the agreed-upon mission is complete the wanderer’s mind/body/spirit complex will go to the home vibration.
 (英文待翻译)
 
+## (70.16)
+
 (70.16) Questioner Have there been any wanderers on this planet for the past 50,000 years now?
 (英文待翻译)
 
 Ra I am Ra. There have been a few. There have been many more which chose to join this last cycle of 25,000 years and many, many more which have come for harvest.
 (英文待翻译)
+
+## (70.17)
 
 (70.17) Questioner Now here is the point of my confusion. If, after physical death, a wanderer would return to his home planet, shall I say, why cannot the same entity be extracted from negative time/space to the home planet rather than incarnating in negative space/time?
 (英文待翻译)
@@ -127,11 +163,15 @@ Ra I am Ra. As we stated, the position in negative time/space, of which we previ
 I perceive a basic miscalculation upon your part in that time/space is no more homogenous than space/time. It is as complex and complete a system of illusions, dances, and pattern as is space/time, and has as structured a system of what you may call natural laws.
 (英文待翻译)
 
+## (70.18)
+
 (70.18) Questioner I’ll ask this question to inform me a little bit about what you just stated. When you came to this planet in craft 18,000 and 11,000 years ago, these craft have been called, I believe, bell craft, and were photographed by George Adamski. If I am correct these craft looked somewhat like a bell; they had portholes around the upper portions; and they had three hemispheres at 120° apart underneath. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. This is correct.
 (英文待翻译)
+
+## (70.19)
 
 (70.19) Questioner Were these constructed in time/space or space/time?
 (英文待翻译)
@@ -145,11 +185,15 @@ A construct of thought was formed in time/space. This portion of time/space is t
 When we were where we wished to be, we then clothed the construct of light with that which would appear as the crystal bell. This was formed through the boundary into space/time. Thus there were two constructs: the time/space (or immaterial) construct, and the space/time (or materialized) construct.
 (英文待翻译)
 
+## (70.20)
+
 (70.20) Questioner Now was there a reason for the particular shape you chose, in particular a reason for the three hemispheres on the bottom?
 (英文待翻译)
 
 Ra I am Ra. It seemed an aesthetically pleasing form and one well suited to those limited uses which we must needs make of your space/time motivating requirements.
 (英文待翻译)
+
+## (70.21)
 
 (70.21) Questioner Was there a principle of motivation contained within the three hemispheres on the bottom, or were they just aesthetic, or were they landing gear?
 (英文待翻译)
@@ -157,11 +201,15 @@ Ra I am Ra. It seemed an aesthetically pleasing form and one well suited to thos
 Ra I am Ra. These were aesthetic and part of a system of propulsion. These hemispheres were not landing gear.
 (英文待翻译)
 
+## (70.22)
+
 (70.22) Questioner I am sorry to ask such stupid questions, but I am trying to determine something about space/time, time/space, and, you might say, this very difficult area of the mechanism of evolution. I think it is central to the understanding of our evolution. However, I am not sure of this, and I may be wasting my time. Could Ra comment on whether I am wasting my time in this particular [chuckles] investigation or whether it would be fruitful?
 (英文待翻译)
 
 Ra I am Ra. Since the concepts of space/time, or physics, and time/space, or metaphysics, are mechanical, they are not central to the spiritual evolution of the mind/body/spirit complex. The study of love and light is far more productive in its motion towards unity in those entities pondering such concepts. However, this material is, shall we say, of some small interest and is harmless.
 (英文待翻译)
+
+## (70.23)
 
 (70.23) Questioner I was asking these questions primarily to understand or to build a base for an attempt to get a little bit of enlightenment on the way that time/space and space/time are related to the evolution of the mind/body/spirit complex so that I could better understand the techniques, you might say, of that evolution.
 (英文待翻译)
@@ -180,6 +228,8 @@ The entity which incarnates into negative space/time will not find it possible t
 
 There is much in this line of questioning which is somewhat muddled. May we, at this point, allow the questioner to rephrase the question or to turn the direction of query more towards that which is the heart of its concern.
 (英文待翻译)
+
+## (70.24)
 
 (70.24) Questioner I will, at the next session, then attempt to turn more toward the heart. I was attempting in this session to get at a point that I thought was central to the evolution of spirit, but I seem to have gone awry. I’m sorry for that. It is sometimes very, very difficult for me to question wisely in these areas.
 (英文待翻译)

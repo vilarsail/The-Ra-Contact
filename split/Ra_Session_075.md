@@ -4,14 +4,20 @@
 October 31, 1981
 (英文待翻译)
 
+## (75.0)
+
 (75.0) Ra I am Ra. I greet you in the love and in the light of the One Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (75.1)
 
 (75.1) Questioner Could you first please give me the condition of the instrument?
 (英文待翻译)
 
 Ra I am Ra. It is as previously stated with some slight lessening of the reserve of vital energy due to mental/emotional distortions regarding what you call the future.
 (英文待翻译)
+
+## (75.2)
 
 (75.2) Questioner I felt that this session was advisable before the instrument has her hospital experience. She wished to ask a few questions, if possible, about those.
 (英文待翻译)
@@ -28,11 +34,15 @@ The first aiding has to do with the vibration of the ritual with which this enti
 The general improvement of the place of the performance of the ritual of the purification of the place is known. We may note that the distortion towards love, as you call this spiritual/emotional complex which is felt by each for this entity, will be of aid whether this is expressed or unmanifest, as there is no protection greater than love.
 (英文待翻译)
 
+## (75.3)
+
 (75.3) Questioner Do you mean that it would be valuable to perform the Banishing Ritual of the Lesser Pentagram in the room that she will be occupying in the hospital?
 (英文待翻译)
 
 Ra I am Ra. This is correct.
 (英文待翻译)
+
+## (75.4)
 
 (75.4) Questioner I was wondering about the operating room. That might be very difficult. Would it be helpful there?
 (英文待翻译)
@@ -40,11 +50,15 @@ Ra I am Ra. This is correct.
 Ra I am Ra. This is correct. We may note that it is always helpful. Therefore, it is not easy to posit a query to which you would not receive the answer which we offer. This does not indicate that it is essential to purify a place. The power of visualization may aid in your support where you cannot intrude in your physical form.
 (英文待翻译)
 
+## (75.5)
+
 (75.5) Questioner I see the way to do this as a visualization of the operating room and a visualization of the three of us performing the banishing ritual in the room as we perform it in another location. Is this the correct procedure?
 (英文待翻译)
 
 Ra I am Ra. This is one correct method of achieving your desired configuration.
 (英文待翻译)
+
+## (75.6)
 
 (75.6) Questioner Is there a better method than that?
 (英文待翻译)
@@ -52,17 +66,23 @@ Ra I am Ra. This is one correct method of achieving your desired configuration.
 Ra I am Ra. There are better methods for those more practiced. For this group, this method is well.
 (英文待翻译)
 
+## (75.7)
+
 (75.7) Questioner I would assume those more practiced would leave their physical bodies and, in the other body, enter the room and practice the banishing ritual. Is this what you mean?
 (英文待翻译)
 
 Ra I am Ra. This is correct.
 (英文待翻译)
 
+## (75.8)
+
 (75.8) Questioner The instrument would like to know if she can meditate in the hospital without someone holding her hand, and would this be a safe practice?
 (英文待翻译)
 
 Ra I am Ra. We might suggest that the instrument may pray with safety but only meditate with another entity’s tactile protection.
 (英文待翻译)
+
+## (75.9)
 
 (75.9) Questioner The instrument would like to know what she can do to improve the condition of her back, as she says it could be a problem for the operation.
 (英文待翻译)
@@ -73,11 +93,15 @@ Ra I am Ra. As we scan the physical complex we find several factors contributing
 In general we may say that the sole modality addressing itself specifically to all three contributing distortions, which is not now being used, is that of the warmed water which is moved with gentle force repeatedly against the entire physical complex while the physical vehicle is seated. This would be of some aid, if practiced daily, after the exercise period.
 (英文待翻译)
 
+## (75.10)
+
 (75.10) Questioner Did the exercise of the fire that was just performed before the session help the instrument?
 (英文待翻译)
 
 Ra I am Ra. There was some slight physical aid to the instrument. This will enlarge itself as the practitioner learns/teaches its healing art. Further, there is distortion in the mental/emotional complex which feeds the vital energy towards comfort due to support which tends to build up the level of vital energy as this entity is a sensitive instrument.
 (英文待翻译)
+
+## (75.11)
 
 (75.11) Questioner Was the exercise of fire properly done?
 (英文待翻译)
@@ -85,17 +109,23 @@ Ra I am Ra. There was some slight physical aid to the instrument. This will enla
 Ra I am Ra. The baton is well visualized. The conductor will learn to hear the entire score of the great music of its art.
 (英文待翻译)
 
+## (75.12)
+
 (75.12) Questioner I assume that if this can be fully accomplished today that exercise would result in total healing of the distortions of the instrument to such an extent that operations would be unnecessary. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. No.
 (英文待翻译)
 
+## (75.13)
+
 (75.13) Questioner What else is necessary, the instrument’s acceptance?
 (英文待翻译)
 
 Ra I am Ra. This is correct, the case with this instrument being delicate, since it must totally accept much which the limitations it now experiences cause to occur involuntarily. This is a pre-incarnative choice.
 (英文待翻译)
+
+## (75.14)
 
 (75.14) Questioner The instrument would like to know why twice at the “Benedictus” portion of the music that she practices did she experience what she believes to be a psychic attack?[39]
 (英文待翻译)
@@ -121,6 +151,8 @@ The chink, for this instrument, is this subtle situation which echoes down throu
 We may speak only generally here. The instrument did not experience the full force of the greeting which it correctly identified during the “Hosanna” due to the intense concentration necessary to vibrate its portion of that composition. However, the “Benedictus” in this particular rendition of these words is vibrated by one entity. Thus, the instrument relaxed its concentration and was immediately open to the fuller greeting.
 (英文待翻译)
 
+## (75.15)
+
 (75.15) Questioner The chink then, as I understand it, was originally created by the decision of Jesus to take the path of martyrdom? Is this correct?
 (英文待翻译)
 
@@ -130,11 +162,15 @@ Ra I am Ra. This is, in relation to this instrument, quite correct. It is aware 
 For those who seek further, the consequences of martyrdom must be considered, for in martyrdom lies the end of the opportunity, in the density of the martyr, to offer love and light. Each entity must seek its deepest path.
 (英文待翻译)
 
+## (75.16)
+
 (75.16) Questioner Let me see if I understand, then, how the Orion group finds a chink in this distortion. The entity identifying, or having a distortion of any amount toward martyrdom is then open by its free will to the aid of the Orion group to make it a martyr. Am I correct?
 (英文待翻译)
 
 Ra I am Ra. You are correct only in the quite specialized position in which the instrument finds itself; that is, of being involved in and dedicated to work which is magical, or extremely polarized, in nature. This group entered this work with polarity but virtual innocence as to the magical nature of this polarity it is beginning to discover.
 (英文待翻译)
+
+## (75.17)
 
 (75.17) Questioner How was the Orion entity able to act through this linkage of the “Hosanna?” Was this simply because of the mental distortion of the instrument at this period of time, because of that suggested by the music? Or was it a more physical, or more metaphysical link from the time of Christ?
 (英文待翻译)
@@ -148,11 +184,15 @@ This entity has an intense devotion to the teachings and example of the one it c
 As you can see, it is not an ordinary occurrence and would not have happened had any ingredient been left out: exhaustion, bias in belief complexes, attention from an Orion entity, and the metaphysical nature of that particular set of words.
 (英文待翻译)
 
+## (75.18)
+
 (75.18) Questioner What was the Orion entity’s objective with respect to the entity you spoke of who, in a demanding manner, sings the Mass?
 (英文待翻译)
 
 Ra I am Ra. The Orion entity wishes to remove the instrument.
 (英文待翻译)
+
+## (75.19)
 
 (75.19) Questioner Is this a fourth- or a fifth-density entity?
 (英文待翻译)
@@ -160,11 +200,15 @@ Ra I am Ra. The Orion entity wishes to remove the instrument.
 Ra I am Ra. This instrument is being greeted by a fifth-density entity which has lost some polarity due to its lack of dictatorship over the disposition of the instrument’s mind/body/spirit or its yellow-ray activated physical complex.
 (英文待翻译)
 
+## (75.20)
+
 (75.20) Questioner You are speaking of this other person now that is singing the Mass? This is correct?
 (英文待翻译)
 
 Ra I am Ra. No.
 (英文待翻译)
+
+## (75.21)
 
 (75.21) Questioner I think there was a little miscommunication here. The other person who sings the Mass who helped in creating this chink you said was also greeted by an Orion entity, and my question was what density was that entity that greets the person who sings the Mass?
 (英文待翻译)
@@ -172,11 +216,15 @@ Ra I am Ra. No.
 Ra I am Ra. We did not speak of any entity but the instrument.
 (英文待翻译)
 
+## (75.22)
+
 (75.22) Questioner OK. I misunderstood. I thought you were speaking of someone else in the singing group who had been the one you were speaking of [regarding] the identification with the singing. The entire time we were speaking, then, we were speaking only of the instrument, Carla? Is this correct?
 (英文待翻译)
 
 Ra I am Ra. This is correct.
 (英文待翻译)
+
+## (75.23)
 
 (75.23) Questioner I am sorry for the confusion. Sometimes, as you say, sound vibration complexes are not very adequate, and I’m sorry.
 (英文待翻译)
@@ -190,6 +238,8 @@ Ra I am Ra. Each entity is the Creator. The entity, as it becomes more and more 
 The adept then begins to do less of the preliminary, or outer, work having to do with function, and begins to effect the inner work which has to do with being. As the adept becomes a more and more consciously crystallized entity it gradually manifests more and more of that which it always has been since before time: that is, the One Infinite Creator.
 (英文待翻译)
 
+## (75.24)
+
 (75.24) Questioner The answer to this question probably has to do with our distorted view of time, but I see wanderers in this density who have come from fifth or sixth density— It seems to me that they should already be of a relatively high degree of adeptness and must follow a slightly or somewhat different path back to the adeptness that they previously had in a higher density and get as close to it as they can in third density. Is this correct?
 (英文待翻译)
 
@@ -202,11 +252,15 @@ There are many wanderers whom you may call adepts who do no conscious work in th
 In the case of wanderers which seek to recapitulate the degree of adeptness which each had acquired previous to this life experience, we may note that, even after the forgetting process has been penetrated, there is still the yellow-ray activated body which does not respond as does the adept which is of a green- or blue-ray activated body. Thusly, you may see the inevitability of frustrations and confusion due to the inherent difficulties of manipulating the finer forces of consciousness through the chemical apparatus of the yellow-ray activated body.
 (英文待翻译)
 
+## (75.25)
+
 (75.25) Questioner You probably can’t answer this, but are there any suggestions you could give with respect to the instrument’s coming hospital experience that could be of benefit for her?
 (英文待翻译)
 
 Ra I am Ra. We may make one suggestion and leave the remainder with the Creator. It is well for each to realize its self as the Creator. Thusly each may support each including the support of self by humble love of self as Creator.
 (英文待翻译)
+
+## (75.26)
 
 (75.26) Questioner You spoke in a previous session about certain Hebrew and Sanskrit sound vibratory complexes being powerful because they were mathematically related to that which was the creation. Could you expand on this understanding, please, as to how these are linked?
 (英文待翻译)
@@ -214,11 +268,15 @@ Ra I am Ra. We may make one suggestion and leave the remainder with the Creator.
 Ra I am Ra. As we previously stated[41] the linkage is mathematical or that of the ratio. You may consider it musical. There are those whose mind complex activities would attempt to resolve this mathematical ratio, but at present the coloration of the intoned vowel is part of the vibration which cannot be accurately measured. However, it is equivalent to types of rotation of your primary material particles.
 (英文待翻译)
 
+## (75.27)
+
 (75.27) Questioner If these sounds are precisely vibrated then what effect or use would they have with respect to the purposes of the adept?
 (英文待翻译)
 
 Ra I am Ra. You may consider the concept of sympathetic resonance. When certain sounds are correctly vibrated, the creation sings.
 (英文待翻译)
+
+## (75.28)
 
 (75.28) Questioner Would these sounds, then, be of a musical nature in that there would be a musical arrangement of many different sound vibrations, or would this apply to just one single note? Or which would it apply more to?
 (英文待翻译)
@@ -226,17 +284,23 @@ Ra I am Ra. You may consider the concept of sympathetic resonance. When certain 
 Ra I am Ra. This query is not easily answered. In some cases only the intoned vowel has effect. In other cases, most notably Sanskrit combinations, the selection of harmonic intervals is also of resonant nature.
 (英文待翻译)
 
+## (75.29)
+
 (75.29) Questioner Then would the adept use this resonant quality to become more one with the creation and, therefore, attain his objective in that way?
 (英文待翻译)
 
 Ra I am Ra. It would, perhaps, be more accurate to state that in this circumstance the creation becomes more and more contained within the practitioner. The balance of your query is correct.
 (英文待翻译)
 
+## (75.30)
+
 (75.30) Questioner Could you tell me the musical name of the notes to be intoned that are of this quality?
 (英文待翻译)
 
 Ra I am Ra. We may not.
 (英文待翻译)
+
+## (75.31)
 
 (75.31) Questioner I didn’t think that you could, but I thought it wouldn’t hurt to ask.
 (英文待翻译)
@@ -246,6 +310,8 @@ Then I assume that these must be sought out and determined by empirical observat
 
 Ra I am Ra. This is partially correct. As your seeking continues, there will be added to empirical data that acuity of sensibility which continued working in the ways of the adept offers.
 (英文待翻译)
+
+## (75.32)
 
 (75.32) Questioner The three aspects of the magical personality are stated to be power, love, and wisdom. Is this correct, and are these the only primary aspects of the magical personality?
 (英文待翻译)
@@ -259,11 +325,15 @@ It is by no means a personality of three aspects. It is a being of unity, being 
 The three aspects are given that the neophyte not abuse the tools of its trade but, rather, approach those tools balanced in the center of love and wisdom and thus seeking power in order to serve.
 (英文待翻译)
 
+## (75.33)
+
 (75.33) Questioner You mentioned in an earlier session that the hair was an antenna. Could you expand on that statement as to how that works?
 (英文待翻译)
 
 Ra I am Ra. It is difficult to so do due to the metaphysical nature of this antenna-effect. Your physics are concerned with measurements in your physical complex of experience. The metaphysical nature of the contact of those in time/space is such that the hair, as it has significant length, becomes as a type of electrical battery which stays charged and tuned and is then able to aid contact, even when there are small anomalies in the contact.
 (英文待翻译)
+
+## (75.34)
 
 (75.34) Questioner Well, is there an optimum length of hair for this aid?
 (英文待翻译)
@@ -271,11 +341,15 @@ Ra I am Ra. It is difficult to so do due to the metaphysical nature of this ante
 Ra I am Ra. There is no outer limit on length but the, shall we say, inner limit is approximately four to four-and-one-half inches depending upon the strength of the contact and the nature of the instrument.
 (英文待翻译)
 
+## (75.35)
+
 (75.35) Questioner May anyone in third density accomplish some degree of healing if they have the proper will, desire, and polarity, or is there a minimal balance of the energy centers of the healer that is also necessary?
 (英文待翻译)
 
 Ra I am Ra. Any entity may, at any time, instantaneously clear and balance its energy centers. Thus in many cases those normally quite blocked, weakened, and distorted may, through love and strength of will, become healers momentarily. To be a healer by nature one must indeed train its self in the disciplines of the personality.
 (英文待翻译)
+
+## (75.36)
 
 (75.36) Questioner How does the use of the magical ritual of invoking the magical personality aid the mind/body/spirit complex totality? Could you expand on the answer you gave in the last session with respect to that?
 (英文待翻译)
@@ -286,17 +360,23 @@ Ra I am Ra. When the magical personality is properly and efficaciously invoked, 
 It is most central to deliberately take off the magical personality after the working in order that the higher self resume its appropriate configuration as analog to the space/time mind/body/spirit.
 (英文待翻译)
 
+## (75.37)
+
 (75.37) Questioner Then you are saying that the act, the signal, or the key for the invoking of the magical personality—which is the putting something on, or a gesture—should be as carefully . . . you should as carefully take that something off or reverse the gesture, perhaps at the end of the invocation. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. This is correct. It should be fastidiously accomplished either in mind or by gesture as well, if this is of significant aid.
 (英文待翻译)
 
+## (75.38)
+
 (75.38) Questioner Now the invocation of the magical personality is not necessarily effective for the neophyte. Is there a point at which there is a definite quantum change, and that magical personality does then reside? Or can it be done in small degrees, or percentages, of magical personality as the neophyte becomes more adept?
 (英文待翻译)
 
 Ra I am Ra. The latter is correct.
 (英文待翻译)
+
+## (75.39)
 
 (75.39) Questioner Then is it correct that a good sequence for developing the invocation of the magical personality are alternate meditations, first on power, then a meditation on love, and then a meditation on wisdom, and to continue cycling that way? Is that an appropriate technique?
 (英文待翻译)
@@ -307,6 +387,8 @@ Ra I am Ra. This is indeed an appropriate technique. In this particular group th
 [There is a 48-second pause between the end of this answer and the beginning of the next question.]
 (英文待翻译)
 
+## (75.40)
+
 (75.40) Questioner Is the exercise of fire the best for the instrument, or is there anything better that we could do other than, of course, the things that you have already suggested to aid the instrument?
 (英文待翻译)
 
@@ -315,6 +397,8 @@ Ra I am Ra. Continue as you are at present. We cannot speak of the future as we 
 
 This instrument begins to show rapid distortion towards increase of pain. We, therefore, would offer time for any brief queries before we leave this working.
 (英文待翻译)
+
+## (75.41)
 
 (75.41) Questioner Is there anything that we can do to make the instrument more comfortable or improve the contact?
 (英文待翻译)

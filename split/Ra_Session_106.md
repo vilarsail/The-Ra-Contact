@@ -4,8 +4,12 @@
 March 15, 1984
 (英文待翻译)
 
+## (106.0)
+
 (106.0) Ra I am Ra. I greet you in the love and in the light of the One Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (106.1)
 
 (106.1) Questioner Could you first please give me the condition of the instrument?
 (英文待翻译)
@@ -13,11 +17,15 @@ March 15, 1984
 Ra I am Ra. The parameters of this instrument are marginal, both physically and mental/emotionally. The vital energy of this entity is biased towards strength/weakness.
 (英文待翻译)
 
+## (106.2)
+
 (106.2) Questioner By “marginal,” do you mean that— Well, let me put it this way. What would the instrument do to make the marginal condition much better?
 (英文待翻译)
 
 Ra I am Ra. The instrument is proceeding through a portion of the incarnational experience during which the potential for mortal distortion of the left renal system is great. Less important, but adding to the marginality of distortion towards viability, are severe allergic reactions and the energizing of this and other distortions towards weakness/strength. The mental/emotional complex is engaged in what may best be termed inappropriate compassion.
 (英文待翻译)
+
+## (106.3)
 
 (106.3) Questioner Would Ra please recommend the steps we should take to alleviate or reverse the conditions of which you just spoke?
 (英文待翻译)
@@ -27,6 +35,8 @@ Ra I am Ra. We can do this. The renal distortions are subject to affirmations. T
 
 The mental/emotional distortions are somewhat less easily lessened. However, the questioner and instrument together shall find it possible to do such a working.
 (英文待翻译)
+
+## (106.4)
 
 (106.4) Questioner How serious and critical is this renal problem? Is drinking liquids (I assume water is the best) the only thing we can do for that, or is there something else?
 (英文待翻译)
@@ -46,11 +56,15 @@ This entity chose to enter a worshipful situation with a martyr’s role when fi
 The instrument is in a state of relative hunger for those spiritual homes which it gave up when it felt a call to martyrdom and turned from the planned worship at the location you call the Cathedral of St. Philip. This, too, shall be healed gradually due to the proposed alteration in location of this group.
 (英文待翻译)
 
+## (106.5)
+
 (106.5) Questioner Then, as I understand it, the best thing for us to do is advise the instrument to drink much more liquid. And I would imagine the spring water would be best. And we will, of course, move. We could move her out of here immediately, tomorrow, say, if necessary. Would this be considerably better than waiting two to three weeks for the allergies and everything else?
 (英文待翻译)
 
 Ra I am Ra. Such decisions are a matter for free-will choice. Be aware of the strength of the group harmony.
 (英文待翻译)
+
+## (106.6)
 
 (106.6) Questioner Is there anything with respect to the present spiritual, or metaphysical condition, or physical condition of this [house address] that we’re contemplating that Ra could tell us about that would be deleterious to the instrument’s health?
 (英文待翻译)
@@ -58,11 +72,15 @@ Ra I am Ra. Such decisions are a matter for free-will choice. Be aware of the st
 Ra I am Ra. We may speak to this subject only to note that there are mechanical electrical devices which control humidity. The basement level is one location, the nature of which is much like that which you have experienced at the basement level of your previous domicile. Less humid conditions would remove the opportunity for the growth of those spores to which the instrument has sensitivity. The upper portions of the domicile are, almost in every case, at acceptable levels of humidity.
 (英文待翻译)
 
+## (106.7)
+
 (106.7) Questioner How about the metaphysical quality of the house? Could Ra appraise that please?
 (英文待翻译)
 
 Ra I am Ra. This location is greatly distorted. We find an acceptable description of this location’s quality to elude us without recourse to hackneyed words. Forgive our limitations of expression. The domicile and its rear aspect, especially, is blessèd, and angelic presences have been invoked for some of your time past.
 (英文待翻译)
+
+## (106.8)
 
 (106.8) Questioner I’m not sure that I understand what Ra means by that. I’m not sure that I understand whether the place is metaphysically extremely good or extremely negative. Could Ra clear that up please?
 (英文待翻译)
@@ -70,11 +88,15 @@ Ra I am Ra. This location is greatly distorted. We find an acceptable descriptio
 Ra I am Ra. We intended to stress the metaphysical excellence of the proposed location. The emblements of such preparation may well be appreciated by this group.
 (英文待翻译)
 
+## (106.9)
+
 (106.9) Questioner Would the cleansing by salt and water, then, be necessary for this property? Or would it be recommended, shall I say?
 (英文待翻译)
 
 Ra I am Ra. There is the recommended metaphysical cleansing as in any relocation. No matter how fine the instrument, the tuning still is recommended between each concert or working.
 (英文待翻译)
+
+## (106.10)
 
 (106.10) Questioner OK. And if the instrument stays out of the basement, do you think the humidity and physical conditions would be good for the instrument then? Is that correct?
 (英文待翻译)
@@ -82,11 +104,15 @@ Ra I am Ra. There is the recommended metaphysical cleansing as in any relocation
 Ra I am Ra. No.
 (英文待翻译)
 
+## (106.11)
+
 (106.11) Questioner The humidity . . . we must do something about the humidity in the whole house then to make it good for the instrument. Is that correct?
 (英文待翻译)
 
 Ra I am Ra. Yes.
 (英文待翻译)
+
+## (106.12)
 
 (106.12) Questioner I’m going to come back to a couple of points here, but I have to get in a question here about myself. It’d seem to be critical at this point. Can Ra tell me what is physically wrong with me, and what’s causing it, and what I could do to alleviate it?
 (英文待翻译)
@@ -99,6 +125,8 @@ Further, the yellow-ray, chemical vehicle of the questioner is aging and has mor
 
 At the same time the body of yellow ray begins to have more difficulty eliminating trace elements such as aluminum. The energizing effect has occurred in the colon of the questioner, and the distortions in that area are increasingly substantial. Lastly, there is a small area of infection in the mouth of the questioner which needs attention.
 (英文待翻译)
+
+## (106.13)
 
 (106.13) Questioner Could Ra recommend what I should do to improve my state of health?
 (英文待翻译)
@@ -127,17 +155,23 @@ We may affirm the previous recommendation, in general, of the skills and the pur
 Lastly, we may note that, to the one known as Peter, several aspects of the distortions experienced by the questioner, the instrument, and the scribe may be quite apparent and rather simply traduced to lesser distortions.
 (英文待翻译)
 
+## (106.14)
+
 (106.14) Questioner What is Peter’s last name? I am not familiar with who he is.
 (英文待翻译)
 
 Ra I am Ra. The name by which this entity chooses to be known is Inman.
 (英文待翻译)
 
+## (106.15)
+
 (106.15) Questioner Would Ra recommend— Let me put it this way: Would Ra think that surgery in my case would be of any help?
 (英文待翻译)
 
 Ra I am Ra. We assume you speak of the colonic indisposition and its potential aid by your chirurgeons. Is this correct?
 (英文待翻译)
+
+## (106.16)
 
 (106.16) Questioner Yes.
 (英文待翻译)
@@ -154,11 +188,15 @@ I am Ra. We shall continue. The atmosphere has been meticulously prepared. Howev
 Such an operation would be of aid in the event that the entity chose this physical cleansing as an event which collaborated with changes in the mental, mental/emotional, and physical orientations of the entity. Without the latter choice, the distortion would recur.
 (英文待翻译)
 
+## (106.17)
+
 (106.17) Questioner Now, summarizing what we can do for the instrument: through praise and thanksgiving and harmony we can . . . Is that all that we can do, other than advising her to drink a considerable amount of liquid, and moving her into a better atmosphere? Am I correct on that?
 (英文待翻译)
 
 Ra I am Ra. We examine the statement and find two items missing, one important relative to the other. The chief addition is the grasping of the entity’s nature. The less important is, for little it may seem to be, perhaps helpful; that is, the entity absorbs much medication and finds it useful to feed itself when these substances are ingested. The substitution of substances such as fruit juice for the cookie is recommended, and, further, the ingestion of substances containing sucrose which are not liquid is not recommended within four of your hours before the sleeping period.
 (英文待翻译)
+
+## (106.18)
 
 (106.18) Questioner My experience with dehumidifiers indicates to me that it will probably be impossible to lower the humidity in that house much with a dehumidifier, although we can try that. And probably if we do move in there, we’ll have to move out very shortly.
 (英文待翻译)
@@ -172,11 +210,15 @@ Ra I am Ra. If it be realized that the condition shall linger in potential for s
 We may note that, for the purposes you intend, the location, [address], whether humid or arid, is uncharacteristically well-suited. The aggravated present distortions of the instrument having abated due to lack of acute catalyst, the condition of the location about which the assumption was made is extremely beneficial.
 (英文待翻译)
 
+## (106.19)
+
 (106.19) Questioner Then the effect of the . . . you were saying the effect of the humidity . . . we will try to get it as low as possible, but you are saying the effect of the humidity is a relatively minor consideration when all the other beneficial factors are taken in with respect to the Louisville address? Is this correct?
 (英文待翻译)
 
 Ra I am Ra. Yes.
 (英文待翻译)
+
+## (106.20)
 
 (106.20) Questioner I am quite concerned about the instrument’s health at this point and must ask if there is anything I failed to consider with respect to the health of the instrument? Anything at all that we could do for her to improve her condition other than that which has already been recommended?
 (英文待翻译)
@@ -184,11 +226,15 @@ Ra I am Ra. Yes.
 Ra I am Ra. All is most whole-heartedly oriented for support here. Perceive the group as here: a location in time/space. Within this true home, keep the light touch. Laugh together, and find joy in and with each other. All else is most fully accomplished or planned for accomplishment.
 (英文待翻译)
 
+## (106.21)
+
 (106.21) Questioner Is it as efficacious to cleanse the house with salt and water after we move in as it is to do it prior to . . . we move in?
 (英文待翻译)
 
 Ra I am Ra. In this case it is not an urgent metaphysical concern as timing would be in a less benign and happy atmosphere. One notes the relative simplicity of accomplishing such prior to occupancy. This is unimportant except as regards the catalyst with which you wish to deal.
 (英文待翻译)
+
+## (106.22)
 
 (106.22) Questioner Can you tell me what the instrument’s difficulty was with her last whirlpool?
 (英文待翻译)
@@ -201,6 +247,8 @@ In this state the instrument, having the questioner’s distortion without the q
 
 May we ask for one more full query at this working, and remind the instrument that it is appropriate to reserve some small portion of energy before a working.
 (英文待翻译)
+
+## (106.23)
 
 (106.23) Questioner I would just ask if there’s anything we can do to help the instrument and make her more comfortable or improve the contact? And what would be the soonest Ra would recommend the next contact? And we would certainly—I would certainly appreciate the return of the golden hawk. It gave me great comfort.
 (英文待翻译)

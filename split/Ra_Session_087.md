@@ -4,8 +4,12 @@
 May 12, 1982
 (英文待翻译)
 
+## (87.0)
+
 (87.0) Ra I am Ra. I greet you in the love and in the light of the One Infinite Creator. I communicate now.
 (英文待翻译)
+
+## (87.1)
 
 (87.1) Questioner First, please give me the condition of the instrument.
 (英文待翻译)
@@ -13,11 +17,15 @@ May 12, 1982
 Ra I am Ra. The distortions of the physical complex are unchanged. The vital energy levels are greatly enhanced.
 (英文待翻译)
 
+## (87.2)
+
 (87.2) Questioner Thank you. In considering what was mentioned in the last session about the censer, I have thought about the fact that the position of the origin of the smoke changes approximately six inches horizontally. Would it be better to have a censer in a single, horizontal smoking position?
 (英文待翻译)
 
 Ra I am Ra. This alteration would be an helpful one given that the censer is virgin.
 (英文待翻译)
+
+## (87.3)
 
 (87.3) Questioner What would be the optimum geometrical arrangement of censer, chalice, and candle with respect to Bible and table and the positions we now have them in?
 (英文待翻译)
@@ -25,17 +33,23 @@ Ra I am Ra. This alteration would be an helpful one given that the censer is vir
 Ra I am Ra. Both chalice and candle occupy the optimal configuration with respect to the book most closely aligned with the Law of One in the distortion complexes of this instrument. It is optimal to have the censer to the rear of this book and centered at the spine of its open configuration.
 (英文待翻译)
 
+## (87.4)
+
 (87.4) Questioner Would a position directly between the chalice and the candle be optimum, then, for the censer?
 (英文待翻译)
 
 Ra I am Ra. This is not an exact measurement since both chalice and candle are irregularly shaped. However, speaking roughly, this is correct.
 (英文待翻译)
 
+## (87.5)
+
 (87.5) Questioner Thank you. What is the present situation with respect to our fifth-density negative companion?
 (英文待翻译)
 
 Ra I am Ra. This entity has withdrawn for a period of restoration of its polarity.
 (英文待翻译)
+
+## (87.6)
 
 (87.6) Questioner Would you expand upon the concept of the acquisition of polarity by this particular entity, and its use, specifically, of this polarity other than with the simple, obvious need for sixth-density harvest, if this is possible, please?
 (英文待翻译)
@@ -48,6 +62,8 @@ Upon the negative path the wisdom density is one in which power over others has 
 
 It is not within your conscious selves to stand against such refined power, but rather it has been through the harmony, the mutual love, and the honest calling for aid from the forces of light which have given you the shield and buckler.
 (英文待翻译)
+
+## (87.7)
 
 (87.7) Questioner What is the environmental situation of this particular fifth-density negative entity and how does he work with fourth-density negative in order to establish power and control? And what is his particular philosophy with respect to himself as Creator and his use of the First Distortion and the extension of this use of the First Distortion to the fourth-density negative? I hope that this isn’t too complex a question.
 (英文待翻译)
@@ -64,11 +80,15 @@ In some respects one may see a more lucid early attachment to wisdom from those 
 The relationship of such an entity to fourth-density negative entities is one of the more powerful and the less powerful. The negative path posits slavery of the less powerful as a means of learning the desire to serve the self to the extent that the will is brought to bear. It is in this way that polarity is increased in the negative sense. Thus fourth-density entities are willing slaves of such a fifth-density entity, there being no doubt whatsoever of the relative power of each.
 (英文待翻译)
 
+## (87.8)
+
 (87.8) Questioner A reflection of this could be seen in our density in many of those leaders that instigate war and have followers who support, in total conviction that the direction of conquest is correct. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. Any organization which demands obedience without question upon the basis of relative power is functioning according to the above-described plan.
 (英文待翻译)
+
+## (87.9)
 
 (87.9) Questioner One point that I am not clear on is the understanding and use of the First Distortion by fifth- and fourth-density negative entities in manipulating third-density entities. I would like to know how the First Distortion affects the attempts to carry out the conquest of third-density entities, and the attempt to add them, through or under the premise of the First Distortion, to their social memory complexes. Would you expand that, please?
 (英文待翻译)
@@ -76,11 +96,15 @@ Ra I am Ra. Any organization which demands obedience without question upon the b
 Ra I am Ra. This latter plan is not one of which fourth-density negative social memory complexes are capable. The fourth-density habit is that of offering temptations and of energizing pre-existing distortions. Fourth-density entities lack the subtlety and magical practice which the fifth-density experience offers.
 (英文待翻译)
 
+## (87.10)
+
 (87.10) Questioner It seems, though, that in the case of many UFO contacts that have occurred on this planet, that there must be some knowledge and use of the First Distortion, in that the fourth-density entities have carefully remained aloof and anonymous, you might say, for the most part, so that no proof in a concrete way of their existence is too obvious. How are they oriented with respect to this type of contact?
 (英文待翻译)
 
 Ra I am Ra. We misperceived your query, thinking it was directed towards this particular type of contact. The nature of the fourth-density’s observance of the Free Will Distortion while pursuing the seeding of the third-density thought patterns is material which has already been covered.[86] That which can be offered of the negatively oriented information is offered. It is altered to the extent that the entity receiving such negative information is of positive orientation. Thus many such contacts are of a mixed nature.
 (英文待翻译)
+
+## (87.11)
 
 (87.11) Questioner I’m sorry for getting confused on the question here and not asking it correctly. There is a philosophical point of central importance to me that I am trying to clear up here. It has to do with the fact that fourth-density negative seems to be aware of the First Distortion, and they are in a nonveiled condition. And they seem to use this knowledge of the First Distortion to maintain the situation that they maintain in their contacts with this planet.
 (英文待翻译)
@@ -91,11 +115,15 @@ I am trying to extract their ability to understand the mechanism of the First Di
 Ra I am Ra. The answer may still not satisfy the questioner. We ask that you pursue it until you are satisfied. The fourth-density negative entity has made the choice available to each at third-density harvest. It is aware of the full array of possible methods of viewing the universe of the One Creator, and it is convinced that the ignoring and non-use of the green-ray energy center will be the method most efficient in providing harvestability of fourth density. Its operations among those of third density which have not yet made this choice are designed to offer to each the opportunity to consider the self-serving polarity and its possible attractiveness.
 (英文待翻译)
 
+## (87.12)
+
 (87.12) Questioner It seems to me that this is a service-to-others action in offering the possibility of the self-serving path. What is the relative effect of polarization of this? I don’t understand that point.
 (英文待翻译)
 
 Ra I am Ra. In your armed bands a large group marauds and pillages successfully. The success of the privates is claimed by the corporals, the success of corporals by sergeants, then lieutenants, captains, majors, and finally the commanding general. Each successful temptation, each successful harvestable entity is a strengthener of the power and polarity of the fourth-density social memory complex which has had this success.
 (英文待翻译)
+
+## (87.13)
 
 (87.13) Questioner If one mind/body/spirit complex is harvested from third density into a fourth-density social memory complex, does the total power of the social memory complex, before the absorption of this single entity, double when this entity is absorbed?
 (英文待翻译)
@@ -103,11 +131,15 @@ Ra I am Ra. In your armed bands a large group marauds and pillages successfully.
 Ra I am Ra. No.
 (英文待翻译)
 
+## (87.14)
+
 (87.14) Questioner The Law of Doubling does not work in this way. How much does the power of the social memory complex increase relatively when this single entity is harvested and absorbed into it?
 (英文待翻译)
 
 Ra I am Ra. If one entity in the social memory complex is responsible for this addition to its being, that mind/body/spirit complex will absorb, in linear fashion, the power contained in the, shall we say, recruit. If a sub-group is responsible, the power is then this sub-group’s. Only very rarely is the social memory complex of negative polarity capable of acting totally as one being. The loss of polarity due to this difficulty, to which we have previously referred as a kind of spiritual entropy, is quite large.[87]
 (英文待翻译)
+
+## (87.15)
 
 (87.15) Questioner Then assuming that a single negatively polarized entity is responsible for the recruiting of a harvested third-density entity and adds this polarity to his negative polarity and power, what type of ability or what type of benefit is this, and how is it used by the entity?
 (英文待翻译)
@@ -115,11 +147,15 @@ Ra I am Ra. If one entity in the social memory complex is responsible for this a
 Ra I am Ra. The so-called pecking order is immediately challenged, and the entity with increased power exercises that power to control more other-selves and to advance within the social memory complex structure.
 (英文待翻译)
 
+## (87.16)
+
 (87.16) Questioner How is this power measured? How is it obvious that this entity has gained this additional power?
 (英文待翻译)
 
 Ra I am Ra. In some cases there is a kind of battle. This is a battle of wills, and the weapons consist of the light that can be formed by each contender. In most cases where the shift of power has been obvious it simply is acknowledged, and those seeing benefit from associating with this newly more-powerful entity aid it in rising within the structure.
 (英文待翻译)
+
+## (87.17)
 
 (87.17) Questioner Thank you. We noticed the possibility of a confusion between the term “mind/body/spirit” and “mind/body/spirit complex” in the last session. Were there a couple of misuses of those terms, shifting one for the other?
 (英文待翻译)
@@ -133,11 +169,15 @@ Also, we ask that you keep a vigilant watch over these transmissions for any err
 This entity, though far better cleared of distortions towards the pain flares when prepared by those mental vibration complexes you call prayer, is still liable to fluctuation due to its pre-incarnative body-complex distortions and the energizing of them by those of negative polarity.
 (英文待翻译)
 
+## (87.18)
+
 (87.18) Questioner Thank you. We will make the corrections. In the last session you made the statement that before veiling, sexual energy transfer was always possible. I would like to know what you meant by “it was always possible” and why it was not always possible after the veiling, just to clear up that point?
 (英文待翻译)
 
 Ra I am Ra. We believe that we grasp your query and will use the analogy in your culture of the battery which lights the flashlight bulb. Two working batteries placed in series always offer the potential of the bulb’s illumination. After the veiling, to continue this gross analogy, the two batteries being placed not in series would then offer no possible illumination of the bulb. Many mind/body/spirit complexes after the veiling have, through blockages, done the equivalent of reversing the battery.
 (英文待翻译)
+
+## (87.19)
 
 (87.19) Questioner What was the primary source of the blockages that caused the battery reversal analogy?
 (英文待翻译)
@@ -145,17 +185,23 @@ Ra I am Ra. We believe that we grasp your query and will use the analogy in your
 Ra I am Ra. Please query more specifically as to the mind/body/spirits or mind/body/spirit complexes about which you request information.
 (英文待翻译)
 
+## (87.20)
+
 (87.20) Questioner Before the veil there was knowledge of the bulb-lighting technique, shall we say. After the veil some experiments created a bulb lighting; some resulted in no bulb lighting. Other than the fact that information was not available on methods of lighting the bulb, was there some root cause of the experiments that resulted in no bulb lighting?
 (英文待翻译)
 
 Ra I am Ra. This is correct.
 (英文待翻译)
 
+## (87.21)
+
 (87.21) Questioner What was this root cause?
 (英文待翻译)
 
 Ra I am Ra. The root cause of blockage is the lack of the ability to see the other-self as the Creator, or to phrase this differently, the lack of love.
 (英文待翻译)
+
+## (87.22)
 
 (87.22) Questioner OK. In our particular illusion, the sexual potential, it seems, for the male peaks somewhere prior to age twenty and the female some ten years later. What is the cause of this difference in peaking sexual energy, I will say?
 (英文待翻译)
@@ -169,17 +215,23 @@ The yellow-ray, chemical body complex of the female, as you call this polarity, 
 The more, shall we say, integral sexuality or polarity of the body complex, which is a portion of the mind/body/spirit complex, does not concern itself with these yellow-ray manifestations but, rather, follows the ways of the seeking of energy transfer and the furthering of aid and service to others or to the self.
 (英文待翻译)
 
+## (87.23)
+
 (87.23) Questioner In addition, why is the ratio of male to female orgasms so heavily loaded on the side of the male?
 (英文待翻译)
 
 Ra I am Ra. We refer now to the yellow-ray, physical body or, if you will, body complex (at this level the distinction is unimportant). The male orgasm which motivates the sperm forward to meet its ovum is essential for the completion of the red-ray desire to propagate the species. The female orgasm is unnecessary. Again, as mind/body/spirit complexes begin to use the sexual energy transfer to learn, to serve, and to glorify the One Infinite Creator, the function of the female orgasm becomes more clear.
 (英文待翻译)
 
+## (87.24)
+
 (87.24) Questioner What was this ratio before the veil?
 (英文待翻译)
 
 Ra I am Ra. The ratio of male to female orgasms before the veil was closer to one-to-one by a great deal as the metaphysical value of the female orgasm was clear and without shadow.
 (英文待翻译)
+
+## (87.25)
 
 (87.25) Questioner Is it meaningful to give this ratio in early fourth density, and if so, would you do that?
 (英文待翻译)
@@ -193,6 +245,8 @@ It may be said that the veil in fourth density is lifted and the choice has been
 In each case you may see the function of the sexual portion of experience as being a most efficient means of polarization.
 (英文待翻译)
 
+## (87.26)
+
 (87.26) Questioner In our illusion we have physical definitions for possible transfers of energy. We label them as the conversion of potential to kinetic or kinetic to heat and examine this with respect to its increasing entropy. When we speak of sexual energy transfers and other more basic forms of energy I am always at a loss to properly use, you might say, the terms since I am not understanding, and probably can’t understand, the basic form of energy that we speak of.
 (英文待翻译)
 
@@ -201,6 +255,8 @@ However, I intuit that this is the energy of pure vibration; that is, at the bas
 
 Ra I am Ra. Yes.
 (英文待翻译)
+
+## (87.27)
 
 (87.27) Questioner Would you do that?
 (英文待翻译)
@@ -214,6 +270,8 @@ Due to the veiling process the energy transferred from male to female is differe
 At this time may we ask for one more full query.
 (英文待翻译)
 
+## (87.28)
+
 (87.28) Questioner Why is the male and the female nature different?
 (英文待翻译)
 
@@ -222,6 +280,8 @@ Ra I am Ra. When the veiling process was accomplished, to the male polarity was 
 
 May we ask if there are any brief queries before we close this working?
 (英文待翻译)
+
+## (87.29)
 
 (87.29) Questioner Is there anything we can do to make the instrument more comfortable or improve the contact?
 (英文待翻译)

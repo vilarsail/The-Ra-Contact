@@ -4,8 +4,12 @@
 November 18, 1982
 (英文待翻译)
 
+## (99.0)
+
 (99.0) Ra I am Ra. I greet you in the love and in the light of the One Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (99.1)
 
 (99.1) Questioner Would you please give me the condition of the instrument?
 (英文待翻译)
@@ -13,11 +17,15 @@ November 18, 1982
 Ra I am Ra. This instrument’s physical deficit continues but has the potential for the lessening due to the removal in your probable future of foodstuffs to which the instrument has significant allergy. The vital energy levels are somewhat lessened than the last asking but remain strong. The change in the mental/emotional energy level is towards the distortion of the weakening of this complex.
 (英文待翻译)
 
+## (99.2)
+
 (99.2) Questioner What are the foodstuffs that are creating the allergic reaction?
 (英文待翻译)
 
 Ra I am Ra. That which you call the buttermilk, though appropriately used in the healing work undertaken for the throat and chest areas, is the substance to which the entity has allergy.
 (英文待翻译)
+
+## (99.3)
 
 (99.3) Questioner The instrument asks if it will be all right to keep the small gold cross on while she is in one of these sessions, or will it cause some distortion that is not advisable?
 (英文待翻译)
@@ -28,11 +36,15 @@ Ra I am Ra. We scan the mental distortions of the instrument. Although the prese
 In this nexus that which this device represents to this instrument is a much-needed strengthener of the mental/emotional patterns which have been much disrupted from the usual configuration of distortions.
 (英文待翻译)
 
+## (99.4)
+
 (99.4) Questioner Is there anything further that needs to be done for or by the instrument to remove the magical working, or any of its after-effects, on her throat area by our fifth-density negative companion?
 (英文待翻译)
 
 Ra I am Ra. No.
 (英文待翻译)
+
+## (99.5)
 
 (99.5) Questioner Finally, of the preliminary questions, one from Jim stating: “For the last three weeks I have often been at the edge of anger and frustration, have had a nearly constant dull pain at my indigo-ray center, and have felt quite drained of energy. Would Ra comment on the source of these experiences and any thoughts or actions that might alleviate it?”
 (英文待翻译)
@@ -55,6 +67,8 @@ We may note that the great forte of the scribe is summed in the inadequate sound
 This entity experiences a distortion in the direction of an excess of stored energy. It is well to know the self and to guard and use those attributes which the self has provided for its learning and its service.
 (英文待翻译)
 
+## (99.6)
+
 (99.6) Questioner We now have an additional set of tarot images. We will refer to them as the Royal Road images, since that’s the name of the book they came from. They are similar to, but in some instances different from, the C.C. Zain images. Which of these two sets are closer to Ra’s original intention? And if they are mixed, let me know that.
 (英文待翻译)
 
@@ -64,6 +78,8 @@ Ra I am Ra. The principle which moves in accordance with the dynamics of teach/l
 In point of fact, those which are being used have some subtleties which enrich the questioning. As we have said, this set of images is not that which we gave. This is not material. We could use any of a multitude of devised tarot sets. Although this must be at the discretion of the questioner, we suggest the maintaining of one and only one set of distorted images to be used for the querying and note that the images you now use are good.
 (英文待翻译)
 
+## (99.7)
+
 (99.7) Questioner The only problem is something that I am sure is quite foreign to Ra’s way of thinking which is called “copyright laws.” We have been unable to get copyright privileges from the publishers of the cards that we started with, and we’ll have to circumnavigate that problem some way or another, which could conceivably cause us to use a different set of images as we go along.
 (英文待翻译)
 
@@ -72,6 +88,8 @@ The wings of Card Five, I am guessing, have to do with a protection over the—t
 
 Ra I am Ra. Let us say that you are not incorrect but rather less than correct. The Significator owns a covenant with the spirit which it shall, in some cases, manifest through the thought and action of the adept. If there is protection in a promise, then you have chosen the correct sound vibration, for the outstretched wings of spirit, high above manifestation, yet draw the caged mind onward.
 (英文待翻译)
+
+## (99.8)
 
 (99.8) Questioner Thank you. Card Number Six I see as the Transformation of the Mind; the male’s crossed arms representing transformation, transformation being possible either toward the left- or the right-hand path; the path being beckoned or led by the female, the Potentiator.
 (英文待翻译)
@@ -103,6 +121,8 @@ We now speak of that genie, or elemental, or mythic figure, culturally determine
 Those upon the right-hand path have no such protection against other-selves, for upon that path the doughty seeker shall find many mirrors for reflection in each other-self it encounters.
 (英文待翻译)
 
+## (99.9)
+
 (99.9) Questioner In the previous session you mentioned the use of the forty-five minute interval of the tape recorder as a signal for ending the session. Is this still the appropriate time?
 (英文待翻译)
 
@@ -112,6 +132,8 @@ Ra I am Ra. This is, of course, at the discretion of the questioner, for this in
 Therefore, we may say that ending a working at approximately this amount of energy expenditure—that is, some point soon following upon the sound vibration of which you speak—would be appropriate; and insofar as we may determine, may well extend the incarnational amount of your space/time which this instrument shall be able to offer to this contact.
 (英文待翻译)
 
+## (99.10)
+
 (99.10) Questioner In that case I will just ask one additional short question as we terminate for this session. May I ask if the Logos of this system planned for the mating process as possibly depicted in Card Six—I don’t know if this is related—by some type of DNA imprinting as has been studied by our science? Many second-density creatures seem to have some sort of imprinting that creates a lifetime mating relationship, and I was wondering if this was designed by the Logos for that particular mechanism, and if it was also carried into third density?
 (英文待翻译)
 
@@ -120,6 +142,8 @@ Ra I am Ra. There are some of your second-density fauna which have instinctually
 
 The free will of third-density entities is far stronger than the rather mild carryover from second-density DNA encoding, and it is not part of the conscious nature of many of your mind/body/spirit complexes to be monogamous due to the exercise of free will. However, as has been noted there are many signposts in the deep mind indicating to the alert adept the more efficient use of catalyst. As we have said, the Logos of your peoples has a bias towards kindness.
 (英文待翻译)
+
+## (99.11)
 
 (99.11) Questioner Thank you. In closing I will just ask if there is anything that we can do to make the instrument more comfortable or improve the contact?
 (英文待翻译)

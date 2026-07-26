@@ -4,8 +4,12 @@
 November 29, 1982
 (英文待翻译)
 
+## (100.0)
+
 (100.0) Ra I am Ra. I greet you, my friends, in the love and in the light of the One Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (100.1)
 
 (100.1) Questioner Could you first please give me the condition of the instrument?
 (英文待翻译)
@@ -13,11 +17,15 @@ November 29, 1982
 Ra I am Ra. It is as previously stated with the exception of the vital-energy distortion which leans more towards strength/weakness than the last asking.
 (英文待翻译)
 
+## (100.2)
+
 (100.2) Questioner Thank you. The instrument asks if there is some problem with the swirling waters since she feels very dizzy after each application. Could Ra comment on that, please?
 (英文待翻译)
 
 Ra I am Ra. Yes.
 (英文待翻译)
+
+## (100.3)
 
 (100.3) Questioner Would Ra please comment?
 (英文待翻译)
@@ -34,17 +42,23 @@ When the so-called aerobic exercise is pursued, no less than three of your hours
 It is true that some greeting has encouraged the dizziness felt by the instrument. However, its source is largely the determination of the instrument to remain immersed in the swirling waters past the period of space/time it may abide therein without exceeding its physical limits.
 (英文待翻译)
 
+## (100.4)
+
 (100.4) Questioner Thank you. I feel obligated to ask the next somewhat transient question because of a request from Colonel Stevens. I also, for my own edification, would like to better understand the effect of the quarantine and First Distortion. Would Ra comment on the purpose of the so-called Pleiades contact in Switzerland with Billy Meier by an entity known as Semjase and others.
 (英文待翻译)
 
 Ra I am Ra. It is not our practice to judge the value of a contact of metaphysical origin. We cannot confirm the contact referred to by the questioner as pure Confederation contact. However, we might suggest that there is some positive material within the recorded transcript of converse during this contact. As we have spoken previously to the various characteristics of so-called mixed contact,[126] we shall not repeat but note that all communication is of the One Infinite Creator in its infinite distortions.
 (英文待翻译)
 
+## (100.5)
+
 (100.5) Questioner Is it all right for Colonel Stevens to receive the information that Ra just gave to us?
 (英文待翻译)
 
 Ra I am Ra. We find this information to be confirmation of already perceived ideas. Therefore, permission is freely given.
 (英文待翻译)
+
+## (100.6)
 
 (100.6) Questioner Thank you. To continue with the tarot, I would like to make the additional observation with respect to Card Six that the male’s arms being crossed, if the female to his right pulls on his left hand it would cant, in effect turn him, his entire body, toward the right.[127] And the same is true for the female on the left: pulling on his right hand she will turn his entire body to her side. Which is my interpretation of what’s meant by the tangle of the arms—that the transformation occurs by pull which attempts to turn the entity toward the left- or the right-hand path. Would Ra comment on that observation?
 (英文待翻译)
@@ -61,6 +75,8 @@ The conscious entity holds both and will turn itself one way or the other, or po
 It is to be noted that the triangular shape formed by the shoulders and crossed elbows of consciousness is a shape to be associated with transformation. Indeed, you may see this shape echoed twice more in the image, each echo having its own riches to add to the impact of this complex of concepts.
 (英文待翻译)
 
+## (100.7)
+
 (100.7) Questioner Thank you. We will probably return to this card next session for more of an observation after we study Ra’s comments. To conserve and efficiently use the time at this time I will make some notes with respect to Card Seven.
 (英文待翻译)
 
@@ -73,11 +89,15 @@ Ra I am Ra. As one observes the veil of the image of the Great Way of Mind it ma
 Thusly the veil is shown both somewhat lifted and still present, since the work of mind and its transformation involves progressive lifting of the great veil betwixt conscious and deep minds. The complete success of this attempt is not properly a portion of third-density work and, more especially, third-density mental processes.
 (英文待翻译)
 
+## (100.8)
+
 (100.8) Questioner The fact that the veil is raised higher on the right-hand side than on the left indicates to me that the adept choosing the positive polarity will have greater success in penetrating the veil. Would Ra comment?
 (英文待翻译)
 
 Ra I am Ra. This is a true statement if it is realized that the questioner speaks of potential success. Indeed, your third-density experience is distorted or skewed so that the positive orientation has more aid than the so-called negative.
 (英文待翻译)
+
+## (100.9)
 
 (100.9) Questioner It would also seem to me that since Ra stated in the last session the limit of the viewpoint is the source of all distortions, that the very nature of the service-to-self distortions that create the left-hand path are a function of the veil and, therefore, are dependent, you might say, to some degree on at least a partial continued veiling. Does this make any sense?
 (英文待翻译)
@@ -91,11 +111,15 @@ The polarities are both dependent upon a limited viewpoint. However, the negativ
 This attitude in itself is full of the stuff of your third-density illusion.
 (英文待翻译)
 
+## (100.10)
+
 (100.10) Questioner The crown of three stars, we are guessing, indicates mastery and balancing of the mind, body, and spirit. Is this in any way correct?
 (英文待翻译)
 
 Ra I am Ra. This device is astrological in origin and the interpretation given somewhat confusing. We deal in this image with the environment of mind. It is perhaps appropriate to release the starry crown from its stricture.
 (英文待翻译)
+
+## (100.11)
 
 (100.11) Questioner The entities (the small black, or russet, and white entities) have been now changed so that they appear to be sphinxes which we are assuming mean that the catalyst has been mastered.
 (英文待翻译)
@@ -109,11 +133,15 @@ Ra I am Ra. Firstly, we ask that the student consider the Great Way not as the c
 The second supposition, that of placing the creatures as the movers of the chariot of mind, has far more virtue. You may connote the concept of time to the image of the sphinx. The mental and mental/emotional complex ripens, and moves, and is transformed in time.
 (英文待翻译)
 
+## (100.12)
+
 (100.12) Questioner There is the forty-five minute signal. Does Ra suggest a termination of this session, taking into consideration the instrument’s condition and all the other conditions that we have placed on this?
 (英文待翻译)
 
 Ra I am Ra. Information pertinent to this query has been previously covered.[129] The choice of termination time, as you call it, is solely that of the questioner until the point at which we perceive the instrument beginning to use its vital resources due to the absence of transferred or native physical energy. The instrument remains open, as always.
 (英文待翻译)
+
+## (100.13)
 
 (100.13) Questioner In that case I will ask only one more question and that will be having to do with the sword and the scepter. It would seem that the sword would be the power of the negative adept indicating control over other-selves, and the scepter would indicate the power of the positive adept with unity in mind, body, and spirit. However, they seem to be in opposite hands than I would have guessed. Would Ra comment on that?
 (英文待翻译)
@@ -127,11 +155,15 @@ We may note that there is an overriding spiritual environment and protection for
 We may further note that the negatively polarized adept will attempt to fashion that covenant for its own use, whereas the positively polarized entity may hold forth that which is exemplified by the astrological sword; that is, light and truth.
 (英文待翻译)
 
+## (100.14)
+
 (100.14) Questioner Would there be two more appropriate objects or symbols to have the entity in Card Seven holding in its hands, other than the ones shown?
 (英文待翻译)
 
 Ra I am Ra. We leave this consideration to you, O student, and shall comment upon any observation which you may make.
 (英文待翻译)
+
+## (100.15)
 
 (100.15) Questioner I will save that for next session, and I will ask if there is anything we can do to make the instrument more comfortable or improve the contact?
 (英文待翻译)

@@ -4,8 +4,12 @@
 March 16, 1981
 (英文待翻译)
 
+## (39.0)
+
 (39.0) Ra I am Ra. I greet you in the love and in the light of the One Infinite Creator. I communicate now.
 (英文待翻译)
+
+## (39.1)
 
 (39.1) Questioner The instrument was wondering if her fragile feeling was the result of the chemical ingestion of about six weeks ago?
 (英文待翻译)
@@ -16,6 +20,8 @@ Ra I am Ra. This is correct. This instrument is now undergoing the most intensiv
 This instrument is very fortunate in having a support group which impresses upon it the caution necessary as regards these sessions at this time. This instrument is capable of almost instantaneously clearing the mental/emotional complex and the spiritual complex for the purity this working requires, but this instrument’s distortion towards fidelity to service does not function to its best use of judgment regarding the weakness distortions of the physical complex. Thus we appreciate your assistance at space/times such as that in your most recent decision-making not to have a working. This was the appropriate decision, and the guidance given this instrument was helpful.
 (英文待翻译)
 
+## (39.2)
+
 (39.2) Questioner Is there anything that the instrument could do, in addition to what she is attempting to do, to help her condition get better faster? I know that she hasn’t been able to exercise because of her foot problem for the last couple of days . . . not able to walk, but we are hoping to get back to that. Is there anything else that she could do?
 (英文待翻译)
 
@@ -25,6 +31,8 @@ Ra I am Ra. As we have implied, the negative entities are moving all stops out t
 Again, it is fortunate that this instrument has the opportunities for loving social intercourse which are of some substantial benefit. Basically, in your third-density continuum, this is a matter of time.
 (英文待翻译)
 
+## (39.3)
+
 (39.3) Questioner From your reading of the instrument’s condition can you approximate how often and the length of workings that we could plan in our future workings?
 (英文待翻译)
 
@@ -33,6 +41,8 @@ Ra I am Ra. This query borders upon infringement. The information given sets up 
 
 Therefore, we believe we are not infringing if we indicate that one working each alternate diurnal period in the matinal hours is most appropriate with the possibility of a shorter working upon the free matinal period if deemed appropriate. This is so not only during this period but in general.
 (英文待翻译)
+
+## (39.4)
 
 (39.4) Questioner I will then continue now with the general questioning, attempting to find a way into a line of questioning which will get us into an area of understanding non-transient functions which may be worked upon by us and others to raise our consciousness, and I may make several mistakes here in trying to find a way into this questioning. I apologize in advance if my questioning is misleading.
 (英文待翻译)
@@ -55,6 +65,8 @@ However, in your present physical system of knowledge it is useful to take the m
 For an analog one may observe the work of the one known as Albert who posits the growing to infinity of mass as this mass approaches the speed of light. Thus the seventh-density being, the completed being, the Creator who knows Itself, accumulates mass and compacts into the One Creator once again.
 (英文待翻译)
 
+## (39.5)
+
 (39.5) Questioner Then in the equation that I have here on this page, would Mᵢ refer to spiritual mass, I am assuming. Is this correct?
 (英文待翻译)
 
@@ -64,11 +76,15 @@ Mᵢ = (m₀C²) / √(1 - v² / c²)
 Ra I am Ra. This is correct.
 (英文待翻译)
 
+## (39.6)
+
 (39.6) Questioner Thank you. Can you tell me— Can you interpret a transmission from The Nine where they say, “CH is a principle which is the revealing principle of knowledge and law?” Can you tell me what that principle is?
 (英文待翻译)
 
 Ra I am Ra. The principle so veiled in that statement is but the simple principle of the constant (or Creator) and the transient (or the incarnate being) and the yearning existing between the two, one for the other, in love and light amidst the distortions of free will acting upon the illusion-bound entity.
 (英文待翻译)
+
+## (39.7)
 
 (39.7) Questioner Was the reason that The Nine transmitted this principle in this form the— Was the reason for this the First Distortion?
 (英文待翻译)
@@ -76,11 +92,15 @@ Ra I am Ra. The principle so veiled in that statement is but the simple principl
 Ra I am Ra. This is incorrect.
 (英文待翻译)
 
+## (39.8)
+
 (39.8) Questioner Can you tell me why they gave the principle in such a veiled form then?
 (英文待翻译)
 
 Ra I am Ra. The scribe is most interested in puzzles and equations.
 (英文待翻译)
+
+## (39.9)
 
 (39.9) Questioner I see. The Nine describe themselves as the “nine principals of God.”[59] Can you tell me what they mean by that?
 (英文待翻译)
@@ -90,6 +110,8 @@ Ra I am Ra. This is also a veiled statement. The attempt is made to indicate tha
 
 The desire of the scribe may be seen in much of this material to have affected the manner of its presentation, just as the abilities and preferences of this group determine the nature of this contact. The difference lies in the fact that we are as we are. Thus we may either speak as we will or not speak at all. This demands a very tuned, shall we say, group.
 (英文待翻译)
+
+## (39.10)
 
 (39.10) Questioner I sense that there is fruitful ground for investigation of our development in tracing the evolution of the bodily energy centers because these seven centers seem to be linked with all of the sevens that I spoke of previously and be central to our own development.
 (英文待翻译)
@@ -118,6 +140,8 @@ The indigo ray, though precious, is that ray worked upon only by the adept, as y
 As you are aware, the violet ray is constant and does not figure into a discussion of the functions of ray activation in that it is the mark, the register, the identity, the true vibration of an entity.
 (英文待翻译)
 
+## (39.11)
+
 (39.11) Questioner In order to clarify a little bit I would like to ask the question, if we have a highly polarized entity polarized towards service to others, and a highly polarized entity polarized towards service to self, what would be . . . taking each ray, starting with red, would there be a difference in the red ray of these two entities?
 (英文待翻译)
 
@@ -126,6 +150,8 @@ Ra I am Ra. This shall be the last full question of this working.
 
 There is no difference in equally strongly polarized positive and negative entities as regards red ray.
 (英文待翻译)
+
+## (39.12)
 
 (39.12) Questioner Is this also true of all the other rays?
 (英文待翻译)
@@ -141,6 +167,8 @@ In positively oriented entities the configuration is even, crystallinely clear, 
 
 Are there any short queries before we leave this instrument?
 (英文待翻译)
+
+## (39.13)
 
 (39.13) Questioner I only need to know if there is anything that we can do to make the instrument more comfortable or help the contact?
 (英文待翻译)

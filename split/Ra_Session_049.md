@@ -4,14 +4,20 @@
 April 27, 1981
 (英文待翻译)
 
+## (49.0)
+
 (49.0) Ra I am Ra. I greet you in the love and in the light of the One Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (49.1)
 
 (49.1) Questioner Would you please first give us a reading on the instrument’s condition?
 (英文待翻译)
 
 Ra I am Ra. It is as previously stated.
 (英文待翻译)
+
+## (49.2)
 
 (49.2) Questioner Thank you. I have a question here from Jim first. He says:
 (英文待翻译)
@@ -21,6 +27,8 @@ Ra I am Ra. It is as previously stated.
 
 Ra I am Ra. We scan the questioner and find some pertinent information already available which regards the physiological disposition of this particular part of the brain. The experiences described and experienced are those distillations which may be experienced after a concentration of effort upon the opening of the gateway, or indigo, mind complex so that experience of a sacramental, or violet, ray may occur. These experiences are the beginnings of that which—as the body, the mind, and the spirit become integrated at the gateway, or indigo, level—may then yield not only the experience of joy but the comprehension of intelligent infinity which accompanies it. Thus the body complex orgasm and mind complex orgasm, becoming integrated, may then set forth the proper gateway for the spiritual complex integration and its use as a shuttle for the sacrament of the fully experienced presence of the One Infinite Creator. Thus there is much to which the questioner may look forward.
 (英文待翻译)
+
+## (49.3)
 
 (49.3) Questioner [to Jim] Do you have any addition to that question?
 (英文待翻译)
@@ -37,6 +45,8 @@ Questioner [to Jim] Okay.
 Ra I am Ra. We may comment on this.
 (英文待翻译)
 
+## (49.4)
+
 (49.4) Questioner Well, please . . . will you go ahead and comment on it?
 (英文待翻译)
 
@@ -51,6 +61,8 @@ The function of intuition is to inform intelligence. In your illusion the unbrid
 
 There is one correspondence between right and left, and positive and negative. The web of energy which surrounds your bodies contains somewhat complex polarizations. The left area of the head and upper shoulder is most generally seen to be of a negative polarization, whereas the right is of positive polarization, magnetically speaking. This is the cause of the tone’s meaning for you.
 (英文待翻译)
+
+## (49.5)
 
 (49.5) Questioner Will you expand on the positive and negative magnetic polarizations in general and how it applies to, say, individuals and planets, etc.? I think there is a correlation here, but I’m not sure.
 (英文待翻译)
@@ -70,6 +82,8 @@ The most important concept to grasp about the energy field is that the lower, or
 As an entity grows more polarized this locus will move upwards. This phenomenon has been called by your peoples the kundalini. However, it may better be thought of as the meeting place of cosmic and inner, shall we say, vibratory understanding. To attempt to raise the locus of this meeting without realizing the metaphysical principles of magnetism upon which this depends is to invite great imbalance.
 (英文待翻译)
 
+## (49.6)
+
 (49.6) Questioner What process would be the recommended process for correctly awakening, as they say, the kundalini, and of what value would that be?
 (英文待翻译)
 
@@ -88,11 +102,15 @@ Meanwhile the Creator lies within. In the north pole the crown is already upon t
 Where these energies meet is where the serpent will have achieved its height. When this uncoiled energy approaches universal love and radiant being the entity is in a state whereby the harvestability of the entity comes nigh.
 (英文待翻译)
 
+## (49.7)
+
 (49.7) Questioner Will you recommend a technique of meditation?
 (英文待翻译)
 
 Ra I am Ra. No.
 (英文待翻译)
+
+## (49.8)
 
 (49.8) Questioner Is it better, or shall I say, does it produce more usable results in meditation to leave the mind, shall I say, as blank as possible—let it run down, so to speak—or is it better to focus in meditation on some object or some thing for concentration?
 (英文待翻译)
@@ -111,6 +129,8 @@ Contemplation, or the consideration in a meditative state of an inspiring image 
 
 May we ask if there are any brief queries at this time?
 (英文待翻译)
+
+## (49.9)
 
 (49.9) Questioner I will just ask if there is anything we may do to make the instrument more comfortable or to improve the contact and if the two sessions per week are still appropriate?
 (英文待翻译)

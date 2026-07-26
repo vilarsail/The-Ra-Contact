@@ -4,17 +4,23 @@
 April 26, 1982
 (英文待翻译)
 
+## (85.0)
+
 (85.0) Ra I am Ra. We communicate now.
 (英文待翻译)
 
 [There is a 40-second pause here.]
 (英文待翻译)
 
+## (85.1)
+
 (85.1) Questioner Could you first give me the condition of the instrument?
 (英文待翻译)
 
 Ra I am Ra. We ask your permission to preface this answer by the inclusion of the greeting which we use.
 (英文待翻译)
+
+## (85.2)
 
 (85.2) Questioner That’s agreeable.
 (英文待翻译)
@@ -28,11 +34,15 @@ The condition of this instrument is as follows: The necessity for extreme vigila
 We commend the vigilance and care of this group.
 (英文待翻译)
 
+## (85.3)
+
 (85.3) Questioner What is the current situation with respect to our fifth-density, service-to-self polarized companion, shall I say?
 (英文待翻译)
 
 Ra I am Ra. Your companion has never been more closely associated with you than at the present nexus. You may see a kind of crisis occurring upon the so-called magical level at this particular space/time nexus.
 (英文待翻译)
+
+## (85.4)
 
 (85.4) Questioner What is the nature of this crisis?
 (英文待翻译)
@@ -43,11 +53,15 @@ Ra I am Ra. The nature of this crisis is the determination of the relative polar
 If your companion can possibly depolarize this group it must do so, and that quickly, for in this unsuccessful attempt at exploring the wisdom of separation it is encountering some depolarization. This shall continue. Therefore, the efforts of your companion are pronounced at this space/time and time/space nexus.
 (英文待翻译)
 
+## (85.5)
+
 (85.5) Questioner I am totally aware of the lack of necessity or even rational need for naming of entities or things. I was wondering if this particular entity had a name, just so that we could increase our efficiency of communicating with respect to him. Does he have a name?
 (英文待翻译)
 
 Ra I am Ra. Yes.
 (英文待翻译)
+
+## (85.6)
 
 (85.6) Questioner Would it be magically bad for us to know that name, or would it make no difference?
 (英文待翻译)
@@ -55,17 +69,23 @@ Ra I am Ra. Yes.
 Ra I am Ra. It would make a difference.
 (英文待翻译)
 
+## (85.7)
+
 (85.7) Questioner What would the difference be?
 (英文待翻译)
 
 Ra I am Ra. If one wishes to have power over an entity it is an aid to know that entity’s name. If one wishes no power over an entity but wishes to collect that entity into the very heart of one’s own being, it is well to forget the naming. Both processes are magically viable. Each is polarized in a specific way. It is your choice.
 (英文待翻译)
 
+## (85.8)
+
 (85.8) Questioner I am assuming that it would be a problem for the instrument if she were to meditate without the hand pressure from the other-self at this time because of the continued greeting. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. This is correct if the instrument wishes to remain free from this potential separation of mind/body/spirit complex from the third density it now experiences.
 (英文待翻译)
+
+## (85.9)
 
 (85.9) Questioner I am assuming that if for no other reason, since our fifth-density companion has been monitoring our communications with Ra, it has been made aware of the veiling process of which we have been speaking.
 (英文待翻译)
@@ -82,11 +102,15 @@ The polarization process, as it enters fourth density, is one which occurs with 
 It, however, does not influence the choice which has been made and which is the basis for further work past third density in polarization. Those which have chosen the service-to-others[77] path have simply used the veiling process in order to potentiate that which is not. This is an entirely acceptable method of self-knowledge of and by the Creator.
 (英文待翻译)
 
+## (85.10)
+
 (85.10) Questioner You just stated that those who are on the service-to-others path use the veiling process to potentiate that which is not. I believe I am correct in repeating what you said. Is that correct?
 (英文待翻译)
 
 Ra I am Ra. Yes. [78]
 (英文待翻译)
+
+## (85.11)
 
 (85.11) Questioner Then the service-to-others path have potentiated that which is not. Could you expand that a little bit so I can understand it better?
 (英文待翻译)
@@ -103,11 +127,15 @@ When fifth-density refinement has been achieved, that which is not is carried fu
 That which is not may be seen as a self-imposed darkness in which harmony is turned into an eternal disharmony. However, that which is not cannot endure throughout the octave of third density,[80] and, as darkness eventually calls the light, so does that which is not eventually call that which is.
 (英文待翻译)
 
+## (85.12)
+
 (85.12) Questioner I believe that there were salient errors in the communication we just completed because of transmission difficulties. Are you aware of these errors?
 (英文待翻译)
 
 Ra I am Ra. We are unaware of errors although this instrument is experiencing flares of pain, as you call this distortion. We welcome and encourage your perceptions in correcting any errors in transmission.
 (英文待翻译)
+
+## (85.13)
 
 (85.13) Questioner I think simply that the statement was made that we were speaking of the service-to-others path. Would you check that, please?
 (英文待翻译)
@@ -115,17 +143,23 @@ Ra I am Ra. We are unaware of errors although this instrument is experiencing fl
 Ra I am Ra. May we ask that you be apprised of our intention to have spoken of the service-to-self path as the path of that which is not.
 (英文待翻译)
 
+## (85.14)
+
 (85.14) Questioner I am just interested in the problem here that we sometimes have with transmission since the word “others” was used three times in the transmission rather than the word “self.” And could you give me an idea of the problem of communication that we had there that creates that type of an anomaly which, if I didn’t catch, could create a rather large discrepancy in communication?
 (英文待翻译)
 
 Ra I am Ra. Firstly, we may note the clumsiness of language and our unfamiliarity with it in our native, shall we say, experience. Secondly, we may point out that once we have miscalled or misnumbered an event or thing, that referent is quite likely to be reused for some transmission time, as you call this measurement, due to our original error having gone undetected by ourselves.
 (英文待翻译)
 
+## (85.15)
+
 (85.15) Questioner Thank you. Do you have use of all of the words in the English language and, for that matter, all of the words in all languages that are spoken upon this planet at this time?
 (英文待翻译)
 
 Ra I am Ra. No.
 (英文待翻译)
+
+## (85.16)
 
 (85.16) Questioner I have a question here from Jim. It states: “I believe that one of my primary pre-incarnative choices was to open my green-ray energy center for healing purposes. As I see my compassion developing, is it more appropriate to balance this compassion with wisdom in my healing exercises or to allow the compassion to develop as much as possible without being balanced?”
 (英文待翻译)
@@ -151,17 +185,23 @@ We shall leave these considerations with the questioner and invite observations 
 [There is a 30-second pause here.]
 (英文待翻译)
 
+## (85.17)
+
 (85.17) Questioner What changes of functions, or control, or understanding, etc., of the mind/body/spirits were most effective in producing the evolution desired due to the veiling process?
 (英文待翻译)
 
 Ra I am Ra. We are having difficulty retaining clear channel through this instrument. It has a safe margin of transferred energy but is experiencing pain flares. May we ask that you repeat the query as we have a better channel now.
 (英文待翻译)
 
+## (85.18)
+
 (85.18) Questioner After the veiling process certain veiled functions or activities must have been paramount in creating evolution in desired polarized directions. I was just wondering which of these had the greatest effect on polarization?
 (英文待翻译)
 
 Ra I am Ra. The most effectual veiling was that of the mind.
 (英文待翻译)
+
+## (85.19)
 
 (85.19) Questioner I would like to carry that on to find out what specific functions of the mind were most effectual, and the three or four most effective changes brought about to create the polarization.
 (英文待翻译)
@@ -183,6 +223,8 @@ Perhaps the most important and significant function that occurred due to the vei
 
 We may ask for brief queries at this time. Although there is energy remaining for this working we are reluctant to continue this contact, experiencing continual variations due to pain flares, as you call this distortion. Although we are unaware of any misgiven material, we are aware that there have been several points during which our channel was less-than-optimal. This instrument is most faithful, but we do not wish to misuse this instrument. Please query as you will.
 (英文待翻译)
+
+## (85.20)
 
 (85.20) Questioner Well, I will just ask in closing: is an individualized portion or entity of Ra inhabiting the instrument’s body for the purpose of communication? And then is there anything that we can do to improve the contact or make the instrument more comfortable?
 (英文待翻译)

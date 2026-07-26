@@ -4,8 +4,12 @@
 May 19, 1981
 (英文待翻译)
 
+## (52.0)
+
 (52.0) Ra I am Ra. I greet you in the love and in the light of the One Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (52.1)
 
 (52.1) Questioner In the previous session you stated that “the other type of experience is the fourth, fifth, and sixth densities of other galaxies, and some within your own galaxy, which have learned necessary disciplines of personality to view the universe as one being, and, therefore, are able to proceed from locus to locus by thought alone, materializing the necessary craft.”
 (英文待翻译)
@@ -18,6 +22,8 @@ Ra I am Ra. We have once again used a meaning for this term, galaxy, that does n
 
 It is incorrect to assume that other star systems are more able to manipulate the dimensions than your own. It is merely that there are many other systems besides your own.
 (英文待翻译)
+
+## (52.2)
 
 (52.2) Questioner Thank you. I think that possibly I am on an important point here because it seems to me that the great work in evolution is the discipline of personality, and it seems that we have two types of moving around the universe, one stemming from disciplines of personality, and the other stemming from what you call the slingshot effect. I won’t even get into the sub-light speeds because I don’t consider that too important. And I only consider this material important with respect to the fact that we are investigating discipline of the personality.
 (英文待翻译)
@@ -40,11 +46,15 @@ To the disciplined entity, all things are open and free. The discipline which op
 The hitchhiker, instead, is distracted by conversation and the vagaries of the road and, dependent upon the whims of others, is concerned to make the appointment in time. The hitchhiker sees the same beauty, but has not prepared itself for the establishment, in the roots of mind, of the experience.
 (英文待翻译)
 
+## (52.3)
+
 (52.3) Questioner I would ask this question in order to understand the mental disciplines and how they evolve. Do fourth-, fifth-, and sixth-density positive, or service-to-others orientated, social memory complexes use both the slingshot and the personality discipline type of effect for travel, or do they use only one?
 (英文待翻译)
 
 Ra I am Ra. The positively oriented social memory complex will be attempting to learn the disciplines of mind, body, and spirit. However, there are some which, having the technology available to use intelligent energy forces to accomplish travel, do so while learning the more appropriate disciplines.
 (英文待翻译)
+
+## (52.4)
 
 (52.4) Questioner Then I am assuming in the positively oriented social memory complexes that a much higher percentage of them use the personality disciplines for this travel. Is this correct?
 (英文待翻译)
@@ -52,17 +62,23 @@ Ra I am Ra. The positively oriented social memory complex will be attempting to 
 Ra I am Ra. This is correct. As positive fifth density moves into sixth there are virtually no entities which any longer use outer technology for travel or communication.
 (英文待翻译)
 
+## (52.5)
+
 (52.5) Questioner Could you give me the same information on the negatively oriented social memory complexes as to the ratios, how they use the slingshot or other effect, personality disciplines?
 (英文待翻译)
 
 Ra I am Ra. The fourth-density negative uses the slingshot gravitic light effect, perhaps 80% of its membership being unable to master the disciplines necessary for alternate methods of travel. In fifth-density negative approximately 50% at some point gain the necessary discipline to use thought to accomplish travel. As the sixth density approaches, the negative orientation is thrown into confusion and little travel is attempted. What travel is done is perhaps 73% of light/thought.
 (英文待翻译)
 
+## (52.6)
+
 (52.6) Questioner Is there any difference then, at, say, close to the end of fifth density in the disciplines of personality required for this travel between positive and negative orientation, higher fifth density?
 (英文待翻译)
 
 Ra I am Ra. There are patent differences between the polarities, but no difference whatsoever in the completion of the knowledge of the self necessary to accomplish this discipline.
 (英文待翻译)
+
+## (52.7)
 
 (52.7) Questioner Am I correct, then, in assuming that discipline of the personality, knowledge of self, and control, shall I say, in strengthening of the will would be what any fifth-density entity would see as those things of importance?
 (英文待翻译)
@@ -79,11 +95,15 @@ Instead, we appreciate and recommend the use of your second verb in regard to th
 There is great danger in the use of the will as the personality becomes stronger, for it may be used even subconsciously in ways reducing the polarity of the entity.
 (英文待翻译)
 
+## (52.8)
+
 (52.8) Questioner I sense, possibly, a connection between what you just said and why so many wanderers have selected harvest time on this planet to incarnate. Am I correct? This is a vague notion.
 (英文待翻译)
 
 Ra I am Ra. It is correct that, in the chance to remember that which has been lost in the forgetting, there is a nimiety of opportunity for positive polarization.[78] We believe this is the specific thrust of your query. Please ask further if it is not.
 (英文待翻译)
+
+## (52.9)
 
 (52.9) Questioner Well, I would just include the question as to why time of harvest is selected by so many wanderers as time for incarnation?
 (英文待翻译)
@@ -103,6 +123,8 @@ The wanderer, if it remembers and dedicates itself to service, will polarize muc
 The final reason is within the mind/body/spirit totality or the social memory complex totality which may judge that an entity, or members of a societal entity, can make use of third-density catalyst to recapitulate a learning/teaching which is adjudged to be less than perfectly balanced. This especially applies to those entering into and proceeding through sixth density wherein the balance between compassion and wisdom is perfected.
 (英文待翻译)
 
+## (52.10)
+
 (52.10) Questioner Thank you. Just as something that I am a little inquisitive about, not much importance, but I’d like to make a statement I intuitively see, which may be wrong.
 (英文待翻译)
 
@@ -114,6 +136,8 @@ The only thing I can see is that you must put energy into the craft until it app
 
 Ra I am Ra. You are quite correct as far as your language may take you and, due to your training, more able than we to express the concept. Our only correction, if you will, would be to suggest that the 90° of which you speak are an angle which may best be understood as a portion of a tesseract.[80]
 (英文待翻译)
+
+## (52.11)
 
 (52.11) Questioner Thank you. Just a little point that was bothering me of no real importance.
 (英文待翻译)
@@ -130,6 +154,8 @@ Let us remember that we are all one. This is the great learning/teaching. In thi
 The second-ranking lessons are learn/taught in meditation and in service. At some point the mind/body/spirit complex is so smoothly activated and balanced by these central thoughts or distortions that the techniques you have mentioned become quite significant. However, the universe, its mystery unbroken, is one. Always begin and end in the Creator, not in technique.
 (英文待翻译)
 
+## (52.12)
+
 (52.12) Questioner Thank you. In mentioning, in the previous session, the harvest, you mentioned the light-bringers from the octave. Am I to understand that those who provide the light for the gradation of graduation are of an octave above the one we experience? Could you tell me more about these light-bringers, who they are, etc.?
 (英文待翻译)
 
@@ -141,6 +167,8 @@ This octave density of which we have spoken is both omega and alpha, the spiritu
 
 Is there any brief query which you have at this time?
 (英文待翻译)
+
+## (52.13)
 
 (52.13) Questioner Only is there anything that we can do to make the instrument more comfortable or to improve the contact?
 (英文待翻译)

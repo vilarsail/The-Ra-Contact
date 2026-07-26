@@ -4,14 +4,20 @@
 August 18, 1981
 (英文待翻译)
 
+## (68.0)
+
 (68.0) Ra I am Ra. I greet you in the love and in the light of the One Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (68.1)
 
 (68.1) Questioner Could you first please give me an indication of the instrument’s condition?
 (英文待翻译)
 
 Ra I am Ra. This instrument’s physical energies are depleted completely. The remainder is as previously stated.
 (英文待翻译)
+
+## (68.2)
 
 (68.2) Questioner With the physical energies depleted completely should I continue with the session? I’m not sure exactly what that means.
 (英文待翻译)
@@ -25,6 +31,8 @@ Thus if there is no transfer of energy, and if the instrument seems depleted to 
 We may note that the physical energy has been exhausted, not due to the distortion toward pain, although this is great at this space/time, but primarily due to the cumulative effects of continual experience of this distortion.
 (英文待翻译)
 
+## (68.3)
+
 (68.3) Questioner Would you recommend a greater rest period between the end of this session and the next session? Would that help the instrument?
 (英文待翻译)
 
@@ -37,11 +45,15 @@ At this nexus our distortion is towards a flexible scheduling of workings based 
 Thus, if the instrument’s condition is truly marginal, by all means let more rest occur between workings. However, if there is desire for the working, and the instrument is at all able, in your careful opinion, it is, shall we say, a well done action for this group to work. We cannot be more precise, for this contact is a function of your free will.
 (英文待翻译)
 
+## (68.4)
+
 (68.4) Questioner The primary reason that we considered it important to have this session today is that I might not be around for a while, and I had a pressing question about what happened Sunday night when, apparently, the instrument was slipping into a trance state during one of the normal meetings,[24] and I would like to question you on this. Can you give me information about what happened?
 (英文待翻译)
 
 Ra I am Ra. We can.
 (英文待翻译)
+
+## (68.5)
 
 (68.5) Questioner Would you tell me what happened in that case?
 (英文待翻译)
@@ -61,6 +73,8 @@ Thus what occurred was the ones of Latwii never let go of this instrument, altho
 The act of continued communication caused the entity to be unable to grasp the instrument’s mind/body/spirit complex, and after but a small measure of your space/time, Latwii recovered the now completely amalgamated instrument and gave it continued communication to steady it during the transition back into integration.
 (英文待翻译)
 
+## (68.6)
+
 (68.6) Questioner Could you tell me what the plan of the fifth-density negatively oriented entity was, and how it would have accomplished it, and what the results would have been if it had worked?
 (英文待翻译)
 
@@ -70,11 +84,15 @@ Ra I am Ra. The plan, which is ongoing, was to take the mind/body/spirit complex
 At this point the higher self of the instrument would have the choice of leaving the mind/body/spirit complex in negative sp— we correct— time/space, or of allowing incarnation in space/time of equivalent vibration and polarity distortions. Thus this entity would become a negatively polarized entity without the advantage of native negative polarization. It would find a long path to the Creator under these circumstances although the path would inevitably end well.
 (英文待翻译)
 
+## (68.7)
+
 (68.7) Questioner Then you are saying that if this fifth-density negative entity is successful in its attempts to transfer the mind/body/spirit complex, when that complex is in what we call the trance state, to negatively polarized time/space, then the higher self has no choice but to allow incarnation in negatively polarized space/time? Is that correct?
 (英文待翻译)
 
 Ra I am Ra. This is incorrect. The higher self could allow the mind/body/spirit complex to remain in time/space. However, it is unlikely that the higher self would do so indefinitely due to its distortion towards the belief that the function of the mind/body/spirit complex is to experience and learn from other-selves, thus experiencing the Creator. A highly polarized positive mind/body/spirit complex surrounded by negative portions of space/time[25] will experience only darkness, for, like the magnet, there is no, shall we say, likeness. Thus a barrier is automatically formed.
 (英文待翻译)
+
+## (68.8)
 
 (68.8) Questioner Let me be sure that I understand you. Is that darkness experienced in negative space/time, or in negative time/space?
 (英文待翻译)
@@ -82,11 +100,15 @@ Ra I am Ra. This is incorrect. The higher self could allow the mind/body/spirit 
 Ra I am Ra. Negative time/space.
 (英文待翻译)
 
+## (68.9)
+
 (68.9) Questioner Incarnation in negative space/time, then, in a condition like that would result in incarnation into which density level for, let us take as an example, the instrument?
 (英文待翻译)
 
 Ra I am Ra. The answer to this query violates the First Distortion.
 (英文待翻译)
+
+## (68.10)
 
 (68.10) Questioner OK, let’s not take the instrument then as an example. Let’s say that this was done to a wanderer of sixth density. If this answer violates the First Distortion, don’t answer. But let’s say a sixth-density wanderer had this happen and went into negative time/space. Would that be a sixth-density negative time/space, and would he incarnate into sixth-density negative space/time?
 (英文待翻译)
@@ -94,11 +116,15 @@ Ra I am Ra. The answer to this query violates the First Distortion.
 Ra I am Ra. Your assumption is correct. The strength of the polarization would be matched as far as possible. In some positive sixth-density wanderers the approximation would not quite be complete due to the paucity of negative sixth-density energy fields of the equivalent strength.
 (英文待翻译)
 
+## (68.11)
+
 (68.11) Questioner Is the reason that this could be done the fact that the wanderer’s mind/body/spirit complex extracted in what we call the trance state, leaving the third-density physical, in this state the wanderer does not have the full capability or capability to magically defend itself? Is this correct?
 (英文待翻译)
 
 Ra I am Ra. In the case of this instrument, this is correct. This is also correct when applied, almost without exception, to those instruments working in trance which have not consciously experienced magical training in time/space in the, shall we say, present incarnation. The entities of your density capable of magical defense in this situation are extremely rare.
 (英文待翻译)
+
+## (68.12)
 
 (68.12) Questioner It would seem to me that since I can’t imagine anything . . . anything worse, shall I say, than this particular result, other than possibly the total disintegration of the mind/body/spirit complex due to nuclear bomb, that it would be very advisable to seek out the magical training and defense for this situation. Could Ra, and would Ra, instruct in this type of magical defense?
 (英文待翻译)
@@ -109,11 +135,15 @@ Ra I am Ra. This request lies beyond the First Distortion. The entity seeking ma
 To take an entity before it is ready and offer it the scepter of magical power is to infringe in an unbalanced manner. We may suggest with some asperity[26] that the instrument never call upon Ra in any way while unprotected by the configuration which is at this time present.
 (英文待翻译)
 
+## (68.13)
+
 (68.13) Questioner We have been speaking almost precisely of the portion of the Esmerelda Sweetwater book which we wrote having to do with Trostrick’s misplacement of the space girl’s mind/body/spirit complex. What is the significance of that work that we did with respect to our lives? It has been confusing to me for some time how that meshes in. Can you tell me that?
 (英文待翻译)
 
 Ra I am Ra. We scan each and find we may speak.
 (英文待翻译)
+
+## (68.14)
 
 (68.14) Questioner Would you please do so now?
 (英文待翻译)
@@ -130,11 +160,15 @@ Time had become available in its present-moment form. The scenario of the volume
 This is due to the action of free will in all of the creation. However, the volume contains a view of significant events, both symbolically and specifically, which you saw under the influence of the magnetic attraction which was released when the commitment was made and full memory of the dedication of this, what you may call, mission restored.[27]
 (英文待翻译)
 
+## (68.15)
+
 (68.15) Questioner We have a situation with which I am concerned having to do with the understanding, I shall say (poor word of course), completely the . . . This activity occurs due to polarity . . . I think that it is important for me to investigate the techniques, if they are within the First Distortion, of the fifth-density negative entity who wishes to displace the mind/body/spirit complexes of this group. Am I within the First Distortion in asking you to describe how this entity goes about this working?
 (英文待翻译)
 
 Ra I am Ra. You are.
 (英文待翻译)
+
+## (68.16)
 
 (68.16) Questioner Well how does the fifth-density entity go about this working from the very start of his being alerted to the fact that we exist. How does that occur? Can you please trace the steps that he involves himself in? Please.
 (英文待翻译)
@@ -151,11 +185,15 @@ When the instrument leaves its physical vehicle it does so freely. Thus the misp
 We are aware of your pressing desire to know how to become impervious, as a group, to any influences such as this. The processes which you seek are a matter of your free choice. You are aware of the principles of magical work. We cannot speak to advise, but can only suggest, as we have before, that it would be appropriate for this group to embark upon such a path as a group, but not individually, for obvious reasons.
 (英文待翻译)
 
+## (68.17)
+
 (68.17) Questioner I am interested in how the First Distortion applies to the negatively polarized entity misplacing the mind/body/spirit complex. Why is the negatively polarized entity followed to the place of negative time/space? Why would one of us freely follow the entity?
 (英文待翻译)
 
 Ra I am Ra. The positive polarity sees love in all things. The negative polarity is clever.
 (英文待翻译)
+
+## (68.18)
 
 (68.18) Questioner Then I am assuming if the negative polarity used any other approach that did not use the free will of the other-self he would lose magical polarization and power. This is correct, isn’t it?
 (英文待翻译)
@@ -165,6 +203,8 @@ Ra I am Ra. This is correct.
 
 The transferred energy grows low. We wish to close. Are there any short queries before we leave this instrument?
 (英文待翻译)
+
+## (68.19)
 
 (68.19) Questioner Only is there anything that we can do to make the instrument more comfortable or improve the contact?
 (英文待翻译)

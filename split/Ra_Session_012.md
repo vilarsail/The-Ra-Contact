@@ -4,8 +4,12 @@
 January 28, 1981
 (英文待翻译)
 
+## (12.0)
+
 (12.0) Ra I am Ra. I greet you in the love and the light of the Infinite Creator. I communicate now.
 (英文待翻译)
+
+## (12.1)
 
 (12.1) Questioner I got a call from Henry Puharich this afternoon. He will be here next month. I want to ask you if it is possible for him to join in our circle and ask questions. And also if Michel D’Obrenovic, who’s also known as George Hunt Williamson, happens to come here, would it be all right for him to be in the circle?
 (英文待翻译)
@@ -16,6 +20,8 @@ Ra I am Ra. These entities, at present, are not properly attuned for the particu
 This group is highly balanced to this instrument’s vibratory distortions due to, firstly, contact with the instrument on a day-to-day basis. Secondly, due to contact with the instrument through meditation periods. Thirdly, through a personal mind/body/spirit-complex distortion towards contemplation which in sum causes this group to be effective.
 (英文待翻译)
 
+## (12.2)
+
 (12.2) Questioner Thank you. Continuing with the previous session, you mentioned that the Orion crusaders came here in chariots. Could you describe a chariot?
 (英文待翻译)
 
@@ -25,11 +31,15 @@ Ra I am Ra. The term chariot is a term used in warfare among your peoples. That 
 Other craft include disc-shaped objects of a small nature approximately twelve feet in your measurement in diameter, the box-like shape approximately forty feet to a side in your measurement. Other craft can take on a desired shape through the use of thought control mechanisms. There are various civilization complexes which work within this group. Some are more able to use intelligent infinity than others. The information is very seldom shared; therefore, the chariots vary greatly in shape and appearance.
 (英文待翻译)
 
+## (12.3)
+
 (12.3) Questioner Is there any effort by the Confederation to stop the Orion chariots from arriving here?
 (英文待翻译)
 
 Ra I am Ra. Every effort is made to quarantine this planet. However, the network of Guardians, much like any other pattern of patrols on whatever level, does not hinder each and every entity from penetrating quarantine, for if request is made in light/love, the Law of One will be met with acquiescence. If the request is not made due to the slipping through the net, then there is penetration of this net.
 (英文待翻译)
+
+## (12.4)
 
 (12.4) Questioner Who makes this request?
 (英文待翻译)
@@ -37,17 +47,23 @@ Ra I am Ra. Every effort is made to quarantine this planet. However, the network
 Ra I am Ra. Your query is unclear. Please restate.
 (英文待翻译)
 
+## (12.5)
+
 (12.5) Questioner I didn’t quite understand. How does the Confederation stop the Orion chariot from coming through the quarantine? What actions do . . .
 (英文待翻译)
 
 Ra I am Ra. There is contact at the level of light-form, or light-body being, depending upon the vibratory level of the Guardian. These Guardians sweep reaches of your earth’s energy fields attempting to be aware of any entities approaching. An entity which is approaching is hailed in the name of the One Creator. Any entity thus hailed is bathed in love/light and will of free will obey the quarantine due to the power of the Law of One.
 (英文待翻译)
 
+## (12.6)
+
 (12.6) Questioner What would happen to the entity if he did not obey the quarantine after being hailed?
 (英文待翻译)
 
 Ra I am Ra. To not obey quarantine after being hailed on the level of which we speak would be equivalent to your not stopping upon walking into a solid brick wall.
 (英文待翻译)
+
+## (12.7)
 
 (12.7) Questioner What would happen to the entity then if he did this? What’d happen to his chariot?
 (英文待翻译)
@@ -58,11 +74,15 @@ Ra I am Ra. The Creator is one being. The vibratory level of those able to reach
 The only beings who are able to penetrate the quarantine are those who discover windows or distortions in the space/time continua surrounding your planet’s energy fields. Through these windows they come. These windows are rare and unpredictable.
 (英文待翻译)
 
+## (12.8)
+
 (12.8) Questioner Does this account for what we call the “UFO Flaps” where a large number of UFOs show up like in 1973?
 (英文待翻译)
 
 Ra I am Ra. This is correct.
 (英文待翻译)
+
+## (12.9)
 
 (12.9) Questioner Well then, are most of the UFOs which are seen in our skies from the Orion group?
 (英文待翻译)
@@ -73,11 +93,15 @@ Ra I am Ra. Many of those seen in your skies are of the Orion group. They send o
 There are many thought-form entities in your skies which are of a positive nature and are the projections of the Confederation. Other sightings are due to the inadvertent visualization by your peoples’ optical mechanisms of your own government’s weaponry.
 (英文待翻译)
 
+## (12.10)
+
 (12.10) Questioner Which group was it that contacted Henry Puharich in Israel, right around 1972?
 (英文待翻译)
 
 Ra I am Ra. We must refrain from answering this query due to the possibility/probability that the one you call Henry will read this answer. This would cause distortions in his future. It is necessary that each being use free and complete discernment from within the all-self which is at the heart of the mind/body/spirit complex.
 (英文待翻译)
+
+## (12.11)
 
 (12.11) Questioner Does that also apply to answering who was contacting the group that I originally was in, in 1962?
 (英文待翻译)
@@ -85,11 +109,15 @@ Ra I am Ra. We must refrain from answering this query due to the possibility/pro
 Ra I am Ra. This query may be answered. The group contacted was the Confederation.
 (英文待翻译)
 
+## (12.12)
+
 (12.12) Questioner Did they have any of their craft in our area at that time?
 (英文待翻译)
 
 Ra I am Ra. There was no craft. There was a thought-form.
 (英文待翻译)
+
+## (12.13)
 
 (12.13) Questioner You mentioned the Orion crusaders, when they do get through the net, give both technical and non-technical information. We know what you mean by technical information, but what type of non-technical information do they give to those they contact? Am I right in assuming that this is all done by telepathic communication?
 (英文待翻译)
@@ -97,11 +125,15 @@ Ra I am Ra. There was no craft. There was a thought-form.
 Ra I am Ra. This is correct. Through telepathy, the philosophy of the Law of One with the distortion of service to self is promulgated. In advanced groups, there are rituals and exercises given, and these have been written down just as the service-to-others oriented entities have written down the promulgated philosophy of their teachers. The philosophy concerns the service of manipulating others that they may experience service towards the other-self, thus through this experience becoming able to appreciate service to self. These entities thus would become oriented towards service to self and in turn manipulate yet others so that they, in turn, might experience the service towards the other-self.
 (英文待翻译)
 
+## (12.14)
+
 (12.14) Questioner Would this be the origin of what we call black magic?
 (英文待翻译)
 
 Ra I am Ra. This is correct in one sense, incorrect in another. The Orion group has aided the so-called negatively oriented among your mind/body/spirit complexes. These same entities would be concerning themselves with service to self in any case, and there are many upon your so-called inner planes which are negatively oriented and thus available as inner teachers, or guides, and so-called possessors of certain souls who seek this distortion of service to self.
 (英文待翻译)
+
+## (12.15)
 
 (12.15) Questioner Is it possible for an entity here on Earth to be so confused as to call both the Confederation and the Orion group in an alternating way, one, then the other, [inaudible] back to [inaudible]?
 (英文待翻译)
@@ -112,11 +144,15 @@ Ra I am Ra. It is entirely possible for the untuned channel, as you call that se
 Many of your so-called contacts among your people have been confused and self-destructive because the channels were oriented towards service to others, but in the desire for proof were open to the lying information of the crusaders who then were able to neutralize the effectiveness of the channel.
 (英文待翻译)
 
+## (12.16)
+
 (12.16) Questioner Are most of these crusaders fourth-density?
 (英文待翻译)
 
 Ra I am Ra. There is a majority of fourth-density. That is correct.
 (英文待翻译)
+
+## (12.17)
 
 (12.17) Questioner Does an individual in the fourth density normally appear, or are they normally invisible to us?
 (英文待翻译)
@@ -124,11 +160,15 @@ Ra I am Ra. There is a majority of fourth-density. That is correct.
 Ra I am Ra. The use of the word “normal” is one which befuddles the meaning of the question. Let us rephrase for clarity. The fourth density is, by choice, not visible to third density. It is possible for fourth density to be visible. However, it is not the choice of the fourth-density entity to be visible due to the necessity for concentration upon a rather difficult vibrational complex which is the third density you experience.
 (英文待翻译)
 
+## (12.18)
+
 (12.18) Questioner Are there any Confederation or Orion individuals living on Earth visible to us and important in our society at this time? Walking among us?
 (英文待翻译)
 
 Ra I am Ra. There are no entities of either group walking among you at this time. However, the crusaders of Orion use two types of entities to do their bidding, shall we say. The first type is a thought-form; the second, a kind of robot.
 (英文待翻译)
+
+## (12.19)
 
 (12.19) Questioner Could you describe the robot?
 (英文待翻译)
@@ -136,11 +176,15 @@ Ra I am Ra. There are no entities of either group walking among you at this time
 Ra I am Ra. The robot may look like any other being. It is a construct.
 (英文待翻译)
 
+## (12.20)
+
 (12.20) Questioner Is the robot what is normally called “Men in Black?”
 (英文待翻译)
 
 Ra I am Ra. This is incorrect.
 (英文待翻译)
+
+## (12.21)
 
 (12.21) Questioner Who are the Men in Black?
 (英文待翻译)
@@ -148,11 +192,15 @@ Ra I am Ra. This is incorrect.
 Ra I am Ra. The Men in Black are a thought-form type of entity which have some beingness to their make-up. They have certain physical characteristics given them. However, their true vibrational nature is without third-density vibrational characteristics, and therefore they are able to materialize and dematerialize when necessary.
 (英文待翻译)
 
+## (12.22)
+
 (12.22) Questioner Are all of these Men in Black then used by the Orion crusaders?
 (英文待翻译)
 
 Ra I am Ra. This is correct.
 (英文待翻译)
+
+## (12.23)
 
 (12.23) Questioner If one were to visit me, and I grabbed him and locked him in a closet, could I keep him, or would he disappear?
 (英文待翻译)
@@ -160,17 +208,23 @@ Ra I am Ra. This is correct.
 Ra I am Ra. It depends upon which type of entity you grab. You are perhaps able to perceive a construct. The construct might be kept for a brief period, although these constructs also have an ability to disappear. The programming on these constructs, however, makes it more difficult to remotely control them. You would not be able to grapple with a thought-form entity of the Men in Black, as you call it, type.
 (英文待翻译)
 
+## (12.24)
+
 (12.24) Questioner Would this be against the Law of One, and I would be making a mistake by grabbing these entities?
 (英文待翻译)
 
 Ra I am Ra. There are no mistakes under the Law of One.
 (英文待翻译)
 
+## (12.25)
+
 (12.25) Questioner What I’m saying is, would I be polarizing more toward self-service or toward service for others when I did this act of locking up the thought-form or construct?
 (英文待翻译)
 
 Ra I am Ra. You may consider that question for yourself. We interpret the Law of One, but not to the extent of advice.
 (英文待翻译)
+
+## (12.26)
 
 (12.26) Questioner Thank you. Well, you spoke of wanderers. Who are wanderers? Where do they come from?
 (英文待翻译)
@@ -181,11 +235,15 @@ Ra I am Ra. Imagine, if you will, the sands of your shores. As countless as the 
 When a social memory complex has achieved its complete understanding of its desire, it may conclude that its desire is service to others with the distortion towards reaching their hand, figuratively, to any entities who call for aid. These entities, whom you may call the Brothers and Sisters of Sorrow, move towards this calling of sorrow. These entities are from all reaches of the infinite creation and are bound together by the desire to serve in this distortion.
 (英文待翻译)
 
+## (12.27)
+
 (12.27) Questioner How many of them are incarnate on Earth now?
 (英文待翻译)
 
 Ra I am Ra. The number is approximate due to an heavy influx of those birthed at this time due to an intensive need to lighten the planetary vibration and thus aid in harvest. The number approaches sixty-five million.
 (英文待翻译)
+
+## (12.28)
 
 (12.28) Questioner Are most of these from the fourth density? What density do they come from?
 (英文待翻译)
@@ -193,17 +251,23 @@ Ra I am Ra. The number is approximate due to an heavy influx of those birthed at
 Ra I am Ra. Few there are of fourth density. The largest number of wanderers, as you call them, are of the sixth density. The desire to serve must be distorted towards a great deal of purity of mind and what you may call foolhardiness or bravery, depending upon your distortion complex judgment. The challenge/danger of the wanderer is that it will forget its mission, become karmically involved, and thus be swept into the maelstrom from which it had incarnated to aid the destruction.[8]
 (英文待翻译)
 
+## (12.29)
+
 (12.29) Questioner What could one of these entities do to become karmically involved? Could you give us an example?
 (英文待翻译)
 
 Ra I am Ra. An entity which acts in a consciously unloving manner in action with other beings can become karmically involved.
 (英文待翻译)
 
+## (12.30)
+
 (12.30) Questioner I just had a thought. Do any of these wanderers have physical ailments in this earth situation?
 (英文待翻译)
 
 Ra I am Ra. Due to the extreme variance between the vibratory distortions of third density and those of the more dense densities, if you will, wanderers have, as a general rule, some form of handicap, difficulty, or feeling of alienation which is severe. The most common of these difficulties are alienation, the reaction against the planetary vibration by personality disorders, as you would call them, and body complex ailments indicating difficulty in adjustment to the planetary vibrations such as allergies, as you would call them.
 (英文待翻译)
+
+## (12.31)
 
 (12.31) Questioner Is there a best way for these entities to heal themselves of their physical ailments?
 (英文待翻译)
@@ -226,11 +290,15 @@ The seventh, or violet, ray is unimpaired, this being not only an energy recepto
 Is there a short question before we close this session?
 (英文待翻译)
 
+## (12.32)
+
 (12.32) Questioner Is it possible for you to tell us if any of the three of us are and have been wanderers?
 (英文待翻译)
 
 Ra I am Ra. In scanning each of the mind/body/spirit complexes present, we find an already complete assurance of this occurrence and, therefore, find no harm in recapitulating this occurrence. Each of those present are wanderers pursuing a mission, if you will.
 (英文待翻译)
+
+## (12.33)
 
 (12.33) Questioner Thank you. Is there anything that we can do to make the instrument more comfortable?
 (英文待翻译)

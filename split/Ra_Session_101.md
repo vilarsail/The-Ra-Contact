@@ -4,14 +4,20 @@
 December 21, 1982
 (英文待翻译)
 
+## (101.0)
+
 (101.0) Ra I am Ra. I greet you in the love and in the light of the One Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (101.1)
 
 (101.1) Questioner Could you first please give me the condition of the instrument?
 (英文待翻译)
 
 Ra I am Ra. All energy levels of the instrument are somewhat diminished due to the distortions of physical pain and recent mental/emotional catalyst. However, the energy levels appear to be very liable to be improved in what you call your immediate future.
 (英文待翻译)
+
+## (101.2)
 
 (101.2) Questioner Thank you. What has caused the swelling in Jim’s body, and what can be done to heal it?
 (英文待翻译)
@@ -49,6 +55,8 @@ As always the support of the harmonious group is an aid, as is meditation. It is
 Each entity has its ways of viewing and learning from the illusion, and each processes catalyst using unique circuitry. Thus all need not be the same to be equal in will and faith.
 (英文待翻译)
 
+## (101.3)
+
 (101.3) Questioner Thank you. I will make a statement as to the way I see the action, and I would request Ra’s comment. I see the present position as the Creator knowing Itself presently using the concept of polarization. We seem to accentuate or to produce catalyst to increase the desired polarization, whether the mechanism be random, through what we call the higher self, or through the services of an oppositely polarized entity acting upon us with catalyst.
 (英文待翻译)
 
@@ -57,6 +65,8 @@ All of these seem to produce the same effect which is more intense polarization 
 
 Ra I am Ra. We find your observations unexceptional and, in the large, correct.
 (英文待翻译)
+
+## (101.4)
 
 (101.4) Questioner In this particular case, which avenue was the one that produced the catalyst of the bite?
 (英文待翻译)
@@ -67,17 +77,23 @@ Ra I am Ra. The nature of catalyst is such that there is only one source, for th
 In the sense which we feel you intend, the source was the fifth-density negative friend which had noted the gradual falling away of the inharmonious patterns of the distortion called anger/frustration in the entity. The insect was easily led to an attack, and the physical vehicle, which had long-standing allergies and sensitivities, was also easily led into the mechanisms of the failure of lymphatic function and the greatly diminished ability of the immune system to remove from the yellow-ray body that which distorted it.
 (英文待翻译)
 
+## (101.5)
+
 (101.5) Questioner Something occurred to me. I am going to make a guess that my illness over the past week was a function of some action by my higher self to eliminate the possibility of a residence in the proximity of the large number of bees that I observed. Would Ra comment on my statement?
 (英文待翻译)
 
 Ra I am Ra. We can comment, not upon the questioner’s physical distortions but upon the indubitable truth of second-density hive creatures; that is, that a hive mentality as a whole can be influenced by one strong metaphysical impulse. Both the instrument and the scribe have the capacity for great distortions toward nonviability, given such an attack by a great number of the stinging insects.
 (英文待翻译)
 
+## (101.6)
+
 (101.6) Questioner Are the thought-form parameters and other general parameters of the Oakdale Road address in Atlanta such that no cleansing would be necessary, if Ra has this information?
 (英文待翻译)
 
 Ra I am Ra. No.
 (英文待翻译)
+
+## (101.7)
 
 (101.7) Questioner Would cleansing of the nature suggested for the other house just south of the airport in Atlanta be advisable for the Oakdale Road address?
 (英文待翻译)
@@ -91,6 +107,8 @@ The benign nature of the aforementioned domicile is such that the cleansing coul
 The placing of salt may be done at the place which is not being sealed [during] the first of the cleansings, and the salt may be requested to act as seal and yet allow the passage of gentle spirits such as yourselves. We suggest that you speak to this substance and name each entity for which permission is needed in order to pass. Let no person pass without permission being asked of the salt. This is the case in the residence of which you speak.
 (英文待翻译)
 
+## (101.8)
+
 (101.8) Questioner Thank you. Could Ra give information on any way that we could give information to Greta Woodrew as to how to alleviate her present condition of swelling?
 (英文待翻译)
 
@@ -99,6 +117,8 @@ Ra I am Ra. We may only suggest that the honor of propinquity to light carries w
 
 The entity which is given constant and unremitting approval by those surrounding it suffers from the loss of the mirroring effect of those which reflect truthfully rather than unquestioningly. This is not a suggestion to reinstate judgment but merely a suggestion for all those supporting instruments; that is, support, be harmonious, share in love, joy, and thanksgiving, but find love within truth, for each instrument benefits from this support more than from the total admiration which overcomes discrimination.
 (英文待翻译)
+
+## (101.9)
 
 (101.9) Questioner Thank you. I see that the forty-five minute timer window has passed, so I will ask if there is anything we can do to make the instrument more comfortable or improve the contact?
 (英文待翻译)

@@ -4,6 +4,8 @@
 January 15, 1981
 1981年1月15日
 
+## (1.0)
+
 (1.0) Ra I am Ra. I have not spoken through this instrument before. We had to wait until she was precisely tuned, as we send a narrow-band vibration. We greet you in the love and in the light of our Infinite Creator.
 (1.0) Ra 我是 Ra。我此前未曾通过这个器皿说话。我们不得不等待，直到她得到精确的调频，因为我们发送的是一种窄带振动。我们在无限造物主的爱与光中向你们致意。
 
@@ -46,6 +48,8 @@ I am Ra. We greet you once more in the love and the light of our Infinite Creato
 At this time we would be glad to attempt to speak to any subject or question which those entities in the room may have potential use in the requesting.
 此时，我们乐于尝试就房间内这些实体在请求中可能有潜在用途的任何主题或问题进行讲述。
 
+## (1.1)
+
 (1.1) Questioner It seems members of the Confederation have a specific purpose. Is this true with you, and if so, what is your purpose?
 (1.1) 发问者 星际联邦的成员似乎有一个特定的目的。这对你们来说是否如此，如果是，你们的目的是什么？
 
@@ -61,11 +65,15 @@ However, we then felt the great responsibility of staying in the capacity of rem
 Does this give you enough information from which to extract our purpose, my brother?
 这给了你足够的信息来从中提取我们的目的了吗，我的兄弟？
 
+## (1.2)
+
 (1.2) Questioner Yes, it does. Thank you.
 (1.2) 发问者 是的，足够了。谢谢你。
 
 Ra We appreciate your vibration. Is there another query?
 Ra 我们欣赏你的振动。还有其他的询问吗？
+
+## (1.3)
 
 (1.3) Questioner I’ve heard of the name “Ra” in connection with the Egyptians. Are you connected with that Ra in any way?
 (1.3) 发问者 我曾听说过与埃及人相关的”Ra”这个名字。你们与那个 Ra 有任何关联吗？
@@ -73,11 +81,15 @@ Ra 我们欣赏你的振动。还有其他的询问吗？
 Ra I am Ra. Yes, the connection is congruency. May we elucidate?
 Ra 我是 Ra。是的，这种关联是一致的。我们可以阐明吗？
 
+## (1.4)
+
 (1.4) Questioner Please do.
 (1.4) 发问者 请说。
 
 Ra What do you not understand?
 Ra 你不理解什么？
+
+## (1.5)
 
 (1.5) Questioner Could you give me a little more detail about your role with the Egyptians?
 (1.5) 发问者 你能就你们与埃及人的关系给我更多一点细节吗？
@@ -94,11 +106,15 @@ When we were no longer able to have appropriate channels through which to enunci
 Does this form a sufficient amount of information, or could we speak further?
 这构成了足够的信息量了吗，还是我们可以进一步讲述？
 
+## (1.6)
+
 (1.6) Questioner [Inaudible]
 (1.6) 发问者 [听不清]
 
 Ra Is there another query?
 Ra 还有其他的询问吗？
+
+## (1.7)
 
 (1.7) Questioner [The question was lost because the questioner was sitting too far from the tape recorder to be recorded.]
 (1.7) 发问者 [该问题丢失，因为发问者坐得离录音机太远而无法被记录。]
@@ -118,11 +134,15 @@ You are not speaking of similar or somewhat like entities or things. You are eve
 May we enunciate this law in more detail?
 我们可以更详细地阐述这一法则吗？
 
+## (1.8)
+
 (1.8) Questioner [Inaudible]
 (1.8) 发问者 [听不清]
 
 Ra Is there another query at this time?
 Ra 此时还有其他的询问吗？
+
+## (1.9)
 
 (1.9) Questioner Can you say anything about the coming planetary changes?
 (1.9) 发问者 关于即将到来的行星变化，你们能说些什么吗？
@@ -132,6 +152,8 @@ Ra 我是 Ra。我宁愿等待，直到这个器皿再次达到适当的单一�
 
 The changes are very, very trivial. We do not concern ourselves with the conditions which bring about harvest.
 这些变化非常、非常琐碎。我们并不关心那些带来收割的状况。
+
+## (1.10)
 
 (1.10) Questioner Another question. Is it possible to create any acceleration of understanding [in] other entities [or are] all efforts . . . efforts by the individual on himself accelerating his understanding? In other words, if an individual tries to act as a catalyst in general to increase the awareness of planetary consciousness, is he doing nothing but acting upon himself, or is it possible [inaudible]?
 (1.10) 发问者 另一个问题。是否可能创造对其他实体的理解加速，[还是]所有的努力……个体对自身的努力加速了他的理解？换句话说，如果一个人试图作为催化剂普遍地提升行星意识的觉知，他是否只是在作用于自身，还是可能[听不清]？
@@ -157,11 +179,15 @@ Therefore, we offer the question back to you to state that indeed it is the only
 May we speak in any other capacity upon this subject?
 我们可以以任何其他身份就这个主题发言吗？
 
+## (1.11)
+
 (1.11) Questioner Will you be available for communication? Can we call on you in the future?
 (1.11) 发问者 你们将来可以进行通讯吗？我们未来可以呼唤你们吗？
 
 Ra I am Ra. We have good contact with this instrument because of her recent experiences with trance. She is to be able to communicate our thoughts in your future. However, we advise care in disturbing the channel for a few moments, and then the proper procedure for aiding an instrument who has, to some extent, the need of re-entering the mind/body/spirit complex which the instrument has chosen for the life experience of this time/space. Do you understand how to nurture this instrument?
 Ra 我是 Ra。我们与这个器皿有良好的接触，因为她最近有出神体验。她将能够在你们的未来中传递我们的思想。然而，我们建议在干扰该管道时要小心片刻，然后采用适当的程序来帮助一个在一定程度上需要重新进入该器皿为其这个时间/空间的生命体验所选定的心/身/灵复合体的器皿。你们理解如何滋养这个器皿吗？
+
+## (1.12)
 
 (1.12) Questioner No. Could you explain it?
 (1.12) 发问者 不。你能解释一下吗？
@@ -180,6 +206,8 @@ And finally, a gift of water into which the love of all present has been given. 
 
 Do you now understand?
 你们现在理解了吗？
+
+## (1.13)
 
 (1.13) Questioner Not completely.
 (1.13) 发问者 不完全理解。

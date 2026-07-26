@@ -4,14 +4,20 @@
 March 22, 1981
 (英文待翻译)
 
+## (42.0)
+
 (42.0) Ra I am Ra. I greet you in the love and in the light of the One Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (42.1)
 
 (42.1) Questioner I have a question on balancing. It’s quite long, and we’ll copy it directly into the book as it is. If you can answer it without me reading it, it would save time, otherwise I will read it.
 (英文待翻译)
 
 Ra I am Ra. We understand your desire to preserve your opportunity. However, a summary of the query would be well. For if we answer a mentally requested query, this query shall not be published. If you wish this answer to be for private use only, we shall proceed.
 (英文待翻译)
+
+## (42.2)
 
 (42.2) Questioner I will just read it very rapidly, the question, then.
 (英文待翻译)
@@ -37,6 +43,8 @@ The catalyst of experience works in order for the learn/teachings of this densit
 This is not indifference or objectivity but a finely tuned compassion and love which sees all things as love. This seeing elicits no response due to catalytic reactions. Thus the entity is now able to become co-Creator of experiential occurrences. This is the truer balance.
 (英文待翻译)
 
+## (42.3)
+
 (42.3) Questioner I will attempt to make an analogy.
 (英文待翻译)
 
@@ -49,17 +57,23 @@ However, if you encounter another self in his territory and he attacks you, your
 Ra I am Ra. This is basically correct. However, the balanced entity will see in the seeming attack of an other-self the causes of this action which are, in most cases, of a more complex nature than the cause of the attack of the second-density bull, as was your example. Thus, this balanced entity would be open to many more opportunities for service to a third-density other-self.
 (英文待翻译)
 
+## (42.4)
+
 (42.4) Questioner Would a perfectly balanced entity feel an emotional response when being attacked by the other-self?
 (英文待翻译)
 
 Ra I am Ra. This is correct. The response is love.
 (英文待翻译)
 
+## (42.5)
+
 (42.5) Questioner In the illusion that we now experience it is difficult to maintain this response, especially if the entity’s attack results in physical pain, but I assume that this response should be maintained even through physical loss of life or extreme pain. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. This is correct and further is of a major, or principal, importance in understanding, shall we say, the principle of balance. Balance is not indifference but rather the observer not blinded by any feelings of separation but rather fully imbued with love.
 (英文待翻译)
+
+## (42.6)
 
 (42.6) Questioner In the last session you made the statement that, “We (that is Ra) spent much time/space in the fifth density balancing the intense compassion gained in fourth density.” Could you expand on this concept with respect to what we were just discussing?
 (英文待翻译)
@@ -69,6 +83,8 @@ Ra I am Ra. The fourth density, as we have said, abounds in compassion. This com
 
 Thus we, as a social memory complex of fourth density, had the tendency towards compassion even to martyrdom in aid of other-selves. When the fifth-density harvest was achieved we found that in this vibratory level flaws could be seen in the efficacy of such unrelieved compassion. We spent much time/space in contemplation of those ways of the Creator which imbue love with wisdom.
 (英文待翻译)
+
+## (42.7)
 
 (42.7) Questioner I would like to try to make an analogy for this in third density.
 (英文待翻译)
@@ -85,11 +101,15 @@ Ra I am Ra. This is incorrect. To a mind/body/spirit complex which is starving, 
 On the other hand, however, you are correct in your assumption that the green-ray response is not as refined as that which has been imbued with wisdom. This wisdom enables the entity to appreciate its contributions to the planetary consciousness by the quality of its being, without regard to activity or behavior which expects results upon visible planes.
 (英文待翻译)
 
+## (42.8)
+
 (42.8) Questioner Then why do we have the extreme starvation problem in, generally, in the area of Africa at this time? Is this . . . is there any metaphysical reason for this, or is it purely random occurrence?
 (英文待翻译)
 
 Ra I am Ra. Your previous assumption was correct as to the catalytic action of this starvation and ill health. However, it is within the free will of an entity to respond to this plight of other-selves, and the offering of the needed foodstuffs and substances is an appropriate response within the framework of your learn/teachings at this time which involve the growing sense of love for, and service to, other-selves.
 (英文待翻译)
+
+## (42.9)
 
 (42.9) Questioner What is the difference in terms of energy center activation between a person who represses emotionally charged responses to emotionally charged situations and the person who is balanced and, therefore, truly unswayed by emotionally charged situations?
 (英文待翻译)
@@ -103,6 +123,8 @@ The repression of emotions depolarizes the entity insofar as it then chooses not
 The entity which has worked long enough with the catalyst to be able to feel the catalyst but not find it necessary to express reactions is not yet balanced but suffers no depolarization due to the transparency of its experiential continuum. Thus the gradual increase in the ability to observe one’s reactions and to know the self will bring the self ever closer to a true balance. Patience is requested and suggested, for the catalyst is intense upon your plane, and its use must be appreciated over a period of consistent learn/teaching.
 (英文待翻译)
 
+## (42.10)
+
 (42.10) Questioner How can a person know when he is unswayed by an emotionally charged situation, or if he is repressing the flow of emotions, or if he is in balance and truly unswayed?
 (英文待翻译)
 
@@ -112,6 +134,8 @@ Ra I am Ra. We have spoken to this point. Therefore, we shall briefly iterate th
 You may note that it is not our recommendation that reactions to catalyst be repressed or suppressed unless such reactions would be a stumbling block not consonant with the Law of One to an other-self. It is far, far better to allow the experience to express itself in order that the entity may then make fuller use of this catalyst.
 (英文待翻译)
 
+## (42.11)
+
 (42.11) Questioner How can an individual assess what energy centers within its being are activated and in no immediate need of further attention, and which energy centers are not activated and are in need of immediate attention?
 (英文待翻译)
 
@@ -120,6 +144,8 @@ Ra I am Ra. The thoughts of an entity, its feelings or emotions, and least of al
 
 In examining these inappropriate activities of mind, body, and spirit complexes, the entity may then place these distortions in the proper vibrational ray and thus see where work is needed.
 (英文待翻译)
+
+## (42.12)
 
 (42.12) Questioner In the last session you said, “The self, if conscious to a great enough extent of the workings of the catalyst of fasting, and the techniques of programming, may, through concentration of the will and the faculty of faith alone, cause reprogramming without the analogy of fasting, diet, or other analogous body complex disciplines.”
 (英文待翻译)
@@ -133,6 +159,8 @@ Ra I am Ra. There is but one technique for this growing, or nurturing, of will a
 This, when continued, strengthens the will. The entire activity can only occur when there exists faith that an outcome of this discipline is possible.
 (英文待翻译)
 
+## (42.13)
+
 (42.13) Questioner Can you mention some exercises for helping to increase the attention span?
 (英文待翻译)
 
@@ -145,11 +173,15 @@ The visualization of simple shapes and colors which have no innate inspirational
 Whether you image the rose or the circle is not important. However, it is suggested that one or the other path towards visualization be chosen in order to exercise this faculty. This is due to the careful arrangement of shapes and colors which have been described as visualizations by those steeped in the magical tradition.
 (英文待翻译)
 
+## (42.14)
+
 (42.14) Questioner As a youth I was trained in the engineering sciences which include the necessity for three dimensional visualization for the processes of design. Would this be helpful as a foundation for the type of visualization that you are speaking of, or would it be of no value?
 (英文待翻译)
 
 Ra I am Ra. To you, the questioner, this experience was valuable. To a less-sensitized entity it would not gain the proper increase of concentrative energy.
 (英文待翻译)
+
+## (42.15)
 
 (42.15) Questioner Then the less-sensitized entity should use a— What should he use for the proper energy?
 (英文待翻译)
@@ -157,11 +189,15 @@ Ra I am Ra. To you, the questioner, this experience was valuable. To a less-sens
 Ra I am Ra. In the less sensitized individual the choosing of personally inspirational images is appropriate whether this inspiration be the rose, which is of perfect beauty, the cross, which is of perfect sacrifice, the Buddha, which is the All-being in One, or whatever else may inspire the individual.
 (英文待翻译)
 
+## (42.16)
+
 (42.16) Questioner I had one experience in meditation (which I spoke of before),[66] which was very profound, approximately twenty years ago, a little less. What disciplines would be most applicable to re-create this situation and this type of experience?
 (英文待翻译)
 
 Ra I am Ra. Your experience would best be approached from the ceremonial magical stance. However, the wanderer or adept shall have the far greater potential for this type of experience which, as you have undoubtedly analyzed to be the case, is one of an archetypal nature, one belonging to the roots of cosmic consciousness.
 (英文待翻译)
+
+## (42.17)
 
 (42.17) Questioner Was that in any way related to the Golden Dawn in ceremonial magic?
 (英文待翻译)
@@ -169,17 +205,23 @@ Ra I am Ra. Your experience would best be approached from the ceremonial magical
 Ra I am Ra. The relationship was congruency.
 (英文待翻译)
 
+## (42.18)
+
 (42.18) Questioner Then in attempting to reproduce this experience would I then best follow practices for the Order of the Golden Dawn in reproducing this?
 (英文待翻译)
 
 Ra I am Ra. To attempt to reproduce an initiatory experience is to move, shall we say, backwards. However, the practice of this form of service to others is appropriate in your case, working with your associates. It is not well for positively polarized entities to work singly. The reasons for this are obvious.
 (英文待翻译)
 
+## (42.19)
+
 (42.19) Questioner Then this experience was a form of initiation? Is this correct?
 (英文待翻译)
 
 Ra I am Ra. Yes.
 (英文待翻译)
+
+## (42.20)
 
 (42.20) Questioner Thank you. Using the teach/learning relationship of parent to its child, what type of actions would demonstrate the activation of each energy center in sequence from red through violet?
 (英文待翻译)
@@ -201,6 +243,8 @@ Secondly, the compassion of parent to child may well be tempered by the understa
 
 Is there a brief query before we leave this instrument?
 (英文待翻译)
+
+## (42.21)
 
 (42.21) Questioner If this is not brief enough, don’t bother to answer it. But first, I just wondered if certain parts are always removed—the same parts removed—in cattle mutilations, and is that related to the energy centers, and why these parts, these particular parts, were removed. But if that is too long of an answer, I’ll just ask if there’s anything that we can do to make the instrument more comfortable or improve the contact?
 (英文待翻译)

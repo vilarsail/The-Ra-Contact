@@ -4,8 +4,12 @@
 February 11, 1981
 (英文待翻译)
 
+## (23.0)
+
 (23.0) Ra I am Ra. I greet you in the love and the light of the Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (23.1)
 
 (23.1) Questioner You were speaking yesterday of the first contact made by the Confederation which occurred during our third major cycle. You stated that you appeared in the skies over Egypt at the same time, approximately, aid was first given to Atlantis. Can you tell me why you went to Egypt and your, shall we say, orientation of attitude and thinking when you first went to Egypt?
 (英文待翻译)
@@ -16,11 +20,15 @@ Ra I am Ra. At the time of which you speak there were those who chose to worship
 We were drawn to spend some time, as you would call it, scanning the peoples for a serious interest amounting to a seeking with which we might help without infringement. We found that at that time the social complex was quite self-contradictory in its so-called religious beliefs, and, therefore, there was not an appropriate calling for our vibration. Thus, at that time, which you know of as approximately eighteen thousand [18,000] of your years in your past, we departed without taking action.
 (英文待翻译)
 
+## (23.2)
+
 (23.2) Questioner You stated yesterday that you appeared in the skies over Egypt at that time. Were the Egyptian entities able to see you in their skies?
 (英文待翻译)
 
 Ra I am Ra. This is correct.
 (英文待翻译)
+
+## (23.3)
 
 (23.3) Questioner What did they see, and how did this affect their attitudes?
 (英文待翻译)
@@ -31,17 +39,23 @@ Ra I am Ra. They saw what you would speak of as crystal-powered bell-shaped craf
 This did not affect them due to their firm conviction that many wondrous things occurred as a normal part of a world, as you would call it, in which many, many deities had powerful control over supernatural events.
 (英文待翻译)
 
+## (23.4)
+
 (23.4) Questioner Did you have a reason for being visible to them rather than invisible?
 (英文待翻译)
 
 Ra I am Ra. This is correct.
 (英文待翻译)
 
+## (23.5)
+
 (23.5) Questioner Can you tell me your reason for being visible to them?
 (英文待翻译)
 
 Ra I am Ra. We allowed visibility because it did not make any difference.
 (英文待翻译)
+
+## (23.6)
 
 (23.6) Questioner I see. Then at this time you did not contact them. Can you tell me the same . . . answer the same questions I just asked with respect to your next attempt to contact the Egyptians?
 (英文待翻译)
@@ -70,6 +84,8 @@ Meanwhile, the information concerning initiation and healing by crystal was bein
 At this entity’s physical dissolution from your third-density physical plane, as we have said before, our teachings became quickly perverted, our structures returning once again to the use of the so-called “royal,” or those with distortions towards power.
 (英文待翻译)
 
+## (23.7)
+
 (23.7) Questioner When you spoke of pyramid healing, I am assuming that the primary healing was for the mind. Is this correct?
 (英文待翻译)
 
@@ -78,6 +94,8 @@ Ra I am Ra. This is partially correct. The healing, if it is to be effectuated, 
 
 First, however, it is necessary to activate the sense of the spiritual channel or shuttle. Then whether the blockage is from spiritual to mental, or from mental to physical, or whether it may simply be a random and purely physical trauma, healing may then be carried out.
 (英文待翻译)
+
+## (23.8)
 
 (23.8) Questioner When you started building the pyramid at Giza using thought, were you at that time in contact with incarnate Egyptians, and did they observe this building?
 (英文待翻译)
@@ -88,11 +106,15 @@ Ra I am Ra. At that time we were not in close contact with incarnate entities up
 The appearance of the pyramid was a matter of tremendous surprise. However, it was carefully designed to coincide with the incarnation of one known as a great architect. This entity was later made into a deity, in part due to this occurrence.
 (英文待翻译)
 
+## (23.9)
+
 (23.9) Questioner What name did they give this deity?
 (英文待翻译)
 
 Ra I am Ra. This deity had the sound vibration complex Imhotep.
 (英文待翻译)
+
+## (23.10)
 
 (23.10) Questioner Thank you. Then as an overall success, what can you tell me about the relative success of the pyramid in any way at all? I understand that it was . . . the pyramids for the purpose were basically unsuccessful in that they didn’t produce the rise in consciousness that you’d hoped for, but there must have been some success. Can you tell me of that?
 (英文待翻译)
@@ -106,11 +128,15 @@ Our difficulty lay in the honor/responsibility of correcting the distortions of 
 Thus, we would perhaps be in the position of paradox in that as one saw an illumination, we were what you call successful, and as others became more sorrowful and confused, we were failures. These are your terms. We persist in seeking to serve.
 (英文待翻译)
 
+## (23.11)
+
 (23.11) Questioner You probably can’t answer this question, but I will ask it now since we are in the area that I think this occurred in. I feel this somewhat of a duty of mine to ask this question because Henry Puharich will be visiting me later this month. Was this entity involved in any of these times of which you have just spoken?
 (英文待翻译)
 
 Ra I am Ra. You are quite correct in your assumption that we can speak in no way concerning the entity Henry. If you will consider this entity’s distortions with regard to what you call “proof” you will understand/grasp our predicament.
 (英文待翻译)
+
+## (23.12)
 
 (23.12) Questioner I had assumed before I asked the question that that would be the answer. I only asked it for his benefit because he would have wished for me to.
 (英文待翻译)
@@ -121,17 +147,23 @@ Can you tell me what happened to Akhenaten after his physical death?
 Ra I am Ra. This entity was then put through the series of healing and review of incarnational experience which is appropriate for third-density experience. This entity had been somewhat in the distortions of power ameliorated by the great devotion to the Law of One. This entity thus resolved to enter a series of incarnations in which it had no distortions towards power.
 (英文待翻译)
 
+## (23.13)
+
 (23.13) Questioner Thank you. Can you tell me what the average life span was at the time of Akhenaten, for the Egyptians?
 (英文待翻译)
 
 Ra I am Ra. The average life span of these people was approximately thirty-five to fifty of your years. There was much, what you would call, disease of a physical complex nature.
 (英文待翻译)
 
+## (23.14)
+
 (23.14) Questioner Can you tell me of the reasons for the disease? I think I already know, but I think it might be good for the book to state this at this time.
 (英文待翻译)
 
 Ra I am Ra. This is, as we have mentioned before, not particularly informative with regard to the Law of One. However, the land you know of as Egypt at that time was highly barbarous in its living conditions, as you would call them. The river which you call Nile was allowed to flood and to recede, thus providing the fertile grounds for the breeding of diseases which may be carried by insects. Also, the preparation of foodstuffs allowed diseases to form. Also, there was difficulty in many cases with sources of water, and water which was taken caused disease due to the organisms therein.
 (英文待翻译)
+
+## (23.15)
 
 (23.15) Questioner I was really questioning more about the more basic cause of the disease rather than the mechanism of its transmission. I was going back to the root or thought which created the possibility of this disease. Could you shortly tell me if I am correct in assuming that the general reduction of thought over the long time on planet Earth with respect to an understanding of the Law of One created a condition in which this, what we call, disease could develop? Is this correct?
 (英文待翻译)
@@ -141,6 +173,8 @@ Ra I am Ra. This is correct and perceptive. You, as questioner, begin now to pen
 
 The root cause in this particular society was not so much a bellicose action—although there were, shall we say, tendencies—but rather the formation of a money system and a very active trading and development of those tendencies towards greed and power; thus, the enslaving of entities by other entities and the misapprehension of the Creator within each entity.
 (英文待翻译)
+
+## (23.16)
 
 (23.16) Questioner Thank you. Now, I understand, if I am correct, that a South American contact was also made. Can you tell me of the . . . approximately the same question I asked about your contact, with respect to the attitude or . . . about the contact, and its ramifications, and the plan for the contact, and why the people were contacted in South America?
 (英文待翻译)
@@ -169,17 +203,23 @@ As in our experience, the teachings were, for the most part, greatly and grossly
 May we ask if there are any questions of a brief nature before we close?
 (英文待翻译)
 
+## (23.17)
+
 (23.17) Questioner The only questions I have, is there anything we can do to make the instrument more comfortable, and since you stated that she seems to be low on energy, is it possible at all to have another session later today?
 (英文待翻译)
 
 Ra I am Ra. All is well with alignments. However, this instrument would benefit from rest from the trance state for this diurnal period.
 (英文待翻译)
 
+## (23.18)
+
 (23.18) Questioner Thank you.
 (英文待翻译)
 
 Ra Is there any other brief question?
 (英文待翻译)
+
+## (23.19)
 
 (23.19) Questioner This is a dumb question, but there was a movie called Battle Beyond the Stars. I don’t know if you are familiar with it or not. I guess you are. It seemed to have what you’re telling us included in the script. Is this correct? Do you know anything about it?
 (英文待翻译)

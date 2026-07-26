@@ -4,8 +4,12 @@
 February 17, 1981
 (英文待翻译)
 
+## (26.0)
+
 (26.0) Ra I am Ra. I greet you in the love and the light of the Infinite Creator. I communicate now.
 (英文待翻译)
+
+## (26.1)
 
 (26.1) Questioner The first question is that, is any of the changing of what we’ve done here for the instrument going to affect communication of the instrument in any way? Have we set up here all right?
 (英文待翻译)
@@ -13,11 +17,15 @@ February 17, 1981
 Ra I am Ra. This is correct.
 (英文待翻译)
 
+## (26.2)
+
 (26.2) Questioner And do you mean that everything is satisfactory for continued communication?
 (英文待翻译)
 
 Ra I am Ra. We meant that the changes affect this communication.
 (英文待翻译)
+
+## (26.3)
 
 (26.3) Questioner Should we discontinue this communication because of these changes, or should we continue?
 (英文待翻译)
@@ -25,11 +33,15 @@ Ra I am Ra. We meant that the changes affect this communication.
 Ra I am Ra. You may do as you wish. However, we would be unable to use this instrument at this space/time nexus without these modifications.
 (英文待翻译)
 
+## (26.4)
+
 (26.4) Questioner Assuming that it is all right to continue, we’re down to the last 3,000 years of this present cycle, and I was wondering if the Law of One in either written or spoken form has been made available within this past 3,000 years in any complete way such as we’re doing now? Is it available in any other source?
 (英文待翻译)
 
 Ra I am Ra. There is no possibility of a complete source of information of the Law of One in this density. However, certain of your writings passed to you as your so-called holy works have portions of this law.
 (英文待翻译)
+
+## (26.5)
 
 (26.5) Questioner Does the Bible as we know it have portions of this law in it?
 (英文待翻译)
@@ -37,11 +49,15 @@ Ra I am Ra. There is no possibility of a complete source of information of the L
 Ra I am Ra. This is correct.
 (英文待翻译)
 
+## (26.6)
+
 (26.6) Questioner Can you tell me if the Old Testament has any of the Law of One?
 (英文待翻译)
 
 Ra I am Ra. This is correct.
 (英文待翻译)
+
+## (26.7)
 
 (26.7) Questioner Which has more of the Law of One in it, the Old Testament or the New Testament?
 (英文待翻译)
@@ -49,11 +65,15 @@ Ra I am Ra. This is correct.
 Ra I am Ra. Withdrawing from each of the collections of which you speak the portions having to do with the Law of One, the content is approximately equal. However, the so-called Old Testament has a larger amount of negatively influenced material, as you would call it.
 (英文待翻译)
 
+## (26.8)
+
 (26.8) Questioner Can you tell me about what percentage is Orion-influenced in both the Old and the New Testaments?
 (英文待翻译)
 
 Ra We prefer that this be left to the discretion of those who seek the Law of One. We are not speaking in order to judge. Such statements would be construed by some of those who may read this material as judgmental. We can only suggest a careful reading and inward digestion of the contents. The understandings will become obvious.
 (英文待翻译)
+
+## (26.9)
 
 (26.9) Questioner Thank you. Could you please make the instrument cough?
 (英文待翻译)
@@ -61,17 +81,23 @@ Ra We prefer that this be left to the discretion of those who seek the Law of On
 Ra [Cough.]
 (英文待翻译)
 
+## (26.10)
+
 (26.10) Questioner Thank you. Have you communicated with any of our population in the third-density incarnate state in recent times?
 (英文待翻译)
 
 Ra I am Ra. Please restate, specifying “recent times” and the pronoun, “you.”
 (英文待翻译)
 
+## (26.11)
+
 (26.11) Questioner Has Ra communicated with any of our population in this century, in the last, say, eighty years?
 (英文待翻译)
 
 Ra I am Ra. We have not.
 (英文待翻译)
+
+## (26.12)
 
 (26.12) Questioner Has the Law of One been communicated within the past eighty years by any other source to an entity in our population?
 (英文待翻译)
@@ -82,6 +108,8 @@ Ra I am Ra. The Ways of One have seldom been communicated, although there are ra
 There have been many communications from fourth density due to the drawing towards the harvest to fourth density. These are the Ways of Universal Love and Understanding. The other teachings are reserved for those whose depth of understanding, if you will excuse this misnomer, recommend and attract such further communication.
 (英文待翻译)
 
+## (26.13)
+
 (26.13) Questioner Did the Confederation then step up its program of helping planet Earth sometimes, some time late in this last major cycle? It seems that they did from the previous data, especially with the Industrial Revolution. Can you tell me the attitudes and reasonings behind this step up? Is there any reason other than that they just wanted to produce more leisure time in the last, say, a hundred years of the cycle? Is this the total reason?
 (英文待翻译)
 
@@ -91,11 +119,15 @@ Ra I am Ra. This is not the total reason. Approximately two zero zero [200] of y
 The wanderers which came among you began to make themselves felt at approximately this time, firstly offering ideas or thoughts containing the distortion of Free Will. This was the prerequisite for further wanderers which had information of a more specific nature to offer. The thought must precede the action.
 (英文待翻译)
 
+## (26.14)
+
 (26.14) Questioner Could you please make the instrument cough?
 (英文待翻译)
 
 Ra [Cough.]
 (英文待翻译)
+
+## (26.15)
 
 (26.15) Questioner Wondering if the one, Abraham Lincoln, could have possibly been a wanderer?
 (英文待翻译)
@@ -106,11 +138,15 @@ Ra I am Ra. This is incorrect. This entity was a normal, shall we say, Earth bei
 You would do better considering the incarnations of wanderers such as the one known as Thomas, the one known as Benjamin.
 (英文待翻译)
 
+## (26.16)
+
 (26.16) Questioner I am assuming you mean Thomas Edison and Benjamin Franklin?
 (英文待翻译)
 
 Ra This is incorrect. We were intending to convey the sound vibration complex, Thomas Jefferson. The other, correct.
 (英文待翻译)
+
+## (26.17)
 
 (26.17) Questioner Thank you. Can you tell me where the entity that used Lincoln—Abraham’s—body, what density he came from and where?
 (英文待翻译)
@@ -118,17 +154,23 @@ Ra This is incorrect. We were intending to convey the sound vibration complex, T
 Ra I am Ra. This entity was fourth-vibration.
 (英文待翻译)
 
+## (26.18)
+
 (26.18) Questioner I assume positive?
 (英文待翻译)
 
 Ra That is correct.
 (英文待翻译)
 
+## (26.19)
+
 (26.19) Questioner Was his assassination in any way influenced by Orion or any other negative force?
 (英文待翻译)
 
 Ra I am Ra. This is correct.
 (英文待翻译)
+
+## (26.20)
 
 (26.20) Questioner Thank you. In the recent past of the last thirty to forty years the UFO phenomena has become known to our population. What was the original reason for— I know there’ve been UFOs throughout history, but what was the original reason for the increase in what we call UFO activity say in the past forty years?
 (英文待翻译)
@@ -142,11 +184,15 @@ Information offered through wanderer, sound vibration, Nikola [Tesla], also bein
 Thus, we felt a strong need to involve our thought-forms in whatever way we of the Confederation could be of service in order to balance these distortions of information meant to aid your planetary sphere.
 (英文待翻译)
 
+## (26.21)
+
 (26.21) Questioner Then what you did, I am assuming, then, is to create an air of mystery with the UFO phenomena, as we call it, and then by telepathy send many messages that could be either accepted or rejected under the . . . following, of course, the Law of One, so that the population would start thinking seriously about the consequences of what they were doing. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. This is partially correct. There are other services we may perform. Firstly, the integration of souls or spirits, if you will, in the event of use of these nuclear devices in your space/time continuum. This the Confederation has already done.
 (英文待翻译)
+
+## (26.22)
 
 (26.22) Questioner I don’t fully understand what you mean by that. Could you expand a little bit?
 (英文待翻译)
@@ -157,11 +203,15 @@ Ra I am Ra. The use of intelligent energy transforming matter into energy is of 
 Therefore, we are offering ourselves as those who continue the integration of soul, or spirit complex, during transition from space/time to time/space.
 (英文待翻译)
 
+## (26.23)
+
 (26.23) Questioner Could you please give me an example from, let us say, Hiroshima or Nagasaki of how this is done?
 (英文待翻译)
 
 Ra I am Ra. Those who were destroyed, not by radiation, but by the trauma of the energy release, found not only the body/mind/spirit complex made unviable, but also a disarrangement of that unique vibratory complex you have called the spirit complex, which we understand as a mind/body/spirit complex, to be completely disarranged without possibility of re-integration. This would be the loss to the Creator of part of the Creator, and thus we were given permission not to stop the events, but to ensure the survival of the, shall we say, disembodied mind/body/spirit complex. This we did in those events which you mention, losing no spirit, or portion, or holograph, or microcosm of the macrocosmic Infinite One.
 (英文待翻译)
+
+## (26.24)
 
 (26.24) Questioner Could you please make the instrument cough, and then tell me just vaguely how you accomplished this?
 (英文待翻译)
@@ -169,11 +219,15 @@ Ra I am Ra. Those who were destroyed, not by radiation, but by the trauma of the
 Ra [Cough.] I am Ra. This is accomplished through our understanding of dimensional fields of energy. The higher, or more dense, energy field will control the less dense.
 (英文待翻译)
 
+## (26.25)
+
 (26.25) Questioner But then, in general then, you’re saying that if we . . . you will allow Earth, the population of this planet, to have a nuclear war and many deaths from that war, but you will be able to create a condition where these deaths will be no more traumatic, shall I say, with respect to entrance to the heaven world, or astral world, or whatever we call it, than death by a bullet or normal means of dying of old age. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. This is incorrect. It would be more traumatic. However, the entity would remain an entity.
 (英文待翻译)
+
+## (26.26)
 
 (26.26) Questioner Can you tell me the condition of the entities who were, shall I say, killed in Nagasaki and Hiroshima. At this time, what is their condition?
 (英文待翻译)
@@ -181,11 +235,15 @@ Ra I am Ra. This is incorrect. It would be more traumatic. However, the entity w
 Ra I am Ra. They of this trauma have not yet fully begun the healing process. They are being helped as much as is possible.
 (英文待翻译)
 
+## (26.27)
+
 (26.27) Questioner When the healing process is complete with these entities, will this experience of the death due to the nuclear bomb cause them to be, shall we say, regressed in their climb toward the fourth density?
 (英文待翻译)
 
 Ra I am Ra. Such actions as nuclear destruction affect the entire planet. There are no differences at this level of destruction, and the planet will need to be healed.
 (英文待翻译)
+
+## (26.28)
 
 (26.28) Questioner I was thinking specifically if an entity was in Hiroshima or Nagasaki at that time and he was reaching harvestability at the end of our cycle, would this death by nuclear bomb possibly create such trauma that he would not be able to be harvestable at the end of the cycle? That was specifically my question.
 (英文待翻译)
@@ -193,11 +251,15 @@ Ra I am Ra. Such actions as nuclear destruction affect the entire planet. There 
 Ra I am Ra. This is incorrect. Once the healing has taken place the harvest may go forth unimpeded. However, the entire planet will undergo healing for this action, no distinction being made betwixt victim and aggressor, this due to damage done to the planet.
 (英文待翻译)
 
+## (26.29)
+
 (26.29) Questioner Could you please make the instrument cough? And—
 (英文待翻译)
 
 Ra [Cough.]
 (英文待翻译)
+
+## (26.30)
 
 (26.30) Questioner And then, can you describe the mechanism of the planetary healing?
 (英文待翻译)
@@ -205,11 +267,15 @@ Ra [Cough.]
 Ra I am Ra. Healing is a process of acceptance, forgiveness, and, if possible, restitution. The restitution not being available in time/space, there are many among your peoples now attempting restitution while in the physical.
 (英文待翻译)
 
+## (26.31)
+
 (26.31) Questioner How do these people attempt this restitution in the physical?
 (英文待翻译)
 
 Ra I am Ra. These attempt feelings of love towards the planetary sphere, and comfort and healing of the scars, and the imbalances of these actions.
 (英文待翻译)
+
+## (26.32)
 
 (26.32) Questioner Then as the UFO phenomena was made obvious to many of the population, many groups of people reported contact; many groups of people reported telepathic communication with UFO entities and many recorded the results of what they considered telepathic communication.
 (英文待翻译)
@@ -220,11 +286,15 @@ Was the Confederation, shall we say, oriented to impressing telepathic communica
 Ra I am Ra. This is correct although some of our members have removed themselves from the time/space using thought-form projections into your space/time and have chosen, from time to time, with permission of the Council, to appear in your skies without landing.
 (英文待翻译)
 
+## (26.33)
+
 (26.33) Questioner Then are all of the landings that have occurred—except for the landing when Eisenhower was contacted—are all of those landings of the Orion group or similar type groups?
 (英文待翻译)
 
 Ra I am Ra. Except for isolated instances of those of, shall we say, no affiliation, this is correct.
 (英文待翻译)
+
+## (26.34)
 
 (26.34) Questioner Is it necessary in each case for the entity who is contacted in one of these landings to be calling the Orion group, or do some of these entities come in contact with the Orion group even though they are not calling that group?
 (英文待翻译)
@@ -235,11 +305,15 @@ Ra I am Ra. You must plumb the depths of fourth-density negative understanding. 
 This is due to the sincere belief of fourth-density negative that to love self is to love all. Each other-self which is thus either taught or enslaved thus has a teacher which teaches love of self. Exposed to this teaching, it is intended that there be brought to fruition an harvest of fourth-density negative, or self-serving mind/body/spirit complexes.[39]
 (英文待翻译)
 
+## (26.35)
+
 (26.35) Questioner Could you make the instrument cough, please?
 (英文待翻译)
 
 Ra [Cough.]
 (英文待翻译)
+
+## (26.36)
 
 (26.36) Questioner Then I am assuming all of the UFO groups who were getting telepathic contact from the Confederation were, shall we say, high-priority targets for the Orion crusaders, and I would assume that a large percentage of them were, shall we say, had their information polluted then.
 (英文待翻译)
@@ -256,11 +330,15 @@ This is why we iterate quite often, when asked for specific information, that it
 Why, then, be concerned with the grass that blooms, withers, and dies in its season only to grow once again due to the infinite love and light of the One Creator? This is the message we bring. Each entity is only superficially that which blooms and dies. In the deeper sense, there is no end to beingness.
 (英文待翻译)
 
+## (26.37)
+
 (26.37) Questioner Thank you very much. Could you please make the instrument cough?
 (英文待翻译)
 
 Ra [Cough.]
 (英文待翻译)
+
+## (26.38)
 
 (26.38) Questioner As you have stated before, it is a strait and narrow path. There are many distractions.
 (英文待翻译)
@@ -298,11 +376,15 @@ This instrument was able, as an example of this working, to baffle the Orion gro
 May we ask if you have any queries before we close?
 (英文待翻译)
 
+## (26.39)
+
 (26.39) Questioner If you would please make the instrument cough, I will ask one—two quick things.
 (英文待翻译)
 
 Ra [Cough.]
 (英文待翻译)
+
+## (26.40)
 
 (26.40) Questioner The instrument asks, “How long do the debilitative effects that I am experiencing from the use of LSD last, and is there anything that we can do to make the instrument more comfortable?”
 (英文待翻译)

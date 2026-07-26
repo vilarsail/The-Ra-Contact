@@ -4,8 +4,12 @@
 January 25, 1981
 (英文待翻译)
 
+## (7.0)
+
 (7.0) Ra I am Ra. I greet you in the love and the light of our Infinite Creator. I communicate now.
 (英文待翻译)
+
+## (7.1)
 
 (7.1) Questioner You mentioned that you were a member of the Confederation of Planets. What avenues of service, or types of service, are available to members of the Confederation? Would you describe some of them?
 (英文待翻译)
@@ -16,6 +20,8 @@ Ra I am Ra. I am assuming that you intend the service which we of the Confederat
 The service available for our offering to those who call us is equivalent to the square of the distortion/need of that calling divided by, or integrated with, the basic Law of One in its distortion indicating the free will of those who are not aware of the unity of creation.
 (英文待翻译)
 
+## (7.2)
+
 (7.2) Questioner From this I am assuming that the difficulty you have contacting this planet at this time is the mixture of people here—some being aware of the unity, some not, and for this reason you cannot come openly or give any proof of your contact. Is this correct?
 (英文待翻译)
 
@@ -25,11 +31,15 @@ Ra I am Ra. As we just repeated through this instrument, we must integrate all o
 We are fortunate that the Law of Service squares the desires of those who call. Otherwise, we would have no beingness in this time/space at this present continuum of the illusion. In short, you are basically correct. The thought of not being able is not a part of our basic thought-form complex towards your peoples, but rather is a maximal consideration of what is possible.
 (英文待翻译)
 
+## (7.3)
+
 (7.3) Questioner By squared, do you mean that if ten people call you can count that, when comparing it to the planetary ratio of people, as 100 people, squaring ten, getting 100? Is that correct?
 (英文待翻译)
 
 Ra I am Ra. This is incorrect. The square is sequential — one, two, three, four, each squared by the next number.
 (英文待翻译)
+
+## (7.4)
 
 (7.4) Questioner [Inaudible] use an example. If ten, only ten, entities on Earth required your services, how would you compute their call using this square rule?
 (英文待翻译)
@@ -37,11 +47,15 @@ Ra I am Ra. This is incorrect. The square is sequential — one, two, three, fou
 Ra We would square one ten sequential times, raising the number to the tenth square.
 (英文待翻译)
 
+## (7.5)
+
 (7.5) Questioner What would be the result of this calculation?
 (英文待翻译)
 
 Ra [24-second pause] The result is difficult to transmit. It is one thousand and twelve [1,012], approximately. The entities who call are sometimes not totally unified in their calling, and thus the squaring is slightly less. Thus, there is a statistical loss over a period of call. However, perhaps you may see by this statistically corrected information the squaring mechanism.
 (英文待翻译)
+
+## (7.6)
 
 (7.6) Questioner About how many entities at present are calling from planet Earth for your services?
 (英文待翻译)
@@ -49,11 +63,15 @@ Ra [24-second pause] The result is difficult to transmit. It is one thousand and
 Ra I am called personally by three hundred fifty-two thousand [352,000]. The Confederation, in its entire spectrum of entity-complexes, is called by six hundred thirty-two millions [632,000,000] of your mind/body/spirit complexes. These numbers have been simplified.
 (英文待翻译)
 
+## (7.7)
+
 (7.7) Questioner Can you tell me what the result of the application of the Law of Squares is to those figures?
 (英文待翻译)
 
 Ra The number is approximately meaningless in the finite sense as there are many, many digits. It, however, constitutes a great calling which we of all creation feel and hear as if our own entities were distorted towards a great and overwhelming sorrow. It demands our service.
 (英文待翻译)
+
+## (7.8)
 
 (7.8) Questioner At what point would this calling be enough for you to openly come among the people on Earth? How many entities on Earth would have to call the Confederation?
 (英文待翻译)
@@ -63,6 +81,8 @@ Ra I am Ra. We do not calculate the possibility of coming among your peoples by 
 
 In the case wherein a social memory complex which is servant of the Creator sees this situation and has an idea for the appropriate aid which can only be done among your peoples, the social memory complex desiring this project lays it before the Council of Saturn. If it is approved, quarantine is lifted.
 (英文待翻译)
+
+## (7.9)
 
 (7.9) Questioner I have a question here, I believe, about that Council from Jim. Who are the members, and how does the Council function?
 (英文待翻译)
@@ -79,17 +99,23 @@ The Council operates by means of, what you would call, telepathic contact with t
 These are the prominent duties of the Council. They are, if in any doubt, able to contact the twenty-four who then offer consensus judgment/thinking to the Council. The Council then may reconsider any question.
 (英文待翻译)
 
+## (7.10)
+
 (7.10) Questioner Is the Council of Nine the same nine that was mentioned in this book? [Questioner gestures to Uri by Andrija (Henry) Puharich.]
 (英文待翻译)
 
 Ra I am Ra. The Council of Nine has been retained in semi-undistorted form by two main sources: that known in your naming as Mark, and that known in your naming as Henry. In one case, the channel became the scribe. In the other, the channel was not the scribe. However, without the aid of the scribe, the energy would not have come to the channel.
 (英文待翻译)
 
+## (7.11)
+
 (7.11) Questioner The names you spoke of, are they Mark Probert and Henry Puharich?
 (英文待翻译)
 
 Ra I am Ra. This is correct.
 (英文待翻译)
+
+## (7.12)
 
 (7.12) Questioner I am interested in the application of the Law of One as it pertains to free will and what I would call the advertising done by UFO contact with the planet. That is, the Council has allowed the quarantine to be lifted many times over the past thirty years. This seems to me to be a form of advertising for what we are doing right now, so that more people will be awakened. Am I correct?
 (英文待翻译)
@@ -109,11 +135,15 @@ Thirdly, you are correct in assuming that permission was granted at the time/spa
 The mystery and unknown quality of the occurrences we are allowed to offer have the hoped-for intention of making your peoples aware of infinite possibility. When your peoples grasp infinity, then, and only then, can the gateway be opened to the Law of One.
 (英文待翻译)
 
+## (7.13)
+
 (7.13) Questioner You mentioned both our people and those of Orion coming here. Can you expand on that?
 (英文待翻译)
 
 Ra I am Ra. Your thought complexes did not match your vibratory sound complexes. We are unable to respond. Please restate your query.
 (英文待翻译)
+
+## (7.14)
 
 (7.14) Questioner I’ll just ask about Orion. You mentioned Orion as a source of some of the contacts of UFOs. Can you tell me something of that contact, its purpose?
 (英文待翻译)
@@ -123,6 +153,8 @@ Ra I am Ra. Consider, if you will, a simple example of intentions which are bad/
 
 The problem facing them is that they face a great deal of random energy released by the concept of separation. This causes them to be vulnerable as the distortions amongst their own members are not harmonized.
 (英文待翻译)
+
+## (7.15)
 
 (7.15) Questioner What is the density of the Orion group?
 (英文待翻译)
@@ -142,11 +174,15 @@ It should be noted, carefully pondered, and accepted, that the Law of One is ava
 Thus all entities learn, no matter what they seek. All learn the same, some rapidly, some slowly.
 (英文待翻译)
 
+## (7.16)
+
 (7.16) Questioner Using as an example a fifth-density group or social memory complex of the Orion group, what was their previous density before they became fifth density?
 (英文待翻译)
 
 Ra I am Ra. The progress through densities is sequential. A fifth-density social memory complex would be comprised of mind/body/spirit complexes harvested from fourth density. Then the conglomerate or mass mind/body/spirit complex does its melding, and the results are due to the infinitely various possibilities of combination of distortions.
 (英文待翻译)
+
+## (7.17)
 
 (7.17) Questioner I’m trying to understand how a group such as the Orion group would progress. I was of the opinion that a closer understanding of the Law of One created the condition of acceptability moving, say, from our third density to the fourth in our transition now. And I’m trying to understand how it would be possible—if you were in the Orion group and pointed toward self-service—how you would progress, say, from the third density to the fourth. What learning would be necessary for that?
 (英文待翻译)
@@ -169,6 +205,8 @@ The distortion lies in the fact that those who seek to serve the self are seen b
 At this time we would answer any brief questions you may have.
 (英文待翻译)
 
+## (7.18)
+
 (7.18) Questioner Is there anything we can do to make the instrument more comfortable?
 (英文待翻译)
 
@@ -177,6 +215,8 @@ Ra I am Ra. There are small adjustments you may make. However, we are now able t
 
 Do you wish to ask further?
 (英文待翻译)
+
+## (7.19)
 
 (7.19) Questioner We do not wish to overly tire the instrument. Thank you very much. That was very helpful. We will continue in the next session taking up this point. I believe that I’m beginning to understand the progression. Thank you very much.
 (英文待翻译)

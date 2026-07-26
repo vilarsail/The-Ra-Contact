@@ -4,8 +4,12 @@
 October 14, 1981
 (英文待翻译)
 
+## (72.0)
+
 (72.0) Ra I am Ra. I greet you in the love and in the light of the One Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (72.1)
 
 (72.1) Questioner Could you first give me an indication of the instrument’s condition, please?
 (英文待翻译)
@@ -13,11 +17,15 @@ October 14, 1981
 Ra I am Ra. This instrument’s physical-energy distortions are as previously stated. The vital energy level has become distorted from normal levels, somewhat downward, due to the distortion in this instrument’s mind complex activity that it has been responsible for the, shall we say, difficulties in achieving the appropriate configuration for this contact.
 (英文待翻译)
 
+## (72.2)
+
 (72.2) Questioner Was the banishing ritual that we performed of any effect in purifying the place of working and screening from influences that we do not wish?
 (英文待翻译)
 
 Ra I am Ra. This is quite correct.
 (英文待翻译)
+
+## (72.3)
 
 (72.3) Questioner Can you tell me what I can do to improve the effectiveness of the ritual?
 (英文待翻译)
@@ -25,11 +33,15 @@ Ra I am Ra. This is quite correct.
 Ra I am Ra. No.
 (英文待翻译)
 
+## (72.4)
+
 (72.4) Questioner Can you tell me what caused the instrument to become in a condition toward unconsciousness during the last two meditations prior to this one to such an extent that we discontinued them?
 (英文待翻译)
 
 Ra I am Ra. We can.
 (英文待翻译)
+
+## (72.5)
 
 (72.5) Questioner Would you please tell me that?
 (英文待翻译)
@@ -43,11 +55,15 @@ Thus the greatest aim of the Orion entity was not achieved. However, it discover
 Therefore, it applied to the fullest extent the greeting which causes the dizziness and, in meditation without protection, caused in this instrument simple unconsciousness as in what you would call fainting or vertigo. The Orion entity consequently used this tactic to stop the Ra contact from having the opportunity to be accomplished.
 (英文待翻译)
 
+## (72.6)
+
 (72.6) Questioner The instrument has scheduled an operation on her hand next month. If a general anesthetic is used to create the unconscious state will this or any other parameters of the operation allow for any inroads by the Orion entities?
 (英文待翻译)
 
 Ra I am Ra. It is extremely improbable due to the necessity for the intention of the mind/body/spirit complex, when departing the yellow-ray physical complex, to be serving the Creator in the most specific fashion. The attitude of one approaching such an experience as you describe would not be approaching the unconscious state with such an attitude.
 (英文待翻译)
+
+## (72.7)
 
 (72.7) Questioner We have here, I believe, a very important principle with respect to the Law of One. You have stated that the attitude of the individual is of paramount importance for the Orion entity to be able to be effective. Would you please explain how this mechanism works with respect to the Law of One, and why the attitude of the entity is of paramount importance, and why this allows for action by the Orion entity?
 (英文待翻译)
@@ -70,6 +86,8 @@ We could not speak to this and shall not guide you, for the nature of this conta
 [There is a 30-second pause between the end of this answer and the beginning of the next question.]
 (英文待翻译)
 
+## (72.8)
+
 (72.8) Questioner The negatively oriented entities who contact us and others on this planet are limited by the First Distortion. They have obviously been limited by the banishing ritual just performed. Could you describe, with respect to free will, how they limit themselves in order to work within the First Distortion? And how the banishing ritual itself works?
 (英文待翻译)
 
@@ -85,11 +103,15 @@ Thirdly, in the instance of this instrument’s being removed permanently from t
 The use of the light forms being generated is such as to cause such entities to discover a wall through which they cannot pass. This is due to the energy complexes of the light beings and aspects of the One Infinite Creator invoked and evoked in the building of the wall of light.
 (英文待翻译)
 
+## (72.9)
+
 (72.9) Questioner Everything that we experience with respect to this contact—our distortion toward knowledge in order to serve, the Orion entity’s distortion toward the attempt to reduce the effectiveness of this service—all of this is a result of the First Distortion, as I see it, in creating totally free atmosphere for the Creator to become more knowledgeable of Itself through the interplay of Its portions, one with respect to another. Is my view correct with respect to what I just said?
 (英文待翻译)
 
 Ra I am Ra. Yes.
 (英文待翻译)
+
+## (72.10)
 
 (72.10) Questioner In the last session you mentioned that if the instrument used any of the increased vital energy that she experiences now for physical activity she would pay a “harsh toll.” Could you tell me the nature of that harsh toll, and why it would be experienced?
 (英文待翻译)
@@ -103,11 +125,15 @@ This entity has great distortions in the direction of mind complex activity, spi
 However, the use of this energy of will, mind, and spirit for the things of the physical complex causes a far greater distortion in the lessening of the vital energy than would the use of this energy for those things which are in the deepest desires and will of the mind/body/spirit complex. In this entity these desires are for service to the Creator. This entity sees all service as service to the Creator, and this is why we have cautioned the support group and the instrument itself in this regard. All services are not equal in depth of distortion. The over-use of this vital energy is, to be literal, the rapid removal of life force.
 (英文待翻译)
 
+## (72.11)
+
 (72.11) Questioner You mentioned that the large amount of light is available. Could I by, or this group, by proper ritual, use this for recharging the vital energy of the instrument?
 (英文待翻译)
 
 Ra I am Ra. This is correct. However, we caution against any working which raises up any personality; rather it is well to be fastidious in your working.
 (英文待翻译)
+
+## (72.12)
 
 (72.12) Questioner Could you explain what you mean by “raises up any personality?”
 (英文待翻译)
@@ -115,11 +141,15 @@ Ra I am Ra. This is correct. However, we caution against any working which raise
 Ra I am Ra. Clues, we may offer. Explanation is infringement. We can only ask that you realize that all are One.
 (英文待翻译)
 
+## (72.13)
+
 (72.13) Questioner We have included “Shin” in the banishing ritual, “Yod Heh Vau Heh” to make it “Yod Heh Shin Vau Heh.” Is this helpful?
 (英文待翻译)
 
 Ra I am Ra. This is helpful especially to the instrument whose distortions vibrate greatly in congruency with this sound vibration complex.
 (英文待翻译)
+
+## (72.14)
 
 (72.14) Questioner We will in the future have group meditations as our Sunday night meditations. I am concerned in . . . protection for the instrument if she is once more a channel in these. Is there an optimum time, or limiting amount of time, for the banishing ritual to be effective? Or if we continually, daily, purify the place of working that we use for the Sunday night meditation with the banishing ritual, would this carry over for long periods of time, or must the ritual be done immediately prior to the meditations?
 (英文待翻译)
@@ -127,17 +157,23 @@ Ra I am Ra. This is helpful especially to the instrument whose distortions vibra
 Ra I am Ra. Your former assumption is more nearly correct.
 (英文待翻译)
 
+## (72.15)
+
 (72.15) Questioner Is there any danger in the Sunday night meditations, with the precautions we are taking, of the instrument being led away by the Orion entity?
 (英文待翻译)
 
 Ra I am Ra. The opportunities for the Orion entity are completely dependent upon the instrument’s condition of awareness and readiness. We would suggest that this instrument is still too much the neophyte to open itself to questions since that is the format used by Ra. As the instrument grows in awareness this precaution may become unnecessary.
 (英文待翻译)
 
+## (72.16)
+
 (72.16) Questioner Is it possible to over-energize the instrument with sexual energy transfers?
 (英文待翻译)
 
 Ra I am Ra. No.
 (英文待翻译)
+
+## (72.17)
 
 (72.17) Questioner Why is there no protection at the floor, or bottom, of the banishing ritual, and should there be?
 (英文待翻译)
@@ -159,6 +195,8 @@ The energies of life itself, being the One Infinite Creator, flow from the south
 
 May we ask if there are any shorter queries at this time?
 (英文待翻译)
+
+## (72.18)
 
 (72.18) Questioner I would just ask if there is anything that we can do to make the instrument more comfortable or improve the contact?
 (英文待翻译)

@@ -4,14 +4,20 @@
 June 5, 1981
 (英文待翻译)
 
+## (55.0)
+
 (55.0) Ra I am Ra. I greet you in the love and in the light of the One Infinite Creator. I communicate now.
 (英文待翻译)
+
+## (55.1)
 
 (55.1) Questioner I would first like to ask as to the condition of the instrument, please?
 (英文待翻译)
 
 Ra I am Ra. This instrument is experiencing physical distortions toward weakness of the bodily complex occurring due to psychic attack. This instrument’s vital energies have not been affected, however, due to the aid of those present in healing work. This instrument will apparently be subject to such weakness distortions due to incarnative processes which predispose the body complex towards weakness distortions.
 (英文待翻译)
+
+## (55.2)
 
 (55.2) Questioner Is there any specific thing that we can do that you have already told us? Or otherwise to alleviate this psychic attack or to help the instrument the most?
 (英文待翻译)
@@ -21,6 +27,8 @@ Ra I am Ra. We scan this instrument and find its distortion towards appreciation
 
 This each of you do as a subconscious function of true attitudinal, mental, emotional, and spiritual distortions towards this instrument. There is no magic greater than honest distortion toward love.
 (英文待翻译)
+
+## (55.3)
 
 (55.3) Questioner Thank you. I want to ask a couple questions about previous material that I didn’t understand. I’m hoping that this will clear up my understanding, somewhat, with respect to the mental configurations with which we have been dealing.
 (英文待翻译)
@@ -34,6 +42,8 @@ Ra I am Ra. The negative polarization is greatly aided by the subjugation or ens
 The entity so bidden or enslaved, in serving an other-self, will necessarily lose negative polarity, although it will gain in desire for further negative polarization. This desire will then tend to create opportunities to regain negative polarity.
 (英文待翻译)
 
+## (55.4)
+
 (55.4) Questioner Am I to understand then—just the fact that the third-density entity on this planet . . . just the fact that he calls or bids an Orion Crusader is a polarizing type of action that affects both entities?
 (英文待翻译)
 
@@ -46,17 +56,23 @@ There are instances, however, when the contact becomes a contest which is protot
 In this case, the third-density entity becomes master, and the Orion Crusader becomes entrapped and can be bid. This is rare. However, when it has occurred the Orion entity or social memory complex involved has experienced loss of negative polarity in proportion to the strength of the bidding third-density entity.
 (英文待翻译)
 
+## (55.5)
+
 (55.5) Questioner You mentioned that this will work when the bidding is properly done. What did you mean by “when the bidding is properly done?”
 (英文待翻译)
 
 Ra I am Ra. To properly bid is to be properly negative. The percentage of thought and behavior involving service to self must approach 99% in order for a third-density negative entity to be properly configured for such a contest of bidding.
 (英文待翻译)
 
+## (55.6)
+
 (55.6) Questioner What method of communication with the Orion entity would a negative bidder of this type use?
 (英文待翻译)
 
 Ra I am Ra. The two most usual types of bidding are: One, the use of perversions of sexual magic; two, the use of perversions of ritual magic. In each case the key to success is the purity of the will of the bidder. The concentration upon victory over the servant must be nearly perfect.
 (英文待翻译)
+
+## (55.7)
 
 (55.7) Questioner Can you tell me, in the polarizations in consciousness, if there is any analogy with respect to what you just said in this type of contact with respect to what we are doing, right now, in communicating with Ra?
 (英文待翻译)
@@ -73,11 +89,15 @@ We may note that this in no way presupposes that either the callers or those of 
 Things come not to those positively oriented, but through such beings.
 (英文待翻译)
 
+## (55.8)
+
 (55.8) Questioner Thank you. You stated at an earlier time “until transfers of energy of all types have been experienced and mastered to a great extent, there will be blockages in the blue and indigo radiations.” Could you explain that more fully?
 (英文待翻译)
 
 Ra I am Ra. At this space/time we have not covered the appropriate intermediate material. Please re-question at a more appropriate space/time nexus.
 (英文待翻译)
+
+## (55.9)
 
 (55.9) Questioner OK. I’m sort of hunting around here for an entry into some information. I may not be looking in a productive area.
 (英文待翻译)
@@ -91,11 +111,15 @@ You stated, “You will find the intersection of the triangle which is at the fi
 Ra I am Ra. Your mathematics and arithmetic have a paucity of configurative descriptions which we might use. Without intending to be obscure, we may note that the purpose of the shapes is to work with time/space portions of the mind/body/spirit complex. Therefore, the intersection is both space/time and time/space oriented and thus is expressed in three dimensional geometry by two intersections which, when projected in both time/space and space/time, form one point.
 (英文待翻译)
 
+## (55.10)
+
 (55.10) Questioner I have calculated this point to be one-sixth of the height of the triangle that forms the side of the pyramid. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. Your calculations are substantially correct, and we are pleased at your perspicacity.[87]
 (英文待翻译)
+
+## (55.11)
 
 (55.11) Questioner This would indicate to me that in the Great Pyramid at Giza, the Queen’s Chamber, as it is called, would be the chamber for initiation. Is this correct?
 (英文待翻译)
@@ -106,11 +130,15 @@ Ra I am Ra. Again, you penetrate the outer teaching.
 The Queen’s Chamber would not be appropriate or useful for healing work as that work involves the use of energy in a more synergic configuration rather than the configuration of the centered being.[88]
 (英文待翻译)
 
+## (55.12)
+
 (55.12) Questioner Then would the healing work be done in the King’s Chamber?
 (英文待翻译)
 
 Ra I am Ra. This is correct. We may note that such terminology is not our own.
 (英文待翻译)
+
+## (55.13)
 
 (55.13) Questioner Yes, I understand that. It is just the common naming of the two chambers of the Great Pyramid. I don’t know whether this line of questioning is going to take me to a better understanding of the energies, but until I have explored these concepts there is nothing much that I can do but ask a few questions.
 (英文待翻译)
@@ -124,17 +152,23 @@ Ra I am Ra. We may say that there is information to be gained from this line of 
 The chamber you request to be informed about is a resonating chamber. The bottom of such a structure, in order to cause the appropriate distortions for healing catalyst, shall be open.
 (英文待翻译)
 
+## (55.14)
+
 (55.14) Questioner The book, Life Force in the Great Pyramid, they have related the ankh shape with a resonance in the pyramid. Is this a correct analysis?
 (英文待翻译)
 
 Ra I am Ra. We have scanned your mind and find the phrase “working with crayons.” This would be applicable. There is only one significance to these shapes such as the crux ansata; that is the placing in coded form of mathematical relationships.
 (英文待翻译)
 
+## (55.15)
+
 (55.15) Questioner Is the 76° 18′ angle at the apex of the pyramid a critical angle?
 (英文待翻译)
 
 Ra I am Ra. For the healing work intended, this angle is appropriate.
 (英文待翻译)
+
+## (55.16)
 
 (55.16) Questioner Why does the King’s Chamber have the various small chambers above it?
 (英文待翻译)
@@ -151,6 +185,8 @@ This light then may, by the catalyst of the healer with the crystal, manipulate 
 The process by which this is done involves bringing the entity to be healed to an equilibrium. This involves temperature, barometric pressure, and the electrical charged atmosphere. The first two requirements are controlled by the system of chimneys.
 (英文待翻译)
 
+## (55.17)
+
 (55.17) Questioner Does this healing work by affecting the energy centers in such a way that they are unblocked so as to perfect the seven bodies that they generate and, therefore, bring the entity being healed into proper balance?
 (英文待翻译)
 
@@ -162,6 +198,8 @@ The catalytic effect of the charged atmosphere and the crystal directed by the h
 
 Are there any brief queries before we leave this instrument?
 (英文待翻译)
+
+## (55.18)
 
 (55.18) Questioner Only is there anything we can do to make the instrument more comfortable or improve the contact?
 (英文待翻译)

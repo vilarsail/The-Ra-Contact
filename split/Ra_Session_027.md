@@ -4,8 +4,12 @@
 February 21, 1981
 (英文待翻译)
 
+## (27.0)
+
 (27.0) Ra I am Ra. I greet you in the love and the light of the One Infinite Creator. I communicate now.
 (英文待翻译)
+
+## (27.1)
 
 (27.1) Questioner This session I thought we would start Book II of The Law of One,[42] which will focus on what we consider to be the only important aspect of our being.
 (英文待翻译)
@@ -19,11 +23,15 @@ Ra I am Ra. This was in your space/time continuum two periods and two lifetimes.
 The second experience being approximately one thousand [1,000] of your years later during which experience this entity prepared, in some part, the consciousness of the people of what you now call Egypt, that they were able to offer the calling that enabled those of our social memory complex to walk among your peoples. During this life experience this entity was of a priest and teaching nature and succeeded in remembering in semi-distorted form the learn/teachings of the Atlantean pyramidal experiences. Thus, this entity became a builder of the archetypal thought of the Law of One with distortion towards healing, which aided our people in bringing this through into a physical manifestation at what you would call a later period in your time measurement.
 (英文待翻译)
 
+## (27.2)
+
 (27.2) Questioner The second question is: Paul has also received information that mentions that there were other beings aiding in the construction of the pyramids who were not fully materialized in the third density. They were materialized from the waist up to their heads, but were not materialized from the waist down to their feet. Did such entities exist in the construction of the pyramids, and who were they?
 (英文待翻译)
 
 Ra I am Ra. Consider, if you will, the intelligent infinity present in the absorption of livingness and beingness as it becomes codified into intelligent energy due to the thought impressions of those assisting the living stone into a new shape of beingness. The release and use of intelligent infinity for a brief period begins to absorb all the consecutive, or interlocking, dimensions, thus offering brief glimpses of those projecting to the material their thought. These beings thus beginning to materialize but not remaining visible. These beings were the thought-form, or third-density-visible, manifestation of our social memory complex as we offered contact from our intelligent infinity to the intelligent infinity of the stone.
 (英文待翻译)
+
+## (27.3)
 
 (27.3) Questioner Thank you very much. I will now proceed with the process of starting the second book of The Law of One.[43] This, I will assume, will be a much more difficult task than the first book because we want to focus on things that are not transient, and as questioner I may have difficulty at times.
 (英文待翻译)
@@ -43,6 +51,8 @@ I would like to start with definitions of words that we have been using that pos
 Ra I am Ra. Your vibrations of mind complex indicate a query. However, your vibrational sound complex indicate a preference. Please restate.
 (英文待翻译)
 
+## (27.4)
+
 (27.4) Questioner Would you define the word intelligent in the concept of intelligent infinity?
 (英文待翻译)
 
@@ -51,6 +61,8 @@ Ra I am Ra. We shall address the entire spectrum of this question before definin
 
 To define intelligent apart from infinity is difficult, for these two vibration complexes equal one concept. It is much like attempting to divide your sound vibration concept, faith, into two parts. We shall attempt to aid you, however.
 (英文待翻译)
+
+## (27.5)
 
 (27.5) Questioner It is not necessary to divide it. The definition of intelligent infinity as one part is sufficient. Could you please now define intelligent infinity?
 (英文待翻译)
@@ -61,11 +73,15 @@ Ra I am Ra. This is exponentially simpler and less confusing. There is unity. Th
 The nature of this work is dependent upon the particular distortion of Free Will which, in turn, is the nature of a particular intelligent energy, or kinetic focus, of the potential of unity, or that which is all.
 (英文待翻译)
 
+## (27.6)
+
 (27.6) Questioner I’d like to expand a little on the concept of work. In Newtonian physics the concept of work is what we call a force which moves through space. It’s the product of force and distance as we measure it. I’m assuming that the work of which you speak is a much broader term including possibly work in consciousness. Am I correct?
 (英文待翻译)
 
 Ra I am Ra. As we use this term it is universal in application. Intelligent infinity has a rhythm, or flow, as of a giant heart beginning with the Central Sun, as you would think or conceive of this; the presence of the flow inevitable as a tide of beingness without polarity, without finity; the vast and silent all beating outward, outward, focusing outward and inward until the focuses are complete. The intelligence or consciousness of foci have reached a state where their, shall we say, spiritual nature or mass calls them inward, inward, inward until all is coalesced. This is the rhythm of reality as you spoke.
 (英文待翻译)
+
+## (27.7)
 
 (27.7) Questioner Now I think I have extracted an important point from this in that in intelligent infinity we have work without polarity, or a potential difference does not have to exist. Is this correct?
 (英文待翻译)
@@ -76,11 +92,15 @@ Ra I am Ra. There is no difference, potential or kinetic, in unity. The basic rh
 In this way you may observe the term to be somewhat two-sided: One use of the term, that being as the undistorted unity, being without any kinetic or potential side. The other application of this term, which we use undifferentiatedly for lack of other term, in the sense of the vast potential tapped into by foci or focuses of [intelligent] energy.[45]
 (英文待翻译)
 
+## (27.8)
+
 (27.8) Questioner Now, I understand that the first distortion of intelligent infinity is the distortion of what we call Free Will. Can you give me a definition of this distortion?
 (英文待翻译)
 
 Ra I am Ra. In this distortion of the Law of One it is recognized that the Creator will know Itself.
 (英文待翻译)
+
+## (27.9)
 
 (27.9) Questioner Then am I correct then in assuming that the Creator will know Itself—the Creator then grants for this knowing the concept of freedom, total freedom of choice in the ways of knowing? Am I correct?
 (英文待翻译)
@@ -88,11 +108,15 @@ Ra I am Ra. In this distortion of the Law of One it is recognized that the Creat
 Ra I am Ra. This is quite correct.
 (英文待翻译)
 
+## (27.10)
+
 (27.10) Questioner This then being the first distortion of the Law of One, which I am assuming is the Law of Intelligent Infinity, from all other—correction, all other distortions which are the total experience of the creation spring from this. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. This is both correct and incorrect. In your illusion all experience springs from the Law of Free Will, or the Way of Confusion. In another sense, which we are learning, the experiences are this distortion.
 (英文待翻译)
+
+## (27.11)
 
 (27.11) Questioner I will have to think about that and ask questions on it in the next session, so I will go on to what you have given me as the Second Distortion which is the distortion of Love. Is this correct?
 (英文待翻译)
@@ -100,11 +124,15 @@ Ra I am Ra. This is both correct and incorrect. In your illusion all experience 
 Ra I am Ra. This is correct.
 (英文待翻译)
 
+## (27.12)
+
 (27.12) Questioner I would like for you to define Love in the sense . . . in its sense as the Second Distortion.
 (英文待翻译)
 
 Ra I am Ra. This must be defined against the background of intelligent infinity, or unity, or the One Creator, with the primal distortion of Free Will. The term Love then may be seen as the focus, the choice of attack, the type of energy of an extremely, shall we say, high order which causes intelligent energy to be formed from the potential of intelligent infinity in just such and such a way. This then may be seen to be an object rather than an activity by some of your peoples, and the principle of this extremely strong energy focus being worshiped as the Creator instead of unity, or oneness, from which all Loves emanate.
 (英文待翻译)
+
+## (27.13)
 
 (27.13) Questioner Is Love . . . is there a manifestation of Love that we could call vibration?
 (英文待翻译)
@@ -115,6 +143,8 @@ Ra I am Ra. Again we reach semantic difficulties. The vibration, or density, of 
 Thus in vibratory sense love comes into light. In the sense of the activity of unity in its free will, love uses light and has the power to direct light in its distortions. Thus vibratory complexes recapitulate in reverse the creation in its unity, thus showing the rhythm, or flow, of the great heartbeat, if you will use this analogy.
 (英文待翻译)
 
+## (27.14)
+
 (27.14) Questioner I will make a statement that I have extracted from the physics of Dewey Larson which may or may not be close to what we are trying to explain. Larson says that all is motion, which we can take as vibration; and that vibration, which is pure vibration and is not physical in any way, or in any form, or in any density, that vibration, by . . . first product of that vibration is what we call the photon, particle of light.
 (英文待翻译)
 
@@ -123,6 +153,8 @@ I was trying to make an analogy between this physical solution and the concept o
 
 Ra I am Ra. You are correct.
 (英文待翻译)
+
+## (27.15)
 
 (27.15) Questioner Then I will expand a bit more on this concept. We have the infinite vibration of Love which can occur, I am assuming, at varying frequencies, if this has a meaning in this. I would assume that it begins at one basic frequency.
 (英文待翻译)
@@ -133,11 +165,15 @@ Does this have any meaning? Am I making sense? Is this correct?
 Ra I am Ra. Each Love, as you term the prime movers, comes from one frequency, if you wish to use this term. This frequency is unity. We would perhaps liken it rather to a strength than a frequency, this strength being infinite, the finite qualities being chosen by the particular nature of this primal movement.
 (英文待翻译)
 
+## (27.16)
+
 (27.16) Questioner Then this vibration which is, for lack of better understanding, which we would call pure motion; it is pure Love. It is. . . it is not . . . there is nothing that is yet condensed, shall we say, to form any type, or density, of illusion. This Love then creates, by this process of vibration, a photon, as we call it, which is the basic particle of light. This photon then, by added vibrations and rotations, further condenses into particles of the densities, the various densities that we experience. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. This is correct.
 (英文待翻译)
+
+## (27.17)
 
 (27.17) Questioner Now, this— Then light which forms the densities has what we call color, and this color is divided into seven categories of color. Can you tell me, is there a reason or an explanation for these categories of color? Can you tell me something about that?
 (英文待翻译)
@@ -150,6 +186,8 @@ The nature of the vibratory patterns of your universe is dependent upon the conf
 
 There is further information which we shall be happy to share by answering your questions. However, we do not wish to deplete this instrument. Is there a short query necessary before we leave?
 (英文待翻译)
+
+## (27.18)
 
 (27.18) Questioner The only thing I need to know is, is there is anything we can do to make the instrument more comfortable or help her or the contact?
 (英文待翻译)

@@ -4,14 +4,20 @@
 April 14, 1982
 (英文待翻译)
 
+## (84.0)
+
 (84.0) Ra I am Ra. I greet you, my friends, in the love and in the light of the One Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (84.1)
 
 (84.1) Questioner Could you first please give me the condition of the instrument?
 (英文待翻译)
 
 Ra I am Ra. The physical complex energy level of the instrument is in sizeable deficit. The vital energies are well.
 (英文待翻译)
+
+## (84.2)
 
 (84.2) Questioner In the last session you mentioned “least distorted complex protein” and that the body complex of the instrument was capable of greatly increased distortion. Would you define the protein of which you spoke? And we would like to know: increased distortion in which direction, towards health or ill-health?
 (英文待翻译)
@@ -22,6 +28,8 @@ Ra I am Ra. We were, in the cautionary statement about complex protein, referrin
 We were speaking of the distortion towards disease which is potential at this space/time.
 (英文待翻译)
 
+## (84.3)
+
 (84.3) Questioner What disease in particular were you speaking of, and what would be its cause?
 (英文待翻译)
 
@@ -30,6 +38,8 @@ Ra I am Ra. One disease, as you call this distortion, is that of the arthritis a
 
 Therefore, we simply encouraged the general care with the diet with the instructions about allergy, as you call this quite complex distortion of the mind and body complexes.
 (英文待翻译)
+
+## (84.4)
 
 (84.4) Questioner The instrument asked the following question: “Ra has implied that the instrument is on a path of martyrdom, but since all die are we not all martyr to something? When, if ever, does martyrdom partake of wisdom?”
 (英文待翻译)
@@ -49,6 +59,8 @@ It is indeed so that all mind/body/spirit complexes shall die to the third-densi
 We may encourage meditation upon the functions of the will.
 (英文待翻译)
 
+## (84.5)
+
 (84.5) Questioner Can you make any suggestions about the instrument’s feet, or how they got in the bad shape they are in? And would alternating the shoes help?
 (英文待翻译)
 
@@ -61,11 +73,15 @@ We may suggest care in resumption of the exercise, but determination as well. Th
 We may further suggest that the same immersion in the waters which is helpful to the general distortion is, in general, helpful to this specific distortion as well. However, the injury which has been sustained in the metatarsal region of the right pedal appendage should further be treated for some period of your space/time by the prudent application of the ice to the arch of the right foot for brief periods followed always by immersion in the warm water.
 (英文待翻译)
 
+## (84.6)
+
 (84.6) Questioner Thank you. The instrument asks if the restricted, unpublishable healing information that was given during the first book be included in Book IV[73] since readers who have gotten that far will be dedicated somewhat?
 (英文待翻译)
 
 Ra I am Ra. This publication of material shall, in time, shall we say, be appropriate. There is intervening material.
 (英文待翻译)
+
+## (84.7)
 
 (84.7) Questioner Thank you. I’m sure that we are getting into an area of problem with the First Distortion here, and also with a difficulty in a bit of transient material here, but I have two questions from people that I’ll ask, although I consider especially the first one to be of no lasting value. Andrija Puharich asks about coming physical changes, specifically this summer. Is there anything that we could relay to him about that?
 (英文待翻译)
@@ -73,17 +89,23 @@ Ra I am Ra. This publication of material shall, in time, shall we say, be approp
 Ra I am Ra. We may confirm the good intention of the source of this entity’s puzzles and suggest that it is a grand choice that each may make to, by desire, collect the details of the day or, by desire, to seek the keys to unknowing.
 (英文待翻译)
 
+## (84.8)
+
 (84.8) Questioner I’m interested . . . I can’t help but be interested in the fact that he had reported being taken on board craft. Could you tell me something about that?[74]
 (英文待翻译)
 
 Ra I am Ra. The nature of contact is such that—in order for the deep portion of the trunk of the tree of mind affected to be able to accept the contact—some symbology which may rise to the conscious mind is necessary as a framework for the explanation of the fruits of the contact. In such cases the entity’s own expectations fashion the tale which shall be most acceptable to that entity; and in the dream state, or a trance state in which visions may be produced, this seeming memory is fed into the higher levels of the so-called subconscious and the lower levels of the conscious. From this point the story may surface as any memory and cause the instrument to function without losing balance or sanity.
 (英文待翻译)
 
+## (84.9)
+
 (84.9) Questioner Thank you. Going back to the previous session, it was stated that each sexual activity was a transfer before the veil. I am assuming from that that you mean that there was a transfer of energy for each sexual activity before the veil which indicates to me that a transfer doesn’t take place every time. Taking the case before the veil, would you trace the flow of energy that is transferred and tell me if that was the planned activity or a planned transfer by the designing Logos?
 (英文待翻译)
 
 Ra I am Ra. The path of energy transfer before the veiling during the sexual intercourse was that of the two entities possessed of green-ray capability. The awareness of all as Creator is that which opens the green energy center. Thusly there was no possibility of blockage due to the sure knowledge of each by each that each was the Creator. The transfers were weak due to the ease with which such transfers could take place between any two polarized entities during sexual intercourse.
 (英文待翻译)
+
+## (84.10)
 
 (84.10) Questioner What I was getting at more precisely was: is the path of energy transfer— When we close an electrical circuit, it’s easy to follow the path of energy. It goes along the conductor. I am trying to determine whether this transfer is between the heart chakras of each entity. I am trying to trace the physical flow of the energy to try to get an idea of blockages after the veil. I may be off on a wrong track here. If I’m wrong, we’ll just drop it. Can you tell me something about that?
 (英文待翻译)
@@ -94,17 +116,23 @@ Ra I am Ra. In such a drawing or schematic representation of the circuitry of tw
 It is well to remember in the case of the mind/body/spirit that the chakras, or energy centers, could well be functioning without crystallization.
 (英文待翻译)
 
+## (84.11)
+
 (84.11) Questioner In other words, they would be functioning, but it would be equivalent in electrical circuitry to having a high resistance, shall we say. Although the circuit would be complete, red through green, the total quantity of energy transferred would be less. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. We might most closely associate your query with the concept of voltage. The uncrystallized, lower centers cannot deliver the higher voltage. The crystallized centers may become quite remarkable in the high voltage characteristics of the energy transfer as it reaches green ray. And indeed, as green ray is crystallized, this also applies to the higher energy centers until such energy transfers become an honestation for the Creator.[75]
 (英文待翻译)
 
+## (84.12)
+
 (84.12) Questioner Would you please correct me on this statement, then? I’m guessing that what happens is that, when a transfer takes place, the energy is that light energy that comes in through the feet of the entity, and starts the— The voltage or potential difference starts with the red energy center and, in the case of the green-ray transfer, terminates at the green energy center and then must leap or flow from the green energy center of one entity to the green of the other, and then something happens to it. Could you clear up my thinking on that?
 (英文待翻译)
 
 Ra I am Ra. Yes.
 (英文待翻译)
+
+## (84.13)
 
 (84.13) Questioner Would you please do that?
 (英文待翻译)
@@ -115,11 +143,15 @@ Ra I am Ra. The energy transfer occurs in one releasing of the potential differe
 However, it functions as transfer if either has the orgasm. And, indeed, in the case of the physically expressed love between a mated pair which does not have the conclusion you call orgasm, there is nonetheless a considerable amount of energy transferred due to the potential difference which has been raised, as long as both entities are aware of this potential and release its strength to each other by desire of the will in a mental or mind complex dedication. You may see this practice as being used to generate energy transfers in some of your practices of what you may call other than Christian religious-distortion systems of the Law of One.
 (英文待翻译)
 
+## (84.14)
+
 (84.14) Questioner Would you give me an example of that last statement?
 (英文待翻译)
 
 Ra I am Ra. We preface this example with the reminder that each system is quite distorted and its teachings always half-lost. However, one such system is that called the tantric yoga.
 (英文待翻译)
+
+## (84.15)
 
 (84.15) Questioner Considering individual A and individual B, if individual A experiences the orgasm is the energy, then, transferred to individual B in a greater amount? Is that correct?
 (英文待翻译)
@@ -127,11 +159,15 @@ Ra I am Ra. We preface this example with the reminder that each system is quite 
 Ra I am Ra. Your query is incomplete. Please restate.
 (英文待翻译)
 
+## (84.16)
+
 (84.16) Questioner What I am trying to determine is the direction of energy transfer as a function of orgasm. Which entity gets the transferred energy? I know it’s a dumb question, but I want to be sure I have it cleared up.
 (英文待翻译)
 
 Ra I am Ra. If both entities are well polarized and vibrating in green-ray love, any orgasm shall offer equal energy to both.
 (英文待翻译)
+
+## (84.17)
 
 (84.17) Questioner I see. Before the veil can you describe any other physical difference that we haven’t talked about yet with respect to the sexual energy transfers or relationships or anything prior to veiling?
 (英文待翻译)
@@ -141,6 +177,8 @@ Ra I am Ra. Perhaps the most critical difference of the veiling, before and afte
 
 The energies transferred during the sexual activity are not, properly speaking, of space/time. There is a great component of what you may call metaphysical energy transferred. Indeed, the body complex as a whole is greatly misunderstood due to the post-veiling assumption that the physical manifestation called the body is subject only to physical stimuli. This is emphatically not so.
 (英文待翻译)
+
+## (84.18)
 
 (84.18) Questioner After the veil, in our particular case now, we have, in the circuitry of which we were speaking, what you’d call a blockage that first occurs in orange ray. Could you describe what occurs with this first blockage and what its effects are on each of the entities, assuming that one blocks, and the other does not, or if both are blocked?
 (英文待翻译)
@@ -154,6 +192,8 @@ If one entity is blocked and the other vibrates in love, the entity baffled will
 The green-ray active individual shall polarize slightly in the direction of service to others but have only the energy with which it began.
 (英文待翻译)
 
+## (84.19)
+
 (84.19) Questioner I didn’t mean to cover previously covered material. I was trying to work into a better understanding of what we’re talking about, with background of the veiling process, and what I was actually attempting to do was to discover something new in asking the question, so please if I ask any questions in the future that have already been covered don’t bother to repeat the material.
 (英文待翻译)
 
@@ -165,6 +205,8 @@ It occurs to me that many statues or drawings of the one known as Lucifer, or th
 
 Ra I am Ra. There is, of course, much other distortion involved in a discussion of any mythic archetypical form. However, we may answer in the affirmative and note that you are perceptive.
 (英文待翻译)
+
+## (84.20)
 
 (84.20) Questioner Then, with respect to the green, blue, and indigo transfers of energy: How would the mechanism for these transfers differ in making them possible or setting the groundwork for them than the orange ray?
 (英文待翻译)
@@ -196,6 +238,8 @@ We cannot speak at all of violet-ray transfer as we do not, again, desire to bre
 We may say that these jewels, though dearly bought, are beyond price for the seeker; and might suggest that just as each awareness is arrived at through a process of analysis, synthesis, and inspiration, so should the seeker approach its mate and evaluate each experience, seeking the jewel.
 (英文待翻译)
 
+## (84.21)
+
 (84.21) Questioner Is there any way to tell which ray the transfer was for an individual after the experience? Is there any way for the individual to tell in which particular ray the transfer occurred?
 (英文待翻译)
 
@@ -211,6 +255,8 @@ If the polarized entities, by this same energy transfer experience, find that th
 We may not speak of the violet-ray transfer except to note that it is an opening to the gateway of intelligent infinity. Indeed, the indigo-ray transfer is also this, but, shall we say, the veil has not yet been lifted.
 (英文待翻译)
 
+## (84.22)
+
 (84.22) Questioner Before the veil, were there— Let me put it this way: Did the Logos, or did most Logoi plan before the veil to create a system of random sexual activity, or specific pairing of entities for periods of time, or did they have an objective in this respect?
 (英文待翻译)
 
@@ -222,6 +268,8 @@ The harvest from the previous creation was that which included the male and fema
 
 May we ask if there may be any brief queries before we leave this instrument?
 (英文待翻译)
+
+## (84.23)
 
 (84.23) Questioner Is there anything we can do to make the instrument more comfortable or improve the contact?
 (英文待翻译)

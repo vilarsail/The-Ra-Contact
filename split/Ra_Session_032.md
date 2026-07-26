@@ -4,8 +4,12 @@
 February 27, 1981
 (英文待翻译)
 
+## (32.0)
+
 (32.0) Ra I am Ra. I greet you in the love and the light of the One Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (32.1)
 
 (32.1) Questioner I have a little question I will throw in at this point from Jim. I will read it.
 (英文待翻译)
@@ -25,6 +29,8 @@ Secondly, the means of protection against any negative, or debilitating, influen
 This, in turn, allowed this particular entity to radiate to the other-self such energies as became a catalyst for an opening and strengthening of the other-self’s ability to function in a more positively polarized state. Thus we see protection being very simple. Give thanksgiving for each moment. See the self and the other-self as Creator. Open the heart. Always know the light and praise it. This is all the protection necessary.
 (英文待翻译)
 
+## (32.2)
+
 (32.2) Questioner Thank you very much. I will now continue with the material from day before yesterday. Our subject is how sexual polarity acts as a catalyst in evolution and how to best make use of this catalyst. Going back to that material, I will fill in a few gaps that we possibly don’t understand at this point too well.
 (英文待翻译)
 
@@ -40,17 +46,23 @@ The yellow ray is a focal and very powerful ray, and concerns the entity in rela
 The negative path, as you would call it, uses a combination of the yellow ray and the orange ray in its polarization patterns. These rays, used in a dedicated fashion, will bring about a contact with intelligent infinity. The usual nature of sexual interaction, if one is yellow or orange in primary vibratory patterns, is one of blockage and then insatiable hunger due to the blockage. When there are two selves vibrating in this area, the potential for polarization through the sexual interaction is begun, one entity experiencing the pleasure of humiliation and slavery, or bondage, the other experiencing the pleasure of mastery and control over another entity. In this way a sexual energy transfer of a negative polarity is experienced.
 (英文待翻译)
 
+## (32.3)
+
 (32.3) Questioner From the material that you transmitted February 17th you stated: “In third ray there are two possibilities. Firstly, if both vibrate in third ray there will be a mutually strengthening energy transfer.” What color is third ray in this material?
 (英文待翻译)
 
 Ra I am Ra. The ray we were speaking of in that material should be properly the green ray or fourth ray.
 (英文待翻译)
 
+## (32.4)
+
 (32.4) Questioner So I should change that third to fourth?
 (英文待翻译)
 
 Ra I am Ra. This is correct.[52] Please continue to scan for errors having to do with numberings, as you call them, as this concept is foreign to us and we must translate, if you will, when using numbers. This is an ongoing weakness of this contact due to the difference between our ways and yours. Your aid is appreciated.
 (英文待翻译)
+
+## (32.5)
 
 (32.5) Questioner OK. Thank you. I believe that for the time being we’ve amply covered green ray, so I am going to skip over green ray and go to blue ray.
 (英文待翻译)
@@ -64,17 +76,23 @@ Ra I am Ra. With the green-ray transfer of energy you now come to the great turn
 It will be noted that once green-ray energy transfer has been achieved by two mind/body/spirits in mating, the further rays are available without both entities having the necessity to progress equally. Thus a blue-ray vibrating entity or indigo-ray vibrating entity whose other ray vibrations are clear may share that energy with the green-ray other-self, thus acting as catalyst for the continued learn/teaching of the other-self. Until an other-self reaches green ray, such energy transfers through the rays is not possible.
 (英文待翻译)
 
+## (32.6)
+
 (32.6) Questioner My next question had to do with indigo ray. Is there any difference between indigo and blue-ray energy transfer?
 (英文待翻译)
 
 Ra I am Ra. The indigo ray is the ray of, shall we say, awareness of the Creator as self; thus one whose indigo-ray vibrations have been activated can offer the energy transfer of Creator to Creator. This is the beginning of the sacramental nature of what you call your bisexual reproductive act. It is unique in bearing the allness, the wholeness, the unity in its offering to other-self.
 (英文待翻译)
 
+## (32.7)
+
 (32.7) Questioner And then finally, the violet ray. What is the difference between violet ray and the others?
 (英文待翻译)
 
 Ra I am Ra. The violet ray, just as the red ray, is constant in the sexual experience. Its experience by other-self may be distorted, or completely ignored, or not apprehended by other-self. However, the violet ray, being the sum and substance of the mind/body/spirit complex, surrounds and informs any action by a mind/body/spirit complex.
 (英文待翻译)
+
+## (32.8)
 
 (32.8) Questioner Do the energy transfers of this nature occur in fourth, fifth, sixth, and seventh density? I mean, of all the rays?
 (英文待翻译)
@@ -84,6 +102,8 @@ Ra I am Ra. The rays, as you understand them, have such a different meaning in t
 
 The process is different in the fifth and the sixth density than you may understand it. However, it is in these cases still based upon polarity. In the seventh density there is not this particular energy exchange as it is unnecessary to recycle body complexes.
 (英文待翻译)
+
+## (32.9)
 
 (32.9) Questioner I am assuming from what we have previously looked at . . . we have on Earth today, and have had in the past, fourth-, fifth-, and sixth-density wanderers. As they come into incarnation in the physical of this density for a period as a wanderer, what types of polarizations with respect to these various rays do they find affecting them? Can you tell me that?
 (英文待翻译)
@@ -100,17 +120,23 @@ The fifth-density wanderer is one who is not tremendously affected by the stimul
 The sixth density, whose means of propagation you may liken to what you call fusion, is likely to refrain, to a great extent, from the bisexual reproductive programming of the bodily complex and instead seek out those with whom the sexual energy transfer is of the complete fusion nature insofar as this is possible in manifestation in third density.
 (英文待翻译)
 
+## (32.10)
+
 (32.10) Questioner Can you expand a little bit on what you mean by “complete fusion nature?”
 (英文待翻译)
 
 Ra I am Ra. The entire creation is of the One Creator. Thus the division of sexual activity into simply that of the bodily complex is an artificial division, all things thusly being seen as sexual equally—the mind, the body, and the spirit—all of which are part of the polarity of the entity. Thus sexual fusion may be seen, with or without what you may call sexual intercourse, to be the complete melding of the mind, the body, and the spirit in what feels to be a constant orgasm, shall we say, of joy and delight each in the other’s beingness.
 (英文待翻译)
 
+## (32.11)
+
 (32.11) Questioner Would then many wanderers of the higher densities have considerable problems with respect to incarnation in third density because of this different orientation?
 (英文待翻译)
 
 Ra I am Ra. The possibility/probability of such problems, as you call them, due to sixth density incarnating in third is rather large. It is not necessarily a problem if you would call it thusly. It depends upon the unique orientation of each mind/body/spirit complex having this situation or placement of vibratory relativities.
 (英文待翻译)
+
+## (32.12)
 
 (32.12) Questioner Can you give me an idea how the different colors . . . this is a difficult question to ask. I hardly have any words.
 (英文待翻译)
@@ -124,11 +150,15 @@ Ra I am Ra. This question is sufficiently clear for us to attempt explanation of
 However, as one approaches a boundary, an effort must be made to cross that boundary. These colors are a simplistic way of expressing the boundary divisions of your density. There is also the time/space analogy which may be seen as the color itself in a modified aspect.
 (英文待翻译)
 
+## (32.13)
+
 (32.13) Questioner Thank you. Is it possible for an entity in third-density physical to vary widely across the entire band of colors, or is the entity pretty well zeroed in on one color?
 (英文待翻译)
 
 Ra I am Ra. This will be the last full question of this working. Please restate for clarity.
 (英文待翻译)
+
+## (32.14)
 
 (32.14) Questioner I just meant was it possible, say, for a green-ray . . . when we’re talking about green-ray activation and energy transfers, is it possible for a green-ray person who is primarily green-ray activation to vary on both sides of green ray a large or a small amount in energy activation, or does he stay primarily green-ray?
 (英文待翻译)
@@ -139,11 +169,15 @@ Ra I am Ra. We grasp the newness of material requested by you. It was unclear, f
 The new material is this: once the green ray has been achieved, the ability of the entity to enter blue ray is immediate and is only awaiting the efforts of the individual. The indigo ray is opened only through considerable discipline and practice largely having to do with acceptance of self, not only as the polarized and balanced self but as the Creator, as an entity of infinite worth. This will begin to activate the indigo ray.
 (英文待翻译)
 
+## (32.15)
+
 (32.15) Questioner Thank you.
 (英文待翻译)
 
 Ra I am Ra. Do you have any brief queries before we close?
 (英文待翻译)
+
+## (32.16)
 
 (32.16) Questioner I think anything would be too long. I’ll just ask if there’s anything we can do to make the instrument more comfortable or make the contact better?
 (英文待翻译)

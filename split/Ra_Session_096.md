@@ -4,14 +4,20 @@
 September 9, 1982
 (英文待翻译)
 
+## (96.0)
+
 (96.0) Ra I am Ra. I greet you in the love and in the light of the One Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (96.1)
 
 (96.1) Questioner Could you first please give me the condition of the instrument?
 (英文待翻译)
 
 Ra I am Ra. The physical energy deficit is significantly greater than the last asking. There has been substantive lessening also of the vital energies, although the perquisite degree of energy for mental/emotional distortions of normalcy are yet available.
 (英文待翻译)
+
+## (96.2)
 
 (96.2) Questioner Could you tell me the cause of the lessening of the physical and vital energies?
 (英文待翻译)
@@ -31,11 +37,15 @@ Although this entity attempted clear communication upon this matter, and althoug
 It is well that this instrument is not distorted towards what you may call hysteria, for the potential of this working was such that had the instrument allowed fear to become greater than the will to persevere when it could not breathe, each attempt at respiration would have been even more nearly impossible until the suffocation occurred, which was desired by the one which greets you in its own way. Thus the entity would have passed from this incarnation.
 (英文待翻译)
 
+## (96.3)
+
 (96.3) Questioner Does this threat, shall I say, still exist, and if so is there something we can do to alleviate it?
 (英文待翻译)
 
 Ra I am Ra. This threat no longer exists, if you wish to phrase this greeting in this manner. The communication which was effected by the scribe and then by the questioner did close the opening and enable the instrument to begin assimilating the catalyst it had received.
 (英文待翻译)
+
+## (96.4)
 
 (96.4) Questioner The instrument asks, since this has to do with that house, is the house capable of being transformed by the painting and cleaning? We are able to undertake . . . that is, we don’t plan to put down all new carpets. Are the carpets that are there now acceptable?
 (英文待翻译)
@@ -58,11 +68,15 @@ If the intention is to clean, as much as is physically possible, the location, t
 May we note that just as each entity strives in each moment to become more nearly one with the Creator but falls short, just so is physical spotlessness striven for but not achieved. In each case the purity of intention and thoroughness of manifestation are appreciated. The variance between the attempt and the goal is never noted and may be considered unimportant.
 (英文待翻译)
 
+## (96.5)
+
 (96.5) Questioner The sequence of events that I am considering, which may be easily changed, is first the painting, then the cleaning, then the moving in of the furniture, then the salting and use of garlic. Is this sequence as good as any other sequence, or would a different sequence be better for those events?
 (英文待翻译)
 
 Ra I am Ra. Any sequence which results in the cleansings is acceptable. It is to be noted that the thresholds are not to be crossed during the cleansing. Since such stricture upon use of the limen may affect your considerations we make note of this.[120]
 (英文待翻译)
+
+## (96.6)
 
 (96.6) Questioner Was the unusual sound on the instrument’s tape recorder that occurred while she was trying to record her singing a greeting from our fifth-density negative associate?
 (英文待翻译)
@@ -70,11 +84,15 @@ Ra I am Ra. Any sequence which results in the cleansings is acceptable. It is to
 Ra I am Ra. No. Rather it was a greeting from a malfunctioning electronic machine.
 (英文待翻译)
 
+## (96.7)
+
 (96.7) Questioner There was no catalyst for the machine to malfunction from any of the negative entities then. Is that right? I mean, it just was a function only of the random malfunction of the machine. Am I correct?
 (英文待翻译)
 
 Ra I am Ra. No.
 (英文待翻译)
+
+## (96.8)
 
 (96.8) Questioner What was the origin of this malfunction?
 (英文待翻译)
@@ -85,17 +103,23 @@ Ra I am Ra. There are two difficulties with the machine. Firstly, this instrumen
 Also, there was some difficulty from physical interference due to the material you call tape catching upon adjoining, what you would call, buttons when the “play” button, as you call it, is depressed.
 (英文待翻译)
 
+## (96.9)
+
 (96.9) Questioner How is Ra able to know all of this information? This is a somewhat unimportant question, but it is just amazing to me that Ra is able to know all of these trivial things. What do you do, move in time/space and inspect the problem or what?
 (英文待翻译)
 
 Ra I am Ra. Your former supposition is correct, your latter unintelligible to us.
 (英文待翻译)
 
+## (96.10)
+
 (96.10) Questioner You mean you move in time/space and inspect the situation to determine the problem. Is that correct?
 (英文待翻译)
 
 Ra I am Ra. This is so.
 (英文待翻译)
+
+## (96.11)
 
 (96.11) Questioner Sorry to ask the unimportant question. I was thinking of the future readers, and that they would be totally mystified as to how much . . .
 (英文待翻译)
@@ -106,17 +130,23 @@ Was there a significance with respect to the hawk that landed the other day just
 Ra I am Ra. This is correct. We may note that we find it interesting that queries offered to us are often already known. We assume that our confirmation is appreciated.
 (英文待翻译)
 
+## (96.12)
+
 (96.12) Questioner This seems to be connected with the concept of the birds being messengers in the tarot, and this is a demonstration of this concept in the tarot, and I was wondering about the mechanics, you might say, of this type of a message. I assume the hawk was a messenger. And I assume that as I thought of the possible meaning of this with respect to our activities I was, in the state of free will, getting a message through the appearance of this very unusual bird—unusual, I say, in that it came so close. I would be very interested to know the origin of the message. (Of course, the origin is the One Creator.) The mechanics of this are very mystifying to me. Would Ra comment on this, please?
 (英文待翻译)
 
 Ra I am Ra. No.
 (英文待翻译)
 
+## (96.13)
+
 (96.13) Questioner I was afraid that you would say that. Am I correct in assuming that this is the same type of communication as depicted in Card Number Three in the Catalyst of the Mind?
 (英文待翻译)
 
 Ra I am Ra. We may not comment due to the Law of Confusion. There is an acceptable degree of confirmation of items known, but when the recognized subjective sigil is waived and the message not clear, then it is that we must remain silent.[121]
 (英文待翻译)
+
+## (96.14)
 
 (96.14) Questioner Would Ra comment on the technique of blessing the water we will use to sprinkle on the salt? I assume we just sprinkle the water directly off of our fingertips onto the line of salt. And also how much, in general, should be sprinkled on the salt? How wet we should get it? This is trivial, but I’d like to get it right.
 (英文待翻译)
@@ -126,6 +156,8 @@ Ra I am Ra. The blessing of the water may be that one we have previously given, 
 
 The intention of blessing is the notable feature of blessed water. The water may be sprinkled not so that all salt is soaked, but so that a goodly portion has been dampened. This is not a physical working. The substances need to be seen in their ideal state, so that water may be seen to be enabling the salt.
 (英文待翻译)
+
+## (96.15)
 
 (96.15) Questioner I planned to re-draw the tarot cards eliminating extraneous additions by those who came after Ra’s initial giving. And I would like quickly to go through those things that I intend to eliminate from each card we’ve gone over and ask Ra if there is anything else that should be eliminated to make the cards as they were when they were originally drawn before the astrological and other appendages were added.
 (英文待翻译)
@@ -154,6 +186,8 @@ Fifthly, we would note that it is not possible to offer what you may call a pure
 Sixthly, although it is good to view the images without the astrological additions (it is to be noted that the more general positions, phases, and characteristics of each concept complex are those which are significant), the removal of all distortion is unlikely and, to a great extent, unimportant.
 (英文待翻译)
 
+## (96.16)
+
 (96.16) Questioner I didn’t think we could ever remove all distortion, but some of this is very difficult to interpret because of the quality of the drawing. And as we go through these cards we get a better idea of what some of these things are and how they should be drawn, and I think that we can improve greatly on the quality of the card and also remove some of the extraneous material that is misleading.
 (英文待翻译)
 
@@ -163,11 +197,15 @@ On the second card, in addition to removing the letters and stars I assume we sh
 Ra I am Ra. We perceive an incomplete query. Please re-question.
 (英文待翻译)
 
+## (96.17)
+
 (96.17) Questioner I think that I should put a crux ansata in place of this thing that looks a little like a crux ansata on the front of the female. Is that correct?
 (英文待翻译)
 
 Ra I am Ra. This is correct.
 (英文待翻译)
+
+## (96.18)
 
 (96.18) Questioner And as to the thing that she wears on her head—that, I believe, is a bit confusing. What should it be shaped like?
 (英文待翻译)
@@ -175,17 +213,23 @@ Ra I am Ra. This is correct.
 Ra I am Ra. We shall allow the student to ponder this point. We note that although it is an astrologically based addition to the concept complex, it is not entirely unacceptable when viewed with a certain feeling. Therefore, we suggest, O student, that you choose whether to remove the crown or to name its meaning in such a way as to enhance the concept complex.
 (英文待翻译)
 
+## (96.19)
+
 (96.19) Questioner Would Ra please give me any information possible on the ratios of the dimensions, and the dimensions and shape of the crux ansata as it should be made or drawn?
 (英文待翻译)
 
 Ra I am Ra. No.
 (英文待翻译)
 
+## (96.20)
+
 (96.20) Questioner Card Number Three, we will remove all of the letters, etc., and the stars. And I assume that it would be advisable to remove all these little cups around the outside of the rays representing the sun. Is that correct?
 (英文待翻译)
 
 Ra I am Ra. Yes.
 (英文待翻译)
+
+## (96.21)
 
 (96.21) Questioner In Card Number Four we will remove the letters around the outside and all of the stars, and it seems that again we have a situation of removing the wand and putting the sphere in the hand. Is that correct?
 (英文待翻译)
@@ -198,6 +242,8 @@ This instrument is experiencing some small lack of that distortion which you cal
 
 We did not complete our statement upon the dimensions of the crux ansata. It is given in many places. There are decisions to be made as to which drawing of this image is the appropriate one. We may, of course, suggest viewing the so-called Great Pyramid if the puzzle is desired. We do not wish to work this puzzle. It was designed in order that in its own time it be deciphered. In general, of course, this image has the meaning previously stated.[122]
 (英文待翻译)
+
+## (96.22)
 
 (96.22) Questioner Is there anything that we can do to make the instrument more comfortable or improve the contact?
 (英文待翻译)

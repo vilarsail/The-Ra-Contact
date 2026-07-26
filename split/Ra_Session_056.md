@@ -4,14 +4,20 @@
 June 8, 1981
 (英文待翻译)
 
+## (56.0)
+
 (56.0) Ra I am Ra. I greet you in the love and in the light of the One Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (56.1)
 
 (56.1) Questioner Would you first please give me an indication of the condition of the instrument?
 (英文待翻译)
 
 Ra I am Ra. This instrument is severely distorted towards weakness of the mental and physical complexes at this time, and is under psychic attack due to this opportunity.
 (英文待翻译)
+
+## (56.2)
 
 (56.2) Questioner Would it be better to discontinue the contact at this time?
 (英文待翻译)
@@ -21,6 +27,8 @@ Ra I am Ra. This is entirely at your discretion. This instrument has some energy
 
 We, if you desire to question us further at this working, will as always attempt to safeguard this instrument. We feel that you are aware of the parameters without further elaboration.
 (英文待翻译)
+
+## (56.3)
 
 (56.3) Questioner In that case, I will ask how does the pyramid shape work?
 (英文待翻译)
@@ -52,6 +60,8 @@ It is to be noted that these shapes are dangerous. We are quite pleased to have 
 It is to be noted that your peoples build, for the most part, the cornered or square habitations, for they do not concentrate power. It is further to be noted that the spiritual seeker has, for many of your time periods of years, sought the rounded, arched, and peaked forms as an expression of the power of the Creator.[89]
 (英文待翻译)
 
+## (56.4)
+
 (56.4) Questioner Is there an apex angle that is the angle for maximum efficiency in the pyramid?
 (英文待翻译)
 
@@ -61,11 +71,15 @@ Ra I am Ra. Again, to conserve this instrument’s energy, I am assuming that yo
 However, we found this particular angle to be useful. Other social memory complexes, or portions thereof, have determined different apex angles for different uses, not having to do with healing but with learning. When one works with the cone or, shall we say, the silo type of shape, the energy for healing may be found to be in a general circular pattern unique to each shape as a function of its particular height and width and, in the cone shape, the angle of apex. In these cases there are no corner angles. Thus the spiraling energy works in circular motion.
 (英文待翻译)
 
+## (56.5)
+
 (56.5) Questioner I will make a statement that you can correct. I intuitively see the spiraling energy of the Giza pyramid being spread out as it moves through the so-called King’s Chamber and then refocusing in the so-called Queen’s Chamber. I am guessing that the spread of energy in the so-called King’s Chamber is seen in the spectrum of colors, red through violet, and that the energy centers of the entity to be healed should be aligned with this spread of the spectrum so that the spectrum matches the various energy centers. Can you correct this statement?
 (英文待翻译)
 
 Ra I am Ra. We can correct this statement.
 (英文待翻译)
+
+## (56.6)
 
 (56.6) Questioner Would you please do that?
 (英文待翻译)
@@ -75,6 +89,8 @@ Ra The spiraling energy is beginning to be diffused at the point where it goes t
 
 Thus the King’s Chamber position is chosen as the first spiral after the centered beginning through the Queen’s Chamber position. You may visualize the diffusion angle as the opposite of the pyramid angle, but the angle being less wide than the apex angle of the pyramid, being somewhere between 33 and 54°, depending upon the various rhythms of the planet itself.
 (英文待翻译)
+
+## (56.7)
 
 (56.7) Questioner Then I assume if I start my angle at the bottom of the Queen’s Chamber, and make a 33 to 54° angle from that point, so that half of that angle falls on the side of the centerline the King’s Chamber is on, that will indicate the diffusion of the spectrum, starting from the point at the bottom of the Queen’s Chamber; let’s say if we were using a 40° angle, we would have a 20° diffusion to the left of the centerline, passing through the King’s Chamber. Is that correct?
 (英文待翻译)
@@ -90,6 +106,8 @@ This variation is dependent upon various magnetic fluxes of the planet. The King
 
 May we answer any brief queries at this time?
 (英文待翻译)
+
+## (56.8)
 
 (56.8) Questioner I will just ask if there is anything that we can do to make the instrument more comfortable or improve the contact?
 (英文待翻译)

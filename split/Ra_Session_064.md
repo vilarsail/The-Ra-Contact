@@ -4,8 +4,12 @@
 July 26, 1981
 (英文待翻译)
 
+## (64.0)
+
 (64.0) Ra I am Ra. I greet you in the love and in the light of the One Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (64.1)
 
 (64.1) Questioner Could you first tell me the condition of the instrument?
 (英文待翻译)
@@ -13,11 +17,15 @@ July 26, 1981
 Ra I am Ra. It is as previously stated with the exception of a transitory distortion lessening the free flow of vital energy.
 (英文待翻译)
 
+## (64.2)
+
 (64.2) Questioner Can you tell what the transitory distortion is?
 (英文待翻译)
 
 Ra I am Ra. This is marginal information.
 (英文待翻译)
+
+## (64.3)
 
 (64.3) Questioner Then we won’t question on it.
 (英文待翻译)
@@ -27,6 +35,8 @@ I would like to ask first about a mistake I believe that I might have made in th
 
 Ra I am Ra. You and Ra made an error. The appropriate number of your ciphers is one less than previously stated.[10]
 (英文待翻译)
+
+## (64.4)
 
 (64.4) Questioner Thank you. Could you explain the basic principles behind the ritual which we perform to initiate the contact and what I would call the basic white magical rituals—principles of protection and other principles? Could you please do this?
 (英文待翻译)
@@ -43,6 +53,8 @@ The subconscious reason, it being the stronger for this yearning, was the awaren
 The principle behind any ritual of the white magical nature is to so configure the stimuli which reach down into the trunk of mind that this arrangement causes the generation of disciplined and purified emotion, or love, which then may be both protection and the key to the gateway to intelligent infinity.
 (英文待翻译)
 
+## (64.5)
+
 (64.5) Questioner Can you tell me why the slight error made in the ritual starting this communication two sessions ago allowed the intrusion of one Orion-affiliated entity?
 (英文待翻译)
 
@@ -54,6 +66,8 @@ The smallest of lapses may disturb the regularity of this pattern of energies wh
 
 We may note, for your information, that our pause was due to the necessity of being quite sure that the mind/body/spirit complex of the instrument was safely in the proper light configuration or density before we dealt with the situation. Far better would it be to allow the shell to become unviable than to allow the mind/body/spirit complex to be, shall we say, misplaced.
 (英文待翻译)
+
+## (64.6)
 
 (64.6) Questioner Could you describe or tell me of rituals or technique used by Ra in seeking in the direction of service?
 (英文待翻译)
@@ -73,11 +87,15 @@ Your rituals at your level of progress contain the concept of polarization, and 
 We may answer further if you have specific queries.
 (英文待翻译)
 
+## (64.7)
+
 (64.7) Questioner Would it be helpful if Ra were to describe the techniques used while Ra was in third density to evolve in mind, body, and spirit?
 (英文待翻译)
 
 Ra I am Ra. This query lies beyond the Law of Confusion.
 (英文待翻译)
+
+## (64.8)
 
 (64.8) Questioner What about fourth-density experience of Ra? Would that also lie beyond the Law of Confusion?
 (英文待翻译)
@@ -88,11 +106,15 @@ Ra I am Ra. This is correct. Let us express a thought. Ra is not elite. To speak
 Let it be said that any entity or group may create the most splendid harmony in any outer atmosphere. Ra’s experiences are no more than your own. Yours is the dance at this space/time in third-density harvest.
 (英文待翻译)
 
+## (64.9)
+
 (64.9) Questioner The question was brought up recently having to do with possible records left near, in, or under the Great Pyramid at Giza. I have no idea whether this would be of benefit. I will just ask if there is any benefit in investigating in this area?
 (英文待翻译)
 
 Ra I am Ra. We apologize for seeming to be so shy of information. However, any words upon this particular subject create the possibility of infringement upon free will.
 (英文待翻译)
+
+## (64.10)
 
 (64.10) Questioner In a previous session[13] you mentioned the gateway of magic for the adept occurring in eighteen-day cycles. Could you expand on that information please?
 (英文待翻译)
@@ -109,11 +131,15 @@ The most interesting portion of this information, like that of each cycle, is th
 At the nadir of each cycle the adept will be at its least powerful but will not be open to difficulties in nearly the degree that it experiences at critical times.
 (英文待翻译)
 
+## (64.11)
+
 (64.11) Questioner Then, to find the cycles, we would take the instant of birth and the emerging of the infant from the mother into this density and start the cycle at that instant and continue it through the life. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. This is mostly correct. It is not necessary to identify the instant of birthing. The diurnal cycle upon which this event occurs is satisfactory for all but the most fine workings.
 (英文待翻译)
+
+## (64.12)
 
 (64.12) Questioner Now, am I correct in assuming that whatever magic the adept would perform would be more successful or, shall we say, more to his design than that performed at less opportune times in the cycle?
 (英文待翻译)
@@ -121,17 +147,23 @@ Ra I am Ra. This is mostly correct. It is not necessary to identify the instant 
 Ra I am Ra. This cycle is an helpful tool to the adept, but, as we said, as the adept becomes more balanced, the workings designed will be dependent less and less upon these cycles of opportunity and more and more even in their efficacy.
 (英文待翻译)
 
+## (64.13)
+
 (64.13) Questioner I have no ability to judge at what point, at what level of abilities the adept would reach this point of being, shall we say, independent of the cyclical action. Can you give me an indication of what level of “adeptness” that would be necessary to be so independent?
 (英文待翻译)
 
 Ra I am Ra. We are fettered from speaking specifically due to this group’s work, for to speak would seem to be to judge. However, we may say that you may consider this cycle in the same light as the so-called astrological balances within your group; that is, they are interesting but not critical.
 (英文待翻译)
 
+## (64.14)
+
 (64.14) Questioner Thank you. I read that recent research has indicated that the normal sleep cycle for entities on this planet occurs one hour later each diurnal period, so that we have a 25-hour cycle instead of a 24. Is this correct, and if so, why is this?
 (英文待翻译)
 
 Ra I am Ra. This is in some cases correct. The planetary influences from which those of Mars experience memory have some effect upon these third-density physical bodily complexes. This race has given its genetic material to many bodies upon your plane.
 (英文待翻译)
+
+## (64.15)
 
 (64.15) Questioner Thank you. Ra mentioned the ones Stuart and Douglas in a recent session.[14] These are members of what we call our medical profession. What is the value, overall value, shall I say, of modern medical techniques in alleviating bodily distortions with respect to the purpose for these distortions and what we might call karma and other effects?
 (英文待翻译)
@@ -151,6 +183,8 @@ In observing the allopathic concept of the body complex as the machine, we may n
 In turn this mechanical concept of the body complex has created the continuing proliferation of distortions towards what you would call ill-health due to the strong chemicals used to control, and hide, bodily distortions. There is a realization among many of your peoples that there are more efficacious systems of healing, not excluding the allopathic, but also including the many other avenues of healing.
 (英文待翻译)
 
+## (64.16)
+
 (64.16) Questioner Let us assume that a bodily distortion occurs within a particular entity who then has a choice of seeking allopathic aid or experiencing the catalyst of the distortion and not seeking correction of the distortion. Can you comment on the two possibilities for this entity and his analysis of each path?
 (英文待翻译)
 
@@ -163,17 +197,23 @@ For the negatively polarized entity the antithesis is the case.
 For the unpolarized entity the considerations are random and, most likely, in the direction of the distortion towards comfort.
 (英文待翻译)
 
+## (64.17)
+
 (64.17) Questioner Dr. Monroe,[16] I understand, brought a four-toed Bigfoot cast by here the other day. Could you tell me which form of Bigfoot that cast was?
 (英文待翻译)
 
 Ra I am Ra. We can.
 (英文待翻译)
 
+## (64.18)
+
 (64.18) Questioner I know it is totally unimportant, but as a service to Dr. Monroe I thought that I should ask that.
 (英文待翻译)
 
 Ra I am Ra. This entity was one of a small group of thought-forms.
 (英文待翻译)
+
+## (64.19)
 
 (64.19) Questioner He also asked (and I know this is unimportant) why there were no Bigfoot remains found, that is, after the Bigfoot entities had died on our surface. He had asked why there had never been any remains of these entities found. Could you answer this for him? It’s just of no importance, but just as a service to him I ask it.
 (英文待翻译)
@@ -183,6 +223,8 @@ Ra I am Ra. You may suggest that exploration of the caves which underlie some of
 
 There is enough energy for one more full query at this time.
 (英文待翻译)
+
+## (64.20)
 
 (64.20) Questioner In the healing exercises, when you say “examine the sensations of the body,” do you mean those sensations available to the body via the five senses? Or in relation to the natural functions of the body such as touching, loving, sexual sharing, and company? Or are you speaking of something else altogether?
 (英文待翻译)
@@ -198,6 +240,8 @@ Each sensation that leaves the aftertaste of meaning upon the mind, that leaves 
 
 May we answer any brief queries before we leave this instrument?
 (英文待翻译)
+
+## (64.21)
 
 (64.21) Questioner Is there anything that we could do to make the instrument more comfortable or improve the contact?
 (英文待翻译)

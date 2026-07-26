@@ -4,8 +4,12 @@
 February 4, 1981
 (英文待翻译)
 
+## (18.0)
+
 (18.0) Ra I am Ra. I greet you in the love and the light of the Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (18.1)
 
 (18.1) Questioner I was thinking last night that if I were in the place of Ra at this time, the first distortion of the Law of One might cause me to mix some erroneous data with the true information that I was transmitting to this group. Do you do this?
 (英文待翻译)
@@ -13,11 +17,15 @@ February 4, 1981
 Ra I am Ra. We do not intentionally do this. However, there will be confusion. The errors which have occurred have occurred due to the occasional variation in the vibrational complex of this instrument due to its ingestion of a chemical substance. It is not our intent in this particular project to create erroneous information but to express in the confining ambiance of your language system the feeling of the infinite mystery of the One Creation in its infinite and intelligent unity.
 (英文待翻译)
 
+## (18.2)
+
 (18.2) Questioner Can you tell me what the chemical substance is that was ingested? Causes poor contact?
 (英文待翻译)
 
 Ra I am Ra. This is not a clear query. Could you please restate?
 (英文待翻译)
+
+## (18.3)
 
 (18.3) Questioner You just stated that you had some problems with the instrument because of the ingestion, by the instrument, of some chemical substance. Can you tell me what the substance was?
 (英文待翻译)
@@ -28,11 +36,15 @@ Ra I am Ra. The substance of which we speak is called vibratory sound complex LS
 However, this entity was, during the session, at the point where this substance no longer was in sufficient strength to amplify the entity’s abilities to express vital energy. Thus, first the phenomenon of, shall we say, a spotty contact, and then, as the instrument relies again upon its own vibrational complexes of vital energy, the vital energy being in this case very low, it became necessary to abruptly cut off communication in order to preserve and nurture the instrument. This particular chemical substance is both helpful and unhelpful in these contacts for the causes given.
 (英文待翻译)
 
+## (18.4)
+
 (18.4) Questioner Are there any foods that are helpful or harmful that the instrument might eat?
 (英文待翻译)
 
 Ra I am Ra. This instrument has body-complex distortion towards ill health in the distortion direction corrected best by ingestion of the foodstuffs of your grains and your vegetables, as you call them. However, this is extremely unimportant when regarded as an aid with equality to other aids such as attitude which this instrument has in abundance. It, however, aids the vital energies of this instrument, with less distortion towards ill health, to ingest foodstuffs in the above manner with occasional ingestion of what you call your meats, due to the instrument’s need to lessen the distortion towards low vital energy.
 (英文待翻译)
+
+## (18.5)
 
 (18.5) Questioner Thank you. I have a question here from Jim that I will read verbatim:
 (英文待翻译)
@@ -58,6 +70,8 @@ All things are acceptable in the proper time for each entity, and in experiencin
 It is, shall we say, a shortcut to simply ignore or overcome any desire. It must instead be understood and accepted. This takes patience and experience which can be analyzed with care, with compassion for self and for other-self.
 (英文待翻译)
 
+## (18.6)
+
 (18.6) Questioner Basically, I would say that to infringe on the free will of another self, or another entity, would be the basic thing never to do under the Law of One. Can you state any other breaking of the Law of One than this basic rule?
 (英文待翻译)
 
@@ -76,11 +90,15 @@ The area, or arena, called the societal complex is an arena in which there are n
 Thus, you have two simple directives: awareness of the intelligent energy expressed in nature; awareness of the intelligent energy expressed in self to be shared, when it seems appropriate, by the entity with the social complex. And you have one infinitely subtle and various set of distortions of which you may be aware; that is, distortions with respect to self and other-selves not concerning free will but concerning harmonious relationships and service to others as other-selves would most benefit.
 (英文待翻译)
 
+## (18.7)
+
 (18.7) Questioner As an entity in this density grows from childhood, he becomes more aware of his responsibilities. Is there an age below which an entity is not responsible for his actions, or is he responsible from the time of birth?
 (英文待翻译)
 
 Ra I am Ra. An entity incarnating upon the earth plane becomes conscious of self at a varying point in its time/space progress through the continuum. This may have a median, shall we say, of approximately fifteen of your months. Some entities become conscious of self at a period closer to incarnation, some at a period farther from this event. In all cases responsibility then becomes retroactive from that point backwards in the continuum so that distortions are to be understood by the entity and dissolved as the entity learns.
 (英文待翻译)
+
+## (18.8)
 
 (18.8) Questioner Then an entity, say, four years old would be totally responsible for any actions that were against or inharmonious with the Law of One. Is this correct?
 (英文待翻译)
@@ -88,17 +106,23 @@ Ra I am Ra. An entity incarnating upon the earth plane becomes conscious of self
 Ra I am Ra. This is correct. It may be noted that it has been arranged by your social complex structures that the newer entities to incarnation are to be provided with guides of a physical mind/body/spirit complex, thus being able to learn quickly what is consonant with the Law of One.
 (英文待翻译)
 
+## (18.9)
+
 (18.9) Questioner Who are these guides?
 (英文待翻译)
 
 Ra I am Ra. These guides are what you call parents, teachers, and friends.
 (英文待翻译)
 
+## (18.10)
+
 (18.10) Questioner I see. The entity Aleister Crowley wrote, “Do what thou wilt is the whole of the law.” He was obviously in understanding, to some extent, of the Law of One. Where is this entity now?
 (英文待翻译)
 
 Ra I am Ra. This entity is within your inner planes. This entity is in an healing process.
 (英文待翻译)
+
+## (18.11)
 
 (18.11) Questioner Did this entity, then, even though he intellectually understood the Law of One, misuse it and therefore have to go through this healing process?
 (英文待翻译)
@@ -109,6 +133,8 @@ Ra I am Ra. This entity became, may we use the vibration sound complex, overstim
 This entity was positive. However, its journey was difficult due to the inability to use, synthesize, and harmonize the understandings of the desires of self so that it might have shared, in full compassion, with other-selves. This entity thus became very unhealthy, as you may call it, in a spiritual complex manner, and it is necessary for those with this type of distortion towards inner pain to be nurtured in the inner planes until such an entity is capable of viewing the experiences again with the lack of distortion towards pain.
 (英文待翻译)
 
+## (18.12)
+
 (18.12) Questioner You stated yesterday that forgiveness is the eradicator of karma. I am assuming that balanced forgiveness for the full eradication of karma would require forgiveness not only of other-selves, but forgiveness of self. Am I correct?
 (英文待翻译)
 
@@ -117,6 +143,8 @@ Ra I am Ra. You are correct. We will briefly expand upon this understanding in o
 
 Forgiveness of other-self is forgiveness of self. An understanding of this insists upon full forgiveness upon the conscious level of self and other-self, for they are one. A full forgiveness is thus impossible without the inclusion of self.
 (英文待翻译)
+
+## (18.13)
 
 (18.13) Questioner Thank you. A most important point to my way of thinking.
 (英文待翻译)
@@ -130,6 +158,8 @@ Ra I am Ra. All serve the One Creator. There is nothing else to serve, for the C
 As in the Confederation which works with your peoples, each Confederation is a group of specialized individual social memory complexes, each doing that which it expresses to bring into manifestation.
 (英文待翻译)
 
+## (18.14)
+
 (18.14) Questioner Can you tell me how Yahweh communicated to Earth’s people?
 (英文待翻译)
 
@@ -139,11 +169,15 @@ Ra I am Ra. This is a somewhat complex question.
 The first communication was what you would call genetic. The second communication was the walking among your peoples to produce further genetic changes in consciousness. The third was a series of dialogues with chosen channels.
 (英文待翻译)
 
+## (18.15)
+
 (18.15) Questioner Can you tell me what these genetic changes were and how they were brought about?
 (英文待翻译)
 
 Ra I am Ra. Some of these genetic changes were in a form similar to what you call the cloning process. Thus, entities incarnated in the image of the Yahweh entities. The second was a contact of the nature you know as sexual, changing the mind/body/spirit complex through the natural means of the patterns of reproduction devised by the intelligent energy of your physical complex.
 (英文待翻译)
+
+## (18.16)
 
 (18.16) Questioner Can you tell me specifically what they did in this case?
 (英文待翻译)
@@ -151,11 +185,15 @@ Ra I am Ra. Some of these genetic changes were in a form similar to what you cal
 Ra I am Ra. We have answered this question. Please restate for further information.
 (英文待翻译)
 
+## (18.17)
+
 (18.17) Questioner Can you tell me the difference between the . . . the sexual programming, let us say, prior to Yahweh’s intervention and after intervention?
 (英文待翻译)
 
 Ra I am Ra. This is a question which we can only answer by stating that intervention by genetic means is the same no matter what the source of this change.
 (英文待翻译)
+
+## (18.18)
 
 (18.18) Questioner Can you tell me Yahweh’s purpose in making the genetic sexual changes?
 (英文待翻译)
@@ -163,11 +201,15 @@ Ra I am Ra. This is a question which we can only answer by stating that interven
 Ra I am Ra. The purpose, seven five oh oh oh [75,000] years ago, as you measure time, [of] the changes subsequent to that time were of one purpose only: that to express in the mind/body complex those characteristics which would lead to further and more speedy development of the spiritual complex.
 (英文待翻译)
 
+## (18.19)
+
 (18.19) Questioner How did these characteristics go about leading to the more spiritual development?
 (英文待翻译)
 
 Ra I am Ra. The characteristics which were encouraged included sensitivity of all the physical senses to sharpen the experiences and the strengthening of the mind complex in order to promote the ability to analyze these experiences.
 (英文待翻译)
+
+## (18.20)
 
 (18.20) Questioner When did Yahweh act to perform the genetic changes that Yahweh performed?
 (英文待翻译)
@@ -178,11 +220,15 @@ Ra I am Ra. The Yahweh group worked with those of the planet you call Mars seven
 The two six oh oh [2,600], approximately, time was the second time—we correct ourselves—three six oh oh [3,600], approximately the time of attempts by those of the Orion group during this cultural complex. This was a series of encounters in which the ones called Anak were impregnated with the new genetic coding by your physical complex means so that the organisms would be larger and stronger.
 (英文待翻译)
 
+## (18.21)
+
 (18.21) Questioner Why did they want larger and stronger organisms?
 (英文待翻译)
 
 Ra The ones of Yahweh were attempting to create an understanding of the Law of One by creating mind/body complexes capable of grasping the Law of One. The experiment was a decided failure from the view of the desired distortions due to the fact that rather than assimilating the Law of One, it was a great temptation to consider the so-called social complex, or sub-complex, as elite or different, and better, than other-selves, this one of the techniques of service to self.
 (英文待翻译)
+
+## (18.22)
 
 (18.22) Questioner Then the Orion group . . . I’m not quite sure that I understand this. Do you mean that the Orion group produced this larger body complex to create an elite so that the Law of One could be applied in what we call the negative sense?
 (英文待翻译)
@@ -193,17 +239,23 @@ Ra I am Ra. This is incorrect. The entities of Yahweh were responsible for this 
 However, the Orion group were able to use this distortion of mind/body complex to inculcate the thoughts of the elite rather than concentrations upon the learning/teaching of oneness.
 (英文待翻译)
 
+## (18.23)
+
 (18.23) Questioner Well, was Yahweh then of the Confederation?
 (英文待翻译)
 
 Ra I am Ra. Yahweh was of the Confederation but was mistaken in its attempts to aid.
 (英文待翻译)
 
+## (18.24)
+
 (18.24) Questioner Then Yahweh’s communications did not help or did not create what Yahweh wished for them to create. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. The results of this interaction were quite mixed. Where the entities were of a vibrational sum characteristic which embraced oneness, the manipulations of Yahweh were very useful. Wherein the entities of free will had chosen a less positively oriented configuration of sum total vibratory complex, those of the Orion group were able, for the first time, to make serious inroads upon the consciousness of the planetary complex.
 (英文待翻译)
+
+## (18.25)
 
 (18.25) Questioner Can you tell me specifically what allowed the most serious of these inroads to be made by the Orion group?
 (英文待翻译)
@@ -214,11 +266,15 @@ Ra I am Ra. This will be the final full question.
 Specifically, those who are strong, intelligent, etc., have a temptation to feel different from those who are less intelligent and less strong. This is a distorted perception of oneness with other-selves. It allowed the Orion group to form the concept of the holy war, as you may call it. This is a seriously distorted perception. There were many of these wars of a destructive nature.
 (英文待翻译)
 
+## (18.26)
+
 (18.26) Questioner Thank you very much. I believe that to be a very important point in understanding the total workings of the Law of One. It’ll be helpful. As you probably know, I must work for the next three days, so we will possibly have another session tonight if you think it is possible. And the next session after that would not be until four days from now. Do you believe another session tonight is possible?
 (英文待翻译)
 
 Ra I am Ra. This instrument is somewhat weak. This is a distortion caused by lack of vital energy. Thus, nurturing the instrument in physical balancing will allow another session. Do you understand?
 (英文待翻译)
+
+## (18.27)
 
 (18.27) Questioner Not completely. What specifically shall we do for physical balancing?
 (英文待翻译)

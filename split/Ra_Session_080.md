@@ -4,6 +4,8 @@
 February 27, 1982
 (英文待翻译)
 
+## (80.0)
+
 (80.0) Ra I am Ra. We greet you in the love and in the light of the One Infinite Creator.
 (英文待翻译)
 
@@ -19,6 +21,8 @@ This instrument’s distortions of body do not ever rule out, shall we say, such
 We communicate now.
 (英文待翻译)
 
+## (80.1)
+
 (80.1) Questioner Thank you. Could you please give me the condition of the instrument?
 (英文待翻译)
 
@@ -28,11 +32,15 @@ Ra I am Ra. This instrument is experiencing mild fluctuations of the physical en
 In other respects, the instrument is in the previously stated condition.
 (英文待翻译)
 
+## (80.2)
+
 (80.2) Questioner I had to leave the room for a forgotten item after we performed the banishing ritual. Did this have a deleterious effect on the ritual or the working?
 (英文待翻译)
 
 Ra I am Ra. Were it the only working the lapse would have been critical. There is enough residual energy of a protective nature in this place of working that this lapse, though quite unrecommended, does not represent a threat to the protection which the ritual of which you spoke offers.
 (英文待翻译)
+
+## (80.3)
 
 (80.3) Questioner Has our fifth-density visitor been less able to affect the instrument during our more recent workings?
 (英文待翻译)
@@ -49,6 +57,8 @@ Secondly, in the general experiential circumstance of your space/time experience
 However, the instrument has become more mentally and spiritually able to greet this entity with love, thereby reducing the element of fear which is an element the entity counts as a great weapon in the attempt to cause cessation, in any degree, of the Ra contact.
 (英文待翻译)
 
+## (80.4)
+
 (80.4) Questioner What is the reason for the fact that the entity is able to act through physical distortions that are already present as opposed to being unable to act on an entity who’s had no physical distortions at all?
 (英文待翻译)
 
@@ -57,6 +67,8 @@ Ra I am Ra. The key to this query is the term “distortion.” Any distortion�
 
 This entity has many physical distortions. Each in the group has various mental distortions. Their nature varies. The less balanced the distortion by self-knowledge, the more adeptly the entity may accentuate such a distortion in order to mitigate against the smooth functioning and harmony of the group.
 (英文待翻译)
+
+## (80.5)
 
 (80.5) Questioner As Ra well knows, the information that we accumulate here will be illuminating to but a very minor percentage of those who populate this planet presently simply because there are very, very few people who can understand it. However, it seems that our fifth-density visitor is, shall we say, dead set against this communication.
 (英文待翻译)
@@ -73,11 +85,15 @@ The instrument through which we speak and its support group have a similar fidel
 Due to the nature of the group the queries made to us by the group have led rapidly into somewhat abstruse regions of commentary. This content does not mitigate against the underlying purity of the contact. Such purity is as a light. Such an intensity of light attracts attention.
 (英文待翻译)
 
+## (80.6)
+
 (80.6) Questioner What would our fifth-density visitor hope to gain for himself if he were to be successful in terminating this contact?
 (英文待翻译)
 
 Ra I am Ra. As we have previously stated, the entity hopes to gain a portion of that light; that is, the mind/body/spirit complex of the instrument. Barring this, the entity intends to put out the light.
 (英文待翻译)
+
+## (80.7)
 
 (80.7) Questioner I understand this up to a point—that point is if the entity were successful in either of these attempts, of what value would this be to him? Would it increase his ability? Would it increase his polarity? By what mechanism would it do whatever it does?
 (英文待翻译)
@@ -87,6 +103,8 @@ Ra I am Ra. Having attempted for some of your space/time with no long-lasting re
 
 The gain for triumph is an increase in negative polarity to the entity in that it has removed a source of radiance and, thereby, offered to this space/time the opportunity of darkness where there once was light. In the event that it succeeded in enslaving the mind/body/spirit complex of the instrument it would have enslaved a fairly powerful entity, thus adding to its power.
 (英文待翻译)
+
+## (80.8)
 
 (80.8) Questioner I am sorry for my lack of penetration of these mechanisms, and I apologize for some rather stupid questions, but I think we have here a point that is somewhat central to what we are presently attempting to understand. So even though my next questions may be almost unacceptably stupid, I will attempt to try to understand what this power that our visitor seeks is and how he uses it. For it seems to me that this is central to the mind and the evolution of it in which we are involved.
 (英文待翻译)
@@ -103,11 +121,15 @@ You may, with some fruitfulness, consider the possibilities of moonlight. You ar
 The adept, then, is working with the power of hidden things illuminated by that which can be false or true. To embrace falsity, to know it, to seek it, and to use it gives a power that is most great. This is the nature of the power of your visitor and may shed some light upon the power of one who seeks in order to serve others as well, for the missteps in the night are oh! so easy.
 (英文待翻译)
 
+## (80.9)
+
 (80.9) Questioner Are you saying, then, that this power is of the spirit and not of the mind or the body?
 (英文待翻译)
 
 Ra I am Ra. The work of the adept is based upon previous work with the mind and the body, else work with the spirit would not be possible on a dependable basis. With this comment we may assert the correctness of your assumption.
 (英文待翻译)
+
+## (80.10)
 
 (80.10) Questioner Now, the fifteenth archetype, which is the Matrix of the Spirit, has been called the Devil. Can you tell me why that is so?
 (英文待翻译)
@@ -124,11 +146,15 @@ Therefore, the melody, shall we say, of this Matrix often seems to be of a negat
 It is also to be noted that an adept is one which has freed itself more and more from the constraints of the thoughts, opinions, and bonds of other-selves. Whether this is done for service to others or service to self, it is a necessary part of the awakening of the adept. This freedom is seen by those not free as what you would call evil or black. The magic is recognized; the nature is often not.
 (英文待翻译)
 
+## (80.11)
+
 (80.11) Questioner Could I say, then, that implicit in the process of becoming adept is the possible partial polarization towards service to self because simply the adept becomes disassociated with many of his kind or like in the particular density which he inhabits?
 (英文待翻译)
 
 Ra I am Ra. This is likely to occur. The apparent happening is disassociation: whether the truth is service to self and thus true disassociation from other-selves, or service to others and thus true association with the heart of all other-selves and disassociation only from the illusory husks which prevent the adept from correctly perceiving the self and other-self as one.
 (英文待翻译)
+
+## (80.12)
 
 (80.12) Questioner Then you say that this effect of disassociation on the service-to-others adept is a stumbling block or slowing process in reaching that goal which he aspires to? Is this correct?
 (英文待翻译)
@@ -136,17 +162,23 @@ Ra I am Ra. This is likely to occur. The apparent happening is disassociation: w
 Ra I am Ra. This is incorrect. This disassociation from the miasma of illusion and misrepresentation of each and every distortion is a quite necessary portion of an adept’s path. It may be seen by others to be unfortunate.
 (英文待翻译)
 
+## (80.13)
+
 (80.13) Questioner Then, is this, from the point of view or with respect to the fifteenth archetype, somewhat of an excursion into the Matrix of the Spirit in this process? Does that make any sense?
 (英文待翻译)
 
 Ra I am Ra. The excursion of which you speak and the process of disassociation is most usually linked with that archetype you call Hope—which we would prefer to call Faith. This archetype is the Catalyst of the Spirit and, because of the illuminations of the Potentiator of the Spirit, will begin to cause these changes in the adept’s viewpoint.
 (英文待翻译)
 
+## (80.14)
+
 (80.14) Questioner I didn’t intend to get too far ahead of my questioning process here. The either positively or negatively polarized adept, then, is building a potential to draw directly on the spirit for power. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. It would be more proper to say that the adept is calling directly through the spirit to the universe for its power, for the spirit is a shuttle.
 (英文待翻译)
+
+## (80.15)
 
 (80.15) Questioner Now, the obvious only significant difference, I believe, between the positive and negative adept in using this shuttle is the way they had polarized. Is there a relationship between the archetypes of the spirit and whether the polarization is either positive or negative? Is, for instance, the positive calling through the sixteenth and the [chuckles] negative calling through the fifteenth archetype? I am very confused on these points, and I imagine that question is poor or meaningless. Can you answer that?
 (英文待翻译)
@@ -166,11 +198,15 @@ The Experience of the Spirit, that which you have called the Moon, is then, by f
 Even the most unhappy of experiences, shall we say, which seem to occur in the Catalyst of the adept, seen from the viewpoint of the spirit, may, with the discrimination possible in shadow, be worked with until light equaling the light of brightest noon descends upon the adept and positive or service-to-others illumination has occurred. The service-to-self adept will satisfy itself with the shadows and, grasping the light of day, will toss back the head in grim laughter, preferring the darkness.
 (英文待翻译)
 
+## (80.16)
+
 (80.16) Questioner I guess that the nineteenth archetype of the spirit would be the Significator of the Spirit. Is that correct?
 (英文待翻译)
 
 Ra I am Ra. This is correct.
 (英文待翻译)
+
+## (80.17)
 
 (80.17) Questioner How would you describe the Significator of the Spirit?
 (英文待翻译)
@@ -178,17 +214,23 @@ Ra I am Ra. This is correct.
 Ra I am Ra. In answer to the previous query we set about doing just this. The Significator of the Spirit is that living entity which either radiates or absorbs the love and the light of the One Infinite Creator: radiates it to others or absorbs it for the self.
 (英文待翻译)
 
+## (80.18)
+
 (80.18) Questioner Then would this process of radiation or absorption, since we have what I would call a flux or flux rate, be the measure of the power of the adept?
 (英文待翻译)
 
 Ra I am Ra. This may be seen to be a reasonably adequate statement.
 (英文待翻译)
 
+## (80.19)
+
 (80.19) Questioner Then for the twentieth archetype I’m guessing that this is the Transformation of the Spirit, possibly analogous to the sixth-density merging of the paths. Is this in any way correct?
 (英文待翻译)
 
 Ra I am Ra. No.
 (英文待翻译)
+
+## (80.20)
 
 (80.20) Questioner Sorry about that. Can you tell me what the twentieth archetype would be?
 (英文待翻译)
@@ -202,11 +244,15 @@ The infinity of the spirit is an even greater realization than the infinity of c
 There are many things which fall away in the many, many steps of adepthood. We, of Ra, still walk these steps and praise the One Infinite Creator at each transformation.
 (英文待翻译)
 
+## (80.21)
+
 (80.21) Questioner Then I would guess that the twenty-first archetype would represent the contact with intelligent infinity. Is that correct?
 (英文待翻译)
 
 Ra I am Ra. This is correct, although one may also see the reflection of this contact, as well as the contact with intelligent energy, which is the Universe, or, as you have called it somewhat provincially, the World.
 (英文待翻译)
+
+## (80.22)
 
 (80.22) Questioner Then by this contact also with intelligent energy can you give me an example of what this would be for both: for the contact with intelligent infinity and intelligent energy? Could you give me an example of what type of experience this would result in, if that’s at all possible?
 (英文待翻译)
@@ -222,6 +268,8 @@ The contact with intelligent infinity is most likely to produce an unspeakable j
 
 If you wish to query in more detail upon this subject, we invite you to do so in another working. Is there a brief query before we close this working?
 (英文待翻译)
+
+## (80.23)
 
 (80.23) Questioner Is there anything that we can do to improve the contact or to make the instrument more comfortable?
 (英文待翻译)

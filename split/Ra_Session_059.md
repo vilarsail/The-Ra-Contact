@@ -4,8 +4,12 @@
 June 25, 1981
 (英文待翻译)
 
+## (59.0)
+
 (59.0) Ra I am Ra. I greet you in the love and in the light of the One Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (59.1)
 
 (59.1) Questioner Could you first tell me the instrument’s condition and why she feels so tired?
 (英文待翻译)
@@ -13,11 +17,15 @@ June 25, 1981
 Ra I am Ra. This instrument’s condition is as previously stated. We cannot infringe upon your free will by discussing the latter query.
 (英文待翻译)
 
+## (59.2)
+
 (59.2) Questioner Would it be any greater protection for the instrument if Jim changed his sitting position to the other side of the bed?
 (英文待翻译)
 
 Ra I am Ra. No.
 (英文待翻译)
+
+## (59.3)
 
 (59.3) Questioner I have a question from Jim that states: “I think I have penetrated the mystery of my lifelong anger at making mistakes. I think I have always been aware subconsciously of my abilities to master new learnings, but my desire to successfully complete my mission on Earth has been energized by the Orion group into irrational and destructive anger when I fail. Could you comment on this observation?”
 (英文待翻译)
@@ -27,6 +35,8 @@ Ra I am Ra. We would suggest that as this entity is aware of its position as a w
 
 The work of sixth density is to unify wisdom and compassion. This entity abounds in wisdom. The compassion it is desirous of balancing has, as its antithesis, lack of compassion. In the more conscious being this expresses or manifests itself as lack of compassion for self. We feel this is the sum of suggested concepts for thought which we may offer at this time without infringement.
 (英文待翻译)
+
+## (59.4)
 
 (59.4) Questioner At the end of the second major cycle there were a few hundred thousand people incarnate on Earth. There are over four billion incarnate today. Were the over four billion people who are incarnate today, were they in the earth planes but not incarnate at that time, or did they come in from elsewhere during the last 25,000-year cycle?
 (英文待翻译)
@@ -46,6 +56,8 @@ Thirdly, in the past approximate 200 of your years you have experienced much vis
 It may be noted that all possible opportunities for incarnation are being taken at this time due to your harvesting process and the opportunities which this offers.
 (英文待翻译)
 
+## (59.5)
+
 (59.5) Questioner Just to clarify that: could you tell me approximately how many total mind/body/spirit complexes were transferred to Earth at the beginning of this last 75,000 year period?
 (英文待翻译)
 
@@ -54,6 +66,8 @@ Ra I am Ra. The transfer, as you call it, has been gradual. Over two billion sou
 
 Approximately 1.9 billion souls have, from many portions of the creation, entered into this experience at various times. The remainder are those who have experienced the first two cycles upon this sphere or who have come in at some point as wanderers; some wanderers having been in this sphere for many thousands of your years; others having come far more recently.
 (英文待翻译)
+
+## (59.6)
 
 (59.6) Questioner I’m trying to understand the three spirals of light in the pyramid shape. I would like to question on each.
 (英文待翻译)
@@ -64,11 +78,15 @@ The first spiral starts below the Queen’s Chamber and ends in the Queen’s Ch
 Ra I am Ra. This is incorrect. The first notion of upward spiraling light is as that of the scoop, the light energy being scooped in through the attraction of the pyramid shape through the bottom or base. Thus the first configuration is a semi-spiral.
 (英文待翻译)
 
+## (59.7)
+
 (59.7) Questioner Would this be similar to the vortex you get when you release the water from a bathtub?
 (英文待翻译)
 
 Ra I am Ra. This is correct except that in the case of this action the cause is gravitic, whereas in the case of the pyramid the vortex is that of upward spiraling light being attracted by the electromagnetic fields engendered by the shape of the pyramid.
 (英文待翻译)
+
+## (59.8)
 
 (59.8) Questioner Then the first spiral after this semi-spiral is the spiral used for study and healing. Relative to the Queen’s Chamber position, where does this first spiral begin and end?
 (英文待翻译)
@@ -76,17 +94,23 @@ Ra I am Ra. This is correct except that in the case of this action the cause is 
 Ra I am Ra. The spiral which is used for study and healing begins at, or slightly below, the Queen’s Chamber position, depending upon your earth and cosmic rhythms. It moves through the King’s Chamber position in a sharply delineated form and ends at the point whereby the top approximate third of the pyramid may be seen to be intensifying the energy.
 (英文待翻译)
 
+## (59.9)
+
 (59.9) Questioner Now, the first spiral is obviously different somehow than the second and third spirals since they have different uses and different properties. The second spiral then starts at the end of the first spiral and goes up, I assume, to the apex of the pyramid. Is that correct?
 (英文待翻译)
 
 Ra I am Ra. This is partially correct. The large spiral is drawn into the vortex of the apex of the pyramid. However, some light energy—which is of the more intense nature of the red, shall we say, end of the spectrum—is spiraled once again, causing an enormous strengthening and focusing of energy which is then of use for building.
 (英文待翻译)
 
+## (59.10)
+
 (59.10) Questioner And then the third spiral radiates from the top of the pyramid. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. The third complete spiral does so. This is correct. It is well to reckon with the foundation semi-spiral which supplies the prana for all that may be affected by the three following upward spirals of light.
 (英文待翻译)
+
+## (59.11)
 
 (59.11) Questioner Now I am trying to understand what happens in this process. I’ll call the first semi-spiral zero position and the other three spirals one, two, and three; the first spiral being study and healing. What change takes place in light from the zero position into the first spiral that makes that first spiral available for healing and study?
 (英文待翻译)
@@ -97,11 +121,15 @@ Ra I am Ra. The prana scooped in by the pyramid shape gains coherence of energet
 Thus all light, or prana, is upward spiraling, but its direction, as you understand this term, is unregimented and not useful for work.
 (英文待翻译)
 
+## (59.12)
+
 (59.12) Questioner Could I assume, then, that from all points in space light radiates in our illusion outward in a 360° solid angle, and this scoop shape with the pyramid then creates the coherence to this radiation as a focusing mechanism? Is this correct?
 (英文待翻译)
 
 Ra I am Ra. This is precisely correct.
 (英文待翻译)
+
+## (59.13)
 
 (59.13) Questioner Then the first spiral has a different factor of cohesion, you might say, than the second. What is the difference between this first and second spiral?
 (英文待翻译)
@@ -109,11 +137,15 @@ Ra I am Ra. This is precisely correct.
 Ra I am Ra. As the light is funneled into what you term the zero position, it reaches the point of turning. This acts as a compression of the light, multiplying tremendously its coherence and organization.
 (英文待翻译)
 
+## (59.14)
+
 (59.14) Questioner Then is the coherence and organization multiplied once more at the start of the second spiral? Is there just a doubling effect or an increasing effect?
 (英文待翻译)
 
 Ra I am Ra. This is difficult to discuss in your language. There is no doubling effect but a transformation across boundaries of dimension so that light, which was working for those using it in space/time–time/space configuration, becomes light working in what you might consider an inter-dimensional time/space–space/time configuration. This causes an apparent diffusion and weakness of the spiraling energy. However, in position two, as you have called it, much work may be done inter-dimensionally.
 (英文待翻译)
+
+## (59.15)
 
 (59.15) Questioner In the Giza pyramid there was no chamber at position two. Do you ever make use of position two by putting a chamber in that position, say on other planets or in other pyramids?
 (英文待翻译)
@@ -121,11 +153,15 @@ Ra I am Ra. This is difficult to discuss in your language. There is no doubling 
 Ra I am Ra. This position is useful only to those whose abilities are such that they are capable of serving as conductors of this type of focused spiral. One would not wish to attempt to train third-density entities in such disciplines.
 (英文待翻译)
 
+## (59.16)
+
 (59.16) Questioner Then the third spiral radiating from the top of the pyramid, you say, is used for energizing. Can you tell me what you mean by “energizing?”
 (英文待翻译)
 
 Ra I am Ra. The third spiral is extremely full of the positive effects of directed prana, and that which is placed over such a shape will receive shocks energizing the electromagnetic fields. This can be most stimulating in third-density applications of mental and bodily configurations. However, if allowed to be in place over-long such shocks may traumatize the entity.
 (英文待翻译)
+
+## (59.17)
 
 (59.17) Questioner Are there any other effects of the pyramid shape beside the spirals that we have just discussed?
 (英文待翻译)
@@ -139,11 +175,15 @@ The outer shell of the pyramid shape contains small vortices of light energy whi
 Other of these places are those wherein perfect sleep may be obtained and age reversed. These characteristics are not important.
 (英文待翻译)
 
+## (59.18)
+
 (59.18) Questioner What position would be the age reversal position?
 (英文待翻译)
 
 Ra I am Ra. Approximately 5 to 10° above and below the Queen’s Chamber position, in ovoid shapes on each face of the four-sided pyramid, extending into the solid shape approximately one-quarter of the way to the Queen’s Chamber position.
 (英文待翻译)
+
+## (59.19)
 
 (59.19) Questioner In other words, if I went just inside the wall of the pyramid a quarter of the way but still remained three-quarters of the way from the center, at approximately the level above the base of the Queen’s Chamber, I would find that position?
 (英文待翻译)
@@ -151,11 +191,15 @@ Ra I am Ra. Approximately 5 to 10° above and below the Queen’s Chamber positi
 Ra I am Ra. This is approximately so. You must picture the double teardrop extending in both the plane of the pyramid face and in half towards the Queen’s Chamber, extending above and below it. You may see this as the position where the light has been scooped into the spiral and then is expanding again. This position is what you may call a prana vacuum.
 (英文待翻译)
 
+## (59.20)
+
 (59.20) Questioner Why would this reverse aging?
 (英文待翻译)
 
 Ra I am Ra. Aging is a function of the effects of various electromagnetic fields upon the electromagnetic fields of the mind/body/spirit complex. In this position there is no input or disturbance of the fields, nor is any activity within the electromagnetic field complex of the mind/body/spirit complex allowed full sway. The vacuum sucks any such disturbance away. Thus the entity feels nothing and is suspended.
 (英文待翻译)
+
+## (59.21)
 
 (59.21) Questioner Is the pyramid shape that Jim has constructed in our yard functioning properly? Is it aligned properly and built properly?
 (英文待翻译)
@@ -163,11 +207,15 @@ Ra I am Ra. Aging is a function of the effects of various electromagnetic fields
 Ra I am Ra. It is built within good tolerances though not perfect. However, its alignment should be as this resting place for maximum efficacy.
 (英文待翻译)
 
+## (59.22)
+
 (59.22) Questioner Do you mean that one of the base sides should be aligned 20° east of north?
 (英文待翻译)
 
 Ra I am Ra. That alignment would be efficacious.
 (英文待翻译)
+
+## (59.23)
 
 (59.23) Questioner Previously you stated that one of the base sides should be aligned with magnetic north. Which is better, to align with magnetic north or to align with 20° east of magnetic north?
 (英文待翻译)
@@ -181,6 +229,8 @@ There are advantages to each orientation. The effect is stronger at magnetic nor
 The choice is yours. It is the choice between quantity and quality, or wide-band and narrow-band aid in meditation.
 (英文待翻译)
 
+## (59.24)
+
 (59.24) Questioner When the planetary axes realign, will they realign 20° east of north to conform to the green vibration?
 (英文待翻译)
 
@@ -192,6 +242,8 @@ There is every indication that this will occur. We cannot speak of certainties b
 
 May we answer any brief queries at this time?
 (英文待翻译)
+
+## (59.25)
 
 (59.25) Questioner Only if there is anything that we can do to make the instrument more comfortable or improve the contact?
 (英文待翻译)

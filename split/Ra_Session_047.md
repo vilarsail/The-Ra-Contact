@@ -4,14 +4,20 @@
 April 18, 1981
 (英文待翻译)
 
+## (47.0)
+
 (47.0) Ra I am Ra. I greet you in the love and in the light of the One Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (47.1)
 
 (47.1) Questioner Could you first give us an indication of the condition of the instrument?
 (英文待翻译)
 
 Ra I am Ra. It is as previously stated.
 (英文待翻译)
+
+## (47.2)
 
 (47.2) Questioner OK. The question that I was trying to ask at the end of the last session was:
 (英文待翻译)
@@ -28,6 +34,8 @@ The incorrectness lies in the consideration that social memory complexes were pl
 However, the distortion of Free Will causes the social memory complex to appear as a possibility at a certain stage of evolution of mind. The purpose, or consideration, which causes entities to form such complexes, of these social memory complexes, is a very simple extension of the basic distortion towards the Creator’s knowing of Itself, for when a group of mind/body/spirits become able to form a social memory complex, all experience of each entity is available to the whole of the complex. Thus the Creator knows more of Its creation in each entity partaking of this communion of entities.
 (英文待翻译)
 
+## (47.3)
+
 (47.3) Questioner We chose the values of . . . or were given the values of better than 50% service to others for fourth-density positive and better than 95% service to self for fourth-density negative social memory complexes. Do these two values correspond to the same rate, shall I say, of vibration?
 (英文待翻译)
 
@@ -40,11 +48,15 @@ The vibratory rates are not to be understood as the same in positive and negativ
 The positive, upon the other hand, shall we say, has the full spectrum of true-color time/space vibratory patterns and thus contains a variant vibratory pattern or schedule. Each is capable of doing fourth-density work. This is the criterion for harvest.
 (英文待翻译)
 
+## (47.4)
+
 (47.4) Questioner Did you say that blue was missing from fourth-density negative?
 (英文待翻译)
 
 Ra I am Ra. Let us clarify further. As we have previously stated, all beings have the potential for all possible vibratory rates. Thus the potential of the green and blue energy center activation is, of course, precisely where it must be in a creation of Love. However, the negatively polarized entity will have achieved harvest due to extremely efficient use of red and yellow/orange, moving directly to the gateway indigo bringing through this intelligent energy channel the instreamings of intelligent infinity.
 (英文待翻译)
+
+## (47.5)
 
 (47.5) Questioner Then at fourth-density graduation into fifth is there anything like the percentages you gave for third-density graduation into fourth for polarization?
 (英文待翻译)
@@ -54,6 +66,8 @@ Ra I am Ra. There are, in your modes of thinking, responses we can make, which w
 
 A large percentage of fourth-density negative entities continue the negative path from fourth- to fifth-density experience, for without wisdom the compassion and desire to aid other-self is not extremely well-informed. Thus, though one loses approximately two percent moving from negative to positive during the fourth-density experience, we find approximately eight percent of graduations into fifth density those of the negative.
 (英文待翻译)
+
+## (47.6)
 
 (47.6) Questioner Well, what I was actually asking was if 50% is required for graduation from third to fourth in the positive sense, 95% is required for graduation in the negative sense, does this have to more closely approach 100% in both cases for graduation from fourth to fifth? Does an entity have to be 99% polarized for negative and maybe 80% polarized for positive graduation from fourth to fifth?
 (英文待翻译)
@@ -67,11 +81,15 @@ To give this in your terms is misleading, for there are, shall we say, visual ai
 The percentage of service to others of positively oriented entities will harmoniously approach 98% in intention. The qualifications for fifth density, however, involve understanding. This then becomes the primary qualification for graduation from fourth to fifth density. To achieve this graduation the entity must be able to understand the actions, the movements, and the dance. There is no percentage describable which measures this understanding. It is a measure of efficiency of perception. It may be measured by light. The ability to love, accept, and use a certain intensity of light thus creates the requirement for both positive and negative fourth to fifth harvesting.
 (英文待翻译)
 
+## (47.7)
+
 (47.7) Questioner Can you define what you mean by a “crystallized entity”?
 (英文待翻译)
 
 Ra I am Ra. We have used this particular term because it has a fairly precise meaning in your language. When a crystalline structure is formed of your physical material the elements present in each molecule are bonded in a regularized fashion with the elements in each other molecule. Thus the structure is regular and, when fully and perfectly crystallized, has certain properties. It will not splinter or break; it is very strong without effort; and it is radiant, traducing light into a beautiful refraction giving pleasure of the eye to many.
 (英文待翻译)
+
+## (47.8)
 
 (47.8) Questioner In our esoteric literature numerous bodies are listed. I have here a list of the physical body, the etheric, the emotional, the astral, and the mental. Can you tell me if this listing is the proper number, and can you tell me the uses and purposes and effects, etc., of each of these, or any other bodies that may be in our mind/body/spirit complex?
 (英文待翻译)
@@ -109,11 +127,15 @@ Each of these bodies has an effect upon your mind/body/spirit complex in your li
 Perhaps one suggestion that may be indicated is this: The indigo-ray body may be used by the healer once the healer becomes able to place its consciousness in this etheric state. The violet-ray, or Buddhic, body is of equal efficacy to the healer, for within it lies a sense of wholeness which is extremely close to unity with all that there is. These bodies are part of each entity, and the proper use of them, and understanding of them is, though far advanced from the standpoint of third-density harvest, nevertheless useful to the adept.
 (英文待翻译)
 
+## (47.9)
+
 (47.9) Questioner Which bodies do we have immediately after physical death from this yellow-ray body that I now inhabit?
 (英文待翻译)
 
 Ra I am Ra. You have all bodies in potentiation.
 (英文待翻译)
+
+## (47.10)
 
 (47.10) Questioner Then the yellow-ray body in potentiation is used to create the chemical arrangement that I have as a physical body now. Is this correct?
 (英文待翻译)
@@ -121,11 +143,15 @@ Ra I am Ra. You have all bodies in potentiation.
 Ra I am Ra. This is incorrect only in that in your present incarnation the yellow-ray body is not in potentiation but in activation, it being that body which is manifest.
 (英文待翻译)
 
+## (47.11)
+
 (47.11) Questioner Then, after death from this incarnation we still have the yellow-ray body in potentiation, but then is, perhaps, say in the general case of our planetary population after death, would they then normally have the green-ray body manifested?
 (英文待翻译)
 
 Ra I am Ra. Not immediately. The first body which activates itself upon death is the “form-maker,” or the indigo-ray body. This body remains—you have called it the “ka”—until etherea has been penetrated and understanding has been gained by the mind/body/spirit totality. Once this is achieved, if the proper body to be activated is green-ray, then this will occur.
 (英文待翻译)
+
+## (47.12)
 
 (47.12) Questioner Let me make a statement and see if I am correct. After death, then, if an entity is unaware, he may become what is called an earth-bound spirit until he is able to achieve the required awareness for activation of one of the bodies. And it would be possible then to activate any of the bodies—would this go all the way from red through violet?
 (英文待翻译)
@@ -133,17 +159,23 @@ Ra I am Ra. Not immediately. The first body which activates itself upon death is
 Ra I am Ra. Given the proper stimulus, this is correct.
 (英文待翻译)
 
+## (47.13)
+
 (47.13) Questioner What stimulus would create what we call an earth-bound spirit or a lingering ghost?
 (英文待翻译)
 
 Ra I am Ra. The stimulus for this is the faculty of the will. If the will of yellow-ray mind/body/spirit [complex] is that which is stronger than the progressive impetus of the physical death towards realization of that which comes—that is, if the will is concentrated enough upon the previous experience—the entity’s shell of yellow ray, though no longer activated, cannot either be completely deactivated and, until the will is released, the mind/body/spirit complex is caught. This often occurs, as we see you are aware, in the case of sudden death as well as in the case of extreme concern for a thing or an other-self.
 (英文待翻译)
 
+## (47.14)
+
 (47.14) Questioner Well then, does orange-ray activation, after death, occur very frequently with this planet?
 (英文待翻译)
 
 Ra I am Ra. Quite infrequently, due to the fact that this particular manifestation is without will. Occasionally an other-self will so demand the form of the one passing through the physical death that some semblance of the being will remain. This is orange ray. This is rare, for normally if one entity desires another enough to call it, the entity will have the corresponding desire to be called. Thus the manifestation would be the shell of yellow ray.
 (英文待翻译)
+
+## (47.15)
 
 (47.15) Questioner What does the large percentage of the earth’s population, as they pass from the physical, activate?
 (英文待翻译)
@@ -156,6 +188,8 @@ The normal procedure, given an harmonious passage from yellow-ray bodily manifes
 
 Is there a short query we may answer at this time?
 (英文待翻译)
+
+## (47.16)
 
 (47.16) Questioner I will only ask if there is anything we can do to make the instrument more comfortable or improve the contact?
 (英文待翻译)

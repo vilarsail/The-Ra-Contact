@@ -4,11 +4,15 @@
 January 20, 1981
 1981年1月20日
 
+## (2.0)
+
 (2.0) Ra I am Ra. I greet you in the love and the light of our Infinite Creator. I am with this mind/body/spirit complex which has offered itself for a channel. I communicate with you.
 (2.0) Ra 我是 Ra。我在无限造物主的爱与光中向你们致意。我与这个已奉献自身作为管道的心/身/灵复合体同在。我与你们通讯。
 
 Queries are in order in your projections of mind-distortion at this time/space. Thusly would I assure this group that my own social memory complex has one particular method of communicating with those few who may be able to harmonize their distortions with ours, and that is to respond to queries for information. We are comfortable with this format. May the queries now begin.
 在你们这个时间/空间的心智变貌投射中，询问是适时的。因此，我愿向这个小组保证，我自己的社会记忆复合体有一种特定的方法与那些少数能够将他们的变貌与我们的变貌相协调的实体进行沟通，那就是回应信息的询问。我们对这种形式感到自在。现在可以开始询问了。
+
+## (2.1)
 
 (2.1) Questioner I’m guessing that there are enough people who would understand what you are saying, interested enough, for us to make a book of communications with it, and I wondered if you would agree to this, us making a book. And if so, I was thinking that possibly a bit of historical background on yourself would be in order.
 (2.1) 发问者 我猜想有足够多的人能够理解你们所说的内容，并有足够的兴趣，让我们以此制作一本通讯之书，我想知道你们是否会同意我们这样做，制作一本书。如果同意的话，我在想或许可以介绍一下你们自己的历史背景。
@@ -18,6 +22,8 @@ Ra 我是 Ra。如你们会称呼的那样，从太一到太一、经由为意�
 
 However, if it be your desire to share our communications with others, we have the distortion towards a perception that this would be most helpful in regularizing and crystallizing your own patterns of vibration upon the levels of experience which you call the life. If one is illuminated, are not all illuminated? Therefore, we are oriented towards speaking for you in whatever supply of speakingness you may desire. To teach/learn is the Law of One in one of its most elementary distortions.
 然而，如果你们渴望与他人分享我们的通讯，我们有一种朝向如下认知的变貌：这将对在你们称为生命的体验层次上，规律化并结晶化你们自身的振动模式极有帮助。如果一人被照亮，难道不是所有人都被照亮了吗？因此，我们倾向于以你们所渴望的任何言说量来为你们讲述。教导/学习是处于其最原初变貌中的一的法则。
+
+## (2.2)
 
 (2.2) Questioner Could you tell us something of your historical background, your earlier times in the illusion, possibly your incarnation on this planet that you spoke of before, and contact with earlier races on this planet? Then we would have something to start with in writing this book.
 (2.2) 发问者 你们能否告诉我们一些关于你们历史背景的事情，你们在幻象中的早期时光，可能的话，你们之前提到过的在这个行星上的投生，以及与该行星上早期种族的接触？这样我们就有一些素材来开始撰写这本书了。
@@ -46,6 +52,8 @@ However, this entity’s beliefs were accepted by very few. His priests gave lip
 Do you have a more detailed interest at this time?
 你们此时有更详细的兴趣吗？
 
+## (2.3)
+
 (2.3) Questioner We are very interested in the entire story that you have to tell and in getting into the Law of One in quite some detail. There will be several questions that I’ll ask as we go along that may or may not be related directly to understanding the Law of One. However, I believe that the proper way of presenting this as a teach/learning vehicle to the population of the planet that will read it, at this time, is to investigate different facets of what you tell us.
 (2.3) 发问者 我们对你们所要讲述的整个故事以及相当详细地深入一的法则非常感兴趣。随着我们进行，我会问几个问题，这些问题可能与直接理解一的法则有关，也可能无关。然而，我相信，此时将其作为教导/学习工具呈现给将阅读它的行星人口的恰当方式，是探究你们告诉我们的内容的不同面向。
 
@@ -67,6 +75,8 @@ This, of course, takes initiation, and there have never been many to persevere t
 May we further inform you in any fairly brief way upon this or another subject?
 我们可以以任何相当简短的方式就这个或其他主题进一步告知你们吗？
 
+## (2.4)
+
 (2.4) Questioner Yes. You mentioned that the pyramids were an outgrowth of this. Could you expand a little bit on— Were you responsible for the building of the pyramid, and what was the purpose of the pyramid?
 (2.4) 发问者 是的。你们提到金字塔是这一点的产物。你们能否稍微展开一下——你们是否负责建造了金字塔，以及金字塔的目的是什么？
 
@@ -82,6 +92,8 @@ Two, we wished then to carefully guide the initiates in developing a healing of 
 This instrument begins to lose energy. We ask for one more query or subject, and then we shall take our leave for this time/space.
 这个器皿开始失去能量。我们请求再有一个询问或主题，然后我们将离开这个时间/空间。
 
+## (2.5)
+
 (2.5) Questioner You might mention that . . . there was originally a capstone on the pyramid at the top, what was it made of, and how you moved the heavy blocks to build the pyramid. What technique was used for that?
 (2.5) 发问者 你们或许可以提一下……金字塔顶部原本有一块顶石，它是由什么制成的，以及你们是如何移动那些沉重的石块来建造金字塔的。那使用了什么技术？
 
@@ -90,6 +102,8 @@ Ra 我是 Ra。我请求在我们下一次的工作时间中向我们提出这�
 
 If you have any questions about the proper use of this mind/body/spirit [complex], we would appreciate your asking them now.
 如果你们有任何关于这个心/身/灵[复合体]的正确使用的问题，我们将感谢你们现在提出。
+
+## (2.6)
 
 (2.6) Questioner Consider them asked. I mean, I don’t have anything to go on. What is the proper use of this instrument? What should we do to maximize her ability to . . . comfort, rejuvenation, etc.?
 (2.6) 发问者 就当已经问过了。我的意思是，我没有任何依据。这个器皿的正确使用方式是什么？我们应该做些什么来最大化她的……舒适、恢复活力等能力？

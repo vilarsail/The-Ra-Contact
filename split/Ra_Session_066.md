@@ -4,8 +4,12 @@
 August 12, 1981
 (英文待翻译)
 
+## (66.0)
+
 (66.0) Ra I am Ra. I greet you in the love and in the light of the One Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (66.1)
 
 (66.1) Questioner Could you give me an indication of the instrument’s condition?
 (英文待翻译)
@@ -13,11 +17,15 @@ August 12, 1981
 Ra I am Ra. The vital energies are somewhat depleted at this time but not seriously so. The physical energy level is extremely low. Otherwise, it is as previously stated.
 (英文待翻译)
 
+## (66.2)
+
 (66.2) Questioner Is there anything that we can do, staying within the First Distortion, to seek aid from the Confederation in order to alleviate the instrument’s physical problems?
 (英文待翻译)
 
 Ra I am Ra. No.
 (英文待翻译)
+
+## (66.3)
 
 (66.3) Questioner Can you tell me the most appropriate method for attempting to alleviate the instrument’s physical problems?
 (英文待翻译)
@@ -31,11 +39,15 @@ These things are being accomplished with what we consider great harmony, given t
 Finally, it is well for this instrument to continue the practices it has lately begun.
 (英文待翻译)
 
+## (66.4)
+
 (66.4) Questioner Which practices are those?
 (英文待翻译)
 
 Ra I am Ra. These practices concern exercises which we have outlined previously. We may say that the variety of experiences which this entity seeks is helpful, as we have said before, but as this instrument works in these practices the distortion seems less mandatory.
 (英文待翻译)
+
+## (66.5)
 
 (66.5) Questioner I would like to investigate the mechanism of healing using the crystallized healer. I am going to make a statement, and I would appreciate it if you would correct my thinking.
 (英文待翻译)
@@ -58,6 +70,8 @@ It is from the green center that the healing prana moves into the polarized heal
 We may note that there are some who use the yellow-ray configuration to transfer energy, and this may be done, but the effects are questionable—and, with regard to the relationship between the healer, the healing energy, and the seeker, questionable due to the propensity for the seeker to continue requiring such energy transfers without any true healing taking place in the absence of the healer due to the lack of penetration of the armoring shell of which you spoke.
 (英文待翻译)
 
+## (66.6)
+
 (66.6) Questioner Now, a wanderer who has an origin from fifth or sixth density can attempt such a healing and have little or no results. This indicates to me that there is some function of the activated body, since the— Can you tell me what the wanderer has lost, and why it is necessary for him to regain certain balances and abilities to perfect his healing ability?
 (英文待翻译)
 
@@ -67,17 +81,23 @@ Ra I am Ra. You may see the wanderer as the infant attempting to verbalize the s
 So it is with the wanderer which, remembering the ease with which adjustments can be made in the home density, yet still, having entered third density, cannot manifest that memory due to the limitations of the chosen experience. The chances of a wanderer being able to heal in third density are only more than those native to this density because the desire to serve may be stronger and this method of service chosen.
 (英文待翻译)
 
+## (66.7)
+
 (66.7) Questioner What about the ones with the dual—not the wanderers—but the harvested and dual-activated third- and fourth-density-body entities? Are they able to heal using the techniques that we have discussed?
 (英文待翻译)
 
 Ra I am Ra. In many cases this is so, but as beginners of fourth density the desire may not be present.
 (英文待翻译)
 
+## (66.8)
+
 (66.8) Questioner I’m assuming, then, that we have a wanderer with the desire attempting to learn the techniques of healing while, shall I say, trapped in third density. He then, it seems to me, is primarily concerned with the balancing and unblocking of energy centers. Am I correct in this assumption?
 (英文待翻译)
 
 Ra I am Ra. This is correct. Only insofar as the healer has become balanced may it be a channel for the balancing of an other-self. The healing is first practiced upon the self, if we may say this in another way.
 (英文待翻译)
+
+## (66.9)
 
 (66.9) Questioner Now as the healer approaches an other-self to do the healing we have a situation where the other-self has, through programming of catalyst, possibly created a condition which is viewed as a condition needing healing. What is the situation, and what are the ramifications of the healer acting upon a condition of programmed catalyst to bring about healing?
 (英文待翻译)
@@ -97,6 +117,8 @@ The seeker will then have the reciprocal opportunity to accept a novel view of t
 This is one great difficulty with other forms of energy transfer in that they do not carry through the process of free will as this process is not native to yellow ray.
 (英文待翻译)
 
+## (66.10)
+
 (66.10) Questioner What is the difference, philosophically, between a mind/body/spirit complex healing itself through mental, shall I say, configuration or it being healed by an healer?
 (英文待翻译)
 
@@ -106,11 +128,15 @@ Ra I am Ra. You have a misconception. The healer does not heal. The crystallized
 In no case is there an other description of healing. Therefore, there is no difference as long as the healer never approaches one whose request for aid has not come to it previously. This is also true of the more conventional healers of your culture, and if these healers could but fully realize that they are responsible only for offering the opportunity of healing, and not for the healing, many of these entities would feel an enormous load of misconceived responsibility fall from them.
 (英文待翻译)
 
+## (66.11)
+
 (66.11) Questioner Then in seeking healing a mind/body/spirit complex would then be seeking in some cases a source of gathered and focused light energy. This source could be another mind/body/spirit complex sufficiently crystallized for this purpose, or the pyramid shape, or possibly something else. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. These are some of the ways an entity may seek healing. Yes.
 (英文待翻译)
+
+## (66.12)
 
 (66.12) Questioner Could you tell me the other ways that the entity could seek healing?
 (英文待翻译)
@@ -120,6 +146,8 @@ Ra I am Ra. Perhaps the greatest healer is within the self and may be tapped wit
 
 The many forms of healing available to your peoples—each have virtue and may be deemed appropriate by any seeker who wishes to alter the physical-complex distortions or some connection between the various portions of the mind/body/spirit complex thereby.
 (英文待翻译)
+
+## (66.13)
 
 (66.13) Questioner I have observed many activities known as psychic surgery in the area of the Philippine Islands. It was my assumption that these healers are providing what I would call a training aid, or a way of creating a reconfiguration of the mind of the patient to be healed, as the relatively naïve patient observes the action of the healer in seeing the materialized blood, etc., then reconfigures the roots of mind to believe, you might say, the healing is done and, therefore, heals himself. Is this analysis that I made correct?
 (英文待翻译)
@@ -142,6 +170,8 @@ In other psychic surgery the kidneys of this instrument were carefully offered a
 The key is not in the continuation of the dematerialization of distortion to the eye of the beholder but, rather, lies in the choosing of the newly materialized configuration which exists in time/space.
 (英文待翻译)
 
+## (66.14)
+
 (66.14) Questioner Would you explain that last comment about the configuration in time/space?
 (英文待翻译)
 
@@ -154,11 +184,15 @@ In this process you may see the transdimensional aspect of what you call will, f
 We may note that in the healing of very young children there is often an apparent healing by the healer in which the young entity has no part. This is never so, for the mind/body/spirit complex in time/space is always capable of willing the distortions it chooses for experience no matter what the apparent age, as you call it, of the entity.
 (英文待翻译)
 
+## (66.15)
+
 (66.15) Questioner Is this desire and will that operates through to the time/space section a function only of the entity who is healed, or is it also the function of the healer, the crystallized healer?
 (英文待翻译)
 
 Ra I am Ra. May we take this opportunity to say that this is the activity of the Creator. To specifically answer your query, the crystallized healer has no will. It offers an opportunity without attachment to the outcome, for it is aware that all is one, and that the Creator is knowing Itself.
 (英文待翻译)
+
+## (66.16)
 
 (66.16) Questioner Then the desire must be strong within the mind/body/spirit complex who seeks healing to be healed in order for the healing to occur? Is this correct?
 (英文待翻译)
@@ -166,11 +200,15 @@ Ra I am Ra. May we take this opportunity to say that this is the activity of the
 Ra I am Ra. This is correct on one level or another. An entity may not consciously seek healing and yet subconsciously be aware of the need to experience the new set of distortions which result from healing. Similarly an entity may consciously desire healing greatly but within the being, at some level, find some cause whereby certain configurations which seem quite distorted are, in fact, at that level, considered appropriate.
 (英文待翻译)
 
+## (66.17)
+
 (66.17) Questioner I assume that the reason for assuming the distortions appropriate would be that these distortions would aid the entity in its reaching its ultimate objective, which is a movement along the path of evolution in the desired polarity. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. This is correct.
 (英文待翻译)
+
+## (66.18)
 
 (66.18) Questioner Then in the case of an entity who becomes aware of its polarization with respect to service to others, it might find a paradoxical situation in the case where it was unable to fully serve because of distortions chosen to reach that understanding which it has reached. At this point it would seem that the entity who was aware of the mechanism might, through meditation, understand the necessary mental configuration for alleviating the physical distortion so that it could be of greater service to others at this particular nexus. Am I correct in this thinking?
 (英文待翻译)
@@ -178,11 +216,15 @@ Ra I am Ra. This is correct.
 Ra I am Ra. You are correct although we might note that there are often complex reasons for the programming of a distorted physical complex pattern. In any case, meditation is always an aid to knowing the self.
 (英文待翻译)
 
+## (66.19)
+
 (66.19) Questioner Is a vertical positioning of the spine useful or helpful in the meditative procedure?
 (英文待翻译)
 
 Ra I am Ra. It is somewhat helpful.
 (英文待翻译)
+
+## (66.20)
 
 (66.20) Questioner I have a written question, two of them actually. The first is would you please list the polarities within the body which are related to the balancing of the energy centers of the various bodies of the unmanifested entity?
 (英文待翻译)
@@ -193,6 +235,8 @@ Ra I am Ra. In this question there lies a great deal of thought which we appreci
 May we answer more specifically?
 (英文待翻译)
 
+## (66.21)
+
 (66.21) Questioner Possibly in the next session we will expand on that.
 (英文待翻译)
 
@@ -201,6 +245,8 @@ I would like to ask the second question. What are the structure and contents of 
 
 Ra I am Ra. You must realize that we offered these concepts to you so that you might grow in your own knowledge of the self through the consideration of them. We would prefer, especially for this latter query, to listen to the observations upon this subject which the student of these exercises may make and then suggest further avenues of the refinement of these inquiries. We feel we might be of more aid in this way.
 (英文待翻译)
+
+## (66.22)
 
 (66.22) Questioner You mentioned that an energizing spiral is emitted from the top of any pyramid, and that you could benefit by placing this under the head for a period of thirty minutes or less. Can you tell me how this third spiral is helpful, and what help it gives the entity who is receiving it?
 (英文待翻译)
@@ -214,11 +260,15 @@ The vibration offered by the energizing spiral of the pyramid is such that each 
 It is possible to over-charge a battery, and this is the cause of our cautioning any who use such pyramidal energies to remove the pyramid after a charge has been received.
 (英文待翻译)
 
+## (66.23)
+
 (66.23) Questioner Is there a best material, or optimal size, for the small pyramid to go beneath the head?
 (英文待翻译)
 
 Ra I am Ra. Given that the proportions are such as to develop the spirals in the Giza pyramid, the most appropriate size for use beneath the head is an overall height small enough to make placing it under the cushion of the head a comfortable thing.
 (英文待翻译)
+
+## (66.24)
 
 (66.24) Questioner There’s no best material?
 (英文待翻译)
@@ -226,11 +276,15 @@ Ra I am Ra. Given that the proportions are such as to develop the spirals in the
 Ra I am Ra. There are better materials which are, in your system of barter, quite dear. They are not that much better than substances which we have mentioned before.[20] The only incorrect substances would be the baser metals.
 (英文待翻译)
 
+## (66.25)
+
 (66.25) Questioner Now, you mentioned the problems with the action in the King’s Chamber of the Giza-type pyramid. I am assuming if we used the same geometrical configuration that is used at the pyramid at Giza, this would be perfectly all right for the pyramid placed beneath the head since we wouldn’t be using the King’s Chamber radiations but only the third spiral from the top. And I’m also asking would it be better to use a 60° apex angle than the larger apex angle? Would it provide a better energy source?
 (英文待翻译)
 
 Ra I am Ra. For energy through the apex angle, the Giza pyramid offers an excellent model. Simply be sure the pyramid is so small that there is no entity small enough to crawl inside it.
 (英文待翻译)
+
+## (66.26)
 
 (66.26) Questioner I assume that this energy, then, this spiraling light energy, is somehow absorbed by the energy field of the body. Is this somehow connected to the indigo energy center? Am I correct in this guess?
 (英文待翻译)
@@ -238,11 +292,15 @@ Ra I am Ra. For energy through the apex angle, the Giza pyramid offers an excell
 Ra I am Ra. This is incorrect. The properties of this energy are such as to move within the field of the physical complex and irradiate each cell of the space/time body and, as this is done, irradiate also the time/space equivalent which is closely aligned with the space/time yellow-ray body. This is not a function of the etheric body or of free will. This is a radiation much like your sun’s rays. Thus it should be used with care.
 (英文待翻译)
 
+## (66.27)
+
 (66.27) Questioner How many applications of thirty minutes or less during a diurnal period would be appropriate?
 (英文待翻译)
 
 Ra I am Ra. In most cases, no more than one. In a few cases, especially where the energy will be used for spiritual work, experimentation with two shorter periods might be possible, but any feeling of sudden weariness would be a sure sign that the entity had been over-radiated.
 (英文待翻译)
+
+## (66.28)
 
 (66.28) Questioner Can this energy help in any way as far as healing of physical distortions?
 (英文待翻译)
@@ -250,17 +308,23 @@ Ra I am Ra. In most cases, no more than one. In a few cases, especially where th
 Ra I am Ra. There is no application for direct healing using this energy, although if used in conjunction with meditation it may offer to a certain percentage of entities some aid in meditation. In most cases it is most helpful in alleviating weariness and in the stimulation of physical or sexual activity.
 (英文待翻译)
 
+## (66.29)
+
 (66.29) Questioner In a transition from third to fourth density we have two other possibilities other than the type that we are experiencing now. We have the possibility of a totally positively polarized harvest, and the possibility of a totally negatively polarized harvest that, I understand, have occurred elsewhere in the universe many times. When there is a totally negatively polarized harvest, when a whole planet, that is, has negatively polarized and makes the transition from third to fourth density, does the planet have the experience of the distortion of disease that this planet now experiences prior to that transition?
 (英文待翻译)
 
 Ra I am Ra. You are perceptive. The negative harvest is one of intense disharmony, and the planet will express this.
 (英文待翻译)
 
+## (66.30)
+
 (66.30) Questioner The planet has a certain set of conditions prior to transition into fourth density, that is in late third density, and then the conditions are different in early fourth density. Could you give me an example of a negatively polarized planet and the conditions in late third density and early fourth density, so that I can see how they change?
 (英文待翻译)
 
 Ra I am Ra. The vibrations from third to fourth density change on a negatively oriented planet precisely as they do upon a positively oriented planet. With fourth-density negative comes many abilities and possibilities of which you are familiar. The fourth density is more dense, and it is far more difficult to hide the true vibrations of the mind/body/spirit complex. This enables fourth-density negatives, as well as positives, the chance to form social memory complexes. It enables negatively oriented entities the opportunity for a different set of parameters with which to show their power over others and to be of service to the self. The conditions are the same as far as the vibrations are concerned.
 (英文待翻译)
+
+## (66.31)
 
 (66.31) Questioner I was concerned about the amount of physical distortions, disease, and that sort of thing in third-density negative just before harvest and in fourth-density negative just after harvest or in transition. What are the conditions of the physical problems, disease, etc., at late third-density negative?
 (英文待翻译)
@@ -271,6 +335,8 @@ Ra I am Ra. Each planetary experience is unique. The problems, shall we say, of 
 As fourth density occurs there is a new planet and new physical vehicle system gradually expressing itself, and the parameters of bellicose actions become those of thought rather than manifested weapons.
 (英文待翻译)
 
+## (66.32)
+
 (66.32) Questioner Well then is physical disease and illness, as we know it on this planet, rather widespread on a third-density negative planet just before harvest into fourth-density negative?
 (英文待翻译)
 
@@ -279,6 +345,8 @@ Ra I am Ra. Physical-complex distortions of which you speak are likely to be les
 
 There are still instances of the types of disease which are associated with the mind-complex distortions of negative emotions such as anger. However, in an harvestable entity these emotional distortions are much more likely to be used as catalyst in an expressive and destructive sense as regards the object of anger.
 (英文待翻译)
+
+## (66.33)
 
 (66.33) Questioner I am trying to understand the way that disease and bodily distortions are generated with respect to polarities, both positive and negative. It seems that they are generated in some way to create the split or polarization, that they have a function in creating the original polarization that occurs in third-density. Is this correct?
 (英文待翻译)
@@ -294,6 +362,8 @@ Moreover, in an unpolarized entity catalyst of the physical distortion nature wi
 
 In the negatively oriented individual the physical body is likely to be more carefully tended and the mind disciplined against physical distortions.
 (英文待翻译)
+
+## (66.34)
 
 (66.34) Questioner This planet, to me, seems to be what I would call a cesspool of distortions. This includes all diseases and malfunctions of the physical body in general. It would seem to me that, on the average, this planet would be very, very high on the list if we just took the overall amount of these problems. Am I . . . is my feeling correct in this assumption?
 (英文待翻译)
@@ -315,6 +385,8 @@ Indeed, on some third-density planetary spheres catalyst has been used more effi
 
 We have enough energy available for one query at this time.
 (英文待翻译)
+
+## (66.35)
 
 (66.35) Questioner Then I will ask if there is anything that we can do to make the instrument more comfortable or improve the contact?
 (英文待翻译)

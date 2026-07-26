@@ -4,14 +4,20 @@
 July 8, 1982
 (英文待翻译)
 
+## (92.0)
+
 (92.0) Ra I am Ra. I greet you in the love and in the light of the One Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (92.1)
 
 (92.1) Questioner Could you first please give me the condition of the instrument?
 (英文待翻译)
 
 Ra I am Ra. The condition of this instrument is slightly more distorted towards weakness in each respect since the previous asking.
 (英文待翻译)
+
+## (92.2)
 
 (92.2) Questioner Is there a specific cause for this, and could you tell us what it is if so?
 (英文待翻译)
@@ -22,11 +28,15 @@ Ra I am Ra. The effective cause of the increased physical distortions have to do
 The continued slight but noticeable losses of the vital energies is due to the necessity for the instrument to call upon this resource in order to clear the, shall we say, way for a carefully purified service-to-others working. The use of the will in the absence of physical and, in this particular case, mental and mental/emotional energies requires vital energies.
 (英文待翻译)
 
+## (92.3)
+
 (92.3) Questioner We have been attempting to figure out how to provide the instrument with the swirling water, which we hope to do very soon. Is there any other thing that we can do to improve this situation?
 (英文待翻译)
 
 Ra I am Ra. Continue in peace and harmony. Already the support group does much. There is the need for the instrument to choose the manner of its beingness. It has the distortion, as we have noted, towards the martyrdom. This can be evaluated and choices made only by the entity.
 (英文待翻译)
+
+## (92.4)
 
 (92.4) Questioner What is the present situation with the fifth-density negative visitor we have [inaudible]?
 (英文待翻译)
@@ -34,11 +44,15 @@ Ra I am Ra. Continue in peace and harmony. Already the support group does much. 
 Ra I am Ra. It is with this group.
 (英文待翻译)
 
+## (92.5)
+
 (92.5) Questioner What prompted its return?
 (英文待翻译)
 
 Ra I am Ra. The promptings were duple. There was the recovery of much negative polarity upon the part of your friend of fifth density and, at the same approximate nexus, a temporary lessening of the positive harmony of this group.
 (英文待翻译)
+
+## (92.6)
 
 (92.6) Questioner Is there anything that we can do about the instrument’s stomach problem or constipation?
 (英文待翻译)
@@ -46,11 +60,15 @@ Ra I am Ra. The promptings were duple. There was the recovery of much negative p
 Ra I am Ra. The healing modes of which each is capable are already in use.
 (英文待翻译)
 
+## (92.7)
+
 (92.7) Questioner In the last session we discussed the first tarot card of the Egyptian type. Are there any distortions in the cards that we have (which we will publish in the book if possible) that Ra did not originally intend, with the exception of the star, which we know is a distortion? Or any additions that Ra did intend in this particular tarot?
 (英文待翻译)
 
 Ra I am Ra. The distortions remaining after the removal of astrological material are those having to do with the mythos of the culture to which Ra offered this teach/learning tool. This is why we have suggested approaching the images looking for the heart of the image rather than being involved overmuch by the costumes and creatures of a culture not familiar to your present incarnation. We have no wish to add to an already distorted group of images, feeling that, although distortion is inevitable, there is the least amount which can be procured in the present arrangement.
 (英文待翻译)
+
+## (92.8)
 
 (92.8) Questioner Then you are saying that the cards that we have here are the best available cards in our present illusion at this date?
 (英文待翻译)
@@ -58,11 +76,15 @@ Ra I am Ra. The distortions remaining after the removal of astrological material
 Ra I am Ra. Your statement is correct in that we consider the so-called Egyptian tarot the most undistorted version of the images which Ra offered. This is not to intimate that other systems may not, in their own way, form an helpful architecture for the adept’s consideration of the archetypical mind.
 (英文待翻译)
 
+## (92.9)
+
 (92.9) Questioner I would like to attempt an analogy of the first archetype in that when a baby is first born and enters this density of experience, I am assuming, then, that the Matrix is new and undistorted, veiled from the Potentiator and ready for that which is to be experienced: the incarnation. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. Yes.
 (英文待翻译)
+
+## (92.10)
 
 (92.10) Questioner I will read several statements here and ask for Ra’s comment on the statement.
 (英文待翻译)
@@ -72,6 +94,8 @@ First: Until an entity becomes consciously aware of the evolutionary process, th
 
 Ra I am Ra. This is so.
 (英文待翻译)
+
+## (92.11)
 
 (92.11) Questioner Then, this occurs because the Potentiator of the Mind is directly connected, through the roots of the tree of mind, to the archetypical mind and to the Logos which created it, and because the veil between the Matrix and Potentiator of the Mind allows for the development of the will. Would Ra comment?
 (英文待翻译)
@@ -85,11 +109,15 @@ This, then, becomes a portion of that which you may call a potential for incarna
 It is not in the archetypical mind of an entity that the potential for incarnational experience resides, but in the mind/body/spirit complex’s insertion, shall we say, into the energy web of the physical vehicle and the chosen planetary environment. However, to more deeply articulate this portion of the mind/body/spirit complex’s beingness, this archetype, the Potentiator of the Mind, may be evoked with profit to the student of its own evolution.
 (英文待翻译)
 
+## (92.12)
+
 (92.12) Questioner Then are you saying that the source of pre-incarnative programmed catalyst is the Potentiator of Mind?
 (英文待翻译)
 
 Ra I am Ra. No. We are suggesting that the Potentiator of the Mind is an archetype which may aid the adept in grasping the nature of this pre-incarnative and continuingly incarnative series of choices.
 (英文待翻译)
+
+## (92.13)
 
 (92.13) Questioner Thank you. Third: Just as Free Will taps intelligent infinity, which yields intelligent energy, which then focuses and creates the densities of this octave of experience, the Potentiator of Mind utilizes its connection with intelligent energy and taps or potentiates the Matrix of the Mind, which yields Catalyst of the Mind. Is this correct?
 (英文待翻译)
@@ -100,17 +128,23 @@ Ra I am Ra. This is thoughtful but confused. The Matrix of the Mind is that whic
 It is indeed so that the biases of the potentials of a mind/body/spirit complex cause the catalyst of this entity to be unique and to form a coherent pattern that resembles the dance, full of movement, forming a many-figured tapestry of motion.
 (英文待翻译)
 
+## (92.14)
+
 (92.14) Questioner Fourth: When the Catalyst of the Mind is processed by the entity the Experience of the Mind results. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. There are subtle misdirections in this simple statement having to do with the overriding qualities of the Significator. It is so that catalyst yields experience. However, through free will and the faculty of imperfect memory, catalyst is most often only partially used, and the experience thus correspondingly skewed.
 (英文待翻译)
 
+## (92.15)
+
 (92.15) Questioner The dynamic process between the Matrix, Potentiator, Catalyst, and Experience of the Mind forms the nature of the mind or the Significator of the Mind. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. As our previous response suggests, the Significator of the Mind is both actor and acted upon. With this exception the statement is largely correct.
 (英文待翻译)
+
+## (92.16)
 
 (92.16) Questioner As the entity becomes consciously aware of this process it programs this activity itself before the incarnation. Is this correct?
 (英文待翻译)
@@ -121,6 +155,8 @@ Ra I am Ra. This is correct. Please keep in mind that we are discussing, not the
 We wish to make this distinction clear, for it is not the archetypes which live the incarnation, but the conscious mind/body/spirit complex—which may, indeed, live the incarnation without recourse to the quest for articulation of the processes of potentiation, experience, and transformation.
 (英文待翻译)
 
+## (92.17)
+
 (92.17) Questioner Thank you. Then finally: As each energy center becomes activated and balanced the Transformation of the Mind is called upon more and more frequently. When all of the energy centers are activated and balanced to a minimal degree, contact with intelligent infinity occurs; the veil is removed; and the Great Way of the Mind is called upon. Is this correct?
 (英文待翻译)
 
@@ -129,6 +165,8 @@ Ra I am Ra. No. This is a quite eloquent look at some relationships within the a
 
 Due to the first misperception we hesitate to speak to the second consideration but shall attempt clarity. While studying the archetypical mind we may suggest that the student look at the Great Way of the Mind not as that which is attained after contact with intelligent infinity, but rather as that portion of the archetypical mind which denotes and configures the particular framework within which the Mind, the Body, or the Spirit archetypes move.
 (英文待翻译)
+
+## (92.18)
 
 (92.18) Questioner Turning, then, to my analogy—or shall we say, example—of the newborn infant with the undistorted Matrix, this newborn infant has its subconscious veiled from the Matrix. The second archetype, the Potentiator of Mind, is going to act at some time through—I won’t say through the veil, I don’t think that is a very good way of stating it—but the Potentiator of Mind will act to create a condition, and I will use an example of the infant touching a hot object. The hot object we could take as random catalyst. The infant can either leave its hand on the hot object or rapidly remove it. My question is: is the Potentiator of Mind involved at all in this experience and, if so, how?
 (英文待翻译)
@@ -148,6 +186,8 @@ This sub-sub-Logos then (or that portion of the mind/body/spirit complex which m
 The results of these experiments in novelty are then recorded in the portion of the mind and body articulated by the Matrices thereof.
 (英文待翻译)
 
+## (92.19)
+
 (92.19) Questioner Are all activities that the entity has, as it experiences things from the state of infancy, a function of the Potentiator of Mind?
 (英文待翻译)
 
@@ -156,6 +196,8 @@ Ra I am Ra. Firstly, although the functions of the mind are indeed paramount ove
 
 Secondly, as a mind/body/spirit complex becomes aware of the process of spiritual evolution, more and more of the activities of the mind and body which precipitate activity are caused by those portions of the mind/body/spirit complex which are articulated by the archetypes of Transformation.
 (英文待翻译)
+
+## (92.20)
 
 (92.20) Questioner The Matrix of the Mind is depicted seemingly as male on the card and the Potentiator as female. Could Ra state why this is and how this affects these two archetypes?
 (英文待翻译)
@@ -169,11 +211,15 @@ In a more general sense, that which reaches may be seen as a male principle; tha
 The richness of the male and female system of polarity is interesting, and we would not comment further but suggest consideration by the student.
 (英文待翻译)
 
+## (92.21)
+
 (92.21) Questioner Card #2, the Potentiator of the Mind: we see a female sitting on a rectangular block. She is veiled and between two pillars which seem to be identically covered with drawings, but one much darker than the other. I am assuming that the veil represents the veil between the conscious and subconscious or Matrix and Potentiator. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. This is quite correct.
 (英文待翻译)
+
+## (92.22)
 
 (92.22) Questioner I am assuming that she sits between the different colored columns, one on her left, one on her right (the dark one is on her left), to indicate at this position an equal opportunity, you might say, for potentiation of the mind to be of the negative or positive paths. Would Ra comment on this?
 (英文待翻译)
@@ -187,17 +233,23 @@ The unfed mind has no polarity just as intelligent infinity has none. The nature
 We perceive an unclear statement. The polarity of Potentiator is there not for the Matrix to choose. It is there for the Matrix to accept as given.
 (英文待翻译)
 
+## (92.23)
+
 (92.23) Questioner In other words, this particular illusion has polarity as its foundation which might be represented by the structural significance of these columns. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. This is correct.
 (英文待翻译)
 
+## (92.24)
+
 (92.24) Questioner It seems to me that the drawings on each of these columns are identical, but that the left-hand column, that is the one on the Priestess’s left, has been shaded much darker indicating that the events or the experiences may be identical in the incarnation, but may be approached and viewed and utilized with either polarity as the bias. Is this in any way correct?
 (英文待翻译)
 
 Ra I am Ra. This is correct. You will note also, from the symbol denoting spirit in manifestation upon each pillar, that the One Infinite Creator is no respecter of polarity but offers Itself in full to all.
 (英文待翻译)
+
+## (92.25)
 
 (92.25) Questioner There seems to be a book on the Priestess’s lap which is half hidden by the robe or material that covers her right shoulder. It would seem that this indicates that knowledge is available if the veil is lifted, but is not only hidden by the veil, but hidden partially by her very garment which she must somehow move to become aware of the knowledge which she has available. Is this correct?
 (英文待翻译)
@@ -211,11 +263,15 @@ The very nature of the feminine principle of mind which, in Ra’s suggestion, w
 All robes, in this case indicating the outer garments of custom, shield these principles. Thusly there is great dynamic tension, if you will, betwixt the Matrix and the Potentiator of the Mind.
 (英文待翻译)
 
+## (92.26)
+
 (92.26) Questioner Are there any other parts of this picture that were not given by Ra?
 (英文待翻译)
 
 Ra I am Ra. The astrological symbols offered are not given by Ra.
 (英文待翻译)
+
+## (92.27)
 
 (92.27) Questioner The fact that the Priestess sits atop the rectangular box indicates to me the Potentiator of the Mind has dominance or is above and over the material illusion. Is this in any way correct?
 (英文待翻译)
@@ -223,11 +279,15 @@ Ra I am Ra. The astrological symbols offered are not given by Ra.
 Ra I am Ra. Let us say, rather, that this figure is immanent, near at hand, shall we say, within all manifestation. The opportunities for the reaching to the Potentiator are numerous. However, of itself the Potentiator does not enter manifestation.
 (英文待翻译)
 
+## (92.28)
+
 (92.28) Questioner Would the half moon on the crown represent the receptivity of the subconscious mind?
 (英文待翻译)
 
 Ra I am Ra. This symbol is not given by Ra, but it is not distasteful, for within your own culture the moon represents the feminine, the sun the masculine. Thusly we accept this portion as a portion of the image, for it seems without significant distortion.
 (英文待翻译)
+
+## (92.29)
 
 (92.29) Questioner Was the symbol on the front of the Priestess’ shirt given by Ra?
 (英文待翻译)
@@ -235,11 +295,15 @@ Ra I am Ra. This symbol is not given by Ra, but it is not distasteful, for withi
 Ra I am Ra. The crux ansata is the correct symbol. The addition and slight distortion of this symbol thereby is astrological and may be released from its stricture.
 (英文待翻译)
 
+## (92.30)
+
 (92.30) Questioner Would this crux ansata then be indicating a sign of life or spirit enlivening matter?
 (英文待翻译)
 
 Ra I am Ra. This is quite correct. Moreover, it illuminates a concept which is a portion of the archetype which has to do with the continuation of the consciousness which is being potentiated in incarnation, beyond incarnation.
 (英文待翻译)
+
+## (92.31)
 
 (92.31) Questioner Were the grapes depicted upon the cloth covering the shoulder of the Priestess of Ra’s communication?
 (英文待翻译)
@@ -247,11 +311,15 @@ Ra I am Ra. This is quite correct. Moreover, it illuminates a concept which is a
 Ra I am Ra. Yes.
 (英文待翻译)
 
+## (92.32)
+
 (92.32) Questioner We have taken those as indicating the fertility of the subconscious mind. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. This is correct, O student, but note ye the function of the mantle. There is great protection given by the very character of potentiation. To bear fruit is a protected activity.
 (英文待翻译)
+
+## (92.33)
 
 (92.33) Questioner The protection here seems to be depicted as being on the right-hand side but not the left. Would this indicate greater protection for the positive path than the negative?
 (英文待翻译)
@@ -261,6 +329,8 @@ Ra I am Ra. You perceive correctly an inborn bias offering to the seeing eye and
 
 We would at this time, as you may call it, suggest one more full query.
 (英文待翻译)
+
+## (92.34)
 
 (92.34) Questioner I will just, then, attempt an example of the Potentiator of Mind acting. Would, as the infant gains time in incarnation, it experience the Potentiator offering both positive and negative potential acts (or thoughts, shall I say) for the Matrix to experience, which then begin to accumulate in the Matrix, and color it one way or the other in polarity depending upon its continuing choice of that polarity offered by the Potentiator? Is this in any way correct?
 (英文待翻译)
@@ -276,6 +346,8 @@ The experience of the Significator of this potentiated activity is, of course, d
 
 May we ask if there are briefer queries before we leave this instrument?
 (英文待翻译)
+
+## (92.35)
 
 (92.35) Questioner Is there anything that we can do to make the instrument more comfortable or improve the contact?
 (英文待翻译)

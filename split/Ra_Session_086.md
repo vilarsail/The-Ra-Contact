@@ -4,8 +4,12 @@
 May 4, 1982
 (英文待翻译)
 
+## (86.0)
+
 (86.0) Ra I am Ra. I greet you in the love and in the light of the One Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (86.1)
 
 (86.1) Questioner Could you first please give me the condition of the instrument?
 (英文待翻译)
@@ -13,11 +17,15 @@ May 4, 1982
 Ra I am Ra. The instrument’s distortion towards physical energy complex deficit has slightly increased since the last asking. The vital energy levels have had significant calls upon them and are somewhat less than the last asking also.
 (英文待翻译)
 
+## (86.2)
+
 (86.2) Questioner What was the nature of these significant calls on the vital energy?
 (英文待翻译)
 
 Ra I am Ra. There are those entities which entertain the thought-distortion towards this entity that it shall remove, for the other-selves, all distortions for the other-self. This entity has recently been in close contact with a larger than normal number of entities with these thought-complex distortions. This entity is of the distortion to provide whatever service is possible and is not consciously aware of the inroads made upon the vital energies.
 (英文待翻译)
+
+## (86.3)
 
 (86.3) Questioner Am I correct in assuming that you’re speaking of incarnate third-density entities that were creating the condition of use of the vital energy?
 (英文待翻译)
@@ -25,17 +33,23 @@ Ra I am Ra. There are those entities which entertain the thought-distortion towa
 Ra I am Ra. Yes.
 (英文待翻译)
 
+## (86.4)
+
 (86.4) Questioner What’s the present situation with our fifth-density service-to-self polarized companion?
 (英文待翻译)
 
 Ra I am Ra. The period which you may call crisis remains.
 (英文待翻译)
 
+## (86.5)
+
 (86.5) Questioner Can you tell me anything of the nature of this crisis?
 (英文待翻译)
 
 Ra I am Ra. The polarity of your companion is approaching the critical point at which the entity shall choose either to retreat for the nonce and leave any greetings to fourth-density minions, or lose polarity. The only other potential is that in some way this group might lose polarity in which case your companion could continue its form of greeting.
 (英文待翻译)
+
+## (86.6)
 
 (86.6) Questioner In the last session you had mentioned the properties precipitating from the veiling of the mind, the first being visioning, envisioning, or far-seeing. Would you explain the meaning of that?
 (英文待翻译)
@@ -48,6 +62,8 @@ The nature of the unconscious is of the nature of concept rather than word. Cons
 
 This is the nature of the deeper mind. There are only stylized methods with which to discuss its functions. Thusly our descriptions of this portion of the mind, as well as the same portions of body and spirit, were given terms such as “far-seeing,” indicating that the nature of penetration of the veiled portion of the mind may be likened unto the journey too rich and exotic to contemplate adequate describing thereof.
 (英文待翻译)
+
+## (86.7)
 
 (86.7) Questioner You stated that dreaming, if made available to the conscious mind, will aid greatly in polarization. Would you define dreaming, or tell us what it is and how it aids in polarization?
 (英文待翻译)
@@ -73,11 +89,15 @@ As a mind/body/spirit complex consciously chooses the path of the adept and, wit
 There are other possibilities of the dreaming not so closely aligned with the increase in polarity which we do not cover at this particular space/time.
 (英文待翻译)
 
+## (86.8)
+
 (86.8) Questioner How is the dream designed or programmed? Is this done by the higher self, or who is responsible for this?
 (英文待翻译)
 
 Ra I am Ra. In all cases the mind/body/spirit complex makes what use it can of the faculty of the dreaming. It, itself, is responsible for this activity.
 (英文待翻译)
+
+## (86.9)
 
 (86.9) Questioner Then you are saying that the subconscious is responsible for what I would call design or scriptwriting for the dream. Is this correct?
 (英文待翻译)
@@ -85,17 +105,23 @@ Ra I am Ra. In all cases the mind/body/spirit complex makes what use it can of t
 Ra I am Ra. This is correct.
 (英文待翻译)
 
+## (86.10)
+
 (86.10) Questioner Is the memory that the individual has upon waking from the dream usually reasonably accurate? Is the dream easily remembered?
 (英文待翻译)
 
 Ra I am Ra. You must realize that we are over-generalizing in order to answer your queries as there are several sorts of dreams. However, in general, it may be noted that it is only for a trained and disciplined observer to have reasonably good recall of the dreaming. This faculty may be learned by virtue of a discipline of the recording immediately upon awakening of each and every detail which can be recalled. This training sharpens one’s ability to recall the dream. The most common perception of a mind/body/spirit complex of its dreams is muddied, muddled, and quickly lost.
 (英文待翻译)
 
+## (86.11)
+
 (86.11) Questioner In that remembering dreams, you are saying that the individual can find specific clues to current energy center blockages and may, thereby, reduce or eliminate those blockages. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. This is so.
 (英文待翻译)
+
+## (86.12)
 
 (86.12) Questioner Is there any other function of dreaming that is of value in the evolutionary process?
 (英文待翻译)
@@ -109,17 +135,23 @@ The activity of dreaming is an activity in which there is made a finely wrought 
 The other function of the dreaming which is of aid is that type of dream which is visionary and which prophets and mystics have experienced from days of old. Their visions come through the roots of mind and speak to a hungry world. Thus the dream is of service without being of a personally polarizing nature. However, in that mystic or prophet [who] desires to serve, such service will increase the entity’s polarity.
 (英文待翻译)
 
+## (86.13)
+
 (86.13) Questioner There is a portion of sleep that has been called R.E.M. Is this the state of dreaming?
 (英文待翻译)
 
 Ra I am Ra. This is correct.
 (英文待翻译)
 
+## (86.14)
+
 (86.14) Questioner It was noticed that this occurs in small units during the night with gaps in between. Is there any particular reason for this?
 (英文待翻译)
 
 Ra I am Ra. Yes.
 (英文待翻译)
+
+## (86.15)
 
 (86.15) Questioner If it is of any value to know that, would you tell me why the dreaming process works like that?
 (英文待翻译)
@@ -130,17 +162,23 @@ Ra I am Ra. The portions of the dreaming process which are helpful for polarizat
 The bridge remains, however, and traduces each distortion of mind, body, and spirit as it has received the distortions of energy influxes so that healing may take place. This healing process does not occur with the incidence of rapid eye movement but, rather, occurs largely in the space/time portion of the mind/body/spirit complex using the bridge to time/space for the process of healing to be enabled.
 (英文待翻译)
 
+## (86.16)
+
 (86.16) Questioner You mentioned loss of knowledge and control over the body as being a factor that was helpful in the evolutionary process due to veiling. Could you enumerate the important losses of knowledge and control over the body?
 (英文待翻译)
 
 Ra I am Ra. This query contains some portions which would be more helpfully answered were some intervening material requested.
 (英文待翻译)
 
+## (86.17)
+
 (86.17) Questioner I’m at a loss to know what to request. Can you [chuckles] give me an idea of what area of intervening material I should work on?
 (英文待翻译)
 
 Ra I am Ra. No. However, we shall be happy to answer the original query if it is still desired if you first perceive that there is information lacking.
 (英文待翻译)
+
+## (86.18)
 
 (86.18) Questioner Perhaps I can question it slightly differently here. I might ask why loss of knowledge and control over the body was helpful?
 (英文待翻译)
@@ -151,11 +189,15 @@ Ra I am Ra. The knowledge of the potentials of the physical vehicle before the v
 However, this state of lack of knowledge offers an opportunity for a desire to grow within the mind complex. This desire is that which seeks to know the possibilities of the body complex. The ramifications of each possibility and the eventual biases thusly built have within them a force which can only be generated by such desire or will to know.
 (英文待翻译)
 
+## (86.19)
+
 (86.19) Questioner Perhaps you could give examples of use of the body prior to veiling and after veiling in the same aspect so that we could understand the change in knowledge and control over the body more clearly. Could you do this, please?
 (英文待翻译)
 
 Ra I am Ra. We could.
 (英文待翻译)
+
+## (86.20)
 
 (86.20) Questioner Will you do this?
 (英文待翻译)
@@ -172,6 +214,8 @@ After the veiling process it became infinitely more difficult to achieve green-r
 From this point it was far more likely that higher energy transfers would be sought by this mated pair of mind/body/spirit complexes, thus allowing the Creator to know Itself with great beauty, solemnity, and wonder. Intelligent infinity having been reached by this sacramental use of this function of the body, each mind/body/spirit complex of the mated pair gained greatly in polarization and in ability to serve.
 (英文待翻译)
 
+## (86.21)
+
 (86.21) Questioner Did any of the other aspects of loss of knowledge or control over the body approach, to any degree in efficiency, what you’ve just described?
 (英文待翻译)
 
@@ -181,6 +225,8 @@ Ra I am Ra. Each function of the body complex has some potential after the veili
 This instrument grows somewhat low in energy. We would prefer to retain the maximal portion of reserved energy for which this instrument has given permission. We would, therefore, ask for one more full query at this working.
 (英文待翻译)
 
+## (86.22)
+
 (86.22) Questioner I will assume that the veiling of the sexual aspect was of great efficiency because it is an aspect that has to do totally with a relationship with another self. It would seem to me that the bodily veilings having to do with other-self interaction would be most efficient, and those only related to the self be lower in efficiency in producing either positive or negative polarization. Am I correct in this assumption?
 (英文待翻译)
 
@@ -189,6 +235,8 @@ Ra I am Ra. You are correct to a great extent. Perhaps the most notable exceptio
 
 May we ask if there are any brief queries?
 (英文待翻译)
+
+## (86.23)
 
 (86.23) Questioner Is there anything that we can do to make the instrument more comfortable or improve the contact?
 (英文待翻译)

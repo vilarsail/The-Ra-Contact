@@ -4,8 +4,12 @@
 March 1, 1981
 (英文待翻译)
 
+## (33.0)
+
 (33.0) Ra I am Ra. I greet you in the love and in the light of the One Infinite Creator. I communicate now.
 (英文待翻译)
+
+## (33.1)
 
 (33.1) Questioner In our last session you cautioned “each to look well to the vital energies necessary for non-depletion of the instrument and the contact level.” Did that mean that we should . . . that Jim and I should look at the instrument’s . . . or be careful of the instrument’s vital energies or be careful of our own vital energies?
 (英文待翻译)
@@ -22,6 +26,8 @@ This supporting group has always, due to an underlying harmony, been of a very s
 Please understand that we ask your apology for this infringement upon your free will. However, it is our distortion-understanding that you would prefer this information rather than, being left totally to your own dedication-distortions, deplete the instrument or deplete the group to the point where the contact cannot be sustained.
 (英文待翻译)
 
+## (33.2)
+
 (33.2) Questioner Can you give us advice on how to maintain the best possible condition for maintaining contact?
 (英文待翻译)
 
@@ -34,11 +40,15 @@ Firstly, we suggest that rather than being, shall we say, brave and ignoring a p
 Secondly, the work begun in harmony may continue. Harmony, thanksgiving, and praise of opportunities and of the Creator: these are your protection. These are our suggestions. We cannot be specific, for your free will is of the essence in this contact. As we said, we only speak to this subject because of our grasp of your orientation towards long-term maintenance of this contact. This is acceptable to us.
 (英文待翻译)
 
+## (33.3)
+
 (33.3) Questioner Thank you very much. The instrument has a device for so-called color therapy, and since we were on, in the past session, the concept of the different colors I was wondering if these, in some way, apply to the principle of color therapy in the shining of particular colors on the physical body. Does this have any beneficial effect, and can you tell me something about it?
 (英文待翻译)
 
 Ra I am Ra. This therapy, as you call it, is a somewhat clumsy and variably useful tool for instigating in an entity’s mind/body/spirit complex an intensification of energies, or vibrations, which may be of aid to the entity. The variableness of this device is due, firstly, to the lack of true colors used; secondly, to the extreme variation in sensitivity to vibration among your peoples.
 (英文待翻译)
+
+## (33.4)
 
 (33.4) Questioner I would think that you could achieve a true color by passing the light through a crystal of the particular color. Is this correct?
 (英文待翻译)
@@ -46,11 +56,15 @@ Ra I am Ra. This therapy, as you call it, is a somewhat clumsy and variably usef
 Ra I am Ra. This would be one way of approaching accuracy in color. It is a matter of what you would call quality control that the celluloid used is of a varying color. This is not a great, or even visible, variation; however, it does make some difference given specific applications.
 (英文待翻译)
 
+## (33.5)
+
 (33.5) Questioner Possibly the use of a prism breaking white light into its spectrum and then screening off all parts of the spectrum except that which you wish to pass through a slit and use would be even better. Would this be true?
 (英文待翻译)
 
 Ra I am Ra. This is correct.
 (英文待翻译)
+
+## (33.6)
 
 (33.6) Questioner Thank you. I was wondering if there is a programming of experiences that causes an individual to get certain catalyst in his daily life. For instance, as we go through our daily life there are many things that we can experience. We look at these experiences as occurring by pure chance or by a conscious design of ours, like making appointments or going places. I was just wondering if there was a behind-the-scenes, I might call it, programming of catalyst to create the necessary experiences for more rapid growth in the case of some entities. Is this . . . does this happen?
 (英文待翻译)
@@ -61,11 +75,15 @@ Ra I am Ra. We believe we grasp the heart of your query. Please request further 
 The incarnating entity which has become conscious of the incarnative process and thus programs its own experience may choose the amount of catalyst or, to phrase this differently, the number of lessons which it will undertake to experience and to learn from in one incarnation. This does not mean that all is predestined, but rather that there are invisible guidelines shaping events which will function according to this programming. Thus if one opportunity is missed, another will appear until the, shall we say, student of the life experience grasps that a lesson is being offered and undertakes to learn it.
 (英文待翻译)
 
+## (33.7)
+
 (33.7) Questioner Then these lessons would be reprogrammed, you might say, as a life experience continues. Let’s say that an entity develops a bias that he actually didn’t choose to develop prior to incarnation. It is then possible to program experiences so that he will have an opportunity to alleviate this bias through balancing. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. This is precisely correct.
 (英文待翻译)
+
+## (33.8)
 
 (33.8) Questioner Thank you. Then from this I would extrapolate to the conjecture, I will say, that the orientation in mind of the entity is the only thing that is of any consequence at all. The physical catalyst that he experiences, regardless of what is happening about him, will be a function strictly of his orientation in mind. I will use as an example [example deleted], this being a statement of the orientation in mind governing the catalyst. Is this correct?
 (英文待翻译)
@@ -79,6 +97,8 @@ Thus a scene may be observed in your grocery store. The entity ahead of self may
 Do you now see the analogies in a more appropriate manner?
 (英文待翻译)
 
+## (33.9)
+
 (33.9) Questioner Yes, I do. Then from this I will extrapolate the concept which is somewhat more difficult because, as you have explained before, even fourth-density positive has the concept of defensive action, but above the fourth density the concept of defensive action is not in use. The concept of defensive action and [chuckles] offensive action are very much in use in this, our present experience.
 (英文待翻译)
 
@@ -91,11 +111,15 @@ Ra I am Ra. This is unknowable. In each case, as we have said, an entity able to
 It is possible that an extremely positively oriented entity might program for itself situations testing the ability of self to refrain from defensive action, even to the point of the physical death of self or other-self. This is an intensive lesson, and it is not known, shall we say, what entities have programmed. We may, if we desire, read this programming. However, this is an infringement and we choose not to do so.
 (英文待翻译)
 
+## (33.10)
+
 (33.10) Questioner I will ask you if you are familiar with the motion picture called The Ninth Configuration. Are you familiar with this?
 (英文待翻译)
 
 Ra I am Ra. We scan your mind complex and see this configuration called The Ninth Configuration.
 (英文待翻译)
+
+## (33.11)
 
 (33.11) Questioner This motion picture brought out this point of which we have been talking. And the entity, the Colonel, had to make a decision at that point. I was just wondering, with respect to polarity, his polarization. He could have either knuckled under, you might say, to the negative forces, but he chose to defend his friend instead.
 (英文待翻译)
@@ -109,6 +133,8 @@ Ra I am Ra. This question takes in the scope of fourth density as well as your o
 The impulse to protect the loved other-self is one which persists through the fourth density, a density abounding in compassion. More than this we cannot and need not say.
 (英文待翻译)
 
+## (33.12)
+
 (33.12) Questioner Thank you. As we near the end of this master cycle there may be an increasing amount of catalyst for entities. I am wondering if, as the planetary vibrations mismatch somewhat with the fourth-density vibrations and catalyst is increased, if this will create a slight amount of more polarization, thereby getting a slightly greater positive harvest because of this catalyst, and in the same way create a more negative polarization, and then get a slight amount more negative harvest by this mechanism of transition that is, unfortunately, somewhat more catalytic than it would be if the planet had reached a higher state of consciousness. Does this happen?
 (英文待翻译)
 
@@ -121,11 +147,15 @@ Firstly, the planetary catastrophes, as you may call them, are a symptom of the 
 The second portion is this: the results of the random catalyst of what you call the earth changes are also random. Thus we may see probability/possibility vortices going towards positive and negative. However, it will be as it will be. The true opportunities for conscious catalyst are not a function of the earth changes but of the result of the seniority system of incarnations which at the time of the harvest has placed in incarnation those whose chances of using life experiences to become harvestable are the best.
 (英文待翻译)
 
+## (33.13)
+
 (33.13) Questioner Is this seniority system also used for the service-to-self side for becoming harvestable on that side?
 (英文待翻译)
 
 Ra I am Ra. This is correct. You may ask one more full question at this time.
 (英文待翻译)
+
+## (33.14)
 
 (33.14) Questioner OK. What I would like for you to do is list all the major mechanisms designed to provide catalytic experience that do not include interaction with other-self. That’s the first part of the question I’ll ask.
 (英文待翻译)
@@ -133,11 +163,15 @@ Ra I am Ra. This is correct. You may ask one more full question at this time.
 Ra I am Ra. We grasp from this question that you realize that the primary mechanism for catalytic experience in third density is other-self. The list of other catalytic influences: firstly, the Creator’s universe; secondly, the self.
 (英文待翻译)
 
+## (33.15)
+
 (33.15) Questioner Can you list any sub-headings under the self that would . . . or ways that the self is acted on catalytically to produce experience?
 (英文待翻译)
 
 Ra I am Ra. Firstly, the self unmanifested. Secondly, the self in relation to the societal self created by self and other-self. Thirdly, the interaction between self and the gadgets, toys, and amusements of the self/other-self invention. Fourthly, the self relationship with those attributes which you may call war and rumors of war.
 (英文待翻译)
+
+## (33.16)
 
 (33.16) Questioner I was thinking possibly the catalyst of physical pain. How does this . . . Does this go under this heading?
 (英文待翻译)
@@ -145,17 +179,23 @@ Ra I am Ra. Firstly, the self unmanifested. Secondly, the self in relation to th
 Ra I am Ra. This is correct, it going under the heading of the unmanifested self; that is, the self which does not need other-self in order to manifest or act.
 (英文待翻译)
 
+## (33.17)
+
 (33.17) Questioner Do we have enough time left to ask the second part of this question, which is to list all major mechanisms designed to provide the catalyst that include action with other-self? Do we have enough time for that?
 (英文待翻译)
 
 Ra I am Ra. You have much time for this, for we may express this list in one of two ways. We could speak infinitely, or we could simply state that any interaction betwixt self and other-self has whatever potential for catalyst that there exists in the potential difference between self and other-self, this moderated and undergirded by the constant fact of the Creator as self and as other-self. You may ask to this question further if you wish specific information.
 (英文待翻译)
 
+## (33.18)
+
 (33.18) Questioner I believe that that is sufficient for the time being.
 (英文待翻译)
 
 Ra I am Ra. Do you have a brief query or two before we close this working?
 (英文待翻译)
+
+## (33.19)
 
 (33.19) Questioner Uh, just a minute. I don’t think that anything I could ask at this time would be brief enough. Just a minute. [Sounds of papers being handled.]
 (英文待翻译)
@@ -168,6 +208,8 @@ Ra I am Ra. This is correct. The violet ray of the positive fourth-density will 
 
 The violet ray of fourth-density negative has in its aura, shall we say, the tinge of red, orange, yellow, these three rays being muddied rather than distinct.
 (英文待翻译)
+
+## (33.20)
 
 (33.20) Questioner Just as a slight appendage to that question: what would the rays of fifth and sixth density look like?
 (英文待翻译)
@@ -183,6 +225,8 @@ The sixth density of a whiteness which contains a golden quality as you would pe
 
 You may ask one more question briefly.
 (英文待翻译)
+
+## (33.21)
 
 (33.21) Questioner Then I will ask if there is anything we can do to make the instrument more comfortable or improve the contact?
 (英文待翻译)

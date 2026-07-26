@@ -4,8 +4,12 @@
 February 10, 1982
 (英文待翻译)
 
+## (77.0)
+
 (77.0) Ra I am Ra. I greet you in the love and in the light of the One Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (77.1)
 
 (77.1) Questioner Could you first please give me an indication of the condition of the instrument?
 (英文待翻译)
@@ -13,11 +17,15 @@ February 10, 1982
 Ra I am Ra. It is as previously stated.
 (英文待翻译)
 
+## (77.2)
+
 (77.2) Questioner Was the instrument under attack just prior to this session?
 (英文待翻译)
 
 Ra I am Ra. This is correct.
 (英文待翻译)
+
+## (77.3)
 
 (77.3) Questioner Is there anything that we could do to help protect the instrument from these attacks prior to the session?
 (英文待翻译)
@@ -25,17 +33,23 @@ Ra I am Ra. This is correct.
 Ra I am Ra. This is correct.
 (英文待翻译)
 
+## (77.4)
+
 (77.4) Questioner What could we do?
 (英文待翻译)
 
 Ra I am Ra. Your group could refrain from continuing this contact.
 (英文待翻译)
 
+## (77.5)
+
 (77.5) Questioner Is that the only thing we could do?
 (英文待翻译)
 
 Ra I am Ra. That is the only thing you could do which you are not already attempting with a whole heart.
 (英文待翻译)
+
+## (77.6)
 
 (77.6) Questioner I have three questions that the instrument asked me to ask that I’ll get out of the way first. She wants to know if the preparation for her hospital experience could be improved for the next experience.
 (英文待翻译)
@@ -46,17 +60,23 @@ Ra I am Ra. All was done well with one exception. The instrument was instructed 
 The elimination of such creates the lack of possibility for negative elementals, and other negative entities, to use these thought-forms to create the worsening of the mind complex deviation from the normal distortions of cheerfulness/anxiety.
 (英文待翻译)
 
+## (77.7)
+
 (77.7) Questioner The instrument would also like to know if the, what we call, tuning could be improved during times when we do not communicate with Ra, for that communication.
 (英文待翻译)
 
 Ra I am Ra. That which has been stated in regard to the latter question will suffice to point the way for the present query.
 (英文待翻译)
 
+## (77.8)
+
 (77.8) Questioner Finally, she wishes to know why several days ago her heart rate went up to 115 per minute, and then she had extreme pain in her stomach. “Was that an Orion greeting?” it says.[46]
 (英文待翻译)
 
 Ra I am Ra. Although this experience was energized by the Orion group, the events mentioned, as well as others more serious, were proximally caused by the ingestion of certain foodstuffs in what you call your tablet form.
 (英文待翻译)
+
+## (77.9)
 
 (77.9) Questioner Can you tell me what these tablets were, specifically?
 (英文待翻译)
@@ -73,6 +93,8 @@ This instrument has a physical body complex of complicated balances which afford
 Therefore, physical healing techniques are inappropriate whereas mental and spiritual healing techniques are beneficial.
 (英文待翻译)
 
+## (77.10)
+
 (77.10) Questioner Is there any technique which we could do that we have not been doing that would be beneficial for the instrument in this case?
 (英文待翻译)
 
@@ -82,11 +104,15 @@ Ra I am Ra. We might suggest, without facetiousness, two. Firstly, let the instr
 Secondly, each of the group may become aware of the will to a greater extent. We cannot instruct upon this but merely indicate, as we have previously,[47] that it is a vital key to the evolution of the mind/body/spirit complex.
 (英文待翻译)
 
+## (77.11)
+
 (77.11) Questioner Thank you. I would like to go back to the plan of this Logos for Its creation and examine the philosophical basis that is the foundation for what was created in this local creation and the philosophy of the plan for experience. I am assuming that I am correct in stating that the foundation for this, as we have stated many times before, is the First Distortion. After that, what was the plan in a philosophical sense?
 (英文待翻译)
 
 Ra I am Ra. We cannot reply due to a needed portion of your query which has been omitted; that is, do we speak of this particular Logos?
 (英文待翻译)
+
+## (77.12)
 
 (77.12) Questioner That is correct. I am asking with respect to this particular sub-Logos, our sun, in creating the experience of its planetary system and those sub-Logoi of it.
 (英文待翻译)
@@ -100,6 +126,8 @@ The philosophy was to create a foundation, first of mind, then of body, and then
 Upon the foundation of transformation of each complex, with free will guided by the root concepts offered in these cycles, the Logos offered this density the basic architecture of a building and constructing and synthesizing of data culminating in The Choice.
 (英文待翻译)
 
+## (77.13)
+
 (77.13) Questioner Then for me to condense your statement, I see it meaning that there are seven basic philosophical foundations for mental experience, seven for bodily, seven for spiritual, and that these produce the polarization that we experience some time during the third-density cycle. This may be very poorly stated on my part. Am I close to correct?
 (英文待翻译)
 
@@ -112,11 +140,15 @@ Furthermore, there are relationships betwixt mind, body, and spirit of the same 
 The Logos under which these foundations stand is one of free will. Thusly the foundations may be seen to have unique facets and relationships for each mind/body/spirit complex. Only twenty-two, The Choice, is relatively fixed and single.
 (英文待翻译)
 
+## (77.14)
+
 (77.14) Questioner I am probably having a problem with the concept of time since it appears that the Logos was aware of the polarization choice. It seems that this choice for polarization at the end of third density is an important philosophical plan for the experience past third density. Am I correct in assuming that this process is a process to create the proper, or the desired, experience that will take place in the creation after third density is complete?
 (英文待翻译)
 
 Ra I am Ra. These philosophical foundations are those of third density. Above this density there remains the recognition of the architecture of the Logos but without the veils which are so integral a part of the process of making the choice in third density.
 (英文待翻译)
+
+## (77.15)
 
 (77.15) Questioner The specific question that I had was that it seems to me that the choice was planned to create intense polarization past third density so that experience would be intense past third density. Is this correct?
 (英文待翻译)
@@ -127,11 +159,15 @@ Ra I am Ra. Given that our interpretation of your sound vibration complexes is a
 However, in third density the statue is forged in the fire. This is a type of intensity which is not the property of fourth, fifth, sixth, or seventh densities.
 (英文待翻译)
 
+## (77.16)
+
 (77.16) Questioner What I am really attempting to understand, since all of these twenty-one philosophical bases result in the twenty-second, which is The Choice, is why this choice is so important; why the Logos, it seems, puts so much emphasis on this choice; and what function that choice of polarity is, precisely, in the evolution or the experience of that which is created by the Logos?
 (英文待翻译)
 
 Ra I am Ra. The polarization, or choosing, of each mind/body/spirit is necessary for harvestability from third density. The higher densities do their work due to the polarity gained in this choice.
 (英文待翻译)
+
+## (77.17)
 
 (77.17) Questioner Now, would it be possible for this work of our density to be performed if all of the sub-Logoi chose the same polarity in any particular expression or evolution of a Logos? Let us make the assumption that our sun created nothing but, through the First Distortion, there was no product except positive polarity. Would work then be done in fourth density and higher as a function only of this positive polarization evolving from our original creation of sub-Logoi?
 (英文待翻译)
@@ -148,11 +184,15 @@ Let us illustrate by observing the relative harmony and unchanging quality of ex
 Those Logoi whose creations have been set up without free will have not, in the feeling of those Logoi, given the Creator the quality and variety of experience of Itself as have those Logoi which have incorporated free will as paramount. Thusly you find those Logoi moving through the timeless states at what you would see as a later space/time to choose the free will character when elucidating the foundations of each Logos.
 (英文待翻译)
 
+## (77.18)
+
 (77.18) Questioner I guess, under the First Distortion, it was the free will of the Logos to choose to evolve without free will. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. This is correct.
 (英文待翻译)
+
+## (77.19)
 
 (77.19) Questioner Do the Logoi that choose this type of evolution choose both the service-to-self and the service-to-others path for different Logoi, or do they choose just one of the paths?
 (英文待翻译)
@@ -160,11 +200,15 @@ Ra I am Ra. This is correct.
 Ra I am Ra. Those, what you would call, early Logoi which chose lack-of-free-will foundations, to all extents with no exceptions founded Logoi of the service-to-others path. The, shall we say, saga of polarity, its consequences and limits, were unimagined until experienced.
 (英文待翻译)
 
+## (77.20)
+
 (77.20) Questioner In other words you are saying that originally the Logoi that did not choose this free will path did not choose it simply because they had not conceived of it. And later Logoi, extending the First Distortion farther down through their evolution, experienced it as an outcropping or growth from that extension of the First Distortion. Am I correct in saying that?
 (英文待翻译)
 
 Ra I am Ra. Yes.
 (英文待翻译)
+
+## (77.21)
 
 (77.21) Questioner Then did this particular Logos that we experience plan for this polarity and know all about it prior to its plan? That I suspect is what happened.
 (英文待翻译)
@@ -172,11 +216,15 @@ Ra I am Ra. Yes.
 Ra I am Ra. This is quite correct.
 (英文待翻译)
 
+## (77.22)
+
 (77.22) Questioner In that case, you would have, as a Logos, you would have the advantage of selecting the form of acceleration, I might say, of spiritual evolution by planning for what we call the major archetypical philosophical foundation and planning these as a function of the polarity that would be gained in third density. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. This is exquisitely correct.
 (英文待翻译)
+
+## (77.23)
 
 (77.23) Questioner In that case, it seems that a thorough knowledge of the precise nature of these philosophical foundations would be of primary importance to the study of evolution of mind, body, and spirit, and I would like to carefully go through each of the basic twenty-one, starting with the mind, if this is agreeable with Ra.
 (英文待翻译)
@@ -192,6 +240,8 @@ Secondly, we request that it be constantly kept before the mind, as the candle b
 
 Therefore, you may see that precision is not the goal; rather, quality of general concept complex perception is the goal.
 (英文待翻译)
+
+## (77.24)
 
 (77.24) Questioner Now, there are several general concepts that I would like to be sure that we have clear before going into this process, and I will certainly adhere to the requests that you have just stated.
 (英文待翻译)
@@ -213,6 +263,8 @@ When fifth density has been obtained the process takes upon itself a momentum ba
 
 May we enquire if there are any brief queries at this space/time?
 (英文待翻译)
+
+## (77.25)
 
 (77.25) Questioner Is there anything that we can do after this contact to increase the instrument’s comfort as related to the psychic attack, or is there anything we can do to make the instrument more comfortable or improve the contact in this present situation?
 (英文待翻译)

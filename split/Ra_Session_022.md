@@ -4,8 +4,12 @@
 February 10, 1981
 (英文待翻译)
 
+## (22.0)
+
 (22.0) Ra I am Ra. I greet you in the love and in the light of the Infinite Creator. I communicate now.
 (英文待翻译)
+
+## (22.1)
 
 (22.1) Questioner The instrument would like to ask a couple of questions of you. I’ll get them out of the way first. The instrument would like to know why she smells the incense at various times during the day in various places?
 (英文待翻译)
@@ -16,6 +20,8 @@ Ra I am Ra. This instrument has spent a lifetime in dedication to service. This 
 This instrument is not consciously aware of this slow changing of the meshing vibratory complex. However, as the dedication on both levels continues, and the workings continue, there are signals sent from the unconscious in a symbolic manner. Because this instrument is extremely keen in its sense of smell this association takes place unconsciously, and the thought-form of this odor is witnessed by the entity.
 (英文待翻译)
 
+## (22.2)
+
 (22.2) Questioner Secondly, she would like to know why she feels more healthy now after she does these sessions. She’s generally feeling more healthy as time goes on.
 (英文待翻译)
 
@@ -24,6 +30,8 @@ Ra I am Ra. This is a function of the free will of the entity. This entity has, 
 
 Also, this entity has begun, due to this working, to accept certain limitations which it placed upon itself in order to set the stage for services such as it now performs. This also is an aid to re-aligning the distortions of the physical complex with regard to pain.
 (英文待翻译)
+
+## (22.3)
 
 (22.3) Questioner Thank you. I’ll ask a couple of questions to clear up the end of the second cycle, the second major cycle. And then we’ll go on to the third and last of the major cycles.
 (英文待翻译)
@@ -34,11 +42,15 @@ Can you tell me the life span, the average life span, at the end of the second m
 Ra I am Ra. By the end of the second major cycle the life span was as you know it, with certain variations among geographically isolated peoples more in harmony with intelligent energy and less bellicose.
 (英文待翻译)
 
+## (22.4)
+
 (22.4) Questioner Can you tell me the length of that . . . average span, in years, at the end of the second major cycle?
 (英文待翻译)
 
 Ra I am Ra. The average is perhaps misleading. To be precise, many spent approximately thirty-five to forty of your years in one incarnation, with the possibility not considered abnormal of a life span approaching one hundred of your years.
 (英文待翻译)
+
+## (22.5)
 
 (22.5) Questioner Then can you give me a— Can I assume, then, that this drastic drop from 700-year life span to one less than one hundred years in length during this second 25,000-year period was because of an intensification of a . . . of a condition of lack of service to others? Is this correct?
 (英文待翻译)
@@ -52,6 +64,8 @@ Each entity, then, was offered many more subtle ways of demonstrating either ser
 Without demonstrating the fruits of such learn/teaching the life span became greatly reduced, for the ways of honor/duty were not being accepted.
 (英文待翻译)
 
+## (22.6)
+
 (22.6) Questioner Would this shortened life span help the entity in any way in that he would have more times in between incarnations to review his mistakes, or would this shortened life span hinder him?
 (英文待翻译)
 
@@ -64,11 +78,15 @@ Thus the shortened life span is due to the necessity for removing an entity from
 The incorrectness lies in the truth that, given appropriate circumstances, a much longer incarnation in your space/time continuum is very helpful for continuing this intensive work until conclusions have been reached through the catalytic process.
 (英文待翻译)
 
+## (22.7)
+
 (22.7) Questioner You spoke of the South American group that was harvestable at the end of the second cycle. How long was their average life span at the end of the second cycle?
 (英文待翻译)
 
 Ra I am Ra. This isolated group had achieved life spans stretching upwards towards the nine-hundred-year [900-year] life span appropriate to this density.
 (英文待翻译)
+
+## (22.8)
 
 (22.8) Questioner Then I’m assuming the planetary action that we’re experiencing now, which shortens, it seems, all life spans here, was not strong enough at that time to affect them and shorten their life span regardless. Is this correct?
 (英文待翻译)
@@ -76,11 +94,15 @@ Ra I am Ra. This isolated group had achieved life spans stretching upwards towar
 Ra I am Ra. This is correct. It is well to remember that at that nexus in space/time great isolation was possible.
 (英文待翻译)
 
+## (22.9)
+
 (22.9) Questioner About how many people populated the earth totally at that time; that is, incarnated in the physical at any one time?
 (英文待翻译)
 
 Ra I am Ra. I am assuming that you intend to query regarding the number of incarnate mind/body/spirit complexes at the end of the second major cycle, this number being approximately three four five, oh oh oh, three hundred forty-five thousand [345,000] entities.
 (英文待翻译)
+
+## (22.10)
 
 (22.10) Questioner Approximately how many were harvestable out of the total number?
 (英文待翻译)
@@ -88,11 +110,15 @@ Ra I am Ra. I am assuming that you intend to query regarding the number of incar
 Ra I am Ra. There were approximately one hundred fifty [150] entities harvestable.
 (英文待翻译)
 
+## (22.11)
+
 (22.11) Questioner A very small number. Then as the next cycle started . . . are these the entities then that stayed to work on the planet?
 (英文待翻译)
 
 Ra I am Ra. These entities were visited by the Confederation and became desirous of remaining in order to aid the planetary consciousness. This is correct.
 (英文待翻译)
+
+## (22.12)
 
 (22.12) Questioner What type of visit did the Confederation make to this group of 150 entities?
 (英文待翻译)
@@ -100,11 +126,15 @@ Ra I am Ra. These entities were visited by the Confederation and became desirous
 Ra I am Ra. A light being appeared bearing that which may be called a shield of light. It spoke of the oneness and infinity of all creation and of those things which await those ready for harvest. It described in golden words the beauties of love as lived. It then allowed a telepathic linkage to progressively show those who were interested the plight of third density when seen as a planetary complex. It then left.
 (英文待翻译)
 
+## (22.13)
+
 (22.13) Questioner And did all of these entities then decide to stay and help during the next 25,000-year cycle?
 (英文待翻译)
 
 Ra I am Ra. This is correct. As a group they stayed. There were those peripherally associated with this culture which did not stay. However, they were not able to be harvested either and so, beginning at the very highest, shall we say, of the sub-octaves of third density, repeated this density. Many of those who have been of a loving nature are not wanderers but those of this particular origin of second cycle.
 (英文待翻译)
+
+## (22.14)
 
 (22.14) Questioner Are all of these entities still with us in this cycle?
 (英文待翻译)
@@ -112,11 +142,15 @@ Ra I am Ra. This is correct. As a group they stayed. There were those peripheral
 Ra I am Ra. The entities repeating the third-density major cycle have, in some few cases, been able to leave. These entities have chosen to join their brothers and sisters, as you would call these entities.
 (英文待翻译)
 
+## (22.15)
+
 (22.15) Questioner Were any of these entities names that we know from our historical past? That have appeared as incarnated beings we find in our history?
 (英文待翻译)
 
 Ra I am Ra. The one known as sound vibration complex, Saint Augustine, is of such a nature. The one known as Saint Teresa of such a nature. The one known as Saint Francis of Assisi of such nature. These entities, being of monastic background, as you would call it, found incarnation in the same type of ambiance appropriate for further learning.
 (英文待翻译)
+
+## (22.16)
 
 (22.16) Questioner Well, then as the cycle terminated 25,000 years ago, what was the reaction of the Confederation to the lack of harvest?
 (英文待翻译)
@@ -124,11 +158,15 @@ Ra I am Ra. The one known as sound vibration complex, Saint Augustine, is of suc
 Ra I am Ra. We became concerned.
 (英文待翻译)
 
+## (22.17)
+
 (22.17) Questioner Was any action taken immediately, or did you wait for a call?
 (英文待翻译)
 
 Ra I am Ra. The Council of Saturn acted only in allowing the entry into third density of other mind/body/spirit complexes of third density, not wanderers, but those who sought further third-density experience. This was done randomly so that free will would not be violated, for there was not yet a call.
 (英文待翻译)
+
+## (22.18)
 
 (22.18) Questioner Was the next action taken by the Confederation when a call occurred?
 (英文待翻译)
@@ -136,17 +174,23 @@ Ra I am Ra. The Council of Saturn acted only in allowing the entry into third de
 Ra I am Ra. This is correct.
 (英文待翻译)
 
+## (22.19)
+
 (22.19) Questioner Who, or what group, produced this call, and what action was taken by the Confederation?
 (英文待翻译)
 
 Ra The calling was that of Atlanteans. This calling was for what you would call understanding with the distortion towards helping other-selves. The action taken is that which you take part in at this time: the impression of information through channels, as you would call them.
 (英文待翻译)
 
+## (22.20)
+
 (22.20) Questioner Was this first calling then at a time before Atlantis became technologically advanced?
 (英文待翻译)
 
 Ra I am Ra. This is basically correct.
 (英文待翻译)
+
+## (22.21)
 
 (22.21) Questioner Then did the technological advancement of Atlantis come because of this call? I am assuming the call was answered to bring them the Law of One and the Law of Love as a distortion of the Law of One, but did they also then get technological information that caused them to grow into such a highly technological society?
 (英文待翻译)
@@ -157,11 +201,15 @@ Ra I am Ra. Not at first. At about the same time as we first appeared in the ski
 However, requests being made for healing and other understandings, information was passed having to do with crystals and the building of pyramids as well as temples, as you would call them, which were associated with training.
 (英文待翻译)
 
+## (22.22)
+
 (22.22) Questioner Was this training the same type of initiatory training that was done with the Egyptians?
 (英文待翻译)
 
 Ra I am Ra. This training was different in that the social complex was more, shall we say, sophisticated and less contradictory and barbarous in its ways of thinking. Therefore the temples were temples of learning rather than the attempt being made to totally separate and put upon a pedestal the healers.
 (英文待翻译)
+
+## (22.23)
 
 (22.23) Questioner Then were there what we would call priests trained in these temples?
 (英文待翻译)
@@ -172,11 +220,15 @@ Ra I am Ra. You would not call them priests in the sense of celibacy, of obedien
 The difficulties became apparent as those trained in this learning began to attempt to use crystal powers for those things other than healing, as they were involved not only with learning but became involved with what you would call the governmental structure.
 (英文待翻译)
 
+## (22.24)
+
 (22.24) Questioner Was all of their information given to them in the way you’re giving our information now, through an instrument such as this instrument?
 (英文待翻译)
 
 Ra I am Ra. There were visitations from time to time but none of importance in the, shall we say, historical passage of events in your space/time continuum.
 (英文待翻译)
+
+## (22.25)
 
 (22.25) Questioner Was it necessary for them to have a unified social complex for these visitations to occur? What conditions were . . . I’m saying, what conditions were necessary for these visitations to occur?
 (英文待翻译)
@@ -184,11 +236,15 @@ Ra I am Ra. There were visitations from time to time but none of importance in t
 Ra I am Ra. The conditions were two: the calling of a group of people whose square overcame the integrated resistance of those unwilling to search or learn; the second requirement, the relative naïveté of those members of the Confederation who felt that direct transfer of information would necessarily be as helpful for Atlanteans as it had been for the Confederation entity.
 (英文待翻译)
 
+## (22.26)
+
 (22.26) Questioner I see then. What you’re saying is these naïve Confederation entities had had the same thing happen to them in the past, so they were doing the same thing for the Atlantean entities. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. This is correct. We remind you that we are one of the naïve members of that Confederation and are still attempting to recoup the damage for which we feel responsibility. It is our duty as well as honor to continue with your peoples, therefore, until all traces of the distortions of our teach/learnings have been embraced by their opposite distortions and balance achieved.
 (英文待翻译)
+
+## (22.27)
 
 (22.27) Questioner I see. Then I will state the picture I have now of Atlantis, and you can tell me if I’m correct.
 (英文待翻译)
@@ -202,6 +258,8 @@ Ra This is correct with one exception. There is only one law. That is the Law of
 This will be the final question in length of this working. Please ask it now.
 (英文待翻译)
 
+## (22.28)
+
 (22.28) Questioner What was the—the only question I was going to ask, that I can think of was— Could you give me the average life span of the Atlantean population?
 (英文待翻译)
 
@@ -210,6 +268,8 @@ Ra I am Ra. The average life span, as we have said, is misleading. The Atlantean
 
 Do you have any brief queries before we close?
 (英文待翻译)
+
+## (22.29)
 
 (22.29) Questioner Is there any way that we can make the instrument more comfortable or anything that we can do for her?
 (英文待翻译)

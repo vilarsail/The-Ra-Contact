@@ -4,8 +4,12 @@
 February 15, 1981
 (英文待翻译)
 
+## (24.0)
+
 (24.0) Ra I am Ra. I greet you in the love and in the light of the Infinite Creator. I communicate now.
 (英文待翻译)
+
+## (24.1)
 
 (24.1) Questioner We are a little concerned about the physical condition of the instrument. She has a slight congestion. If you can tell me of the suitability of this session at all, I would appreciate it.
 (英文待翻译)
@@ -13,17 +17,23 @@ February 15, 1981
 Ra I am Ra. This instrument’s vital energies of the physical complex are low. The session will be appropriately shortened.
 (英文待翻译)
 
+## (24.2)
+
 (24.2) Questioner She requests that if it is possible for you to cause the instrument’s vehicle to cough at intervals that would help her. Is this possible?
 (英文待翻译)
 
 Ra I am Ra. Please restate query, specifying interval.
 (英文待翻译)
 
+## (24.3)
+
 (24.3) Questioner She requests that you cause the instrument to cough about at least after each communication. Is this possible?
 (英文待翻译)
 
 Ra I am Ra. This is possible. [Cough.]
 (英文待翻译)
+
+## (24.4)
 
 (24.4) Questioner Thank you. The way I intend to continue with the book is to follow on through the last 25,000-year cycle that we’re in now and possibly investigate a little of fourth-density conditions and thereby find many places that we can go back and delve further into the Law of One. The first material I expect to be not too deep with respect to the Law of One. I hope to get into greater philosophical areas of the Law of One in more advanced sessions so as to make the material progress so that it will be understandable. I hope that I’m following the right direction in this.
 (英文待翻译)
@@ -43,11 +53,15 @@ In the Egyptian and the South American experiments results, though not as widely
 Our attitude, thus, was one of caution, observation, and continuing attempts to creatively discover methods whereby contact from our entities could be of service with the least distortion and, above all, with the least possibility of becoming perversions, or antitheses, of our intentions in sharing information.
 (英文待翻译)
 
+## (24.5)
+
 (24.5) Questioner Could you have the instrument cough, please?
 (英文待翻译)
 
 Ra [Cough.]
 (英文待翻译)
+
+## (24.6)
 
 (24.6) Questioner Thank you. Then I assume the Confederation stayed away from Earth for a period of time. What condition created the next contact the Confederation made?
 (英文待翻译)
@@ -64,11 +78,15 @@ The one known as Yahweh felt a great responsibility to these entities. However, 
 In this complex the old Yahweh, now unnamed, but meaning “He comes,” began to send positively oriented philosophy. This was approximately, in your past, of two—we correct this instrument—three three zero zero [3,300] years. Thus, the intense portion of what has become known as Armageddon was joined.
 (英文待翻译)
 
+## (24.7)
+
 (24.7) Questioner Could you create another cough for us, please?
 (英文待翻译)
 
 Ra [Cough.]
 (英文待翻译)
+
+## (24.8)
 
 (24.8) Questioner Thank you. I have a question about how the Orion group got in 3,600 years ago. How did they get through the quarantine? Was that a random window effect?
 (英文待翻译)
@@ -82,6 +100,8 @@ The quarantine in this case was, shall we say, not patrolled so closely, due to 
 Thus, due to the Way of Empowering, or Squares, there is much resistance to penetration. Yet free will must be maintained, and those desiring negatively oriented information, as you would call it, must then be satisfied by those moving through by the window effect. [Cough.]
 (英文待翻译)
 
+## (24.9)
+
 (24.9) Questioner Then Yahweh, in an attempt to correct what he saw as what I might call a mistake (I know you don’t want to call it that), started 3,300 years ago with the positive philosophy. Were both the Orion and Yahweh philosophies impressed telepathically, or were there other techniques used?
 (英文待翻译)
 
@@ -91,11 +111,15 @@ Ra I am Ra. There were two other techniques used: one by the entity no longer ca
 The other method used to greater effect later in the scenario, as you would call it, was the thought-form such as we often use among your peoples to suggest the mysterious or the sublime. You may be familiar with some of these appearances.
 (英文待翻译)
 
+## (24.10)
+
 (24.10) Questioner Could you state some of those after making the instrument cough, please?
 (英文待翻译)
 
 Ra [Cough.] I am Ra. This is information which you may discover. However, we will briefly point the way by indicating the so-called wheel within a wheel and the cherubim with sleepless eye.
 (英文待翻译)
+
+## (24.11)
 
 (24.11) Questioner Very good. Did the Orion group use similar methods for their impression 3,600 years ago?
 (英文待翻译)
@@ -103,11 +127,15 @@ Ra [Cough.] I am Ra. This is information which you may discover. However, we wil
 Ra I am Ra. The group, or empire, had an emissary in your skies at that time.
 (英文待翻译)
 
+## (24.12)
+
 (24.12) Questioner Can you describe that emissary?
 (英文待翻译)
 
 Ra This emissary was of your fiery nature, which was hidden by the nature of cloud in the day. This was to obliterate the questions of those seeing such a vehicle and to make it consonant with these entities’ concept of what you may call the Creator.
 (英文待翻译)
+
+## (24.13)
 
 (24.13) Questioner And then how was the impression or information passed on to the entities after they saw this fiery cloud?
 (英文待翻译)
@@ -115,11 +143,15 @@ Ra This emissary was of your fiery nature, which was hidden by the nature of clo
 Ra I am Ra. By thought transfer and by the causing of fiery phenomena and other events to appear as being miraculous through the use of thought-forms.
 (英文待翻译)
 
+## (24.14)
+
 (24.14) Questioner Then were there any prophets that we have now recorded that sprung from this era or soon after it?
 (英文待翻译)
 
 Ra I am Ra. Those of the empire were not successful in maintaining their presence for long after the approximate three zero zero zero [3,000] date in your history and were, perforce, left with the decision to physically leave the skies. The so-called prophets were often given mixed information, but the worst that the Orion group could do was to cause these prophets to speak of doom, as prophecy in those days was the occupation of those who love[d] their fellow beings and wish[ed] only to be of service to them and to the Creator.
 (英文待翻译)
+
+## (24.15)
 
 (24.15) Questioner After making the instrument cough . . .
 (英文待翻译)
@@ -127,11 +159,15 @@ Ra I am Ra. Those of the empire were not successful in maintaining their presenc
 Ra [Cough.]
 (英文待翻译)
 
+## (24.16)
+
 (24.16) Questioner Could you tell me if you’re saying the Orion group was successful in polluting, shall we say, some of the positively oriented prophets with messages of doom?
 (英文待翻译)
 
 Ra I am Ra. This is correct. Your next query shall be the last full query for this session.
 (英文待翻译)
+
+## (24.17)
 
 (24.17) Questioner Could you tell me why the Orion group had to leave after—I believe, it figures to be a six-hundred-year period—why they had to vacate?
 (英文待翻译)
@@ -145,11 +181,15 @@ The creation about them tended towards being somewhat bellicose, somewhat orient
 Any short queries may be asked now.
 (英文待翻译)
 
+## (24.18)
+
 (24.18) Questioner There’s one thing that’s been bothering me a little bit which I was just reading about—
 (英文待翻译)
 
 Ra [Cough.]
 (英文待翻译)
+
+## (24.19)
 
 (24.19) Questioner It’s not too important, but I would really be interested to know if Dwight Eisenhower met with either the Confederation or the Orion group during the 1950s or that time?
 (英文待翻译)
@@ -163,11 +203,15 @@ We discovered that this entity did not feel that those under his care could deal
 [Cough.] Is there any short query before we close?
 (英文待翻译)
 
+## (24.20)
+
 (24.20) Questioner The only other question that went with that is: was there a crashed spaceship, and are there small bodies now stored in our military installations?
 (英文待翻译)
 
 Ra I am Ra. We do not wish to infringe upon your future. Gave we you this information, we might be giving you more than you could appropriately deal with in the space/time nexus of your present somewhat muddled configuration of military and intelligence thought. Therefore, we shall withhold this information.
 (英文待翻译)
+
+## (24.21)
 
 (24.21) Questioner OK. Sorry to bother you with these type of questions—
 (英文待翻译)
@@ -175,11 +219,15 @@ Ra I am Ra. We do not wish to infringe upon your future. Gave we you this inform
 Ra [Cough.]
 (英文待翻译)
 
+## (24.22)
+
 (24.22) Questioner —but they were just bothering me. We will continue in our next session with the Law of One and keep that uppermost in the scope of the book, and try to get more deeply into the philosophy as we build a framework for reference to the philosophy. Thank you very much.
 (英文待翻译)
 
 Ra I—
 (英文待翻译)
+
+## (24.23)
 
 (24.23) Questioner Oh, please, I’m almost ready. Is there anything that we can do to make the instrument more comfortable?
 (英文待翻译)

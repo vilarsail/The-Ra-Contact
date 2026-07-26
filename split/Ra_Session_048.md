@@ -4,14 +4,20 @@
 April 22, 1981
 (英文待翻译)
 
+## (48.0)
+
 (48.0) Ra I am Ra. I greet you in the love and in the light of the One Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (48.1)
 
 (48.1) Questioner Could you tell me of the instrument’s condition and if she is improving with time?
 (英文待翻译)
 
 Ra I am Ra. This instrument’s vital energies are improving with time, as you measure it. This instrument’s physical energies are less than your previous asking.
 (英文待翻译)
+
+## (48.2)
 
 (48.2) Questioner I have a question from the instrument that I will read: “You have suggested several times that sexual energy transfers aid the instrument’s vital energy and this contact. It seems that this is not true for all people; that the sexual circuitry and the spiritual circuitry are not the same. Is this instrument an anomaly, or is the positive effect of sexual activity on spiritual energy normal for all third-density beings?”
 (英文待翻译)
@@ -25,17 +31,23 @@ Some there are, such as this instrument, who have not, in the particular incarna
 This is not unique to one entity but is common to a reasonable number of entities who, having lost the desire for orange- and green-ray[72] sexual experiences, have strengthened the combined circuitry of spirit, mind, and body to express the totality of beingness in each action. It is for this reason also that the social intercourse and companionship is very beneficial to this instrument, it being sensitive to the more subtle energy transfers.
 (英文待翻译)
 
+## (48.3)
+
 (48.3) Questioner Thank you. If you, Ra, as an individualized entity were incarnate on Earth now with full awareness and memory of what you know now, what would be your objective at this time on Earth as far as activities are concerned?
 (英文待翻译)
 
 Ra I am Ra. The query suggests that which has been learned to be impractical. However, were we to again be naïve enough to think that our physical presence was any more effective than that love/light we send your peoples and the treasure of this contact, we would do as we did do. We would be, and we would offer our selves as teach/learners.
 (英文待翻译)
 
+## (48.4)
+
 (48.4) Questioner Knowing what you know now about our planetary condition and methods of communication, etc., if you, yourself, as an individual, had gone through the process of incarnation here as a wanderer and now have memory of a sufficient way to have the objective that you just stated, what mechanisms would you seek out for the process of teach/learning in our present state of communication?
 (英文待翻译)
 
 Ra I am Ra. My brother, we perceive you have made certain unspoken connections. We acknowledge these and, for this reason, cannot infringe upon your confusion.
 (英文待翻译)
+
+## (48.5)
 
 (48.5) Questioner I was afraid of that.
 (英文待翻译)
@@ -48,6 +60,8 @@ Ra I am Ra. This assumption is incorrect. The flaps cause many fears among your 
 
 We perceive there is a further point we may posit at this time. The audience brought about by Orion-type publicity is not seeded by seniority of vibration to a great extent. The audiences receiving teach/learnings without stimulus from publicity will be more greatly oriented towards illumination. Therefore, forget you the counting.
 (英文待翻译)
+
+## (48.6)
 
 (48.6) Questioner Thank you. That cleared it up very well. A very important point.
 (英文待翻译)
@@ -76,6 +90,8 @@ In positive, the fifth-density complex uses sixth-density teach/learners to stud
 In fifth-density negative, service to self has become extremely intense and the self has shrunk or compacted so that the dialogues with the teach/learners are used exclusively in order to intensify wisdom. There are very, very few fifth-density negative wanderers for they fear the forgetting. There are very, very few fifth-density Orion members for they do not any longer perceive any virtue in other-selves.[74]
 (英文待翻译)
 
+## (48.7)
+
 (48.7) Questioner Thank you. I would like to take as an example an entity, at birth, who is roughly high on the seniority list for positive polarization and possible harvestability at the end of this cycle, and follow a full cycle of his experience starting before his incarnation—which body is activated, process of becoming incarnate, the activation of the third-density physical body process as the body moves through this density and is acted upon by catalyst, and then the process of death, and the activation of the various bodies—so that we make a full circuit from a point prior to incarnation back around through incarnation and death and back to that position, you might say, in one cycle of incarnation in this density. Could you do that for me?
 (英文待翻译)
 
@@ -100,6 +116,8 @@ Upon the bodily complex death, as you call this transition, the entity will imme
 Here we have the anomaly of harvest. In harvest the entity will then transfer its indigo body into violet-ray manifestation as seen in true-color yellow. This is for the purpose of gauging the harvestability of the entity. After this anomalous activity has been carefully completed, the entity will move into indigo body again and be placed in the correct true-color locus in space/time and time/space, at which time the healings and learn/teachings necessary shall be completed and further incarnation needs determined.
 (英文待翻译)
 
+## (48.8)
+
 (48.8) Questioner Who, shall we say, supervises the determination of further incarnation needs and sets up the seniority list, shall I say, for incarnation?
 (英文待翻译)
 
@@ -115,11 +133,15 @@ The seniority of vibration is to be likened unto placing various grades of liqui
 When the entity becomes aware in its mind/body/spirit complex totality of the mechanism for spiritual evolution, it, itself, will arrange and place those lessons and entities necessary for maximum growth and expression of polarity in the incarnative experience before the forgetting process occurs. The only disadvantage of this total free will of those senior entities choosing the manner of incarnation experiences is that some entities attempt to learn so much during one incarnative experience that the intensity of catalyst disarranges the polarized entity and the experience thus is not maximally useful as intended.
 (英文待翻译)
 
+## (48.9)
+
 (48.9) Questioner An analogy to that would be a student entering college and signing up for more courses than he could possibly assimilate in the time. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. This is correct.
 (英文待翻译)
+
+## (48.10)
 
 (48.10) Questioner Could you tell me how the various bodies, red through violet, are linked to the energy center, centers red through violet? Are they linked in some way?
 (英文待翻译)
@@ -135,6 +157,8 @@ There are adepts who have penetrated many, many of the energy centers and severa
 
 Is there any brief query before we leave this instrument?
 (英文待翻译)
+
+## (48.11)
 
 (48.11) Questioner Just if there is anything that we can do to make the instrument more comfortable or improve the contact?
 (英文待翻译)

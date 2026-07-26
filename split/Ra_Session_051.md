@@ -4,8 +4,12 @@
 May 13, 1981
 (英文待翻译)
 
+## (51.0)
+
 (51.0) Ra I am Ra. I greet you in the love and in the light of the One Infinite Creator. We communicate now.
 (英文待翻译)
+
+## (51.1)
 
 (51.1) Questioner As we begin this session, Book III of The Law Of One, there are a couple of questions, one of fairly non-transient importance and one which I consider to be a bit transient, that I feel obligated to ask because of communication with others.
 (英文待翻译)
@@ -31,6 +35,8 @@ The third group watching over this process is that group you call the Guardians.
 Thus the harvest is automatic in that those harvested will respond according to that which is unchangeable during harvest. That is the violet-ray emanation. However, these helpers are around to ensure a proper harvesting so that each entity may have the fullest opportunity to express its violet-ray selfhood.
 (英文待翻译)
 
+## (51.2)
+
 (51.2) Questioner Thank you. This next question I feel to be a transient type of question; however, it has been asked me by one whom I have communicated with who has been intensely involved in the UFO portion of the phenomenon. If you deem it too transient or unimportant we’ll skip it, but I have been asked how is it possible for the craft of, shall we say, the fourth-density to get here in that it seems that, as you approach the velocity of light, mass approaches infinite. We have talked about the increase of spiritual mass, and it was just a question as to how this transition from very distant planets is made in craft. And my question would be why craft would be necessary at all? This is not an important question.
 (英文待翻译)
 
@@ -55,17 +61,23 @@ One is the type which, coming from fourth, fifth, or sixth density in your own g
 The other type of experience is that of fourth, fifth, and sixth densities of other galaxies, and some within your own galaxy, which have learned the necessary disciplines of personality to view the universe as one being and, therefore, are able to proceed from locus to locus by thought alone, materializing the necessary craft, if you will, to enclose the light body of the entity.
 (英文待翻译)
 
+## (51.3)
+
 (51.3) Questioner I assume that that latter type is the type that we experience with most of our landings from the Orion group. Is this correct?
 (英文待翻译)
 
 Ra I am Ra. The Orion group is mixed between the penultimate and the latter groups.
 (英文待翻译)
 
+## (51.4)
+
 (51.4) Questioner Why is a vehicle necessary for this transition? When you, as Ra, went to Egypt earlier you used bell-shaped craft, but you did this by thought. Can you tell me why you used a vehicle rather than just materializing the body?
 (英文待翻译)
 
 Ra I am Ra. The vehicle, or craft, is that thought-form upon which our concentration may function as motivator. We would not choose to use our mind/body/spirit complexes as the focus for such a working.
 (英文待翻译)
+
+## (51.5)
 
 (51.5) Questioner Thank you. I would like to make a statement. I’m sure I’m somewhat off with this. It’s a very difficult question to ask for me, because I don’t really know what I’m talking about. But it seems to me—and you can tell me where I am going wrong with this statement—that we have seven bodies, each corresponding to one of the seven colors of the spectrum. And that energy that creates these seven bodies is a universal type of energy that streams into our planetary environment and comes in through seven energy centers that we have called chakras to develop and perfect these bodies.
 (英文待翻译)
@@ -75,6 +87,8 @@ And this is— Each of these bodies is in somehow related to the mental configur
 
 Ra I am Ra. Your statement is substantially correct. To use the term “mental configuration” is to oversimplify the manners of blockage of instreaming which occur in your density. The mind complex has a relationship to the spirit and body complexes which is not fixed. Thus blockages may occur betwixt spirit and mind, or body and mind, upon many different levels. We reiterate that each energy center has seven sub-colors, let us say for convenience. Thus spiritual/mental blockages combined with mental/bodily blockages may affect each of the energy centers in several differing ways. Thus you may see the subtle nature of the balancing and evolutionary process.
 (英文待翻译)
+
+## (51.6)
 
 (51.6) Questioner I am unsure as to whether this will provide an avenue of questioning or not that will be fruitful. However, I will ask this question since it seemed to me that there is possibly a connection here.
 (英文待翻译)
@@ -88,11 +102,15 @@ Ra I am Ra. These drawings of which you speak are some of many which distort the
 In fact, the process of the physical death is as we have described before: one in which there is aid available, and the only need at death is the releasing of that entity from its body by those around it and the praising of the process by those who grieve. By these means may the mind/body/spirit which has experienced physical death be aided, not by the various perceptions of careful and repeated rituals.
 (英文待翻译)
 
+## (51.7)
+
 (51.7) Questioner You spoke at an earlier time of rotational speeds of energy centers. Am I correct in assuming that this is a function of the blockage of the energy center, and the less blocked it is, the higher the speed of rotation, then, indicating greater energy instreaming?
 (英文待翻译)
 
 Ra I am Ra. You are partially correct. In the first three energy centers, a full unblocking of this energy will create speeds of rotation. As the entity develops the higher energy centers, however, these centers will then begin to express their nature by forming crystal structures. This is the higher, or more balanced, form of activation of energy centers as the space/time nature of this energy is transmuted to the time/space nature of regularization and balancing.
 (英文待翻译)
+
+## (51.8)
 
 (51.8) Questioner What do you mean by crystal structures?
 (英文待翻译)
@@ -121,11 +139,15 @@ The indigo center a more quiet center which has the basic triangular, or three-p
 The violet energy center is the least variable and is sometimes described in your philosophy as thousand-petaled, as it is the sum of the mind/body/spirit complex distortion totality.
 (英文待翻译)
 
+## (51.9)
+
 (51.9) Questioner Right now I feel a feeling at the indigo center. If this center were totally activated and not blocked at all, would I then feel nothing there?
 (英文待翻译)
 
 Ra I am Ra. This query, if answered, would infringe upon the Law of Confusion.
 (英文待翻译)
+
+## (51.10)
 
 (51.10) Questioner Immediately after the death of the physical body, you have stated that the—I believe I’m correct in saying that—primary activated body is the indigo, and you stated that it is the form-maker. Why is this so? Can you answer that?
 (英文待翻译)
@@ -141,6 +163,8 @@ Free Will has potentiated both the Creator of us all and our selves as co-Creato
 
 I am Ra. This is the time for any brief queries.
 (英文待翻译)
+
+## (51.11)
 
 (51.11) Questioner Is there anything that we can do to make the instrument more comfortable or improve the contact?
 (英文待翻译)
