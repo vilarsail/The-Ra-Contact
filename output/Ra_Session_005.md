@@ -77,4 +77,3 @@ Ra 我是 Ra。蜡烛可以每次集会顺时针旋转大约10°，以改善螺�
 
 I am Ra. I leave this instrument in the love and light of the One Infinite Creator. Go forth rejoicing in the power and the peace of the One Creator. Adonai.
 我是 Ra。我将这个器皿留在太一无限造物主的爱与光中。欢欣前行于太一造物主的力量与平安之中。Adonai。
-
