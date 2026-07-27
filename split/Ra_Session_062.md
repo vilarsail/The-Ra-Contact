@@ -197,7 +197,7 @@ Ra I am Ra. This thinking will not be so strange to you. Therefore, we may speak
 Ra 我是 Ra。这种思维对你们来说不会太陌生。因此，我们可以通过密度来讲述，因为你们的星球在这个空间/时间节点上受到一些负面导向行动的影响。
 
 The early fifth-density negative entity, if oriented towards maintaining cohesion as a social memory complex, may, in its free will, determine that the path to wisdom lies in the manipulation, in exquisite propriety, of all other-selves. It, then, by virtue of its abilities in wisdom, is able to be the leader of fourth-density beings which are upon the road to wisdom by exploring the dimensions of love of self and understanding of self. These fifth-density entities see the creation as that which shall be put in order.
-早期的第五密度负面实体，如果倾向于维持作为一个社会记忆复合体的凝聚力，可以在其自由意志中决定，通往智慧的道路在于以精巧得体地操控所有其他自我。然后，凭借其在智慧上的能力，它能够成为第四密度存有的领导者，这些存有正通过探索爱自己和理解自己的维度走在通往智慧的道路上。这些第五密度实体将造物视为应当被整理有序的东西。
+早期的第五密度负面实体，如果倾向于维持作为一个社会记忆复合体的凝聚力，可以在其自由意志中决定，通往智慧的道路在于以精巧得体的方式操控所有其他自我。然后，凭借其在智慧上的能力，它能够成为第四密度存有的领导者，这些存有正通过探索爱自己和理解自己的维度走在通往智慧的道路上。这些第五密度实体将造物视为应当被整理有序的东西。
 
 Dealing with a plane such as this third density at this harvesting it will see the mechanism of the call more clearly and have much less distortion towards plunder, or manipulation by thoughts which are given to negatively oriented entities—although in allowing this to occur and sending less wise entities to do this work, any successes redound to the leaders.
 在处理如此次收割中的第三密度层面时，它将更清楚地看到呼唤的机制，并对掠夺或通过发送给负面导向实体的思想进行操控有更少的变貌——尽管在允许这种情况发生并派遣较不智慧的实体去做这项工作时，任何成功都归于领导者。
@@ -217,7 +217,7 @@ The thought is what is sent, for a fifth-density entity is likely to have master
 发送的是思想，因为第五密度实体很可能已经掌握了这种技术或纪律。几乎没有或根本没有感知这种实体的方法，因为与第四密度负面实体不同，第五密度实体脚步轻盈。
 
 This instrument was aware of extreme coldness in the past diurnal cycle and spent much more time than your normal attitudes would imagine to be appropriate in what seemed to each of you an extremely warm climate. This was not perceived by the instrument, but the drop in subjective temperature is a sign of presence of a negative, or non-positive, or draining entity.
-这个器皿在过去的昼夜周期中觉察到了极度的寒冷，并在你们每个人看来都极其温暖的气候中花费了比你们正常态度想象中更多的适当时间。器皿没有感知到这一点，但主观温度的下降是一个负面、或非正面、或消耗性实体存在的标志。
+这个器皿在过去的昼夜周期中觉察到了极度的寒冷，在你们每个人看来都极其温暖的气候中，停留的时间远超你们正常态度所认为适当的时长。器皿没有感知到这一点，但主观温度的下降是一个负面、或非正面、或消耗性实体存在的标志。
 
 This instrument did mention a feeling of discomfort but was nourished by this group and was able to dismiss it. Had it not been for a random mishap, all would have been well, for you have learned to live in love and light and do not neglect to remember the One Infinite Creator.
 这个器皿确实提到了一种不适感，但得到了这个小组的滋养，并能够将其消除。如果不是一次偶然的意外，一切都会很好，因为你们已经学会了在爱与光中生活，并且不会忘记记起太一无限造物主。

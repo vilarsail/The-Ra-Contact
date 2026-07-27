@@ -43,7 +43,7 @@ It is well that this instrument is not distorted towards what you may call hyste
 (96.3) 发问者 这个威胁，容我说，还存在吗？如果存在，我们能做些什么来缓解它吗？
 
 Ra I am Ra. This threat no longer exists, if you wish to phrase this greeting in this manner. The communication which was effected by the scribe and then by the questioner did close the opening and enable the instrument to begin assimilating the catalyst it had received.
-Ra 我是 Ra。如果你想用这种方式来描述这次问候，这个威胁已不复存在。记录者随后由发问者所进行的沟通确实关闭了那个开口，并使器皿能够开始吸收它所接收到的催化剂。
+Ra 我是 Ra。如果你想用这种方式来描述这次问候，这个威胁已不复存在。记录者以及随后发问者所进行的沟通，确实关闭了那个开口，并使器皿能够开始吸收它所接收到的催化剂。
 
 ## (96.4)
 

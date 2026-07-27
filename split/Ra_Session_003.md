@@ -183,7 +183,7 @@ Ra This is a large question. We feel that we shall begin and ask you to re-evalu
 Ra 这是一个大问题。我们感到我们应当开始，并请你们在稍后的集会中重新评估并进一步询问这个——容我们说——颇具信息量的要点。
 
 To begin, there are two main functions of the pyramid in relation to the initiatory procedures. One has to do with the body. Before the body can be initiated, the mind must be initiated. This is the point at which most adepts of your present cycle find their mind/body/spirit complexes distorted from.
-首先，金字塔在启蒙过程中有两个主要功能。一个与身体有关。在身体能被启蒙之前，心智必须先被启蒙。这是你们当前周期中大多数 adept 发现其心/身/灵复合体被扭曲偏离的关键点。
+首先，金字塔在启蒙过程中有两个主要功能。一个与身体有关。在身体能被启蒙之前，心智必须先被启蒙。这是你们当前周期中大多数修行者发现其心/身/灵复合体被扭曲偏离的关键点。
 
 When the character and personality that is the true identity of the mind has been discovered, the body then must be known in each and every way. Thus, the various functions of the body need understanding and control with detachment. The first use of the pyramid, then, is the going down into the pyramid for purposes of deprivation of sensory input so that the body may, in a sense, be dead and another life begin.
 当品格与人格——即心智的真实身份——被发现后，身体随后必须以每一种方式被了解。因此，身体的各种功能需要带着超然的态度进行理解和控制。那么，金字塔的第一个用途，是进入金字塔内部以剥夺感官输入，从而在某种意义上使身体死亡，而另一种生命得以开始。

@@ -137,7 +137,7 @@ The entire mood, shall we say, of the Great Way is, indeed, dependent upon its n
 我们可以说，大道的整个氛围确实取决于它与意义者的显著差异。意义者是有意义的自我，在很大程度上但不完全地受到帘幕降低的影响。
 
 The Great Way of the Mind, the Body, or the Spirit draws the environment which has been the new architecture caused by the veiling process and, thusly, dipped in the great, limitless current of time/space.
-心智、身体或灵性的大道描绘了那个环境，这是由帘幕过程产生的新架构，因此被浸入时间/空间的伟大无限流动中。
+心智、身体或灵性的大道牵引着那个环境——该环境是由帘幕过程产生的新架构，因此被浸入时间/空间的伟大无限流动之中。
 
 ## (103.12)
 
@@ -170,7 +170,7 @@ Ra I am Ra. The observation has merit in that it may serve as the obverse of the
 Ra 我是 Ra。这个观察有价值，因为它可以作为所设想内涵的反面。
 
 The position is intended to show two items, one of which is the dual possibilities of the time-full characters there drawn. The resting is possible in time, as is the progress. If a mixture is attempted, the upright, moving leg will be greatly hampered by the leg that is bent.
-这个姿势旨在显示两个项目，其中之一是那里所描绘的充满时间的角色的双重可能性。在时间中可以休息，也可以前进。如果尝试混合，笔直的、移动的腿将会被弯曲的腿严重妨碇。
+这个姿势旨在显示两个项目，其中之一是那里所描绘的充满时间的角色的双重可能性。在时间中可以休息，也可以前进。如果尝试混合，笔直的、移动的腿将会被弯曲的腿严重妨碍。
 
 The other meaning has to do with the same right angle, with its architectural squareness, as the device upon the breast of the actor.
 另一个含义与同样的直角有关，具有其建筑学上的方正性，如同演员胸口上的装置。

@@ -18,7 +18,7 @@ Ra I am Ra. This is correct. This instrument is now undergoing the most intensiv
 Ra 我是 Ra。这是正确的。这个器皿目前正经历着物理复合体最剧烈的衰弱/变貌期，这是由于两次摄入造成的加倍效应。这个器皿可以预期这种极端状况将持续十五到二十个你们的日周期。然后，衰弱的变貌将开始减轻，然而，由于这个器皿持续的衰弱变貌，减轻不会像我们最初想的那样快。
 
 This instrument is very fortunate in having a support group which impresses upon it the caution necessary as regards these sessions at this time. This instrument is capable of almost instantaneously clearing the mental/emotional complex and the spiritual complex for the purity this working requires, but this instrument’s distortion towards fidelity to service does not function to its best use of judgment regarding the weakness distortions of the physical complex. Thus we appreciate your assistance at space/times such as that in your most recent decision-making not to have a working. This was the appropriate decision, and the guidance given this instrument was helpful.
-这个器皿非常幸运，拥有一个支持小组，这个小组使它在此时对关于这些集会的必要谨慎印象深刻。这个器皿几乎能够瞬间清理心智/情绪复合体和灵性复合体，以达到这个工作所需的纯度，但这个器皿朝向服务忠诚的变貌，并未使其在关于物理复合体衰弱变貌的判断上发挥最佳用处。因此，我们感谢你们在空间/时间中的协助，比如你们最近决定不举行集会。这是适当的决定，给予这个器皿的指导是有帮助的。
+这个器皿非常幸运，拥有一个支持小组，这个小组向它强调了此时关于这些集会所需的必要谨慎。这个器皿几乎能够瞬间清理心智/情绪复合体和灵性复合体，以达到这个工作所需的纯度，但这个器皿朝向服务忠诚的变貌，并未使其在关于物理复合体衰弱变貌的判断上发挥最佳用处。因此，我们感谢你们在空间/时间中的协助，比如你们最近决定不举行集会。这是适当的决定，给予这个器皿的指导是有帮助的。
 
 ## (39.2)
 
@@ -120,7 +120,7 @@ Could you describe the process of evolution of these bodily energy centers start
 你能描述这些身体能量中心的演化过程吗，从拥有它们的最原始生命形式开始？
 
 Ra I am Ra. This material has been covered previously to some extent.[60] Therefore, we shall not repeat information upon which rays dwell in first and second density and the wherefores of this but rather attempt to enlarge upon this information.
-Ra 我是 Ra。这份材料在之前已在一定程度上被覆盖。[60] 因此，我们不会重复关于哪些光芒驻留在第一和第二密度及其原因的信息，而是尝试扩展这些信息。
+Ra 我是 Ra。这份材料在之前已在一定程度上涉及过。[60] 因此，我们不会重复关于哪些光芒驻留在第一和第二密度及其原因的信息，而是尝试扩展这些信息。
 
 The basic pivotal points of each level of development—that is, each density beyond second—may be seen to be as follows:
 每个发展层次的基本关键点——即，第二密度以上的每个密度——可以如下看待：

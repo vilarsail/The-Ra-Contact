@@ -43,7 +43,7 @@ Under these conditions we found your vibration. We observed your vibration. It w
 在这些条件下，我们发现了你们的振动。我们观察了你们的振动。它不会经常被看到。我们不想助长骄傲，但我们不会就我们这种特定接触所需的条件讨价还价。[56] 因此，你们已经接收到了，我们也乐意承担这份荣誉/职责，继续提供概念传输，这些概念在我们能力所及范围内本质上是精确的，并立足于将许多你们关切的事物统一起来的尝试。
 
 Secondly, the use you make of these transmissions is completely at your discretion. We suggest the flowing of the natural intuitive senses and a minimum of the distortion towards concern. We are content, as we have said, to be able to aid in the evolution of one of your peoples. Whatever efforts you make cannot disappoint us, for that number already exceeds one.
-其次，你们如何使用这些传输完全由你们自行决定。我们建议让自然的直觉感流动，并将朝向担忧的变貌减至最小。如我们所说，能够协助你们族群中一员的进化，我们已感到满足。无论你们做出何种努力，都不会令我们失望，因为这个数字已经超过了——。
+其次，你们如何使用这些传输完全由你们自行决定。我们建议让自然的直觉感流动，并将朝向担忧的变貌减至最小。如我们所说，能够协助你们族群中一员的进化，我们已感到满足。无论你们做出何种努力，都不会令我们失望，因为这个数字已经超过了一。
 
 ## (37.4)
 
@@ -68,7 +68,7 @@ More than this we cannot say. These are our observations of your situation. What
 (37.5) 发问者 我们将尝试绕过这些在传播一的法则时遇到的问题。这需要一些细致的工作，但我们会去做。就我个人而言，只要还在世，我就不会停止传播它的努力。我认为有必要写一本书，很可能是一本关于UFO的书，因为一的法则与这个现象相关。它和所有现象都相关，但这是……似乎是最容易入手的传播切入点。
 
 My first plan is to, using the UFO in the advertising sense that it was meant by the Confederation, use this as an entry into an explanation of the process of evolution that has gone on on this planet, and how the rest of the . . . or the Confederation has been involved in a more understandable way, shall I say, for the population who will read it, using the Ra material in undistorted form just as it has been recorded here in various places through the book to amplify and clarify what we are saying in the book. This is the only way that I can see right now to create enough dissemination for the people who would like to have the Law of One for them to be able to get it. I could just go ahead and print up the material we have off the tape recorder and publish it, but we would be unable to disseminate it very well because of distribution problems.
-我的第一个计划是，使用UFO——在星际联邦赋予它的宣传意义上——作为切入点，来解释这个星球上已经发生的进化过程，以及联邦的其他成员……或者说星际联邦是如何以一种更易于理解的方式参与其中的，容我这么说，对于将要阅读它的人群，我会在书中的不同地方以未扭曲的形式使用Ra材料，就像它在这里被记录的那样，来扩充和澄清我们在书中所述的内容。这是我现在能看到的唯一方法，能为那些想要得到一的法则的人创造足够的传播渠道，让他们能够获得它。我也可以直接把我们录音机上的材料打印出来出版，但由于分发问题，我们无法很好地传播它。
+我的第一个计划是，使用UFO——在星际联邦赋予它的宣传意义上——作为切入点，来解释这个星球上已经发生的进化过程，以及联邦的其他成员……或者说星际联邦是如何以一种更易于理解的方式参与其中的，容我这么说，对于将要阅读它的人群，我会在书中的不同地方以未变貌的形式使用Ra材料，就像它在这里被记录的那样，来扩充和澄清我们在书中所述的内容。这是我现在能看到的唯一方法，能为那些想要得到一的法则的人创造足够的传播渠道，让他们能够获得它。我也可以直接把我们录音机上的材料打印出来出版，但由于分发问题，我们无法很好地传播它。
 
 Will you comment on my second idea of doing a general book on UFOs including the material from the Law of One?
 你们会对我第二个想法——写一本关于UFO的通用书籍并包含一的法则中的材料——发表评论吗？

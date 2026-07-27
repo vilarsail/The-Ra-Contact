@@ -41,7 +41,7 @@ We suggest the support group encourage any exercise except that which exceeds th
 我们建议支持小组鼓励任何运动，但超出时间限制的运动除外，该时间限制已经远远超出了这个身体复合体的身体极限。
 
 It is the way of distortion that in order to balance a distortion one must accentuate it. Thusly, the over-wearing of the body may, if correctly motivated, produce a lack of deficit, at which juncture the lesser exercise limitations should be put into practice.
-变貌之道在于：为了平衡一种变貌，必须强调它。因此，身体过度劳累，如果动机正确，可能会产生不足的缺失，届时应当实行较小的运动限制。
+变貌之道在于：为了平衡一种变貌，必须强调它。因此，身体的过度消耗如果动机正确，可能会消除能量亏空，届时应当实行较宽松的运动限制。
 
 ## (104.3)
 
@@ -66,7 +66,7 @@ Ra I am Ra. The greatest aid is already being given to the fullest. The encourag
 Ra 我是 Ra。最大的帮助已经被充分给予了。鼓励器皿避免摄入油炸食物是有帮助的。愉悦的和谐是有帮助的。
 
 The spasms must subside as a function of the entity's indigo-ray work and, to some extent, the recommendations made in response to a previous query.
-痉挛必定会随着该实体的靛蓝色光芒工作而消退，在某种程度上，也会随着对先前询问所作的建议而消退。
+痉挛必定会随着该实体的靛蓝光芒工作而消退，在某种程度上，也会随着对先前询问所作的建议而消退。
 
 The definitive refraining from over-stepping the already swollen boundaries of physical limitation is recommended. The infection remains, and the symptoms are now far less medicable, the entity having chosen the catalyst.
 强烈建议明确地避免超越已经扩张的身体极限边界。感染仍然存在，由于该实体已经选择了催化剂，现在症状远非药物所能医治。

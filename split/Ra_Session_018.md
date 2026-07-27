@@ -15,7 +15,7 @@ February 4, 1981
 (18.1) 发问者 我昨晚在想，如果此时我处在 Ra 的位置上，一的法则的第一变貌可能会使我在向这个小组传递的真实信息中混入一些错误的数据。你们会这样做吗？
 
 Ra I am Ra. We do not intentionally do this. However, there will be confusion. The errors which have occurred have occurred due to the occasional variation in the vibrational complex of this instrument due to its ingestion of a chemical substance. It is not our intent in this particular project to create erroneous information but to express in the confining ambiance of your language system the feeling of the infinite mystery of the One Creation in its infinite and intelligent unity.
-Ra 我是 Ra。我们并非有意为之。然而，混淆是会发生的。已发生的错误是由于这个器皿因摄入一种化学物质而导致其声音振动复合体偶尔产生变化。在这个特定项目中，我们的意图并非制造错误信息，而是在你们语言系统的有限氛围中，表达那太一造物在其无限且智能的合一中的无限奥秘之感。
+Ra 我是 Ra。我们并非有意为之。然而，混淆是会发生的。已发生的错误是由于这个器皿因摄入一种化学物质而导致其振动复合体偶尔产生变化。在这个特定项目中，我们的意图并非制造错误信息，而是在你们语言系统的有限氛围中，表达那太一造物在其无限且智能的合一中的无限奥秘之感。
 
 ## (18.2)
 

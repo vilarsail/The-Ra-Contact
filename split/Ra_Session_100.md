@@ -45,7 +45,7 @@ It is true that some greeting has encouraged the dizziness felt by the instrumen
 ## (100.4)
 
 (100.4) Questioner Thank you. I feel obligated to ask the next somewhat transient question because of a request from Colonel Stevens. I also, for my own edification, would like to better understand the effect of the quarantine and First Distortion. Would Ra comment on the purpose of the so-called Pleiades contact in Switzerland with Billy Meier by an entity known as Semjase and others.
-(100.4) 发问者 谢谢你。由于 Stevens 上校的请求，我觉得有义务问下一个有些短暂的问题。为了我自己的启发，我也想更好地理解隔离和第一变貌的影响。Ra 能否评论一下所谓昴宿星接触的目的，即在瑞士与 Billy Meier 由一个名为 Semjase 的实体和其他实体进行的接触。
+(100.4) 发问者 谢谢你。由于 Stevens 上校的请求，我觉得有义务问下一个有些短暂的问题。为了我自己的启发，我也想更好地理解隔离和第一变貌的影响。Ra 能否评论一下所谓昴宿星接触的目的，即一个名为 Semjase 的实体及其他实体在瑞士与 Billy Meier 进行的接触。
 
 Ra I am Ra. It is not our practice to judge the value of a contact of metaphysical origin. We cannot confirm the contact referred to by the questioner as pure Confederation contact. However, we might suggest that there is some positive material within the recorded transcript of converse during this contact. As we have spoken previously to the various characteristics of so-called mixed contact,[126] we shall not repeat but note that all communication is of the One Infinite Creator in its infinite distortions.
 Ra 我是 Ra。评判一个形而上学起源的接触的价值并非我们的做法。我们不能确认发问者所指的接触是纯粹的星际联邦接触。然而，我们可以指出，在这次接触期间的对话记录文本中有一些正面材料。由于我们先前已经谈到过所谓混合接触的各种特征，[126] 我们将不再重复，但指出所有通讯都是太一无限造物主在其无限变貌中的通讯。
@@ -87,7 +87,7 @@ Ra I am Ra. As one observes the veil of the image of the Great Way of Mind it ma
 Ra 我是 Ra。当一个人观察心智的大道图像的帷幕时，使用环境的框架来构思可能会有帮助。心智、身体或灵性的大道旨在描绘心智、身体或灵性的工作将被放置于其中的环境。[128]
 
 Thusly the veil is shown both somewhat lifted and still present, since the work of mind and its transformation involves progressive lifting of the great veil betwixt conscious and deep minds. The complete success of this attempt is not properly a portion of third-density work and, more especially, third-density mental processes.
-因此，帷幕被显示为既部分掀开又仍然存在，因为心智的工作及其转化涉及逐步掀开意识与深层心智之间的伟大帷幕。这一尝试的完全成功并不恰当地属于第三密度工作的一部分，更特别是第三密度心智过程的一部分。
+因此，帷幕被显示为既部分掀开又仍然存在，因为心智的工作及其转化涉及逐步掀开意识与深层心智之间的伟大帷幕。这一尝试的完全成功，严格来说并不属于第三密度工作的一部分，更特别是第三密度心智过程的一部分。
 
 ## (100.8)
 

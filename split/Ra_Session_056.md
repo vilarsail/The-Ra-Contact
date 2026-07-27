@@ -15,7 +15,7 @@ June 8, 1981
 (56.1) 发问者 你能首先告诉我器皿状况的指示吗？
 
 Ra I am Ra. This instrument is severely distorted towards weakness of the mental and physical complexes at this time, and is under psychic attack due to this opportunity.
-Ra 我是 Ra。这个器皿此时严重地朝向心智和身体复合体的虚弱而变貌，并且由于这个时机而处于 psychic 攻击之下。
+Ra 我是 Ra。这个器皿此时严重变貌朝向心智和身体复合体的虚弱，并且由于这个时机而处于心灵攻击之下。
 
 ## (56.2)
 

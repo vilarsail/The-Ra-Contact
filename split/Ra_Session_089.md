@@ -20,7 +20,7 @@ Ra 我是 Ra。如前所述。
 ## (89.2)
 
 (89.2) Questioner I have two questions of a personal nature. First, during the last intensive meditation the instrument experienced very strong conditioning from an entity which did not identify itself and which did not leave when she asked it to. Will you tell us what was occurring then?
-(89.2) 发问者 我有两个私人性质的问题。首先，在上次密集冥想期间，器皿经历了一个实体的强烈致意，该实体未表明身份，且在她要求其离开时并未离开。你能告诉我们当时发生了什么吗？
+(89.2) 发问者 我有两个私人性质的问题。首先，在上次密集冥想期间，器皿经历了一个实体施加的强烈影响，该实体未表明身份，且在她要求其离开时并未离开。你能告诉我们当时发生了什么吗？
 
 Ra I am Ra. We find the instrument to have been given the opportunity to become a channel for a previously known friend. This entity was not able to answer the questioning of spirits in the name of Christ, as is this instrument’s distortion of the means of differentiating betwixt those of positive and those of negative orientation. Therefore, after some resistance, the entity found the need to take its leave.
 Ra 我是 Ra。我们发现器皿被给予机会成为一个先前认识的朋友的管道。该实体未能以基督之名回应灵性考验，而这正是该器皿用以区分正面导向与负面导向实体的变貌方式。因此，经过一些抵抗后，该实体感到有必要离开。
@@ -60,7 +60,7 @@ Ra 我是 Ra。这是正确的，这也是为什么所有接触的考验都受�
 ## (89.7)
 
 (89.7) Questioner Question two: Jim has also felt very strong conditioning which was unbidden while channeling Latwii recently and in his personal meditations. Would you also tell us what occurred in these cases?
-(89.7) 发问者 第二个问题：Jim 最近在通灵 Latwii 时以及在他个人冥想中，也感受到了非常强烈的、未经请求的致意。你能告诉我们这些情况中发生了什么吗？
+(89.7) 发问者 第二个问题：Jim 最近在通灵 Latwii 时以及在他个人冥想中，也感受到了非常强烈的、未经请求的影响。你能告诉我们这些情况中发生了什么吗？
 
 Ra I am Ra. The entity which has been your companion has a vibratory frequency—but a small amount lesser—than that of the social memory complex known as Latwii. Also, Latwii is the primary comforter of the Confederation for entities seeking at the vibratory complex level of the one known as Jim.
 Ra 我是 Ra。作为你们同伴的那个实体，其振动频率比被称为 Latwii 的社会记忆复合体略低一点点。此外，Latwii 是星际联邦中为那些在被称为 Jim 的实体的振动复合体层级上寻求的实体提供安慰的主要服务者。
@@ -239,7 +239,7 @@ Any observations made by a student which has fulfilled these considerations will
 ## (89.26)
 
 (89.26) Questioner All right, we’ll attempt to do that. Ra stated that a major breakthrough was made when proper emphasis was put on Arcanum Twenty-Two. This didn’t happen until after Ra had completed third density. I assume from this that Ra, being polarized positively, probably had some of the same difficulty that occurred prior to the veil in that the negative polarity was not appreciated. That’s a guess. Is this correct?
-(89.26) 发问者 好的，我们会尝试那样做。Ra 曾说过，当对第二十二张奥秘牌给予适当强调时，取得了重大突破。这直到 Ra 完成第三密度后才发生。我由此推断，Ra 作为正面极化的实体，可能遇到了与面纱之前类似的困难，即负面极性未被欣赏。这只是猜测。这是否正确？
+(89.26) 发问者 好的，我们会尝试那样做。Ra 曾说过，当对第二十二张奥秘牌给予适当强调时，取得了重大突破。这直到 Ra 完成第三密度后才发生。我由此推断，Ra 作为正面极化的实体，可能遇到了与面纱之前类似的困难，即负面极性未被充分理解。这只是猜测。这是否正确？
 
 Ra I am Ra. In one way it is precisely correct. Our harvest was overwhelmingly positive, and our appreciation of those which were negative was relatively uninformed.
 Ra 我是 Ra。在某种意义上，这完全正确。我们的收割压倒性地是正面的，我们对那些负面实体的理解相对不足。
@@ -358,7 +358,7 @@ Ra 我是 Ra。在化身之前，流浪者的愿望仅仅是帮助服务他人�
 (89.39) 发问者 我只是无法理解，他们为什么会认为一个像 Ra 这样做得如此之好的星球，就我所知，会需要流浪者来帮助收割。这是否在 Ra 第三密度的早期？
 
 Ra I am Ra. It was in the second cycle of 25,000 years. We had a harvest of six out of thirty, to speak roughly, millions of mind/body/spirit complexes, less than 20%. Wanderers are always drawn to whatever percentage has not yet polarized and come when there is a call. There was a call from those which were not positively polarized as such but which sought to be positively polarized and sought wisdom, feeling the compassion of other-selves upon Venus as complacent or pitying towards other-selves.
-Ra 我是 Ra。那是在两万五千年的第二个周期。我们有大约三千万心/身/灵复合体中的六个——粗略地说——收割成功，不到 20%。流浪者总是被吸引到那些尚未极化的人口比例中，并在有呼求时到来。有来自那些并非正向极化但却寻求正向极化并寻求智慧的实体的呼求，他们觉得金星上其他自我的同情对他人而言是自满或怜悯。
+Ra 我是 Ra。那是在两万五千年的第二个周期。我们有大约三千万心/身/灵复合体中的六百万——粗略地说——收割成功，不到 20%。流浪者总是被吸引到那些尚未极化的人口比例中，并在有呼求时到来。有来自那些并非正向极化但却寻求正向极化并寻求智慧的实体的呼求，他们觉得金星上其他自我的同情对他人而言是自满或怜悯。
 
 ## (89.40)
 

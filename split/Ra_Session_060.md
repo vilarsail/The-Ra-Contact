@@ -126,7 +126,7 @@ Ra 我是 Ra。前者正是我们所谈论的效应。你可以注意到，当�
 ## (60.14)
 
 (60.14) Questioner Then is the large underwater pyramid off the Florida coast one of the balancing pyramids that Ra constructed, or some other social memory complex? And if so, which one?
-(60.14) 发问者 那么佛罗里达海岸附近的大型水下金字塔是 Ra 建造的平衡金字塔之一，还是其他社会记忆复合体建造的？如果是，是哪一/个？
+(60.14) 发问者 那么佛罗里达海岸附近的大型水下金字塔是 Ra 建造的平衡金字塔之一，还是其他社会记忆复合体建造的？如果是，是哪一个？
 
 Ra I am Ra. That pyramid of which you speak was one whose construction was aided by sixth-density entities of a social memory complex working with Atlanteans prior to our working with the, as you call them, Egyptians.
 Ra 我是 Ra。你所提到的那个金字塔，其建造是由一个社会记忆复合体的第六密度实体协助的，他们在我们与你们所称的埃及人合作之前与亚特兰蒂斯人合作。
@@ -168,7 +168,7 @@ However, it is our observation that due to the complexity of influences upon the
 (60.17) 发问者 谢谢你。我不知道这个问题是否会带来任何有用的方向，但我想我必须问。什么是约柜，它的用途是什么？
 
 Ra I am Ra. The Ark of the Covenant was that place wherein those things most holy, according to the understanding of the one called Moishe, [were] placed. The article placed therein has been called by your peoples two tablets called the Ten Commandments. There were not two tablets. There was one writing in scroll. This was placed along with the most carefully written accounts by various entities of their beliefs concerning the creation by the One Creator.
-Ra 我是 Ra。约柜是存放那些根据被称为摩西者的理解最神圣之物的地方。其中所放的物品被你们人类称为两块刻有十诫的石板。并没有两块石板。只有一卷书写的卷轴。这与各种实体关于太一造物主创造的最精心书写的记录一起被放入。
+Ra 我是 Ra。约柜是存放那些根据被称为摩西的实体的理解最神圣之物的地方。其中所放的物品被你们人类称为两块刻有十诫的石板。并没有两块石板。只有一卷书写的卷轴。这与各种实体关于太一造物主创造的最精心书写的记录一起被放入。
 
 This Ark was designed to constitute the place wherefrom the priests, as you call those distorted towards the desire to serve their brothers, could draw their power and feel the presence of the One Creator. However, it is to be noted that this entire arrangement was designed, not by the one known to the Confederation as Yahweh, but rather was designed by negative entities preferring this method of creating an elite called the Sons of Levi.
 这个约柜被设计成构成一个场所，从中祭司——如你们所称那些变貌朝向服务兄弟之渴望的人——可以汲取他们的力量，并感受太一造物主的临在。然而，需要注意的是，这整个安排并非由星际联邦所知的那位亚威设计，而是由负面实体设计的，他们更喜欢这种创造被称为利未之子的精英阶层的方法。

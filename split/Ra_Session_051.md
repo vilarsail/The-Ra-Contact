@@ -73,7 +73,7 @@ Ra 我是 Ra。你的陈述大体正确。使用"心智配置"一词过于简化
 在《大金字塔的秘密》一书背面，有几幅埃及绘画或作品的复制品，其中一些显示鸟类飞越水平躺着的实体。你能告诉我这是什么，以及它是否与 Ra 有任何关系？
 
 Ra I am Ra. These drawings of which you speak are some of many which distort the teaching of our perception of death as the gateway to further experience. The distortions concern those considerations of specific nature as to processes of the so-called "dead" mind/body/spirit complex. This may be termed, in your philosophy, the distortion of Gnosticism: that is, the belief that one may achieve knowledge and a proper position by means of carefully perceived and accentuated movements, concepts, and symbols.
-Ra 我是 Ra。你所说的这些图画是众多扭曲我们关于死亡是通往进一步经验之门户的教导的图画之一。这些扭曲涉及关于所谓的"死亡"心/身/灵复合体的过程的具体性质的考虑。这在你们的哲学中可被称为诺斯替主义的变貌：即相信可以通过精心感知和强调的动作、概念和符号来获得知识和适当的位置。
+Ra 我是 Ra。你所说的这些图画是众多使关于死亡为通往进一步经验之门户的教导发生变貌的图画之一。这些变貌涉及关于所谓的"死亡"心/身/灵复合体过程之具体性质的考虑。这在你们的哲学中可被称为诺斯替主义的变貌：即相信可以通过精心感知和强调的动作、概念和符号来获得知识和适当的位置。
 
 In fact, the process of the physical death is as we have described before: one in which there is aid available, and the only need at death is the releasing of that entity from its body by those around it and the praising of the process by those who grieve. By these means may the mind/body/spirit which has experienced physical death be aided, not by the various perceptions of careful and repeated rituals.
 事实上，物理死亡的过程如我们之前所描述的：在这个过程中有援助可用，而死亡时唯一需要的是周围人释放该实体离开其身体，以及哀悼者赞颂这个过程。通过这些方式，经历了物理死亡的心/身/灵可以得到帮助，而非通过精心和重复仪式的各种观念。

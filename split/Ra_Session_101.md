@@ -75,7 +75,7 @@ Ra I am Ra. The nature of catalyst is such that there is only one source, for th
 Ra 我是 Ra。催化剂的本质是这样的，只有一个源头，因为催化剂和体验是在处理自我无意识心智的架构时进一步尝试特定化。因此，在一次投生经历中，作为造物主的自我，尤其是高我，是催化剂站立于其上以向心智、身体或灵性提供服务的基础。
 
 In the sense which we feel you intend, the source was the fifth-density negative friend which had noted the gradual falling away of the inharmonious patterns of the distortion called anger/frustration in the entity. The insect was easily led to an attack, and the physical vehicle, which had long-standing allergies and sensitivities, was also easily led into the mechanisms of the failure of lymphatic function and the greatly diminished ability of the immune system to remove from the yellow-ray body that which distorted it.
-在我们感觉你所指的意义上，源头是第五密度的负面朋友，它注意到该实体中被称为愤怒/挛败的变貌的不和谐模式正在逐渐消退。昆虫很容易被引导发动攻击，而具有长期过敏和敏感性的物理载具，也很容易被引导进入淋巴功能失败和免疫系统从黄色光芒身体中清除使其变貌之物的能力大幅降低的机制中。
+在我们感觉你所指的意义上，源头是第五密度的负面朋友，它注意到该实体中被称为愤怒/挫败的变貌的不和谐模式正在逐渐消退。昆虫很容易被引导发动攻击，而具有长期过敏和敏感性的物理载具，也很容易被引导进入淋巴功能失败和免疫系统从黄色光芒身体中清除使其变貌之物的能力大幅降低的机制中。
 
 ## (101.5)
 
@@ -130,5 +130,5 @@ The alignments are as they must be for all to continue well. We are grateful for
 对齐状态如同它们必须是的那样，以便所有人继续顺利进行。我们感激支持小组的认真负责。
 
 I am Ra. I leave this group glorying in the love and in the light of the One Infinite Creator. Go forth rejoicing, therefore, in the power and in the peace of the Creator. Adonai.
-我是 Ra。我在太一无限造物主的爱与光中离开这个小组，荣耀其中。因此，在造物主的大能与和平中欢欣鼓舞地前进吧。Adonai。
+我是 Ra。我在太一无限造物主的爱与光中荣耀地离开这个小组。因此，在造物主的大能与和平中欢欣鼓舞地前进吧。Adonai。
 

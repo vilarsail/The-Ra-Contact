@@ -38,7 +38,7 @@ Within the door lies an hierarchical construction you may liken unto geography a
 在这扇门之内，存在着一个层级构造，你可以将其比作地理学，并在某些方面比作几何学，因为该层级是相当规则的，承载着内在关系。
 
 To begin to master the concept of mental discipline it is necessary to examine the self. The polarity of your dimension must be internalized. Where you find patience within your mind you must consciously find the corresponding impatience and vice versa. Each thought that a being has, has in its turn an antithesis. The disciplines of the mind involve, first of all, identifying both those things of which you approve and those things of which you disapprove within yourself, and then balancing each and every positive and negative charge with its equal. The mind contains all things. Therefore, you must discover this completeness within yourself.
-要开始掌握心智修炼的概念，检视自我是必要的。你们次元的极性必须被内化。当你在心智中发现耐心时，你必须有意识地发现相应的不耐烦，反之亦然。一个存有拥有的每一个思想，都相应地有其对立面。心智的修炼首先涉及：识别你内在所赞同的事物与所不赞同的事物，然后用其等同物去平衡每一个正负电荷。心智包含一切事物。因此，你必须在你自身之内发现这种完整性。
+要开始掌握心智修炼的概念，检视自我是必要的。你们维度的极性必须被内化。当你在心智中发现耐心时，你必须有意识地发现相应的不耐烦，反之亦然。一个存有拥有的每一个思想，都相应地有其对立面。心智的修炼首先涉及：识别你内在所赞同的事物与所不赞同的事物，然后用其等同物去平衡每一个正负电荷。心智包含一切事物。因此，你必须在你自身之内发现这种完整性。
 
 The second mental discipline is acceptance of the completeness within your consciousness. It is not for a being of polarity in the physical consciousness to pick and choose among attributes, thus building the roles that cause blockages and confusions in the already-distorted mind complex. Each acceptance smooths part of the many distortions that the faculty you call judgment engenders.
 第二项心智修炼是接纳你意识内的完整性。处于物理意识中的极性存有，不应在各属性中挑选和拣择，从而构建出那些会在已然变貌的心智复合体中造成阻塞与混淆的角色。每一次接纳都会抚平你们称为判断的官能所产生的众多变貌的一部分。

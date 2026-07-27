@@ -81,7 +81,7 @@ We may note that such a configuration of free will, one-pointed in service to ot
 我们可以指出，这样一个自由意志的配置，一心一意地服务他人，也具有唤起大量光之力量的可能性。然而，这种正面光之力量也在自由意志下运作，必须被召唤。
 
 We could not speak to this and shall not guide you, for the nature of this contact is such that the purity of your free will must, above all things, be preserved. Thus you wend your way through experiences discovering those biases which may be helpful.
-我们不能对此发言，也不应引导你们，因为这次通讯的性质是，你们自由意志的纯净必须首先被保护。因此，你们通过体验蜿蜒前行，发现那些可能有帮助的偏见。
+我们不能对此发言，也不应引导你们，因为这次通讯的性质是，你们自由意志的纯净必须首先被保护。因此，你们通过体验蜿蜒前行，发现那些可能有帮助的倾向。
 
 [There is a 30-second pause between the end of this answer and the beginning of the next question.]
 [在此回答结束与下一个问题开始之间有30秒的停顿。]

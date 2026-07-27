@@ -31,7 +31,7 @@ Ra 我是 Ra。如果香炉是全新的，这个改动将是有帮助的。
 (87.3) 发问者 香炉、圣杯和蜡烛相对于圣经和桌子，以及我们目前放置它们的位置，最佳几何排列是怎样的？
 
 Ra I am Ra. Both chalice and candle occupy the optimal configuration with respect to the book most closely aligned with the Law of One in the distortion complexes of this instrument. It is optimal to have the censer to the rear of this book and centered at the spine of its open configuration.
-Ra 我是 Ra。在这个器皿的变貌复合体中，圣杯和蜡烛都占据了与该器皿最接近一的法则的书籍相关的最佳配置。将香炉放在这本书的后方，并居中于它打开的书脊处是最佳的。
+Ra 我是 Ra。在这个器皿的变貌复合体中，圣杯和蜡烛都占据了与最接近一的法则的书籍相关的最佳配置。将香炉放在这本书的后方，并居中于它打开的书脊处是最佳的。
 
 ## (87.4)
 
@@ -55,7 +55,7 @@ Ra 我是 Ra。这个实体已经撤退了一段时间以恢复其极性。
 (87.6) 发问者 如果可能的话，你能扩展一下关于这个特定实体获取极性的概念，以及它具体使用这种极性的方式，而非仅仅是显而易见的第六密度收割需求吗？
 
 Ra I am Ra. We would. The nature of the densities above your own is that a purpose may be said to be shared by both positive and negative polarities. This purpose is the acquisition of the ability to welcome more and more the less and less distorted love/light and light/love of the One Infinite Creator.
-Ra 我是 Ra。我们可以。在你们之上的密度的性质是，可以说一个目的同时被正面和负面极性所共享。这个目的是获取越来越能够欢迎太一无限造物主的越来越少扭曲的爱/光和光/爱的能力。
+Ra 我是 Ra。我们可以。在你们之上的密度的性质是，可以说一个目的同时被正面和负面极性所共享。这个目的是获取越来越能够欢迎太一无限造物主的越来越少变貌的爱/光和光/爱的能力。
 
 Upon the negative path the wisdom density is one in which power over others has been refined until it is approaching absolute power. Any force such as the force your group and those of Ra offer which cannot be controlled by the power of such a negative fifth-density mind/body/spirit complex then depolarizes the entity which has not controlled other-selves.
 在负面道路上，智慧密度是一个对他人的权力已被精炼到接近绝对权力的密度。任何像你们小组和 Ra 提供的，不能被这样一个负面第五密度心/身/灵复合体的力量所控制的力量，都会使那个未能控制其他自我的实体去极化。
@@ -164,7 +164,7 @@ Ra I am Ra. There was an error in transmission. The use of the term “mind/body
 Ra 我是 Ra。传输中有一个错误。术语"心/身/灵"应该指那些在罩纱过程之前居住在第三密度中的实体，术语"心/身/灵复合体"指那些在罩纱过程之后居住在第三密度中的实体。我们还发现，在谈到罩纱之后的身体时，我们没有提供"复合体"这个术语。请纠正这些错误。[88]
 
 Also, we ask that you keep a vigilant watch over these transmissions for any errors, and question without fail as it is our intention to provide as undistorted a series of sound vibration complexes as is possible.
-另外，我们请求你们对这些传输保持警惕，发现任何错误都要毫不犹豫地提问，因为我们的意图是提供尽可能少扭曲的一系列声音振动复合体。
+另外，我们请求你们对这些传输保持警惕，发现任何错误都要毫不犹豫地提问，因为我们的意图是提供尽可能少变貌的一系列声音振动复合体。
 
 This entity, though far better cleared of distortions towards the pain flares when prepared by those mental vibration complexes you call prayer, is still liable to fluctuation due to its pre-incarnative body-complex distortions and the energizing of them by those of negative polarity.
 这个实体，虽然当以你们称为祈祷的那些心智振动复合体来准备时，朝向疼痛发作的变貌已经好得多了，但由于其投胎前的肉体复合体变貌以及负面极性存有对其的激活，它仍然容易波动。
@@ -265,7 +265,7 @@ Ra I am Ra. You are correct in assuming that the energy of which we speak in dis
 Ra 我是 Ra。你在假设我们在讨论性能量转移时所说的能量是空间/时间与时间/空间之间的一种振动桥梁形式，是正确的。尽管这个区别不脱离接下来的内容，但接下来的内容可能为这个基本陈述提供启示：
 
 Due to the veiling process the energy transferred from male to female is different than that transferred from female to male. Due to the polarity difference of the mind/body/spirit complexes of male and female, the male stores physical energy; the female, mental and mental/emotional energy. When third-density sexual energy transfer is completed the male will have offered the discharge of physical energy. The female is, thereby, refreshed, having far less physical vitality. At the same time, if you will use this term, the female discharges the efflux of its stored mental and mental/emotional energy, thereby offering inspiration, healing, and blessing to the male which by nature is less vital in this area.
-由于罩纱过程，从男性转移到女性的能量与从女性转移到男性的能量是不同的。由于男性和女性心/身/灵复合体的极性差异，男性储存物理能量；女性储存心智和心智/情感能量。当第三密度性能量转移完成时，男性将提供物理能量的释放。女性因此被恢复活力，具有远为更少的物理生命力。同时，如果你愿意使用这个术语，女性释放其储存的心智和心智/情感能量的流出，从而为男性提供灵感、疗愈和祝福，而男性在这一领域本性上不那么有活力。
+由于罩纱过程，从男性转移到女性的能量与从女性转移到男性的能量是不同的。由于男性和女性心/身/灵复合体的极性差异，男性储存物理能量；女性储存心智和心智/情感能量。当第三密度性能量转移完成时，男性将提供物理能量的释放。女性因此恢复活力，而她原本的物理生命力要少得多。同时，如果你愿意使用这个术语，女性释放其储存的心智和心智/情感能量的流出，从而为男性提供灵感、疗愈和祝福，而男性在这一领域本性上不那么有活力。
 
 At this time may we ask for one more full query.
 此时我们可以再问一个完整的问题吗？

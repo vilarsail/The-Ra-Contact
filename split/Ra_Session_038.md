@@ -47,7 +47,7 @@ Ra 我是 Ra。灵感的机制涉及一种非凡的渴望或意志能力，即�
 ## (38.5)
 
 (38.5) Questioner Could you tell me how each of the rays, red through violet, would appear in a perfectly balanced, undistorted entity?
-(38.5) 发问者 你能否告诉我，从红色到紫罗兰色的每一道光芒，在一个完美平衡、无扭曲的实体中会如何显现？
+(38.5) 发问者 你能否告诉我，从红色到紫罗兰色的每一道光芒，在一个完美平衡、无变貌的实体中会如何显现？
 
 Ra I am Ra. We cannot tell you this for each balance is perfect and each unique. We do not mean to be obscure.
 Ra 我是 Ra。我们无法告诉你这一点，因为每一种平衡都是完美的，且每一种都是独特的。我们并非有意含糊其辞。

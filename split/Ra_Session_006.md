@@ -143,7 +143,7 @@ Ra 我是 Ra。这是一个新的提问方向，值得拥有它自己的位置�
 (6.14) 发问者 我想现在是适当的时机，来发现一的法则在将存有们转移到我们星球的过程以及收割的行动中是如何运作的。
 
 Ra I am Ra. The Law of One states simply that all things are one, that all beings are one. There are certain behaviors and thought-forms consonant with the understanding and practice of this law. Those who, finishing a cycle of experience, demonstrate various grades of distortion of that understanding of thought and action will be separated by their own choice into the vibratory distortion most comfortable to their mind/body/spirit complexes.
-Ra 我是 Ra。一的法则简单地陈述，所有事物都是一，所有存有都是一。有某些行为和思想形态与对这个法则的理解和实践是一致的。那些完成了一个体验周期并展示出对该思想与行动的理解的不同程度变貌的实体，将根据他们自己的选择，被分离到对他们的心/身/灵复合体而言最舒适的声音振动变貌中。
+Ra 我是 Ra。一的法则简单地陈述，所有事物都是一，所有存有都是一。有某些行为和思想形态与对这个法则的理解和实践是一致的。那些完成了一个体验周期并展示出对该思想与行动的理解的不同程度变貌的实体，将根据他们自己的选择，被分离到对他们的心/身/灵复合体而言最舒适的振动变貌中。
 
 This process is guarded, or watched, by those nurturing beings who, being very close to the Law of One in their distortions, nevertheless have the distortion towards active service.
 这个过程被那些养育性的存有守护或看顾着，这些存有在其变貌中非常接近一的法则，然而却拥有朝向主动服务的变貌。
@@ -173,7 +173,7 @@ Ra 我是 Ra。这个领域此时处于第四维度振动中。由于其意识�
 (6.17) 发问者 这个不便在几年内即将来临吗？
 
 Ra I am Ra. This inconvenience, or disharmonious vibratory complex, has begun several of your years in the past. It shall continue unabated for a period of approximately three oh, thirty [30], of your years.
-Ra 我是 Ra。这个不便，或不和谐的声音振动复合体，在你们过去几年中已经开始。它将继续不减地持续大约三十（30）个你们的年。
+Ra 我是 Ra。这个不便，或不和谐的振动复合体，在你们过去几年中已经开始。它将继续不减地持续大约三十（30）个你们的年。
 
 ## (6.18)
 
@@ -232,7 +232,7 @@ Ra 我是 Ra。我们拥有与你们时间/空间当前这些突袭行动合一�
 (6.24) 发问者 目前被报告的 UFO 中，是否有任何来自其他行星的目前在此地，或者你拥有这方面的知识？
 
 Ra I am one of the members of the Confederation of Planets in the Service of the Infinite Creator. There are approximately fifty-three civilizations comprising approximately five hundred planetary consciousness complexes in this Confederation. This Confederation contains those from your own planet who have attained dimensions beyond your third. It contains planetary entities within your solar system, and it contains planetary entities from other galaxies. It is a true Confederation in that its members are not alike, but allied in service according to the Law of One.
-Ra 我是服务于无限造物主的行星联邦的成员之一。在这个联邦中，大约有五十三个文明，包含大约五百个行星意识复合体。这个联邦包含来自你们自己星球、已获得超越你们第三维度的维度的实体。它包含你们太阳系内的行星实体，也包含来自其他星系的行星实体。它是一个真正的联邦，因为其成员并不相同，但根据一的法则在服务中结盟。
+Ra 我是服务于无限造物主的星际联邦的成员之一。在这个星际联邦中，大约有五十三个文明，包含大约五百个行星意识复合体。这个星际联邦包含来自你们自己星球、已获得超越你们第三维度的维度的实体。它包含你们太阳系内的行星实体，也包含来自其他星系的行星实体。它是一个真正的星际联邦，因为其成员并不相同，但根据一的法则在服务中结盟。
 
 ## (6.25)
 
@@ -243,7 +243,7 @@ Ra I am Ra. We must state that this information is unimportant. If you will unde
 Ra 我是 Ra。我们必须声明，这个信息是不重要的。如果你们能理解这一点，我们觉得这个信息可以被接受地提供。一的法则是我们在此要表达的。然而，我们将谈论这个主题。
 
 Each planetary entity which wishes to appear within your third-dimensional space/time-distortion requests permission to break quarantine, as you may call it, and appear to your peoples. The reason and purpose for this appearance is understood and either accepted or rejected. There have been as many as fifteen of the Confederation entities in your skies at any one time; the others available to you through thought.
-每个希望出现在你们第三密度空间/时间变貌中的行星实体，都请求允许打破隔离，正如你们可能称呼的，并向你们人群显现。这种显现的原因和目的被理解，并被接受或拒绝。在任何时候，你们天空中曾有多达十五个联邦实体；其他的则通过思想对你们可用。
+每个希望出现在你们第三维度空间/时间变貌中的行星实体，都请求允许打破隔离，正如你们可能称呼的，并向你们人群显现。这种显现的原因和目的被理解，并被接受或拒绝。在任何时候，你们天空中曾有多达十五个星际联邦实体；其他的则通过思想对你们可用。
 
 At present there are seven which are operating with craft in your density. Their purposes are very simple: to allow those entities of your planet to become aware of infinity which is often best expressed to the uninformed as the mysterious or unknown.
 目前有七个实体正在你们的密度中使用飞行器运作。它们的目的非常简单：允许你们星球的实体意识到无限，这通常对未受启蒙者而言，最好被表达为神秘或未知。

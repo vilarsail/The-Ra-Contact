@@ -119,7 +119,7 @@ You may, with some fruitfulness, consider the possibilities of moonlight. You ar
 你可以富有成效地考虑月光的可能性。你知道我们曾将灵性的矩阵描述为黑夜。那么，月光提供的是在阴影中看到的真实图景，或是幻象和虚假。虚假的力量是深沉的，正如从阴影中辨别真理的力量一样。隐藏事物的阴影是一个无限的深度，其中储存着太一无限造物主的力量。
 
 The adept, then, is working with the power of hidden things illuminated by that which can be false or true. To embrace falsity, to know it, to seek it, and to use it gives a power that is most great. This is the nature of the power of your visitor and may shed some light upon the power of one who seeks in order to serve others as well, for the missteps in the night are oh! so easy.
-那么，Adept 是在运用隐藏事物的力量，这些力量被可能是虚假或真实的东西所照亮。拥抱虚假，认识它，寻求它，并使用它，会给予一种非常强大的力量。这就是你们访客的力量的本质，并且也可能为那些为了服务他人而寻求的人的力量提供一些启示，因为在黑夜中的失足是，哦！如此容易。
+那么，行家是在运用隐藏事物的力量，这些力量被可能是虚假或真实的东西所照亮。拥抱虚假，认识它，寻求它，并使用它，会给予一种非常强大的力量。这就是你们访客的力量的本质，并且也可能为那些为了服务他人而寻求的人的力量提供一些启示，因为在黑夜中的失足是，哦！如此容易。
 
 ## (80.9)
 
@@ -127,7 +127,7 @@ The adept, then, is working with the power of hidden things illuminated by that 
 (80.9) 发问者 那么，你是在说这种力量是灵性的，而不是心智或身体的？
 
 Ra I am Ra. The work of the adept is based upon previous work with the mind and the body, else work with the spirit would not be possible on a dependable basis. With this comment we may assert the correctness of your assumption.
-Ra 我是 Ra。Adept 的工作是基于先前与心智和身体的工作，否则与灵性的工作就不可能在可靠的基础上进行。有了这个评论，我们可以断言你的假设的正确性。
+Ra 我是 Ra。行家的工作是基于先前与心智和身体的工作，否则与灵性的工作就不可能在可靠的基础上进行。有了这个评论，我们可以断言你的假设的正确性。
 
 ## (80.10)
 
@@ -138,26 +138,26 @@ Ra I am Ra. We do not wish to be facile in such a central query, but we may note
 Ra 我是 Ra。我们不想在这样一个核心问题上轻率，但我们可以注意到，灵性的本质是如此无限精微，以至于光对灵性之伟大黑暗的丰饶影响常常不像黑暗本身那样明显。
 
 The progress chosen by many adepts becomes a confused path as each adept attempts to use the Catalyst of the Spirit. Few there are which are successful in grasping the light of the sun. By far, the majority of adepts remain groping in the moonlight and, as we have said, this light can deceive as well as uncover hidden mystery.
-许多 adept 选择的进展变成了一条混乱的道路，因为每个 adept 都试图使用灵性的催化剂。很少有人能成功地抓住太阳的光。绝大多数 adept 仍然在月光中摸索，而如我们所说，这光既能揭示隐藏的奥秘，也能欺骗。
+许多行家选择的进展变成了一条混乱的道路，因为每个行家都试图使用灵性的催化剂。很少有人能成功地抓住太阳的光。绝大多数行家仍然在月光中摸索，而如我们所说，这光既能揭示隐藏的奥秘，也能欺骗。
 
 Therefore, the melody, shall we say, of this Matrix often seems to be of a negative and evil, as you would call it, nature.
 因此，容我们说，这个矩阵的旋律常常似乎具有你们所谓的负面和邪恶的本质。
 
 It is also to be noted that an adept is one which has freed itself more and more from the constraints of the thoughts, opinions, and bonds of other-selves. Whether this is done for service to others or service to self, it is a necessary part of the awakening of the adept. This freedom is seen by those not free as what you would call evil or black. The magic is recognized; the nature is often not.
-还应注意，adept 是一个已经越来越多地将自己从其他自我的思想、观点和束缚中解放出来的实体。无论这是为了服务他人还是服务自我，这都是 adept 觉醒的必要部分。这种自由被那些不自由的人视为你们所谓的邪恶或黑暗。魔法被认出；其本质常常不被认出。
+还应注意，行家是一个已经越来越多地将自己从其他自我的思想、观点和束缚中解放出来的实体。无论这是为了服务他人还是服务自我，这都是行家觉醒的必要部分。这种自由被那些不自由的人视为你们所谓的邪恶或黑暗。魔法被认出；其本质常常不被认出。
 
 ## (80.11)
 
 (80.11) Questioner Could I say, then, that implicit in the process of becoming adept is the possible partial polarization towards service to self because simply the adept becomes disassociated with many of his kind or like in the particular density which he inhabits?
-(80.11) 发问者 那么，我能不能说，成为 adept 的过程中隐含着可能部分朝向服务自我极化，因为简单地，adept 与他所居住的特定密度中的许多同类或相似者变得分离？
+(80.11) 发问者 那么，我能不能说，成为行家的过程中隐含着可能部分朝向服务自我极化，因为简单地，行家与他所居住的特定密度中的许多同类或相似者变得分离？
 
 Ra I am Ra. This is likely to occur. The apparent happening is disassociation: whether the truth is service to self and thus true disassociation from other-selves, or service to others and thus true association with the heart of all other-selves and disassociation only from the illusory husks which prevent the adept from correctly perceiving the self and other-self as one.
-Ra 我是 Ra。这很可能发生。表面上的发生是分离：真相是服务自我，因而真正地与其他自我分离，还是服务他人，因而真正地与所有其他自我的核心联合，而只与阻止 adept 正确感知自我与其他自我为一体的虚幻外壳分离。
+Ra 我是 Ra。这很可能发生。表面上的发生是分离：真相是服务自我，因而真正地与其他自我分离，还是服务他人，因而真正地与所有其他自我的核心联合，而只与阻止行家正确感知自我与其他自我为一体的虚幻外壳分离。
 
 ## (80.12)
 
 (80.12) Questioner Then you say that this effect of disassociation on the service-to-others adept is a stumbling block or slowing process in reaching that goal which he aspires to? Is this correct?
-(80.12) 发问者 那么你是说，这种分离对服务他人 adept 的影响，是达成他所渴望的目标的绊脚石或减速过程？这正确吗？
+(80.12) 发问者 那么你是说，这种分离对服务他人行家的影响，是达成他所渴望的目标的绊脚石或减速过程？这正确吗？
 
 Ra I am Ra. This is incorrect. This disassociation from the miasma of illusion and misrepresentation of each and every distortion is a quite necessary portion of an adept’s path. It may be seen by others to be unfortunate.
 Ra 我是 Ra。这是不正确的。这种从幻象迷雾和每个变貌的虚假呈现中脱离，是行家道途上相当必要的部分。它可能被他人视为不幸。
@@ -176,7 +176,7 @@ Ra 我是 Ra。你所说的这种偏移和脱离过程，最常与你们称为�
 (80.14) 发问者 我本无意在这里过于超前我的提问过程。那么，无论是正面还是负面极化的行家，都在建立一个直接汲取灵性力量的潜能。这是正确的吗？
 
 Ra I am Ra. It would be more proper to say that the adept is calling directly through the spirit to the universe for its power, for the spirit is a shuttle.
-Ra 我是 Ra。更恰当的说法是，adept 正通过灵性直接向宇宙呼唤其力量，因为灵性是一个穿梭器。
+Ra 我是 Ra。更恰当的说法是，行家正通过灵性直接向宇宙呼唤其力量，因为灵性是一个穿梭器。
 
 ## (80.15)
 
@@ -187,16 +187,16 @@ Ra I am Ra. It is a challenge to answer such a query, for there is some confusio
 Ra 我是 Ra。回答这样一个问题是一个挑战，因为它的构建中有一些混乱。然而，我们将尝试就这个主题发言。
 
 The adept, whether positive or negative, has the same Matrix. The Potentiator is also identical.
-Adept，无论是正面还是负面，有相同的矩阵。赋能者也是相同的。
+行家，无论是正面还是负面，有相同的矩阵。赋能者也是相同的。
 
 Due to the Catalyst of each adept, the adept may begin to pick and choose that into which it shall look further.
-由于每个 adept 的催化剂，adept 可能开始挑选它要进一步审视的东西。
+由于每个行家的催化剂，行家可能开始挑选它要进一步审视的东西。
 
 The Experience of the Spirit, that which you have called the Moon, is then, by far, the more manifest of influences upon the polarity of the adept.
-灵性的体验，你们称为月亮，到目前为止，是对 adept 极性影响更明显的。
+灵性的体验，也就是你们称为月亮的那个，远为更明显地影响着行家的极性。
 
 Even the most unhappy of experiences, shall we say, which seem to occur in the Catalyst of the adept, seen from the viewpoint of the spirit, may, with the discrimination possible in shadow, be worked with until light equaling the light of brightest noon descends upon the adept and positive or service-to-others illumination has occurred. The service-to-self adept will satisfy itself with the shadows and, grasping the light of day, will toss back the head in grim laughter, preferring the darkness.
-即使是最不快乐的体验，容我们说，那些似乎发生在 adept 的催化剂中的体验，从灵性的视角来看，可以凭借阴影中可能的辨别力被处理，直到等同于最明亮正午之光的亮光降临于 adept，正面或服务他人的照亮发生。服务自我的 adept 将满足于阴影，并在抓住白昼之光时，将头向后一甩，发出冷酷的笑声，偏爱黑暗。
+即使是最不快乐的体验，容我们说，那些似乎发生在行家的催化剂中的体验，从灵性的视角来看，可以凭借阴影中可能的辨别力被处理，直到等同于最明亮正午之光的亮光降临于行家，正面或服务他人的照亮发生。服务自我的行家将满足于阴影，并在抓住白昼之光时，将头向后一甩，发出冷酷的笑声，偏爱黑暗。
 
 ## (80.16)
 
@@ -217,7 +217,7 @@ Ra 我是 Ra。在回答前一个问题时，我们正是在做这件事。灵�
 ## (80.18)
 
 (80.18) Questioner Then would this process of radiation or absorption, since we have what I would call a flux or flux rate, be the measure of the power of the adept?
-(80.18) 发问者 那么，这种辐射或吸收的过程，既然我们有我称之为通量或通量率的东西，会是 adept 力量的度量吗？
+(80.18) 发问者 那么，这种辐射或吸收的过程，既然我们有我称之为通量或通量率的东西，会是行家力量的度量吗？
 
 Ra I am Ra. This may be seen to be a reasonably adequate statement.
 Ra 我是 Ra。这可以被视为一个相当恰当的陈述。
@@ -242,7 +242,7 @@ The infinity of the spirit is an even greater realization than the infinity of c
 灵性的无限是一种比意识的无限更伟大的实现，因为被意志和信心所训练的意识，是那种可以直接接触智能无限的意识。
 
 There are many things which fall away in the many, many steps of adepthood. We, of Ra, still walk these steps and praise the One Infinite Creator at each transformation.
-在 adepthood 的许多、许多步骤中，有许多东西会脱落。我们 Ra，仍然在走这些步骤，并在每次转变中赞美太一无限造物主。
+在行家之道的许多、许多步骤中，有许多东西会脱落。我们 Ra，仍然在走这些步骤，并在每次转变中赞美太一无限造物主。
 
 ## (80.21)
 

@@ -47,7 +47,7 @@ Ra 我是 Ra。你们小组可以停止继续这个通讯。
 (77.5) 发问者 那是我们唯一能做的事吗？
 
 Ra I am Ra. That is the only thing you could do which you are not already attempting with a whole heart.
-Ra 我是 Ra。这是你们唯一能做的事，而你们尚未以全心全意去尝试。
+Ra 我是 Ra。这是你们唯一能做、却尚未以全心全意去尝试的事。
 
 ## (77.6)
 
@@ -179,7 +179,7 @@ To turn to your question, there were Logoi which chose to set the plan for the a
 转向你的问题，曾经有一些理则选择设定计划，让心/身/灵复合体通过每个真实颜色身体而被激活，而不诉诸于自由意志的预先应用。据我们所知，只有在没有自由意志的情况下，你所说的条件才会出现。在这样一个密度的进程中，你会发现一个以你们的时间衡量极其漫长的第三密度；同样，第四密度也是如此。然后，当实体开始看见造物主时，会有一个以你们的时间衡量非常迅速的向第八密度前进的过程。这是因为一个不知道的人，也不在乎。
 
 Let us illustrate by observing the relative harmony and unchanging quality of existence in one of your, as you call it, primitive tribes. The entities have the concepts of lawful and taboo, but the law is inexorable and all events occur as predestined. There is no concept of right and wrong, good or bad. It is a culture in monochrome. In this context you may see the one you call Lucifer as the true light-bringer in that the knowledge of good and evil both precipitated the mind/body/spirits of this Logos from the Edenic conditions of constant contentment but also provided the impetus to move, to work, and to learn.
-让我们通过观察你们所谓的一个原始部落中相对和谐且不变的存在品质来说明。这些实体有合法和禁忌的概念，但法律是严酷的，所有事件都如预定般发生。没有对与错、善与恶的概念。这是一种单色的文化。在这种背景下，你们可以将你们称为路西法的存在视为真正的光之使者，因为善恶知识既使这个理则的心/身/灵复合体从伊甸园般永恒满足的状态中脱离出来，也提供了行动、工作和学习的动力。
+让我们通过观察你们所谓的一个原始部落中相对和谐且不变的存在品质来说明。这些实体有合法和禁忌的概念，但法律是不可变更的，所有事件都如预定般发生。没有对与错、善与恶的概念。这是一种单色的文化。在这种背景下，你们可以将你们称为路西法的存在视为真正的光之使者，因为善恶知识既使这个理则的心/身/灵复合体从伊甸园般永恒满足的状态中脱离出来，也提供了行动、工作和学习的动力。
 
 Those Logoi whose creations have been set up without free will have not, in the feeling of those Logoi, given the Creator the quality and variety of experience of Itself as have those Logoi which have incorporated free will as paramount. Thusly you find those Logoi moving through the timeless states at what you would see as a later space/time to choose the free will character when elucidating the foundations of each Logos.
 那些没有自由意志的造物理则，在这些理则的感受中，并未像那些将自由意志视为至高无上的理则那样，给予造物主对自身经验的品质和多样性。因此，你会发现那些理则在你们所认为的较晚的空间/时间中，穿越无时间状态，在阐明每个理则的基础时选择了自由意志的特性。

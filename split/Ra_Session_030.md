@@ -161,7 +161,7 @@ The planet which you dwell upon has a metaphysical history well known to you, an
 你们所居住的行星，其形而上学历史已为你们所熟知，若你们愿意，可以就此提问。然而，我们已就这一主题做了大量发言。
 
 The planet known as Saturn has a great affinity for the infinite intelligence, and thus it has been dwelled upon in its magnetic fields of time/space by those who wish to protect your system.
-以土星闻名的行星与无限智能有着深厚的亲和力，因此那些希望保护你们星系的存在曾居住在其时间/空间的磁场中。
+你们所知为土星的行星与无限智能有着深厚的亲和力，因此那些希望保护你们星系的存在曾居住在其时间/空间的磁场中。
 
 The planetary entity known to you as Uranus is slowly moving through the first density and has the potential of moving through all densities.
 你们所知为天王星的行星实体正缓慢地穿越第一密度，并具有穿越所有密度的潜力。

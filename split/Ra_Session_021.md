@@ -290,7 +290,7 @@ I would just like to ask if there is anything I could do to make the instrument 
 我只是想问一下，我是否可以做些什么让器皿更舒适？我们希望今天晚些时候再进行一次集会。
 
 Ra I am Ra. You may observe a slight misalignment between book, candle, and perpendicularity of censer. This is not significant, but as we have said, the cumulative effects upon this instrument are not well. You are conscientious. It is well to have a second session given the appropriate exercising and manipulation of this instrument’s physical complex.
-Ra 我是 Ra。你们可以观察到书、蜡烛与香炉垂直度之间轻微的未对齐。这不重要，但正如我们所说，累积效应对这个器皿是不利的。你们是尽责的。在给予这个器皿的物理复合体适当的锻炼和操作后，进行第二次集会是好的。
+Ra 我是 Ra。你们可以观察到书、蜡烛与香炉垂直度之间轻微的未对齐。这不重要，但正如我们所说，累积效应对这个器皿是不利的。你们是尽责的。在给予这个器皿的物理复合体适当的运用与操作后，进行第二次集会是好的。
 
 I am Ra. I leave you in the love and the light of the One Infinite Creator. Go forth, therefore, rejoicing in the power and the peace of the One Creator. Adonai.
 我是 Ra。我在太一无限造物主的爱与光中离开你们。因此，向前去吧，在太一造物主的力量与和平中欢欣鼓舞。Adonai。

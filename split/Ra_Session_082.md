@@ -75,7 +75,7 @@ Ra 我是 Ra。这个问题有令人困惑的元素。无限有一个中心。�
 (82.8) 发问者 仅考虑我们的银河系：在其开始时，我假设第一个……我们目前可以用物理仪器找到的第一个发生……第一个发生是出现了一颗类似我们太阳性质的恒星？
 
 Ra I am Ra. In the case of the galactic systems the first manifestation of the Logos is a cluster of central systems which generate the outward swirling energies producing, in their turn, further energy centers for the Logos, or what you would call stars.
-Ra 我是 Ra。在星系系统的情况下，逻各斯的第一个显化是一个中心系统星团，它产生向外旋转的能量，进而为逻各斯产生更多的能量中心，即你们所谓的恒星。
+Ra 我是 Ra。在星系系统的情况下，理则的第一个显化是一个中心系统星团，它产生向外旋转的能量，进而为理则产生更多的能量中心，即你们所谓的恒星。
 
 ## (82.9)
 
@@ -83,7 +83,7 @@ Ra 我是 Ra。在星系系统的情况下，逻各斯的第一个显化是一�
 (82.9) 发问者 那么这些中心的原始创造是我们所谓的恒星团吗？
 
 Ra I am Ra. This is correct. However, the closer to the, shall we say, beginning of the manifestation of the Logos the star is, the more it partakes in the One Original Thought.
-Ra 我是 Ra。这是正确的。然而，恒星越接近逻各斯显化的开始，容我们说，它就越多地参与太一原初思想。
+Ra 我是 Ra。这是正确的。然而，恒星越接近理则显化的开始，容我们说，它就越多地参与太一原初思想。
 
 ## (82.10)
 
@@ -119,13 +119,13 @@ Ra I am Ra. Your queries seem more confused than your basic mental distortions i
 Ra 我是 Ra。你的问题似乎比你在这一领域的基本心智变貌更加混乱。让我们概括地说，也许你可以找到一个不那么混乱、更简单的方法来获取这一领域的信息。
 
 A very great deal of creation was manifested without the use of the concepts involved in consciousness, as you know it. The creation itself is a form of consciousness which is unified—the Logos being the one great heart of creation.
-非常大量的造物是在没有使用你们所知的意识概念的情况下显化的。造物本身是一种统一的意识形式——逻各斯是造物的那一颗伟大心脏。
+非常大量的造物是在没有使用你们所知的意识概念的情况下显化的。造物本身是一种统一的意识形式——理则是造物的那一颗伟大心脏。
 
 The process of evolution through this period, which may be seen to be timeless, is most valuable to take into consideration, for it is against the background of this essential unity of the fabric of creation that we find the ultimate development of the Logoi which chose to use that portion of the harvested consciousness of the Creator to move forward with the process of knowledge of self.
-通过这个可以被视为无时间性的时期进化的过程，是非常值得考虑的，因为正是在造物构造这一基本统一性的背景下，我们发现了那些逻各斯的最终发展，它们选择使用造物主已收割意识的那一部分，以推进自我认识的过程。
+通过这个可以被视为无时间性的时期进化的过程，是非常值得考虑的，因为正是在造物构造这一基本统一性的背景下，我们发现了那些理则的最终发展，它们选择使用造物主已收割意识的那一部分，以推进自我认识的过程。
 
 As it had been found to be efficient to use the various densities, which are fixed in each octave, in order to create conditions in which self-conscious sub-Logoi could exist, this was carried out throughout the growing flower-strewn field, as your simile suggests, of the One Infinite Creation.
-由于已经发现使用每个八度音程中固定的各个密度是有效的，以便创造自我意识的子逻各斯能够存在的条件，这在太一无限造物中——如你的比喻所暗示的——遍布生长的繁花田野上得以实施。
+由于已经发现使用每个八度音程中固定的各个密度是有效的，以便创造自我意识的子理则能够存在的条件，这在太一无限造物中——如你的比喻所暗示的——遍布生长的繁花田野上得以实施。
 
 The first beings of mind, body, and spirit were not complex. The experience of mind/body/spirits at the beginning of this octave of experience was singular. There was no third-density forgetting. There was no veil. The lessons of third density are predestined by the very nature of the vibratory rates experienced during this particular density, and by the nature of the quantum jump to the vibratory experiences of fourth density.
 最初的心智、身体和灵性存有并不复杂。在这个经验八度音程开始时，心/身/灵（复数）的体验是单一的。没有第三密度遗忘。没有面纱。第三密度的课程是由这个特定密度期间所体验的振动频率的本质，以及跃迁到第四密度振动体验的量子跳跃的本质所预先决定的。
@@ -144,7 +144,7 @@ Ra 我是 Ra。这在假设上是正确的。
 (82.14) 发问者 这在星系中心附近的一些行星或大部分行星上确实以这种方式发生了吗？
 
 Ra I am Ra. Our knowledge is limited. We know of the beginning but cannot asseverate to the precise experiences of those things occurring before us.[64] You know the nature of historical teaching. At our level of learn/teaching we may expect little distortion. However, we cannot, with surety, say there is no distortion as we speak of specific occurrences of which we were not consciously a part. It is our understanding that your supposition is correct. Thus we so hypothesize.
-Ra 我是 Ra。我们的知识是有限的。我们知道开始，但不能断言在我们之前发生的那些事情的具体体验。[64]你知道历史教学的性质。在我们的学习/教导层级上，我们可能期望很少的扭曲。然而，我们不能确定地说，当我们谈论我们并未有意识地参与的具体事件时没有扭曲。我们的理解是，你的假设是正确的。因此我们如此假设。
+Ra 我是 Ra。我们的知识是有限的。我们知道开始，但不能断言在我们之前发生的那些事情的具体体验。[64]你知道历史教学的性质。在我们的学习/教导层级上，我们可能期望很少的变貌。然而，我们不能确定地说，当我们谈论我们并未有意识地参与的具体事件时没有变貌。我们的理解是，你的假设是正确的。因此我们如此假设。
 
 ## (82.15)
 
@@ -168,7 +168,7 @@ Ra 我是 Ra。我们请求你的允许，以间接的方式回答这个问题�
 (82.17) 发问者 当然可以。
 
 Ra I am Ra. Your queries seem to be pursuing the possibility/probability that the mechanisms of experience in third density are different if a mind/body/spirit is attempting them rather than a mind/body/spirit complex. The nature of third density is constant. Its ways are to be learned the same now and ever.
-Ra 我是 Ra。你的问题似乎比你在这一领域的基本心智变貌更加混乱。让我们概括地说，也许你可以找到一个不那么混乱、更简单的方法来获取这一领域的信息。
+Ra 我是 Ra。你的问题似乎在追寻一种可能性/或然性，即如果在第三密度中尝试这些机制的是心/身/灵而非心/身/灵复合体，体验的机制是否会有所不同。第三密度的本质是恒常的。其道途如今与永远皆相同，需被学习。
 
 Thusly, no matter what form the entity facing these lessons, the lessons and mechanisms are the same. The Creator will learn from Itself. Each entity has unmanifest portions of learning and, most importantly, learning which is involved with other-selves.
 因此，无论实体以何种形式面对这些课程，课程和机制都是相同的。造物主将从它自身学习。每个实体都有未显化的学习部分，最重要的是，涉及与其他自我互动的学习。
@@ -203,10 +203,10 @@ Ra 我是 Ra。这是正确的。
 ## (82.21)
 
 (82.21) Questioner Then even though, from our point of view, there was great evolutionary experience it was deemed at some point by the evolving Logos that an experiment to create a greater experience was appropriate. Is this correct?
-(82.21) 发问者 那么，即使从我们的观点来看，曾有伟大的进化体验，但进化的逻各斯在某个时刻认为，创造一个产生更大体验的实验是适当的。这是正确的吗？
+(82.21) 发问者 那么，即使从我们的观点来看，曾有伟大的进化体验，但进化的理则在某个时刻认为，创造一个产生更大体验的实验是适当的。这是正确的吗？
 
 Ra I am Ra. This is correct and may benefit from comment. The Logos is aware of the nature of the third-density requirement for what you have called graduation. All the previous, if you would use this term, experiments, although resulting in many experiences, lacked what was considered the crucial ingredient: that is, polarization.
-Ra 我是 Ra。这是正确的，并且可以通过评论来增益。逻各斯意识到第三密度对你们所谓的毕业的要求的本质。所有先前的——如果你愿意用这个术语——实验，尽管产生了许多体验，但缺乏被认为是关键成分的东西：即极化。
+Ra 我是 Ra。这是正确的，并且可以通过评论来增益。理则意识到第三密度对你们所谓的毕业的要求的本质。所有先前的——如果你愿意用这个术语——实验，尽管产生了许多体验，但缺乏被认为是关键成分的东西：即极化。
 
 There was little enough tendency for experience to polarize entities that entities repeated, habitually, the third-density cycles many times over. It was desired that the potential for polarization be made more available.
 体验极化实体的倾向非常微弱，以至于实体们习惯性地多次重复第三密度循环。人们希望使极化的潜能变得更加可用。
@@ -239,7 +239,7 @@ Ra I am Ra. The inchoate structure of this process was always in place, but wher
 Ra 我是 Ra。这个过程的基本结构一直存在，但若没有伤害，就不需要疗愈。[67]
 
 This, too, may be seen to have been of concern to Logoi which were aware that, without the need to understand, understanding would forever be left undone. We ask your forgiveness for the use of this misnomer, but your language has a paucity of sound vibration complexes for this general concept.
-这也可能被视为那些逻各斯所关心的问题，它们意识到，没有理解的需要，理解将永远无法完成。我们请求你的原谅，因为使用了这个不当用词，但你们的语言对这一普遍概念缺乏声音振动复合体。
+这也可能被视为那些理则所关心的问题，它们意识到，没有理解的需要，理解将永远无法完成。我们请求你的原谅，因为使用了这个不当用词，但你们的语言对这一普遍概念缺乏声音振动复合体。
 
 ## (82.25)
 
@@ -294,7 +294,7 @@ Prior to the veiling process the measurement would be that of an entity walking 
 在面纱过程之前，衡量标准将是一个实体走上你们的一组楼梯，每一步都浸透着某种光质。实体停下的那一级台阶将是第三密度之光或第四密度之光。在两级台阶之间是门槛。跨越那个门槛是困难的。在每个密度的边缘，容我们说，都存在着阻力。
 
 The faculty of faith or will needs to be understood, nourished, and developed in order to have an entity which seeks past the boundary of third density. Those entities which do not do their homework, be they ever so amiable, shall not cross. It was this situation which faced the Logoi prior to the veiling process being introduced into the experiential continuum of third density.
-信心或意志的能力需要被理解、滋养和发展，以便一个实体寻求超越第三密度的边界。那些不做家庭作业的实体，无论多么友善，都不会跨越。这就是在面纱过程被引入第三密度体验连续体之前，逻各斯们所面临的状况。
+信心或意志的能力需要被理解、滋养和发展，以便一个实体寻求超越第三密度的边界。那些不做家庭作业的实体，无论多么友善，都不会跨越。这就是在面纱过程被引入第三密度体验连续体之前，理则们所面临的状况。
 
 May we ask if there are any brief queries at this working?
 我们可以问一下，在这次工作中是否还有任何简短的问题？

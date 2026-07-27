@@ -48,7 +48,7 @@ Ra 我是 Ra。你们的同伴从未像在当前的连结点这样与你们如�
 (85.4) 发问者 这个危机的性质是什么？
 
 Ra I am Ra. The nature of this crisis is the determination of the relative polarity of your companion and yourselves. You are in the position of being in the third-density illusion and consequently having the conscious collective magical ability of the neophyte, whereas your companion is most adept. However, the faculties of will and faith and the calling to the light have been used by this group to the exclusion of any significant depolarization from the service-to-others path.
-Ra 我是 Ra。这个危机的性质是确定你们的同伴和你们之间相对的极性。你们处于第三密度幻象中，因此只拥有新手的、有意识的集体魔法能力，而你们的同伴则是最为熟练的。然而，这个小组使用了意志、信心以及对光的呼求，从而排除了任何显著偏离服务他人道路的极化消减。
+Ra 我是 Ra。这个危机的性质是确定你们的同伴和你们之间相对的极性。你们处于第三密度幻象中，因此只拥有新手的、有意识的集体魔法能力，而你们的同伴则是最为熟练的。然而，这个小组使用了意志、信仰以及对光的呼求，从而排除了任何显著偏离服务他人道路的极化消减。
 
 If your companion can possibly depolarize this group it must do so, and that quickly, for in this unsuccessful attempt at exploring the wisdom of separation it is encountering some depolarization. This shall continue. Therefore, the efforts of your companion are pronounced at this space/time and time/space nexus.
 如果你们的同伴有可能消减这个小组的极化，它必须这样做，并且要快，因为在这探索分离之智慧的失败尝试中，它正在经历一些极化消减。这将继续。因此，你们的同伴在此空间/时间与时间/空间连结点上的努力是显著的。
@@ -88,24 +88,24 @@ Ra 我是 Ra。如果器皿希望保持自由，免受这种心/身/灵复合体
 ## (85.9)
 
 (85.9) Questioner I am assuming that if for no other reason, since our fifth-density companion has been monitoring our communications with Ra, it has been made aware of the veiling process of which we have been speaking.
-(85.9) 发问者 我假设，如果不是因为其他原因，由于我们的第五密度同伴一直在监视我们与 Ra 的通讯，它已经意识到了我们一直在谈论的罩纱过程。
+(85.9) 发问者 我假设，如果不是因为其他原因，由于我们的第五密度同伴一直在监视我们与 Ra 的通讯，它已经意识到了我们一直在谈论的面纱过程。
 
 And it seems to me that, from an intellectual point of view, that conscious knowledge and acceptance of the fact that this veiling process was used for the purpose for which it was used, that it would be difficult to maintain high negative polarization once it was intellectually, consciously accepted that this veiling process did in fact occur the way that you have described. Could you clear up my thinking on that point?
-在我看来，从理智的角度来看，一旦在理智上、有意识地接受了这个罩纱过程确实如你所描述的那样发生，那么在意识到并接受这个罩纱过程被用于其原本目的的事实之后，维持高度的负面极化将是困难的。你能澄清我对这一点的想法吗？
+在我看来，从理智的角度来看，一旦在理智上、有意识地接受了这个面纱过程确实如你所描述的那样发生，那么在意识到并接受这个面纱过程被用于其原本目的的事实之后，维持高度的负面极化将是困难的。你能澄清我对这一点的想法吗？
 
 Ra I am Ra. We are unsure as to our success in realigning your modes of mentation. We may, however, comment.
 Ra 我是 Ra。我们不确定能否成功重新调整你的思维模式。然而，我们可以评论。
 
 The polarization process, as it enters fourth density, is one which occurs with full knowledge of the veiling process which has taken place in third density. This veiling process is that which is a portion of the third-density experience. The knowledge and memory of the outcome of this, and all portions of the third-density experience, informs the higher-density polarized entity.
-极化过程，当它进入第四密度时，是在完全知晓第三密度中已发生的罩纱过程的情况下发生的。这个罩纱过程是第三密度经验的一部分。对此结果以及第三密度经验所有部分的知识和记忆，为更高密度的极化实体提供了信息。
+极化过程，当它进入第四密度时，是在完全知晓第三密度中已发生的面纱过程的情况下发生的。这个面纱过程是第三密度经验的一部分。对此结果以及第三密度经验所有部分的知识和记忆，为更高密度的极化实体提供了信息。
 
 It, however, does not influence the choice which has been made and which is the basis for further work past third density in polarization. Those which have chosen the service-to-others[77] path have simply used the veiling process in order to potentiate that which is not. This is an entirely acceptable method of self-knowledge of and by the Creator.
-然而，它并不影响已经做出的选择，而这一选择是超越第三密度后进一步极化工作的基础。那些选择了服务他人[77]道路的实体，只是利用罩纱过程来增强那非是之物。这完全是造物主认识自我以及被造物主认识的一种可接受的方法。
+然而，它并不影响已经做出的选择，而这一选择是超越第三密度后进一步极化工作的基础。那些选择了服务他人[77]道路的实体，只是利用面纱过程来增强那非是之物。这完全是造物主认识自我以及被造物主认识的一种可接受的方法。
 
 ## (85.10)
 
 (85.10) Questioner You just stated that those who are on the service-to-others path use the veiling process to potentiate that which is not. I believe I am correct in repeating what you said. Is that correct?
-(85.10) 发问者 你刚才说，那些在服务他人道路上的人利用罩纱过程来增强那非是之物。我相信我复述你的话是正确的。这是否正确？
+(85.10) 发问者 你刚才说，那些在服务他人道路上的人利用面纱过程来增强那非是之物。我相信我复述你的话是正确的。这是否正确？
 
 Ra I am Ra. Yes. [78]
 Ra 我是 Ra。是的。[78]
@@ -119,7 +119,7 @@ Ra I am Ra. If you see the energy centers in their various colors completing the
 Ra 我是 Ra。如果你看到能量中心以其各种颜色构成完整的光谱，你可能会看到，服务他人[79]的选择是否认光谱正中心——即普世大爱——的选择。
 
 Therefore, all that is built upon the penetration of the light of harvestable quality by such entities is based upon an omission. This omission shall manifest in fourth density as the love of self; that is, the fullest expression of the orange and yellow energy centers which then are used to potentiate communication and adepthood.
-因此，这些实体基于穿透可收割品质之光所建立的一切，都是建立在一种遗漏之上。这种遗漏将在第四密度中显现为自我之爱；也就是说，橙色和黄色能量中心的最充分表达，然后被用来增强沟通和熟练度。
+因此，这些实体基于穿透可收割品质之光所建立的一切，都是建立在一种遗漏之上。这种遗漏将在第四密度中显现为自我之爱；也就是说，橙色和黄色能量中心的最充分表达，然后被用来增强沟通与精通者之境。
 
 When fifth-density refinement has been achieved, that which is not is carried further, the wisdom density being explored by entities which have no compassion, no universal love. They experience that which they wish by free choice, being of the earnest opinion that green-ray energy is folly.
 当第五密度的精炼达成时，那非是之物被进一步推进，智慧密度被那些没有悲悯、没有普世大爱的实体所探索。他们通过自由选择体验他们所想要的，他们真诚地认为绿色光芒能量是愚蠢的。
@@ -174,7 +174,7 @@ Thus the student may discover many other components to what may seem to be all-e
 因此，学生可能会在看似包容一切的爱中发现许多其他成分。这些成分中的每一个都可以被平衡，并被接受为自我的一部分，并作为过渡材料，随着该实体的学习/教导之座越来越公正地进入绿色光芒。
 
 When it is perceived that universal love has been achieved, the next balancing may or may not be wisdom. If the adept is balancing manifestations it is indeed appropriate to balance universal love and wisdom. If the balancing is of mind or spirit there are many subtleties to which the adept may give careful consideration. Love and wisdom, like love and light, are not black and white, shall we say, but faces of the same coin, if you will. Therefore, it is not in all cases that balancing consists of a movement from compassion to wisdom.
-当普世大爱被认为已经达成时，下一个平衡可能是智慧，也可能不是。如果熟练者正在平衡显化，那么平衡普世大爱与智慧确实是合适的。如果平衡的是心智或精神，那么熟练者可以仔细考虑许多微妙之处。爱与智慧，如同爱与光，并不是——容我们说——黑白分明的，而是——如果你愿意这么说——同一枚硬币的两面。因此，并非在所有情况下平衡都包含从悲悯到智慧的转变。
+当普世大爱被认为已经达成时，下一个平衡可能是智慧，也可能不是。如果熟练者正在平衡显化，那么平衡普世大爱与智慧确实是合适的。如果平衡的是心智或灵性，那么熟练者可以仔细考虑许多微妙之处。爱与智慧，如同爱与光，并不是——容我们说——黑白分明的，而是——如果你愿意这么说——同一枚硬币的两面。因此，并非在所有情况下平衡都包含从悲悯到智慧的转变。
 
 We may suggest at all times the constant remembrance of the density from which each adept desires to move. This density learns the lessons of love. In the case of wanderers there are half-forgotten overlays of other lessons and other densities.
 我们可以在任何时候建议，持续记住每个熟练者希望从中移动的密度。这个密度学习爱的课程。就流浪者而言，存在着其他课程和其他密度中半被遗忘的重叠。
@@ -188,7 +188,7 @@ We shall leave these considerations with the questioner and invite observations 
 ## (85.17)
 
 (85.17) Questioner What changes of functions, or control, or understanding, etc., of the mind/body/spirits were most effective in producing the evolution desired due to the veiling process?
-(85.17) 发问者 由于罩纱过程，心/身/灵复合体的哪些功能、控制或理解等方面的变化在产生所需的进化方面最为有效？
+(85.17) 发问者 由于面纱过程，心/身/灵复合体的哪些功能、控制或理解等方面的变化在产生所需的进化方面最为有效？
 
 Ra I am Ra. We are having difficulty retaining clear channel through this instrument. It has a safe margin of transferred energy but is experiencing pain flares. May we ask that you repeat the query as we have a better channel now.
 Ra 我是 Ra。我们正在这个器皿身上保持清晰的通道方面遇到困难。它有安全范围的转移能量，但正在经历疼痛发作。我们可否请你重复这个问题，因为我们现在有一个更好的通道。
@@ -196,10 +196,10 @@ Ra 我是 Ra。我们正在这个器皿身上保持清晰的通道方面遇到�
 ## (85.18)
 
 (85.18) Questioner After the veiling process certain veiled functions or activities must have been paramount in creating evolution in desired polarized directions. I was just wondering which of these had the greatest effect on polarization?
-(85.18) 发问者 在罩纱过程之后，某些被罩纱的功能或活动必定在创造朝向所需极化方向的进化中至关重要。我只是想知道，其中哪一个对极化影响最大？
+(85.18) 发问者 在面纱过程之后，某些被面纱遮蔽的功能或活动必定在创造朝向所需极化方向的进化中至关重要。我只是想知道，其中哪一个对极化影响最大？
 
 Ra I am Ra. The most effectual veiling was that of the mind.
-Ra 我是 Ra。最有效的罩纱是心智的罩纱。
+Ra 我是 Ra。最有效的面纱是心智的面纱。
 
 ## (85.19)
 
@@ -207,19 +207,19 @@ Ra 我是 Ra。最有效的罩纱是心智的罩纱。
 (85.19) 发问者 我想继续探讨，找出心智的哪些具体功能最为有效，以及为创造极化而带来的三到四个最有效的变化。
 
 Ra I am Ra. This is an interesting query. The primary veiling was of such significance that it may be seen to be analogous to the mantling of the earth over all the jewels within the earth's crust; whereas previously all facets of the Creator were consciously known. After the veiling, almost no facets of the Creator were known to the mind. Almost all was buried beneath the veil.
-Ra 我是 Ra。这是一个有趣的问题。主要的罩纱具有如此重大的意义，以至于它可以被类比为大地覆盖了地壳内的所有宝石；而在此之前，造物主的所有面向都是有意识地已知的。在罩纱之后，几乎没有任何造物主的面向被心智所知晓。几乎一切都被埋藏在了罩纱之下。
+Ra 我是 Ra。这是一个有趣的问题。主要的面纱具有如此重大的意义，以至于它可以被类比为大地覆盖了地壳内的所有宝石；而在此之前，造物主的所有面向都是有意识地已知的。在面纱之后，几乎没有任何造物主的面向被心智所知晓。几乎一切都被埋藏在了面纱之下。
 
 If one were to attempt to list those functions of mind most significant in that they might be of aid in polarization, one would need to begin with the faculty of visioning, envisioning, or far-seeing. Without the veil the mind was not caught in your illusory time. With the veil, space/time is the only obvious possibility for experience.
-如果有人试图列出那些在极化方面可能最有帮助的心智功能，那么需要从观想、展望或远见的能力开始。没有罩纱时，心智不会被你们幻象中的时间所困。有了罩纱，空间/时间成了唯一明显的经验可能性。
+如果有人试图列出那些在极化方面可能最有帮助的心智功能，那么需要从观想、展望或远见的能力开始。没有面纱时，心智不会被你们幻象中的时间所困。有了面纱，空间/时间成了唯一明显的经验可能性。
 
 Also upon the list of significant veiled functions of the mind would be that of dreaming. The so-called dreaming contains a great deal which, if made available to the conscious mind and used, shall aid it in polarization to a great extent.
-在重要的被罩纱心智功能列表中，还有做梦。所谓的做梦包含了大量内容，如果使其能被有意识心智获取并利用，将在很大程度上帮助极化。
+在重要的被面纱遮蔽心智功能列表中，还有做梦。所谓的做梦包含了大量内容，如果使其能被有意识心智获取并利用，将在很大程度上帮助极化。
 
 The third function of the mind which is significant and which has been veiled is that of the knowing of the body. The knowledge of and control over the body, having been lost to a great extent in the veiling process, is thusly lost from the experience of the seeker. Its knowledge before the veiling is of small use. Its knowledge after the veiling, and in the face of what is now a dense illusion of separation of body complex from mind complex, is quite significant.
-心智中第三个重要且被罩纱的功能是对身体的知晓。在罩纱过程中，对身体的知识和控制已大量丧失，因此从寻求者的经验中失去了。它在罩纱前的知识用处不大。在罩纱后，面对肉体复合体与心智复合体分离的密集幻象，它的知识是相当重要的。
+心智中第三个重要且被面纱遮蔽的功能是对身体的知晓。在面纱过程中，对身体的知识和控制已大量丧失，因此从寻求者的经验中失去了。它在面纱前的知识用处不大。在面纱后，面对肉体复合体与心智复合体分离的密集幻象，它的知识是相当重要的。
 
 Perhaps the most important and significant function that occurred due to the veiling of the mind from itself is not in itself a function of mind but rather is a product of the potential created by this veiling. This is the faculty of will or pure desire.
-也许，由于心智对自身罩纱而产生的最重要且最显著的功能，本身不是心智的功能，而是这种罩纱所创造的潜能之产物。这就是意志或纯粹渴望的能力。
+也许，由于心智对自身面纱而产生的最重要且最显著的功能，本身不是心智的功能，而是这种面纱所创造的潜能之产物。这就是意志或纯粹渴望的能力。
 
 We may ask for brief queries at this time. Although there is energy remaining for this working we are reluctant to continue this contact, experiencing continual variations due to pain flares, as you call this distortion. Although we are unaware of any misgiven material, we are aware that there have been several points during which our channel was less-than-optimal. This instrument is most faithful, but we do not wish to misuse this instrument. Please query as you will.
 我们此时可以请求简短的问题。虽然这次工作还有剩余能量，但由于疼痛发作——如你们对这个变貌的称呼——我们经历了持续的波动，因此我们不愿继续这个通讯。虽然我们没有意识到有任何错误传递的材料，但我们意识到有几个时刻我们的通道处于次优状态。这个器皿非常忠诚，但我们不希望滥用这个器皿。请随意提问。
@@ -230,7 +230,7 @@ We may ask for brief queries at this time. Although there is energy remaining fo
 (85.20) 发问者 好吧，我最后只问一个问题：Ra 的一个个体化部分或实体是否为了通讯目的而居住在器皿的身体中？然后，我们能做些什么来改善接触或使器皿更舒适？
 
 Ra I am Ra. We of Ra communicate through narrow-band channel through the violet-ray energy center. We are not, as you would say, physically indwelling in this instrument; rather, the mind/body/spirit complex of this instrument rests with us.
-Ra 我是 Ra。我们 Ra 通过紫罗兰光芒能量中心进行窄带通道通讯。我们并没有——如你们所说——实际居住在这个器皿体内；更确切地说，这个器皿的心/身/灵复合体与我们同处。
+Ra 我是 Ra。我们 Ra 通过紫色光芒能量中心进行窄带通道通讯。我们并没有——如你们所说——实际居住在这个器皿体内；更确切地说，这个器皿的心/身/灵复合体与我们同处。
 
 You are diligent and conscientious. The alignments are excellent. We leave you rejoicing in the power and in the peace of the One Infinite Creator. Go forth, then, my friends, rejoicing in the power and in the peace of the infinite love and the ineffable light of the One Creator. I am Ra. Adonai.
 你们是勤奋且尽责的。校准是极好的。我们离开你们，在太一无限造物主的力量与平安中欢欣鼓舞。那么，向前去吧，我的朋友们，在太一造物主的无限大爱与不可言喻之光的力量与平安中欢欣鼓舞。我是 Ra。Adonai。

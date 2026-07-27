@@ -23,12 +23,12 @@ Ra 我是 Ra。我们欣慰地说，如前所述。
 (70.2) 发问者 你为什么说你们欣慰地这样说？
 
 Ra I am Ra. We say this due to a sense of gratitude at the elements which have enabled this instrument to maintain, against great odds, its vital energy at normal vibratory strength. As long as this complex of energies is satisfactory we may use this instrument without depletion regardless of the distortions previously mentioned.
-Ra 我是 Ra. 我们这样说是因为对那些使该器皿能够克服巨大困难将其生命能维持在正常振动强度水平的因素感到感激。只要这个能量复合体令人满意，我们就可以使用该器皿而不会耗尽——无论先前提到的变貌如何。
+Ra 我是 Ra。我们这样说是因为对那些使该器皿能够克服巨大困难将其生命能维持在正常振动强度水平的因素感到感激。只要这个能量复合体令人满意，我们就可以使用该器皿而不会耗尽——无论先前提到的变貌如何。
 
 ## (70.3)
 
 (70.3) Questioner The instrument has complained of intensive psychic attack for the past diurnal period, approximately. Is there a reason for the intensification of this at this time?
-(70.3) 发问者 器皿抱怨在过去大约一个日间周期中遭受了强烈的 psychic 攻击。此时这种攻击的加剧是否有原因？
+(70.3) 发问者 器皿抱怨在过去大约一个日间周期中遭受了强烈的心灵攻击。此时这种攻击的加剧是否有原因？
 
 Ra I am Ra. Yes.
 Ra 我是 Ra。是的。
@@ -42,7 +42,7 @@ Ra I am Ra. The cause is that with which you are intimately involved; that is, t
 Ra 我是 Ra。原因与你们密切相关之事有关；也就是说，原因是对你们可称为启蒙的密集寻求。你们这方面的寻求没有减弱，反而加强了。
 
 In the general case, pain—as you call this distortion, and the various exaggerations of this distortion by psychic attack—would, after the depletion of physical complex energy, begin the depletion of vital energy.
-在一般情况下，痛苦——如你们所称的变貌，以及通过 psychic 攻击对这种变貌的各种夸大——在身体复合体能量耗尽后，会开始耗尽生命能。
+在一般情况下，痛苦——如你们所称的变貌，以及通过心灵攻击对这种变貌的各种夸大——在身体复合体能量耗尽后，会开始耗尽生命能。
 
 This instrument guards its vital energy due to previous errors upon its part. Its subconscious will, which is preternaturally strong for this density, has put a ward upon this energy complex. Thus the Orion visitor strives with more and more intensity to disturb this vital energy as this group intensifies its dedication to service through enlightenment.
 这个器皿由于先前自身的错误而守护着其生命能。它的潜意识意志——对这个密度而言异常强大——已经对这个能量复合体施加了防护。因此，随着这个小组通过启蒙加强其服务奉献，猎户访客越来越努力地试图扰乱这个生命能。
@@ -61,7 +61,7 @@ There is an infinite range of possibility of service/disservice in the situation
 ## (70.6)
 
 (70.6) Questioner In the last session Ra stated that “the path back from sixth-density negative time/space revolves, firstly, about the higher self’s reluctance to enter negative time/space.”[28] Could you explain the higher self’s position with respect to positive and negative time/space, and why it is so reluctant to enter negative time/space that it is necessary for the mind/body/spirit complex to incarnate in negative space/time to find its path back?
-(70.6) 发问者 在上次集会中，Ra 说：「从第六密度负面时间/空间回归的道路，首先围绕高我对进入负面时间/空间的不情愿。」你能解释高我关于正面和负面时间/空间的立场，以及为什么它如此不情愿进入负面时间/空间，以至于心/身/灵复合体必须投生在负面空间/时间中才能找到回归之路？
+(70.6) 发问者 在上次集会中，Ra 说：「从第六密度负面时间/空间回归的道路，首先围绕高我对进入负面时间/空间的不情愿。」[28]你能解释高我关于正面和负面时间/空间的立场，以及为什么它如此不情愿进入负面时间/空间，以至于心/身/灵复合体必须投生在负面空间/时间中才能找到回归之路？
 
 Ra I am Ra. In brief, you have answered your own query. Please question further for more precise information.
 Ra 我是 Ra。简而言之，你已经回答了你自己的问题。请进一步提问以获得更精确的信息。
@@ -80,7 +80,7 @@ Ra 我是 Ra。高我不情愿允许其心/身/灵复合体进入负面时间/�
 (70.8) 发问者 我在这里试图理解的是更多关于高我及其与心/身/灵复合体的关系。高我是否拥有一个第六密度心/身/灵复合体，它是一个独立于在此情况下被错置到负面时间/空间的心/身/灵复合体的单元？
 
 Ra I am Ra. This is correct. The higher self is the entity of mid-sixth density which, turning back, offers this service to its self.
-Ra 我是 Ra。这是正确的。高我是第六密度中期的实体，它转身向其后来的自我提供这项服务。
+Ra 我是 Ra。这是正确的。高我是第六密度中期的实体，它回过头来向其过去的自我提供这项服务。
 
 ## (70.9)
 
@@ -123,7 +123,7 @@ Ra 我是 Ra。我们避免谈论正确性，因为我们理解吸收形而上�
 (70.13) 发问者 存在于第六密度中期的高我，似乎处于负面和正面经验路径合而为一的点。这有原因吗？
 
 Ra I am Ra. We have covered this material previously.[29]
-Ra 我是 Ra。我们先前已经讨论过这个材料。
+Ra 我是 Ra。我们先前已经讨论过这个材料。[29]
 
 ## (70.14)
 
@@ -227,7 +227,7 @@ The entity which incarnates into negative space/time will not find it possible t
 投生到负面空间/时间中的实体，将发现不可能维持任何显著的正面极性，因为负面性——当纯粹时——是一种——容我们说——重力井，将所有一切拉入其中。因此，该实体在记住其已学且偏好的极性的同时，必须利用所给予的催化剂，并重新概括服务自我的课程，以建立起足够的极性，从而使逆转的潜能得以发生。
 
 There is much in this line of questioning which is somewhat muddled. May we, at this point, allow the questioner to rephrase the question or to turn the direction of query more towards that which is the heart of its concern.
-这一系列问题中有许多内容有些混乱。在这一点上，我们可否允许发问者重新表述问题，或将询问方向更多地转向其关切的核 心？
+这一系列问题中有许多内容有些混乱。在这一点上，我们可否允许发问者重新表述问题，或将询问方向更多地转向其关切的核心？
 
 ## (70.24)
 

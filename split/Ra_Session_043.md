@@ -254,7 +254,7 @@ Ra 我是 Ra。我们理解你询问的主旨。尽管确实随着第四密度�
 (43.29) 发问者 那么我想知道，教导/学习的机制在第四密度中是否相对相同。从你所说的来看，似乎首先必须有呼唤存在，第五密度的教导/学习才能被给予第四密度，正如在这里必须有呼唤存在，第四密度的课程才能被给予第三密度。这是否正确？
 
 Ra I am Ra. This query is misguided, for experience in fourth density is emphatically not the same as third-density experience. However, it is correct that the same mechanism of calling predisposes the information received in a way consonant with free will.
-Ra 我是 Ra。这个询问被误导了，因为第四密度的经验显然与第三密度的经验不相同。然而，正确的呼唤机制以与自由意志一致的方式使接收到的信息成为可能，这是正确的。
+Ra 我是 Ra。这个询问被误导了，因为第四密度的经验显然与第三密度的经验不相同。然而，这是正确的：同样的呼唤机制以一种与自由意志一致的方式预先安排所接收到的信息。
 
 You may ask one more full question at this working.
 在这次工作中，你们可以再问一个完整的问题。

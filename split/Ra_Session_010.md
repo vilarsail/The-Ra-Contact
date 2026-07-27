@@ -46,7 +46,7 @@ Ra 这是正确的。
 (10.3) 发问者 那么现在有任何马尔戴克实体已经转变了吗？他们现在还是第二密度，还是正在形成某个第三密度行星？
 
 Ra The consciousness of these entities has always been third-density. The alleviation mechanism was designed by the placement of this consciousness in second-dimensional physical chemical complexes which are not able to be dexterous or manipulative to the extent which is appropriate to the workings of the third-density distortions of the mind complex.
-Ra 这些实体的意识一直是第三密度的。减轻机制是通过将这种意识置于第二维度的物理化学复合体中而设计的，这些复合体无法达到适合心复合体的第三密度变貌运作所需的灵巧或操控程度。
+Ra 这些实体的意识一直是第三密度的。减轻机制是通过将这种意识置于第二密度的物理化学复合体中而设计的，这些复合体无法达到适合心复合体的第三密度变貌运作所需的灵巧或操控程度。
 
 ## (10.4)
 
@@ -127,7 +127,7 @@ Ra I am Ra. This is correct. We shall attempt to speak upon this concept.
 Ra 我是 Ra。这是正确的。我们将尝试谈论这个概念。
 
 The Law of One has, as one of its primal distortions, the Free Will distortion. Thus each entity is free to accept, reject, or ignore the mind/body/spirit complexes about it and ignore the creation itself. There are many among your social memory complex-distortion who, at this time/space, engage daily, as you would put it, in the working upon the Law of One in one of its primal distortions; that is, the Ways of Love.
-一的法则以其首要变貌之一，即自由意志变貌。因此每个实体都可以自由地接受、拒绝或忽略周围的心/身/灵复合体，并忽略造物本身。在你们的社会记忆复合体变貌中，有许多人在此时/空间，如你们所说，每天致力于依照一的法则的其中一个首要变貌进行工作；那就是爱之道。
+一的法则拥有自由意志变貌，作为其首要变貌之一。因此每个实体都可以自由地接受、拒绝或忽略周围的心/身/灵复合体，并忽略造物本身。在你们的社会记忆复合体变貌中，有许多人在此时/空间，如你们所说，每天致力于依照一的法则的其中一个首要变貌进行工作；那就是爱之道。
 
 However, if this same entity—being biased from the depths of its mind/body/spirit complex towards love/light—were then to accept responsibility for each moment of the time/space accumulation of present moments available to it, such an entity can empower its progress in much the same way as we described the empowering of the call of your social complex-distortion to the Confederation.[7]
 然而，如果这同一个实体——从其心/身/灵复合体的深处偏向爱/光——随后接受对其可用的当下时刻之时间/空间累积中的每一刻的责任，这样一个实体就能增强其进展，方式与我们描述过的你们社会复合体变貌对星际联邦的呼唤之增强大致相同。[7]
@@ -143,7 +143,7 @@ Ra 我是 Ra。我们理解你现在谈论的是我们之前的信息。呼唤�
 ## (10.14)
 
 (10.14) Questioner For general development of the reader of this book, could you state some of the practices or exercises to perform to produce an acceleration toward the Law of One?
-(10.14) 发问者 为了本书读者的普遍发展，你能陈述一些可以进行的练习或锻炼，以产生朝向一的法则的加速吗？
+(10.14) 发问者 为了本书读者的普遍发展，你能陈述一些可以进行的练习或修习，以产生朝向一的法则的加速吗？
 
 Ra I am Ra.
 Ra 我是 Ra。
@@ -161,7 +161,7 @@ Exercise Four. Gaze at the creation which lies about the mind/body/spirit comple
 练习四。注视每个实体心/身/灵复合体周围的造物。看见造物主。
 
 The foundation or prerequisite of these exercises is a predilection towards what may be called meditation, contemplation, or prayer. With this attitude, these exercises can be processed. Without it, the data will not sink down into the roots of the tree of mind, thus enabling and ennobling the body and touching the spirit.
-这些练习的基础或前提是倾向于可被称为冥想、沉思或祈祷的事物。有了这种态度，这些练习才能被处理。没有它，这些数据将不会沉入心智之树的根部，从而赋能并提升身体，触及灵性。
+这些练习的基础或前提是倾向于可被称为冥想、沉思或祈祷的事物。有了这种态度，这些练习才能被处理。没有它，这些数据将不会沉入心智之树的根部，也就无法赋能并提升身体、触及灵性。
 
 ## (10.15)
 

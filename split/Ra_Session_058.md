@@ -235,5 +235,5 @@ This instrument is well balanced. The accoutrements are aligned well. You are co
 该器皿平衡良好。装备已对齐妥当。你们是尽责的。
 
 I am Ra. I leave you, my friends, in the love and in the light of the One Infinite Creator. Go forth, therefore, rejoicing in the power and the peace of the One Infinite Creator. Adonai.
-我是 Ra。我离开你们，我的朋友们，于太一无限造物主的爱与光中。因此，向前去吧，在太一无限造物主的大能与和平中欢庆。Adonai。
+我是 Ra。我离开你们，我的朋友们，于太一无限造物主的爱与光中。因此，向前去吧，在太一无限造物主的力量与和平中欢欣鼓舞。Adonai。
 

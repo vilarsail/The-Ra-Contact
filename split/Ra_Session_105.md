@@ -26,7 +26,7 @@ I feel it necessary to ask what the cause of the symmetrical welts on the instru
 我觉得有必要问一下，器皿背上对称的伤痕是什么原因造成的，以及我们还能做些什么来治愈器皿的任何状况，包括这些伤痕或其成因？
 
 Ra I am Ra. The welting is a symptom of that which has been a prolonged psychic greeting. The opportunity for this entity to experience massive allergic reaction from streptococcal and staphylococcal viruses[141] has been offered in hopes that this entity would wish to leave the incarnation. The previous occurrence of this state of the mind complex occurring upon, in your time-numbering system, the ninth month, the twelfth day, of your present planetary solar revolution caught your fifth-density companion unprepared. The entity is now prepared.
-Ra 我是 Ra。伤痕是长期心灵致意的症状。在你们的时间计数系统中，你们当前行星太阳公转的第九个月第十二天，上一次该心智复合体出现这种状态时，你们的第五密度同伴措手不及。该实体现在已做好准备。
+Ra 我是 Ra。伤痕是长期心灵致意的症状。该实体经历由链球菌和葡萄球菌病毒[141]引发大规模过敏反应的机会已被提供，期望该实体愿意离开此次投生。在你们的时间计数系统中，你们当前行星太阳公转的第九个月第十二天，上一次该心智复合体出现这种状态时，你们的第五密度同伴措手不及。该实体现在已做好准备。
 
 There have been two instances wherein this entity could have started the reaction since the first opportunity was missed:
 自第一次机会被错过以来，有两个例子中该实体本可以触发此反应：
@@ -38,7 +38,7 @@ Secondly, the possible vision of self separated from other-self in regard to the
 其次，关于离开这个住所时消解世俗纽带，可能看到自我与他人-自我分离的愿景。
 
 Both opportunities were met by this entity with a refusal to separate self from other-self, with further work also upon the indigo-ray level concerning the avoidance of martyrdom while maintaining unity in love.
-该实体以拒绝将自我与他人-自我分离的方式应对了这两个机会，同时在靛蓝色光芒层面进一步工作，以避免殉道，同时在爱中保持合一。
+该实体以拒绝将自我与他人-自我分离的方式应对了这两个机会，同时在靛蓝光芒层面进一步工作，以避免殉道，同时在爱中保持合一。
 
 Thusly, this instrument has had its immunal defenses breached and its lymphatic system involved in the invasion of these viri. You may see some merit in a purging of the instrument's yellow-ray, chemical body in order to more quickly aid the weakened body complex in its attempt to remove these substances. Techniques include therapeutic enemas or colonics, the sauna once or twice in a day, and the use of vigorous rubbing of the integument for the period of approximately seven of your diurnal periods.
 因此，该器皿的免疫防御已被突破，其淋巴系统被卷入这些病毒的入侵中。你们可能会看到，净化该器皿的黄色光芒化学身体有某些好处，以便更迅速地帮助虚弱的身体复合体尝试清除这些物质。技术包括治疗性灌肠或结肠清洗，每天一到两次桑拿，以及在约七个地球日期间用力摩擦皮肤。
@@ -249,7 +249,7 @@ Ra I am Ra. We find the weariness of the group well-balanced by its harmony. Tha
 Ra 我是 Ra。我们发现这个小组的疲惫被其和谐很好地平衡了。在你们投生期间，这种疲惫将在任何未来境遇中持续。因此，你们要关注彼此的爱与感恩，永远在友谊中相聚，用耐心、安慰和安静来修复每一根断裂的情感之线。
 
 We find all meticulously observed in the alignments and give you these words only as reminder. All that can be done for the instrument seems done with an whole heart, and the instrument itself is working in the indigo ray with perseverance.
-我们发现所有校准都被细致地遵守了，我们只给你们这些话作为提醒。能为器皿做的一切似乎都全心全意地做了，而器皿本身也在坚持不懈地进行靛蓝色光芒的工作。
+我们发现所有校准都被细致地遵守了，我们只给你们这些话作为提醒。能为器皿做的一切似乎都全心全意地做了，而器皿本身也在坚持不懈地进行靛蓝光芒的工作。
 
 We have previously mentioned some temporary measures for the instrument. If these are adopted, additional liquids shall be imbibed by the instrument and by the questioner, whose bond with the instrument is such that each difficulty for one is the same, in sympathy, for the other.
 我们之前已提到过一些针对器皿的临时措施。如果采纳这些措施，器皿和发问者都应额外摄入液体，因为发问者与器皿的纽带如此紧密，以至于一方的每个困难在同情中也是另一方的同样困难。

@@ -15,7 +15,7 @@ August 8, 1981
 (65.1) 发问者 你能否首先告诉我们器皿的状况以及生命能和物理能量的水平？
 
 Ra I am Ra. This instrument's vital energies are as previously stated. The physical energies are greatly distorted towards weakness at this space/time due to the distortion complexes symptomatic of that which you call the arthritic condition. The level of psychic attack is constant but is being dealt with by this instrument in such a way as to eliminate serious difficulties due to its fidelity and that of the support group.
-Ra 我是 Ra。这个器皿的生命能如前所述。由于被你们称为关节炎状况的变貌复合体之症状，物理能量在这个空间/时间中极大地朝向虚弱扭曲。通灵攻击的强度持续不变，但由于该器皿的忠诚以及支持团体的忠诚，它正以消除严重困难的方式应对着。
+Ra 我是 Ra。这个器皿的生命能如前所述。由于被你们称为关节炎状况的变貌复合体之症状，物理能量在这个空间/时间中极大地变貌朝向虚弱。通灵攻击的强度持续不变，但由于该器皿的忠诚以及支持团体的忠诚，它正以消除严重困难的方式应对着。
 
 ## (65.2)
 

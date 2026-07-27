@@ -90,7 +90,7 @@ Ra 我是 Ra。不是。
 (102.7) 发问者 我没有完全理解你关于她应该何时摄入糖的意思。你能澄清一下吗？
 
 Ra I am Ra. The concentrated sugar; that is, the dessert, the ice cream, the cookie, should be ingested at that time. Small amounts of the fructose, maple, or raw honey may be ingested periodically, for, as we have said, the chemistry of this yellow-ray body is such that the sugar is being used by blood enzymes as would carbohydrates in a less distorted yellow-ray, physical vehicle.
-Ra 我是 Ra。浓缩的糖；即，甜点、冰淇淋、饼干，应该在那个时间摄入。少量的果糖、榫糖或生蜂蜜可以定期摄入，因为，如我们所说，这个黄色光芒身体的化学性质是这样的，糖正在被血液酶使用，就像在一个变貌较少的黄色光芒物理载具中碳水化合物的使用方式一样。
+Ra 我是 Ra。浓缩的糖；即，甜点、冰淇淋、饼干，应该在那个时间摄入。少量的果糖、枫糖或生蜂蜜可以定期摄入，因为，如我们所说，这个黄色光芒身体的化学性质是这样的，糖正在被血液酶使用，就像在一个变貌较少的黄色光芒物理载具中碳水化合物的使用方式一样。
 
 ## (102.8)
 
@@ -98,7 +98,7 @@ Ra 我是 Ra。浓缩的糖；即，甜点、冰淇淋、饼干，应该在那�
 (102.8) 发问者 很抱歉我理解我们这里所谈的确切内容如此迟钝，但我想确保我们弄对这个，所以我可能会再问几个愚蠢的问题。导致极度疼痛的痉挛是回肠的痉挛吗？
 
 Ra I am Ra. Partially. The transverse colon also spasmed, as did the ducts to the liver in its lower portion. There were also muscle spasms from the bronchial coverings down through the pelvis and from shoulder blades to hips. These sympathetic spasms are a symptom of the exhaustion of the entity’s physical vehicle.
-Ra 我是 Ra。部分是。横结肠也痉挛了，肝脏下部的管道也是。还有从支气管覆盖层向下穿过盆腔以及从肩胛骨到臀部的肌肉痉挛。这些同情性痉挛是该实体物理载具筋疲力尽的一个症状。
+Ra 我是 Ra。部分是。横结肠也痉挛了，肝脏下部的管道也是。还有从支气管覆盖层向下穿过盆腔以及从肩胛骨到臀部的肌肉痉挛。这些交感性痉挛是该实体物理载具筋疲力尽的一个症状。
 
 ## (102.9)
 

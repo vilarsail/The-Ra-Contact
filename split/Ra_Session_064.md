@@ -34,7 +34,7 @@ I would like to ask first about a mistake I believe that I might have made in th
 我想先问一下，关于上一场集会[9]中我提到的今日地球上的流浪者数量，我相信我可能犯了一个错误。我出错了吗？
 
 Ra I am Ra. You and Ra made an error. The appropriate number of your ciphers is one less than previously stated.[10]
-Ra 我是 Ra。你和 Ra 都犯了一个错误。你们数字的适当数值比先前所述少一。[10]
+Ra 我是 Ra。你和 Ra 都犯了一个错误。你们数字的适当位数比先前所述少一位。[10]
 
 ## (64.4)
 
@@ -73,7 +73,7 @@ We may note, for your information, that our pause was due to the necessity of be
 (64.6) 发问者 你能否描述或告诉我，Ra 在寻求服务方向时所使用的仪式或技巧？
 
 Ra I am Ra. To speak of that which sixth-density social memory complexes labor within in order to advance is at best misprision of plain communication, for much is lost in transmission of concept from density to density, and the discussion of sixth density is inevitably distorted greatly.[12]
-Ra 我是 Ra。谈论第六密度社会记忆复合体为了进步而在其中努力的事物，充其量是对清晰通讯的误解，因为概念在密度与密度之间传输的过程中会丢失很多，而对第六密度的讨论不可避免地会被严重扭曲。[12]
+Ra 我是 Ra。谈论第六密度社会记忆复合体为了进步而在其中努力的事物，充其量是对清晰通讯的误解，因为概念在密度与密度之间传输的过程中会丢失很多，而对第六密度的讨论不可避免地会被严重变貌。[12]
 
 However, we shall attempt to speak to your query, for it is an helpful one in that it allows us to express once again the total unity of creation. We seek the Creator upon a level of shared experience to which you are not privy, and rather than surrounding ourselves in light, we have become light. Our understanding is that there is no other material except light. Our rituals, as you may call them, are an infinitely subtle continuation of the balancing processes which you are now beginning to experience.
 然而，我们将尝试回答你的询问，因为它是有帮助的，它使我们能再次表达造物的全然合一。我们是在你们无法接触的共享经验层面上寻求造物主，与其说我们用光包围自己，不如说我们已成为光。我们的理解是，除了光之外没有其他材料。我们的仪式——如你们可以称呼的那样——是你们现在开始体验的平衡过程的无限精微的延续。

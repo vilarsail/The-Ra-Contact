@@ -105,7 +105,7 @@ During the process of study (which you may call the incarnation), regardless of 
 在学习过程中（你可以称之为投生），无论实体对正在发生的过程有多么觉知，材料都是分散的，过度关注几乎不可避免地放在细节上。
 
 The testing upon the cessation of the incarnative state is not that testing which involves the correct memorization of many details. This testing is, rather, the observing of self by self, often with aid, as we have said. In this observation one sees the sum of all the detailed study: that being an attitude, or complex of attitudes, which bias the consciousness of the mind/body/spirit.
-在投生状态停止时的测试，不是那种涉及正确记忆许多细节的测试。这种测试更确切地说，是自我观察自我，通常如我们所说，有辅助。在这种观察中，一个人看到所有细节学习的总和：那是一种态度，或态度的复合体，它偏见了心/身/灵的意识。
+在投生状态停止时的测试，不是那种涉及正确记忆许多细节的测试。这种测试更确切地说，是自我观察自我，通常如我们所说，有辅助。在这种观察中，一个人看到所有细节学习的总和：那是一种态度，或态度的复合体，它使心/身/灵的意识产生偏倚。
 
 ## (83.8)
 
@@ -192,7 +192,7 @@ It was discovered, experientially and empirically, that there were as many ways 
 通过经验和实证发现，穿透面纱的方法与心/身/灵复合体的想象力所能提供的一样多。心/身/灵复合体对认识未知的渴望，吸引了梦境，以及逐渐向寻求者敞开所有导致精通和与能够穿透这层面纱的教导/学习者沟通的平衡机制。
 
 The various unmanifested activities of the self were found to be productive, in some degree, of penetration of the veil. In general we may say that by far the most vivid and even extravagant opportunities for the piercing of the veil are a result of the interaction of polarized entities.
-自我的各种未显化活动被发现，在某种程度上，有助于穿透面纱。总的来说，我们可以说，到目前为止，穿透面纱最生动甚至最奢侈的机会是极化实体互动的结果。
+自我的各种未显化活动被发现，在某种程度上，有助于穿透面纱。总的来说，我们可以说，显然穿透面纱最生动甚至最奢侈的机会是极化实体互动的结果。
 
 ## (83.17)
 

@@ -97,7 +97,7 @@ We wish not to form that which may be considered by any mind/body/spirit complex
 我们不希望形成任何心/身/灵复合体可能认为是完整且无误的一系列图像。在这方面有一个重要的观点要提出。我们一直在发问者的帮助下，探索原型心智伟大架构的概念复合体。为了更清晰地把握原型的本质、过程和目的，Ra 提供了一系列概念复合体。
 
 In no way whatsoever should we, as humble messengers of the One Infinite Creator, wish to place before the consideration of any mind/body/spirit complex, which seeks its evolution, the palest tint of the idea that these images are anything but a resource for working in the area of the development of the faith and the will.
-作为太一无限造物主的谦卑信使，我们绝不应希望将哪怕最淡的念头——即这些图像不过是用于信仰和意志发展领域工作的资源——置于任何寻求其进化的心/身/灵复合体的考量之前。
+作为太一无限造物主的谦卑信使，我们绝不应希望将哪怕最淡的念头——即这些图像绝非仅仅是用于信仰和意志发展领域工作的资源——置于任何寻求其进化的心/身/灵复合体的考量之前。
 
 To put this into perspective we must gaze, then, at the stunning mystery of the One Infinite Creator. The archetypical mind does not resolve any paradox or bring all into unity. This is not the property of any resource which is of the third density.
 为了正确看待这一点，我们必须凝视太一无限造物主那令人惊叹的奥秘。原型心智不解决任何悖论，也不将一切带入合一。这不是任何第三密度资源的属性。

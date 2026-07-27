@@ -23,7 +23,7 @@ Ra 我是 Ra。这个器皿处于一种物理复合体破产的状态，这种�
 (76.2) 发问者 我们与Ra的持续通讯会对器皿的物理能量有害吗？
 
 Ra I am Ra. We may answer in two modes. Firstly, if the instrument were thusly dedicated to this use with no transfer of energy of physical complex nature, it would begin to call upon the vital energy itself, and this, done in any substantive measure, is actively deleterious to a mind/body/spirit complex if that complex wishes further experience in the illusion which it now distorts.
-Ra 我是 Ra。我们可以以两种方式回答。首先，如果器皿如此致力于这种用途而没有物理复合体性质的能量转移，它将开始调用生命能本身，而这，在任何实质性程度上进行，对于一个心/身/灵复合体如果该复合体希望在其现在变貌的幻象中进一步的体验，是主动有害的。
+Ra 我是 Ra。我们可以以两种方式回答。首先，如果器皿如此致力于这种用途而没有物理复合体性质的能量转移，它将开始调用生命能本身，而这，如果在任何实质性程度上进行，对一个心/身/灵复合体是主动有害的——如果该复合体希望在其现在变貌的幻象中获得进一步体验的话。
 
 Secondly, if care is taken, firstly, to monitor the outer parameters of the instrument, then to transfer physical energy by sexual transfer, by magical protection, and, lastly, by the energetic displacements of thought-forms energizing the instrument during contact, there is no difficulty in that there is no worsening of the instrument’s mind/body/spirit-complex distortions of strength/weakness.
 其次，如果小心谨慎，首先，监控器皿的外部参数，然后通过性能量转移，通过魔法保护，最后，通过在接触期间为器皿充能的思维形态的能量位移来转移物理能量，就没有困难，因为器皿的心/身/灵复合体的力量/弱点的变貌没有恶化。
@@ -70,7 +70,7 @@ Ra 我是 Ra。在这个地方定期工作是有益的。
 (76.6) 发问者 抱歉我们在上一次集会和这次集会之间有如此长的延迟。我想这是没办法的事。你能告诉我塔罗牌的起源吗？
 
 Ra I am Ra. The origin of this system of study and divination is twofold: firstly, there is that influence which, coming in a distorted fashion from those who were priests attempting to teach the Law of One in Egypt, gave form to the understanding, if you will pardon the misnomer, which they had received. These forms were then made a regular portion of the learn/teachings of an initiate.
-Ra 我是 Ra。这个研究和占卜体系的起源是双重的：首先，有那种影响，以扭曲的方式来自那些在埃及试图教导一的法则的祭司，他们给所接收的理解赋予了形式，如果你能原谅这个用词不当的话。这些形式随后成为入门者学习/教导的常规部分。
+Ra 我是 Ra。这个研究和占卜体系的起源是双重的：首先，有那种影响，以变貌的方式来自那些在埃及试图教导一的法则的祭司，他们给所接收的理解赋予了形式，如果你能原谅这个用词不当的话。这些形式随后成为入门者学习/教导的常规部分。
 
 The second influence is that of those entities in the lands you call Ur, Chaldea, and Mesopotamia who, from old, had received the, shall we say, data for which they called having to do with the heavens.
 第二个影响是那些在你们称为吾珥、迦勒底和美索不达米亚的地方的实体，他们自古以来就收到了，可以说，他们称之为与诸天有关的数据。
@@ -106,7 +106,7 @@ The study of the roots of mind is a portion of the vivification of the mind comp
 (76.9) 发问者 在Ra看来，重新使用塔罗牌作为进化过程中的辅助，在今天有任何价值吗？
 
 Ra I am Ra. We shall repeat information.[43] It is appropriate to study one form of constructed and organized distortion of the archetypical mind in depth in order to arrive at the position of being able to become and to experience archetypes at will. You have three basic choices:
-Ra 我是 Ra。我们将重复信息。[43] 深入研究一种构建和组织的原型心智扭曲形式是适当的，以便达到能够随意成为和体验原型的位置。你有三个基本选择：
+Ra 我是 Ra。我们将重复信息。[43] 深入研究一种构建和组织的原型心智变貌形式是适当的，以便达到能够随意成为和体验原型的位置。你有三个基本选择：
 
 You may choose astrology—the twelve signs, as you call these portions of your planet’s energy web, and what has been called the ten planets.
 你可以选择占星术——十二个星座，如你们称为你们行星能量网的这些部分，以及被称为十颗行星的东西。
@@ -126,13 +126,13 @@ After a period of study, the discipline mastered sufficiently, the seeker may th
 ## (76.10)
 
 (76.10) Questioner Would I be correct in saying that our local Logos, in acting as co-Creator, distorted to some extent, for the purposes of experience, that which we experience here? And that the archetypes of this particular Logos are somewhat unique with respect to the rest of the creation—but are, of course, related to the all in that they are part of it, but are, I can only say, a unique part—and that the systems of study that we have just talked about would not translate quickly or easily in other parts of the creation. This is a very difficult question to state. Could you clear that up for me?
-(76.10) 发问者 我说我们当地的理则，作为共同造物主，为了体验的目的，在某种程度上扭曲了我们在这里所体验的东西，这是正确的吗？而且这个特定理则的原型相对于创造物的其余部分有些独特——但当然，与大全相关，因为它们是它的一部分，但只是，我只能说，一个独特的部分——并且我们刚刚谈到的那些研究体系不会在创造物的其他部分快速或容易地移植。这是一个非常难以陈述的问题。你能为我澄清一下吗？
+(76.10) 发问者 我说我们当地的理则，作为共同造物主，为了体验的目的，在某种程度上变貌了我们在这里所体验的东西，这是正确的吗？而且这个特定理则的原型相对于创造物的其余部分有些独特——但当然，与大全相关，因为它们是它的一部分，但只是，我只能说，一个独特的部分——并且我们刚刚谈到的那些研究体系不会在创造物的其他部分快速或容易地移植。这是一个非常难以陈述的问题。你能为我澄清一下吗？
 
 Ra I am Ra. We may draw from the welter of statement which you offer the question we believe you ask.[44] Please re-question if we have mistaken your query.
 Ra 我是 Ra。我们可以从你提供的杂乱陈述中提取我们相信你所问的问题。[44] 如果我们误解了你的询问，请重新询问。
 
 The archetypical mind is that mind which is peculiar to the Logos under which influence you are at this space/time distorting your experiences. There is no other Logos the archetypical mind of which would be the same, any more than the stars would appear the same from another planet in another galaxy. You may correctly infer that the closer Logoi are indeed closer in archetypes.
-原型心智是那个在你们当前空间/时间扭曲你们的体验的影响之下的理则所特有的心智。没有其他理则的原型心智会是相同的，就像从另一个星系中的另一个行星上看，星星看起来不会是一样的。你可以正确地推断，更接近的理则确实在原型上更接近。
+原型心智是那个在你们当前空间/时间变貌你们的体验的影响之下的理则所特有的心智。没有其他理则的原型心智会是相同的，就像从另一个星系中的另一个行星上看，星星看起来不会是一样的。你可以正确地推断，更接近的理则确实在原型上更接近。
 
 ## (76.11)
 
@@ -235,7 +235,7 @@ The second portion of the answer has to do with second-density other-selves of a
 (76.21) 发问者 我试图理解的是，理则对这些第二密度实体的计划与产生我猜想的或多或少失控的反馈阵列以创造各种物理问题作为我们当前第三密度状况中的催化剂之间的区别。你能给我一个指示吗；关于我的想法是否接近正确？
 
 Ra I am Ra. This instrument’s physical body complex is becoming more distorted towards pain. We shall, therefore, speak to this subject as our last full query of this working.
-Ra 我是 Ra。这个器皿的物理身体复合体正在变得更加朝向疼痛扭曲。因此，我们将把这个主题作为这次工作的最后一个完整询问来讨论。
+Ra 我是 Ra。这个器皿的物理身体复合体正在变得更加朝向疼痛变貌。因此，我们将把这个主题作为这次工作的最后一个完整询问来讨论。
 
 Your query contains some internal confusion which causes the answer to be, perhaps, more general than desired. We invite refinements of the query.
 你的询问包含一些内部混淆，这导致答案可能比期望的更一般。我们邀请对询问的精炼。

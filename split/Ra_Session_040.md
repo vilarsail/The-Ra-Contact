@@ -24,7 +24,7 @@ The white light which emanates and forms the articulated sub-Logos has its begin
 散发并形成被表达的（articulated）子理则的白光，其开端在于那在形而上学上可被视为黑暗的东西。光进入那黑暗并转化它，使混沌得以组织并变得具有反射性或辐射性。由此维度得以产生。
 
 Conversely, the blackness of the black hole, metaphysically speaking, is a concentration of white light being systematically absorbed once again into the One Creator. Finally, this absorption into the One Creator continues until all the infinity of creations have attained sufficient spiritual mass in order that all form, once again, the Great Central Sun, if you would so imagine it, of the intelligent infinity awaiting potentiation by Free Will. Thus the transition of the octave is a process which may be seen to enter into timelessness of unimaginable nature. To attempt to measure it by your time measures would be useless.
-相反地，黑洞的黑暗，从形而上学上讲，是白光被系统地再次吸收回太一造物主的浓缩。最终，这种向太一造物主的吸收持续进行，直到所有无限的造物都获得了足够的灵性质量，以便所有形式再次形成——如果你愿意这样想象的话——智能无限的大中心太阳，等待着被自由意志赋能。因此，八度音程的转换是一个可以被视为进入不可想象性质的永恒之过程。试图用你们的时间衡量标准来度量它将是徒劳的。
+相反地，黑洞的黑暗，从形而上学上讲，是白光被系统地再次吸收回太一造物主的浓缩。最终，这种向太一造物主的吸收持续进行，直到所有无限的造物都获得了足够的灵性质量，以便所有形式再次形成——如果你愿意这样想象的话——智能无限的大中心太阳，等待着被自由意志潜能化。因此，八度音程的转换是一个可以被视为进入不可想象性质的永恒之过程。试图用你们的时间衡量标准来度量它将是徒劳的。
 
 Therefore, the concept of moving through the black hole of the ultimate spiritual gravity well and coming immediately into the next octave misses the sub-concept, or corollary, of the portion of this process which is timeless.
 因此，穿越终极灵性引力井之黑洞并立即进入下一个八度音程的概念，忽略了该过程中那永恒部分之子概念或推论。
@@ -132,7 +132,7 @@ Ra 我是 Ra。第四密度是信息被揭示的密度。自我对自我或对�
 (40.13) 发问者 那么你是说癌症相当容易通过心智能量治愈，并且是一个好的教学工具，因为它相当容易在心智上被治愈，一旦实体原谅了他所愤怒的那个其他自我，癌症就会消失。这正确吗？
 
 Ra I am Ra. This is partially correct. The other portion of healing has to do with forgiveness of self and a greatly heightened respect for the self. This may conveniently be expressed by taking care in dietary matters. This is quite frequently a part of the healing and forgiving process. Your basic premise is correct.
-Ra 我是 Ra。这是部分正确。疗愈的另一部分涉及对自我的原谅和对自我极大提升的尊重。这可以方便地通过对饮食的注意来表达。这常常是疗愈和原谅过程的一部分。你的基本前提是正确的。
+Ra 我是 Ra。这是部分正确。疗愈的另一部分涉及对自我的原谅，以及对自我尊重的极大提升。这可以方便地通过对饮食的注意来表达。这常常是疗愈和原谅过程的一部分。你的基本前提是正确的。
 
 ## (40.14)
 

@@ -184,7 +184,7 @@ The energies transferred during the sexual activity are not, properly speaking, 
 (84.18) 发问者 面纱之后，在我们当前的特定情况中，在我们所说的电路中，我们有你们所谓的首先在橙色光芒中发生的阻塞。你能描述一下这个第一个阻塞发生了什么，以及它对每个实体的影响是什么，假设一个阻塞而另一个不阻塞，或者如果两者都阻塞？
 
 Ra I am Ra. This material has been covered previously.[76] If both entities are blocked, both will have an increased hunger for the same activity, seeking to unblock the baffled flow of energy.
-Ra 我是 Ra。这个材料已在之前覆盖过。[76]如果两个实体都阻塞，双方都会对同一活动有增加的渴望，寻求解除那受阻的能量流动。
+Ra 我是 Ra。这个材料之前已经讲述过。[76]如果两个实体都阻塞，双方都会对同一活动有增加的渴望，寻求解除那受阻的能量流动。
 
 If one entity is blocked and the other vibrates in love, the entity baffled will hunger still but have a tendency to attempt to continue the procedure of sating the increasing hunger with the one vibrating green ray due to an impression that this entity might prove helpful in this endeavor.
 如果一个实体被阻塞，而另一个在爱中振动，被阻塞的实体仍会渴望，但倾向于尝试继续用那个振动绿色光芒的实体来满足日益增长的渴望，因为有一种印象认为这个实体可能在这个努力中有所帮助。
@@ -195,7 +195,7 @@ The green-ray active individual shall polarize slightly in the direction of serv
 ## (84.19)
 
 (84.19) Questioner I didn’t mean to cover previously covered material. I was trying to work into a better understanding of what we’re talking about, with background of the veiling process, and what I was actually attempting to do was to discover something new in asking the question, so please if I ask any questions in the future that have already been covered don’t bother to repeat the material.
-(84.19) 发问者 我并不是要重复之前覆盖过的材料。我试图在面纱过程的背景下更好地理解我们正在讨论的内容，而我实际上试图做的是在提问中发现一些新东西。所以，如果我将来问任何已经被覆盖过的问题，请不要费心重复材料。
+(84.19) 发问者 我并不是要重复之前已经讲述过的材料。我试图在面纱过程的背景下更好地理解我们正在讨论的内容，而我实际上试图做的是在提问中发现一些新东西。所以，如果我将来问任何已经被讨论过的问题，请不要费心重复材料。
 
 I am just searching the same area for the possibility of greater enlightenment with respect to the particular area, since it seems to be one of the major areas of experience in our present condition of veiling that produces a very large amount of catalyst. And I am trying to understand, to use a poor term, how this veiling process created a greater experience, and how this experience evolved, shall I say. The questions are very difficult at times to ask.
 我只是在同一个领域中探索，寻求对特定领域更深入启发的可能性，因为它似乎是在我们当前面纱状况下产生大量催化剂的主要体验领域之一。我试图理解——用一个不太恰当的术语——面纱过程如何创造了更大的体验，以及这个体验是如何演化的，容我说。这些问题有时很难提出。
@@ -212,10 +212,10 @@ Ra 我是 Ra。当然，在讨论任何神话原型形式时，涉及许多其�
 (84.20) 发问者 那么，关于绿色、蓝色和靛蓝色能量转移：这些转移的机制在使它们成为可能或为其奠定基础方面，与橙色光芒有何不同？
 
 I know this is very difficult to ask, and I may not be making any sense, but what I am trying to do is get to an understanding of the foundation for transfers in each of the rays, and the preparations for the transfers, you might say, or the fundamental requirements and biases and potentials for these transfers. Could you expand on that for me please? I am sorry for the poor question.
-我知道这很难问，我可能没有表达清楚，但我试图做的是理解每个光芒中转移的基础，以及转移的准备，你可以说，或者这些转移的基本要求、偏见和潜能。你能为我详细说明一下吗？我为这个糟糕的问题道歉。
+我知道这很难问，我可能没有表达清楚，但我试图做的是理解每个光芒中转移的基础，以及转移的准备，你可以说，或者这些转移的基本要求、偏向和潜能。你能为我详细说明一下吗？我为这个糟糕的问题道歉。
 
 Ra I am Ra. We would take a moment to state in reply to a previous comment that we shall answer each query, whether or not it has been previously covered, for not to do so would be to baffle the flow of quite another transfer of energy.
-Ra 我是 Ra。我们想花一点时间回应之前的评论：我们将回答每个问题，无论它是否已被之前覆盖，因为不这样做将会阻塞另一种相当不同的能量转移的流动。
+Ra 我是 Ra。我们想花一点时间回应之前的评论：我们将回答每个问题，无论它是否已被之前讲述过，因为不这样做将会阻塞另一种相当不同的能量转移的流动。
 
 To respond to your query we firstly wish to agree with your supposition that the subject you now query upon is a large one, for in it lies an entire system of opening the gateway to intelligent infinity. You may see that some information is necessarily shrouded in mystery by our desire to preserve the free will of the adept.
 为了回应你的问题，我们首先想同意你的假设，即你现在询问的主题是庞大的，因为其中包含了一整套开启智能无限之门的系统。你可能看到，某些信息出于我们保护 adept（精通者）自由意志的愿望，必然被笼罩在神秘之中。
@@ -224,7 +224,7 @@ The great key to blue, indigo, and finally that great capital of the column of s
 蓝色、靛蓝色，以及最终性能量转移之柱的伟大资本——紫色能量转移——的伟大钥匙，是在你们人民中被称为无条件之爱的形而上纽带或变貌。
 
 In the blue-ray energy transfer the quality of this love is refined in the fire of honest communication and clarity; this, shall we say, normally—meaning in general—takes a substantial portion of your space/time to accomplish, although there are instances of matings so well refined in previous incarnations and so well remembered that the blue ray may be penetrated at once.
-在蓝色光芒能量转移中，这种爱的品质在诚实沟通和清晰性的火焰中得到精炼；这，容我们说，通常——意味着一一般来说——需要你们空间/时间的相当大一部分来完成，尽管存在一些在先前投生中如此精炼并且如此被记住的伴侣关系，以至于蓝色光芒可以立即被穿透。
+在蓝色光芒能量转移中，这种爱的品质在诚实沟通和清晰性的火焰中得到精炼；这，容我们说，通常——意味着一般来说——需要你们空间/时间的相当大一部分来完成，尽管存在一些在先前投生中如此精炼并且如此被记住的伴侣关系，以至于蓝色光芒可以立即被穿透。
 
 This energy transfer is of great benefit to the seeker in that all communication from this seeker is thereby refined, and the eyes of honesty and clarity look upon a new world. Such is the nature of blue-ray energy, and such is one mechanism of potentiating and crystallizing it.
 这种能量转移对寻求者大有益处，因为此寻求者的所有沟通由此得到精炼，诚实和清晰性的眼睛看到了一个新的世界。这就是蓝色光芒能量的本质，这就是增强和结晶化它的一种机制。
@@ -250,7 +250,7 @@ If, by the same entities’ exchange, greater ease in communication and greater 
 如果通过相同实体的交换，体验到了沟通的更大便利和更大的视野，能量已经被精炼到蓝色光芒能量中心。
 
 If the polarized entities, by this same energy transfer experience, find that the faculties of will and faith have been stimulated, not for a brief while but for a great duration of what you call time, you may perceive the indigo-ray transfer.
-如果极化实体通过同样的能量转移体验，发现意志和信心的能力已经被激发，不是短暂的时间，而是在你们所谓的时间中持续很长一段时间，你可以感知到靛蓝色光芒转移。
+如果极化实体通过同样的能量转移体验，发现意志和信仰的能力已经被激发，不是短暂的时间，而是在你们所谓的时间中持续很长一段时间，你可以感知到靛蓝色光芒转移。
 
 We may not speak of the violet-ray transfer except to note that it is an opening to the gateway of intelligent infinity. Indeed, the indigo-ray transfer is also this, but, shall we say, the veil has not yet been lifted.
 我们不能谈论紫色光芒转移，除了指出它是通往智能无限之门的开启。事实上，靛蓝色光芒转移也是如此，但容我们说，面纱尚未被揭开。
@@ -264,7 +264,7 @@ Ra I am Ra. This shall be the last full query of this working.
 Ra 我是 Ra。这将是这次工作的最后一个完整问题。
 
 The harvest from the previous creation was that which included the male and female mind/body/spirit. It was the intention of the original Logoi that entities mate with one another in any fashion which caused a greater polarization. It was determined, after observation of the process of many Logoi, that polarization increased manyfold if the mating were not indiscriminate. Consequent Logoi thusly preserved a bias towards the mated relationship which is more characteristic of more disciplined personalities and of what you may call higher densities. The free will of each entity, however, was always paramount, and a bias only could be offered.
-来自先前造物的收割是包含了男性和女性心/身/灵的收割。原始逻各斯们的意图是，实体们以任何导致更大极化的方式彼此交配。在观察了许多逻各斯的过程之后，确定如果交配不是不加选择的，极化会增加许多倍。因此，后续的逻各斯们保持了对伴侣关系的偏见，这种关系更特征于更自律的人格和你们所谓的更高密度。然而，每个实体的自由意志始终是至高无上的，只能提供一个倾向。
+来自先前造物的收割是包含了男性和女性心/身/灵的收割。原始逻各斯们的意图是，实体们以任何导致更大极化的方式彼此交配。在观察了许多逻各斯的过程之后，确定如果交配不是不加选择的，极化会增加许多倍。因此，后续的逻各斯们由此保持了对伴侣关系的偏向，这种关系更特征于更自律的人格和你们所谓的更高密度。然而，每个实体的自由意志始终是至高无上的，只能提供一个倾向。
 
 May we ask if there may be any brief queries before we leave this instrument?
 在我们离开这个器皿之前，我们可以问一下是否有任何简短的问题吗？

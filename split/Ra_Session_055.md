@@ -15,15 +15,15 @@ June 5, 1981
 (55.1) 发问者 我首先想询问器皿的状况，请？
 
 Ra I am Ra. This instrument is experiencing physical distortions toward weakness of the bodily complex occurring due to psychic attack. This instrument’s vital energies have not been affected, however, due to the aid of those present in healing work. This instrument will apparently be subject to such weakness distortions due to incarnative processes which predispose the body complex towards weakness distortions.
-Ra 我是 Ra。这个器皿正经历由于 psychic 攻击导致的身体复合体朝向虚弱的身体变貌。然而，这个器皿的生命能量并未受到影响，这得益于在场者的疗愈工作的帮助。这个器皿显然将因投生过程而受到此类虚弱变貌的影响，这些过程使身体复合体倾向于虚弱变貌。
+Ra 我是 Ra。这个器皿正经历由于心灵攻击导致的身体复合体朝向虚弱的身体变貌。然而，这个器皿的生命能量并未受到影响，这得益于在场者的疗愈工作的帮助。这个器皿显然将因投生过程而受到此类虚弱变貌的影响，这些过程使身体复合体倾向于虚弱变貌。
 
 ## (55.2)
 
 (55.2) Questioner Is there any specific thing that we can do that you have already told us? Or otherwise to alleviate this psychic attack or to help the instrument the most?
-(55.2) 发问者 是否有任何你已经告诉过我们的具体事情我们可以做？或者以其他方式减轻这种 psychic 攻击，或最大程度地帮助器皿？
+(55.2) 发问者 是否有任何你已经告诉过我们的具体事情我们可以做？或者以其他方式减轻这种心灵攻击，或最大程度地帮助器皿？
 
 Ra I am Ra. We scan this instrument and find its distortion towards appreciation of each entity and each entity’s caring, as you may call it. This atmosphere, shall we say, offers the greatest contrast to the discomfort of such psychic attacks, being the reciprocal, that is, the atmosphere of psychic support.
-Ra 我是 Ra。我们扫描这个器皿，发现它朝向对每个实体和每个实体的关怀——如你们可以称呼的——的欣赏变貌。这种氛围，我们可以说，提供了对此类 psychic 攻击之不适的最大对比，作为其对立面，即 psychic 支持的氛围。
+Ra 我是 Ra。我们扫描这个器皿，发现它朝向对每个实体和每个实体的关怀——如你们可以称呼的——的欣赏变貌。这种氛围，我们可以说，提供了对此类心灵攻击之不适的最大对比，作为其对立面，即心灵支持的氛围。
 
 This each of you do as a subconscious function of true attitudinal, mental, emotional, and spiritual distortions towards this instrument. There is no magic greater than honest distortion toward love.
 这你们每个人都在做，作为朝向这个器皿的真实态度、心智、情感和灵性变貌的潜意识功能。没有比真诚朝向爱的变貌更伟大的魔法。
@@ -34,7 +34,7 @@ This each of you do as a subconscious function of true attitudinal, mental, emot
 (55.3) 发问者 谢谢你。我想问几个关于我之前没理解的先前材料的问题。我希望这将厘清我对于我们所处理的心智配置的理解，在某种程度上。
 
 In the session before last you stated, “However, this is a risk for the Orion entities due to the frequency with which the harvestable negative planetary entities then attempt to bid, or order, the Orion contact, just as these entities bid planetary negative contacts.” Can you explain the mechanisms that affect polarization in consciousness with respect to this statement?
-在上上次集会中，你说，“然而，这对猎户实体来说是一种风险，因为可收割的负面行星实体随后试图对猎户接触进行竞价或命令的频率，正如这些实体对行星负面接触进行竞价一样。”你能解释与这个陈述相关的、影响意识中极化的机制吗？
+在上上次集会中，你说，“然而，这对猎户实体来说是一种风险，因为可收割的负面行星实体随后会频繁试图对猎户接触进行竞价或命令，正如这些实体对行星负面接触进行竞价一样。”你能解释与这个陈述相关的、影响意识中极化的机制吗？
 
 Ra I am Ra. The negative polarization is greatly aided by the subjugation or enslavement of other-selves. The potential between two negatively polarized entities is such that the entity which enslaves the other or bids the other gains in negative polarity.
 Ra 我是 Ra。负面极化极大地受益于对其他自我的征服或奴役。两个负面极化实体之间的潜力是这样的：奴役或竞价另一方的实体获得负面极性。
@@ -70,7 +70,7 @@ Ra 我是 Ra。恰当地竞价就是恰当地负面。涉及服务自我的思�
 (55.6) 发问者 这种类型的负面竞价者会使用什么方法与猎户实体沟通？
 
 Ra I am Ra. The two most usual types of bidding are: One, the use of perversions of sexual magic; two, the use of perversions of ritual magic. In each case the key to success is the purity of the will of the bidder. The concentration upon victory over the servant must be nearly perfect.
-Ra 我是 Ra。两种最常见的竞价类型是：一，使用性魔法的曲解；二，使用仪式魔法的曲解。在每种情况下，成功的关键是竞价者意志的纯净。专注于战胜仆人的集中力必须近乎完美。
+Ra 我是 Ra。两种最常见的竞价类型是：一，使用性魔法的曲解；二，使用仪式魔法的曲解。在每种情况下，成功的关键是竞价者意志的纯净。对战胜仆人的专注必须近乎完美。
 
 ## (55.7)
 
@@ -92,7 +92,7 @@ Things come not to those positively oriented, but through such beings.
 ## (55.8)
 
 (55.8) Questioner Thank you. You stated at an earlier time “until transfers of energy of all types have been experienced and mastered to a great extent, there will be blockages in the blue and indigo radiations.” Could you explain that more fully?
-(55.8) 发问者 谢谢你。你在较早的时候说“在所有类型的能量转移都被充分体验和掌握之前，蓝色和靛蓝色辐射中会有阻塞。”你能更充分地解释一下吗？
+(55.8) 发问者 谢谢你。你在较早的时候说“在所有类型的能量转移都被在很大程度上体验和掌握之前，蓝色和靛蓝色辐射中会有阻塞。”你能更充分地解释一下吗？
 
 Ra I am Ra. At this space/time we have not covered the appropriate intermediate material. Please re-question at a more appropriate space/time nexus.
 Ra 我是 Ra。在这个空间/时间，我们尚未涵盖适当的中间材料。请在更合适的空间/时间连接点重新提问。

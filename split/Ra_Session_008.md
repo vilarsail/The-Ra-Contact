@@ -131,10 +131,10 @@ The second form is that of landing beneath the earth's crust which is entered fr
 ## (8.14)
 
 (8.14) Questioner What do the Orion group have . . . what’s the objective with respect to the conquest of the Orion group?
-(8.14) 发问者 狩户座集团有……狩户座集团征服的目标是什么？
+(8.14) 发问者 猎户座集团有……猎户座集团征服的目标是什么？
 
 Ra I am Ra. As we have said previously, their objective is to locate certain mind/body/spirit complexes which vibrate in resonance with their own vibrational complex, then to enslave the un-elite, as you may call those who are not of the Orion vibration.
-Ra 我是 Ra。正如我们之前所说，他们的目标是定位某些与他们自己的振动复合体共振的心/身/灵复合体，然后奴役那些非精英，你们可以称之为非狩户座振动的人。
+Ra 我是 Ra。正如我们之前所说，他们的目标是定位某些与他们自己的振动复合体共振的心/身/灵复合体，然后奴役那些非精英，你们可以称之为非猎户座振动的人。
 
 ## (8.15)
 
@@ -142,7 +142,7 @@ Ra 我是 Ra。正如我们之前所说，他们的目标是定位某些与他�
 (8.15) 发问者 1973年帕斯卡古拉的着陆，当时Charlie Hickson被带上飞行器，是这种类型的着陆吗？
 
 Ra I am Ra. The landing of which you speak was what you would call an anomaly. It was neither the Orion influence nor our peoples in thought-form but rather a planetary entity of your own vibration which came through quarantine in all innocence in a random landing.
-Ra 我是 Ra。你所说的着陆是你们所谓的异常事件。它既不是狩户座影响力，也不是我们人群的思想形体，而是一个与你们自己振动相同的行星实体，它在完全无知的情况下穿过了隔离，进行了一次随机着陆。
+Ra 我是 Ra。你所说的着陆是你们所谓的异常事件。它既不是猎户座影响力，也不是我们人群的思想形体，而是一个与你们自己振动相同的行星实体，它在完全无知的情况下穿过了隔离，进行了一次随机着陆。
 
 ## (8.16)
 
@@ -206,7 +206,7 @@ Ra 我是 Ra。这些实体来自天狼星系。
 (8.23) 发问者 你给我的最令人震惊的信息——我必须承认我很难相信——是美国拥有573架如你所描述的飞行器。我们政府中有多少人知道我们拥有这些？美国指定的人中有多少人知道这一点，包括操作这些飞行器的人？
 
 Ra I am Ra. The number of your peoples varies, for there are needs to communicate at this particular time/space nexus so that the number is expanding at this time. The approximate number is one five oh oh [1,500]. It is only approximate, for as your illusory time/space continuum moves from present to present at this nexus many are learning.
-Ra 我是 Ra。你们人群的数量是变化的，因为在这个特定的空间/时间联结上有通讯的需要，所以此时数量正在增加。大约数量是一五〇〇，一千五百[1,500]。这只是近似值，因为在你们的幻像时间/空间连续体从当下向当下移动时，在这个联结上许多人正在学习。
+Ra 我是 Ra。你们人群的数量是变化的，因为在这个特定的空间/时间联结上有通讯的需要，所以此时数量正在增加。大约数量是一五〇〇，一千五百[1,500]。这只是近似值，因为在你们的幻象时间/空间连续体从当下向当下移动时，在这个联结上许多人正在学习。
 
 ## (8.24)
 
@@ -227,10 +227,10 @@ Ra 我是 Ra。我是这样说的。我可以在这个时候重申吗，这种�
 ## (8.26)
 
 (8.26) Questioner I am totally aware how this line of questioning is of no consequence at all, but this particular information is so startling to me that it makes me question your validity on this. Up until this point, I was in agreement with everything. This is very startling, and it does not seem possible that this secret could have been kept twenty-seven years and that we are operating these craft. I apologize for my attitude, but I thought I would be very honest about this. It is unbelievable to me that we would operate a plant in Mexico, outside of the United States, to build these craft. Maybe I’m mistaken. These craft are physical craft built by our physical people? I could go get in one and ride in one? Is that correct?
-(8.26) 发问者 我完全意识到这个提问方向毫无意义，但这个特定的信息对我来说如此震惊，以至于让我怀疑你在这一点上的可信度。在此之前，我同意所有内容。这非常震惊，似乎不可能这个秘密能被保守二十七年，而且我们还在操作这些飞行器。我为我的态度道歉，但我觉得我应该对此很诚实。我难以相信我们会在墨西哥——美国之外——运营一个工厂来制造这些飞行器。或许我搞错了。这些飞行器是由我们的物理人员制造的物理飞行器吗？我可以走过去坐进去并驾驶一架吗？这是正确的吗？
+(8.26) 发问者 我完全意识到这个提问方向毫无意义，但这个特定的信息对我来说如此震惊，以至于让我怀疑你在这一点上的可信度。在此之前，我同意所有内容。这非常震惊，似乎不可能这个秘密能被保守二十七年，而且我们还在操作这些飞行器。我为我的态度道歉，但我觉得我应该对此很诚实。我难以相信我们会在墨西哥——美国之外——运营一个工厂来制造这些飞行器。或许我搞错了。这些飞行器是由我们的物理人员制造的物理飞行器吗？我可以走过去坐进去并乘坐一架吗？这是正确的吗？
 
 Ra I am Ra. This is incorrect. You could not ride one. The United States, as you call your society divisional complex, creates these as a type of weapon.
-Ra 我是 Ra。这是不正确的。你不能驾驶一架。美国，如你所称呼的你们的社会划分复合体，将这些创造为一种武器。
+Ra 我是 Ra。这是不正确的。你不能乘坐一架。美国，如你所称呼的你们的社会划分复合体，将这些创造为一种武器。
 
 ## (8.27)
 
@@ -262,7 +262,7 @@ Ra 我是 Ra。必要性在于两点：地面干燥以及几乎完全没有人�
 (8.30) 发问者 这就是Dan Frye被运输时所乘坐的飞行器类型吗？
 
 Ra I am Ra. The one known as Daniel was, in thought-form, transported by Confederation thought-form vehicular illusion in order to give this mind/body/spirit complex data so that we might see how this type of contact aided your people in the uncovering of the intelligent infinity behind the illusion of limits.
-Ra 我是 Ra。那个被称为Daniel的人，是以思想形体被星际联邦的思想形体载具幻像运输的，以便给予这个心/身/灵复合体资料，从而我们可以看到这种类型的接触如何帮助你们的人群揭示限制幻像背后的智能无限。
+Ra 我是 Ra。那个被称为Daniel的人，是以思想形体被星际联邦的思想形体载具幻象运输的，以便给予这个心/身/灵复合体资料，从而我们可以看到这种类型的接触如何帮助你们的人群揭示限制幻象背后的智能无限。
 
 ## (8.31)
 

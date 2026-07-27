@@ -26,7 +26,7 @@ Ra 我是 Ra。如前所述。
 “在过去的九年里，我在早晨醒来前的前意识睡眠状态中经历了所谓的额叶体验。它们是愉悦和压力的结合，始于额叶，并以脉冲形式扩散到整个大脑，感觉像是我大脑中的高潮。我已经有超过两百次这样的体验，通常伴有幻视和声音，但很少对我有意义。这些额叶体验的源头是什么？”
 
 Ra I am Ra. We scan the questioner and find some pertinent information already available which regards the physiological disposition of this particular part of the brain. The experiences described and experienced are those distillations which may be experienced after a concentration of effort upon the opening of the gateway, or indigo, mind complex so that experience of a sacramental, or violet, ray may occur. These experiences are the beginnings of that which—as the body, the mind, and the spirit become integrated at the gateway, or indigo, level—may then yield not only the experience of joy but the comprehension of intelligent infinity which accompanies it. Thus the body complex orgasm and mind complex orgasm, becoming integrated, may then set forth the proper gateway for the spiritual complex integration and its use as a shuttle for the sacrament of the fully experienced presence of the One Infinite Creator. Thus there is much to which the questioner may look forward.
-Ra 我是 Ra。我们扫描了这位发问者，发现已有一些关于大脑这一特定部位生理倾向的相关信息。所描述和经历的体验是那些精炼，它们可以在专注于开启门户或靛蓝色光芒心智复合体之后被体验到，从而使得圣事性或紫罗兰色光芒的体验得以发生。这些体验是那些——当身体、心智和灵性在门户或靛蓝色层次整合时——不仅可能产生喜悦的体验，还可能产生伴随而来的对智能无限的理解。因此，身体复合体的高潮和心智复合体的高潮，在整合后，可能为灵性复合体的整合及其作为穿梭载具以体验太一造物主完全临在之圣事而设立正确的门户。因此，发问者有许多值得期待的事物。
+Ra 我是 Ra。我们扫描了这位发问者，发现已有一些关于大脑这一特定部位生理倾向的相关信息。所描述和经历的体验是那些精炼，它们可以在专注于开启门户或靛蓝色光芒心智复合体之后被体验到，从而使得圣事性或紫罗兰色光芒的体验得以发生。这些体验是那些——当身体、心智和灵性在门户或靛蓝色层次整合时——不仅可能产生喜悦的体验，还可能产生伴随而来的对智能无限的理解。因此，身体复合体的高潮和心智复合体的高潮，在整合后，可能为灵性复合体的整合及其作为穿梭载具以体验太一无限造物主完全临在之圣事而设立正确的门户。因此，发问者有许多值得期待的事物。
 
 ## (49.3)
 
@@ -54,7 +54,7 @@ Ra I am Ra. The lobes of your physical complex brain are alike in their use of w
 Ra 我是 Ra。你们物理复合体大脑的脑叶在使用弱电能方面是相似的。当考虑极性时，由直觉和冲动支配的实体与由理性分析支配的实体是平等的。两个脑叶都可以用于服务自我或服务他人。
 
 It may seem that the rational, or analytical, mind might have more of a possibility of successfully pursuing the negative orientation due to the fact that, in our understanding, too much order is, by its essence, negative. However, this same ability to structure abstract concepts and to analyze experiential data may be the key to rapid positive polarization. It may be said that those whose analytical capacities are predominant have somewhat more to work with in polarizing.
-理性或分析性心智，在我们看来，由于过多的秩序本质上是负面的，似乎有更多可能成功追求负面导向。然而，这同样的构建抽象概念和分析经验数据的能力，可能是快速正面极化的关键。可以说，那些分析能力占主导的人有更多工作可做以进行极化。
+理性或分析性心智，在我们看来，由于过多的秩序本质上是负面的，似乎有更多可能成功追求负面导向。然而，这同样的构建抽象概念和分析经验数据的能力，可能是快速正面极化的关键。可以说，那些分析能力占主导的人在极化方面有更多可资凭借的素材。
 
 The function of intuition is to inform intelligence. In your illusion the unbridled predominance of intuition will tend to keep an entity from the greater polarizations due to the vagaries of intuitive perception. As you may see, these two types of brain structure need to be balanced in order that the net sum of experiential catalyst will be polarization and illumination, for without the acceptance by the rational mind of the worth of the intuitive faculty, the creative aspects which aid in illumination will be stifled.
 直觉的功能是告知智力。在你们的幻象中，直觉的无节制主导往往会因直觉感知的变幻无常而使实体远离更大的极化。如你所见，这两种大脑结构需要平衡，以便经验催化剂的总和将是极化与启蒙，因为若没有理性心智对直觉官能价值的接纳，那些有助于启蒙的创造性方面将被扼杀。

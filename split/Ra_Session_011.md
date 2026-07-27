@@ -265,7 +265,7 @@ That is correct. Wanderers incarnated in several waves, as you may call them, in
 (11.30) 发问者 好的，那是最后一个问题了，所以我会像往常一样，问一下我们是否可以做些什么让器皿更舒适？
 
 Ra I am Ra. You are doing well. The most important thing is to carefully align the symbols. The adjustment made this particular time/space present will aid this instrument's physical complex in the distortion towards comfort.
-你们做得很好。最重要的是仔细校准符号。在这个特定时间/空间当下所做的调整，将有助于这个器皿的物理复合体在朝向舒适的变貌中。
+Ra 我是 Ra。你们做得很好。最重要的是仔细校准符号。在这个特定时间/空间当下所做的调整，将有助于这个器皿的物理复合体在朝向舒适的变貌中。
 
 May we ask if you have any short questions which we may resolve before closing the session?
 我们可以问一下，在结束本次集会之前，你们是否有任何简短的问题我们可以解答？

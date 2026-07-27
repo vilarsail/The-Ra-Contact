@@ -13,13 +13,13 @@ We have watched your group. We have been called to your group, for you have a ne
 我们曾观察过你们的小组。我们被呼唤到你们的小组，因为你们需要管道传讯中多样性的体验，这些体验伴随着一种更为深入的——或者如你们所称的——进阶方式，用以研究你们身体、心智和灵性的幻象模式，你们将这种研究称为寻求真理。我们希望为你们提供一种略有不同的视角来看待那始终如一、永远不变的信息。
 
 The Confederation of Planets in the Service of the Infinite Creator has only one important statement. That statement, my friends, as you know, is: “All things, all of life, all of the creation is part of One Original Thought.”
-服务无限造物主的行星联盟只有一个重要的声明。那个声明，我的朋友们，如你们所知，就是：”所有事物，所有生命，所有造物，都是太一原初思想的一部分。”
+服务无限造物主的星际联邦只有一个重要的声明。那个声明，我的朋友们，如你们所知，就是：”所有事物，所有生命，所有造物，都是太一原初思想的一部分。”
 
 We will exercise each channel if we are able to. The reception of our beam is a somewhat more advanced feat than some of the more broad vibration channels opened by other members for more introductory and intermediate work.
 如果条件允许，我们将运用每一个管道。接收我们的波束是一项比某些其他成员为更初级和中级的工作而开启的较宽频振动管道更为进阶的技艺。
 
 Let us for a moment consider thought. What is it, my friends, to take thought? Took you then thought today? What thoughts did you think today? What thoughts were part of the Original Thought today? In how many of your thoughts did the creation abide? Was love contained? And was service freely given?
-让我们暂时来思考一下思想。我的朋友们，取用思想意味着什么？那么你们今天取用思想了吗？你们今天思考了哪些思想？今天有哪些思想是太一原初思想的一部分？在你们多少思想中，造物寓居其中？爱是否包含其中？服务是否被无偿给予？
+让我们暂时来思考一下思想。我的朋友们，思考意味着什么？那么你们今天思考了吗？你们今天思考了哪些思想？今天有哪些思想是太一原初思想的一部分？在你们多少思想中，造物寓居其中？爱是否包含其中？服务是否被无偿给予？
 
 You are not part of a material universe. You are part of a thought. You are dancing in a ballroom in which there is no material. You are dancing thoughts. You move your body, your mind, and your spirit in somewhat eccentric patterns, for you have not completely grasped the concept that you are part of the Original Thought.
 你们并非一个物质宇宙的一部分。你们是一个思想的一部分。你们正在一个没有任何物质的舞厅中跳舞。你们正在舞动思想。你们以某种略显古怪的模式移动你们的身体、你们的心智和你们的灵性，因为你们尚未完全领会你们是太一原初思想的一部分这个概念。
@@ -95,7 +95,7 @@ Ra 你不理解什么？
 (1.5) 发问者 你能就你们与埃及人的关系给我更多一点细节吗？
 
 Ra I am Ra. The identity of the vibration Ra is our identity. We as a group, or what you would call a social memory complex, made contact with a race of your planetary kind which you call Egyptians. Others from our density made contact at the same time in South America, and the so-called “lost cities” were their attempts to contribute to the Law of One.
-Ra 我是 Ra。振动 Ra 的身份即是我们的身份。我们作为一个群体——或你们所称的社会记忆复合体——与你们行星种类中你们称为埃及人的那个种族进行了接触。我们密度中的其他实体同时在南美洲进行了接触，而那些所谓的”失落城市”即是他们为贡献于一法则所做的尝试。
+Ra 我是 Ra。振动 Ra 的身份即是我们的身份。我们作为一个群体——或你们所称的社会记忆复合体——与你们行星种类中你们称为埃及人的那个种族进行了接触。我们密度中的其他实体同时在南美洲进行了接触，而那些所谓的”失落城市”即是他们为贡献于一的法则所做的尝试。
 
 We spoke to one who heard and understood and was in a position to decree the Law of One. However, the priests and peoples of that era quickly distorted our message, robbing it of the, shall we say, compassion with which unity is informed by its very nature. Since it contains all, it cannot abhor any.
 我们对一位听见并理解、且处于能够颁布一的法则之地位者进行了讲述。然而，那个时代的祭司和民众迅速扭曲了我们的讯息，剥去了它——容我们说——那统一性因其本质而自然蕴含的悲悯。既然它包含一切，它便不可能憎恶任何。

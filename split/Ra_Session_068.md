@@ -48,7 +48,7 @@ Thus, if the instrument’s condition is truly marginal, by all means let more r
 ## (68.4)
 
 (68.4) Questioner The primary reason that we considered it important to have this session today is that I might not be around for a while, and I had a pressing question about what happened Sunday night when, apparently, the instrument was slipping into a trance state during one of the normal meetings,[24] and I would like to question you on this. Can you give me information about what happened?
-(68.4) 发问者 我们认为今天进行这次集会很重要的主要原因，是我可能有一段时间不在，而且我有一个紧迫的问题，关于周日晚上发生的事情，当时显然器皿在正常会议之一期间滑入了出神状态，我想就此向你提问。你能告诉我发生了什么吗？
+(68.4) 发问者 我们认为今天进行这次集会很重要的主要原因，是我可能有一段时间不在，而且我有一个紧迫的问题，关于周日晚上发生的事情，当时显然器皿在正常会议之一期间滑入了出神状态，[24]我想就此向你提问。你能告诉我发生了什么吗？
 
 Ra I am Ra. We can.
 Ra 我是 Ra。我们可以。
@@ -90,7 +90,7 @@ At this point the higher self of the instrument would have the choice of leaving
 (68.7) 发问者 那么你是说，如果这个第五密度负面实体成功地将心/身/灵复合体——当该复合体处于我们称为出神状态时——转移到负面极化的时间/空间，那么高我就别无选择，只能允许在负面极化的空间/时间中投生？这是否正确？
 
 Ra I am Ra. This is incorrect. The higher self could allow the mind/body/spirit complex to remain in time/space. However, it is unlikely that the higher self would do so indefinitely due to its distortion towards the belief that the function of the mind/body/spirit complex is to experience and learn from other-selves, thus experiencing the Creator. A highly polarized positive mind/body/spirit complex surrounded by negative portions of space/time[25] will experience only darkness, for, like the magnet, there is no, shall we say, likeness. Thus a barrier is automatically formed.
-Ra 我是 Ra。这是不正确的。高我可以允许心/身/灵复合体留在时间/空间中。然而，高我不太可能无限期地这样做，因为它存在着一种变貌，即相信心/身/灵复合体的功能是体验其他自我并从中学习，从而体验造物主。一个高度极化的正面心/身/灵复合体被空间/时间的负面部分包围，将只会体验黑暗，因为如同磁铁，没有——容我们说——相似性。因此一道屏障会自动形成。
+Ra 我是 Ra。这是不正确的。高我可以允许心/身/灵复合体留在时间/空间中。然而，高我不太可能无限期地这样做，因为它存在着一种变貌，即相信心/身/灵复合体的功能是体验其他自我并从中学习，从而体验造物主。一个高度极化的正面心/身/灵复合体被空间/时间的负面部分包围[25]，将只会体验黑暗，因为如同磁铁，没有——容我们说——相似性。因此一道屏障会自动形成。
 
 ## (68.8)
 
@@ -133,7 +133,7 @@ Ra I am Ra. This request lies beyond the First Distortion. The entity seeking ma
 Ra 我是 Ra。这个请求超出了第一变貌的范围。寻求魔法能力的实体必须以某种方式去做。我们可以给出一般性的指导。这我们已经做了。器皿已经开始了平衡自我的过程。这是一个漫长的过程。
 
 To take an entity before it is ready and offer it the scepter of magical power is to infringe in an unbalanced manner. We may suggest with some asperity[26] that the instrument never call upon Ra in any way while unprotected by the configuration which is at this time present.
-在一个实体尚未准备好时就把它接过来，并赐予它魔法力量的权杖，是以一种不平衡的方式侵犯。我们可以略带严厉地建议，器皿在没有当前这种配置保护的情况下，绝不要以任何方式呼唤 Ra。
+在一个实体尚未准备好时就把它接过来，并赐予它魔法力量的权杖，是以一种不平衡的方式侵犯。我们可以略带严厉地建议[26]，器皿在没有当前这种配置保护的情况下，绝不要以任何方式呼唤 Ra。
 
 ## (68.13)
 
@@ -152,13 +152,13 @@ Ra I am Ra. We confirm the following which is already, shall we say, supposed or
 Ra 我是 Ra。我们确认以下内容，这些内容已经是——容我们说——被假定或假设的。
 
 When the commitment was made between two of this group to work for the betterment of the planetary sphere, this commitment activated a possibility/probability vortex of some strength. The experience of generating this volume was unusual in that it was visualized as if watching the moving picture.
-当这个小组中的两位成员做出承诺，为行星 sphere 的改善而工作时，这个承诺激活了一个具有一定强度的可能性/概率漩涡。创作这部作品的体验是不寻常的，因为它被可视化得如同观看电影一般。
+当这个小组中的两位成员做出承诺，为行星球体的改善而工作时，这个承诺激活了一个具有一定强度的可能性/概率漩涡。创作这部作品的体验是不寻常的，因为它被可视化得如同观看电影一般。
 
 Time had become available in its present-moment form. The scenario of the volume went smoothly until the ending of the volume. You could not end the volume, and the ending was not visualized as [was] the entire body of the material but [instead] was written or authored.
-时间以其当下时刻的形式变得可用。这部作品的 scenario 进展顺利，直到作品的结尾。你无法结束这部作品，结尾不像材料的整个主体那样被可视化，而是被写出来或创作的。
+时间以其当下时刻的形式变得可用。这部作品的剧本进展顺利，直到作品的结尾。你无法结束这部作品，结尾不像材料的整个主体那样被可视化，而是被写出来或创作的。
 
 This is due to the action of free will in all of the creation. However, the volume contains a view of significant events, both symbolically and specifically, which you saw under the influence of the magnetic attraction which was released when the commitment was made and full memory of the dedication of this, what you may call, mission restored.[27]
-这是由于造物中所有自由意志的作用。然而，这部作品包含了对重大事件的观察，既有象征性地也有具体地，这些事件是你们在磁力吸引的影响下看到的，这种磁力吸引在做出承诺时被释放，并且对此——你们可以称为——使命的奉献的完整记忆得以恢复。
+这是由于造物中所有自由意志的作用。然而，这部作品包含了对重大事件的观察，既有象征性地也有具体地，这些事件是你们在磁力吸引的影响下看到的，这种磁力吸引在做出承诺时被释放，并且对此——你们可以称为——使命的奉献的完整记忆得以恢复。[27]
 
 ## (68.15)
 

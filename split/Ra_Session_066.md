@@ -31,7 +31,7 @@ Ra 我是 Ra。不。
 (66.3) 发问者 你能告诉我尝试减轻器皿身体问题的最适当方法吗？
 
 Ra I am Ra. The basic material has been covered before concerning the nurturing of this instrument. We recapitulate: the exercise according to ability, not to exceed appropriate parameters, the nutrition, the social intercourse with companions, the sexual activity in green ray or above and, in general, the sharing of the distortions of this group's individual experiences in an helpful, loving manner.
-Ra 我是 Ra。关于滋养这个器皿的基本材料之前已经涵盖过了。我们重述：根据能力进行锻炼，但不超过适当范围，营养，与同伴的社交互动，在绿色光芒或以上的性活动，以及总体上以有帮助的、充满爱的方式分享这个团体个体经验的变貌。
+Ra 我是 Ra。关于滋养这个器皿的基本材料之前已经涵盖过了。我们重述：根据能力进行练习，但不超过适当范围，营养，与同伴的社交互动，在绿色光芒或以上的性活动，以及总体上以有帮助的、充满爱的方式分享这个团体个体经验的变貌。
 
 These things are being accomplished with what we consider great harmony, given the density in which you dance. The specific attention and activities, with which those with physical-complex distortions may alleviate these distortions, are known to this instrument.
 这些事情正在以我们认为极大的和谐被完成，考虑到你们在其中舞蹈的密度。那些有身体复合体变貌的实体可以通过特定的关注和活动来减轻这些变貌，这些方法是这个器皿所知道的。
@@ -165,7 +165,7 @@ For instance, in this instrument the removal of three small cysts was the remova
 例如，在这个器皿身上，三个小囊肿的移除，是移除了对该实体没有兴趣的物质。因此，这些增生在所谓的灵性手术体验之后保持了非物质化状态。
 
 In other psychic surgery the kidneys of this instrument were carefully offered a new configuration of beingness which the entity embraced. However, this particular portion of the mind/body/spirit complex carried a great deal of emotional, mental, and spiritual charge due to this distorted functioning being the cause of great illness, in a certain configuration of events, which culminated in this entity’s conscious decision to be of service. Therefore, any objective scanning of this entity’s renal complex would indicate the rather extreme dysfunctional aspect which it showed previous to the psychic surgery experience, as you call it.
-在另一次灵性手术中，这个器皿的肾脏被仔细地提供了一个新的存在性配置，该实体接纳了它。然而，心/身/灵复合体的这个特定部分带有大量的情感、心智和灵性负荷，因为这种扭曲的功能运作在某个事件配置中导致了重大疾病，最终促使该实体做出了有意识地服务他人的决定。因此，对该实体肾脏复合体的任何客观扫描，都会显示出它在所谓的灵性手术体验之前所表现出的相当极端的功能失调方面。
+在另一次灵性手术中，这个器皿的肾脏被仔细地提供了一个新的存在性配置，该实体接纳了它。然而，心/身/灵复合体的这个特定部分带有大量的情感、心智和灵性负荷，因为这种变貌的功能运作在某个事件配置中导致了重大疾病，最终促使该实体做出了有意识地服务他人的决定。因此，对该实体肾脏复合体的任何客观扫描，都会显示出它在所谓的灵性手术体验之前所表现出的相当极端的功能失调方面。
 
 The key is not in the continuation of the dematerialization of distortion to the eye of the beholder but, rather, lies in the choosing of the newly materialized configuration which exists in time/space.
 关键不在于变貌在观察者眼中的持续非物质化，而在于对存在于时间/空间中的新物质化配置的选择。
@@ -198,7 +198,7 @@ Ra 我是 Ra。请允许我们借此机会说，这是造物主的活动。具�
 (66.16) 发问者 那么，寻求疗愈的心/身/灵复合体内部，必须有强烈的渴望才能被疗愈，以便疗愈发生？这是正确的吗？
 
 Ra I am Ra. This is correct on one level or another. An entity may not consciously seek healing and yet subconsciously be aware of the need to experience the new set of distortions which result from healing. Similarly an entity may consciously desire healing greatly but within the being, at some level, find some cause whereby certain configurations which seem quite distorted are, in fact, at that level, considered appropriate.
-Ra 我是 Ra。这在某个层面上是正确的。一个实体可能不有意识地寻求疗愈，却在潜意识中意识到需要体验疗愈所带来的新一组变貌。同样地，一个实体可能在意识上非常渴望疗愈，但在其存在的某个层面，发现某种原因，使得某些看似相当扭曲的配置，在那个层面上，实际上被认为是适当的。
+Ra 我是 Ra。这在某个层面上是正确的。一个实体可能不有意识地寻求疗愈，却在潜意识中意识到需要体验疗愈所带来的新一组变貌。同样地，一个实体可能在意识上非常渴望疗愈，但在其存在的某个层面，发现某种原因，使得某些看似相当变貌的配置，在那个层面上，实际上被认为是适当的。
 
 ## (66.17)
 

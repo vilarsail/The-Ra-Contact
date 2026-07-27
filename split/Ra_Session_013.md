@@ -118,7 +118,7 @@ Ra I am Ra. This is an appropriate question.
 Ra 我是 Ra。这是一个恰当的问题。
 
 The intelligent infinity discerned a concept. This concept was discerned due to freedom of will of awareness. This concept was finity. This was the first and primal paradox or distortion of the Law of One. Thus the one intelligent infinity invested itself in an exploration of many-ness. Due to the infinite possibilities of intelligent infinity, there is no ending to many-ness. The exploration, thus, is free to continue infinitely in an eternal present.
-智能无限辨识了一个概念。这个概念是由于觉察的自由意志而被辨识的。这个概念是有限。这是第一个也是原初的悖论或一的法则的变貌。于是这一的智能无限投身于对众多性的探索。由于智能无限的无限可能性，众多性没有终点。因此，探索在一个永恒的当下中自由地无限延续。
+智能无限辨识了一个概念。这个概念是由于觉察的自由意志而被辨识的。这个概念是有限。这是第一个也是原初的悖论或一的法则的变貌。于是，那唯一的智能无限投身于对众多性的探索。由于智能无限的无限可能性，众多性没有终点。因此，探索在一个永恒的当下中自由地无限延续。
 
 ## (13.13)
 

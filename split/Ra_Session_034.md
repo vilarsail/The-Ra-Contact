@@ -148,18 +148,18 @@ Finally, one may polarize very strongly third ray[53] by expressing the principl
 (34.15) 发问者 你刚才在那句话中使用了"第三光芒"这个词。那是你想要使用的术语吗？
 
 Ra I am Ra. We intended the green ray. Our difficulty lies in our perception of red ray and violet ray as fixed; thus the inner rays are those which are varying and are to be observed as those indications of seniority in the attempts to form an harvest.
-Ra 我是 Ra。我们本意是指绿色光芒。我们的困难在于我们将红色光芒和紫罗兰色光芒视为固定的；因此内部光芒是那些变化的，并且应被视为在形成收割的尝试中代表资历的指标。
+Ra 我是 Ra。我们本意是指绿色光芒。我们的困难在于我们将红色光芒和紫色光芒视为固定的；因此内部光芒是那些变化的，并且应被视为在形成收割的尝试中代表资历的指标。
 
 ## (34.16)
 
 (34.16) Questioner Would the red ray, an intense red ray, then be used as an index for seniority, the seniority system of incarnation, as well as the intense violet ray?
-(34.16) 发问者 那么，红色光芒，强烈的红色光芒，是否也会被用作资历的指标——投生的资历系统——以及强烈的紫罗兰色光芒？
+(34.16) 发问者 那么，红色光芒，强烈的红色光芒，是否也会被用作资历的指标——投生的资历系统——以及强烈的紫色光芒？
 
 Ra I am Ra. This is partially correct. In the graduation or harvesting to fourth-density positive, the red ray is seen only as that which, being activated, is the basis for all that occurs in vibratory levels, the sum of this being violet-ray energy.
-Ra 我是 Ra。这在一定程度上是正确的。在毕业或收割至第四密度正面的过程中，红色光芒仅被视为：被激活后，它是所有振动层级发生之事的基础，其总和为紫罗兰色光芒能量。
+Ra 我是 Ra。这在一定程度上是正确的。在毕业或收割至第四密度正面的过程中，红色光芒仅被视为：被激活后，它是所有振动层级发生之事的基础，其总和为紫色光芒能量。
 
 This violet ray is the only consideration for fourth-density positive. In assessing the harvestable fourth-density negative, the intensity of the red as well as the orange and the yellow rays is looked upon quite carefully, as a great deal of stamina and energy of this type is necessary for the negative progression, it being extremely difficult to open the gateway to intelligent infinity from the solar plexus center. This is necessary for harvest in fourth-density negative.
-这种紫罗兰色光芒是第四密度正面的唯一考量。在评估可收割的第四密度负面时，红色以及橙色和黄色光芒的强度被相当仔细地审视，因为大量的这种类型的耐力和能量对于负面进展是必要的，因为从太阳神经丛中心打开通往智能无限的门户是极其困难的。这对于第四密度负面的收割是必要的。
+这种紫色光芒是第四密度正面的唯一考量。在评估可收割的第四密度负面时，红色以及橙色和黄色光芒的强度被相当仔细地审视，因为大量的这种类型的耐力和能量对于负面进展是必要的，因为从太阳神经丛中心打开通往智能无限的门户是极其困难的。这对于第四密度负面的收割是必要的。
 
 ## (34.17)
 

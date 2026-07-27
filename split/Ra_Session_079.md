@@ -168,7 +168,7 @@ Ra 我是 Ra。这是不正确的。
 ## (79.19)
 
 (79.19) Questioner Could you tell me what you mean by “the Significator must become a complex?”
-(79.19) 发问者 你能告诉我你所说的"赋能者必须成为一个复合体"是什么意思吗？
+(79.19) 发问者 你能告诉我你所说的"意指者必须成为一个复合体"是什么意思吗？
 
 Ra I am Ra. To be complex is to consist of more than one characteristic element or concept.
 Ra 我是 Ra。成为复合体意味着由不止一个特征元素或概念组成。

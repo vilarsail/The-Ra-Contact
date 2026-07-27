@@ -21,7 +21,7 @@ In answer to the question of exercise, now that the intensive period is over, th
 关于锻炼问题的回答，既然密集期已经结束，这个器皿如果愿意，可以锻炼一次而不是两次。在扫描这个器皿的身体复合体变貌时，我们发现当前的锻炼时段处于这个器皿力量的极限。从长远来看，由于生命能量的累积增强，这是好的。在短期内，这对该实体来说是令人疲惫的。因此，我们建议该实体注意我们之前关于其他帮助适当身体变貌的告诫。
 
 In answer to the second query, we may say that the physical complex difficulties prior to contact with our social memory complex are due to the action of the subconscious will of the instrument. This will is extremely strong and requires the mind/body/spirit complex to reserve all available physical and vital energies for the contact. Thus the discomforts are experienced due to the dramatic distortion towards physical weakness while this energy is diverted. The entity is, it may be noted, also under psychic attack, and this intensifies pre-existing conditions and is responsible for the cramping and the dizziness as well as mind-complex distortions.
-关于第二个问题的回答，我们可以说，在与我们的社会记忆复合体接触之前，身体复合体的困难是由于器皿潜意识意志的作用。这个意志极其强大，要求心/身/灵复合体为接触保留所有可用的身体和生命能量。因此，当这种能量被转移时，由于朝向身体虚弱方向的剧烈变貌，不适被体验到。可以注意到，该实体也受到 psychic 攻击，这加剧了先前存在的状况，并导致了痉挛和头晕以及心智复合体变貌。
+关于第二个问题的回答，我们可以说，在与我们的社会记忆复合体接触之前，身体复合体的困难是由于器皿潜意识意志的作用。这个意志极其强大，要求心/身/灵复合体为接触保留所有可用的身体和生命能量。因此，当这种能量被转移时，由于朝向身体虚弱方向的剧烈变貌，不适被体验到。可以注意到，该实体也受到心灵攻击，这加剧了先前存在的状况，并导致了痉挛和头晕以及心智复合体变貌。
 
 ## (53.2)
 
@@ -43,7 +43,7 @@ Ra I am Ra. This query is marginal. We will make the concession towards informat
 Ra 我是 Ra。这个问题处于边缘。我们将做出让步提供信息，由于自由意志被缩减而会有一些极性损失。我们请求将这类问题保持在最低限度。
 
 The entities in this and some other vividly remembered cases are those who, feeling the need to plant Confederation imagery in such a way as not to abrogate free will, use the symbols of death, resurrection, love, and peace as a means of creating, upon the thought level, the time/space illusion of a systematic train of events which give the message of love and hope. This type of contact is chosen by careful consideration of Confederation members which are contacting an entity of like-home vibration, if you will. This project then goes before the Council of Saturn and, if approved, is completed. The characteristics of this type of contact include the non-painful nature of thoughts experienced and the message content which speaks not of doom, but of the new dawning age.
-在这个案例和其他一些被生动记忆的案例中，那些实体感到需要以一种不废除自由意志的方式植入星际联邦的意象，使用死亡、复活、爱与和平的符号作为手段，在思想层面上创造一系列系统事件的时空幻象，传达爱与希望的信息。这种类型的接触是由星际联邦成员经过仔细考虑后选择的，他们接触的是一个——如果你愿意这么说的话——具有类似家园振动的实体。这个项目然后提交给土星议会，如果获得批准，就会完成。这种类型接触的特点包括所经历的思想的非痛苦性质，以及信息内容讲述的不是末日，而是新的黎明时代。
+在这个案例和其他一些被生动记忆的案例中，那些实体感到需要以一种不废除自由意志的方式植入星际联邦的意象，使用死亡、复活、爱与和平的符号作为手段，在思想层面上创造一系列系统事件的时间/空间幻象，传达爱与希望的信息。这种类型的接触是由星际联邦成员经过仔细考虑后选择的，他们接触的是一个——如果你愿意这么说的话——具有类似家园振动的实体。这个项目然后提交给土星议会，如果获得批准，就会完成。这种类型接触的特点包括所经历的思想的非痛苦性质，以及信息内容讲述的不是末日，而是新的黎明时代。
 
 ## (53.4)
 
@@ -208,7 +208,7 @@ Ra 我是 Ra。这是正确的。
 (53.21) 发问者 你能告诉我为什么 [name] 身上有那么多银色斑点吗？
 
 Ra I am Ra. This is infringement. No.
-Ra 我是 Ra。不能。
+Ra 我是 Ra。这构成侵犯。不能。
 
 ## (53.22)
 
@@ -235,7 +235,7 @@ Is there any other query of a brief nature we may answer?
 ## (53.24)
 
 (53.24) Questioner No. I apologize for asking many transient questions during this session. I hope that we did not cause any problem for you, especially with respect to loss of polarity and that one question, but I felt it necessary to include some of this material so that those wanderers and others reading the first book of The Law of One would not get the wrong impression with respect to their experiences in contacts. I am sorry for any problems that I might have caused.
-Ra 我是 Ra。不能。
+(53.24) 发问者 不。我为这次集会中问了那么多短暂性问题道歉。我希望我们没有给你们造成任何问题，特别是关于极性损失和那个问题，但我觉得有必要包含一些这些材料，以便那些流浪者和其他阅读《一的法则》第一本书的人不会对他们在接触中的经验产生错误的印象。我为可能造成的任何问题感到抱歉。
 
 I will just ask if there is anything that we can do to improve the contact or aid the instrument?
 我只想问，有什么我们可以做的来改善通讯或帮助器皿吗？

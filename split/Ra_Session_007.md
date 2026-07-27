@@ -12,7 +12,7 @@ January 25, 1981
 ## (7.1)
 
 (7.1) Questioner You mentioned that you were a member of the Confederation of Planets. What avenues of service, or types of service, are available to members of the Confederation? Would you describe some of them?
-(7.1) 发问者 你提到你是行星星际联邦的成员。联邦成员可用的服务途径或服务类型有哪些？你能描述其中一些吗？
+(7.1) 发问者 你提到你是星际联邦的成员。联邦成员可用的服务途径或服务类型有哪些？你能描述其中一些吗？
 
 Ra I am Ra. I am assuming that you intend the service which we of the Confederation can offer, rather than the service which is available to our use.
 Ra 我是 Ra。我假设你意指我们联邦能够提供的服务，而非可供我们使用的服务。
@@ -45,7 +45,7 @@ Ra 我是 Ra。这是不正确的。平方是连续的——一、二、三、�
 (7.4) 发问者 [听不清] 举个例子。如果地球上有十个——只有十个——实体需要你们的服务，你们如何使用这个平方规则计算他们的呼唤？
 
 Ra We would square one ten sequential times, raising the number to the tenth square.
-Ra 我们将一对十进行连续平方，将该数字提升至第十次平方。
+Ra 我们将一连续平方十次，将该数字提升至第十次平方。
 
 ## (7.5)
 
@@ -69,7 +69,7 @@ Ra 我被三十五万两千[352,000]个实体以个人方式呼唤。联邦在�
 (7.7) 发问者 你能告诉我将平方法则应用于这些数字的结果是什么吗？
 
 Ra The number is approximately meaningless in the finite sense as there are many, many digits. It, however, constitutes a great calling which we of all creation feel and hear as if our own entities were distorted towards a great and overwhelming sorrow. It demands our service.
-Ra 这个数字在有限意义上几乎毫无意义，因为它有许多许多位数。然而，它构成了一次伟大的呼唤，我们所有造物都感受到并听到，仿佛我们自己的实体都朝向一种巨大而压倒性的悲伤而变貌。它要求我们的服务。
+Ra 这个数字在有限意义上几乎毫无意义，因为它有许多许多位数。然而，它构成了一次伟大的呼唤，我们这些属于所有造物的存在都感受到并听到，仿佛我们自己的实体都朝向一种巨大而压倒性的悲伤而变貌。它要求我们的服务。
 
 ## (7.8)
 

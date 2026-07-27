@@ -113,7 +113,7 @@ As the garlic is burned you may say: “We give thanks to the One Creator for th
 (95.8) 发问者 在房间里悬挂大蒜，有没有什么地方比其他地方更合适；例如，挂在窗户上或类似的地方？我知道它应该挂在吧台区域，但我指的是在卧室里。有没有什么地方比其他地方更合适？
 
 Ra I am Ra. The windows and the doorways are most appropriate and, in addition, we suggest the salting and sprinkling of any door which may lead elsewhere than out of the dwelling in order to afford to the entities the understanding that they are not desired elsewhere within the dwelling.
-Ra 我是Ra。窗户和门道是最合适的，此外，我们建议在任何可能通往住所外其他地方的门上撒盐和洒水，以便让实体们理解，它们在住所内的其他地方是不受欢迎的。
+Ra 我是Ra。窗户和门道是最合适的，此外，我们建议对任何可能通向住所内其他地方（而非住所外）的门进行撒盐和洒水，以便让实体们理解，它们在住所内的其他地方是不受欢迎的。
 
 ## (95.9)
 
@@ -156,10 +156,10 @@ Ra 我是Ra。在该区域中没有储存任何不受欢迎的负面能量。因
 (95.13) 发问者 关于新地点，在结束这个提问领域时，Ra除了已经对新地点或其任何部分所做的评论外，还有什么其他评论吗？
 
 Ra I am Ra. We are gratified that this query was offered to us, for there has been a concentration of negative thought patterns at a distance north to 10° of north, approximately 45 of what you call yards, extending therefrom to all four directions in a rectangular but irregular shape.
-Ra 我是Ra。我们很欣慰这个问题被提出给我们，因为在一个距离正北偏北10度、大约45个你们称为码的地方，有一团负面思想模式的集中，从那里向四个方向延伸，呈矩形但不规则形状。
+Ra 我是Ra。我们很欣慰这个问题被提出给我们，因为在一个距离北偏东10度、大约45个你们称为码的地方，有一团负面思想模式的集中，从那里向四个方向延伸，呈矩形但不规则形状。
 
 We ask that the garlic be strung approximately 60-70 feet beyond the far verge of this area which is approximately 57 yards from the dwelling on a bearing north to 10° off north. We suggest that the garlic be hung in the funnel so that the energies are drawn into the south, small end of the funnel, and traduced northward and away from the dwelling. The procedure of the hanging will be one for testing your ingenuity, but there are several ways to suspend the substance, and it is well to do so.
-我们请求将大蒜串在该区域远边之外约60-70英尺处，该区域距离住所约57码，方位为正北偏北10度。我们建议将大蒜以漏斗形式悬挂，使能量被吸入漏斗朝南的小端，并被引导向北，远离住所。悬挂的程序将考验你们的巧思，但有几种方法可以悬挂该物质，这样做是好的。
+我们请求将大蒜串在该区域远边之外约60-70英尺处，该区域距离住所约57码，方位为北偏东10度。我们建议将大蒜以漏斗形式悬挂，使能量被吸入漏斗朝南的小端，并被引导向北，远离住所。悬挂的程序将考验你们的巧思，但有几种方法可以悬挂该物质，这样做是好的。
 
 ## (95.14)
 

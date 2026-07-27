@@ -91,7 +91,7 @@ Ra I am Ra. As we scan the physical complex we find several factors contributing
 Ra 我是 Ra。当我们扫描物理复合体时，我们发现有几个因素导致器皿经历的一种普遍变貌。这些变貌中有两个已被诊断；一个没有被诊断；该实体也不愿意接受足以导致你们称为疼痛的变貌停止的化学物质。
 
 In general we may say that the sole modality addressing itself specifically to all three contributing distortions, which is not now being used, is that of the warmed water which is moved with gentle force repeatedly against the entire physical complex while the physical vehicle is seated. This would be of some aid, if practiced daily, after the exercise period.
-一般来说，我们可以说，唯一专门针对所有三个促成变貌的、目前未被使用的方式，是在物理载具就座时，用温和的力量反复将温水推向整个物理复合体。如果在锻炼期后每天练习，这会有些帮助。
+一般来说，我们可以说，唯一专门针对所有三个促成变貌的、目前未被使用的方式，是在物理载具就座时，用温和的力量反复将温水推向整个物理复合体。如果在练习期后每天进行，这会有些帮助。
 
 ## (75.10)
 
@@ -137,7 +137,7 @@ When the entity Jehoshua[40] decided to return to the location called Jerusalem 
 当Jehoshua[40]实体决定返回称为耶路撒冷的地方参加其人民的圣日时，它从混合爱与智慧的工作转向了拥抱殉道，即没有智慧的爱的工作。
 
 The “Hosanna,” as it is termed, and the following “Benedictus,” is that which is the written summation of what was shouted as Jehoshua came into the place of its martyrdom. The general acceptance of this shout—“Hosanna to the son of David! Hosanna in the highest! Blessed is he who comes in the name of the Lord!”—by that which is called the church has been a misstatement of occurrence which has been, perhaps, unfortunate, for it is more distorted than much of the so-called Mass.
-被称为“Hosanna”以及接下来的“Benedictus”，是当Jehoshua进入其殉道之地时被呼喊的内容的书面总结。被称为教会的机构对这个呼喊——“和散那归于大卫的子孙！高高在上和散那！奉主名来的是应当称颂的！”——的普遍接受，是对事件的一个错误陈述，这可能是不幸的，因为它比所谓的弥撒曲的大部分内容更加扭曲。
+被称为“Hosanna”以及接下来的“Benedictus”，是当Jehoshua进入其殉道之地时被呼喊的内容的书面总结。被称为教会的机构对这个呼喊——“和散那归于大卫的子孙！高高在上和散那！奉主名来的是应当称颂的！”——的普遍接受，是对事件的一个错误陈述，这可能是不幸的，因为它比所谓的弥撒曲的大部分内容更加变貌。
 
 There were two factions present to greet Jehoshua, firstly, a small group of those which hoped for an earthly king. However, Jehoshua rode upon an ass stating by its very demeanor that it was no earthly king, and wished no fight with Roman or Sadducee.
 当时有两个派别在场迎接Jehoshua，首先，一小群希望有一位地上君王的人。然而，Jehoshua骑着一头驴，通过其姿态表明它不是地上君王，并且不希望与罗马人或撒都该人争斗。
@@ -339,7 +339,7 @@ Ra 我是 Ra。由于这个天线效应的形而上学性质，这样做是困�
 (75.34) 发问者 那么，对于这种辅助，头发有一个最佳长度吗？
 
 Ra I am Ra. There is no outer limit on length but the, shall we say, inner limit is approximately four to four-and-one-half inches depending upon the strength of the contact and the nature of the instrument.
-Ra 我是 Ra。长度没有外部限制，但是，可以说，内部限制大约是四到四英寸半，取决于接触的强度和器皿的性质。
+Ra 我是 Ra。长度没有上限，但是，可以说，下限大约是四到四英寸半，取决于接触的强度和器皿的性质。
 
 ## (75.35)
 
@@ -347,7 +347,7 @@ Ra 我是 Ra。长度没有外部限制，但是，可以说，内部限制大�
 (75.35) 发问者 第三密度中的任何人，如果他们有适当的意志、渴望和极性，是否都能实现某种程度的疗愈，还是疗愈者的能量中心也需要有一个最低限度的平衡？
 
 Ra I am Ra. Any entity may, at any time, instantaneously clear and balance its energy centers. Thus in many cases those normally quite blocked, weakened, and distorted may, through love and strength of will, become healers momentarily. To be a healer by nature one must indeed train its self in the disciplines of the personality.
-Ra 我是 Ra。任何实体都可以在任何时候瞬间清理和平衡其能量中心。因此，在许多情况下，那些通常相当阻塞、虚弱和扭曲的实体，可以通过爱和意志的力量，暂时成为疗愈者。要成为天生的疗愈者，一个人必须确实在人格的修炼中训练自己。
+Ra 我是 Ra。任何实体都可以在任何时候瞬间清理和平衡其能量中心。因此，在许多情况下，那些通常相当阻塞、虚弱和变貌的实体，可以通过爱和意志的力量，暂时成为疗愈者。要成为天生的疗愈者，一个人必须确实在人格的修炼中训练自己。
 
 ## (75.36)
 

@@ -21,7 +21,7 @@ Ra I am Ra. This concept is incorrect, as is any concept of the one intelligent 
 Ra 我是 Ra。这个概念是不正确的，正如任何关于那个太一智能无限的概念都是不正确的一样。这个概念在某个特定理则的背景下是正确的，或者说在一个特定的爱、或造物主的焦点之下是正确的，该焦点选择了——容我们说——其自然法则以及用数学或其他方式表达它们的方式。
 
 The one undifferentiated intelligent infinity, unpolarized, full and whole, is the macrocosm of the mystery-clad being. We are messengers of the Law of One. Unity, at this approximation of understanding, cannot be specified by any physics but only be activated, or potentiated, intelligent infinity due to the catalyst of free will. This may be difficult to accept. However, the understandings we have to share begin and end in mystery.
-那个太一一统的、未分化的智能无限，无极性、圆满而完整，是那披着神秘外衣的存有的宏观宇宙。我们是一的法则的使者。在这个理解近似值上，合一无法被任何物理学所指定，而只能因自由意志的催化剂而被激活或强化为智能无限。这可能难以接受。然而，我们要分享的理解始于神秘，也终于神秘。
+那个太一一统的、未分化的智能无限，无极性、圆满而完整，是那披着神秘外衣的存有的宏观宇宙。我们是一的法则的使者。在这个理解近似值上，合一无法被任何物理学所指定，而只能因自由意志的催化剂而被激活或赋予潜能为智能无限。这可能难以接受。然而，我们要分享的理解始于神秘，也终于神秘。
 
 ## (28.2)
 
@@ -70,7 +70,7 @@ Ra I am Ra. You remain carefully in the area of creation itself. In this process
 Ra 我是 Ra。你们谨慎地停留在创造本身的领域内。在这个过程上，我们必须进一步让你们困惑，指出自由意志作用于潜在智能无限以成为聚焦的智能能量的过程，是在你们如此熟悉的空间/时间之外发生的，因为它是你们的连续统体验。
 
 The experience, or existence, of space/time comes into being after the individuation process of Logos, or Love, has been completed and the physical universe, as you would call it, has coalesced or begun to draw inward while moving outward to the extent that that which you call your sun bodies have, in their turn, created timeless chaos coalescing into what you call planets, these vortices of intelligent energy spending a large amount of what you would call first density in a timeless state, the space/time realization being one of the learn/teachings of this density of beingness.
-空间/时间的体验或存在，是在理则或爱的个体化过程完成之后才出现的，而物理宇宙——如你们所称呼的——已经凝聚或开始向内吸引，同时向外移动，以至于你们称为太阳的那些天体，在它们的轮回中，创造了无时间的混沌，凝聚成你们称为行星的实体，这些智能能量的漩涡在无时间状态中花费了大量你们称为第一密度的时光，空间/时间的领悟是这一存在性密度的学习/教导之一。
+空间/时间的体验或存在，是在理则或爱的个体化过程完成之后才出现的，而物理宇宙——如你们所称呼的——已经凝聚或开始向内吸引，同时向外移动，以至于你们称为太阳的那些天体，依次创造了无时间的混沌，凝聚成你们称为行星的实体，这些智能能量的漩涡在无时间状态中花费了大量你们称为第一密度的时光，空间/时间的领悟是这一存在性密度的学习/教导之一。
 
 Thus we have difficulty answering your questions with regard to time and space and their relationship to the, what you would call, original creation which is not a part of space/time as you can understand it.
 因此，我们难以回答你们关于时间和空间及其与你们所称的原初创世之关系的问题，那原初创世不是你们所能理解的空间/时间的一部分。

@@ -28,7 +28,7 @@ Ra 我是 Ra。为工作做准备的目的，是净化参与工作的每个实�
 ## (98.3)
 
 (98.3) Questioner I had just taken a wild guess that it was possibly during that meditation prior to the working that was used by our fifth-density negative friend to create the allergic reactions and other in the instrument. Was I correct on that or incorrect?
-(98.3) 发问者 我只是胡乱猜测，我们的第五密度负面朋友可能是在工作前的冥想期间被用来在器皿身上制造过敏反应和其他症状。我猜对了还是错了？
+(98.3) 发问者 我只是胡乱猜测，可能正是在工作前的冥想期间，那次冥想被我们第五密度负面朋友利用来在器皿身上制造过敏反应和其他症状。我猜对了还是错了？
 
 Ra I am Ra. This entity greets the instrument as close to the working in your space/time continuum as is practicable. The elimination of that preparation caused the fifth-density entity to greet this instrument at this juncture of decision not to meditate. The greeting does not take what you would call a noticeable amount of your time.
 Ra 我是 Ra。这个实体在你们空间/时间连续体中尽可能接近工作之时向器皿致意。取消那项准备导致第五密度实体在决定不冥想的这个关头向这个器皿致意。这次致意并未占用你们所称的明显时间量。

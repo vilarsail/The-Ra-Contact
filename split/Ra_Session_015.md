@@ -218,7 +218,7 @@ Ra 我是 Ra。我们如此称呼他们，是为了让你——发问者——�
 (15.20) 发问者 这些长老种族中有流浪者吗，还是没有？
 
 Ra I am Ra. These are planetary entities harvested—wanderers only in the sense that they chose, in fourth-density love, to immediately reincarnate in third density rather than proceeding towards fourth density. This causes them to be wanderers of a type, wanderers who have never left the earth plane because of their free will rather than because of their vibrational level.
-Ra 我是 Ra。这些是被收割的行星实体——他们仅仅是流浪者，意义在于他们选择在第四密度的爱中立即重新投生于第三密度，而不是继续前往第四密度。这使他们成为某种类型的流浪者，是那些从未离开地球平面的流浪者，因为他们的自由意志而非因为他们的振动层次。
+Ra 我是 Ra。这些是被收割的行星实体——他们仅在以下意义上是流浪者：他们选择在第四密度的爱中立即重新投生于第三密度，而不是继续前往第四密度。这使他们成为某种类型的流浪者，是那些从未离开地球平面的流浪者，因为他们的自由意志而非因为他们的振动层次。
 
 ## (15.21)
 

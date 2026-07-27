@@ -82,7 +82,7 @@ Take, then, the crystal, and feel your polarized and potentiated, balanced energ
 然后，拿起水晶，感受你已极化且强化、平衡的能量，以绿色光芒疗愈的方式流经你的存有，进入并激活那冻结之光的结晶规律性，即水晶。水晶将与充满的化身之爱与光能量共振，并开始以特定方式辐射，以所需的光振动波束送出疗愈能量，聚焦并强化地指向待疗愈的心/身/灵复合体的磁场。请求这种疗愈的实体将随后打开整体紫罗兰/红色光芒保护振动护盾的铠甲。
 
 Thus the inner vibratory fields, from center to center in mind, body, and spirit, may be interrupted and adjusted momentarily, thus offering the one to be healed the opportunity to choose a less distorted inner complex of energy fields and vibratory relationships.
-因此，内在的振动场——在心、身、灵中从一个中心到另一个中心——可以被暂时中断和调整，从而为被疗愈者提供一个机会，去选择一个变形较少的内在能量场与振动关系复合体。
+因此，内在的振动场——在心、身、灵中从一个中心到另一个中心——可以被暂时中断和调整，从而为被疗愈者提供一个机会，去选择一个变貌较少的内在能量场与振动关系复合体。
 
 ## (57.7)
 
@@ -139,10 +139,10 @@ Ra 我是 Ra。这是正确的。
 ## (57.12)
 
 (57.12) Questioner How does the healing that you just told us about relate to the healing done in the King's Chamber in the Giza pyramid?
-(57.12) 发问者 你刚才告诉我们的疗愈方式与吉萨金字塔中王者之室所做的疗愈有什么关系？
+(57.12) 发问者 你刚才告诉我们的疗愈方式与吉萨金字塔中国王室所做的疗愈有什么关系？
 
 Ra I am Ra. There are two advantages to doing this working in such a configuration of shapes and dimensions.
-Ra 我是 Ra。在如此形状和尺寸的配置中进行这项工/作有两个优势。
+Ra 我是 Ra。在如此形状和尺寸的配置中进行这项工作有两个优势。
 
 Firstly, the disruption, or interruption, of the violet/red armoring, or protective shell, is automatic.
 首先，紫罗兰/红色光芒的铠甲或保护壳的瓦解或中断是自动的。
@@ -190,29 +190,29 @@ Thus this is the place of the initiate, for many extraneous items, or distortion
 ## (57.15)
 
 (57.15) Questioner Then if a pyramid shape is used, it would seem to me that it would be necessary to make it large enough so that the Queen’s Chamber position would be far enough from the King’s Chamber position, so that you could use that energy position and not be harmed by the energy position of the King’s Chamber position, or any position farther from the Queen’s Chamber. Is this correct?
-(57.15) 发问者 那么如果使用金字塔形状，在我看来有必要把它做得足够大，使王后室位置离王者之室位置足够远，这样你就可以使用那个能量位置，而不会被王者之室位置或任何比王后室更远的位置的能量位置所伤害。这正确吗？
+(57.15) 发问者 那么如果使用金字塔形状，在我看来有必要把它做得足够大，使王后室位置离国王室位置足够远，这样你就可以使用那个能量位置，而不会被国王室位置或任何比王后室更远的位置的能量位置所伤害。这正确吗？
 
 Ra I am Ra. In this application a pyramid shape may be smaller if the apex angle is less, thus not allowing the formation of the King’s Chamber position. Also efficacious for this application are the following shapes: the silo, the cone, the dome, and the tepee.
-Ra 我是 Ra。在这种应用中，如果顶角较小，金字塔形状可以更小，从而不允许王者之室位置的形成。以下形状对此应用也有效：筒仓形、圆锥形、穹顶形和圆锥帐篷形。
+Ra 我是 Ra。在这种应用中，如果顶角较小，金字塔形状可以更小，从而不允许国王室位置的形成。以下形状对此应用也有效：筒仓形、圆锥形、穹顶形和圆锥帐篷形。
 
 ## (57.16)
 
 (57.16) Questioner Do these shapes that you just mentioned have any of the effect of the King’s Chamber at all, or do they have only the Queen Chamber effect?
-(57.16) 发问者 你刚才提到的这些形状是否具有任何王者之室的效果，还是它们只有王后室的效果？
+(57.16) 发问者 你刚才提到的这些形状是否具有任何国王室的效果，还是它们只有王后室的效果？
 
 Ra I am Ra. These shapes have the Queen’s Chamber effect. It is to be noted that a strongly crystallized entity is, in effect, a portable King’s Chamber position.
-Ra 我是 Ra。这些形状具有王后室的效果。需要注意的是，一个高度结晶化的实体实际上就是一个便携的王者之室位置。
+Ra 我是 Ra。这些形状具有王后室的效果。需要注意的是，一个高度结晶化的实体实际上就是一个便携的国王室位置。
 
 ## (57.17)
 
 (57.17) Questioner Then are you saying that there is absolutely no need, use, or good in having the King’s Chamber effect at this time in our planetary evolution?
-(57.17) 发问者 那么你是在说，在我们行星演化的这个时期，王者之室效果绝对没有任何必要、用途或益处吗？
+(57.17) 发问者 那么你是在说，在我们行星演化的这个时期，国王室效果绝对没有任何必要、用途或益处吗？
 
 Ra I am Ra. If those who desired to be healers [were] of a crystallized nature, and were all supplicants those wishing less distortion, the pyramid would be, as always, a carefully designed set of parameters to distribute light and its energy so as to aid in healing catalyst.
 Ra 我是 Ra。如果那些渴望成为疗愈者的人具有结晶化的本质，并且所有请求者都是希望减少变貌的人，那么金字塔将一如既往地是一套精心设计的参数，用于分配光及其能量，以辅助疗愈催化剂。
 
 However, we found that your peoples are not distorted towards the desire for purity to a great enough extent to be given this powerful and potentially dangerous gift. We, therefore, would suggest it not be used for healing in the traditional, shall we say, King’s Chamber configuration which we naïvely gave to your peoples only to see its use grossly distorted and our teachings lost.
-然而，我们发现你们人类尚未向着对纯净的渴望变貌到足以被赋予这份强大且潜在危险的礼物的程度。因此，我们建议不要将其用于传统的、可以说是王者之室配置中的疗愈，我们曾天真地将它给予你们人类，却只看到其用途被严重扭曲，我们的教导被遗失。
+然而，我们发现你们人类尚未向着对纯净的渴望变貌到足以被赋予这份强大且潜在危险的礼物的程度。因此，我们建议不要将其用于传统的、可以说是国王室配置中的疗愈，我们曾天真地将它给予你们人类，却只看到其用途被严重扭曲，我们的教导被遗失。
 
 ## (57.18)
 
@@ -322,7 +322,7 @@ Ra 我是 Ra。教导/学习和学习/教导究竟是如何发生的？
 ## (57.30)
 
 (57.30) Questioner The dangerous pyramid shape for use today would be a four-sided pyramid that was large enough to create the King’s Chamber effect. Is that statement correct?
-(57.30) 发问者 今天使用危险的金字塔形状将是足够大以产生王者之室效果的四边金字塔。这个说法正确吗？
+(57.30) 发问者 今天使用危险的金字塔形状将是足够大以产生国王室效果的四边金字塔。这个说法正确吗？
 
 Ra I am Ra. This statement is correct with the additional understanding that the 76° apex angle is that characteristic of the powerful shape.
 Ra 我是 Ra。这个说法是正确的，同时需要额外理解，76°的顶角是那种强大形状的特征。
@@ -381,5 +381,5 @@ Ra I am Ra. All is harmonious. We greet you all in joy. The adjustments are sati
 Ra 我是 Ra。一切都很和谐。我们在喜悦中向你们所有人致意。调整是令人满意的。
 
 I am Ra. I leave you in the love and in the light of the One Infinite Creator. Go forth, therefore, rejoicing in the power and in the peace of the One Infinite Creator. Adonai.
-我是 Ra。我离开你们于太一无限造物主的爱与光中。因此，向前去吧，在太一无限造物主的大能与和平中欢庆。Adonai。
+我是 Ra。我离开你们于太一无限造物主的爱与光中。因此，向前去吧，在太一无限造物主的力量与和平中欢欣鼓舞。Adonai。
 

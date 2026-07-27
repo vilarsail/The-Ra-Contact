@@ -155,7 +155,7 @@ Ra 我是 Ra。你与 Ra 对话。没有分离。你们会称之为社会记忆�
 (17.14) 发问者 在每次集会中，我是否总是与同一个个体化的意识部分对话？
 
 Ra I am Ra. You speak to the same entity through a channel or instrument. This instrument is at times lower in vital energy. This will sometimes hamper our proceedings. However, this instrument has a great deal of faithfulness to the task and gives whatever it has to this task. Therefore, we may continue even when energy is low. This is why we usually speak to the ending of the session due to our estimation of the instrument's levels of vital energy.
-Ra 我是 Ra。你通过一个管道或器皿与同一个实体对话。这个器皿有时生命能量较低。这有时会阻碍我们的进程。然而，这个器皿对这项任务有着极大的忠诚，并为此任务付出其所拥有的一切。因此，即使能量较低，我们也可以继续。这就是为什么我们通常根据我们对器皿生命能量水平的估计，在集会结束时说话。
+Ra 我是 Ra。你通过一个管道或器皿与同一个实体对话。这个器皿有时生命能量较低。这有时会阻碍我们的进程。然而，这个器皿对这项任务有着极大的忠诚，并为此任务付出其所拥有的一切。因此，即使能量较低，我们也可以继续。这就是为什么我们通常会根据对器皿生命能量水平的估计，说到集会的结束。
 
 ## (17.15)
 

@@ -7,7 +7,7 @@ February 16, 1981
 ## (25.0)
 
 (25.0) Ra I am Ra. I greet you in the love and the light of the Infinite Creator. We communicate now.
-(25.0) Ra 我是 Ra。我在无限造物主的光与爱中向你们致意。我们现在开始通讯。
+(25.0) Ra 我是 Ra。我在无限造物主的爱与光中向你们致意。我们现在开始通讯。
 
 ## (25.1)
 
@@ -32,7 +32,7 @@ The only remaining distortion available, since this entity would not detune and 
 (25.2) 发问者 器皿请求的第二个问题是："我如何才能最好地恢复活力，不仅是现在，也包括将来？"
 
 Ra I am Ra. This instrument is aware of the basic needs of its constitution, those being: meditation, acceptance of limitations, experiences of joy through association with others and with the beauty as of the singing; and the exercising with great contact, whenever possible, with the life forces of second density, especially those of trees; this entity also needing to be aware of the moderate but steady intake of foodstuffs, exercise being suggested at a fairly early portion of the day and at a later portion of the day before the resting.
-Ra 我是 Ra。该器皿意识到其体质的根本需求，这些需求是：冥想、接受限制、通过与他人交往以及通过像歌唱之美来体验喜悦；以及在可能时，大量接触第二密度的生命力量进行锻炼，特别是树木的生命力量；该实体还需要意识到适度但稳定的食物摄入，建议在一天中较早的时段以及一天中较晚的、休息前的时段进行锻炼。
+Ra 我是 Ra。该器皿意识到其体质的根本需求，这些需求是：冥想、接受限制、通过与他人交往以及通过像歌唱之美来体验喜悦；以及在可能时，尽可能多地与第二密度的生命力量（特别是树木的生命力量）进行深度接触；该实体还需要意识到适度但稳定的食物摄入，建议在一天中较早的时段以及一天中较晚的、休息前的时段进行运动。
 
 ## (25.3)
 

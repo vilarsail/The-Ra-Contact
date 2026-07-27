@@ -15,7 +15,7 @@ Ra 我是 Ra。我在太一无限造物主的爱与光中向你们致意。我�
 (42.1) 发问者 我有一个关于平衡的问题。这个问题相当长，我们会直接将它照原样抄录到书中。如果你能在我没有读出的情况下回答它，这会节省时间，否则我就读出来。
 
 Ra I am Ra. We understand your desire to preserve your opportunity. However, a summary of the query would be well. For if we answer a mentally requested query, this query shall not be published. If you wish this answer to be for private use only, we shall proceed.
-Ra 我是 Ra。我们理解你希望节省时间。然而，对该询问做一个总结会是好的。因为如果我们回答一个心智上请求的询问，该询问将不会被出版。如果你希望这个答案仅供私人使用，我们将继续进行。
+Ra 我是 Ra。我们理解你希望保留你的机会。然而，对该询问做一个总结会是好的。因为如果我们回答一个心智上请求的询问，该询问将不会被出版。如果你希望这个答案仅供私人使用，我们将继续进行。
 
 ## (42.2)
 
@@ -154,7 +154,7 @@ What are the techniques of programming which the higher self uses to ensure that
 高我用来确保第三密度自我在我们第三密度转世实验室中学习或尝试所需课程的那些编程技巧是什么？
 
 Ra I am Ra. There is but one technique for this growing, or nurturing, of will and faith, and that is the focusing of the attention. The attention span of those you call children is considered short. The spiritual attention span of most of your peoples is that of the child. Thus it is a matter of wishing to become able to collect one's attention and hold it upon the desired programming.
-Ra 我是 Ra。对于这种意志和信心的增长或培育，只有一种技巧，那就是注意力的聚焦。你们称为孩子的那些人的注意力持续时间被认为是短暂的。你们大多数人的属灵注意力持续时间相当于孩子的。因此，这是一个期望变得能够集中自己的注意力并将其保持在所期望的编程上的问题。
+Ra 我是 Ra。对于这种意志和信心的增长或培育，只有一种技巧，那就是注意力的聚焦。你们称为孩子的那些人的注意力持续时间被认为是短暂的。你们大多数人的灵性注意力持续时间相当于孩子的。因此，这是一个期望变得能够集中自己的注意力并将其保持在所期望的编程上的问题。
 
 This, when continued, strengthens the will. The entire activity can only occur when there exists faith that an outcome of this discipline is possible.
 这，当持续下去时，会强化意志。整个活动只有在存在信心——相信这种纪律的结果是可能的——时才能发生。

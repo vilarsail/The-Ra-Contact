@@ -31,7 +31,7 @@ Ra 我是 Ra。你们称为酪乳的东西，虽然在对喉咙和胸部区域�
 (99.3) 发问者 器皿问，在这些集会中佩戴小金十字架是否可以，还是会导致某种不可取的变貌？
 
 Ra I am Ra. We scan the mental distortions of the instrument. Although the presence of the metallic substance is in general not recommended, in this instance, as we find those distortions weakening the mental/emotional complex of the instrument due to its empathic distortions, the figure is specifically recommended for use by this instrument. We would request that should any strengthening be done to the chain (as we find intended by this instrument) the strengthening links which symbolize eternity to this instrument be as high in purity, or higher, than the remainder of the device.
-Ra 我是 Ra。我们扫描器皿的心智变貌。虽然金属物质的存在通常不被推荐，但在这种情况下，由于我们发现那些变貌正因器皿的共情变貌而削弱其心智/情绪复合体，该形象被特别推荐给这个器皿使用。我们请求，如果对链子（我们发现这个器皿有此意图）进行任何加固，那些对这个器皿象征永恒的加固链环，其纯度应比该装置其余部分一样高或更高。
+Ra 我是 Ra。我们扫描器皿的心智变貌。虽然金属物质的存在通常不被推荐，但在这种情况下，由于我们发现那些变貌正因器皿的共情变貌而削弱其心智/情绪复合体，该形象被特别推荐给这个器皿使用。我们请求，如果对链子（我们发现这个器皿有此意图）进行任何加固，那些对这个器皿象征永恒的加固链环，其纯度应与该装置其余部分一样高，或更高。
 
 In this nexus that which this device represents to this instrument is a much-needed strengthener of the mental/emotional patterns which have been much disrupted from the usual configuration of distortions.
 在这个连结点，这个装置对这个器皿所代表的东西，是一个急需的心智/情绪模式强化剂，这些模式已从通常的变貌配置中被大大扰乱。
@@ -62,7 +62,7 @@ Thirdly, the enthusiastic pursuit of the balancing and silent meditations cannot
 第三，对平衡和静默冥想的热情追求不能从对这个实体有益的活动清单中删除。
 
 We may note that the great forte of the scribe is summed in the inadequate sound vibration complex, power. The flow of power, just as the flow of love or wisdom, is enabled not by the chary conserver of its use, but by the constant user.[123] The physical manifestation of power being either constructive or destructive strenuous activity, the power-filled entity must needs exercise that manifestation.
-我们可以指出，记录者的最大长处可概括为不充分的声音振动复合体，力量。力量的流动，正如爱或智慧的流动，不是由谨慎保存其使用的人实现的，而是由持续使用者实现的。[123] 力量的物理显化——无论是建设性还是破坏性的剧烈活动——充满力量的实体必须练习那种显化。
+我们可以指出，记录者的最大长处可概括为不充分的声音振动复合体，力量。力量的流动，正如爱或智慧的流动，不是由谨慎保存其使用的人实现的，而是由持续使用者实现的。[123] 力量的物理显化——无论是建设性还是破坏性的剧烈活动——充满力量的实体必然需要运用那种显化。
 
 This entity experiences a distortion in the direction of an excess of stored energy. It is well to know the self and to guard and use those attributes which the self has provided for its learning and its service.
 这个实体经历着一种朝向储存能量过剩方向的变貌。认识自我，并守护和使用自我为其学习和服务提供的那些属性，是很好的。
@@ -130,12 +130,12 @@ Ra I am Ra. This is, of course, at the discretion of the questioner, for this in
 Ra 我是 Ra。这当然由发问者决定，因为这个器皿有一些转移能量并保持开放，如它一贯所做的。然而，我们越来越认识到这个器皿的脆弱。我们在最初的观察中看到了意志的力量，并大大高估了这个实体物理复合体的恢复能力。
 
 Therefore, we may say that ending a working at approximately this amount of energy expenditure—that is, some point soon following upon the sound vibration of which you speak—would be appropriate; and insofar as we may determine, may well extend the incarnational amount of your space/time which this instrument shall be able to offer to this contact.
-因此，我们可以说，在大约这个能量消耗量时结束工作——即，在你们所说的声音振动之后不久——是合适的；并且就我们所能确定的而言，很可能延长这个器皿能够为这次接触提供的你们空间/时间的转世数量。
+因此，我们可以说，在大约这个能量消耗量时结束工作——即，在你们所说的声音振动之后不久——是合适的；并且就我们所能确定的而言，很可能延长这个器皿能够为这次接触所奉献的、你们这一转世期间空间/时间的量。
 
 ## (99.10)
 
-(99.10) Questioner In that case I will just ask one additional short question as we terminate for this session. May I ask if the Logos of this system planned for the mating process as possibly depicted in Card Six—I don’t know if this is related—by some type of DNA imprinting as has been studied by our science? Many second-density creatures seem to have some sort of imprinting that creates a lifetime mating relationship, and I was wondering if this was designed by the Logos for that particular mechanism, and if it was also carried into third density?
-因此，我们可以说，在大约这个能量消耗量时结束工作——即，在你们所说的声音振动之后不久——是合适的；并且就我们所能确定的而言，很可能延长这个器皿能够为这次接触提供的你们空间/时间的转世数量。
+(99.10) Questioner In that case I will just ask one additional short question as we terminate for this session. May I ask if the Logos of this system planned for the mating process as possibly depicted in Card Six—I don't know if this is related—by some type of DNA imprinting as has been studied by our science? Many second-density creatures seem to have some sort of imprinting that creates a lifetime mating relationship, and I was wondering if this was designed by the Logos for that particular mechanism, and if it was also carried into third density?
+(99.10) 发问者 在这种情况下，当我们结束本次集会时，我只想再问一个简短的问题。我可否问，这个系统的 Logos 是否计划了如第六号牌所可能描绘的交配过程——我不知道这是否相关——通过某种被我们科学研究的 DNA 铭印机制？许多第二密度生物似乎有某种铭印，创造了一生的交配关系，我想知道这是否由 Logos 为那个特定机制所设计，以及它是否也被带入第三密度？
 
 Ra I am Ra. There are some of your second-density fauna which have instinctually imprinted monogamous mating processes. The third-density physical vehicle which is the basic incarnational tool of manifestation upon your planet arose from entities thusly imprinted, all the aforesaid being designed by the Logos.
 Ra 我是 Ra。你们的一些第二密度动物本能地铭印了一夫一妻的交配过程。第三密度物理载具——你们星球上显化的基本转世工具——源自如此铭印的实体，所有前述皆由 Logos 设计。

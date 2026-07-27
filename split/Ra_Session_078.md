@@ -56,7 +56,7 @@ When this instrument began ingesting substances designed to heal in a physical s
 当这个器皿开始摄入旨在物理意义上疗愈的物质时，其中包括肾脏复合体，这个器皿便停止了疗愈的肯定。因此，疗愈再次被削弱。这是一个相当深刻的变貌，器皿吸收这些概念将是有益的。
 
 We ask your forgiveness for offering information which may abridge free will, but the dedication of the instrument is such that it would persevere regardless of its condition, if possible. Thusly we offer this information that it may persevere with a fuller distortion towards comfort.
-我们请求你的原谅，提供可能缩短自由意志的信息，但器皿的奉献精神如此之强，以至于只要可能，无论其状况如何，它都会坚持下去。因此，我们提供这些信息，以便它可以带着更充分的朝向舒适的变貌坚持下去。
+我们请求你的原谅，提供可能限制自由意志的信息，但器皿的奉献精神如此之强，以至于只要可能，无论其状况如何，它都会坚持下去。因此，我们提供这些信息，以便它可以带着更充分的朝向舒适的变貌坚持下去。
 
 ## (78.6)
 
@@ -320,7 +320,7 @@ Ra 我是 Ra。同样的情况也适用于它们。观察这些关系是有启�
 (78.32) 发问者 那么，原型与我们太阳系的行星之间有任何关系吗？
 
 Ra I am Ra. This is not a simple query. Properly, the archetypes have some relationship to the planets. However, this relationship is not one which can be expressed in your language. This, however, has not halted those among your people who have become adepts from attempting to name and describe these relationships.
-Ra 我是 Ra。这不是一个简单的问题。恰当地说，原型与行星有一些关系。然而，这种关系是无法用你们的语言表达的。然而，这并没有阻止你们人群中那些成为 adept 的人尝试命名和描述这些关系。
+Ra 我是 Ra。这不是一个简单的问题。恰当地说，原型与行星有一些关系。然而，这种关系是无法用你们的语言表达的。然而，这并没有阻止你们人群中那些成为行家的人尝试命名和描述这些关系。
 
 To most purely understand, if we may use this misnomer, the archetypes it is well to view the concepts which make up each archetype and reserve the study of planets and other correspondences for meditation.
 要最纯粹地理解——如果我们可以使用这个不当用词的话——原型，最好观察构成每个原型的概念，并将行星和其他对应关系的研究留作冥想。
@@ -331,7 +331,7 @@ To most purely understand, if we may use this misnomer, the archetypes it is wel
 (78.33) 发问者 我只是觉得，既然行星是理则的产物，而原型心智是体验的基础，那么这个理则的行星应该以某种方式相关联。我们一定会遵循你的建议。
 
 I have been trying to get a foothold into an undistorted doorway, you might say, into the archetypical mind. It seems to me that everything that I have read having to do with archetypes is, to some degree or another, distorted by those who have written, and the fact that our language is not really capable of description.
-我一直在尝试找到一个立足点，进入一个未扭曲的门户，你可以说，进入原型心智。在我看来，我所读过的与原型相关的一切，在某种程度上都被写作者扭曲了，而且我们的语言实际上无法胜任描述。
+我一直在尝试找到一个立足点，进入一个未变貌的门户，你可以说，进入原型心智。在我看来，我所读过的与原型相关的一切，在某种程度上都被写作者变貌了，而且我们的语言实际上无法胜任描述。
 
 You have spoken of the Magician as a basic archetype, and that this seems to have been carried through from the previous octave. Would this then be, if there is an order, the first archetypical concept of this Logos?
 你曾谈到魔法师是一个基本原型，而且这似乎是从前一个八度音程传递下来的。那么，如果存在一个顺序，这会否是这个理则的第一个原型概念？

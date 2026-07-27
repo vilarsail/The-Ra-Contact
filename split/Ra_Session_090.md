@@ -15,7 +15,7 @@ June 19, 1982
 (90.1) 发问者 首先，请给我器皿的状态。
 
 Ra I am Ra. The physical complex energy deficit is somewhat increased by continued distortions towards pain. The vital energy levels are as previously stated, having fluctuated slightly between askings.
-Ra 我是 Ra。物理复合体的能量赤字因持续的疼痛变貌而有所增加。生命能量水平如前所述，在每次询问之间有小幅波动。
+Ra 我是 Ra。肉体复合体的能量赤字因持续的疼痛变貌而有所增加。生命能量水平如前所述，在每次询问之间有小幅波动。
 
 ## (90.2)
 
@@ -23,7 +23,7 @@ Ra 我是 Ra。物理复合体的能量赤字因持续的疼痛变貌而有所�
 (90.2) 发问者 你能告诉我关于我们第四和第五密度同伴目前的情况吗？
 
 Ra I am Ra. The fourth-density league of companions accompanies your group. The fifth-density friend, at this space/time nexus, works within its own density exclusively.
-Ra 我是 Ra。第四密度同伴联盟陪伴着你们的团体。第五密度朋友，在这个空间/时间当下，在其自身密度内独自工作。
+Ra 我是 Ra。第四密度同伴联盟陪伴着你们的团体。第五密度朋友，在这个空间/时间当下，仅在其自身密度内工作。
 
 ## (90.3)
 
@@ -59,7 +59,7 @@ The mechanism of the fifth-density entity is from density to density and is magi
 (90.5) 发问者 你之前说过，第五密度实体与地球上第三密度的我们相似，但第四密度则不然。你能描述一下第四密度实体，并告诉我为什么它们不像我们吗？
 
 Ra I am Ra. The description must be bated under the Law of Confusion. The cause for a variety of so-called physical vehicles is the remaining variety of heritages from second-density physical vehicular forms. The process of what you call physical evolution continues to hold sway into fourth density. Only when the Ways of Wisdom have begun to refine the power of what you may loosely call thought is the form of the physical complex manifestation more nearly under the direction of the consciousness.
-Ra 我是 Ra。在混淆法则下，描述必须被克制。所谓各种物理载具之多样性的原因，是来自第二密度物理载具形态的遗传多样性。你们称为物理进化的过程持续影响着第四密度。只有当智慧之道开始精炼你们可以松散地称为思想的力量时，物理复合体显化的形式才更接近于意识的方向。
+Ra 我是 Ra。在混淆法则下，描述必须被克制。所谓各种物理载具之多样性的原因，是来自第二密度物理载具形态的遗传多样性。你们称为物理进化的过程持续影响着第四密度。只有当智慧之道开始精炼你们可以松散地称为思想的力量时，肉体复合体显化的形式才更接近于意识的方向。
 
 ## (90.6)
 
@@ -75,7 +75,7 @@ Ra 我是 Ra。你的询问建立在一个误解之上。你是希望我们评�
 (90.7) 发问者 如果可能的话，请对我的误解发表评论。
 
 Ra I am Ra. In fifth density the manifestation of the physical complex is more and more under the control of the conscious mind complex. Therefore, the fifth-density entity may dissolve one manifestation and create another. Consequently, the choice of a fifth-density entity or complex of entities wishing to communicate with your peoples would choose to resemble your peoples’ physical-complex, chemical, yellow-ray vehicles.
-Ra 我是 Ra。在第五密度，物理复合体的显化越来越受到意识心智复合体的控制。因此，第五密度实体可以溶解一个显化并创造另一个。因此，一个希望与你们人群交流的第五密度实体或实体复合体，会选择与你们人群的物理复合体、化学、黄色光芒载具相似的外观。
+Ra 我是 Ra。在第五密度，肉体复合体的显化越来越受到意识心智复合体的控制。因此，第五密度实体可以溶解一个显化并创造另一个。因此，一个希望与你们人群交流的第五密度实体或实体复合体，会选择与你们人群的肉体复合体、化学、黄色光芒载具相似的外观。
 
 ## (90.8)
 
@@ -91,7 +91,7 @@ Ra 我是 Ra。大约百分之五。
 (90.9) 发问者 那么在宇宙中第三密度物理载具的形式存在极大的差异。我假设第四密度也是如此。这是否正确？
 
 Ra I am Ra. This is so. We remind you that it is a great theoretical distance between demanding that the creatures of an infinite creation be unnoticeably similar to oneself and observing those signs which may be called human which denote the third-density characteristics of self-consciousness: the grouping into pairs, societal groups, and races; and the further characteristic means of using self-consciousness to refine and search for the meaning of the milieu.
-Ra 我是 Ra。正是如此。我们提醒你，要求无限造物的生物与自身毫无察觉地相似，与观察那些可被称为人类特征的标志（它们表示第三密度的自我意识特征：成对组合、社会群体和种族；以及使用自我意识来精炼和寻找环境意义的进一步特征方式），这二者之间存在着巨大的理论距离。
+Ra 我是 Ra。正是如此。我们提醒你，要求无限造物的生物与自身相似到难以察觉的程度，与观察那些可被称为人类特征的标志（它们表示第三密度的自我意识特征：成对组合、社会群体和种族；以及使用自我意识来精炼和寻找环境意义的进一步特征方式），这二者之间存在着巨大的理论距离。
 
 ## (90.10)
 

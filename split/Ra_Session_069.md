@@ -34,13 +34,13 @@ Ra 我是 Ra。这是正确的，尽管我们有转移的身体能量可用于�
 ## (69.3)
 
 (69.3) Questioner Thank you. A question I didn’t get to ask the previous session which I will be forced to continue at this time: is the trance state the only condition from which a mind/body/spirit positive entity may be lured by a negative adept to a negative time/space configuration?
-(69.3) 发问者 谢谢你。一个上次集会我没来得及问而不得不在此时继续的问题：出神状态是否是正面心/身/灵实体可能被负面 adept 引诱到负面时间/空间配置的唯一状态？
+(69.3) 发问者 谢谢你。一个上次集会我没来得及问而不得不在此时继续的问题：出神状态是否是正面心/身/灵实体可能被负面精通者引诱到负面时间/空间配置的唯一状态？
 
 Ra I am Ra. This is a misperceived concept. The mind/body/spirit complex which freely leaves the third-density physical complex is vulnerable when the appropriate protection is not at hand. You may perceive carefully that very few entities which choose to leave their physical complexes are doing work of such a nature as to attract the polarized attention of negatively oriented entities. The danger to most in trance state, as you term the physical complex being left, is the touching of the physical complex in such a manner as to attract the mind/body/spirit complex back thereunto, or to damage the means by which that which you call ectoplasm is being recalled.
 Ra 我是 Ra。这是一个被误解的概念。自由离开第三密度物理复合体的心/身/灵复合体，在没有适当保护的情况下是脆弱的。你可以仔细觉察到，选择离开其物理复合体的实体中，极少数在从事会吸引负面导向实体极化注意的工作。对大多数处于出神状态——你们如此称呼物理复合体被离开的状态——的实体而言，危险在于以某种方式触碰物理复合体，从而将心/身/灵复合体吸引回去，或损坏你们称为 ectoplasm（灵外质）被召回的手段。
 
 This instrument is an anomaly in that it is well that the instrument not be touched, or artificial light thrown upon it, while in the trance state. However, the ectoplasmic activity is interiorized. The main difficulty, as you are aware, is then the previously discussed negative removal of the entity under its free will.
-这个器皿是一个异常，因为在出神状态下，最好不要触碰器皿，或将人造光照射其上。然而，ectoplasmic 活动是内在化的。正如你所意识到的，主要困难在于先前讨论过的在实体自由意志下的负面移除。
+这个器皿是一个异常，因为在出神状态下，最好不要触碰器皿，或将人造光照射其上。然而，灵外质活动是内在化的。正如你所意识到的，主要困难在于先前讨论过的在实体自由意志下的负面移除。
 
 That this can happen only in the trance state is not completely certain, but it is highly probable that in an other out-of-body experience, such as death, the entity here examined would, as most positively polarized entities, have a great deal of protection from comrades, guides, and portions of the self which would be aware of the transfer you call the physical death.
 这只能在出神状态中发生，并非完全确定，但极有可能的是，在其他出体体验中，例如死亡，被检视的实体——如同大多数正面极化的实体一样——会得到大量的保护，来自同伴、指导灵以及自我的各个部分，它们会意识到你们称为物理死亡的转移。
@@ -108,7 +108,7 @@ Ra 我是 Ra。不。器皿的自由意志，确实是提供给猎户集团的�
 ## (69.10)
 
 (69.10) Questioner Now, has a wanderer ever been so infringed upon by, shall I say, a negative adept or whoever and then placed in negative time/space?
-(69.10) 发问者 那么，是否有流浪者曾被——容我这样说——一个负面 adept 或其他人如此侵犯，然后被置于负面时间/空间中？
+(69.10) 发问者 那么，是否有流浪者曾被——容我这样说——一个负面精通者或其他人如此侵犯，然后被置于负面时间/空间中？
 
 Ra I am Ra. This is correct.
 Ra 我是 Ra。这是正确的。
@@ -191,7 +191,7 @@ Secondly, that which we and you do in workings such as this carries a magical ch
 其次，我们和你们在这样工作中所做的事，带有一种魔法充能——如果你们愿意使用这个被严重误解的术语的话。或许我们可以说，一种形而上力量。从事力量工作的人，可以与大致相似力量的实体进行双向通讯。
 
 It is fortunate that the Orion entity does not have the native power of this group. However, it is quite disciplined, whereas this group lacks the finesse equivalent to its power. Each is working in consciousness, but the group has not begun a work as a group. The individual work is helpful, for the group is mutually an aid, one to another.
-幸运的是，猎户实体没有这个群体的原生力量。然而，它相当 disciplined，而这个群体缺乏与其力量相等的技巧。每个人都在意识中工作，但群体尚未作为一个群体开始工作。个体工作是有帮助的，因为群体相互是彼此的援助。
+幸运的是，猎户实体没有这个群体的原生力量。然而，它相当训练有素，而这个群体缺乏与其力量相等的技巧。每个人都在意识中工作，但群体尚未作为一个群体开始工作。个体工作是有帮助的，因为群体相互是彼此的援助。
 
 [There is a 48-second pause between the end of this answer and the beginning of the next question.]
 [在这个回答结束和下一个问题开始之间，有一段48秒的停顿。]
@@ -199,15 +199,15 @@ It is fortunate that the Orion entity does not have the native power of this gro
 ## (69.18)
 
 (69.18) Questioner This instrument performs services on Sunday night channeling other members of the Confederation. We are reluctant to continue this because of the possibility of her slipping into trance and being offered the services of the negatively polarized adept. Are there any safeguards to create a situation where she cannot go into trance other than at a protected working such as this one?
-(69.18) 发问者 这个器皿在周日晚上进行通灵星际联邦其他成员的服务。我们不愿继续这样做，因为她有可能滑入出神状态，并被提供负面极化 adept 的服务。除了像这样受保护的工作之外，是否有任何安全措施可以创造一种她无法进入出神状态的情况？
+(69.18) 发问者 这个器皿在周日晚上进行通灵星际联邦其他成员的服务。我们不愿继续这样做，因为她有可能滑入出神状态，并被提供负面极化精通者的服务。除了像这样受保护的工作之外，是否有任何安全措施可以创造一种她无法进入出神状态的情况？
 
 Ra I am Ra. There are three. Firstly, the instrument must needs improve the disciplined subconscious taboo against requesting Ra. This would involve daily conscious and serious thought. The second safeguard is the refraining from the opening of the instrument to questions and answers for the present. The third is quite gross in its appearance but suffices to keep the instrument in its physical complex. The hand may be held.
-Ra 我是 Ra。有三种。首先，器皿必须改进 disciplined 的潜意识禁忌，禁止请求 Ra。这将涉及每日有意识且认真的思考。第二个安全措施是暂时避免将器皿开放给问答。第三个在外观上相当粗糙，但足以将器皿保持在物理复合体中。可以握住手。
+Ra 我是 Ra。有三种。首先，器皿必须改进训练有素的潜意识禁忌，禁止请求 Ra。这将涉及每日有意识且认真的思考。第二个安全措施是暂时避免将器皿开放给问答。第三个在外观上相当粗糙，但足以将器皿保持在物理复合体中。可以握住手。
 
 ## (69.19)
 
 (69.19) Questioner Then you are saying just by holding the instrument’s hand during the channeling sessions that this would prevent trance?
-(69.19) 发问者 那么你是说，仅仅通过在通灵 session 中握住器皿的手，就能防止出神？
+(69.19) 发问者 那么你是说，仅仅通过在通灵集会中握住器皿的手，就能防止出神？
 
 Ra I am Ra. This would prevent those levels of meditation which necessarily precede trance. Also in the event that, unlikely as it might seem, the entity grew able to leave the physical complex, the auric infringement and tactile pressure would cause the mind/body/spirit complex to refrain from leaving.
 Ra 我是 Ra。这将防止那些必定先于出神的冥想层次。此外，万一——尽管看似不太可能——该实体变得能够离开物理复合体，光环侵犯和触觉压力将导致心/身/灵复合体不会离开。
@@ -218,7 +218,7 @@ Ra 我是 Ra。这将防止那些必定先于出神的冥想层次。此外，�
 (69.20) 发问者 我们不断提起《埃斯梅拉达·斯威特沃特》一书中的要点，那是书中特别的一点。我在想，鉴于我们试图从必定是负面时间/空间中将太空女孩的心/身/灵复合体取回——因为它是被魔法师特罗斯特里克放置在那里的：特罗斯特里克对太空女孩的行动场景——以及埃斯梅拉达·斯威特沃特为帮助取回太空女孩的心/身/灵复合体而设计的魔法仪式——这两种技术都大致合理吗？还是这些魔法技术的设计中有任何错误？
 
 Ra I am Ra. There were no errors. We only remind each that this particular character imaged forth by you was an experienced adept.
-Ra 我是 Ra。没有错误。我们只提醒各位，你们所想象出的这个特定角色是一位经验丰富的 adept。
+Ra 我是 Ra。没有错误。我们只提醒各位，你们所想象出的这个特定角色是一位经验丰富的精通者。
 
 ## (69.21)
 

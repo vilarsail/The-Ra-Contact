@@ -70,7 +70,7 @@ Ra I am Ra. In approximately three six zero zero [3,600] of your years in the pa
 Ra 我是 Ra。在你们的时间测量中，大约在你们过去三千六百[3,600]年前，有一股你们所称的猎户座集团的涌入。由于对思维和行动变貌的负面影响的日益增加，他们得以开始与那些从古老时代起就留有印象——你们可以这么说——认为自己特殊且与众不同的实体合作。
 
 An entity of the Confederation, many, many thousands of your years in the past, the one you may call Yahweh, had, by genetic cloning, set up these particular biases among these peoples who had come gradually to dwell in the vicinity of Egypt, as well as in many, many other places, by dispersion after the down-sinking of the land mass Mu. Here the Orion group found fertile soil in which to plant the seeds of negativity; these seeds, as always, being those of the elite, the different, those who manipulate or enslave others.
-星际联邦的一个实体，在你们过去许多、许多千年前，你们可以称之为雅威的实体，曾通过在穆大陆沉没后的散居，借由基因克隆，在这些逐渐定居于埃及附近以及许多、许多其他地方的人们中建立了这些特定的偏见。在这里，猎户座集团找到了肥沃的土壤来播下负面性的种子；这些种子一如既往，是精英、与众不同的种子，是那些操纵或奴役他人的种子。
+星际联邦的一个实体，在你们过去许多、许多千年前，你们可以称之为雅威的实体，曾借由基因克隆，在那些因穆大陆沉没后散居而逐渐定居于埃及附近以及许多、许多其他地方的人们中，建立了这些特定的偏见。在这里，猎户座集团找到了肥沃的土壤来播下负面性的种子；这些种子一如既往，是精英、与众不同的种子，是那些操纵或奴役他人的种子。
 
 The one known as Yahweh felt a great responsibility to these entities. However, the Orion group had been able to impress upon the peoples the name Yahweh as the one responsible for this elitism. Yahweh then was able to take, what you would call, stock of its vibratory patterns and became, in effect, a more eloquently effective sound vibration complex.
 被称为雅威的实体对这些实体感到巨大的责任。然而，猎户座集团已经能够将雅威之名印刻在人们心中，作为对这种精英主义负责的那一位。雅威于是能够，你们可以称之为，评估自己的振动模式，并实际上成为了一个更雄辩有效的声音振动复合体。

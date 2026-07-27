@@ -51,7 +51,7 @@ In relationship to intelligent infinity, the sun body is, equally with all parts
 在与智能无限的关系上，太阳体与无限造物的所有部分一样，是那无限的一部分。
 
 In relation to the potentiated intelligent infinity which makes use of intelligent energy, it is the offspring, shall we say, of the Logos for a much larger number of sub-Logoi. The relationship is hierarchical in that the sub-Logos uses the intelligent energy in ways set forth by the Logos and uses its free will to co-create the, shall we say, full nuances of your densities as you experience them.
-在与运用智能能量的已赋能智能无限的关系上，它是——容我们说——理则为数量多得多的子理则所产生的后代。这种关系是层级性的，因为子理则以理则设定的方式运用智能能量，并使用其自由意志来共同创造——容我们说——你们所体验的各密度的全部细微差异。
+在与运用智能能量的已潜能化智能无限的关系上，它是——容我们说——理则为数量多得多的子理则所产生的后代。这种关系是层级性的，因为子理则以理则设定的方式运用智能能量，并使用其自由意志来共同创造——容我们说——你们所体验的各密度的全部细微差异。
 
 In relationship to the densities, the sun body may physically, as you would say, be seen to be a large body of gaseous elements undergoing the processes of fusion and radiating heat and light.
 在与各密度的关系上，太阳体在物理上，如你们所说，可以被视为一个由气态元素组成的巨大天体，经历着聚变过程并辐射出热和光。

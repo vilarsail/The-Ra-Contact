@@ -83,7 +83,7 @@ Ra I am Ra. Each of you in this working has consciously dedicated the existence 
 我是 Ra。这次工作中的每一位，都已自觉地将当下正在体验的存在奉献给服务他人。这位器皿通过你们所谓的通灵星际联邦哲学的长期经验，精炼了这种奉献。因此，当我们首次接触这位器皿时，它已奉献了其存在性，不仅服务于其他自我，而且通过这种性质的通讯来服务。
 
 As this contact has developed, this dedication of beingness has become quite specific. Thus once the vital energy is dedicated by the instrument to our communications, even if the working did not occur, this vital energy would be lost to the day-by-day experience of the instrument. Thus we indicated the importance of the instrument's releasing of the will from the process of determining the times of working, for if the instrument desires contact, the energy is gathered and thus lost for ordinary or mundane purposes.
-随着这种接触的发展，这种对存在性的奉献已变得相当具体。因此，一旦生命能量被器皿奉献给我们的通讯，即使工作没有发生，这份生命能量也会从器皿的日常体验中流失。因此，我们指出了器皿将意志从决定工作时间的过程中释放出来的重要性，因为如果器皿渴望接触，能量就会被聚集，从而为普通或世俗目的而流失。
+随着这种接触的发展，这种对存在性的奉献已变得相当具体。因此，一旦生命能量被器皿奉献给我们的通讯，即使工作没有发生，这份生命能量也会从器皿的日常体验中流失。因此，我们指出了器皿将意志从决定工作时间的过程中释放出来的重要性，因为如果器皿渴望接触，能量就会被聚集，从而无法再用于普通或世俗目的。
 
 ## (44.9)
 

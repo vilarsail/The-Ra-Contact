@@ -130,7 +130,7 @@ Ra 我是 Ra。这正确。
 (27.12) 发问者 我想请你定义爱，在其作为第二变貌的意义上……
 
 Ra I am Ra. This must be defined against the background of intelligent infinity, or unity, or the One Creator, with the primal distortion of Free Will. The term Love then may be seen as the focus, the choice of attack, the type of energy of an extremely, shall we say, high order which causes intelligent energy to be formed from the potential of intelligent infinity in just such and such a way. This then may be seen to be an object rather than an activity by some of your peoples, and the principle of this extremely strong energy focus being worshiped as the Creator instead of unity, or oneness, from which all Loves emanate.
-Ra 我是 Ra。这必须对照智能无限、或统一性、或太一造物主，以及自由意志的原始变貌的背景来定义。那么，爱这个术语可以被视为焦点、攻击的选择、一种极高秩序的能量类型，它使得智能能量以如此这般的方式从智能无限的潜能中形成。这随后可能被你们的一些人视为一个对象而非一种活动，而这个极其强大的能量焦点原则被当作造物主来崇拜，而非万有之爱所源自的统一性或合一性。
+Ra 我是 Ra。这必须对照智能无限、或统一性、或太一造物主，以及自由意志的原始变貌的背景来定义。那么，爱这个术语可以被视为焦点、攻击的选择、一种极高秩序的能量类型，它使得智能能量以如此这般的方式从智能无限的潜能中形成。这随后可能被你们的一些人视为一个对象而非一种活动，而这个极其强大的能量焦点原则被当作造物主来崇拜，而非所有的爱所源自的统一性或合一性。
 
 ## (27.13)
 

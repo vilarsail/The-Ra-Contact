@@ -182,7 +182,7 @@ We may only say that you correctly surmise the paramount import of the magical p
 ## (74.17)
 
 (74.17) Questioner I assume that the reason that the rituals that have been used previously are of effect is that these words have built a bias in consciousness of those who have worked in these areas so that those who are of the distortion of mind that we seek will respond to the imprint in consciousness of these series of words. Is this correct?
-(74.17) 发问者 我假设之前使用的仪式之所以有效，是因为这些词语在那些在这些领域工作过的人的意识中建立了偏见，以至于那些我们寻求的心智变貌中的实体，会回应这些系列词语在意识中的印记。这是正确的吗？
+(74.17) 发问者 我假设之前使用的仪式之所以有效，是因为这些词语在那些在这些领域工作过的人的意识中建立了倾向，以至于那些我们寻求的心智变貌中的实体，会回应这些系列词语在意识中的印记。这是正确的吗？
 
 Ra I am Ra. This is, to a great extent, correct. The exception is the sounding of some of what you call your Hebrew and some of what you call your Sanskrit vowels. These sound vibration complexes have power before time and space and represent configurations of light which built all that there is.
 Ra 我是 Ra。这在很大程度上是正确的。例外是一些你们称为希伯来语和一些你们称为梵语元音的发音。这些声音振动复合体在时间和空间之前就具有力量，并代表了构建一切万有的光之配置。

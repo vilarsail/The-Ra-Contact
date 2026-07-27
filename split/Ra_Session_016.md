@@ -20,7 +20,7 @@ Ra 我是 Ra。守护者守护着这个行星领域上第三密度心/身/灵复
 ## (16.2)
 
 (16.2) Questioner I may be wrong, but it seems to me that it would be the free will of, say, the Orion group to interfere. How is this balanced against the other concept you just gave?
-(16.2) 发问者 我可能错了，但在我看来，干涉似乎是，比如说，猎户座集团的自有意志。这如何与你刚才给出的另一个概念平衡？
+(16.2) 发问者 我可能错了，但在我看来，干涉似乎是，比如说，猎户座集团的自由意志。这如何与你刚才给出的另一个概念平衡？
 
 Ra I am Ra. The balancing is from dimension to dimension. The attempts of the so-called Crusaders to interfere with free will are acceptable upon the dimension of their understanding. However, the mind/body/spirit complexes of this dimension you call third form a dimension of free will which is not able to, shall we say, recognize in full the distortions towards manipulation.
 Ra 我是 Ra。这种平衡是维度与维度之间的。所谓的十字军试图干涉自由意志，在其理解的维度上是可以接受的。然而，你们称为第三密度的这个维度的心/身/灵复合体，形成一个自由意志的维度，该维度无法，容我们说，完全识别出朝向操控的变貌。
@@ -335,7 +335,7 @@ Ra I am Ra. I see the confusion. We have difficulty with your language.
 Ra 我是 Ra。我看到困惑了。我们对你们的语言有困难。
 
 The galaxy term must be split. We call galaxy that vibrational complex that is local. Thus, your sun is what we would call the center of a galaxy. We see you have another meaning for this term.
-银河系这个术语必须拆分。我们称银河系为那个本地的声音振动复合体。因此，你们的太阳就是我们之称为一个银河系中心的所在。我们看到你们对这个术语有另一种含义。
+银河系这个术语必须拆分。我们称银河系为那个本地的振动复合体。因此，你们的太阳就是我们之称为一个银河系中心的所在。我们看到你们对这个术语有另一种含义。
 
 ## (16.36)
 
@@ -536,7 +536,7 @@ Ra 我是 Ra。只有当接收的心/身/灵复合体对思想形态的感知有
 (16.59) 发问者 现在和最近过去来到这个行星的许多流浪者——他们是否受到猎户座思想的影响？
 
 Ra I am Ra. As we have said before, wanderers become completely the creature of third density in mind/body complex. There is just as much chance of such influence to a wanderer entity as to a mind/body/spirit complex of this planetary sphere. The only difference occurs in the spirit complex which, if it wishes, has an armor of light, if you will, which enables it to recognize more clearly that which is not as it would appropriately be desired by the mind/body/spirit complex. This is not more than a bias and cannot be called an understanding.
-Ra 我是 Ra。正如我们之前说过的，流浪者完全成为第三密度心/身复合体的造物。流浪者实体受到这种影响的可能性，与这个行星领域的心/身/灵复合体一样多。唯一的不同发生在灵复合体中，如果它愿意，它拥有一件光的铠甲，如果你愿意，这使它能够更清晰地识别那些不符合心/身/灵复合体适当愿望的事物。这不过是一种偏见，不能被称为一种理解。
+Ra 我是 Ra。正如我们之前说过的，流浪者完全成为第三密度心/身复合体的造物。流浪者实体受到这种影响的可能性，与这个行星领域的心/身/灵复合体一样多。唯一的不同发生在灵复合体中，如果它愿意，它拥有一件光的铠甲，如果你愿意，这使它能够更清晰地识别那些不符合心/身/灵复合体适当愿望的事物。这不过是一种倾向，不能被称为一种理解。
 
 Furthermore, the wanderer is, in its own mind/body/spirit complex, less distorted towards the, shall we say, deviousness of third-density positive/negative confusions. Thus, it often does not recognize, as easily as a more negative individual, the negative nature of thoughts or beings.
 此外，流浪者在其自身的心/身/灵复合体中，较少朝向，容我们说，第三密度正面/负面混淆的曲折性。因此，它常常不能像一个更负面的个体那样容易地识别出思想或存有的负面本质。

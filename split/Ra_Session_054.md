@@ -75,7 +75,7 @@ We have, coming from the sub-Logos we call our sun, intelligent energy, which th
 我们有来自我们称为太阳的子理则的智能能量，它然后形成——我们以一个单一的子子理则（即一个心/身/灵复合体）为例。这个智能能量以某种方式被调制或变貌，以至于它最终成为一个具有某些人格变貌的心/身/灵复合体，而心/身/灵复合体，或该复合体的心智部分，有必要去解除这些变貌，以便再次更精确地与原始的智能能量一致。
 
 First, I want to know if my statement on that is correct. And, secondly, I want to know why this is the way that it is; if there is any answer other than the first distortion of the Law of One for this?
-首先，我想知道我的陈述是否正确。其次，我想知道为什么事情是这样的；除了太一法则的第一变貌之外，对此是否有任何其他答案？
+首先，我想知道我的陈述是否正确。其次，我想知道为什么事情是这样的；除了一的法则的第一变貌之外，对此是否有任何其他答案？
 
 Ra I am Ra. This statement is substantially correct. If you will penetrate the nature of the First Distortion in its application of self knowing self, you may begin to distinguish the hallmark of an Infinite Creator: variety. Were there no potentials for misunderstanding and, therefore, understanding, there would be no experience.
 Ra 我是 Ra。这个陈述基本上是正确的。如果你能深入第一变貌在自我认识自我之应用中的本质，你可能会开始辨别出无限造物主的标志：多样性。如果没有误解的潜能，因而也就没有理解，就不会有经验。

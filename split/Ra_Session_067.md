@@ -15,15 +15,15 @@ August 15, 1981
 (67.1) 发问者 你能先告诉我们器皿的状况吗？
 
 Ra I am Ra. The vital energies are more closely aligned with the amount of distortion normal to this entity than previous asking showed. The physical complex energy levels are somewhat less strong than at the previous asking. The psychic attack component is exceptionally strong at this particular nexus.
-Ra 我是 Ra。生命能比先前询问所显示的更接近该实体正常的变貌程度。身体复合体能量水平比先前询问时稍弱。在这个特定连接点， psychic 攻击成分异常强烈。
+Ra 我是 Ra。生命能比先前询问所显示的更接近该实体正常的变貌程度。身体复合体能量水平比先前询问时稍弱。在这个特定连接点，心灵攻击成分异常强烈。
 
 ## (67.2)
 
 (67.2) Questioner Can you describe what you call the psychic attack component and tell me why it is strong at this particular time?
-(67.2) 发问者 你能描述你所称的 psychic 攻击成分，并告诉我为什么它在这个特定时间如此强烈吗？
+(67.2) 发问者 你能描述你所称的心灵攻击成分，并告诉我为什么它在这个特定时间如此强烈吗？
 
 Ra I am Ra. We shall elect not to retrace previously given information but, rather, elect to note that the psychic attack upon this instrument is at a constant level as long as it continues in this particular service.
-Ra 我是 Ra。我们将选择不重述先前已提供的信息，而是选择指出，只要该器皿继续从事这项特定服务，对其的 psychic 攻击就处于持续水平。
+Ra 我是 Ra。我们将选择不重述先前已提供的信息，而是选择指出，只要该器皿继续从事这项特定服务，对其的心灵攻击就处于持续水平。
 
 Variations towards the distortion of intensity of attack occur due to the opportunities presented by the entity in any weakness. At this particular nexus the entity has been dealing with the distortion which you call pain for some time, as you call this measurement, and this has a cumulatively weakening effect upon physical energy levels. This creates a particularly favorable target of opportunity, and the entity of which we have previously spoken has taken this opportunity to attempt to be of service in its own way.
 攻击强度的变貌变化是由于该实体在任何弱点中呈现的机会。在这个特定连接点，该实体已持续应对你们称为痛苦的变貌一段时间，按你们的时间度量，且这对身体能量水平产生了累积性的削弱效应。这创造了一个特别有利的机会目标，而我们先前谈到的那位实体已利用这个机会，试图以其自身方式提供服务。
@@ -32,7 +32,7 @@ It is fortunate for the ongoing vitality of this contact that the instrument is 
 对于这次接触的持续活力而言，幸运的是，该器皿是一个意志坚强的实体，几乎没有朝向你们人群称为歇斯底里的变貌的倾向，因为这次攻击的眩晕效应已是持续的，并且有时在数个你们的日间周期中造成了干扰。
 
 However, this particular entity is adapting well to the situation without undue distortions towards fear. Thus the psychic attack is not successful but does have some draining influence upon the instrument.
-然而，这个特定实体正在很好地适应这个状况，没有产生朝向恐惧的过度变貌。因此， psychic 攻击并未成功，但确实对器皿有一些消耗性影响。
+然而，这个特定实体正在很好地适应这个状况，没有产生朝向恐惧的过度变貌。因此，心灵攻击并未成功，但确实对器皿有一些消耗性影响。
 
 ## (67.3)
 
@@ -122,7 +122,7 @@ Ra 我是 Ra。这完全可能。
 (67.11) 发问者 那么我们如何才能解决这个矛盾？
 
 Ra I am Ra. Consider, if you will, that you have no ability not to serve the Creator since all is the Creator. In your individual growth patterns appear the basic third-density choice. Further, there are overlaid memories of the positive polarizations of your home density. Thus your particular orientation is strongly polarized towards service to others and has attained wisdom as well as compassion.
-Ra 我是 Ra。请考虑，你们没有能力不服务造物主，因为一切皆是造物主。在你们个体成长模式中显现了基本的第三密度选择。此外，还叠加了你们家园密度的正面极化记忆。因此，你们的特定导向是强烈朝向服务他人的极化，并且已获得了智慧与 compassion。
+Ra 我是 Ra。请考虑，你们没有能力不服务造物主，因为一切皆是造物主。在你们个体成长模式中显现了基本的第三密度选择。此外，还叠加了你们家园密度的正面极化记忆。因此，你们的特定导向是强烈朝向服务他人的极化，并且已获得了智慧与慈悲。
 
 You do not have merely two opposite requests for service. You will find an infinite array of contradictory requests for information, or lack of information from this source if you listen carefully to those whose voices you may hear. This is all one voice to which you resonate upon a certain frequency. This frequency determines your choice of service to the One Creator. As it happens this group’s vibratory patterns and those of Ra are compatible and enable us to speak through this instrument with your support. This is a function of free will.
 你们并非只有两个相反的服务请求。如果你们仔细倾听那些你们可能听到的声音，你们会发现来自这个源头的信息或信息缺失的请求有无穷无尽的矛盾排列。全部都是同一个声音，你们在某个频率上与之共振。这个频率决定了你们选择服务太一造物主。恰好这个小组的振动模式与 Ra 的振动模式是兼容的，使我们能够通过这个器皿，在你们的支持下说话。这是自由意志的功能。
@@ -156,7 +156,7 @@ Ra I am Ra. This entity is able to, shall we say, penetrate in time/space config
 Ra 我是 Ra。该实体能够——容我们说——以时间/空间配置穿透这个特定实体的场域。它没有任何载具就穿越了隔离网，因此更能够逃脱守护者之网的侦测。
 
 This is the great virtue of the magical working whereby consciousness is sent forth, essentially without vehicle, as light. The light would work instantly upon an untuned individual by suggestion; that is, the stepping out in front of the traffic because the suggestion is that there is no traffic. This entity, as each in this group, is enough disciplined in the ways of love and light that it is not suggestible to any great extent.
-这正是魔法运作的巨大优点，借此意识被发送出去，本质上没有载具，如同光。光会通过暗示即时作用于一个未调谐的个体；也就是说，走到车流前，因为暗示告诉他们那里没有车流。这个实体，如同小组中的每一位，在爱与光之道上足够 disciplined，以至于在很大程度上不会被暗示。
+这正是魔法运作的巨大优点，借此意识被发送出去，本质上没有载具，如同光。光会通过暗示即时作用于一个未调谐的个体；也就是说，走到车流前，因为暗示告诉他们那里没有车流。这个实体，如同小组中的每一位，在爱与光之道上足够训练有素，以至于在很大程度上不会被暗示。
 
 However, there is a predisposition of the physical complex which this entity is making maximal use of as regards the instrument, hoping, for instance, by means of increasing dizziness to cause the instrument to fall or to, indeed, walk in front of your traffic because of impaired vision.
 然而，就器皿而言，该实体正在最大限度地利用物理复合体的某种先天倾向，例如，希望通过增加眩晕来导致器皿摔倒，或确实，由于视力受损而走到你们的车流前。
@@ -221,7 +221,7 @@ Ra 我是 Ra。这是通过一个非常微小的窗口完成的，魔法导向�
 (67.20) 发问者 现在，这一系列问题的主要要点与第一变貌以及这个窗口存在的事实有关。这是否——容我这样说——是随机窗口效应的一部分？我们在接受该实体的提供时，是否正在经历与行星整体因窗口效应而经历的相同类型的平衡？
 
 Ra I am Ra. This is precisely correct. As the planetary sphere accepts more highly evolved positive entities or groups with information to offer, the same opportunity must be offered to similarly wise negatively oriented entities or groups.
-Ra 我是 Ra。这完全正确。随着行星 sphere 接受更多高度进化的正面实体或群体及其所提供的信息，同样的机会也必须提供给类似智慧的负面导向实体或群体。
+Ra 我是 Ra。这完全正确。随着行星球体接受更多高度进化的正面实体或群体及其所提供的信息，同样的机会也必须提供给类似智慧的负面导向实体或群体。
 
 ## (67.21)
 
@@ -300,13 +300,13 @@ Ra 我是 Ra。我们觉察到我们未能澄清你们的服务与它对服务�
 ## (67.28)
 
 (67.28) Questioner Thank you very much. I have a statement here that I will quickly read and have you comment on the accuracy or inaccuracy. In general, the archetypical mind is a representation of facets of the One Infinite Creator.[22]
-(67.28) 发问者 非常感谢。我这里有一段陈述，我将快速朗读，并请你评论其准确性或不准确性。总的来说，原型心智是太一无限造物主各面向的呈现。
+(67.28) 发问者 非常感谢。我这里有一段陈述，我将快速朗读，并请你评论其准确性或不准确性。总的来说，原型心智是太一无限造物主各面向的呈现。[22]
 
 The Father archetype corresponds to the male or positive aspect of electromagnetic energy and is active, creative, and radiant, as is our local sun. The Mother archetype corresponds to the female or negative aspect of electromagnetic energy and is receptive or magnetic as is our earth as it receives the sun’s rays and brings forth life via third-density fertility. The Prodigal Son or the Fool archetype corresponds to every entity who seems to have strayed from unity and seeks to return to the One Infinite Creator. The Devil archetype represents the illusion of the material world and the appearance of evil but is more accurately the provider of catalyst for the growth of each entity within the third-density illusion.
 父亲原型对应电磁能量的男性或正面面向，是主动的、创造性的、辐射的，如同我们的本地太阳。母亲原型对应电磁能量的女性或负面面向，是接受的或磁性的，如同我们的地球，它接收太阳光线并通过第三密度生育力带来生命。浪子或愚者原型对应每一个看似已偏离合一并寻求返回太一无限造物主的实体。魔鬼原型代表物质世界的幻象和邪恶的表象，但更准确地说，是在第三密度幻象中为每个实体的成长提供催化剂者。
 
 The Magician, Saint, Healer, or Adept corresponds to the higher self and, because of the balance within its energy centers, pierces the illusion to contact intelligent infinity and, thereby, demonstrates mastery of the catalyst of third density. The archetype of Death symbolizes the transition of an entity from the yellow-ray body to the green-ray body either temporarily between incarnations or, more permanently, at harvest.
-魔法师、圣者、医者或 adept 对应高我，由于其能量中心内的平衡，它穿透幻象以接触智能无限，并由此展示对第三密度催化剂的掌握。死亡原型象征着一个实体从黄色光体到绿色光体的过渡，或是在投生之间暂时过渡，或是在收割时更永久地过渡。
+魔法师、圣者、医者或精通者对应高我，由于其能量中心内的平衡，它穿透幻象以接触智能无限，并由此展示对第三密度催化剂的掌握。死亡原型象征着一个实体从黄色光体到绿色光体的过渡，或是在投生之间暂时过渡，或是在收割时更永久地过渡。
 
 Each archetype presents an aspect of the One Infinite Creation to teach the individual mind/body/spirit complex according to the calling, or the electromagnetic configuration of mind, of the entity. Teaching is done via the intuition. With proper seeking, or mind configuration, the power of will uses the spirit as a shuttle to contact the appropriate archetypical aspect necessary for the teach/learning.
 每个原型呈现太一无限造物的一个面向，根据实体的召唤，或心智的电磁配置，来教导个体心/身/灵复合体。教导通过直觉完成。通过适当的寻求，或心智配置，意志的力量使用灵性作为穿梭器，以接触教导/学习所需的适当原型面向。
@@ -343,7 +343,7 @@ An example of this would be the observation of the questioner that the Fool is d
 这方面的一个例子是发问者观察到愚者被以如此这般的方式描述。这个原型的一个重要面向是信念的面向，即走入空间而不顾接下来会发生什么。这当然是愚蠢的，但却是灵性初学者的特征之一。这个面向未被看到，发问者可以对此加以沉思。
 
 At this time we shall again request that the query be restated at the next working, and we shall, at this time, cease using this instrument. Before we leave may we ask if there may be any short questions?[23]
-此时我们将再次请求在下一次工作中重述该问题，并且我们将在此时停止使用这个器皿。在我们离开之前，请问是否有任何简短的问题？
+此时我们将再次请求在下一次工作中重述该问题，并且我们将在此时停止使用这个器皿。在我们离开之前，请问是否有任何简短的问题？[23]
 
 ## (67.31)
 

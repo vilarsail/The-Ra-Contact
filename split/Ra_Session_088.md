@@ -64,7 +64,7 @@ The experience should be expected to continue, and is an appropriate outgrowth o
 (88.6) 发问者 器皿提到在这次集会前再次出现了需要去洗手间的情况。这是因为生命能量低吗？
 
 Ra I am Ra. It is part of the cause of the lowered vital energy level. This entity has been sustaining a level of the distortion you call pain which few among your peoples experience without significant draining of the energies. Indeed, the stability of the entity is notable. However, the entity has thusly become drained and, further, has felt other distortions such as those for a variety of experiences accentuated, for this is one means of balancing the inward-looking experience of the physical pain.
-Ra 我是 Ra。这是生命能量水平降低的部分原因。这个实体一直承受着一种你们称之为疼痛的变貌水平，而这种水平在你们人群中很少有人能在没有显著能量消耗的情况下经历。确实，这个实体的稳定性是值得注意的。然而，这个实体因此变得耗尽，并且进一步感受到了其他变貌，例如对各种体验的渴望被加剧了，因为这是平衡肉体疼痛的内向体验的一种方式。
+Ra 我是 Ra。这是生命能量水平降低的部分原因。这个实体一直承受着一种你们称之为疼痛的变貌水平，而这种水平在你们人群中很少有人能在没有显著能量消耗的情况下经历。确实，这个实体的稳定性是值得注意的。然而，这个实体因此变得耗尽，并且进一步感受到了其他变貌，例如与各种体验相关的那些变貌被加剧了，因为这是平衡肉体疼痛的内向体验的一种方式。
 
 Due to concern for this entity such activities have been discouraged. This has further drained the entity.
 出于对这个实体的关心，这类活动被劝阻了。这进一步消耗了这个实体。
@@ -170,10 +170,10 @@ The one great breakthrough which was made after our work in third density was do
 ## (88.17)
 
 (88.17) Questioner I will make this statement as to my understanding of some of the archetypes and let you correct this statement. It seems to me that the Significator of Mind, Body, and Spirit are acted upon in each of these by the Catalyst. This produces Experience which then leads to the Transformation and produces the Great Way. This is the same process for mind, the body, and spirit. The archetypes are just repeated but act in a different way as catalyst because of the differences of mind, body, and spirit.
-(88.17) 发问者 我将陈述我对一些原型的理解，并请你纠正这个陈述。在我看来，心智、身体和灵性的 signifier 在每一个中都被催化剂所作用。这产生了体验，然后导致转化，并产生大道。这对于心智、身体和灵性是同样的过程。原型只是重复了，但由于心智、身体和灵性的差异，它们作为催化剂以不同的方式起作用。
+(88.17) 发问者 我将陈述我对一些原型的理解，并请你纠正这个陈述。在我看来，心智、身体和灵性的 指涉者 在每一个中都被催化剂所作用。这产生了体验，然后导致转化，并产生大道。这对于心智、身体和灵性是同样的过程。原型只是重复了，但由于心智、身体和灵性的差异，它们作为催化剂以不同的方式起作用。
 
 They produce a different type of Experience for each because of the differences in the three. The Transformation is slightly different. The Great Way is somewhat different, but the archetypes are all basically doing the same thing. They are just acting on three different portions of the mind/body/spirit complex so that we can condense the entire archetypical mind into a way of saying that, in making the Significator a complex, basically we have provided a way for Catalyst to create Transformation more efficiently. Would you correct my statement, please?
-它们为每一个产生不同类型的体验，因为这三者的差异。转化略有不同。大道也有些不同，但原型基本上都在做同样的事情。它们只是作用于心/身/灵复合体的三个不同部分，这样我们可以将整个原型心智浓缩为一种说法，即通过使 signifier 成为一个复合体，基本上我们提供了一种让催化剂更有效地创造转化的方式。请你纠正我的陈述，好吗？
+它们为每一个产生不同类型的体验，因为这三者的差异。转化略有不同。大道也有些不同，但原型基本上都在做同样的事情。它们只是作用于心/身/灵复合体的三个不同部分，这样我们可以将整个原型心智浓缩为一种说法，即通过使 指涉者 成为一个复合体，基本上我们提供了一种让催化剂更有效地创造转化的方式。请你纠正我的陈述，好吗？
 
 Ra I am Ra. In your statement, correctness is so plaited up with tendrils of the most fundamental misunderstanding that correction of your statement is difficult. We shall make comments and from these comments request that you allow a possible realignment of conceptualization to occur.
 Ra 我是 Ra。在你的陈述中，正确性与最根本的误解的卷须如此交织在一起，以至于纠正你的陈述是困难的。我们将做出评论，并从这些评论中请求你允许概念化的可能重新对齐发生。
@@ -185,7 +185,7 @@ While it is informative to survey the relationships of one archetype to another,
 虽然审视一个原型与另一个原型之间的关系是有启发性的，但可以说，这条探究路线次于发现每个原型对智力和直觉心智所意味的最纯粹的格式塔、愿景或旋律。
 
 The Significators of Mind, Body, and Spirit complexes are complex in and of themselves; and the archetypes of Catalyst, Experience, Transformation, and the Great Way are most fruitfully viewed as independent complexes which have their own melodies with which they may inform the mind of its nature.
-心智、身体和灵性复合体的 signifier 本身也是复杂的；而催化剂、体验、转化和大道的原型，最富有成效地被视为独立的复合体，它们拥有自己的旋律，可以用这些旋律告知心智其本质。
+心智、身体和灵性复合体的 指涉者 本身也是复杂的；而催化剂、体验、转化和大道的原型，最富有成效地被视为独立的复合体，它们拥有自己的旋律，可以用这些旋律告知心智其本质。
 
 We ask that you consider that the archetypical mind informs those thoughts which then may have bearing upon the mind, the body, or the spirit. The archetypes do not have a direct linkage to body or spirit. All must be drawn up through the higher levels of the subconscious mind to the conscious mind, and thence they may flee whither they have been bidden to go. When used in a controlled way they are most helpful.
 我们请求你考虑，原型心智赋予那些思想以信息，这些思想随后可能对心智、身体或灵性产生影响。原型与身体或灵性没有直接的联系。一切都必须通过潜意识心智的更高层次被抽取到显意识心智，然后它们可以逃往它们被吩咐去的地方。当以受控的方式使用时，它们是最有帮助的。
@@ -319,7 +319,7 @@ You may continue in this form for the body and spirit archetypes.
 你可以以这种形式继续用于身体和灵性的原型。
 
 You will note that the consideration of the Significator was left unpaired, for the Significator shall be paired with Archetype Twenty-Two.
-你会注意到，signifier 的考量被留为未配对，因为 signifier 应与第二十二号原型配对。
+你会注意到，指涉者 的考量被留为未配对，因为 指涉者 应与第二十二号原型配对。
 
 At the end of this line of inquiry the student was beginning to grasp more and more deeply the qualities and resonances of each archetype. At this point, using various other aids to spiritual evolution, we encouraged the initiate to learn to become each archetype and, most importantly, to know, as best as possible within your illusion, when the adoption of the archetype’s persona would be spiritually or metaphysically helpful.
 在这条探究路线结束时，学生开始越来越深入地掌握每个原型的品质和共振。在这一点上，使用各种其他灵性进化的辅助工具，我们鼓励启蒙者学习成为每个原型，并且最重要的是，在你们的幻象中尽可能最好地知道，何时采用原型的角色将在灵性或形而上层面是有帮助的。

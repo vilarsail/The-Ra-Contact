@@ -135,7 +135,7 @@ Ra 我是 Ra。这是正确的。
 ## (81.13)
 
 (81.13) Questioner We have already discussed the Significator, so I will skip to number thirteen. Transformation of Body is called Death, for with death the body is transformed to a higher-vibration body for additional learning. Is this correct?
-(81.13) 发问者 我们已经讨论过象征者，所以我将跳到第十三号。身体的转化被称为死亡，因为随着死亡，身体被转化为更高振动的身体以进行额外的学习。这是正确的吗？
+(81.13) 发问者 我们已经讨论过意指者，所以我将跳到第十三号。身体的转化被称为死亡，因为随着死亡，身体被转化为更高振动的身体以进行额外的学习。这是正确的吗？
 
 Ra I am Ra. This is correct and may be seen to be additionally correct in that each moment, and certainly each diurnal period of the bodily incarnation, offers death and rebirth to one which is attempting to use the catalyst which is offered it.
 Ra 我是 Ra。这是正确的，并且可以进一步被视为正确的，因为每一刻，当然还有身体投生的每一个日周期，都为尝试使用提供给它的催化剂的人提供了死亡与重生。
@@ -221,7 +221,7 @@ Ra 我是 Ra。是的。
 (81.23) 发问者 只是……这不重要，但只是大致上 Ra 曾旅行到多少其他这些星系，容我们说？
 
 Ra I am Ra. We have opened our hearts in radiation of love to the entire creation. Approximately 90 percent of the creation is, at some level, aware of the sending and able to reply. All of the infinite Logoi are one in the consciousness of love. This is the type of contact which we enjoy rather than travel.
-Ra 我是 Ra。我们已向整个造物敞开心扉以爱的放射。大约90%的造物在某种层面上意识到这种发送并能回应。所有无限的逻各斯在爱的意识中都是一体的。这是我们享受的接触类型，而非旅行。
+Ra 我是 Ra。我们已向整个造物敞开心扉以爱的放射。大约90%的造物在某种层面上意识到这种发送并能回应。所有无限的理则在爱的意识中都是一体的。这是我们享受的接触类型，而非旅行。
 
 ## (81.24)
 
@@ -229,7 +229,7 @@ Ra 我是 Ra。我们已向整个造物敞开心扉以爱的放射。大约90%�
 (81.24) 发问者 为了让我能对我正在谈论的内容有一点概念，Ra 在直接体验或观察各个地方活动的意义上，旅行的范围是什么？是否仅限于这个星系，如果是，涵盖了这个星系的多少？还是包括了一些其他星系？
 
 Ra I am Ra. Although it would be possible for us to move at will throughout the creation within this Logos—that is to say, the Milky Way Galaxy, so-called—we have moved where we were called to service; these locations being, shall we say, local and including Alpha Centauri, planets of your solar system which you call the Sun, Cepheus, and Zeta Reticuli. To these sub-Logoi we have come, having been called.
-Ra 我是 Ra。虽然我们有可能在这个逻各斯内——也就是说，所谓的银河系——自由移动，但我们只移动到我们被召唤去服务的地方；这些地点，容我们说，是本地的，包括半人马座阿尔法星、你们太阳系中你们称为太阳的行星、仙王座和网罟座泽塔星。我们被召唤而来，来到了这些子逻各斯。
+Ra 我是 Ra。虽然我们有可能在这个理则内——也就是说，所谓的银河系——自由移动，但我们只移动到我们被召唤去服务的地方；这些地点，容我们说，是本地的，包括半人马座阿尔法星、你们太阳系中你们称为太阳的行星、仙王座和网罟座泽塔星。我们被召唤而来，来到了这些子理则。
 
 ## (81.25)
 
@@ -237,7 +237,7 @@ Ra 我是 Ra。虽然我们有可能在这个逻各斯内——也就是说，�
 (81.25) 发问者 每次召唤是来自第三密度存有，还是来自额外或其他密度的召唤？
 
 Ra I am Ra. In general, the latter supposition is correct. In the particular case of the Sun sub-Logos, third density is the density of calling.
-Ra 我是 Ra。一般而言，后一个假设是正确的。在太阳子逻各斯的特殊情况下，第三密度是召唤的密度。
+Ra 我是 Ra。一般而言，后一个假设是正确的。在太阳子理则的特殊情况下，第三密度是召唤的密度。
 
 ## (81.26)
 
@@ -283,7 +283,7 @@ Ra 我是 Ra。这是正确的。
 (81.30) 发问者 现在，你之前说过，在这个星系的中心附近，我相信——用一个不太恰当的术语，你可以称之为较古老的部分——你不会找到服务自我的极化，而这是一个，你可以称之为，较晚的体验。我是否可以假设，对于来自 Ra 的流浪者所体验过的其他星系也是如此？在这些星系的中心，只有服务他人的极性存在，而实验是从更靠近星系边缘的地方开始的？
 
 Ra I am Ra. Various Logoi and sub-Logoi had various methods of arriving at the discovery of the efficiency of free will in intensifying the experience of the Creator by the Creator. However, in each case this has been a pattern.
-Ra 我是 Ra。不同的逻各斯和子逻各斯有不同的方法来发现自由意志在强化造物主通过造物主体验自身方面的效率。然而，在每种情况下，这都是一种模式。
+Ra 我是 Ra。不同的理则和子理则有不同的方法来发现自由意志在强化造物主通过造物主体验自身方面的效率。然而，在每种情况下，这都是一种模式。
 
 ## (81.31)
 
@@ -310,7 +310,7 @@ This instrument is unusually fragile at this space/time, and has used much of th
 (81.33) 发问者 实际上，关于这点我没有更多要说的了，除了假设在整个八度音程中必定存在某种类型的通讯，以便当第一个实验变得有效时，关于这个的知识随后迅速传遍整个八度音程，并被其他正在萌芽的星系螺旋所采纳，你可以这么说。这是正确的吗？
 
 Ra I am Ra. This is correct. To be aware of the nature of this communication is to be aware of the nature of the Logos. Much of what you call creation has never separated from the one Logos of this octave and resides within the One Infinite Creator. Communication in such an environment is the communication of cells of the body. That which is learned by one is known to all. The sub-Logoi, then, have been in the position of refining the discoveries of what might be called the earlier sub-Logoi.
-Ra 我是 Ra。这是正确的。要意识到这种通讯的本质，就要意识到逻各斯的本质。你们所谓的造物中有很大一部分从未与这个八度音程的单一逻各斯分离，并居住在太一无限造物主之内。在这种环境中的通讯是身体细胞之间的通讯。一个所学的，所有都知道。因此，子逻各斯一直处于精炼那些可被称为较早子逻各斯的发现的位置。
+Ra 我是 Ra。这是正确的。要意识到这种通讯的本质，就要意识到理则的本质。你们所谓的造物中有很大一部分从未与这个八度音程的单一理则分离，并居住在太一无限造物主之内。在这种环境中的通讯是身体细胞之间的通讯。一个所学的，所有都知道。因此，子理则一直处于精炼那些可被称为较早子理则的发现的位置。
 
 May we ask if we may answer any brief queries at this working?
 我们可以问一下，在这次工作中我们是否可以回答任何简短的问题？

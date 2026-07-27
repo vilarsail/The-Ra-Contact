@@ -15,7 +15,7 @@ February 27, 1981
 (32.1) 发问者 我在此要插入一个来自 Jim 的小问题。我来读一下。
 
 “The instrument’s physical complex is now in the process of recovery from taking a chemical. She was ignorant of the opening that she was creating. How can each of the three of us present be more aware of how such openings may be created in our actions and thoughts? Is it possible that we could make such openings innocently as we question in certain areas during these sessions? And then, what can we do to protect ourselves from distorting influences in general? Is there any ritual or meditation that we could use?”
-「该器皿的身体复合体目前正处于因服用一种化学物质后的恢复过程中。她未曾意识到自己正在造成的开口。我们三个在场的人如何才能更觉察到我们的行动和思想中可能会如何造成这样的开口？我们在这些集会期间对某些领域提问时，是否有可能无意中造成这样的开口？还有，我们总体上能做些什么来保护自己免受致畸影响？有没有我们可以使用的任何仪式或冥想？」
+「该器皿的身体复合体目前正处于因服用一种化学物质后的恢复过程中。她未曾意识到自己正在造成的开口。我们三个在场的人如何才能更觉察到我们的行动和思想中可能会如何造成这样的开口？我们在这些集会期间对某些领域提问时，是否有可能无意中造成这样的开口？还有，我们总体上能做些什么来保护自己免受扭曲性影响？有没有我们可以使用的任何仪式或冥想？」
 
 Ra I am Ra. Although we are in sympathy with the great desire to be of service exemplified by this question, our answer is limited by the distortion of the Way of Confusion. We shall say some general things which may be of service in this area.
 Ra 我是 Ra。尽管我们同情这个问题所体现的、想要服务的巨大渴望，我们的回答受到混淆之路的变貌限制。我们将说一些在这个领域可能有所助益的一般性事情。
@@ -35,7 +35,7 @@ This, in turn, allowed this particular entity to radiate to the other-self such 
 (32.2) 发问者 非常感谢。我现在继续前天的话题。我们的主题是性极性如何作为进化中的催化剂，以及如何最好地利用这种催化剂。回到那个资料，我将填补一些我们此刻可能还不太理解的空白。
 
 Can you tell me the difference between orange- and yellow-ray activation? I am going to work up from red ray right on through the violet, and we covered red ray, so what's the difference between orange- and yellow-ray activation?
-你能告诉我橙色光芒与黄色光芒激活之间的区别吗？我打算从红色光芒一直向上到紫罗兰色光芒，我们已经讲过了红色光芒，那么橙色光芒和黄色光芒激活之间有什么区别？
+你能告诉我橙色光芒与黄色光芒激活之间的区别吗？我打算从红色光芒一直向上到紫色光芒，我们已经讲过了红色光芒，那么橙色光芒和黄色光芒激活之间有什么区别？
 
 Ra I am Ra. The orange ray is that influence, or vibratory pattern, wherein the mind/body/spirit expresses its power on an individual basis. Thus power over individuals may be seen to be orange ray. This ray has been quite intense among your peoples on an individual basis. You may see in this ray the treating of other-selves as non-entities, slaves, or chattel, thus giving other-selves no status whatever.
 Ra 我是 Ra。橙色光芒是那种影响力，或振动模式，在其中，心/身/灵在个体基础上表达其力量。因此，对个体的支配权力可被视为橙色光芒。这道光芒在你们人群中在个体层面上一直相当强烈。你可以在这道光芒中看到将其他自我视为非实体、奴隶或财产，从而不给其他自我任何地位。
@@ -87,10 +87,10 @@ Ra 我是 Ra。靛蓝色光芒是——容我们说——将造物主觉知为�
 ## (32.7)
 
 (32.7) Questioner And then finally, the violet ray. What is the difference between violet ray and the others?
-(32.7) 发问者 最后是紫罗兰色光芒。紫罗兰色光芒与其他光芒之间有什么区别？
+(32.7) 发问者 最后是紫色光芒。紫色光芒与其他光芒之间有什么区别？
 
 Ra I am Ra. The violet ray, just as the red ray, is constant in the sexual experience. Its experience by other-self may be distorted, or completely ignored, or not apprehended by other-self. However, the violet ray, being the sum and substance of the mind/body/spirit complex, surrounds and informs any action by a mind/body/spirit complex.
-Ra 我是 Ra。紫罗兰色光芒，正如红色光芒一样，在性体验中是恒常的。其他自我对它的体验可能被扭曲、或完全忽略、或不被其他自我领会。然而，紫罗兰色光芒，作为心/身/灵复合体的总和与实质，包围并贯穿着心/身/灵复合体的任何行动。
+Ra 我是 Ra。紫色光芒，正如红色光芒一样，在性体验中是恒常的。其他自我对它的体验可能被扭曲、或完全忽略、或不被其他自我领会。然而，紫色光芒，作为心/身/灵复合体的总和与实质，包围并贯穿着心/身/灵复合体的任何行动。
 
 ## (32.8)
 
@@ -145,7 +145,7 @@ What I’m trying to get at is how the different colors, I might say, originate 
 我想要探究的是，不同的颜色，我可以说，如何作为这些功能而起源……或者说，这些颜色作为意识中这些不同表达的功能，其起源的本质。我不知道这个问题是否足够。
 
 Ra I am Ra. This question is sufficiently clear for us to attempt explanation of what, as you have observed, is not easily grasped material for the intellectual mind. The nature of vibration is such that it may be seen as having mathematically strait or narrow steps. These steps may be seen as having boundaries. Within each boundary there are infinite gradations of vibration or color.
-Ra 我是 Ra。这个问题足够清晰，我们可以尝试解释这——正如你已经观察到的——对智性心智来说并不容易掌握的材料。振动的本质是，它可以被视为具有数学上笔直或狭窄的阶梯。这些阶梯可被视为具有边界。在每个边界内，存在着振动或颜色的无限渐变。
+Ra 我是 Ra。这个问题足够清晰，我们可以尝试解释这——正如你已经观察到的——对智性心智来说并不容易掌握的材料。振动的本质是，它可以被视为具有数学上狭窄的阶梯。这些阶梯可被视为具有边界。在每个边界内，存在着振动或颜色的无限渐变。
 
 However, as one approaches a boundary, an effort must be made to cross that boundary. These colors are a simplistic way of expressing the boundary divisions of your density. There is also the time/space analogy which may be seen as the color itself in a modified aspect.
 然而，当一个人接近一个边界时，必须做出努力才能跨越那个边界。这些颜色是表达你们密度边界划分的一种简化方式。还有时间/空间的类比，可以将其视为颜色本身在一个变形后的面向中。
@@ -186,5 +186,5 @@ Ra I am Ra. All is well. We caution not only this instrument but each to look we
 Ra 我是 Ra。一切都好。我们不仅告诫这个器皿，也告诫每一位，要好好留意维持器皿和通讯水平不枯竭所必需的生命能量。你们是最尽责的，我的朋友们。我们将与你们同在。
 
 I leave you now in the love and in the light of the One Infinite Creator. Go forth, then, rejoicing in the power and the peace of the One Infinite Creator. Adonai.
-我现在离开你们，在太一无限造物主的爱与光中。那么，向前去吧，在太一无限造物主的大能与和平中欢欣鼓舞。Adonai。
+我现在离开你们，在太一无限造物主的爱与光中。那么，前行吧，在太一无限造物主的力量与平安中欢欣雀跃。Adonai。
 
