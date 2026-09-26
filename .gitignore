@@ -1,4 +1,12 @@
-.claude/
-*.py
+# Python
 *.pyc
+*.py
+__pycache__/
+
+# macOS
 .DS_Store
+
+# 允许 .claude/skills（skill 定义与脚本）入库，其余保持忽略
+!.claude/skills/**
+.claude/**/__pycache__/
+.claude/**/.DS_Store
