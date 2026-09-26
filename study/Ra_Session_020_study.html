@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 020 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 020 · 交互式学习模块</h1>
+  <p class="sub">这一集从「没赶上收割的第二密度怎么办」问起，把第三密度历史的两个断面摊开：寿命如何从九百年一路缩水，以及第一个 25,000 年周期为何颗粒无收——联邦在等一个没来的春天，猎户座只出手一次。</p>
+  <div class="tagline">8 个主题 · 6 个学习步骤 · 32 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 第二密度的第二次机会</a>
+<a href="#s3">③ 密度切换的机制</a>
+<a href="#s4">④ 极性即电荷</a>
+<a href="#s5">⑤ 九百年寿命</a>
+<a href="#s6">⑥ 第一周期的人口拼图</a>
+<a href="#s7">⑦ 园丁与猎户座的第一击</a>
+<a href="#s8">⑧ 收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>先看这一集的八个转折点与两块议题，例行问答可跳过</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>第二密度的第二次机会</b><span>没进第三密度的实体去了哪，以及宠物为什么是毕业通道</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>极性即电荷</b><span>为什么必须选边：线圈、电位与「功」（顺带看 03 的载具机制）</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>九百年寿命为何缩水</b><span>设计值、缩短的真正原因，以及「永久的童年」</span></span></label></div>
+<div class="step-item" data-target="#s7"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>两个阵营的第一轮交手</b><span>园丁为何只在旁观看，猎户座的石像是怎么起作用的</span></span></label></div>
+<div class="step-item" data-target="#s8"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官</b><span>金句、术语卡，以及 Ra 最后那句拒答里的自由意志</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：这一集在问什么</h2></div>
+  <p class="sec-lead">上一集谈的是第三密度中因选择或偏见而发生的分裂（服务他人／服务自我）。这一集发问者要的是「进化的历史及其机制」：他打算一路讲到第三密度走完、进入第四密度开头，好把心/身/灵复合体的发展机制交代清楚。Ra 的回答分成两条线——一条是「人从哪来」（第二密度毕业、载具换代、火星移民、人口不混合），另一条是「日子怎么越过越短」（寿命从九百年降到七百年，再到今天），最后停在第一个周期颗粒无收、猎户座第一次出手却落空这件事上。</p>
+  <div class="card">
+    <h3>问答脉络：从「宠物」问到「石像」</h3>
+    <p>本集四十六个问答块可以压成八个转折点。点节点或按钮，看每一段在做什么——最后一点是本集的收束。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="qaTrack"></div>
+      <div class="flow-detail" id="qaDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="qaPrev">← 上一步</button> <button class="tri-btn" id="qaNext">下一步 →</button></div>
+    </div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">开场 · 集会后勤</span></summary>
+  <div class="body">
+    <p><b>(20.0) 开场：</b>Ra 以「在无限造物主的爱与光中致意」开场，宣布本次通讯开始。</p>
+    <p><b>(20.44) 集会后勤：</b>发问者问今天晚些时候能否再进行一场，以及如何让器皿更舒适。Ra 回答「这是可能的」，只请求他们仔细留意器皿的校准，其余一切尽责。</p>
+    <p><b>(20.42) 节奏提示：</b>Ra 在解释纳斯卡线条时先声明「这将是本次集会的最后一个完整问题」，之后只接受简短的提问——这是本次工作的时间口径，与义理无关。</p>
+  </div></details>
+  <div class="card">
+    <h3>本集在书中的位置</h3>
+    <p><b>承接：</b>上一集刚谈完第三密度里「因选择或偏见而服务他人／服务自我」的分裂，本集把这个裂缝往前追溯——为什么这个裂缝是必需的（没有极性就没有「功」），又往后推——它在第三密度的历史里造成了什么。</p>
+    <p><b>开启：</b>Ra 在 (20.28) 说第一周期的「春天没有到来、种子没有发芽」，所以园丁必须亲自下园工作；发问者在 (20.45) 预告下一集要聚焦第一个 25,000 年里正向导向实体的发展。也就是说，本集的结尾正好是下一集的入口。</p>
+    <div class="table-wrap" style="margin-top:12px">
+      <table class="nine">
+        <tr><th>本集议题</th><th>英文关键词</th><th>一句话</th></tr>
+        <tr><td>第二密度的补考</td><td>second-density graduation</td><td>没赶上收割的第二密度可以在第三密度期间重走周期的一部分；宠物是最常见的通道</td></tr>
+        <tr><td>密度切换的机制</td><td>vibration / parameters</td><td>底层的基本振动先变，参数跟着变，新类型的载具才得以出现</td></tr>
+        <tr><td>极性与「功」</td><td>polarization / work</td><td>线圈已绕好、有电位、准备好了，缺的只是电荷；电荷由自由意志的选择提供</td></tr>
+        <tr><td>寿命的缩短</td><td>life span</td><td>从九百年到七百年；根源永远是其他自我之间的不和谐振动，主因是正向导向没有建立</td></tr>
+        <tr><td>第一周期的人口</td><td>Mars / unmixed</td><td>火星实体约一半、地球第二密度毕业生约四分之一、其他行星领域约四分之一，且很少混合</td></tr>
+        <tr><td>猎户座的第一次尝试</td><td>Orion group</td><td>心灵感应加上石造构造（复活节岛石像、纳斯卡线条），约六万年前，动手的是一位第四密度实体</td></tr>
+      </table>
+    </div>
+    <div class="case"><b>周一九点的复盘会：</b>小林没有一上来就抛新方案，而是先说「先把主线上次说到的地方接上」，把这两个月打算走的整条路线讲了一遍，然后才提第一个问题。这正是 (20.1) 发问者的开场方式——先钉住写书的主线（讲到第三密度尽头、机制如何展开），后面每个问题才有位置可放。</div>
+    <div class="case"><b>老医生先翻既往病历：</b>社区医院的老医生问诊前总要先把你的病历翻一遍，再开口问今天哪儿不舒服。本集也是这样开场的：发问者先报出「进度坐标」，然后才问「那批没被收割的第二密度实体后来怎么样了」。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>第二密度的第二次机会：宠物如何跨进第三密度</h2></div>
+  <p class="sec-lead">发问者往回收了一步：七万五千年前这个周期开始时，那些没能收割进第三密度的第二密度实体去哪了？Ra 的答案很短，却开出了一条通道——第二密度可以在第三密度期间重走周期的一部分，而这条通道上最常见的身影，是家里那只动物。</p>
+  <div class="card">
+    <h3>出路：重走周期的一部分</h3>
+    <div class="q">七万五千年前那批没被收割的第二密度实体后来怎样了？当时留在第二密度的，有没有在这段期间补上来？</div>
+    <div class="quote">
+      <p class="en">The second density is able to repeat, during third density, a portion of its cycle.</p>
+      <p class="zh">第二密度能够在第三密度期间重复它周期的一部分。</p>
+      <span class="src">—— Session 020 · (20.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This has been increasingly true.</p>
+      <p class="zh">这已经越来越成为事实。</p>
+      <span class="src">—— Session 020 · (20.2)</span>
+    </div>
+    <div class="plain">没赶上第一班车的第二密度不会被丢下：它可以在第三密度进行期间把周期的一部分再走一遍，而这样做成的实体越来越多。</div>
+    <div class="analogy"><b>像年检的复检工位：</b>一辆车这次没过检测线，不是整台报废，而是回到工位把没通过的那几项重走一遍。重走的只是其中一部分，不是从头再来。</div>
+    <div class="case"><b>执业资格考试的第二年：</b>小陈第一年只差一门没过，第二年不必重考全部科目，只补考未通过的那一门就行——「重复周期的一部分」，说的就是这种安排。</div>
+  </div>
+  <div class="card">
+    <h3>通道：宠物与「个体化」</h3>
+    <div class="q">能举一个具体的例子吗？最近有第二密度实体进入第三密度吗？</div>
+    <div class="quote">
+      <p class="en">Perhaps the most common occurrence of second-density graduation during third-density cycle is the so-called pet: the animal which is exposed to the individualizing influences of the bond between animal and third-density entity.</p>
+      <p class="zh">在第三密度周期中，第二密度毕业最常见的情形或许就是所谓的宠物：那只暴露在「动物与第三密度实体之间的纽带」所产生的个体化影响之下的动物。</p>
+      <span class="src">—— Session 020 · (20.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This individuation causes a sharp rise in the potential of the second-density entity so that, upon the cessation of physical complex, the mind/body complex does not return unto the undifferentiated consciousness of that species, if you will.</p>
+      <p class="zh">这种个体化使第二密度实体的潜能急剧上升，以至于当物理复合体停止运作时，它的心/身复合体不再回到该物种那未分化的意识之中。</p>
+      <span class="src">—— Session 020 · (20.3)</span>
+    </div>
+    <div class="plain">与人长期相处形成的纽带会把一只动物「个体化」，把它的潜能抬高；于是它身体停止之后，不再退回整个物种共用的那片未分化意识——这就是它进入第三密度的门槛。</div>
+    <div class="analogy"><b>像湖边围出的一口小池塘：</b>整片湖水本无分别，常年的堤岸却在边上围出了一块有边界的水体。它仍属于这片湖，但从此刻起，它有了自己的形状。</div>
+    <div class="case"><b>老周家的猫「豆子」：</b>豆子活了十四年，只对老周的脚步声有反应，别人叫它毫无回应。它走的那年老周说了一句「它不像只是一只猫」——这句话对应的正是 (20.3)：纽带带来的个体化，使它在形体停止后不回到该物种的未分化意识。</div>
+    <div class="case"><b>有名字的牛和没名字的牛：</b>牧场里有几头牛被饲养员叫了名字、听得懂呼唤，会主动凑到人手边；同栏那些从没被叫过名字的牛，始终只按整群的方式行动。差别不在品种，在于有没有那条「纽带」。</div>
+  </div>
+  <div class="card">
+    <h3>起点：从最低的一档意识开始</h3>
+    <div class="q">那刚毕业的实体一上来是什么样子？会是像我们这样的人类吗？</div>
+    <div class="quote">
+      <p class="en">As a second-density entity returns as third-density for the beginning of this process of learning, the entity is equipped with the lowest, if you will so call these vibrational distortions, forms of third-density consciousness; that is, equipped with self-consciousness.</p>
+      <p class="zh">当实体作为第三密度返回、开始这个学习过程时，它被配置的是第三密度意识里最低的那些形态（如果你愿意这样称呼这些振动变貌的话），也就是：自我意识。</p>
+      <span class="src">—— Session 020 · (20.4)</span>
+    </div>
+    <div class="plain">它以第三密度意识里最低的一档入场——「自我意识」。发问者追问这样的实体是否就是人类形态，Ra 直接回答这是正确的 (20.5)。</div>
+    <div class="analogy"><b>像刚拿到驾照的新手：</b>车是真的、路是真的，但一切都从「知道自己在开车」这一层开始学。</div>
+    <div class="case"><b>三岁孩子第一次说「我自己来」：</b>之前他也会拿勺子、会走路，但那一刻起他知道有个「我」在做事——自我意识的出现，就是第三密度的入场券。</div>
+    <div class="case"><b>转学第一周的孩子：</b>新班级里他只会说「我叫……」，别的还谈不上；按 (20.4)，刚从第二密度上来的实体就处在这样的一档：不是不会，而是从最低处起步。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>密度切换的机制：振动参数先变，载具才换代</h2></div>
+  <p class="sec-lead">发问者盯住一个细节：第二密度到第三密度的身体变化大约只用了「一代半」，体毛消失、结构改变。他带着自己读过的「一切皆运动」的物理学来问：是不是底层振动先变，才允许新载具出现？Ra 说对，并顺手给这个物理学体系定了位。</p>
+  <div class="card">
+    <h3>换代的次序：参数在前，载具在后</h3>
+    <div class="q">从第二密度到第三密度，身体的变化只花了大约一代半。是不是因为构成物理世界的基本振动改变了，出现了新的参数，才允许新类型的载具出现？</div>
+    <div class="quote">
+      <p class="en">Am I correct in assuming that the basic vibration, which makes up the physical world as we experience it, changes, thus creating a different set of parameters, shall I say, in this short period of time between density changes, allowing for the new type of vehicle?</p>
+      <p class="zh">（这是发问者提出的模型，Ra 的回答是「This is correct.」）我是否可以这样假设：构成我们所体验的物理世界的基本振动发生变化，于是在密度切换之间的这段短时间里形成了一组不同的参数，从而允许新类型的载具出现？</p>
+      <span class="src">—— Session 020 · (20.6)</span>
+    </div>
+    <div class="plain">密度切换不是「把身体改造一番」，而是底层的振动参数先变；旧载具因此不再合身，新载具在这段短时间里成形——动物的体毛消失、结构改变，是换机器时留下的痕迹。</div>
+    <div class="analogy"><b>像信号从标清换成高清：</b>不是把旧电视修好，而是发射端的参数变了，屏幕必须换一代。你看到的「机器变了」，其实是参数先变的结果。</div>
+    <div class="case"><b>4G 换 5G 的那两年：</b>没有人上门改装你的旧手机，是信号参数变了，于是手机自然换代。第二密度到第三密度的载具更换，次序与此相同。</div>
+  </div>
+  <div class="card">
+    <h3>定位：拉尔森体系走到了哪里</h3>
+    <div class="q">那杜威·拉尔森那套「一切都是运动或振动」的物理学，本身正确吗？</div>
+    <div class="quote">
+      <p class="en">The physics of sound vibrational complex, Dewey, is a correct system as far as it is able to go. There are those things which are not included in this system.</p>
+      <p class="zh">声音振动复合体杜威的物理学，在它所能达到的范围内是一个正确的体系；有些事物并没有被包含在这个体系里。</p>
+      <span class="src">—— Session 020 · (20.7)</span>
+    </div>
+    <div class="quote">
+      <p class="en">those coming after this particular entity, using the basic concepts of vibration and the study of vibrational distortions, will begin to understand that which you know of as gravity and those things you consider as “n” dimensions.</p>
+      <p class="zh">继这个实体之后的人，若使用振动的基本概念并研究振动变貌，将开始理解你们所知的引力，以及你们称为「n 维」的那些事物。</p>
+      <span class="src">—— Session 020 · (20.7)</span>
+    </div>
+    <div class="plain">Ra 的判定是「在它能走的范围内正确」——但它不含引力与 n 维；这些要等后来的人以振动概念补进一个更普遍的理论。至于这份材料本身，Ra 说它主要是为了在第四密度使用 (20.8)。</div>
+    <div class="analogy"><b>像一张只画了街区的手绘地图：</b>比例、方向都对，能带你走完这座城；可等你真要上山，就得另加等高线——不是地图错了，是它没画到那里。</div>
+    <div class="case"><b>牛顿力学与卫星导航：</b>牛顿力学造出了蒸汽机、算出了行星轨道，在它的范围内极其准确；今天要让卫星定位对得上，却必须加上相对论修正。这就是「在它能走的范围内正确，有些事物不在体系内」。</div>
+    <div class="case"><b>1990 年代写好的加密协议：</b>当年几乎没人用得上，几十年后才被普遍部署。Ra 说拉尔森带来的这些材料「主要是为了在第四密度使用」——一份提前交付、下一代才用得上的东西。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>极性即电荷：为什么「功」必须选边</h2></div>
+  <p class="sec-lead">接着上一集的分裂话题，发问者提出一个哲学问题：为什么意识里非得有服务他人／服务自我这条裂缝？他拿电学打比方——没有极性就没有电、没有行动。Ra 说正确，并给出了一个更精确的图像：线圈早就绕好了。</p>
+  <div class="card">
+    <h3>没有极性，就没有「功」</h3>
+    <div class="q">意识里如果没有服务他人／服务自我这条分裂，是不是就不会有行动、也不会有体验？</div>
+    <div class="quote">
+      <p class="en">This is correct. You may use the general term “work.”</p>
+      <p class="zh">这是正确的。你可以使用「功」这个通用术语。</p>
+      <span class="src">—— Session 020 · (20.9)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The coil, as you may understand this term, is wound, is potential, is ready. The thing that is missing without polarizing is the charge.</p>
+      <p class="zh">线圈——如你可能理解这个术语——已经绕好，已经具备电位，已经准备好了。若不极化，所缺的那样东西就是电荷。</p>
+      <span class="src">—— Session 020 · (20.10)</span>
+    </div>
+    <div class="plain">极性不是道德上的装饰，而是让体验「做功」的条件。Ra 用线圈作补充说明：绕组、电位、准备都已就绪，唯独缺电荷——极化就是那个把潜能变成实动的东西。</div>
+    <div class="analogy"><b>像手电筒的电池仓：</b>弹簧、触点、灯珠一应俱全，唯独电池没装进去；一切都在「准备好」的状态里等着。</div>
+    <div class="case"><b>接好线却一直没通电的机床：</b>车间里那台机床，线路早就接好、刀具也装上了，三年来只当过置物台。它从不缺能力，缺的是一次通电——「没有极化，缺的是电荷」。</div>
+    
+  </div>
+  <div class="card">
+    <h3>电荷由谁提供：个体在自由意志里的选择</h3>
+    <div class="q">那电荷是谁给的？是个体化意识提供的吗？</div>
+    <div class="quote">
+      <p class="en">The charge is provided by the individualized entity using the inpourings and instreamings of energy by the choices of free will.</p>
+      <p class="zh">电荷由个体化实体提供：它凭借自由意志的选择，来使用那些流入与注入的能量。</p>
+      <span class="src">—— Session 020 · (20.11)</span>
+    </div>
+    <div class="plain">电荷来自你自己——用的是本来就流进来的能量，凭的是自由意志做出的选择。所以「有没有做功」这件事，最终落在选择上，而不是落在条件上。</div>
+    <div class="analogy"><b>像银行给你的授信额度：</b>额度一直在那儿，动不动用、用在哪一笔，取决于你签下的那个决定。额度不等于使用。</div>
+    <div class="case"><b>同一间画室里的两个人：</b>画室里颜料、画布、光线对每个人一样。三年后，一个人画满了整面墙，另一个一张都没交。差别不在材料，在有没有把选择落到具体的那一笔上。</div>
+    <div class="case"><b>两兄弟继承同一间铺面：</b>父亲留下同一个铺位，哥哥每天开门做生意，弟弟把卷帘门锁了十年。铺面是一样的铺面，电荷是各人自己给的。</div>
+  </div>
+  <div class="card">
+    <h3>归类练习：这段话落在本集哪条线索上？</h3>
+    <p>下面每个日常场景，都对应本集的一条教导。判断它落在哪一条上。</p>
+    <div id="sorterArea"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>九百年寿命：设计值、缩短史与「永久的童年」</h2></div>
+  <p class="sec-lead">发问者把镜头推向时间：第三密度刚开场时人活多久？是越往后越长还是越短？Ra 给出的数字是一条下滑线——九百年、七百年、再到今天。而更值得注意的是 Ra 否定了发问者的一个猜测：缩短不是火星人带来的负向极化造成的。</p>
+  <div class="card">
+    <h3>设计值：九百年是怎么算出来的</h3>
+    <div class="q">第三密度在七万五千年前开始时，人的平均寿命是多少？为什么九百年是最佳值？</div>
+    <div class="quote">
+      <p class="en">At the beginning of this particular portion of your space/time continuum the average lifetime was approximately nine hundred of your years.</p>
+      <p class="zh">在你们这个空间/时间连续体的这一部分的起点，平均寿命大约是你们的九百年。</p>
+      <span class="src">—— Session 020 · (20.12)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The mind/body/spirit complex of third density has perhaps one hundred times as intensive a program of catalytic action from which to distill distortions and learn/teachings than any other of the densities.</p>
+      <p class="zh">第三密度的心/身/灵复合体所拥有的催化行动计划，其强度或许是其他任何密度的一百倍，它要从中蒸馏出变貌与学习/教导。</p>
+      <span class="src">—— Session 020 · (20.24)</span>
+    </div>
+    <div class="quote">
+      <p class="en">During the first, shall we say, perhaps 150 to 200 of your years, as you measure time, a mind/body/spirit complex is going through the process of a spiritual childhood, the mind and the body not enough in a disciplined configuration to lend clarity to the spiritual influxes. Thus, the remaining time span is given to optimize the understandings which result from experience itself.</p>
+      <p class="zh">在最初的——容我们说——大约 150 到 200 个你们的年头里，心/身/灵复合体正在经历一段灵性童年：心智与身体还没有足够的纪律配置，无法让灵性的注入显得清晰。因此，余下的时间跨度被用来优化那些由体验本身产生的理解。</p>
+      <span class="src">—— Session 020 · (20.24)</span>
+    </div>
+    <div class="plain">第三密度的催化量是其他密度的一百倍，人被「体验的海洋」淹没；起步的 150–200 年只是灵性童年，剩下的时间要用来把体验酿成理解。九百年不是奢侈，而是这个密度的功课所需的时间尺度。</div>
+    <div class="analogy"><b>像酿酒必须放够年头：</b>不是越陈越好，而是这类酒必须存到某个年份才出味。把桶换小，风味就出不来——寿命就是那个桶。</div>
+    <div class="case"><b>马拉松选手的适应期：</b>没有人靠一次长跑练出耐力，适应来自几千公里的累积。催化量既然是一百倍，消化期就得足够长，道理是同一个。</div>
+    <div class="case"><b>学琴的头两年：</b>前两年只是在建立手指与听觉的基本纪律，还谈不上「表达」；等到手上有了纪律，音乐才听得清。这正是 Ra 说的前 150–200 年「不足以让灵性注入清晰」。</div>
+  </div>
+  <div class="card">
+    <h3>缩短史：从九百年到七百年</h3>
+    <div class="q">那寿命后来是变长还是变短了？第一个 25,000 年周期结束时是多少？</div>
+    <div class="quote">
+      <p class="en">given the harmonious development of the learning/teachings of this density, the life span of the physical complex would remain the same throughout the cycle. However, your particular planetary sphere developed vibrations by the second major cycle which shortened the life span dramatically.</p>
+      <p class="zh">若这个密度的学习/教导和谐发展，物理复合体的寿命本会在整个周期中保持不变。然而，你们这颗特定的行星领域在第二个主要周期发展出了某些振动，使寿命大幅缩短。</p>
+      <span class="src">—— Session 020 · (20.13)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The life span at the end of the first cycle which you call major was approximately seven hundred of your years.</p>
+      <p class="zh">在你们称为「主要」的第一个周期结束时，寿命大约是你们的七百年。</p>
+      <span class="src">—— Session 020 · (20.14)</span>
+    </div>
+    <div class="plain">设计值本该全程不变，是地球自己发展出的振动把寿命压短了。第一个 25,000 年周期结束时只剩约七百年——发问者算了一下：二十五年里少了两百年，Ra 说这是正确的 (20.15)。</div>
+    <div class="analogy"><b>像一条设计时速 120 公里的公路：</b>设计值没有变，但你实际开多快，由路况决定。寿命的「设计值」与「实际值」是两件事。</div>
+    <div class="case"><b>同一栋写字楼的两层：</b>十九楼那家公司天天内耗、谁也不服谁；十七楼那家同样忙碌却相处和睦。三年后体检报告先分出了差别——「实际能跑多久」，取决于环境里那些不悦耳的关联振动。</div>
+  </div>
+  <div class="card">
+    <h3>真正的原因：不是火星，而是「没有进展」</h3>
+    <div class="q">缩短的原因到底是什么？是火星来的实体带来强烈负向极化造成的吗？</div>
+    <div class="quote">
+      <p class="en">The causes of this shortening are always an ineuphonious, or inharmonious, relational vibration between other-selves.</p>
+      <p class="zh">这种缩短的原因，永远是其他自我之间不悦耳、也就是不和谐的关联振动。</p>
+      <span class="src">—— Session 020 · (20.16)</span>
+    </div>
+    <div class="quote">
+      <p class="en">There was not a strong negative polarization due to this influx.</p>
+      <p class="zh">并没有因为这次流入而产生强烈的负向极化。</p>
+      <span class="src">—— Session 020 · (20.17)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The lessening of the life span was due primarily to the lack of the building up of positive orientation. When there is no progress, those conditions which grant progress are gradually lost. This is one of the difficulties of remaining unpolarized. The chances, shall we say, of progress become steadily less.</p>
+      <p class="zh">寿命的缩短主要是由于正向导向没有建立起来。当没有进展时，那些给予进展的条件就逐渐丧失。这是「保持未极化」的困难之一：进展的机会，容我们说，会变得越来越少。</p>
+      <span class="src">—— Session 020 · (20.17)</span>
+    </div>
+    <div class="plain">Ra 明确否定了「火星流入导致强烈负极化」这个假设。缩短的主因是停滞：正向导向没建立起来，于是那些「让进展得以发生」的条件被一点点收回——不选边，本身就在消耗机会。</div>
+    <div class="analogy"><b>像一块长期不种的地：</b>它不是被谁占领才荒的，而是因为一直没种东西，能种的地力自己流失了。荒芜常常不是被打败，而是被搁置。</div>
+    <div class="case"><b>毕业后的第三年：</b>证书没考、技能没更新、旧同事也没再联系。不是被谁打败，而是「能进步的条件」在三年里一点点丢了——这正是 (20.17) 说的「进展的机会稳步变少」。</div>
+    
+  </div>
+  <div class="card">
+    <h3>条件模拟器：寿命会被缩短到哪一步？</h3>
+    <p>按本集的说法拨动下面四个开关，看寿命落在哪一档。四条判据分别来自 (20.16)、(20.16)、(20.21)–(20.23) 与 (20.17)。</p>
+    <div class="cond-row"><div class="name">其他自我之间的不和谐振动<small>实体彼此之间不悦耳的关联振动 (20.16)</small></div><label class="switch"><input type="checkbox" id="condA" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">人们分散居住、接触不多<small>第一个周期里摩擦因此「并不严重」(20.16)</small></div><label class="switch"><input type="checkbox" id="condB"><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">不同来源的群体长期不混合<small>群体分离带来好战态度，Ra 确认这缩短了寿命 (20.21)–(20.23)</small></div><label class="switch"><input type="checkbox" id="condC" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">正向导向没有建立（停滞）<small>没有进展时，给予进展的条件会逐渐丧失 (20.17)</small></div><label class="switch"><input type="checkbox" id="condD" checked><span class="slider"></span></label></div>
+    <div id="condResult"></div>
+  </div>
+  <div class="card">
+    <h3>代价：永久的童年</h3>
+    <div class="q">这么短的寿命，对刚接触第三密度课程的实体来说是不是太短了？</div>
+    <div class="quote">
+      <p class="en">the greater preponderance of your entities find themselves in what may be considered a perpetual childhood.</p>
+      <p class="zh">你们实体中的绝大多数，发现自己处在一种可被视为「永久的童年」的状态里。</p>
+      <span class="src">—— Session 020 · (20.25)</span>
+    </div>
+    <div class="plain">Ra 同意「太短」这个判断：少数已经学会快速成长的实体能在短寿命里工作，但绝大多数人卡在起点那一档——Ra 称它为永久的童年。</div>
+    <div class="case"><b>每两年换一次方向的人：</b>学吉他三个月、学编程两个月、读了一半的书摞成一摞——不是不努力，而是每一次都还没走出「前 150–200 年」那一段，就被循环重置了。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>第一周期的人口拼图：一半是火星来的「插班生」</h2></div>
+  <p class="sec-lead">寿命这条线讲完，发问者转向「人」：这个周期刚开始时，地球上住的都是谁？Ra 给出的答案像一张统计表——一半、四分之一、四分之一，而且这三拨人几乎没有混住。Ra 特别提醒：火星来的那一半不是新生入学，而是中途转学。</p>
+  <div class="card">
+    <h3>三个来源</h3>
+    <div class="q">这个 75,000 年周期开始时，第三密度的地球上都是谁？各占多少？</div>
+    <div class="quote">
+      <p class="en">There were perhaps one-half of the third-density population being entities from the Red Planet, Mars, as you call it; perhaps one-quarter from second density of your planetary sphere; approximately one-quarter from other sources, other planetary spheres whose entities chose this planetary sphere for third-density work.</p>
+      <p class="zh">那时第三密度人口中或许有一半，是来自你们称为火星的红色星球的实体；或许有四分之一来自你们行星领域的第二密度；大约四分之一来自其他来源，也就是其他行星领域中、选择这个行星领域来做第三密度工作的实体。</p>
+      <span class="src">—— Session 020 · (20.20)</span>
+    </div>
+    <div class="quote">
+      <p class="en">You must remember that those transferred to this sphere were in the middle of their third density, so that this third density was an adaptation rather than a beginning.</p>
+      <p class="zh">你们必须记住：那些被转移到这个领域的实体正处在他们第三密度的中途，因此这里的第三密度对他们是「一次适应」，而不是「一个开始」。</p>
+      <span class="src">—— Session 020 · (20.19)</span>
+    </div>
+    <div class="plain">三类人拼成了第一周期的第三密度人口；其中占比最大的火星实体，任务是适应，不是从零开始。</div>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">约一半</span><h4>火星转学生</h4><p>来自红色星球，已在自身第三密度走到中途。对他们而言这里是<b>适应</b>，不是入学——Ra 特别强调了这一点 (20.19)。</p></div>
+      <div class="yuan-card"><span class="y-tag">约四分之一</span><h4>地球第二密度毕业生</h4><p>从这颗行星的第二密度毕业上来，以自我意识这一最低形态开始第三密度的功课 (20.4)、(20.20)。</p></div>
+      <div class="yuan-card"><span class="y-tag">约四分之一</span><h4>其他行星的选择者</h4><p>来自其他行星领域，是主动挑选了这个行星领域来做第三密度工作的实体 (20.20)。</p></div>
+    </div>
+    <div class="case"><b>新学期那个班：</b>开学时教室里坐着三种人——从别校中途转来的、本校小学部直升上来的、跨区考进来的。同一个教室，三种来历，进度也不一样。Ra 说第一周期的地球就是这个班。</div>
+    <div class="case"><b>并购后的新部门：</b>被收购公司的老员工是「业务做到一半被搬过来」的，只算适应；原来的实习生转正，是从头长起来的；从其他部门调来的，则是自己选了这个项目。三种人的心态差别，与 (20.19) 的区分完全对应。</div>
+  </div>
+  <div class="card">
+    <h3>不混合的代价</h3>
+    <div class="q">他们混住在一起了吗？这种不混合会不会带来群体对立，甚至缩短寿命？</div>
+    <div class="quote">
+      <p class="en">They remained largely unmixed.</p>
+      <p class="zh">他们在很大程度上保持不混合。</p>
+      <span class="src">—— Session 020 · (20.21)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This did reduce the life span, as you call it.</p>
+      <p class="zh">这确实缩短了你们所谓的寿命。</p>
+      <span class="src">—— Session 020 · (20.23)</span>
+    </div>
+    <div class="plain">三拨人很少杂居通婚，于是有了群体分离与好战态度的土壤；Ra 确认，这确实进一步缩短了寿命。</div>
+    <div class="analogy"><b>像合租屋里各用各的厨房：</b>住得再近，只要灶台各归各用，摩擦就会从「习惯不同」升级成「我们和他们」。距离近，不等于住在一起。</div>
+    <div class="case"><b>共用一个停车场的两家公司：</b>同一栋写字楼里两家公司共用电梯和车位，谁也不打招呼。半年后为三个车位闹到物业——这就是「不混合」长出来的群体对立。</div>
+    
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s7">
+  <div class="sec-head"><span class="num">07</span><h2>园丁与猎户座的第一击：第一个周期为何颗粒无收</h2></div>
+  <p class="sec-lead">本集的后半段是两条干预线的对照。联邦给了援助，但刻意给得很少；猎户座只尝试了一次，用的还是石头。结果是：第一个 25,000 年周期里，正向和负向都没有产出可收割的实体——园丁等了一整个春天。</p>
+  <div class="card">
+    <h3>联邦的援助：在场，但刻意有限</h3>
+    <div class="q">第一个 25,000 年里，星际联邦给了这些实体什么援助，让他们有机会成长？</div>
+    <div class="quote">
+      <p class="en">For the most part the participation was limited, as it was appropriate to allow the full travel of the workings of the confusion mechanism to operate in order for the planetary entities to develop that which they wished in, shall we say, freedom within their own thinking.</p>
+      <p class="zh">绝大部分情况下，参与是有限的；因为让「混淆机制」的运作完整走完才是适当的——这样行星上的实体才能在思想中的自由里，发展出他们自己所愿的东西。</p>
+      <span class="src">—— Session 020 · (20.26)</span>
+    </div>
+    <div class="quote">
+      <p class="en">It is often the case that a third-density planetary cycle will take place in such a way that there need be no outside, shall we say, or other-self aid in the form of information.</p>
+      <p class="zh">情况往往是：第三密度的行星周期完全可以在不需要外部（容我们说，其他自我）以信息形式提供援助的情况下展开。</p>
+      <span class="src">—— Session 020 · (20.26)</span>
+    </div>
+    <div class="plain">援助确实存在——居住在这个行星振动密度复合体内在层面的联邦成员与这些实体一起工作，另有一位成员协助火星实体完成过渡 (20.26)。但它刻意保持有限，因为要让「混淆机制」完整运作：只有这样，实体发展出的东西才真正属于他们自己。Ra 还说，第三密度周期本来常常就无需外来信息形式的援助。</div>
+    <div class="analogy"><b>像家长坐在孩子旁边看写作业：</b>守着但不代笔。因为替写出来的答案，不算他的功课。</div>
+    <div class="case"><b>教练只喊提示、不伸手扶：</b>队员做动作快歪了，教练喊一句「注意髋」而不去扶他——扶过了，这次动作就不是他的了。这正是「让混淆机制完整运作」。</div>
+    <div class="case"><b>把批注写成问题的导师：</b>论文改回来，页边写的全是「这里你为什么这么判断？」，没有一句直接答案。学生绕了一圈以后才明白——「无需以信息形式提供的外来援助」，讲的就是这种克制。</div>
+  </div>
+  <div class="card">
+    <h3>园丁的等待</h3>
+    <div class="q">联邦是不是就在旁观、等着第一个周期结束时出现一次收割？</div>
+    <div class="quote">
+      <p class="en">The original desire is that entities seek and become one.</p>
+      <p class="zh">最初的渴望是：实体们去寻求，并成为一。</p>
+      <span class="src">—— Session 020 · (20.27)</span>
+    </div>
+    <div class="quote">
+      <p class="en">You may see our role in the first major cycle as that of the gardener who, knowing the season, is content to wait for the spring. When the springtime does not occur, the seeds do not sprout; then it is that the gardener must work in the garden.</p>
+      <p class="zh">你可以把我们在第一个主要周期中的角色看作园丁：他知道季节，安心地等待春天。当春天没有到来，种子没有发芽，那时园丁就必须下园工作了。</p>
+      <span class="src">—— Session 020 · (20.28)</span>
+    </div>
+    <div class="plain">Ra 先纠正发问者的假设——它复杂且只对了一部分：若实体能在一瞬间「寻求并成为一」，一瞬间就能前进，整个行星会在周期结束时腾空；但宇宙的中位情形是分三次收割。地球的第一个春天没来，所以园丁必须自己下场。</div>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">宇宙的中位节奏</span><h4>三次收割</h4><p>第一个周期后有一次<b>小收割</b>；其余实体的显著极化让第二个周期有<b>更大的收割</b>；第三个周期达到顶点，收割完成 (20.27)。</p></div>
+      <div class="yuan-card"><span class="y-tag">地球的第一周期</span><h4>一次都没有</h4><p>第一个 25,000 年结束时，既没有正向也没有负向的可收割实体 (20.29)。园丁等的那个春天没有来，于是必须下园工作 (20.28)。</p></div>
+    </div>
+    <div class="case"><b>果农的第一年：</b>新栽的果树第一年没结果。老果农不会拔树，而是开始修枝、看土壤、调灌溉——他知道季节，也知道春天该来的时候没来意味着什么。这就是 (20.28) 里「园丁必须下园工作」的样子。</div>
+  </div>
+  <div class="card">
+    <h3>猎户座的唯一一次尝试</h3>
+    <div class="q">那个周期真的一次收割都没有吗？有没有别的阵营来试过？</div>
+    <div class="quote">
+      <p class="en">Those whom you call the Orion group made one attempt to offer information to those of third density during that cycle. However, the information did not fall upon the ears of any who were concerned to follow this path to polarity.</p>
+      <p class="zh">你们称为猎户座集团的那些实体，在那个周期中做了一次尝试，向第三密度的实体提供信息。然而，这些信息没有落到任何有意追随这条极化道路的人的耳中。</p>
+      <span class="src">—— Session 020 · (20.29)</span>
+    </div>
+    <div class="quote">
+      <p class="en">One, the thought transfer, or what you may call telepathy.</p>
+      <p class="zh">第一，思想转移，或你们称之为心灵感应的方式。</p>
+      <span class="src">—— Session 020 · (20.30)</span>
+    </div>
+    <div class="quote">
+      <p class="en">the arrangement of certain stones in order to suggest strong influences of power, this being those of statues and of rock formations in your Pacific areas, as you now call them, and to an extent in your Central American regions, as you now understand them.</p>
+      <p class="zh">第二，排列某些石头，以暗示强烈的力量影响；这指的是你们现在称为太平洋地区的那些雕像与岩石构造，也在某种程度上包括你们现在所知的中美洲地区的构造。</p>
+      <span class="src">—— Session 020 · (20.30)</span>
+    </div>
+    <div class="plain">猎户座只试了一次，用了两种技术：心灵感应，以及用石头摆出「力量」的样子。发问者问这是不是指复活节岛的石像，Ra 回答正是 (20.31)。</div>
+    <div class="case"><b>只发过一轮传单的推销：</b>小区门口那家健身房，开业时发过一轮传单就再没出现过；拿到传单的人里，一个都没去。这就是「一次尝试」加上「没有落到有意愿的人耳中」。</div>
+  </div>
+  <div class="card">
+    <h3>石像的机制：把「掌控不可控之物」让出去</h3>
+    <div class="q">石头摆成的像，怎么能让一个民族走上服务自我的道路？</div>
+    <div class="quote">
+      <p class="en">Given a charged entity, such as a statue or a rock formation charged with nothing but power, it is possible for the free will of those viewing this particular structure or formation to ascribe to this power, power over those things which cannot be controlled. This, then, has the potential for the further distortion to power over other-selves.</p>
+      <p class="zh">面对一个被充能的实体——比如一座只被充以力量、别无其他的雕像或岩石构造——观看它的那些人有可能凭自由意志，把「掌控那些无法掌控之事」的力量归给它。而这又可能进一步变貌为对其他自我的掌控。</p>
+      <span class="src">—— Session 020 · (20.32)</span>
+    </div>
+    <div class="plain">人本来就活在对不可控之力的摆布感里；一个「只被充以力量」的物件，会让观看者自愿把「掌控不可控之物」的希望挂在它身上。Ra 点出这条链的下一步：从这里到「掌控其他自我」，只有一步之遥。</div>
+    <div class="analogy"><b>像把天气预报当成龙王：</b>雨来不来本来不由谁决定，但人们愿意相信某个被供起来的物件能管这件事——一旦有了这个中介，接下来「谁能求到雨」就变成了权力。</div>
+    <div class="case"><b>直播间里的「宇宙能量手串」：</b>主播说戴上它就能掌控财运、压住霉运。买家买下的不是珠子，而是「掌控不可控之事」的指望——只是把这份力量归给了一个被充以力量的物件，正是 (20.32) 的第一步。</div>
+  </div>
+  <div class="card">
+    <h3>石像是怎么造的、什么密度、什么时候</h3>
+    <div class="q">这些石像是谁造的？怎么造的？什么年代？</div>
+    <div class="quote">
+      <p class="en">These were constructed by thought after a scanning of the deep mind, the trunk of mind tree, looking at the images most likely to cause the experience of awe in the viewer.</p>
+      <p class="zh">它们是以思想建造的：先扫描深层心智（心智之树的树干），找出最可能让观看者产生敬畏体验的那些意象。</p>
+      <span class="src">—— Session 020 · (20.33)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Nearly all of these structures and formations were constructed at a distance by thought. A very few were created in later times in imitation of original constructs by entities upon your Earth plane/density.</p>
+      <p class="zh">这些结构与构造几乎全部是从远处以思想建造的。极少数是后来由你们地球层面/密度上的实体模仿原始构造而造出来的。</p>
+      <span class="src">—— Session 020 · (20.34)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The fourth density, the density of love, or understanding, was the density of the particular entity which offered this possibility to those of your first major cycle.</p>
+      <p class="zh">那个向你们第一个主要周期中的实体提供这种可能性的特定实体，所在的密度是第四密度，也就是爱或理解的密度。</p>
+      <span class="src">—— Session 020 · (20.35)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This approximately was six zero, sixty thousand [60,000], of your years in the past time/space of your continuum.</p>
+      <p class="zh">这大约是在你们连续体的过去时间/空间中，六零——六万 [60,000] 年前。</p>
+      <span class="src">—— Session 020 · (20.37)</span>
+    </div>
+    <div class="plain">造法是从远处以思想成形，先扫描深层心智、挑出最能引起敬畏的意象；动手的是一位第四密度（爱与理解密度）的实体；时间是约六万年前。绝大多数原件是「远距思想工程」，后来地球上的人模仿它们的只是极少数。</div>
+    <div class="analogy"><b>像爆款海报的诞生：</b>设计师先研究什么样的画面能让人停下手指，再动手做图。石像的第一步同样是「扫描」，只不过扫描的对象是深层心智。</div>
+    <div class="case"><b>被全网模仿的创意：</b>一条广告创意火了以后，几年内到处是它的仿版。Ra 说这些构造里也有一小部分是后来地球上的人模仿原始构造做的——原件与仿品，来历不同。</div>
+  </div>
+  <div class="card">
+    <h3>爱与理解是一：第四密度的正负共用同一个名字</h3>
+    <div class="q">第四密度的负向与正向，你用的是同一套命名——都叫「爱或理解的密度」，这正确吗？</div>
+    <div class="quote">
+      <p class="en">Love and understanding, whether it be of self or of self towards other-self, is one.</p>
+      <p class="zh">爱与理解，无论是对自我的，还是自我朝向其他自我的，都是一。</p>
+      <span class="src">—— Session 020 · (20.36)</span>
+    </div>
+    <div class="plain">Ra 确认：第四密度正向与负向共用「爱与理解」之名，因为无论爱朝向自己还是朝向他人，它都是一。名字不区分极性，方向才区分。</div>
+    <div class="case"><b>同一种燃料，两个方向：</b>汽车和压路机烧的是同一箱柴油，去的地方却相反。第四密度的正向与负向也是这样——动力同源，取向决定它们走到哪里。</div>
+  </div>
+  <div class="card">
+    <h3>纳斯卡线条：给谁看的，有什么用</h3>
+    <div class="q">南美洲建了什么？纳斯卡线条也算吗？既然只能从高处看到，它到底有什么用处？</div>
+    <div class="quote">
+      <p class="en">The formations were of benefit because charged with energy of power.</p>
+      <p class="zh">这些构造之所以有益，是因为它们被充以力量的能量。</p>
+      <span class="src">—— Session 020 · (20.40)</span>
+    </div>
+    <div class="quote">
+      <p class="en">At the remove of the amount of time/space which is now your present it is difficult to perceive that at the time/space sixty thousand [60,000] years ago the earth was formed in such a way as to be visibly arranged in powerful structural designs, from the vantage point of distant hills.</p>
+      <p class="zh">隔着现在构成你们当前的这段遥远时间/空间，很难感知到：在六万 [60,000] 年前的那个时间/空间里，大地被塑造成这样——从远处山丘的有利位置看过去，它以强大的结构设计清楚可见地排列着。</p>
+      <span class="src">—— Session 020 · (20.41)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The entire smoothness, as you see this area now, was built up in many places in hills.</p>
+      <p class="zh">你们现在看到的那片区域的整片平坦，在许多地方原本是隆起的山丘。</p>
+      <span class="src">—— Session 020 · (20.42)</span>
+    </div>
+    <div class="plain">它不靠「被人看懂」起作用，靠的是被充以力量的能量；而且六万年前那片地并不平——从远处的山丘看过去，整片大地是按强大结构设计排列的。风与天气把山丘和土石构造一起侵蚀掉了，今天剩下的只是微弱痕迹 (20.43)。南美洲的那些构造包括特征性的雕像、岩石构造，以及岩石与泥土结合的构造 (20.38)，纳斯卡线条也在其中 (20.39)。</div>
+    <div class="case"><b>机场跑道的灯：</b>在地面上走过的人看到的只是几排钉子和灯泡，它真正的意义在天空中的视角里。评判它的用处，得站在「被服务的那个视角」上——纳斯卡线条也一样，只是它的作用在于被充以力量的能量。</div>
+    <div class="timeline">
+      <div class="tl-item"><div class="t">七万五千年前 · 第三密度开场</div><div class="d">地球的第三密度周期开始。平均寿命约九百年；人口由三类实体拼成——约一半来自火星、约四分之一从地球第二密度毕业、约四分之一来自其他行星领域，而且他们「在很大程度上保持不混合」。</div></div>
+      <div class="tl-item"><div class="t">六万年前 · 石像与线条成形</div><div class="d">一位第四密度（爱与理解密度）的猎户座实体从远处以思想造出太平洋地区的雕像与岩阵（含复活节岛石像），以及部分中美洲的构造与纳斯卡线条；目的是用一个「只被充以力量」的物件，让观看者自愿走向服务自我。</div></div>
+      <div class="tl-item"><div class="t">约五万年前 · 第一个主要周期结束</div><div class="d">寿命已从约九百年降到约七百年。这个周期没有产出任何可收割的正向或负向实体：猎户座唯一一次尝试没有落到愿意走这条路的人耳中，联邦则在等一个没有到来的春天。</div></div>
+      <div class="tl-item"><div class="t">现在 · 只剩微弱痕迹</div><div class="d">当时的山丘与土石构造被风与天气大幅侵蚀，线条成了「曾经存在之物的微弱痕迹」；而大多数实体「发现自己处在一种可被视为永久的童年」的状态里。</div></div>
+    </div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s8">
+  <div class="sec-head"><span class="num">08</span><h2>收官：金句、术语卡与最后那句拒答</h2></div>
+  <p class="sec-lead">本集以一句拒答收尾。发问者预告下一集要聚焦第一个 25,000 年里正向导向实体的发展，并且自己先说「我知道你不能提建议」，却还是问了一句「你有没有什么评论」。Ra 的回答只有一句，却把整集的立场讲完了。</p>
+  <div class="saying">
+    <p class="en">Love and understanding, whether it be of self or of self towards other-self, is one.</p>
+    <p class="zh">爱与理解，无论是对自我的，还是自我朝向其他自我的，都是一。</p>
+    <span class="src">—— Session 020 · (20.36)</span>
+  </div>
+  <div class="card">
+    <h3>术语卡：本集的七个关键词</h3>
+    <p>点击卡片翻看解释。这些词在全书反复出现，这里给的是「只看这一集也能看懂」的版本。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">个体化</div><div class="sub">individuation</div><span class="tap">点击展开</span></div><div class="back">一个实体从整个物种共用的未分化意识里「长出自己轮廓」的过程。本集语境：宠物与第三密度实体之间的纽带产生个体化，使它的潜能急剧上升，于是形体停止后不再回到该物种的未分化意识 (20.3)。<em>比喻：整片湖水本无分别，岸边被围出的那口小池塘开始有了自己的形状。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">自我意识</div><div class="sub">self-consciousness</div><span class="tap">点击展开</span></div><div class="back">知道「有一个我在经验」的那种意识。本集语境：刚从第二密度毕业的实体，被配置的是第三密度意识里最低的一档，也就是自我意识——它是第三密度功课的起点 (20.4)。<em>案例：孩子第一次说「我自己来」的那一刻。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">极化</div><div class="sub">polarization</div><span class="tap">点击展开</span></div><div class="back">在服务他人与服务自我之间做出选择，并让这个选择把能量「充」起来的过程。本集语境：没有极化，线圈有电位却没有电荷，就不会有「功」 (20.9)–(20.11)。<em>比喻：电路接好了，开关没合上。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">功</div><div class="sub">work</div><span class="tap">点击展开</span></div><div class="back">Ra 用来统称「意识中的功」与「机械或牛顿意义上的功」的通用术语。本集语境：要有功，就必须有服务他人或服务自我的取向；Ra 明确同意发问者使用「work」这个词 (20.9)–(20.10)。<em>案例：同一台机床，通电之后才有产出。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">混淆机制</div><div class="sub">confusion mechanism</div><span class="tap">点击展开</span></div><div class="back">让实体在被遮蔽、不能直接看清答案的状态下自行摸索的运作；正因如此，他的选择才真正属于自己。本集语境：联邦的参与之所以刻意有限，就是要让混淆机制完整走完 (20.26)。<em>案例：教练只喊提示、不伸手扶。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">其他自我</div><div class="sub">other-self</div><span class="tap">点击展开</span></div><div class="back">Ra 对「他人」的称谓，强调每个他人都是同一个自我的另一面。本集语境：寿命缩短的原因「永远是其他自我之间不和谐的关联振动」(20.16)；石像之所以起作用，也是观看者自愿把力量归给它 (20.32)。<em>案例：同一间办公室里的内耗，会先反映在体检报告上。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">猎户座集团</div><div class="sub">Orion group</div><span class="tap">点击展开</span></div><div class="back">Ra 对一批以服务自我为极化方向的实体的统称。本集语境：他们在第一个主要周期只尝试过一次，用心灵感应与石造构造提供信息，但那些信息没有落到愿意走这条路的人耳中 (20.29)–(20.31)。<em>案例：只发过一轮传单就再没出现的推销。</em></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>最后一句：选择权在你们</h3>
+    <div class="q">下一集我想聚焦第一个 25,000 年里正向导向实体的发展。我知道你不能提建议，但你能对此给我任何评论吗？</div>
+    <div class="quote">
+      <p class="en">The choices are yours according to your discernment.</p>
+      <p class="zh">选择权在于你们，依照你们自己的辨别力。</p>
+      <span class="src">—— Session 020 · (20.45)</span>
+    </div>
+    <div class="plain">Ra 不给方向、不提建议——这不是敷衍，而与本集 (20.26) 的原则完全一致：援助刻意保持有限，好让选择真正出自发问者自己。这一句拒答，本身就是本集最后一个教导。</div>
+    <div class="case"><b>称职的指导者最后一句总是「你自己定」：</b>教练听完你的训练计划，把利弊讲清楚，最后说「怎么练你决定」。他不替你划路线，因为替你选出来的路，你不会真的走。</div>
+    <div class="case"><b>体检报告给你，方案你选：</b>医生把指标、风险、几种应对方式都摊开，然后说「看你想怎么处理」。他手里有专业判断，却没有替你决定的权利——这就是「依照你们自己的辨别力」。</div>
+  </div>
+  <div class="card">
+    <h3>这一集留下的位置</h3>
+    <p>本集把第三密度的历史拆成了两个断面：<b>人</b>（第二密度怎么补考上来、人口由三种来历拼成、火星实体只是中途转学）与<b>时间</b>（九百年如何被缩到七百年，又如何在今天变成「永久的童年」）。它同时给出了一个不变的立场：联邦只当园丁、给援助而不代做选择，猎户座唯一的尝试也因没人听而落空。</p>
+    <div class="plain">带着这个问题读下一集：园丁既然「必须下园工作」，那么在第二个主要周期里，联邦会用什么样的方式介入？</div>
+    <div class="case"><b>读长篇小说时先记住两条线：</b>一条是人物从哪里来，一条是时间怎么走。本集就相当于给第三密度历史开了这两条线——读后面的集会时，凡遇到「谁在人世间」和「进度到哪了」，都可以挂回这一集。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+<p>基于 The Ra Contact Session 020（split/Ra_Session_020.md）英文原文制作 · 交互式学习模块</p>
+<p>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文</p>
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra020-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+  {t:'20.1 没被收割的去了哪',d:'<span class="qa-q">问：那批没能进入第三密度的第二密度实体，后来怎么样了？</span><b>答：</b>第二密度可以在第三密度期间把周期的一部分重走一遍；而且这样做成的越来越多。'},
+  {t:'20.3–20.5 从宠物毕业',d:'<span class="qa-q">问：能举一个具体的例子吗？</span><b>答：</b>最常见的是宠物——动物与第三密度实体之间的纽带使它被个体化，潜能急剧上升，形体停止后不再回到该物种的未分化意识；之后它以「自我意识」这一最低的第三密度形态开始学习，形态就是人类。'},
+  {t:'20.6–20.8 载具怎么换代',d:'<span class="qa-q">问：第二到第三密度的身体变化只用了大约一代半，为什么会这么快？</span><b>答：</b>因为底层的基本振动（参数）先变了，新类型的载具才得以出现。Ra 也就拉尔森的体系给了定位——在它能走的范围内是正确的，但不包含引力与 n 维；而这份材料主要是为第四密度使用。'},
+  {t:'20.9–20.11 极性与功',d:'<span class="qa-q">问：意识里若没有服务他人/服务自我的分裂，就没有行动与体验吗？</span><b>答：</b>正确，可以用「功」这个通用术语。线圈已经绕好、已有电位、已经准备好，缺的只是电荷；而电荷由个体化实体凭自由意志的选择、使用流入与注入的能量来提供。'},
+  {t:'20.12–20.17 寿命在缩水',d:'<span class="qa-q">问：从九百年到七百年，为什么越来越短？</span><b>答：</b>缩短的原因永远是其他自我之间不和谐的关联振动。主因不是火星流入带来的负向极化（Ra 明确否定），而是正向导向没有建立起来——没有进展时，给予进展的条件会逐渐丧失。'},
+  {t:'20.18–20.23 第一周期的人是谁',d:'<span class="qa-q">问：那时地球上住的是谁？他们混住吗？</span><b>答：</b>火星实体约一半（他们是中途转学、只算适应）、地球第二密度毕业生约四分之一、其他行星领域约四分之一；三类人在很大程度上保持不混合，由此生出群体分离与好战态度，也确实缩短了寿命。'},
+  {t:'20.26–20.29 园丁与落空的收割',d:'<span class="qa-q">问：联邦在第一个周期给了什么援助？有收割吗？</span><b>答：</b>援助刻意有限——要让混淆机制完整运作，实体才能在自由中发展自己所愿。Ra 的角色是知道季节、安心等春天的园丁；但春天没来、种子没发芽，园丁必须下园工作。猎户座只试了一次，没人听。'},
+  {t:'20.30–20.43 石像与线条',d:'<span class="qa-q">问：猎户座用了什么技术？纳斯卡线条只能从高处看，有什么用？</span><b>答：</b>两种技术：心灵感应，以及用石头排列出「力量」的样子（复活节岛石像、太平洋与中美洲的构造、纳斯卡线条）。它的用处在于「被充以力量的能量」；而六万年前那片地本是山丘，从远处看才成结构——如今只剩微弱痕迹。'}
+]);
+
+initSorter('sorterArea',[
+  {a:'家里养了十一年的狗只认主人一个人的脚步声，它走的时候主人说「它不像只是一只狗」',opts:['第二密度毕业','极化与功','寿命缩短','猎户座干预'],ans:'第二密度毕业',exp:'纽带带来的个体化抬高了它的潜能，使它在物理复合体停止后不回到该物种的未分化意识 (20.3)。'},
+  {a:'办了三年健身卡只去过两次，教练说「你缺的不是器械」',opts:['第二密度毕业','极化与功','寿命缩短','猎户座干预'],ans:'极化与功',exp:'线圈已经绕好、有电位、准备好了，缺的是电荷——而电荷由你自己凭自由意志的选择提供 (20.10)–(20.11)。'},
+  {a:'一个部门三年没吵过架，也没批过任何一个新方案，最后连提案的人都不提了',opts:['第二密度毕业','极化与功','寿命缩短','猎户座干预'],ans:'寿命缩短',exp:'缩短的主因是正向导向没有建立；没有进展时，给予进展的条件会逐渐丧失，进展的机会越来越少 (20.17)。'},
+  {a:'直播间里卖「宇宙能量手串」，主播说戴上它就能掌控财运、压住霉运',opts:['第二密度毕业','极化与功','寿命缩短','猎户座干预'],ans:'猎户座干预',exp:'一个「只被充以力量」的物件，让观看者自愿把对不可控之事的掌控归给它；这一步再往前，就是对其他自我的掌控 (20.32)。'},
+  {a:'一栋写字楼里两家公司共用电梯和车位，从不打招呼，后来为三个车位闹到物业',opts:['第二密度毕业','极化与功','寿命缩短','猎户座干预'],ans:'寿命缩短',exp:'三类实体「在很大程度上保持不混合」，带来群体分离与好战态度的可能，Ra 确认这确实缩短了寿命 (20.21)–(20.23)。'}
+]);
+
+document.querySelectorAll('.fn-card').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('open')));
+
+/* 条件模拟器：寿命缩短的四条判据 (20.13)-(20.17)、(20.21)-(20.23) */
+function runCondSim(){
+  const A=document.getElementById('condA').checked,
+        B=document.getElementById('condB').checked,
+        C=document.getElementById('condC').checked,
+        D=document.getElementById('condD').checked;
+  const r=document.getElementById('condResult');
+  if(!A){
+    r.classList.remove('fail');
+    r.innerHTML='<b>寿命可以保持在设计值附近（约九百年）。</b>Ra 说：若这个密度的学习/教导和谐发展，物理复合体的寿命本会在整个周期中保持不变——缩短的原因「永远是其他自我之间不和谐的关联振动」(20.13)、(20.16)。九百年不是上限，而是「本来如此」。';
+    return;
+  }
+  const score=1+(C?1:0)+(D?1:0)-(B?1:0);
+  if(score>=3){
+    r.classList.add('fail');
+    r.innerHTML='<b>寿命被大幅缩短：走向「永久的童年」。</b>不和谐振动、群体不混合、正向导向没有建立，三条同时在场——地球走的正是这条路：自第二个主要周期起寿命急剧缩短，Ra 说你们大多数实体如今「发现自己处在一种可被视为永久的童年」的状态 (20.13)、(20.17)、(20.23)、(20.25)。';
+  }else if(score===2){
+    r.classList.add('fail');
+    r.innerHTML='<b>寿命明显缩短。</b>不和谐振动已经出现，又叠加了「群体不混合」或「停滞」其中一条。这是介于设计值与急剧缩短之间的地带：当没有进展时，那些给予进展的条件就逐渐丧失 (20.17)。';
+  }else{
+    r.classList.remove('fail');
+    r.innerHTML='<b>缩短有限。</b>不和谐振动虽然在场，但人群分散或群体仍在混合，摩擦被稀释了——Ra 说第一个周期正因人们分散居住而「并不严重」；不过「朝向与其他自我分离的情感复合体变貌」仍在增长 (20.16)。';
+  }
+}
+['condA','condB','condC','condD'].forEach(id=>document.getElementById(id).addEventListener('change',runCondSim));
+runCondSim();
+
+renderPath();
+</script>
+</body>
+</html>

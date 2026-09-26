@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css">
+<title>死亡与归来 · 滚动星旅</title>
+<style>
+:root{
+  --amb:#f5efe2;          /* 当前场景氛围色，由 JS 实时插值 */
+  --ink:#efe9dd;
+  --ink-dim:rgba(239,233,221,.55);
+  --serif:"LXGW WenKai","霞鹜文楷","LXGW WenKai SC","Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:#070a12;color:var(--ink);font-family:var(--serif);
+  line-height:2;overflow-x:hidden;
+}
+canvas#sky{position:fixed;inset:0;width:100vw;height:100vh;z-index:0}
+
+/* ===== 进度轨道 ===== */
+#rail{
+  position:fixed;right:26px;top:50%;transform:translateY(-50%);z-index:8;
+  display:flex;flex-direction:column;gap:13px;align-items:flex-end;
+}
+#rail .r{display:flex;align-items:center;gap:10px;cursor:pointer}
+#rail .r i{
+  width:5px;height:5px;border-radius:50%;flex-shrink:0;
+  background:rgba(255,255,255,.16);transition:all .4s;
+}
+#rail .r.cur i{background:var(--amb);box-shadow:0 0 9px var(--amb);transform:scale(1.7)}
+#rail .lbl{
+  font-size:.72rem;letter-spacing:.12em;color:var(--ink);white-space:nowrap;
+  padding:3px 12px;border-radius:999px;background:rgba(7,10,18,.78);
+  border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(4px);
+  opacity:0;transform:translateX(10px);transition:all .35s ease;pointer-events:none;
+}
+#rail:hover .lbl{opacity:1;transform:none}
+#rail .r.cur .lbl{border-color:var(--amb);color:var(--amb)}
+
+main{position:relative;z-index:1}
+
+/* ===== 时刻场景（全屏居中） ===== */
+.scene{min-height:118vh;display:flex;align-items:center;justify-content:center;padding:14vh 22px}
+.stage{max-width:620px;text-align:center;opacity:0;transform:translateY(34px);filter:blur(6px);transition:opacity 1.6s ease,transform 1.6s ease,filter 1.6s ease}
+.scene.on .stage,.station.on .stage{opacity:1;transform:none;filter:blur(0)}
+.kicker{
+  font-size:.8rem;letter-spacing:.55em;text-indent:.55em;color:var(--amb);
+  margin-bottom:30px;opacity:.85;
+}
+.kicker::after{
+  content:"";display:block;width:34px;height:1px;margin:16px auto 0;
+  background:var(--amb);opacity:.5;
+}
+.narr{font-size:1.18rem;color:var(--ink);margin-bottom:38px;text-align:center}
+.en{
+  font-family:Georgia,"Times New Roman",serif;font-style:italic;
+  font-size:.98rem;line-height:1.9;color:var(--amb);opacity:.92;margin-bottom:16px;
+}
+.zh{font-size:.95rem;color:var(--ink-dim);margin-bottom:10px}
+.ref{font-size:.74rem;letter-spacing:.2em;color:rgba(239,233,221,.34)}
+
+/* ===== 站点（左钉住 · 右细节流） ===== */
+.station{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);align-items:stretch}
+.pin{
+  position:sticky;top:0;height:100vh;
+  display:flex;align-items:center;justify-content:center;padding:0 3vw;
+}
+.pin .stage{max-width:520px}
+.detail{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:10vh 5vw 10vh 0;
+}
+.frag{
+  min-height:60vh;display:flex;flex-direction:column;justify-content:center;
+  max-width:440px;
+  opacity:0;transform:translateY(30px);
+  transition:opacity 1.3s ease,transform 1.3s ease;
+}
+.frag.on{opacity:1;transform:none}
+.f-k{
+  font-size:.78rem;letter-spacing:.4em;color:var(--amb);opacity:.85;margin-bottom:18px;
+}
+.f-en{
+  font-family:Georgia,"Times New Roman",serif;font-style:italic;
+  font-size:.92rem;line-height:1.9;color:var(--amb);opacity:.9;
+  border-left:2px solid rgba(255,255,255,.18);padding-left:16px;margin-bottom:14px;
+}
+.f-zh{font-size:.93rem;color:var(--ink-dim);margin-bottom:8px}
+.f-ref{font-size:.72rem;letter-spacing:.2em;color:rgba(239,233,221,.32)}
+
+/* 开场 */
+#s0 .narr{font-size:1.5rem;letter-spacing:.1em;line-height:2.3}
+.hint{
+  margin-top:60px;font-size:.8rem;letter-spacing:.4em;text-indent:.4em;
+  color:var(--ink-dim);animation:drift 2.6s ease-in-out infinite;
+}
+@keyframes drift{0%,100%{transform:translateY(0);opacity:.45}50%{transform:translateY(9px);opacity:.95}}
+
+/* 可选演示区（如棱镜 / 时间线 / 对比路径） */
+.demo{margin:8px auto 42px}
+.timeline{position:relative;max-width:460px;margin:0 auto 42px;text-align:left;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:rgba(255,255,255,.14)}
+.tl-item{position:relative;padding:2px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:11px;height:11px;border-radius:50%;
+  background:#070a12;border:3px solid var(--amb)}
+.tl-item .t{font-weight:700;color:var(--amb);letter-spacing:.1em}
+.tl-item .d{font-size:.9rem;color:var(--ink-dim)}
+.paths{display:flex;gap:26px;justify-content:center;margin-top:46px;flex-wrap:wrap}
+.path{
+  width:210px;padding:30px 22px 26px;border-radius:16px;cursor:pointer;
+  border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.02);
+  transition:all .7s ease;
+}
+.path h3{font-size:1.05rem;letter-spacing:.3em;text-indent:.3em;margin-bottom:12px}
+.path p{font-size:.86rem;color:var(--ink-dim);line-height:1.9}
+.paths.p-a .path:not(.a),.paths.p-b .path:not(.b){opacity:.28;transform:scale(.96)}
+.paths.p-a .path.a,.paths.p-b .path.b{transform:scale(1.04)}
+
+/* 终章 */
+#sLast .en{font-size:1.06rem;line-height:2.2}
+#sLast .zh{font-size:1rem}
+.again{
+  margin-top:56px;font-family:var(--serif);font-size:.85rem;letter-spacing:.35em;text-indent:.35em;
+  color:var(--ink-dim);background:none;border:1px solid rgba(255,255,255,.14);
+  border-radius:999px;padding:11px 30px;cursor:pointer;transition:all .4s;
+}
+.again:hover{color:var(--ink);border-color:var(--amb)}
+
+footer{
+  position:relative;z-index:1;text-align:center;padding:40px 20px 56px;
+  font-size:.76rem;color:rgba(239,233,221,.3);letter-spacing:.08em;line-height:2.2;
+}
+@media (max-width:900px){
+  .station{display:block}
+  .pin{position:static;height:auto;padding:12vh 22px 2vh}
+  .pin .stage{margin:0 auto}
+  .detail{padding:0 22px 6vh;align-items:center}
+  .frag{min-height:auto;margin-bottom:7vh}
+}
+@media (max-width:640px){
+  .narr{font-size:1.05rem}
+  #s0 .narr{font-size:1.2rem}
+  #rail{display:none}
+}
+
+/* ===== 本章样式：三种死亡 · 对比路径 ===== */
+.path.nat h3{color:#c8b98a}
+.path.acc h3{color:#b07a55}
+.path.sui h3{color:#9a6f8e}
+.paths.p-nat .path:not(.nat),.paths.p-acc .path:not(.acc),.paths.p-sui .path:not(.sui){opacity:.28;transform:scale(.96)}
+.paths.p-nat .path.nat,.paths.p-acc .path.acc,.paths.p-sui .path.sui{transform:scale(1.04)}
+#s5 .paths .path p{font-size:.83rem}
+</style>
+</head>
+<body>
+
+<canvas id="sky"></canvas>
+<div id="rail"></div>
+
+<main>
+
+<!-- 0 沉睡与遗忘 -->
+<section class="scene" id="s0" data-c="#f5efe2">
+  <div class="stage">
+    <p class="narr">你正穿着一件叫身体的衣服。<br>总有一天它会脱下——<br>Ra 说，那不过是<br>一场沉睡与遗忘里，<br>睁一次眼。</p>
+    <p class="en">"The incarnation pattern of the beginning third-density mind/body/spirit complex begins in darkness, for you may think, or consider, of your density as one of, as you may say, a sleep and a forgetting."</p>
+    <p class="zh">开初的第三密度心/身/灵复合体，其投生模式始于黑暗——因为你可以把你们的密度看作，容我们说，一场沉睡与遗忘。</p>
+    <p class="ref">—— SESSION 021 · (21.9)</p>
+    <p class="hint">向下滚动 · 走到那扇门跟前 ▾</p>
+  </div>
+</section>
+
+<!-- 1 咽气的一刻 -->
+<section class="station" id="s1" data-c="#d8cdb8">
+  <div class="pin"><div class="stage">
+    <p class="kicker">咽气的一刻</p>
+    <p class="narr">床边的人常常手足无措，<br>其实那一刻最要紧的事<br>只有两件：<br>轻轻放手，<br>还有，为这段旅程赞颂。</p>
+    <p class="en">"In fact, the process of the physical death is as we have described before: one in which there is aid available, and the only need at death is the releasing of that entity from its body by those around it and the praising of the process by those who grieve."</p>
+    <p class="zh">事实上，物理死亡的过程如我们先前所述：其中有援助可用，而死亡时刻唯一需要的，是身边人把该实体从它的身体里释放出来，以及哀悼者对这过程的赞颂。</p>
+    <p class="ref">—— SESSION 051 · (51.6)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">不是仪式的事</p>
+      <p class="f-en">"By these means may the mind/body/spirit which has experienced physical death be aided, not by the various perceptions of careful and repeated rituals."</p>
+      <p class="f-zh">能让经历过物理死亡的心/身/灵得到帮助的，是这两件事——而不是那些精心设计、反复重复的仪式的各种观念。</p>
+      <p class="f-ref">—— SESSION 051 · (51.6)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">被画歪的死亡</p>
+      <p class="f-en">"These drawings of which you speak are some of many which distort the teaching of our perception of death as the gateway to further experience."</p>
+      <p class="f-zh">有人拿埃及的图画追问死亡的秘仪。Ra 说：这些正是许多把教导画歪的图——我们对死亡的感知，只是「通往进一步经验的门户」。</p>
+      <p class="f-ref">—— SESSION 051 · (51.6)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">相当完好</p>
+      <p class="f-en">"… The mind/body/spirit complex is quite intact; the physical body complex you now associate with the term "body" being but manifestation of a more dense, and intelligently informed, and powerful body complex."</p>
+      <p class="f-zh">化学身体脱落之后，心/身/灵复合体相当完好——你们此刻叫作「身体」的东西，只是一个更致密、更被智能充满、更强大的身体复合体的显化。</p>
+      <p class="f-ref">—— SESSION 030 · (30.3)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 2 形态制造者 -->
+<section class="station" id="s2" data-c="#41508c">
+  <div class="pin"><div class="stage">
+    <p class="kicker">形态制造者</p>
+    <p class="narr">黄色光芒的身体熄灭了。<br>第一件醒来的东西<br>不是幽灵，也不是光——<br>是那位安静的裁缝，<br>靛蓝色的形态制造者。</p>
+    <p class="en">"You have all bodies in potentiation."</p>
+    <p class="zh">问：从此刻这个黄色光芒身体物理死亡之后，我们立刻拥有哪些身体？Ra 答：你们拥有所有处于潜在状态的身体。</p>
+    <p class="ref">—— SESSION 047 · (47.9)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">第一个醒来的身体</p>
+      <p class="f-en">"The first body which activates itself upon death is the “form-maker,” or the indigo-ray body. This body remains—you have called it the “ka”—until etherea has been penetrated and understanding has been gained by the mind/body/spirit totality."</p>
+      <p class="f-zh">死亡时第一个自我激活的身体是「形态制造者」——靛蓝光芒体。你们叫它「卡」。它一直停留，直到以太领域被穿透、心/身/灵全体获得理解。</p>
+      <p class="f-ref">—— SESSION 047 · (47.11)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">以太里的休息室</p>
+      <p class="f-en">"The normal procedure, given an harmonious passage from yellow-ray bodily manifestation, is for the mind and spirit complex to rest in the etheric, or indigo, body until such time as the entity begins its preparation for experience in an incarnated place which has a manifestation formed by the etheric energy molding it into activation and manifestation."</p>
+      <p class="f-zh">正常程序是：只要从黄色光芒身体的过渡是和谐的，心智与灵复合体就在以太体——靛蓝体——中休息，直到实体开始为下一处投生体验做准备。</p>
+      <p class="f-ref">—— SESSION 047 · (47.15)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">新亡者的观景台</p>
+      <p class="f-en">"This indigo body, being intelligent energy, is able to offer the newly dead, as you would term it, soul a perspective and a place from which to view the experience most recently manifested."</p>
+      <p class="f-zh">这个靛蓝身体是智能能量，它能为刚死去的灵魂提供一个视角、一个位置——从那里回看刚刚走完的那段经验。</p>
+      <p class="f-ref">—— SESSION 047 · (47.15)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 3 时间/空间的书房 -->
+<section class="station" id="s3" data-c="#2e3c6e">
+  <div class="pin"><div class="stage">
+    <p class="kicker">时间/空间的书房</p>
+    <p class="narr">死后没有审判席。<br>时间/空间里有一间书房，<br>一生摊开成一本书——<br>没有监考人，<br>只有自我对自我的观察。</p>
+    <p class="en">"After the death of the physical complex in yellow-ray activation, the mind/body/spirit complex moves to a far different portion of time/space in which the indigo body will allow much healing and review to take place before any movement is made towards another incarnative experience."</p>
+    <p class="zh">黄色光芒激活的物理复合体死亡之后，心/身/灵复合体移动到时间/空间中远为不同的区域；在那里，靛蓝体将允许大量的疗愈与回顾发生，然后才迈向下一次投生体验。</p>
+    <p class="ref">—— SESSION 070 · (70.17)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">整本书摊开</p>
+      <p class="f-en">"It is true that the nature of time/space is such that a lifetime may be seen whole as a book or record, the pages studied, riffled through, and re-read."</p>
+      <p class="f-zh">时间/空间的本质，是让一生可以被完整地看作一本书或一份记录：书页被研究、被翻检、被重读。</p>
+      <p class="f-ref">—— SESSION 083 · (83.7)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">考的不是背诵</p>
+      <p class="f-en">"The testing upon the cessation of the incarnative state is not that testing which involves the correct memorization of many details. This testing is, rather, the observing of self by self, often with aid, as we have said."</p>
+      <p class="f-zh">投生状态停止时的测试，不是考你背熟了多少细节——它更是自我对自我的观察，如我们所说，常常有援助在场。</p>
+      <p class="f-ref">—— SESSION 083 · (83.7)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">造物主不监考</p>
+      <p class="f-en">"No portion of the Creator audits the course, to use your experiential terms. Each incarnation is intended to be a course in the Creator knowing Itself."</p>
+      <p class="f-zh">造物主没有任何部分会来审计这门课。每一次投生，本意就是「造物主认识它自己」的一堂课。</p>
+      <p class="f-ref">—— SESSION 082 · (82.25)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">一场自动的考试</p>
+      <p class="f-en">"Each incarnation will end with such a test. This is so that the portion of the Creator may assimilate the experiences in yellow-ray, physical third density, may evaluate the biases gained, and may then choose, either by means of automatically provided aid, or by the self, the conditions of the next incarnation."</p>
+      <p class="f-zh">每次投生都以这样一场测试结束：好让造物主的那一部分消化黄色光芒、物理第三密度中的经验，评估获得的偏见，然后——或借助自动提供的援助，或由自我——选择下一次投生的条件。</p>
+      <p class="f-ref">—— SESSION 082 · (82.25)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">被拉长的间隔</p>
+      <p class="f-en">"Thus the time, as you may understand it, between incarnations is lengthened to give appropriate attention to the review and the healing of experiences of the previous incarnation. At some point in third density, the green-ray energy center becomes activated, and at that point incarnation ceases to be automatic."</p>
+      <p class="f-zh">随着能量中心被更高程度地激活，投生之间的时间被拉长，好给前一世经验的回顾与疗愈以适当的关注。到了某个时点，绿色光芒被激活——投生从此不再是自动的。</p>
+      <p class="f-ref">—— SESSION 021 · (21.9)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 4 意志的钩子 -->
+<section class="station" id="s4" data-c="#232c4c">
+  <div class="pin"><div class="stage">
+    <p class="kicker">意志的钩子</p>
+    <p class="narr">大多数人顺利安息。<br>但也有一些光，<br>被一根看不见的钩子<br>留在原地——<br>那根钩子，叫意志。</p>
+    <p class="en">"… If the will of yellow-ray mind/body/spirit [complex] is that which is stronger than the progressive impetus of the physical death towards realization of that which comes—that is, if the will is concentrated enough upon the previous experience—the entity’s shell of yellow ray, though no longer activated, cannot either be completely deactivated and, until the will is released, the mind/body/spirit complex is caught."</p>
+    <p class="zh">如果黄色光芒心/身/灵的意志，强过物理死亡朝向「领悟即将来临之事」的渐进推动——也就是意志过于集中在先前的经验上——那么实体的黄色光芒外壳虽已不再激活，也无法完全解除激活；在意志松手之前，心/身/灵复合体会被卡住。</p>
+    <p class="ref">—— SESSION 047 · (47.13)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">被束缚的灵</p>
+      <p class="f-en">"Given the proper stimulus, this is correct."</p>
+      <p class="f-zh">问：死后若未觉察，实体是否会成为所谓的「被束缚于地球的灵」，直到获得激活某个身体所需的觉察？Ra 答：在适当的刺激下，是的。</p>
+      <p class="f-ref">—— SESSION 047 · (47.12)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">猝死与牵挂</p>
+      <p class="f-en">"This often occurs, as we see you are aware, in the case of sudden death as well as in the case of extreme concern for a thing or an other-self."</p>
+      <p class="f-zh">这种被卡住的情形，常发生在猝死之时，也发生在对某件事物或某个他人怀有极端牵挂之时。</p>
+      <p class="f-ref">—— SESSION 047 · (47.13)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">他者的呼唤</p>
+      <p class="f-en">"Occasionally an other-self will so demand the form of the one passing through the physical death that some semblance of the being will remain. This is orange ray."</p>
+      <p class="f-zh">偶尔，一个其他自我会如此强烈地索要那正在穿过物理死亡者的形貌，以致存有的某种相似之物残留下来。这是橙色光芒。</p>
+      <p class="f-ref">—— SESSION 047 · (47.14)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">一唤，一应</p>
+      <p class="f-en">"This is rare, for normally if one entity desires another enough to call it, the entity will have the corresponding desire to be called."</p>
+      <p class="f-zh">这很罕见——因为通常，若一个实体渴望另一个实体到愿意呼唤它的程度，那个实体也会有相应想被呼唤的渴望。</p>
+      <p class="f-ref">—— SESSION 047 · (47.14)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 5 三种死亡 -->
+<section class="scene" id="s5" data-c="#3a2f4f">
+  <div class="stage">
+    <p class="kicker">三种死亡</p>
+    <p class="narr">门是同一扇。<br>但走向门的姿势，<br>决定了门后最初的那段路。<br>（把光标放上去，或点一点）</p>
+    <p class="en">"However, the death, if natural, would undoubtedly be the more harmonious; the death by murder being confused and the entity needing some time/space in which to get its bearings, so to speak; the death by suicide causing the necessity for much healing work and, shall we say, the making of a dedication to the third density for the renewed opportunity of learning the lessons set by the higher self."</p>
+    <p class="zh">然而，若是自然死亡，无疑更为和谐；他杀致死是混乱的，实体需要一些时间/空间来——容我们说——找回方向；自杀致死则需要大量疗愈工作，并重新立下对第三密度的奉献，以再次获得学习高我所设课程的机会。</p>
+    <p class="ref">—— SESSION 069 · (69.6)</p>
+    <div class="paths" id="paths">
+      <div class="path nat" data-k="nat"><h3>自然</h3><p>老病与天时里走完，<br>无疑是三者中<br>最和谐的走法。</p></div>
+      <div class="path acc" data-k="acc"><h3>意外 · 他杀</h3><p>死得混乱，<br>要先在时间/空间里<br>停一停，找回方向。</p></div>
+      <div class="path sui" data-k="sui"><h3>自杀</h3><p>需要大量疗愈，<br>并重新奉献自己<br>给第三密度，再修一遍。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 轻生的回应 -->
+<section class="station" id="s6" data-c="#523a58">
+  <div class="pin"><div class="stage">
+    <p class="kicker">轻生的回应</p>
+    <p class="narr">有人问 Ra：<br>如果一个人自己选择了结呢？<br>Ra 没有审判，<br>只是把门后的路如实指出。</p>
+    <p class="en">"We presume you mean to inquire whether in the death experience, no matter what the cause, the negative friends are not able to remove an entity. This is correct largely because the entity without the attachment to the space/time physical complex is far more aware and without the gullibility which is somewhat the hallmark of those who love wholeheartedly."</p>
+    <p class="zh">我们假定你在询问：无论死因为何，那些负面的「朋友们」都无法带走这个实体，对吗？大体正确——因为不再依附空间/时间物理复合体的实体，觉知远为清明，也没有全心全意去爱的人常带的那种轻信。</p>
+    <p class="ref">—— SESSION 069 · (69.6)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">殉道者的选择</p>
+      <p class="f-en">"… the choice of the martyr; that is, to put value in a fatal action and die, or to put value on consciousness of the creation and of the One Creator and, thereby, live. The instrument, through will, chose the latter path."</p>
+      <p class="f-zh">剧烈的催化剂会把人推到那个古老的选择跟前：把价值放在致命的行动上而死，或把价值放在对造物与太一造物主的意识上而活。器皿凭意志选了后者。</p>
+      <p class="f-ref">—— SESSION 103 · (103.4)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">意志之外</p>
+      <p class="f-en">"However, the mind and mental/emotional distortions did not give the support to this decision necessary to maintain a state of unity which this entity normally experiences and has experienced since its incarnation’s beginnings."</p>
+      <p class="f-zh">然而，凭意志选了活下去还不够——心智与心智/情感的变貌若不跟上，那种该实体素来体验的合一状态，便难以维持。</p>
+      <p class="f-ref">—— SESSION 103 · (103.4)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">都会对幻象死一次</p>
+      <p class="f-en">"It is indeed so that all mind/body/spirit complexes shall die to the third-density illusion; that is, that each yellow-ray physical-complex body shall cease to be viable."</p>
+      <p class="f-zh">确实如此：所有心/身/灵复合体都将对第三密度幻象死亡——也就是说，每个黄色光芒物理复合体身体都将停止存活。</p>
+      <p class="f-ref">—— SESSION 084 · (84.4)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">留给献出生命的人</p>
+      <p class="f-en">"It is a misnomer to, for this reason alone, call each mind/body/spirit complex a martyr, for this term is reserved for those who lay down their lives for the service they may provide to others."</p>
+      <p class="f-zh">仅仅因为每个人都会死，就把每个心/身/灵复合体叫作殉道者，是用词不当——这个词，只留给那些为可能给予他人的服务而献出生命的人。</p>
+      <p class="f-ref">—— SESSION 084 · (84.4)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 7 伤口的疗愈 -->
+<section class="station" id="s7" data-c="#6e4438">
+  <div class="pin"><div class="stage">
+    <p class="kicker">伤口的疗愈</p>
+    <p class="narr">有些死亡不是一个人的事。<br>核火之下的死，<br>是整颗行星的伤——<br>而疗愈从来不挑人，<br>受害者和加害者一起被抱起来。</p>
+    <p class="en">"Such actions as nuclear destruction affect the entire planet. There are no differences at this level of destruction, and the planet will need to be healed."</p>
+    <p class="zh">像核毁灭这样的行动会影响整颗行星。在这个毁灭层级上没有分别，行星将需要被疗愈。</p>
+    <p class="ref">—— SESSION 026 · (26.27)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">收割不受阻</p>
+      <p class="f-en">"This is incorrect. Once the healing has taken place the harvest may go forth unimpeded."</p>
+      <p class="f-zh">问：核弹下的死亡，会不会创伤重到让一个本可收割的实体无法收割？Ra 答：不会。疗愈一旦发生，收割便畅通无阻。</p>
+      <p class="f-ref">—— SESSION 026 · (26.28)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">不分受害者与加害者</p>
+      <p class="f-en">"However, the entire planet will undergo healing for this action, no distinction being made betwixt victim and aggressor, this due to damage done to the planet."</p>
+      <p class="f-zh">不过，整颗行星都将为此行动经历疗愈——在受害者与加害者之间不作区分，因为受伤的是行星本身。</p>
+      <p class="f-ref">—— SESSION 026 · (26.28)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">阿肯那顿的课后</p>
+      <p class="f-en">"This entity was then put through the series of healing and review of incarnational experience which is appropriate for third-density experience."</p>
+      <p class="f-zh">那位推行一的法则的法老死后如何？Ra 说：他随后经历了适合第三密度体验的一系列疗愈与投生经验回顾。</p>
+      <p class="f-ref">—— SESSION 023 · (23.12)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">不再握权柄的决意</p>
+      <p class="f-en">"This entity thus resolved to enter a series of incarnations in which it had no distortions towards power."</p>
+      <p class="f-zh">对一的法则的巨大奉献缓解了他的权力变貌。于是这个实体决意：进入一连串不再执掌权力的投生。</p>
+      <p class="f-ref">—— SESSION 023 · (23.12)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 8 投生前的编程 -->
+<section class="station" id="s8" data-c="#6e5a3d">
+  <div class="pin"><div class="stage">
+    <p class="kicker">投生前的编程</p>
+    <p class="narr">回来之前，你坐下来，<br>像排一张课表：<br>这一世学几门课，<br>多疼，多难——<br>都是你自己点的。</p>
+    <p class="en">"… Thus if one opportunity is missed, another will appear until the, shall we say, student of the life experience grasps that a lesson is being offered and undertakes to learn it."</p>
+    <p class="zh">如果一个机会错过了，另一个就会出现——直到那名生命体验的学生领悟到：有一门课正在被提供，并着手去学它。</p>
+    <p class="ref">—— SESSION 033 · (33.6)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">自己排课表</p>
+      <p class="f-en">"The incarnating entity which has become conscious of the incarnative process and thus programs its own experience may choose the amount of catalyst or, to phrase this differently, the number of lessons which it will undertake to experience and to learn from in one incarnation."</p>
+      <p class="f-zh">已经意识到投生过程、从而自行编程其体验的投生实体，可以选择催化剂的数量——换句话说，选择一次投生中要经历并学习的课程数量。</p>
+      <p class="f-ref">—— SESSION 033 · (33.6)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">不是宿命</p>
+      <p class="f-en">"This does not mean that all is predestined, but rather that there are invisible guidelines shaping events which will function according to this programming."</p>
+      <p class="f-zh">这不意味着一切皆是注定——而是有无形的指引在塑造事件，它们依照这份编程运作。</p>
+      <p class="f-ref">—— SESSION 033 · (33.6)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">连死亡也在课表上</p>
+      <p class="f-en">"It is possible that an extremely positively oriented entity might program for itself situations testing the ability of self to refrain from defensive action, even to the point of the physical death of self or other-self."</p>
+      <p class="f-zh">一个极其正面导向的实体，可能为自己编程了考验「克制防御行动」的情境——甚至到自我或其他自我物理死亡的程度。</p>
+      <p class="f-ref">—— SESSION 033 · (33.9)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">Ra 拒绝偷看</p>
+      <p class="f-en">"We may, if we desire, read this programming. However, this is an infringement and we choose not to do so."</p>
+      <p class="f-zh">Ra 有能力读取每个人的编程，却拒绝偷看：那是一种侵犯。谁的课表，只归谁知道。</p>
+      <p class="f-ref">—— SESSION 033 · (33.9)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 9 面纱之前 -->
+<section class="scene" id="s9" data-c="#a07b46">
+  <div class="stage">
+    <p class="kicker">面纱之前</p>
+    <p class="narr">在遗忘被设计出来之前，<br>死亡并不吓人——<br>它只是身体自然走完的路。<br>因为谁都知道：<br>心/身/灵会继续。</p>
+    <p class="en">"The patterns of illness, disease, and death are a benignant demesne within the plan of incarnational experience.[143]"</p>
+    <p class="zh">疾病、病症与死亡的模式，是投生体验计划中一个仁慈的领域。</p>
+    <p class="ref">—— SESSION 105 · (105.18)</p>
+    <p class="en">"… As such, some healing would occur by decision of mind/body/spirits, and incarnations were experienced with the normal ending of illness to death, accepted as such since, without the veil, it is clear that the mind/body/spirit continues."</p>
+    <p class="zh">一些疗愈会依心/身/灵的决定而发生；投生以从病到死的正常终结收尾，并被如此接受——因为没有面纱，心/身/灵会继续，是清清楚楚的事。</p>
+    <p class="ref">—— SESSION 105 · (105.18)</p>
+  </div>
+</section>
+
+<!-- 10 归来 -->
+<section class="station" id="s10" data-c="#c99e63">
+  <div class="pin"><div class="stage">
+    <p class="kicker">归来</p>
+    <p class="narr">课修完了，伤疗好了，<br>门又开了。<br>这一次，你带着全部的清醒，<br>挑下一世的父母、<br>下一世的疼与爱。</p>
+    <p class="en">"Thus fourth-density experience may be begun with the added attraction, to an entity oriented towards service to others, of dwelling in a troubled third-density environment and offering its love and compassion."</p>
+    <p class="zh">于是，对一个倾向服务他人的实体来说，第四密度体验可以带着一种额外的吸引力开始：居住在一个困扰的第三密度环境里，奉献它的爱与慈悲。</p>
+    <p class="ref">—— SESSION 063 · (63.14)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">双重身体也要死一次</p>
+      <p class="f-en">"The third and fourth, combination, density's body will die according to the necessity of third-density mind/body/spirit-complex distortions."</p>
+      <p class="f-zh">连带着双重激活身体、准备跨入第四密度的实体，也要经历死亡——那结合第三、第四密度的身体，依第三密度心/身/灵复合体变貌的必要性而死。</p>
+      <p class="f-ref">—— SESSION 063 · (63.14)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">百分之五十四</p>
+      <p class="f-en">"The approximate percentage is five four, fifty-four [54] percent."</p>
+      <p class="f-zh">问：是否连父母也是自己选的？Ra 答：正确。而周期将尽之时，约百分之五十四的投生实体，正在亲手做出自己的选择。</p>
+      <p class="f-ref">—— SESSION 021 · (21.11)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">失去的只有表层</p>
+      <p class="f-en">"In your terms, there is a great loss of mind complex due to the fact that much of the activity of a mental nature of which you are aware during the experience of this space/time continuum is as much of a surface illusion as is the chemical body complex."</p>
+      <p class="f-zh">死亡确实带走一样东西：心智复合体的大量活动。因为你在这空间/时间连续体中觉知到的心智活动，和化学身体一样，只是表层幻象。</p>
+      <p class="f-ref">—— SESSION 030 · (30.4)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 11 没有什么丢失 -->
+<section class="scene" id="sLast" data-c="#f5efe2">
+  <div class="stage">
+    <p class="kicker">没有什么丢失</p>
+    <p class="narr">死亡拿走了衣服，<br>拿走了名字，<br>拿走了心智的表层——<br>却没有拿走任何重要的东西。</p>
+    <p class="en">"In other terms, nothing whatever of importance is lost; the character or, shall we say, pure distillation of emotions and biases, or distortions and wisdoms, if you will, becoming obvious for the first time, shall we say; these pure emotions and wisdoms and bias-distortions being, for the most part, either ignored or underestimated during physical life experience."</p>
+    <p class="zh">换句话说，没有任何重要的东西丢失；性格——或说情绪与偏见、变貌与智慧的纯粹蒸馏——第一次变得显明；而这些纯粹的情绪、智慧与偏见变貌，在物理生命体验中，大部分被忽视或低估了。</p>
+    <p class="ref">—— SESSION 030 · (30.4)</p>
+    <p class="en">"We leave you now in the love and in the light of the One Infinite Creator. Go forth, therefore, rejoicing in the power and in the peace of the One Infinite Creator."</p>
+    <p class="zh">我们如今在太一无限造物主的爱与光中离开你们。因此，向前去吧，在太一无限造物主的力量与平安中欢欣。</p>
+    <p class="ref">—— SESSION 047 · (47.16)</p>
+    <button class="again" id="again">再走一遍这段旅程</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+死亡与归来 · 滚动星旅 · 内容取自《一的法则》十余次集会关于死亡、回顾与转世的讨论<br>
+引文为英文原文逐字摘录；中文为本页面自拟 · 仅作沉浸学习实验
+</footer>
+
+<script>
+/* ===== 星空画布（固定，勿改） ===== */
+const cv=document.getElementById('sky'),cx=cv.getContext('2d');
+let W,H,stars=[];
+function size(){W=cv.width=innerWidth*devicePixelRatio;H=cv.height=innerHeight*devicePixelRatio;}
+size();addEventListener('resize',size);
+for(let i=0;i<230;i++)stars.push({x:Math.random(),y:Math.random(),z:.25+Math.random()*.75,p:Math.random()*6.28,s:Math.random()});
+
+/* ===== 氛围色插值（固定，勿改） ===== */
+function hex2rgb(h){h=h.replace('#','');if(h.length===3)h=h.split('').map(c=>c+c).join('');return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
+const scenes=[...document.querySelectorAll('.scene,.station')].map(s=>({el:s,c:hex2rgb(s.dataset.c)}));
+let amb=[245,239,226];
+function lerp(a,b,t){return a+(b-a)*t}
+function rgb2css(c,a){return `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${a})`}
+
+/* ===== 渲染循环（固定，勿改） ===== */
+let t=0;
+function frame(){
+  t+=.016;
+  const sy=scrollY,wh=innerHeight;
+  let target=scenes[0].c;
+  for(const s of scenes){
+    const r=s.el.getBoundingClientRect();
+    if(r.top<wh*.55&&r.bottom>wh*.45){target=s.c;break}
+  }
+  for(let i=0;i<3;i++)amb[i]=lerp(amb[i],target[i],.045);
+  const ac=amb;
+  document.documentElement.style.setProperty('--amb',rgb2css(ac,1));
+
+  cx.clearRect(0,0,W,H);
+  const g=cx.createRadialGradient(W/2,H*.86,0,W/2,H*.86,H*.75);
+  g.addColorStop(0,rgb2css(ac,.10));g.addColorStop(1,'rgba(0,0,0,0)');
+  cx.fillStyle=g;cx.fillRect(0,0,W,H);
+  const dark=1-Math.min(1,(Math.hypot(ac[0]-245,ac[1]-239))/200);
+  for(const st of stars){
+    const px=st.x*W,py=((st.y - sy*.00004*st.z)%1+1)%1*H;
+    const tw=.5+.5*Math.sin(t*1.3+st.p);
+    cx.globalAlpha=(0.12+0.5*tw*st.z)*(0.35+0.65*dark);
+    cx.fillStyle=rgb2css(ac,1);
+    const r=st.s*1.4*st.z*devicePixelRatio;
+    cx.beginPath();cx.arc(px,py,r,0,6.28);cx.fill();
+  }
+  const oy=H*.62+Math.sin(t*.8)*10*devicePixelRatio;
+  const og=cx.createRadialGradient(W/2,oy,0,W/2,oy,26*devicePixelRatio);
+  og.addColorStop(0,rgb2css(ac,.9));og.addColorStop(.35,rgb2css(ac,.25));og.addColorStop(1,'rgba(0,0,0,0)');
+  cx.globalAlpha=1;cx.fillStyle=og;
+  cx.beginPath();cx.arc(W/2,oy,26*devicePixelRatio,0,6.28);cx.fill();
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+/* ===== 场景显影（固定，勿改） ===== */
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>e.target.classList.toggle('on',e.isIntersecting));
+},{threshold:.01});
+document.querySelectorAll('.scene,.station').forEach(s=>io.observe(s));
+
+/* 细节片段显影（固定，勿改） */
+const ioFrag=new IntersectionObserver(es=>{
+  es.forEach(e=>e.target.classList.toggle('on',e.intersectionRatio>.15));
+},{threshold:[0,.35,.6]});
+document.querySelectorAll('.frag').forEach(f=>ioFrag.observe(f));
+
+/* ===== 进度轨道（固定，勿改） ===== */
+const rail=document.getElementById('rail');
+scenes.forEach((s,i)=>{
+  const row=document.createElement('div');row.className='r';
+  const lbl=document.createElement('span');lbl.className='lbl';
+  const k=s.el.querySelector('.kicker');
+  lbl.textContent=k?k.textContent.trim():(i===0?'开始':'终章');
+  const d=document.createElement('i');
+  row.appendChild(lbl);row.appendChild(d);
+  row.onclick=()=>s.el.scrollIntoView({behavior:'smooth'});
+  rail.appendChild(row);
+});
+setInterval(()=>{
+  const wh=innerHeight;
+  scenes.forEach((s,i)=>{
+    const r=s.el.getBoundingClientRect();
+    rail.children[i].classList.toggle('cur',r.top<wh*.55&&r.bottom>wh*.45);
+  });
+},200);
+
+/* ===== 本章定制交互：三种死亡 · 对比路径 ===== */
+const paths=document.getElementById('paths');
+document.querySelectorAll('.path').forEach(p=>{
+  const k='p-'+p.dataset.k;
+  const lit=()=>{paths.classList.remove('p-nat','p-acc','p-sui');paths.classList.add(k);};
+  const dim=()=>paths.classList.remove('p-nat','p-acc','p-sui');
+  p.addEventListener('mouseenter',lit);
+  p.addEventListener('mouseleave',dim);
+  p.addEventListener('click',()=>{dim();lit();});
+});
+
+/* ===== 回到开头 ===== */
+document.getElementById('again').onclick=()=>scrollTo({top:0,behavior:'smooth'});
+</script>
+</body>
+</html>

@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 039 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 039 · 交互式学习模块</h1>
+  <p class="sub">这一集从器皿的身体透支谈起，一路问到「七」的普遍性与形而上电，最后给出从红光到紫罗兰的完整光芒结构，以及正负两种极化在光芒配置上的分岔点。</p>
+  <div class="tagline">6 个主题 · 6 个学习步骤 · 26 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 器皿的透支与边界</a>
+<a href="#s3">③ 七与灵性质量</a>
+<a href="#s4">④ 被遮蔽的陈述</a>
+<a href="#s5">⑤ 七道光芒</a>
+<a href="#s6">⑥ 正负配置与收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>三条线索如何交错，以及本集从上一集承接了什么、给下一集留了什么</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>器皿的透支与边界</b><span>两次摄入的加倍效应、负面实体的集中攻击，以及 Ra 为何说某个询问「接近侵犯」</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>七与灵性质量</b><span>从别人的一句话出发，进入形而上电与灵性质量的领域</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>被遮蔽的陈述</b><span>恒定者与短暂者之间的渴望，以及 Ra 的两次「短答」与一次「不说也行」</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>七道光芒的结构</b><span>红光到紫罗兰各自的职能，配术语卡与归类练习</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>正负配置与收官</b><span>红光为何两边相同、之后在哪里分岔，以及本集留下的接口</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：三条线索交错的一集</h2></div>
+  <p class="sec-lead">这一集没有开启新的大主题，而是三条线索来回穿插：先处理器皿的身体与集会节奏（39.1–39.3），再由发问者带着别人的抄本提问（39.4–39.9），最后落到身体能量中心的七道光芒（39.10–39.12）。与上一集的衔接点由 Ra 自己点明——关于第一、第二密度各驻留哪道光芒，Ra 在 39.10 说这份材料先前已在一定程度上谈过，所以这次不重复、只扩展；而正负两种极化在各道光芒上的具体差异，Ra 只作了简短回答，并说可以在另一次集会中继续问，这个被推迟的题目就是本集交给下一次的接口。</p>
+  <div class="card">
+    <h3>问答脉络：八段一收尾</h3>
+    <p>整集可以切成八段。点节点看每一段在做什么；特别注意 (39.7)(39.8) 两处，Ra 的回答加起来不到一句话——</p>
+    <div class="demo-area">
+      <div class="flow-track" id="qaTrack"></div>
+      <div class="flow-detail" id="qaDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="qaPrev">← 上一步</button> <button class="tri-btn" id="qaNext">下一步 →</button></div>
+    </div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 集会节奏 · 开场收尾</span></summary>
+  <div class="body">
+    <p><b>(39.1) 器皿状态：</b>两次化学物质摄入造成加倍效应，身体复合体正处在最剧烈的衰弱/变貌期；预计这段极端期还要持续十五到二十个日周期，之后才开始减轻，而减轻的速度会比 Ra 原先估计的更慢。</p>
+    <p><b>(39.2) 康复与照料：</b>这段时期器皿将大量参与以神圣歌曲的声音振动复合体崇拜太一造物主；充满爱的社交互动也有实质益处。（其中涉及普遍教导的部分见第 02 章。）</p>
+    <p><b>(39.3) 集会节奏：</b>Ra 说这类精确日程的询问接近侵犯，只给可遵循的原则——每隔一个日周期在晨间做一次，遇到空闲的晨间可另做一次较短的；不只这段时期，普遍适用。</p>
+    <p><b>(39.4)/(39.11)/(39.13) 开场与收尾：</b>以「在太一无限造物主的爱与光中致意」开场；39.11 提前宣布这是本次最后一个完整问题，39.12 后只接受简短问题；39.13 问器皿舒适度，Ra 答「一切都好」，以 Adonai 作结。</p>
+  </div></details>
+  <div class="case"><b>先声明「我可能会说错」的那个提问者：</b>周三晚的选题会上，小周开场就说：「我先抛一个不成熟的方向，可能完全错了，大家随时打断我。」——本集发问者在 (39.4) 里正是这么开场的：他先说明自己正在摸索一条提问路线、可能会犯几个错误，并为「我的提问可能是误导性的」提前道歉。把自己放在可被纠正的位置，本身就是一次校准动作。</div>
+  <div class="case"><b>拿着别家资料来问自己的专家：</b>小林在一份外文会议抄本里读到一句：「只要拿到人体电性当量的七倍，就会产生电质量的七次元。」他看不懂，于是把这句话原样带去问自己信任的物理学家。这就是 Don 在这一集的提问方式——从 Henry Puharich 记录的《九人组》（The Nine）材料里摘出一句，交给 Ra 判断。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>器皿的透支与边界：Ra 为何说「这个询问接近侵犯」</h2></div>
+  <p class="sec-lead">开头三个问答看起来都是照料器皿，但每一段里都藏着可普遍化的东西：摄入为什么会叠加、为什么最肯服务的人反而看不清自己的极限、以及 Ra 在什么情况下会拒答。第三条尤其值得读——它示范了自由意志法则在通讯里怎么落地。</p>
+  <div class="card">
+    <h3>两次摄入的加倍效应</h3>
+    <div class="q">器皿觉得自己变得脆弱，是不是六周前那次化学物质摄入的后遗症？</div>
+    <div class="quote">
+      <p class="en">This instrument is now undergoing the most intensive period of physical-complex debilitation/distortion due to the doubling effects of the two ingestions.</p>
+      <p class="zh">这个器皿此刻正经历身体复合体最剧烈的衰弱/变貌期，起因是那两次摄入所带来的加倍效应。</p>
+      <span class="src">—— Session 039 · (39.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This instrument may expect this extremity to proceed for a period of fifteen to twenty of your diurnal cycles. The weakness distortions will then begin to lift…</p>
+      <p class="zh">这个器皿可以预期，这种极端状态还会持续十五到二十个你们的日周期；在那之后，衰弱的变貌才会开始消退……</p>
+      <span class="src">—— Session 039 · (39.1)</span>
+    </div>
+    <div class="plain">两次摄入不是相加，而是加倍；眼下正是最剧烈的一段，预计十五到二十天之后才开始回升，而且回升得比 Ra 原先估计的更慢。</div>
+    <div class="analogy"><b>两场比赛之间没有恢复期：</b>第二场的代价不是把第一场再累加一遍，而是在尚未修复的身体上相乘——所以恢复期会拉长，进展也不像乐观估计那样快。</div>
+    <div class="case"><b>连跑两场全马的跑者：</b>小林四月、五月各跑了一场马拉松，中间只隔三周。教练看完他的静息心率说：「这次别指望两周就恢复，至少要十五到二十天，而且不会像上次那么快。」——Ra 对器皿说的「doubling effects」以及那句 not as rapidly as we first thought，讲的就是这种非线性叠加：多付一次成本，代价是乘上去的。</div>
+  </div>
+  <div class="card">
+    <h3>器皿的强项，同时也是她的盲点</h3>
+    <div class="q">她那么愿意服务，为什么反而看不出自己身体到什么程度了？</div>
+    <div class="quote">
+      <p class="en">This instrument is capable of almost instantaneously clearing the mental/emotional complex and the spiritual complex for the purity this working requires…</p>
+      <p class="zh">这个器皿几乎能在一瞬间清空心智/情绪复合体与灵性复合体，达到这次工作所要求的纯度……</p>
+      <span class="src">—— Session 039 · (39.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">but this instrument’s distortion towards fidelity to service does not function to its best use of judgment regarding the weakness distortions of the physical complex</p>
+      <p class="zh">但这个器皿朝向「对服务的忠诚」的变貌，使它在判断身体复合体的衰弱变貌时，无法发挥最好的判断力。</p>
+      <span class="src">—— Session 039 · (39.1)</span>
+    </div>
+    <div class="plain">心智与灵性层面她几乎瞬间就能到位，身体层面却因为太忠于服务而判断失准——所以这个支持小组必须替她按住刹车。</div>
+    <div class="case"><b>项目组里最能扛的那个人：</b>阿 May 从不说「我做不完」。周五她手上已经有两份活，还在接第三份，组长直接抽走一个模块：「这周不许你再接了。」Ra 说这正是这个支持小组的作用——器皿自己也看不准身体的极限，需要外面的人替她把关；他们最近决定取消那次集会，Ra 的评价是「This was the appropriate decision」。</div>
+  </div>
+  <div class="card">
+    <h3>负面实体的孤注一掷，与真正有益的事</h3>
+    <div class="q">除了她已经在做的，还有什么能让状况好转得快一些？</div>
+    <div class="quote">
+      <p class="en">As we have implied, the negative entities are moving all stops out to undermine this instrument at this time. This is the cause of the aforementioned problem with the pedal digit.</p>
+      <p class="zh">正如我们已经暗示过的，负面实体此刻正倾尽全力削弱这个器皿，前面提到的脚趾问题正是由此而来。</p>
+      <span class="src">—— Session 039 · (39.2)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The more active physical existence, both in the movements of exercise and in the sexual sense, are helpful. However, the requirements of this instrument’s distortions towards what you would call ethics have an effect upon this latter activity.</p>
+      <p class="zh">更活跃的身体存在——无论是运动，还是你们所说的性意义上的活动——都是有益的。然而，这个器皿朝向你们所谓的「伦理」的变貌，对后一种活动有所影响。</p>
+      <span class="src">—— Session 039 · (39.2)</span>
+    </div>
+    <div class="plain">脚趾的毛病不是偶然，Ra 把它归因于负面实体在此刻把全部力量压上来；对症的做法是更活跃的身体活动与充满爱的社交，但器皿自己的伦理标准限制了其中一部分。最后 Ra 说，基本上这只是个时间问题。</div>
+    <div class="analogy"><b>把所有筹码推上桌的那一刻：</b>不是零星的干扰，而是在对手最虚弱的那一天孤注一掷——Ra 用的说法是「moving all stops out」，形容的正是这种不留余力的打法。</div>
+    <div class="case"><b>上线前连环冒出来的小故障：</b>周五傍晚准备发版，打印机卡纸、门禁失灵、编译服务器的网线被踢松——单独看每件都是小事，凑在一起就成了事故。Ra 把器皿的脚趾问题解释为同一类事情：不是随机，而是对方选在最脆弱的时间点集中施压。</div>
+    <div class="case"><b>健身计划里悄悄加了道德条款：</b>医生建议阿哲每周游泳三次改善睡眠，他给自己加了一条「必须早上五点起床游两千米才算练」。两周后他一次都没去。Ra 说的情形与此同类——有益的活动被「伦理」的变貌卡住，最后吃亏的不是标准，是身体。</div>
+  </div>
+  <div class="card">
+    <h3>「这个询问接近侵犯」：Ra 拒绝给精确日程</h3>
+    <div class="q">你能不能估算一下，我们未来可以多频繁、多长地举行集会？</div>
+    <div class="quote">
+      <p class="en">This query borders upon infringement. The information given sets up fairly followable guidelines.</p>
+      <p class="zh">这个询问接近侵犯。已经给出的信息，已经足以建立相当可遵循的指导方针。</p>
+      <span class="src">—— Session 039 · (39.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">we are aware that not only can each of you not read this instrument’s aura and so see conditions of the physical complex, but also the instrument itself has considerable difficulty penetrating the precise distortion-condition of its physical complex due to its constant dependence upon its will to serve</p>
+      <p class="zh">我们意识到：你们每个人都读不到这个器皿的光环，因而看不见它身体复合体的状况；而且器皿本身由于一直依赖自己那份服务的意志，也很难穿透自己身体复合体的精确变貌状态。</p>
+      <span class="src">—— Session 039 · (39.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Therefore, we believe we are not infringing if we indicate that one working each alternate diurnal period in the matinal hours is most appropriate with the possibility of a shorter working upon the free matinal period if deemed appropriate.</p>
+      <p class="zh">因此我们相信，如果我们指出：每隔一个日周期、在晨间时段举行一次集会最为合适，而遇到空闲的晨间时段、若认为适当还可以加一次较短的集会——这样说并不构成侵犯。</p>
+      <span class="src">—— Session 039 · (39.3)</span>
+    </div>
+    <div class="plain">替对方做出精确决定是侵犯；但把已经给过的信息整理成一条可遵循的原则——隔日晨间一次、闲时另加一次短的——就不算侵犯，而且这条原则不只适用于眼下这段时期。</div>
+    <div class="analogy"><b>向教练要一张「必胜训练表」：</b>他不会给你保证，只给原则：隔天练一次、状态好时加一次短课。到底哪天练、练多久，仍然得你自己判断——他要是替你排死了，你就没有判断的余地了。</div>
+    <div class="case"><b>营养师不肯给你精确克数：</b>小唐追问「每天到底该吃多少克蛋白」，营养师回答：「这个问法已经越界了，我不会替你定死；但我可以给你可遵循的原则——训练日加一份，休息日按饥饿感到位。」Ra 在 (39.3) 的处理方式完全一样：先点出询问越界，再给原则。</div>
+    <div class="case"><b>问医生「我爸还剩几个月」：</b>医生如果给出一个确定数字，家属接下来所有的安排都会被这个数字绑住。他通常只说「按目前的情况，可以准备后面的事了」——给方向、不给定数。这就是 (39.3) 里「接近侵犯」的含义：决定权必须留在当事人手里。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>七与灵性质量：从人体电性当量到太一造物主</h2></div>
+  <p class="sec-lead">发问者发现「大多数基本事物似乎都被分成总计为七的单位」，于是拿着一句别人的话请 Ra 解释。Ra 的回应从「这超出你们语言的能力」开始，却依然给出了一整段可用的模型：造物之初的两套潜能、真正的质量在于场的强度、以及灵性质量如何随着密度增长直到收束。</p>
+  <div class="card">
+    <h3>先划边界，再解释</h3>
+    <div class="q">《九人组》说「若取得人体电性当量的七倍，就会产生电质量的七次元」——这句话能解释吗？</div>
+    <div class="quote">
+      <p class="en">To explain this is beyond the abilities of your language. We shall, however, make an attempt to address this concept.</p>
+      <p class="zh">要解释这一点，超出了你们语言的能力。不过，我们仍会尝试阐述这个概念。</p>
+      <span class="src">—— Session 039 · (39.4)</span>
+    </div>
+    <div class="plain">Ra 先承认语言承载不了，再动手解释——接下来这一整段关于形而上电的说明，都带着「说得不够精确」这个前提。</div>
+    <div class="case"><b>被学生逼到墙角的高中物理老师：</b>小周追问「引力为什么会有」，老师停了两秒说：「这个问题已经超出我们这门课的语言能讲的范围了，但我可以给你一个能用的模型。」——Ra 这一段与老师的处理方式一模一样，承认边界并不妨碍给模型，关键是别把模型说成真相。</div>
+  </div>
+  <div class="card">
+    <h3>两种电：物理的，与形而上的</h3>
+    <div class="q">这句话为什么要从「造物之初」讲起？</div>
+    <div class="quote">
+      <p class="en">in the beginning of the creations set up by each Logos, there are created the complete potentials, both electrical (in the sense of the one you call Larson) and metaphysical.</p>
+      <p class="zh">在每个理则（Logos）所建立的造物之初，完整的潜能就已被造出——既有你们称为拉尔森（Larson）意义上那种电性的潜能，也有形而上的潜能。</p>
+      <span class="src">—— Session 039 · (39.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This metaphysical electricity is as important in the understanding, shall we say, of this statement as is the concept of electricity.</p>
+      <p class="zh">可以说，要理解这个陈述，形而上电这个概念的重要性，和「电」这个概念是一样的。</p>
+      <span class="src">—— Session 039 · (39.4)</span>
+    </div>
+    <div class="plain">形而上电（metaphysical electricity）——与物理的电相对应的那个层面；Ra 说它和电性潜能一样，在每个理则造物之初就被完整造出，所以要读懂那句话，两者必须一起看。</div>
+    <div class="analogy"><b>交付时就写进图纸的两套系统：</b>一栋楼交付那天，电路已经布好，「住进去的人愿不愿意回家」的那种气氛也已经定形。后者没人画在图上，却和布线一样真实地决定这栋楼怎么运转。</div>
+    <div class="case"><b>项目立项那天同时定下的两件事：</b>三月一号的立项会上，团队既敲定了 KPI（写在会议纪要里、可被考核的那种），也定下了「这帮人到底信不信彼此」。第二条没人写下来，但从第一天起就在运行，后面所有的摩擦都在它里面发生。Ra 说的「两种完整潜能」就是这个意思：电性的与形而上的，都在造物之初一并造出。</div>
+  </div>
+  <div class="card">
+    <h3>「质量」其实在那个场里</h3>
+    <div class="q">电子到底有没有质量？这跟灵性有什么关系？</div>
+    <div class="quote">
+      <p class="en">The electron has been said to have no mass but only a field. Others claim a mass of infinitesimal measure. Both are correct. The true mass of the potentiated energy is the strength of the field.</p>
+      <p class="zh">有人说电子没有质量、只有一个场；也有人主张它有一个无限小的质量。两种说法都对。潜能化能量真正的质量，就是场的强度。</p>
+      <span class="src">—— Session 039 · (39.4)</span>
+    </div>
+    <div class="plain">真正的质量不在质量数里，而在场的强度；Ra 说这一点在形而上层面同样成立——所以公式里的质量数只是为了方便计算，不是事物的真相。</div>
+    <div class="analogy"><b>影响力报表上的那个数字：</b>报告写着「触达一万人」，但真正起作用的是这一万人被牵动的程度。数字好统计，强度才决定结果。</div>
+  </div>
+  <div class="card">
+    <h3>灵性质量随密度增长，直到入口密度</h3>
+    <div class="q">每上一个密度，这个存有会变得更「重」吗？增到哪里为止？（发问者还追问：公式里的 Mᵢ 是否就是指灵性质量？）</div>
+    <div class="quote">
+      <p class="en">you may conveniently consider each density of being to have a greater and greater spiritual mass</p>
+      <p class="zh">你们可以方便地认为：每一个存在密度都具有越来越大的灵性质量。</p>
+      <span class="src">—— Session 039 · (39.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The mass increases, shall we say, significantly, but not greatly, until the gateway density. In this density the summing up, the looking backwards—in short, all the useful functions of polarity have been used.</p>
+      <p class="zh">可以说，这质量会显著地增加，但并非大幅增加，一直到入口密度为止。在入口密度里，总结、回顾——简单说，极性所有有用的功能都已经被用尽了。</p>
+      <span class="src">—— Session 039 · (39.4)</span>
+    </div>
+    <div class="plain">灵性质量（spiritual mass）——存有的形而上电性累积起来的「分量」。它随密度递增，增长显著但不算巨大，直到入口密度（the gateway density）；Ra 说那里是极性的功能被用尽的地方，但本集并没有点明它是第几密度，只说明了它的职能——Ra 的「没说」也是信息。</div>
+    <div class="case"><b>同一位医生在不同阶段的分量：</b>住院医、主治、科主任，技术一直在长进，这是「显著」的那部分；但真正能让整条走廊安静下来的分量，是他见过足够多病例之后才出现的。而从那一刻起，他要做的不是继续学，而是把过往全部收拢起来做判断——这正是 Ra 所说的「总结、回顾」在入口密度里发生的事。</div>
+  </div>
+  <div class="card">
+    <h3>阿尔伯特的类比：到那一步，是收回去</h3>
+    <div class="quote">
+      <p class="en">For an analog one may observe the work of the one known as Albert who posits the growing to infinity of mass as this mass approaches the speed of light.</p>
+      <p class="zh">作为一个类比，可以看看那位被称为阿尔伯特（Albert）的人所做的工作：他主张，当质量接近光速时，质量会增长到无限。</p>
+      <span class="src">—— Session 039 · (39.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Thus the seventh-density being, the completed being, the Creator who knows Itself, accumulates mass and compacts into the One Creator once again.</p>
+      <p class="zh">于是，第七密度的存有——那完成了的存有、知晓自身的造物主——累积起质量，再一次压缩回太一造物主之中。</p>
+      <span class="src">—— Session 039 · (39.4)</span>
+    </div>
+    <div class="plain">借爱因斯坦的模型类比：质量趋近光速时增长到无限；对应到密度，第七密度的存有累积完质量之后，不是继续膨胀，而是压缩回太一造物主。</div>
+    <div class="analogy"><b>越接近极限，代价越趋无限：</b>火箭要接近逃逸速度，所需燃料几乎趋近无穷。但 Ra 借这个类比要说的重点不在「更难」，而在掉头——到了那一步，事情的方向是收回去。</div>
+    <div class="case"><b>从三人公司到被并购：</b>一家小公司从三个人长到三百人，规模每一次增长都很显著，但感受上一直是「更忙一些」；直到并购那天它才变了性质——不是变得更大，而是把整个自己交回一个更大的主体。Ra 描述第七密度「compacts into the One Creator once again」，形态与此相类。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>被遮蔽的陈述：Don 从 The Nine 抄本带来的三个问题</h2></div>
+  <p class="sec-lead">接下来四段，发问者连着追问同一批材料里的三句话：CH 原则、为什么写得这么绕、以及「九个主理人」是什么意思。这一章最值得注意的是 Ra 的回应方式——一次「不正确」、一次「抄写员爱谜题」，以及一句「我们要么照自己的意愿说，要么不说」。拒答与短答在这里本身就是教导。</p>
+  <div class="card">
+    <h3>被遮蔽的原则：恒定者与短暂者之间的渴望</h3>
+    <div class="q">《九人组》说「CH 是一个原则，是知识与法则的揭示性原则」，那到底是什么原则？</div>
+    <div class="quote">
+      <p class="en">CH is a principle which is the revealing principle of knowledge and law?</p>
+      <p class="zh">「CH 是一个原则，是知识与法则的揭示性原则」——发问者原样引述了《九人组》的说法。</p>
+      <span class="src">—— Session 039 · (39.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The principle so veiled in that statement is but the simple principle of the constant (or Creator) and the transient (or the incarnate being) and the yearning existing between the two, one for the other, in love and light amidst the distortions of free will acting upon the illusion-bound entity.</p>
+      <p class="zh">那句话里被如此遮蔽起来的原则，其实不过是那个简单的原则：恒定者（也就是造物主）与短暂者（也就是投生中的存有），以及这两者之间彼此、相互的渴望——这份渴望在爱与光之中，而自由意志的变貌正作用在那个被幻象束缚的实体身上。</p>
+      <span class="src">—— Session 039 · (39.6)</span>
+    </div>
+    <div class="plain">Ra 说被藏起来的东西一点也不复杂：恒定者与短暂者之间相互的渴望；复杂的外壳是后人加上去的。而「渴望」这件事发生在爱与光之中，选择权则在自由意志的范围内。</div>
+    <div class="analogy"><b>异地恋的那通电话：</b>把两个人的名字换掉，剩下的就只有「彼此朝对方伸手」这一件事本身。Ra 说被遮蔽的原则就是这样——不复杂，只是被包了一层。</div>
+    <div class="case"><b>凌晨两点的那通电话：</b>在外地读研的小夏每周给外婆打一次电话，两人之间没有别的事项要谈，唯一撑着这通电话的就是「想见对方」这件事在两端往返。Ra 所说的 yearning 就是这种双向往返的渴望；而打不打、多常打，则落在自由意志的范围内——Ra 特意把这两层分开说。</div>
+  </div>
+  <div class="card">
+    <h3>为什么写得这么绕：不是第一变貌，是抄写员的偏好</h3>
+    <div class="q">那这个原则之所以用这么遮蔽的形式给出，是因为第一变貌（自由意志）吗？</div>
+    <div class="quote">
+      <p class="en">This is incorrect.</p>
+      <p class="zh">这是不正确的。</p>
+      <span class="src">—— Session 039 · (39.7)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The scribe is most interested in puzzles and equations.</p>
+      <p class="zh">那位抄写员对谜题和方程式极感兴趣。</p>
+      <span class="src">—— Session 039 · (39.8)</span>
+    </div>
+    <div class="plain">发问者把「写得绕」归因于自由意志法则，Ra 只回一句「不正确」；再追问，答案落到抄写者身上——他喜欢谜题和方程式，所以材料就以谜题的形式出现。Ra 没有为此道歉，也没有声称背后另有深意。</div>
+    <div class="case"><b>一份写得像密码的说明书：</b>你买的咖啡机，说明书每一步都写成谜语：「当温度抵达它的第二次沉默，再放下你的手。」你研究半天，最后发现写说明书的那位工程师本来就好这一口。Ra 说这份材料有同样的情况：呈现方式带着抄写者的偏好，不是原理本身那么难。</div>
+  </div>
+  <div class="card">
+    <h3>「九个主理人」：法庭上的九位证人</h3>
+    <div class="q">《九人组》自称是「上帝的九个主理人」，这是什么意思？</div>
+    <div class="quote">
+      <p class="en">The attempt is made to indicate that the nine who sit upon the Council are those representing the Creator, the One Creator, just as there may be nine witnesses in a courtroom testifying for one defendant. The term principal has this meaning also.</p>
+      <p class="zh">这句话试图指出的是：坐在议会中的那九位，是代表造物主、代表太一造物主的存在——就像法庭上可以有九位证人，为同一位被告作证。principal 这个词本身也含有这层意思。</p>
+      <span class="src">—— Session 039 · (39.9)</span>
+    </div>
+    <div class="plain">坐在议会里的九位不是九个立场，而是同一方的九位代表；Ra 说这又是一句被遮蔽的话，而遮蔽的原因仍与呈现方式有关。</div>
+    <div class="case"><b>发布会上的九位发言人：</b>一家公司为同一件事派出九个人出面说明，记者追问「你们到底谁说了算」，回答是：「我们代表公司。」九个声音、一个主体——这正是 Ra 对「nine principals of God」的解释。</div>
+  </div>
+  <div class="card">
+    <h3>「我们就是我们所是」：不说，也是选项</h3>
+    <div class="quote">
+      <p class="en">The desire of the scribe may be seen in much of this material to have affected the manner of its presentation, just as the abilities and preferences of this group determine the nature of this contact.</p>
+      <p class="zh">在这份材料的许多地方都可以看出，抄写者的渴望影响了它的呈现方式；正如这个小组的能力与偏好，决定了这次接触的性质。</p>
+      <span class="src">—— Session 039 · (39.9)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The difference lies in the fact that we are as we are. Thus we may either speak as we will or not speak at all. This demands a very tuned, shall we say, group.</p>
+      <p class="zh">区别在于：我们就是我们所是。因此，我们要么照自己的意愿说话，要么就完全不说。这就需要一个，可以说，高度调谐的小组。</p>
+      <span class="src">—— Session 039 · (39.9)</span>
+    </div>
+    <div class="plain">抄写者的渴望会改变材料的呈现（正如这个小组的能力与偏好决定了接触的性质），但 Ra 不会为了让材料好看而迁就——要么照自己的意愿说，要么一句不说，所以需要一个调谐到位的小组。</div>
+    <div class="case"><b>愿意来、但开出条件的分享者：</b>公司请一位资深专家做内训，他的条件是：「我只讲我认为真实的东西；如果现场不够专注，我就不讲了。」为此人事部花了三个月筛人、选场地、安排时间。Ra 说这次接触「demands a very tuned, shall we say, group」，讲的是同一件事：这类联络的成败，一半取决于接的那一方够不够齐整。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>七道光芒：能量中心从红光到紫罗兰</h2></div>
+  <p class="sec-lead">这一集最实的一段教导。发问者问的是「能量中心从最原始的生命形式起如何演化」，Ra 先划掉已经被讲过的部分，再逐一交代第二密度以上每一个层次的关键点。请注意 Ra 的用词层级：基础光芒、主要光芒、中心光芒、门户——他不是在列清单，而是在讲一个层级结构。</p>
+  <div class="card">
+    <h3>先划掉不重复的部分</h3>
+    <div class="q">能不能描述身体能量中心的演化，从最早拥有它们的最原始生命形式说起？</div>
+    <div class="quote">
+      <p class="en">This material has been covered previously to some extent.[60] Therefore, we shall not repeat information upon which rays dwell in first and second density and the wherefores of this but rather attempt to enlarge upon this information.</p>
+      <p class="zh">这份材料先前已在一定程度上涉及过。因此，我们不会重复「哪些光芒驻留于第一与第二密度、以及其原因」这些信息，而是尝试扩展它。</p>
+      <span class="src">—— Session 039 · (39.10)</span>
+    </div>
+    <div class="plain">Ra 主动缩小了回答范围：第一、第二密度不讲，只扩展第二密度以上的关键点——这次回答的边界是由 Ra 自己划的。</div>
+  </div>
+  <div class="card">
+    <h3>逐道光芒：从地基到门户</h3>
+    <div class="quote">
+      <p class="en">The basic pivotal points of each level of development—that is, each density beyond second—may be seen to be as follows:</p>
+      <p class="zh">每一个发展层次——也就是第二密度之后的每一个密度——的基本关键点，可以这样来看：</p>
+      <span class="src">—— Session 039 · (39.10)</span>
+    </div>
+    <p>点节点逐道看。注意两个容易读错的地方：绿色光芒既是「中心光芒」，又被明确说成「基础光芒但不是主要光芒」；而紫罗兰色光芒根本不在「激活」的讨论范围里。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="rayTrack"></div>
+      <div class="flow-detail" id="rayDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="rayPrev">← 前一道</button> <button class="tri-btn" id="rayNext">后一道 →</button></div>
+    </div>
+    <div class="case"><b>急诊室最先量的四件事：</b>不管你因为什么被送进来，护士第一件事都是绑上血压计、夹上血氧、量体温和脉搏——最基础的读数决定后面所有判断。Ra 说红光就是这样的地位，甚至专门叮嘱一句：it is the foundation ray，绝不该因为它基础就被轻视。</div>
+    <div class="case"><b>把自己安顿好的那一年：</b>阿伟换了稳定的工作、搬进离公司近的房子、把作息调回正常。那一年他没有任何精神层面的突破，但第二年他才有余力每周末进山做无偿的植物记录。Ra 说黄光是「伟大的垫脚石光芒」——前一年的那些事，就是把人弹进下一道光芒的那块跳板。</div>
+    <div class="case"><b>不图回报的那件事：</b>一位退休教师每周三下午去社区图书角整理旧书，没人给她评分，也没人要求她做。Ra 说绿光「This is the resource for spiritual work」——红/橙/黄三色齐备之后，才有余裕进入不图回报的那一层。</div>
+    <div class="case"><b>把方法贴在实验室墙上的那个人：</b>小陈把两年摸索出的实验流程写成三页纸贴在墙上，新人照着做就不会重复踩坑。这正是蓝光在做的事：把灵性的学习/教导安置进心/身复合体，激活整体，并向他人传达这存在的整体性。</div>
+    <div class="case"><b>周末免费教编程的导师：</b>白天他是项目经理，周六上午在社区中心免费教孩子写代码，不领报酬、不被考核。Ra 说这种「以既辐射又平衡的方式去疗愈、教导、为造物主工作」的活动属于靛蓝色光芒——而会去修习这道光芒的，只有行家。</div>
+    <div class="case"><b>体检报告顶端那串不变的编号：</b>报告里每一项指标都在变，唯独最上面那串档案号从你第一次体检起就没换过。Ra 说紫罗兰色光芒就是这样：它是标记、是记录、是身份、是一个实体真实的振动——所以它不参与「光芒激活」的讨论，它记录结果。</div>
+  </div>
+  <div class="card">
+    <h3>术语卡：这一章的六个关键词</h3>
+    <p>点击卡片翻看解释。这几个词在本集密集出现，先在这里建立准确的直觉。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">形而上电</div><div class="sub">metaphysical electricity</div><span class="tap">点击展开</span></div><div class="back">与物理的电相对应的那个层面。Ra 说它在每个理则造物之初就与电性潜能一同被造出，而且「要理解那句话，它和电这个概念同等重要」。<em>类比：一栋楼交付时既有电路，也有「人愿不愿意回家」的那种气氛——后者没人画在图上，却一样从第一天就在运作。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">灵性质量</div><div class="sub">spiritual mass</div><span class="tap">点击展开</span></div><div class="back">存有的形而上电性累积起来的分量。Ra 说每个密度的存有具有越来越大的灵性质量，增长显著但不算巨大，直到入口密度。<em>比喻：同一个人在人生不同阶段被周围牵动的强度不同，这份分量不写在体重秤上。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">潜能化能量</div><div class="sub">potentiated energy</div><span class="tap">点击展开</span></div><div class="back">已经具备潜势、可以被使用的能量。Ra 说它「真正的质量是场的强度」——所以取电子的质量数只是为了方便计算，不是它的真相。<em>案例：电池标签上写毫安时（方便比较），但它实际能点亮什么，是另一回事。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">入口密度</div><div class="sub">the gateway density</div><span class="tap">点击展开</span></div><div class="back">本集没有点明它是第几密度，只交代了它的职能：总结与回顾在此完成，极性所有有用的功能都已用尽，之后便是第七密度存有压缩回太一造物主。<em>比喻：学期的最后一周，所有回顾与结算都在这里发生；从那以后不再是「继续学」，而是收束。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">行家</div><div class="sub">adept</div><span class="tap">点击展开</span></div><div class="back">Ra 对修习靛蓝色光芒者的称呼：那道光芒「worked upon only by the adept」。它是通往智能无限的门户，可能性是无限的，所以被视为内在、隐秘、奥秘的教导都在这一层修。<em>案例：同一套教程，有人只当作业完成，有人会把它当成要亲手打开的一道门。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">智能无限</div><div class="sub">intelligent infinity</div><span class="tap">点击展开</span></div><div class="back">Ra 体系中一切存在的源头与基质（本集与「太一造物主」并置使用）。靛蓝色光芒是它的门户；而负面实体的光芒模式从红/橙/黄直接跳到蓝光，this being only used in order to contact intelligent infinity——跳跃的唯一目的就是接触它。<em>比喻：不是你去造电，而是把线路接上那个无限的电源。</em></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>对照表：七道光芒一览</h3>
+    <div class="table-wrap">
+      <table class="nine">
+        <tr><th>术语</th><th>英文</th><th>通俗理解</th></tr>
+        <tr><td>红光</td><td>red ray</td><td>每道密度共用的地基与基本强化能量；Ra 说它绝不该被轻视，因为它是基础光芒</td></tr>
+        <tr><td>黄光</td><td>yellow ray</td><td>伟大的垫脚石；心/身在这道光芒上达到最充分的平衡，红/橙/黄三色齐备后把人弹进绿光</td></tr>
+        <tr><td>绿光</td><td>green ray</td><td>中心光芒，灵性工作的资源；它被激活，第三道主要光芒才谈得上开始潜能化</td></tr>
+        <tr><td>蓝光</td><td>blue ray</td><td>第一道真正的灵性光芒；把灵性的学习/教导安置进心/身复合体，激活整体，并向他人传达这存在的整体性</td></tr>
+        <tr><td>靛蓝色光芒</td><td>indigo ray</td><td>只有行家修习的光芒，通往智能无限的门户，把智能能量带入；疗愈、教导等既辐射又平衡的活动都在这一层</td></tr>
+        <tr><td>紫罗兰色光芒</td><td>violet ray</td><td>恒常不变，不参与激活的讨论；它是一个实体的标记、记录、身份与真实振动</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <h3>归类练习：这件事最贴近哪一道光芒？</h3>
+    <p>用本集 Ra 给出的各道光芒职能来判断，不必纠结完美贴合，抓住最核心的那一条。</p>
+    <div id="raySortArea"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>正负配置的分岔与收官：红光相同，之后各走各路</h2></div>
+  <p class="sec-lead">发问者想在收尾前把七道光芒的问题补完：同样高度极化，一个朝服务他人、一个朝服务自我，光芒配置会不一样吗？Ra 的回答分两半：红光完全相同；其余的，只作简短回答，剩下的留到另一次集会。这是本集最清晰的「拒答与限定」示范。</p>
+  <div class="card">
+    <h3>红光：两边共用同一块地基</h3>
+    <div class="q">一个高度朝向服务他人、一个高度朝向服务自我，都很极化——他们的红光会有差别吗？</div>
+    <div class="quote">
+      <p class="en">This shall be the last full question of this working.</p>
+      <p class="zh">这将是本次集会的最后一个完整问题。</p>
+      <span class="src">—— Session 039 · (39.11)</span>
+    </div>
+    <div class="quote">
+      <p class="en">There is no difference in equally strongly polarized positive and negative entities as regards red ray.</p>
+      <p class="zh">就红色光芒而言，同样强烈极化的正面实体与负面实体之间没有差异。</p>
+      <span class="src">—— Session 039 · (39.11)</span>
+    </div>
+    <div class="plain">红光没有差别——无论走哪条路，都得先有身体、有维持存活的能量；差异是从后面几道光芒才开始的。Ra 同时宣布：这是本次集会的最后一个完整问题。</div>
+    <div class="case"><b>两家公司都得交水电费：</b>一家做公益，一家做灰色生意。它们的用电量、房租、员工餐费、早晚班的疲惫程度，其实是一样的。红光就是这块大家共用的地基，不因方向而不同。</div>
+  </div>
+  <div class="card">
+    <h3>分岔点：跳过绿光，还是七道齐备</h3>
+    <div class="q">那其他光芒也这样吗？</div>
+    <div class="quote">
+      <p class="en">We shall answer briefly. You may question further at another working.</p>
+      <p class="zh">我们会简短回答。你可以在另一次集会中进一步提问。</p>
+      <span class="src">—— Session 039 · (39.12)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The negative ray pattern is the red/orange/yellow moving directly to the blue,[61] this being only used in order to contact intelligent infinity.</p>
+      <p class="zh">负面的光芒模式是红色/橙色/黄色直接移动到蓝色，而这只是为了接触智能无限。</p>
+      <span class="src">—— Session 039 · (39.12)</span>
+    </div>
+    <div class="quote">
+      <p class="en">In positively oriented entities the configuration is even, crystallinely clear, and of the seven-ray description.</p>
+      <p class="zh">在正面导向的实体中，这个配置是均匀的、水晶般清澈的，并且具有七道光芒描述的那种样子。</p>
+      <span class="src">—— Session 039 · (39.12)</span>
+    </div>
+    <div class="plain">负面实体的光芒模式从红/橙/黄直接跳到蓝光，而这跳跃只为了接触智能无限；正面实体的配置则是均匀、水晶般清澈的七道光芒。Ra 只答到这一层就收住了——绿光与靛蓝在两侧的具体差异，本集并没有展开。</div>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">共同的起点</span><h4>红色光芒</h4><p>两边完全一样。无论朝哪个方向极化，<b>身体与存活层面的基础能量</b>都得先立起来。</p></div>
+      <div class="yuan-card"><span class="y-tag">负面配置</span><h4>红/橙/黄 → 蓝光</h4><p><b>直接跳到蓝光</b>，跳过绿色；而且这个跳跃的唯一目的是接触智能无限。</p></div>
+      <div class="yuan-card"><span class="y-tag">正面配置</span><h4>均匀、水晶般清澈的七道光芒</h4><p>七道光芒齐备，配置<b>均匀而清澈</b>——没有哪一道被绕过，也没有哪一道被拿来当捷径。</p></div>
+      <div class="yuan-card"><span class="y-tag">Ra 的收束</span><h4>简短回答，其余留待下次</h4><p>本集到此为止：<b>「We shall answer briefly. You may question further at another working.」</b>再往下问，Ra 说下次。</p></div>
+    </div>
+    <div class="case"><b>想跳过中间那一步的团队：</b>一个小组跳过了「让成员真正认同这件事」的阶段，只把指标与规章压实（红/橙/黄），然后想直接通到决策层去拿资源与接口。Ra 说负面的模式正是这样：跳过绿光直接到蓝光，而跳跃的目的只有接触智能无限——中间那一步不是没时间做，是不打算做。</div>
+    <div class="case"><b>七盏灯都亮着的那个家：</b>楼下的老陈夫妇，工作、身体、朋友、孩子、兴趣，没有哪一样被荒废。你说不清他们哪一项特别突出，只觉得这个家是「均匀的」。Ra 用 even 与 crystallinely clear 形容正面实体的光芒配置，说的就是这种找不到捷径、也不缺某一角的状态。</div>
+  </div>
+  <div class="saying">
+    <p class="en">The true mass of the potentiated energy is the strength of the field.</p>
+    <p class="zh">潜能化能量真正的质量，就是场的强度。</p>
+    <span class="src">—— Session 039 · (39.4)</span>
+  </div>
+  <div class="card">
+    <h3>这一集留下的位置</h3>
+    <p>本集从头到尾都在处理「能量与光芒」这一层：先由形而上电引出灵性质量随密度递增的图景，再落到七道光芒各自的职能，最后停在正负配置的分岔点上。Ra 在收尾前只接受简短问题——于是有了 (39.13) 的器皿照料，然后以 Adonai 作结。</p>
+    <div class="quote">
+      <p class="en">Are there any short queries before we leave this instrument?</p>
+      <p class="zh">在我们离开这个器皿之前，还有任何简短的问题吗？</p>
+      <span class="src">—— Session 039 · (39.12)</span>
+    </div>
+    <div class="quote">
+      <p class="en">You are most conscientious. All is well.</p>
+      <p class="zh">你们非常尽责。一切都好。</p>
+      <span class="src">—— Session 039 · (39.13)</span>
+    </div>
+    <div class="plain">带着这个问题读下一集：正面实体的七道光芒里，绿光与靛蓝各自呈现什么样子？负面实体跳过绿光之后，在蓝光上拿到的又是什么？Ra 已经把这两个口子留在 (39.12) 了。</div>
+  </div>
+  <div class="case"><b>主持人那句「今天最后一个完整问题」：</b>例会临近尾声，主持人说：「这是今天最后一个完整问题，其他的下次再谈。」于是最后一个提问者只得到三句回答，剩下的被记入待议清单。Ra 在 (39.11) 就是这么预告的，到 (39.13) 只回答「一切都好」——一场通讯的节奏，本身也是内容。</div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+<p>基于 The Ra Contact Session 039（split/Ra_Session_039.md）英文原文制作 · 交互式学习模块</p>
+<p>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文</p>
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra039-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+  {t:'(39.1) 器皿的衰弱',d:'<span class="qa-q">问：器皿觉得脆弱，是六周前那次化学物质摄入造成的吗？</span><b>答：</b>正确。两次摄入带来加倍效应，身体复合体正处在最剧烈的衰弱/变貌期；预计还要十五到二十个日周期，之后才开始减轻，而且不会像最初估计的那样快。器皿能瞬间清空心智/情绪与灵性复合体，但它朝向服务忠诚的变貌让它在身体这件事上判断失准，所以需要支持小组。'},
+  {t:'(39.2) 还能做什么',d:'<span class="qa-q">问：除了她已经在做的，还能做什么让身体更快好转？</span><b>答：</b>负面实体此刻正全力削弱这个器皿——脚趾的问题由此而来。通过神圣歌曲的声音振动复合体崇拜太一造物主、更活跃的身体活动（运动与性）、充满爱的社交互动都有益，但器皿朝向「伦理」的变貌影响了其中一部分。基本上，这在第三密度连续体中是个时间问题。'},
+  {t:'(39.3) 集会的频率',d:'<span class="qa-q">问：你能否估算我们未来可以多频繁、多长地举行集会？</span><b>答：</b>这个询问接近侵犯——因为你们读不到光环，器皿自己也难穿透自己的身体状态。不过，把已给的信息整理成可遵循的原则并不算侵犯：每隔一个日周期、在晨间做一次最合适，遇到空闲的晨间可另做一次较短的；不只这段时期，普遍适用。'},
+  {t:'(39.4–39.5) 七与灵性质量',d:'<span class="qa-q">问：《九人组》说人体电性当量的七倍会产生「电质量的七次元」，能解释吗？</span><b>答：</b>这超出你们语言的能力，但我们尝试：造物之初就造出了电性与形而上的完整潜能；潜能化能量真正的质量就是场的强度；每个密度的存有具有越来越大的灵性质量，显著增长但不算巨大，直到入口密度——那里总结与回顾完成，极性的有用功能用尽，第七密度存有再压缩回太一造物主。发问者追问公式里的 Mᵢ 是否指灵性质量，Ra 答：正确。'},
+  {t:'(39.6–39.9) 被遮蔽的陈述',d:'<span class="qa-q">问：《九人组》说 CH 是「知识与法则的揭示性原则」，那是什么原则？</span><b>答：</b>那就是恒定者与短暂者之间相互渴望的简单原则。至于为什么写得这么绕：不是第一变貌（Ra 只说「不正确」），而是抄写员本人对谜题和方程式极感兴趣。「九个主理人」的意思则是：坐在议会中的九位代表造物主，如同法庭上九位证人为一位被告作证。Ra 补了一句：我们就是我们所是，要么照意愿说、要么不说。'},
+  {t:'(39.10) 能量中心的演化',d:'<span class="qa-q">问：能否描述身体能量中心的演化，从最早拥有它们的最原始生命形式说起？</span><b>答：</b>第一、第二密度的部分先前已谈过，这里不重复，只扩展第二密度以上每个层次的关键点：红光（基础光芒）、黄光（垫脚石）、绿光（中心光芒、灵性工作的资源）、蓝光（第一道真正的灵性光芒）、靛蓝色光芒（行家修习、通往智能无限的门户），以及恒常不变的紫罗兰色光芒。'},
+  {t:'(39.11–39.12) 正负配置',d:'<span class="qa-q">问：同样强烈极化，服务他人与服务自我的实体，红光有差别吗？</span><b>答：</b>（Ra 先声明这是本次最后一个完整问题。）红光没有差别。其余光芒只作简短回答，剩下的留待另一次集会：负面是红/橙/黄直接移到蓝光，而这跳跃只为接触智能无限；正面则是均匀、水晶般清澈的七道光芒配置。'},
+  {t:'(39.13) 收尾',d:'<span class="qa-q">问：我们还能做什么让器皿更舒适，或帮助这个通讯？</span><b>答：</b>你们非常尽责，一切都好。Ra 以爱与光告别，愿他们欢欣前行于太一造物主的大能与平安之中（Adonai）。'}
+]);
+
+initStepper('rayTrack','rayDetail','rayPrev','rayNext',[
+  {t:'红光',d:'<b>基础强化光芒。</b>Ra 说它是每一道密度的基本强化能量，并专门叮嘱「It shall never be condescended to as less important or productive of spiritual evolution」——绝不该因为它基础就被轻视，因为 it is the foundation ray。<br><b>看家本领：</b>先把身体与存活的能量立稳，后面所有光芒才有落脚处。'},
+  {t:'黄光',d:'<b>伟大的垫脚石光芒。</b>在这道光芒上，心/身潜能化到它最充分的平衡；强健的红/橙/黄三元组会把实体弹射进绿色的中心光芒。'},
+  {t:'绿光',d:'<b>中心光芒，也是灵性工作的资源。</b>Ra 特意加一句：它又是一道基础光芒，但不是主要光芒。绿光被激活之后，第三道主要光芒才能开始潜能化——而那道光芒是第一道真正的灵性光芒，因为它所有的转移都是整合的心/身/灵性质。'},
+  {t:'蓝光',d:'<b>第一道真正的灵性光芒。</b>蓝光把灵性的学习/教导安置在每一个密度的心/身复合体里，激活整体，并向他人传达这存在的整体性。'},
+  {t:'靛蓝色光芒',d:'<b>只有行家修习的光芒。</b>它是通往智能无限的门户，把智能能量引进来；那些被视为内在、隐秘、奥秘的教导，修习的就是它，因为它在可能性上是无限的。Ra 说：以既辐射又平衡的方式去疗愈、教导、为造物主工作的人，这些活动都属于靛蓝色光芒。'},
+  {t:'紫罗兰色光芒',d:'<b>恒常不变。</b>它不进入「光芒激活」的讨论，因为它是标记、是记录、是身份——是一个实体真实的振动。别的光芒在运作，它记录结果。'}
+]);
+
+document.querySelectorAll('.fn-card').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('open')));
+
+initSorter('raySortArea',[
+  {a:'搬进新家的第一周，先让床、灶、网络到位，身体能吃能睡',opts:['红光','黄光','绿光','蓝光','靛蓝'],ans:'红光',exp:'红光是每道密度的基础强化光芒、是地基：先把身体与存活层面的能量立稳，其余光芒才有落脚处。'},
+  {a:'工作合同签妥、家庭与作息都安顿好，心/身处在最充分的平衡里',opts:['红光','黄光','绿光','蓝光','靛蓝'],ans:'黄光',exp:'Ra 说黄光是「伟大的垫脚石光芒」，在这道光芒上心/身潜能化到最充分的平衡，之后再把人弹进绿光。'},
+  {a:'周末做一件不拿报酬、也无法量化成果的事，只是因为它值得做',opts:['红光','黄光','绿光','蓝光','靛蓝'],ans:'绿光',exp:'绿光是「灵性工作的资源」：红/橙/黄三色齐备之后，才有余裕进入不图回报的那一层。'},
+  {a:'把自学到的方法整理成一套讲法，在小组里讲一遍，让整体动起来',opts:['红光','黄光','绿光','蓝光','靛蓝'],ans:'蓝光',exp:'蓝光把灵性的学习/教导安置进心/身复合体，激活整体，并向他人传达这存在的整体性。'},
+  {a:'连续几年修习内在的、隐秘的功课，只为把智能能量引下来',opts:['红光','黄光','绿光','蓝光','靛蓝'],ans:'靛蓝',exp:'靛蓝色光芒是只有行家修习的光芒，它是通往智能无限的门户，把智能能量带入。'}
+]);
+
+renderPath();
+</script>
+</body>
+</html>

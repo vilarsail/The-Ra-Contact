@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 017 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 017 · 交互式学习模块</h1>
+  <p class="sub">本集以 Ra 主动更正一个年份错误开场，随后交织三条线索：第四密度如何降临、收割的两道门槛，以及一位无名流浪者的一生与疗愈之门的钥匙。</p>
+  <div class="tagline">8 个主题 · 6 个学习步骤 · 22 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 第四密度正在到来</a>
+<a href="#s3">③ 收割前夜</a>
+<a href="#s4">④ 帮助的界限</a>
+<a href="#s5">⑤ 收割门槛与层级</a>
+<a href="#s6">⑥ 通古斯卡</a>
+<a href="#s7">⑦ 耶稣与猎户座</a>
+<a href="#s8">⑧ 疗愈与收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>先看这一集的问答怎么拐弯，例行问答可以跳过</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>第四密度正在到来</b><span>一个振动频谱如何让地球「重新磁化」，以及两个急剧增加</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>收割前夜</b><span>为什么地球「看起来是负面的」，谁其实远多于谁</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>帮助的界限</b><span>为什么不能直接帮另一个人，以及「没有最佳方式」</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>收割门槛与层级</b><span>51% 与 95% 两道线，中间那个「冷漠的沉陷坑」</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>通古斯卡与耶稣，再到收官</b><span>一次无人机故障、一位无名流浪者，以及疗愈之门的钥匙</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：这一集在问什么</h2></div>
+  <p class="sec-lead">这一集没有单一主题，而是三束线缠在一起：第四密度降临的机制、收割的门槛数字，以及从通古斯卡追问到耶稣的一生。开篇还有一件少见的事——Ra 主动纠正自己上一次给出的年份。先看整集怎么走，再进入细节。</p>
+  <div class="card">
+    <h3>问答脉络：从一次纠错到一次告别</h3>
+    <p>本集共 45 个问答块，前三分之一在讲密度与收割，中间一大段被发问者的追问带到通古斯卡与耶稣，后三分之一回到门槛、层级与投生分配。点节点看每一段在做什么。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="qaTrack"></div>
+      <div class="flow-detail" id="qaDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="qaPrev">← 上一步</button> <button class="tri-btn" id="qaNext">下一步 →</button></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>开场就纠错：Ra 也承认自己会算错</h3>
+    <div class="q">（发问者还没提问）Ra 先说了一件与我们上次给的信息有关的事。</div>
+    <div class="quote">
+      <p class="en">We have difficulty dealing with your time/space. There may again be errors of this type.</p>
+      <p class="zh">我们在处理你们的时间/空间方面存在困难。可能还会有此类错误。</p>
+      <span class="src">—— Session 017 · (17.0)</span>
+    </div>
+    <div class="plain">Ra 把猎户座团体与星际联邦进入地球影响范围的年份，从 2,600 / 2,300 更正为 3,600 / 3,300，并请发问者随时追问，好让他们按人类的时间测量重新计算。</div>
+    <div class="analogy"><b>像跨时区开会：</b>远程团队里，发起人把「下午三点」算错了时区，会议通知发出去才发现。补救方式不是掩饰，而是重发一条更正，并说「还有对不上的时间直接问我」。</div>
+  </div>
+  <div class="card">
+    <h3>那么，我到底在跟谁说话？</h3>
+    <div class="q">发问者插进一个关于通讯本身的问题：与我对话的，是 Ra 这个群体的某一个个体，还是整个复合体？</div>
+    <div class="quote">
+      <p class="en">You speak with Ra. There is no separation.</p>
+      <p class="zh">你与 Ra 对话。没有分离。</p>
+      <span class="src">—— Session 017 · (17.13)</span>
+    </div>
+    <div class="plain">Ra 说自己是一个社会记忆复合体（social memory complex，即许多个体共享同一记忆与意识的群体），而发问者对话的是其中「一个个体化的意识部分」——不分离，但也不是整个群体的全部。</div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 后勤</span></summary>
+  <div class="body">
+    <p><b>(17.0)/(17.45) 开场与收尾：</b>以「在无限造物主的爱与光中」致意开场，以「我留你们在太一无限造物主的爱与光中。Adonai」作结。</p>
+    <p><b>(17.14) 器皿的生命能量：</b>每次集会都是通过同一个管道/器皿与同一个实体对话；器皿有时生命能量偏低，会拖慢进程，但她对任务极为忠诚，因此能量低时仍可继续——Ra 正是据其对器皿生命能量的估计来决定说到哪里收尾。</p>
+    <p><b>(17.44)–(17.45) 器皿的脚：</b>Ra 说器皿这次穿的衣物不适合这项工作：能量自第七脉轮流入、经第六脉轮层层过滤后，基础脉轮会略显能量不足，因此应为脚部选择更保暖的衣物；发问者确认「就是给脚加厚衣物」，Ra 答「这是正确的」，随即离开器皿。</p>
+    <p><b>(17.43) 集会收束：</b>Ra 宣布「振动资历」那一问为本次工作的最后一个问题，之后只接受简短的收尾提问。</p>
+  </div></details>
+  <div class="case"><b>会议纪要的更正邮件：</b>周会结束两小时，你发现纪要里把「3,600 万」写成了「2,600 万」，于是补发一封更正邮件，并写上「如果还有数字对不上，直接找我，我重算」。这正是 (17.0) 的节奏：发现错误、当场更正、并主动开放后续追问。</div>
+  <div class="case"><b>地铁上冒出来的三个问题：</b>早高峰你在车厢里忽然想到三个一直没想通的问题，到公司第一件事是把它们写在便签上先问掉，再谈正事。本集 (17.1) 就是这么开场的——发问者在冥想中得到三个问题，先问完再继续原定话题。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>第四密度正在到来：地球的磁化与两个「急剧增加」</h2></div>
+  <p class="sec-lead">发问者的第一个问题带着一个具体的焦虑：我们已经在第四密度了，接下来三十年会不会有更多变化？Ra 没有给时间表，而是给了一个机制——第四密度不是「一个地方」，而是一个振动频谱，而地球正在被卷进去。</p>
+  <div class="card">
+    <h3>第四密度是一个振动频谱</h3>
+    <div class="q">我们现在处于第四密度。第四密度的影响会在未来三十年增强吗？我们会看到更多环境变化吗？</div>
+    <div class="quote">
+      <p class="en">The fourth density is a vibrational spectrum.</p>
+      <p class="zh">第四密度是一个振动频谱。</p>
+      <span class="src">—— Session 017 · (17.1)</span>
+    </div>
+    <div class="plain">密度不是空间里的楼层，而是一段振动区间。你们的时间/空间连续体已经把行星球体卷入这个振动，结果是地球「被第四密度磁化」。</div>
+    <div class="analogy"><b>像温度阈值，不像换房间：</b>水没有「搬进」沸点，它只是被持续加热，到了某个阈值整个状态就变了。Ra 说的「磁化」类似：不是地球换个位置，而是它的振动基线被推过去了。</div>
+  </div>
+  <div class="card">
+    <h3>行星调整：熵、不可用的热与外衣的破裂</h3>
+    <div class="q">那这个过程会平顺吗？</div>
+    <div class="quote">
+      <p class="en">due to the energies of the thought-forms of your peoples which disturb the orderly constructs of energy patterns within your earth spirals of energy, which increases entropy and unusable heat</p>
+      <p class="zh">由于你们人群的思想形态能量扰乱了你们地球能量螺旋中有序的能量模式构造，从而增加了熵和不可用的热。</p>
+      <span class="src">—— Session 017 · (17.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This is the planetary adjustment.</p>
+      <p class="zh">这就是行星的调整。</p>
+      <span class="src">—— Session 017 · (17.1)</span>
+    </div>
+    <div class="plain">Ra 明确说这会「以一些不便的方式发生」：人群的思想形态能量扰乱了地球能量螺旋中的有序构造，熵与不可用的热上升，星球在为第四密度磁化的同时，外层「外衣」会出现一些破裂。</div>
+    <div class="analogy"><b>像老楼装电梯前先改配电：</b>电梯本身没坏，但旧线路带不动新负载，于是要先重新布线——施工期间跳闸、噪音、临时断电都属正常。Ra 说的「破裂」不是星球的故障，而是改造过程本身。</div>
+  </div>
+  <div class="card">
+    <h3>两个「急剧增加」：新品种，以及短期的负面</h3>
+    <p>Ra 说同一件事会带来两个方向的急剧增长。这不是乐观或悲观的表态，而是同一机制的两面。</p>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">正面方向</span><h4>「新品种」</h4><p>振动潜能里包含第四密度变貌潜力的人<b>急剧增加</b>——Ra 说他们会像「一个新的品种」，是为第四密度工作而投生的人。</p></div>
+      <div class="yuan-card"><span class="y-tag">负面方向</span><h4>短期内的极化增加</h4><p>短期内负面导向的心/身/灵复合体与社会复合体也会<b>急剧增加</b>，原因是第四密度特征与第三密度服务自我导向之间的分界变得更鲜明，极化条件更强。</p></div>
+      <div class="yuan-card"><span class="y-tag">结果</span><h4>留下的将是正面</h4><p>在这个层面上留在第四密度的，是所谓正面导向者；许多人会从别处来——因为即便联邦尽最大努力，收割的数量仍远少于这个星球在服务中能舒适承载的容量。</p></div>
+    </div>
+  </div>
+  <div class="case"><b>老小区加装电梯：</b>业委会决定装电梯，施工队第一件事不是装轿厢，而是把整栋楼老化的配电系统重新布线；施工半年里跳闸、电钻声、临时停电接连不断。业主抱怨「装个电梯怎么把楼都拆了」——这正是 (17.1) 所说的：磁化过程本身会带来不便与「外层外衣的破裂」。</div>
+  <div class="case"><b>机房跑满负荷的那个下午：</b>你所在团队的服务器全速跑批，机柜之间的走道热得像烤箱，排出来的风都是热的，空调再大也只压得住一时。Ra 说的「思想形态能量扰乱有序构造、增加熵和不可用的热」，在物理世界里就是这个体感。</div>
+  <div class="case"><b>新来的那批同事：</b>团队今年新入职的一批年轻人，谈方案时先问「这件事对谁真的有用」，对旧的排名逻辑天然不适，也不太吃「先熬资历」这一套。Ra 用「一个新的品种」形容为第四密度工作而投生的人，说的就是这种整体气质上的不同。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>收割前夜：为什么地球「看起来是负面的」</h2></div>
+  <p class="sec-lead">发问者在这里连问了几个关于收割比例的问题：既然看起来负面的人更多，地球为什么会被收割成正面第四密度？Ra 的回答包含一个很有用的心理观察，也包含一个不容易接受的结论。</p>
+  <div class="card">
+    <h3>印象偏差：沉默的恐惧</h3>
+    <div class="q">周期结束后，地球为什么是第四密度正面而不是负面？看起来负面的人口更多啊。</div>
+    <div class="quote">
+      <p class="en">The earth seems to be negative.</p>
+      <p class="zh">地球看起来是负面的。</p>
+      <span class="src">—— Session 017 · (17.23)</span>
+    </div>
+    <div class="plain">Ra 说这个「看起来」本身就是一种变貌：正面导向的实体对当下的种种事件普遍持一种沉默的恐惧，这种恐惧让整体印象显得悲观。真实的数量关系恰好相反——以服务他人方式导向且可收割的实体，远远多于服务自我已达成可收割品质的实体。</div>
+    <div class="analogy"><b>像刷了一整天新闻：</b>你没出门，只在手机上刷了一天推送，感觉世界处处在崩坏；可你那天在便利店、地铁、公司食堂遇到的，绝大多数是寻常的善意。信息流放大的是极端，不是比例。</div>
+  </div>
+  <div class="card">
+    <h3>三类人：两个可收割，和一个大多数</h3>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">正面可收割</span><h4>远多于负面</h4><p>以服务他人为导向、达到可收割品质的实体，在数量上<b>大幅超过</b>负面的同类。</p></div>
+      <div class="yuan-card"><span class="y-tag">负面可收割</span><h4>少，而且极难</h4><p>进入第四密度的负面实体将少于正面实体——Ra 在下一问里确认了这一点，并在后面说明负面路径的门槛之高。</p></div>
+      <div class="yuan-card"><span class="y-tag">大多数人</span><h4>重复第三密度</h4><p>Ra 直接说：「你们人群的绝大多数将重复第三密度。」这不是惩罚，只是振动还没长到那一步。</p></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>自燃不是「选择离开」：一棵树与一道闪电</h3>
+    <div class="q">那些人在收割之前就被带走了，是因为他们有意识地选择了离开方式吗？这就是我们说的自燃现象的原因吗？</div>
+    <div class="quote">
+      <p class="en">Picture, if you will, a forest. One tree is struck by lightning. It burns.</p>
+      <p class="zh">请想象一片森林。一棵树被闪电击中。它燃烧了。</p>
+      <span class="src">—— Session 017 · (17.27)</span>
+    </div>
+    <div class="quote">
+      <p class="en">There are random occurrences which do not have to do with the entity but with the window phenomenon of which we spoke.</p>
+      <p class="zh">有一些随机事件，它们与实体无关，而是与我们之前谈到过的窗口现象有关。</p>
+      <span class="src">—— Session 017 · (17.27)</span>
+    </div>
+    <div class="plain">Ra 先说这类现象「不正确」地归因于自燃（17.26），随后用森林与闪电作比：闪电不会击中别处，别处也不会燃烧。这些是随机事件，属于所谓「窗口现象」，与实体本身无关；被问及的实体也只是随机个体。</div>
+    <div class="analogy"><b>像暴雨里被砸中的车：</b>同一场冰雹，露天停放的那辆被砸出坑，地库里的那辆完好。你可以为那辆车惋惜，但不必为它编一个「为什么是它」的故事。</div>
+  </div>
+  <div class="card">
+    <h3>那收割在什么时候？</h3>
+    <div class="q">收割会在 2011 年发生，还是会分散进行？</div>
+    <div class="quote">
+      <p class="en">This is an approximation.</p>
+      <p class="zh">这是一个近似值。</p>
+      <span class="src">—— Session 017 · (17.29)</span>
+    </div>
+    <div class="plain">Ra 重申自己在人类时间测量上的困难：2011 是一个「适当的可能/或然的时间/空间连结」，不是精确日期；并且此时不在投生中的实体也会被包括在收割里。</div>
+  </div>
+  <div class="case"><b>复盘会上数得出三个「难缠的人」：</b>季度复盘时，你随口就能说出团队里最自私的三个人，却要想半天才记起这周有多少人默默帮你改过文档、顶过班。这正是 (17.23) 说的结构：极端的那几个最好记，比例却不在他们那一边。</div>
+  <div class="case"><b>晚高峰的一次让座：</b>地铁里有人给抱孩子的乘客让座，起身后什么都没说就站到了门边。Ra 说很少有人是可收割却光芒不外露的——一个异常璀璨的人格，往往在日常里就会被身边的人察觉到。</div>
+  <div class="case"><b>公司群里那条「谁放了灭火器」：</b>楼道口不知谁把一只灭火器摆到了电动车充电位旁边。没人认领，也没人拍照邀功。以服务他人极化的人常常就是这样：不留下签名，周围人却都感到了那点变化。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>帮助的界限：为什么不能直接帮另一个人</h2></div>
+  <p class="sec-lead">这一章是发问者的第二个冥想问题，也是全集最实用的一段：如果周期真的要结束了，我能为别人做点什么？Ra 的回答把「帮忙」这件事的定义整个换掉了。</p>
+  <div class="card">
+    <h3>只能提供催化剂，不能代替对方走</h3>
+    <div class="q">在最后的日子里，有没有可能帮一个实体达到第四密度的水平？</div>
+    <div class="quote">
+      <p class="en">It is impossible to help another being directly. It is only possible to make catalyst available in whatever form, the most important being the radiation of realization of oneness with the Creator from the self, less important being information such as we share with you.</p>
+      <p class="zh">不可能直接帮助另一个存有。唯一可能的是以任何形式提供催化剂，最重要的是从自我中放射出与造物主合一的领悟，其次重要的是诸如我们与你们分享的信息。</p>
+      <span class="src">—— Session 017 · (17.2)</span>
+    </div>
+    <div class="quote">
+      <p class="en">We cannot offer shortcuts to enlightenment.</p>
+      <p class="zh">我们无法提供开悟的捷径。</p>
+      <span class="src">—— Session 017 · (17.2)</span>
+    </div>
+    <div class="plain">帮助别人的唯一形式是提供催化剂，而第一等的催化剂不是话，是你自己身上放射出的「与造物主合一」的领悟；开悟不能由另一个自我传授，只能由自我、为自我达成。</div>
+    <div class="analogy"><b>像教练不能替你跑：</b>教练能做的，是把配速表给你、陪你跑、在你放弃时说一句对的话——但完赛的每一步都得你自己迈。他跑得再好，也换不来你的终点。</div>
+    <div class="quote">
+      <p class="en">But who can know when an entity will open the gate to the present?</p>
+      <p class="zh">但谁能知道一个实体会在何时开启通往当下的大门呢？</p>
+      <span class="src">—— Session 017 · (17.2)</span>
+    </div>
+  </div>
+  <div class="card">
+    <h3>分享而不计较人数</h3>
+    <div class="q">（Ra 主动补充：）这些信息需要被广泛传播吗？</div>
+    <div class="quote">
+      <p class="en">The attempt, if it reaches one, reaches all.</p>
+      <p class="zh">这尝试，若触及一人，便触及了所有。</p>
+      <span class="src">—— Session 017 · (17.2)</span>
+    </div>
+    <div class="plain">Ra 说自己并不急于让这些信息广泛传播——提供给三、四、五个人就已足够；只要其中一人由此获得第四密度的理解，服务这份变貌就已履行的法则。他们鼓励不带执着地分享，不计较人数与增长速度。</div>
+    <div class="analogy"><b>像在深夜发出的一封长信：</b>你写给一位朋友，没指望转发量，也不清楚他会不会回。发出这个动作本身就是你的服务。</div>
+  </div>
+  <div class="card">
+    <h3>没有「最佳方式」，也没有普遍答案</h3>
+    <div class="q">如果一个实体想在第三密度服务他人而非服务自我，是否存在服务他人的最佳方式，还是任何方式都一样好？</div>
+    <div class="quote">
+      <p class="en">There is no best. There is no generalization. Nothing is known.</p>
+      <p class="zh">没有最佳。没有普遍性。没有什么是已知的。</p>
+      <span class="src">—— Session 017 · (17.30)</span>
+    </div>
+    <div class="plain">Ra 先给出一条通则：服务他人的最佳方式是持续尝试分享内在自我所知的造物主之爱，这需要自我知识，以及毫不犹疑地向其他自我开放的能力。但随即收回通则——每个寻求者的最佳方式是独有的，必须在自己内部寻找自己的辨别力。「没有最佳。」</div>
+    <div class="analogy"><b>像问「最适合我的运动是什么」：</b>教练能给你心率区间和动作要点，但没人能替你回答你该跑步还是游泳——那要看你自己的膝盖、作息和你愿意坚持的东西。</div>
+  </div>
+  <div class="case"><b>不替朋友做决定：</b>朋友在要不要辞职上纠结了三个月，你可以陪他吃饭、把行业信息理清、帮他列出选项，但签那份辞呈的手只能是他的。这正对应 (17.2)：不可能直接帮助另一个存有，只能提供催化剂。</div>
+  <div class="case"><b>把踩坑笔记发到群里：</b>你把这半年踩过的坑整理成文档丢进同事群，不统计谁下载了、也不追问谁看了有用。Ra 说「这尝试，若触及一人，便触及了所有」——分享的价值不在人数。</div>
+  <div class="case"><b>改口的那次请教：</b>你问前辈「我这情况该不该跳槽」，前辈说「我不好替你答，但你愿不愿意说说你在这份工作里最舍不得什么？」——他不给答案，只把催化剂放回你手上，这就是 (17.30) 那句「没有最佳」。 </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>收割的门槛与层级：51%、95%，以及无限的子密度</h2></div>
+  <p class="sec-lead">发问者带着一本书里的说法来核对：超过 50% 为他人、少于 50% 为自己，就可收割——对吗？Ra 确认了正面一侧的数字，然后给出负面一侧的严苛标准，并解释了为什么两条路「一样难」。之后话题转入层级问题。</p>
+  <div class="card">
+    <h3>一侧是 51%，另一侧是 95%</h3>
+    <div class="q">书上说，只要超过 50% 为他人、少于 50% 为自己，就可收割。这说法对吗？</div>
+    <div class="quote">
+      <p class="en">This is correct if the harvesting is to be for the positive fourth-dimensional level.</p>
+      <p class="zh">如果收割是为了正面第四密度水平，这是正确的。</p>
+      <span class="src">—— Session 017 · (17.31)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The entity who wishes to pursue the path of service to self must attain a grade of five—that is five percent service to others, ninety-five percent service to self. It must approach totality.</p>
+      <p class="zh">想要追求服务自我之路的实体必须达到五级——即百分之五服务他人，百分之九十五服务自我。它必须接近全体性。</p>
+      <span class="src">—— Session 017 · (17.32)</span>
+    </div>
+    <div class="plain">正面只需「过半」：51% 奉献他人即可；负面却要「接近全体」：95% 服务自我、仅 5% 服务他人，Ra 说这条路相当难走，需要极大的奉献。</div>
+  </div>
+  <div class="card">
+    <h3>为什么两条路「一样难」：冷漠的沉陷坑</h3>
+    <div class="quote">
+      <p class="en">To attain fifty-one percent dedication to the welfare of other-selves is as difficult as attaining a grade of five percent dedication to other-selves. The, shall we say, sinkhole of indifference is between those two.</p>
+      <p class="zh">达到百分之五十一对他人福祉的奉献，与达到百分之五对他人奉献的等级同样困难。可以说，冷漠的沉陷坑就在这两者之间。</p>
+      <span class="src">—— Session 017 · (17.33)</span>
+    </div>
+    <div class="plain">Ra 说这是因为一的法则的一个变貌：通往智能无限的大门位于一条又直又窄之路的尽头。要真正越线，无论朝哪一极都不容易——而绝大多数人的处境是掉在两条线之间那片「冷漠的沉陷坑」里。</div>
+    <div class="analogy"><b>像山谷两侧的崖壁：</b>山谷底部宽阔好走，两边的崖壁都很陡。你既可以爬上左边也可以爬上右边，但「待在谷底慢慢走」永远不会带你上去。</div>
+  </div>
+  <div class="card">
+    <h3>三道门槛一览</h3>
+    <div class="table-wrap">
+      <table class="nine">
+        <tr><th>路径</th><th>门槛</th><th>结果</th></tr>
+        <tr><td>正面（服务他人）</td><td>51% 奉献他人</td><td>可收割，进入正面第四密度；Ra 说这类实体远多于负面。</td></tr>
+        <tr><td>负面（服务自我）</td><td>5% 服务他人 / 95% 服务自我</td><td>可收割进入负面第四密度，但必须「接近全体性」，极难达成。</td></tr>
+        <tr><td>两者之间</td><td>「冷漠的沉陷坑」</td><td>你们人群的绝大多数将重复第三密度。</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <h3>进入哪一层？由理解决定</h3>
+    <div class="q">假设一个人以 51% / 49% 的等级被收割，他会进入第四密度的哪个层次？</div>
+    <div class="quote">
+      <p class="en">Each enters the sub-density which vibrates in accordance with the entity's understanding.</p>
+      <p class="zh">每个实体都进入与该实体理解相共振的子密度。</p>
+      <span class="src">—— Session 017 · (17.34)</span>
+    </div>
+    <div class="plain">这不是按分数排队：你进入的是与自己理解相共振的那个子密度。而且层级远不止七层——Ra 说第三密度有无限数量的层次，「层面」也有无限多个。</div>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">第三密度</span><h4>无限数量的层级</h4><p>Ra 直接回答「第三密度有无限数量的层次」，所以「多少层」这个问题本身没有固定答案。</p></div>
+      <div class="yuan-card"><span class="y-tag">内在层面</span><h4>七星光层 · 七天界层</h4><p>发问者听闻的「七个星光层与七个天界层」被确认，那是内层中<b>较大的层次区分</b>；星光层从低端的思想形态一路到致力于教导/学习的开悟存有。</p></div>
+      <div class="yuan-card"><span class="y-tag">你们的物理层</span><h4>七个子层面</h4><p>在你们这套空间/时间连续体变貌中，有心/身/灵复合体的七个子层面，与肉体载具的能量流入中心相对应。</p></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>穿透层级的次序：为什么「跳级」会生病</h3>
+    <div class="quote">
+      <p class="en">You will find ill health, as you call this distortion, to frequently be the result of a subtle mismatch of energies in which some of the higher energy levels are being activated by the conscious attempts of the entity while the entity has not penetrated the lower energy centers, or sub-densities, of this density.</p>
+      <p class="zh">你们会发现，你们称之为疾病的这个变貌，常常是能量微妙不匹配的结果，其中一些较高能量层次被该实体的有意识尝试所激活，而该实体尚未穿透该密度的较低能量中心或子密度。</p>
+      <span class="src">—— Session 017 · (17.39)</span>
+    </div>
+    <div class="plain">有人一次穿透数层，有人缓慢推进；有人急于先穿透高层，却还没穿透较低、更基本的层面——Ra 说这会造成能量失衡，而人们所说的「疾病」常常就是这种微妙不匹配的结果。</div>
+    <div class="analogy"><b>像跳过热身直接上重量：</b>身体还没被唤醒就去推大重量，当天也许没事，但肩颈的酸和之后几天的僵，往往就是「高层被激活、底层没跟上」的版本。</div>
+  </div>
+  <details class="dict"><summary>本集谈到的「层面」体系（可跳过）<span class="hint">枚举 · 17.34–17.40</span></summary>
+  <div class="body">
+    <p><b>(17.35) 第三密度的层级：</b>无限数量。</p>
+    <p><b>(17.36) 内在层面的大区分：</b>发问者所说的「七个星光层与七个天界层」是正确的，那属于内层中较大的层次区分。</p>
+    <p><b>(17.37) 谁住在哪里：</b>实体按各自振动天性分层居住——星光层从低端的思想形态，到在较高星光层中致力于教导/学习的开悟存有；天界层面住着振动更接近爱/光之原初变貌的存有；这些层面之外还有其他层面。</p>
+    <p><b>(17.38) 构造：</b>层面无限多；你们特定的空间/时间连续体变貌中有心/身/灵复合体的七个子层面，与肉体载具的能量流入中心对应。不可见的内在第三密度层面住着不聚化学身体的存有，被分成「一个梦中的人工之梦」的若干层次；层次越高，把知识向下传达回外部层面的渴望越少，因为那些层面上的学习/教导本身极密集。</p>
+    <p><b>(17.39) 穿透方式：</b>有人一次穿透数层，有人缓慢；急于先穿透高层会造成能量失衡，疾病常由此而来。</p>
+    <p><b>(17.40) 冥想：</b>问「是否存在最佳的冥想方式」，Ra 只答一个字：No。</p>
+  </div></details>
+  <div class="card">
+    <h3>投生的优先权：振动资历</h3>
+    <div class="q">接近周期结束时，这个星球上的投生是怎么分配的？</div>
+    <div class="quote">
+      <p class="en">Entities wishing to obtain critically needed experience in order to become harvestable are incarnated with priority over those who will, without too much probable/possible doubt, need to re-experience this density.</p>
+      <p class="zh">那些希望获得关键所需经验以成为可收割的实体，会优先投生，优先于那些没有太多可能/或然疑问地需要重新体验该密度的实体。</p>
+      <span class="src">—— Session 017 · (17.41)</span>
+    </div>
+    <div class="plain">这套优先权自「第一个个体实体意识到自己需要学习该密度的课程」时就开始运作，Ra 称之为「振动资历」：意识到收割时间、并在自我层面把心智、身体与灵性转向这些课程的实体，会被优先安排，好让他们有最好的机会成功。</div>
+    <div class="analogy"><b>像教务系统的毕业优先选课：</b>「就差这一门课」的学生先拿名额，已经确定要延期的人排在后面。名额不是奖励，是分配效率。</div>
+  </div>
+  <div class="card">
+    <h3>归类练习：这件事在朝哪一极走？</h3>
+    <p>判断下面每件事的取向。第三类「与极化无关」对应本集说的随机事件与窗口现象。</p>
+    <div id="sorterArea"></div>
+  </div>
+  <div class="case"><b>一门课的 51 分与 95 分：</b>选修课 51 分及格；另一条路要求 95 分，而且几乎是「不许失分」。同一条走廊上，两边崖壁高度差不多——这就是 Ra 说的「51% 与 5% 一样难」。</div>
+  <div class="case"><b>既不吭声也不占便宜的中间人：</b>办公室里出了不公平的事，多数人既不站出来，也不趁乱捞好处，只是低头把自己的活干完。这不坏，但也不生长——恰好落在 Ra 说的「冷漠的沉陷坑」里。</div>
+  <div class="case"><b>同一个部门的两种带人方式：</b>一位主管把踩过的坑、谈判的底价、客户的忌讳全写进交接文档；另一位把关键方法留在自己脑子里，好让团队离不开他。前者朝服务他人极化，后者朝服务自我极化——而 Ra 提醒后者要达到可收割是极难的。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>通古斯卡：一次故障的无人机与一个方程</h2></div>
+  <p class="sec-lead">这一段从「冥想里冒出的一个问题」开始，问的是 1908 年西伯利亚那场大爆炸的成因。Ra 的回答很短，但发问者顺着它一路追问，直到问出一段关于「技术被转为毁灭之用」的往事。</p>
+  <div class="card">
+    <h3>不是陨石：是一次故障的引爆</h3>
+    <div class="q">几天前我在冥想里想到一个问题：通古斯卡那个坑是什么造成的？</div>
+    <div class="quote">
+      <p class="en">The destruction of a fission reactor caused this crater.</p>
+      <p class="zh">一个裂变反应堆的毁灭造成了这个陨石坑。</p>
+      <span class="src">—— Session 017 · (17.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This was what you may call a “drone” sent by Confederation which malfunctioned.</p>
+      <p class="zh">这是你们可称之为星际联邦发送的一个「无人机」，它发生了故障。</p>
+      <span class="src">—— Session 017 · (17.4)</span>
+    </div>
+    <div class="plain">Ra 说那是星际联邦一架携带简单裂变引擎的飞行器出了故障；它被转移到一处引爆不会侵犯心/身/灵复合体意志的区域，然后被引爆——这就是那个坑的来源。</div>
+    <div class="analogy"><b>像坏了电池的测绘无人机：</b>设备在空中报警，操作员不会让它掉在闹市，而是先把它飞到荒地再让它落地——处置方式取决于「落在哪里才不伤到人」。</div>
+    <div class="quote">
+      <p class="en">It was a drone designed to listen to the various signals of your peoples.</p>
+      <p class="zh">它是被设计用来监听你们人群各种信号的一个无人机。</p>
+      <span class="src">—— Session 017 · (17.5)</span>
+    </div>
+  </div>
+  <div class="card">
+    <h3>那次辐射为什么「很低」</h3>
+    <div class="q">它的危险是爆炸和辐射两者吗？那一带树木测出的辐射水平很低，就是这个原因吗？</div>
+    <div class="quote">
+      <p class="en">There is very little radiation, as you know of it, in this particular type of device.</p>
+      <p class="zh">在这种特定类型的装置中，如你们所知的辐射非常少。</p>
+      <span class="src">—— Session 017 · (17.6)</span>
+    </div>
+    <div class="plain">辐射是有的，但高度局部化，不像人类那些还相当原始的武器排放物会随风飘散；所以树木的辐射读数很低。Ra 同时提醒：局部化归局部化，释放出来的能量依然强大到足以造成困难。</div>
+    <div class="analogy"><b>像点状光源与雾灯：</b>一个聚光灯照得再亮，也只照亮它正对的那一块地；而雾灯的光会弥散到整片区域。Ra 说的是前一种。</div>
+  </div>
+  <div class="card">
+    <h3>那笔账怎么算：谁「导致」了核能？</h3>
+    <div class="q">那么，星际联邦是否对地球获得核能负有责任？</div>
+    <div class="quote">
+      <p class="en">That this work should have become foundation for instruments of destruction was not intended and was not given.</p>
+      <p class="zh">这项工作成为毁灭性工具的基础并非本意，也未被给予。</p>
+      <span class="src">—— Session 017 · (17.8)</span>
+    </div>
+    <div class="plain">Ra 说这是一个无法判定何为原因的问题：作为这项工作基础的方程，是由一位致力于服务这颗行星的流浪者带来的；它后来成了毁灭性工具的基础，既非本意，也非被给予。被问及这位流浪者是谁时，Ra 说信息无害——该实体已不在这颗行星的第三密度，其名称为声音振动复合体「阿尔伯特」。</div>
+    <div class="analogy"><b>像发在公开论坛上的公式：</b>一位研究者把自己推导的公式贴出来，本意是让同行算得更准。多年后你发现它被用在了别的地方——你没法说「是他造成了那件事」，也没法说「他完全无关」。</div>
+  </div>
+  <div class="case"><b>从「谁的锅」退回到「无法判定」：</b>线上事故复盘时，有人坚持要找出「第一个引入这段代码的人」。主持人说：「这段代码的引入有它的原意，事故的成因不在那一个人身上。」Ra 对核能之问的回答就是这个态度：不把因果归到某一个实体身上。</div>
+  <div class="case"><b>把无人机飞到荒地再迫降：</b>拍摄团队的无人机电池鼓包报警，飞手没有图省事让它就地掉在公园，而是多飞二十分钟把它带到空地上空才让它落下。这正是 (17.4) 说的处置逻辑：先找一个「不会侵犯他人意志」的落点。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s7">
+  <div class="sec-head"><span class="num">07</span><h2>耶稣：一位无名的流浪者与猎户座的算计</h2></div>
+  <p class="sec-lead">发问者把问题从历史事件转向一个人：拿撒勒的耶稣，投生之前是谁？这一段里有两件值得注意的事——Ra 一次拒答式的反问，以及一次当场更正自己的错误。</p>
+  <div class="card">
+    <h3>先被推回来的问题</h3>
+    <div class="q">你能告诉我，在投生进入这个密度之前，那位被称为拿撒勒的耶稣的存有是谁吗？</div>
+    <div class="quote">
+      <p class="en">I have difficulty with this question as it is phrased.</p>
+      <p class="zh">我对此问题的措辞感到困难。</p>
+      <span class="src">—— Session 017 · (17.10)</span>
+    </div>
+    <div class="plain">Ra 没有直接回答，而是请发问者换一种问法。发问者于是改问：「他在投生到这里之前是否来自星际联邦？」——问法一换，回答就来了。这不是推托，而是措辞本身决定了答案能不能被准确给出。</div>
+    <div class="analogy"><b>像客服说「您这个问题我没法按这个问法查」：</b>不是拒答，而是你的问法把两件事搅在了一起；换个问法，同一个信息立刻能取出来。</div>
+  </div>
+  <div class="card">
+    <h3>他是谁：一个没有名字的流浪者</h3>
+    <div class="quote">
+      <p class="en">The one known to you as Jesus of Nazareth did not have a name.</p>
+      <p class="zh">你们所知的拿撒勒的耶稣并没有名字。</p>
+      <span class="src">—— Session 017 · (17.11)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This entity was desirous of entering this planetary sphere in order to share the love vibration in as pure a manner as possible.</p>
+      <p class="zh">该实体渴望进入这个行星球体，以便以尽可能纯粹的方式分享爱的振动。</p>
+      <span class="src">—— Session 017 · (17.11)</span>
+    </div>
+    <div class="plain">他是一个无名的流浪者，来自星际联邦，因为想尽可能纯粹地分享爱的振动而获得许可进入这颗行星。「耶稣」是我们这边给他的称呼，不是他的本名。</div>
+    <div class="quote">
+      <p class="en">This entity was of the highest sub-octave of the vibration of love. This is fourth density.</p>
+      <p class="zh">该实体属于爱的振动的最高子八度。这是第四密度。</p>
+      <span class="src">—— Session 017 · (17.12)</span>
+    </div>
+    <div class="plain">Ra 先说他属于第五密度，随即当场更正：本意要说的是第四密度——爱的振动的最高子八度，正处在进入第五密度的临界；他本可以继续前往第五密度，却为这个使命选择回到第三密度。</div>
+  </div>
+  <div class="card">
+    <h3>猎户座的算计：在既有的负面信息上叠加</h3>
+    <div class="q">耶稣投生时，猎户座团体是否曾设法诋毁他？他们具体做了什么？</div>
+    <div class="quote">
+      <p class="en">The technique was that of building upon other negatively oriented information.</p>
+      <p class="zh">其技巧是建立在其他负面导向的信息之上。</p>
+      <span class="src">—— Session 017 · (17.17)</span>
+    </div>
+    <div class="plain">Ra 说那条信息来自被你们人群称为耶和华的那一位，内容是许多对行为的严格限制，外加对第三密度「服务自我性质的权力」的承诺；这两种变貌被压进那些本来就倾向于这样想的人心里，于是最终引出对耶稣的许多挑战，也包括那位声音振动复合体「犹大」。</div>
+    <div class="quote">
+      <p class="en">The one you call Judas was mistaken in this estimation of the reaction of the entity, Jesus, whose teach/learning was not oriented towards this distortion.</p>
+      <p class="zh">你们称为犹大的那一位，对耶稣实体的反应估计错误，耶稣的教导/学习并不朝向这个变貌。</p>
+      <span class="src">—— Session 017 · (17.17)</span>
+    </div>
+    <div class="plain">犹大相信自己在做适当的事：把耶稣逼到墙角，他就会看清「使用智能无限的力量去统治他人」的智慧。Ra 说这个估计错了，其结果是耶稣身体复合体的毁灭。</div>
+    <div class="analogy"><b>像谈判里把人逼到死角：</b>一方认定「只要不留退路，对方最后一定会签」。可对方要的从来不是这份合同——逼到极处，他宁可让谈判崩掉。算计者对「对方的反应函数」判断错了。</div>
+  </div>
+  <div class="case"><b>促销话术从不创造念头，只放大已有的：</b>销售不会让一个完全没需求的人下单，他只在你本来就动摇的那一刻再加一句「今天最后一天」。Ra 说猎户座的做法正是「建立在其他负面导向的信息之上」——不凭空造，只在既有倾向上加压。</div>
+  <div class="case"><b>把合伙伙伴逼到墙角的误判：</b>谈股权时有人说：「把条件压到他没有别的选择，他就会接受。」结果对方宁愿清盘也不签。这就是犹大式的错误：以为人被逼到绝境就会改用「力量逻辑」，而对方要的从来不是那个。</div>
+  <div class="case"><b>换个说法再问一次：</b>你问同事一个敏感问题，他说「你这么问我不好答，换个问法吧」。你换成「如果我这么做，你那边会有什么影响？」——答案立刻就来了。这和 (17.10) 里 Ra 请发问者换问法是同一件事。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s8">
+  <div class="sec-head"><span class="num">08</span><h2>收官：疗愈之门的钥匙、宽恕与回归</h2></div>
+  <p class="sec-lead">集会后半段又回到耶稣：他为什么能成为那样出色的疗愈者？他是怎么学会的？最后去了哪里？Ra 给出的是一套可迁移的次第，以及一条关于「他会回来」的澄清。</p>
+  <div class="card">
+    <h3>疗愈之门：先知晓心智与身体</h3>
+    <div class="q">如果耶稣是第四密度，而今天地球上也有来自第五、第六密度的流浪者，耶稣做了什么使他成为那么出色的疗愈者？他们也能做到吗？</div>
+    <div class="quote">
+      <p class="en">Those who heal may be of any density which has the consciousness of the spirit.</p>
+      <p class="zh">那些疗愈者可以来自任何具有灵性意识的密度。</p>
+      <span class="src">—— Session 017 · (17.18)</span>
+    </div>
+    <div class="plain">第三、四、五、六、七密度都可以发生疗愈；第三密度一样能疗愈，只是要理解、平衡、接受的幻象材料更多，需要从中向前迈进的距离更长。门不是某个体别的特权。</div>
+    <div class="plain">开门的前提是：疗愈者对「智能能量流入」的理解已经敞开——那涉及你们局部空间/时间连续体的自然法则，以及电磁源头（nexi）的网络。</div>
+    <div class="analogy"><b>像先学解剖再学开刀：</b>医学生先花几年把结构弄清楚，然后才谈手法。Ra 说的次第也一样：不是先学「怎么治」，而是先弄清楚管道本身长什么样。</div>
+  </div>
+  <div class="card">
+    <h3>三段次第：心智与身体 → 整合灵性 → 分享那光</h3>
+    <p>Ra 把疗愈的门路写成了一条链。点节点逐步看。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="healTrack"></div>
+      <div class="flow-detail" id="healDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="healPrev">← 上一步</button> <button class="tri-btn" id="healNext">下一步 →</button></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>他是怎么学会的：一次愤怒，与一个决定</h3>
+    <div class="q">耶稣在他这一生里是怎么学会这个的？那次对玩伴的攻击性行为，对他的灵性成长有什么影响？</div>
+    <div class="quote">
+      <p class="en">Thus the one known as Jesus became aware that there dwelt in him a terrible potential.</p>
+      <p class="zh">因此，那位被称为耶稣的存有意识到，他内在蕴藏着一种可怕的潜能。</p>
+      <span class="src">—— Session 017 · (17.19)</span>
+    </div>
+    <div class="plain">Ra 说他是在很小的年纪靠一种自然的「忆起」学会的；不幸的是，他第一次发现自己能穿透智能无限，是通过对一个玩伴产生了「愤怒」，触碰之下使对方受到致命伤害。由此他意识到自己内在有一种可怕的潜能，并下定决心要学会把这股能量用于善，而非用于负面。</div>
+    <div class="quote">
+      <p class="en">In forgiveness lies the stoppage of the wheel of action, or what you call karma.</p>
+      <p class="zh">在宽恕中，存在着行动之轮——或你们称为业力——的停止。</p>
+      <span class="src">—— Session 017 · (17.20)</span>
+    </div>
+    <div class="plain">那次经历把他激励起来，此后是一生的寻求：他先在自己宗教构造（犹太教）里日夜学习，年纪很小就足以成为拉比；大约十三岁半离开家庭居所，断断续续在外寻求，直到约二十五岁才回到家中，学习并实践其世俗父亲的技艺。Ra 说他是在生命的最后阶段、在十字架上说出「父啊，赦免他们，因为他们所做的，他们不晓得」，才在业力上被赦免了对另一个自我的毁灭。</div>
+    <div class="analogy"><b>像发现自己在球场上动手了：</b>少年在比赛中一把推倒对手，看到对方半天没爬起来，第一次意识到自己身上有可怕的力量。有人从此怕自己，也有人从此决定去练怎么用它——他选了后者。</div>
+  </div>
+  <div class="card">
+    <h3>他现在在哪，以及「他会回来」是什么意思</h3>
+    <div class="quote">
+      <p class="en">This entity studies now the lessons of the wisdom vibration, the fifth density, also called the light vibration.</p>
+      <p class="zh">这个实体如今正在学习智慧振动——第五密度，也称为光振动——的课程。</p>
+      <span class="src">—— Session 017 · (17.21)</span>
+    </div>
+    <div class="plain">Ra 说这条信息无害但不重要：他现在正在学习第五密度（也叫光振动）的课程。</div>
+    <div class="quote">
+      <p class="en">However, there are others of the identical congruency of consciousness that will welcome those to the fourth density. This is the meaning of the returning.</p>
+      <p class="zh">然而，还有其他具有完全相同意识一致性的人，他们将欢迎那些人进入第四密度。这就是回归的意义。</p>
+      <span class="src">—— Session 017 · (17.22)</span>
+    </div>
+    <div class="plain">至于「他会回来」：Ra 说他意识到自己并非一个独立的实体，而是作为太一造物主的使者运作，并把造物主视为爱；他知道这个周期已到末段，说过「具有其意识的人将在收割时回归」。但那个特定的心/身/灵复合体不会以「一个实体」的形式回来——除非偶尔作为星际联邦的成员通过管道说话。所谓回归，是同一意识一致性的其他存在，来欢迎进入第四密度的人。</div>
+    <div class="analogy"><b>像毕业时老师说的那句「我们会回来」：</b>回来迎新的不是当年那位老师本人，而是一群带着同一套信念的学长。送走一届、迎来下一届的那个「我们」，指的是精神，不是某个具体的人。</div>
+  </div>
+  <div class="saying">
+    <p class="en">True healing is simply the radiance of the self causing an environment in which a catalyst may occur which initiates the recognition of self, by self, of the self-healing properties of the self.</p>
+    <p class="zh">真正的疗愈仅仅是自我的光芒——它创造出一种环境，在其中催化剂得以发生，从而启动自我对自我之自我疗愈属性的认知。</p>
+    <span class="src">—— Session 017 · (17.18)</span>
+  </div>
+  <div class="card">
+    <h3>术语卡：本集的关键词</h3>
+    <p>点击卡片翻看解释。这几个词在全书反复出现，先在这里建立准确的直觉。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">第四密度</div><div class="sub">fourth density</div><span class="tap">点击展开</span></div><div class="back">不是空间里的某个楼层，而是一个振动频谱；进入它意味着整个存在的振动基线被推过去。本集说地球正被「第四密度磁化」，人群中具有第四密度振动潜能的人急剧增加。<em>比喻：水没有被「搬到」沸点，它只是被持续加热到阈值，整个状态就变了。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">行星调整</div><div class="sub">planetary adjustment</div><span class="tap">点击展开</span></div><div class="back">星球为迎接新振动而重新对齐「接收宇宙力量流入的漩涡」的过程，伴随熵与不可用的热上升，以及外层「外衣」出现一些破裂。Ra 说：这不是故障，这就是调整本身。<em>案例：老楼加装电梯前先改造整栋楼的配电——施工里的跳闸与噪音都是过程的一部分。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">催化剂</div><div class="sub">catalyst</div><span class="tap">点击展开</span></div><div class="back">促成作用发生的中介，不是施治的那一方。本集说人对人唯一能做的就是提供催化剂，其中最重要的一种，是自己放射出「与造物主合一」的领悟。<em>比喻：酶不进入产物，却让反应发生。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">收割</div><div class="sub">harvest</div><span class="tap">点击展开</span></div><div class="back">周期末段，实体按自身振动进入相应密度。本集给出两道门槛：正面需 51% 奉献他人；负面需 95% 服务自我、接近全体性。落在两者之间的人，将重复第三密度。<em>案例：毕业不是被谁挑走，而是你把自己长成了某一类人。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">冷漠的沉陷坑</div><div class="sub">sinkhole of indifference</div><span class="tap">点击展开</span></div><div class="back">指 51% 与 5% 之间那片既不奉献他人也不极端自利的区域；Ra 说绝大多数人待在这里。它不邪恶，只是不生长。<em>案例：办公室里出了不公的事，多数人既不站出来也不趁乱捞好处——事情就这么过去了。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">流浪者</div><div class="sub">wanderer</div><span class="tap">点击展开</span></div><div class="back">来自更高密度、为服务而投生到第三密度的存有。本集出现两位：带来「方程」的声音振动复合体阿尔伯特，以及无名的耶稣——后者为尽可能纯粹地分享爱的振动而获得许可来到这里。<em>比喻：从大城市下到偏远小镇做长期支教的人。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">智能无限</div><div class="sub">intelligent infinity</div><span class="tap">点击展开</span></div><div class="back">与太一造物主相通的无限智能。本集说疗愈之门就是通往它的大门，而开启的前提是疗愈者对「智能能量流入」的理解已经敞开——也正因此，它不能靠别人替你打开。<em>比喻：不是你去发电，而是让电通过你。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">振动资历</div><div class="sub">seniority by vibration</div><span class="tap">点击展开</span></div><div class="back">按振动而非年头排序的优先权：急于获得「关键所需经验」以成为可收割的实体，会在投生顺序上获得优先，以便有最好的机会成功。Ra 说这自第一个实体意识到要学这些课程时就开始了。<em>案例：教务系统把名额先给「就差这一门才能毕业」的学生。</em></div></div>
+    </div>
+  </div>
+  <div class="case"><b>心里那句「他不是故意的」：</b>你把一段旧怨放下了，不是因为对方值得被原谅，而是因为那件事不再驱动你去做下一个决定。Ra 说「在宽恕中，行动之轮——业力——的停止」，指的就是这种「链条在此断开」的时刻。</div>
+  <div class="case"><b>体检报告出来那天：</b>你没有立刻去搜「最快的调理法」，而是先把自己这段时间的睡眠、饮食、情绪起伏记录下来，弄明白身体到底在说什么。这正是 (17.18) 的次第：先知晓心智与身体，再谈把光分享出去。</div>
+  <div class="case"><b>把方法给出去的那一刻：</b>团队里最资深的人把自己的判断方法讲给新人听，讲完还补一句「这套逻辑我用了十年，你按自己的场景改」。真正的疗愈与教导都是这个形状——不是替对方做，而是让催化剂在他那里发生。</div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+<p>基于 The Ra Contact Session 017（split/Ra_Session_017.md）英文原文制作 · 交互式学习模块</p>
+<p>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文</p>
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra017-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+  {t:'(17.0) 开场纠错',d:'<b>Ra 先纠错。</b>Ra 说自己处理你们的时间/空间有困难，主动把猎户座与星际联邦进入地球影响范围的年份由 2,600 / 2,300 更正为 3,600 / 3,300，并请对方随时提问，以便按人类的时间测量重新计算。'},
+  {t:'(17.1) 第四密度何时到',d:'<span class="qa-q">问：我们已在第四密度，它的影响会在未来三十年增强吗？</span><b>答：</b>第四密度是一个振动频谱，行星球体正被卷入并重新磁化；这个过程会带来一些不便（熵与不可用的热、外层外衣的破裂），同时出现两个急剧增加。'},
+  {t:'(17.2)/(17.15) 能不能帮人',d:'<span class="qa-q">问：在最后的日子里，能不能帮一个实体达到第四密度水平？</span><b>答：</b>不可能直接帮助另一个存有，只能提供催化剂；最重要的那种，是从自我放射出的「与造物主合一」的领悟。无宗教背景的人一样可收割，但光芒很难不被身边人察觉。'},
+  {t:'(17.3)-(17.9) 通古斯卡',d:'<span class="qa-q">问：通古斯卡的坑是什么造成的？</span><b>答：</b>一个星际联邦的监听无人机因故障被移往无人处引爆；由此牵出「带来方程的那位流浪者」阿尔伯特，以及 Ra 对「何者为因」的拒绝判定。'},
+  {t:'(17.10)-(17.17) 耶稣是谁',d:'<span class="qa-q">问：拿撒勒的耶稣投生前来自星际联邦吗？</span><b>答：</b>他是无名的流浪者、爱的振动最高子八度的第四密度存有（Ra 先说了第五密度，随即更正）；猎户座在耶和华留下的信息上叠加，最终引出犹大的误判。'},
+  {t:'(17.18)-(17.22) 疗愈与回归',d:'<span class="qa-q">问：耶稣为什么能成为这样出色的疗愈者？他现在在哪里？</span><b>答：</b>先知晓心智与身体，灵性整合后开启通往智能无限的大门；他如今在第五密度学习，而「他会回来」指的是同一意识一致性的其他存在来欢迎进入第四密度的人。'},
+  {t:'(17.23)-(17.36) 收割的比例与门槛',d:'<span class="qa-q">问：为什么周期结束后地球会是正面第四密度？</span><b>答：</b>「地球看起来是负面的」是沉默的恐惧造成的印象；正面可收割者远多于负面。门槛是 51% 与 95%，中间是冷漠的沉陷坑；进入哪一层由理解决定。'},
+  {t:'(17.37)-(17.45) 层面与收尾',d:'<span class="qa-q">问：物理层面有七个子层面吗？有没有最佳的冥想方式？</span><b>答：</b>层面无限多，你们这套连续体里有七个子层面；急于穿透高层而跳过低层会造成能量失衡。问到最佳冥想方式，Ra 只答一个字：No。最后提醒给脚部加保暖衣物，随即离开器皿。'}
+]);
+
+initStepper('healTrack','healDetail','healPrev','healNext',[
+  {t:'① 先知晓心智与身体',d:'<b>原文：Know then, first, the mind and the body.</b> 疗愈的起点不是手法，而是认识自己这两层——Ra 把「理解」放在「治疗」之前。'},
+  {t:'② 灵性被整合与综合',d:'当灵性被整合、综合，心智与身体不再各自为政，而是与它一起被谐和。Ra 说这一步是「灵性被整合与综合」之后自然发生的。'},
+  {t:'③ 谐和成心/身/灵复合体',d:'谐和的结果，是一个能够在维度之间穿梭的心/身/灵复合体——它不再只是第三密度的化学载具。'},
+  {t:'④ 开启通往智能无限的大门',d:'这个复合体能够开启通往智能无限的大门。前提在 (17.18) 里说得很明确：疗愈者对「智能能量流入」的理解必须先向他敞开。'},
+  {t:'⑤ 以光疗愈自我并分享那光',d:'从而通过光疗愈自我，并与他人分享那光。Ra 的总结是：真正的疗愈只是自我的光芒，它创造出一种环境，让催化剂得以发生。'}
+]);
+
+document.querySelectorAll('.fn-card').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('open')));
+
+initSorter('sorterArea',[
+  {a:'值夜班的护士交班前多留二十分钟，把手写备注补全给接班的人',opts:['服务他人','服务自我','与极化无关'],ans:'服务他人',exp:'持续、有意识地把他人福祉放在前面，是朝服务他人极化的动作；Ra 说这条线的门槛是 51%。'},
+  {a:'一家公司的负责人刻意把对手逼到破产，并享受掌控他人命运的感觉',opts:['服务他人','服务自我','与极化无关'],ans:'服务自我',exp:'有意识地以他人为代价取得掌控，属于朝服务自我极化——但 Ra 提醒这条路要达到可收割需 95%，必须接近全体性。'},
+  {a:'下班路上被一根断裂坠落的树枝砸坏车窗',opts:['服务他人','服务自我','与极化无关'],ans:'与极化无关',exp:'Ra 用「闪电击中一棵树，别处不燃烧」说明这类随机事件与实体本身无关，属于窗口现象。'},
+  {a:'带新人时把踩过的坑全部写成文档给他，不指望回报',opts:['服务他人','服务自我','与极化无关'],ans:'服务他人',exp:'不计人数与回报地把所知给出去，正是本集所说的服务他人：这尝试若触及一人，便触及了所有。'},
+  {a:'为让自己在团队里不可替代，刻意不把关键技术教给任何人',opts:['服务他人','服务自我','与极化无关'],ans:'服务自我',exp:'以封闭知识来保住自己的位置，是有意识的自我服务取向，方向朝服务自我极化。'},
+  {a:'某人独自在家突然起火，事后查不出原因',opts:['服务他人','服务自我','与极化无关'],ans:'与极化无关',exp:'Ra 否定了「自燃是选择离开密度的方式」这一说法，改以随机事件与窗口现象来解释，因此与极化方向无关。'}
+]);
+
+renderPath();
+</script>
+</body>
+</html>

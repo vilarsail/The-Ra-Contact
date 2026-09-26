@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 030 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 030 · 交互式学习模块</h1>
+  <p class="sub">这一集把「极性从哪一刻开始」这条线拉直，再完整交代心/身/灵复合体从第一密度到第三密度的来历，最后给出太阳系诸行星与银河中心的形而上学素描。器皿不适时 Ra 主动收住，只留下一条尚未展开的线索。</p>
+  <div class="tagline">6 个主题 · 6 个学习步骤 · 15 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 极性的门槛</a>
+<a href="#s3">③ 心/身/灵与死亡之后</a>
+<a href="#s4">④ 复合体的来历</a>
+<a href="#s5">⑤ 双性繁殖与甘道夫</a>
+<a href="#s6">⑥ 行星图与收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>19 个问答块各自在做什么，哪两块可以跳过</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>极性从哪一刻开始</b><span>Ra 校准发问者的推理：天真阶段在哪一步结束</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>三个术语，一个复合体</b><span>心/身/灵如何互相定义，以及死亡之后失去什么</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>复合体的来历</b><span>从第一密度的随机之物，到第三密度的「被激活」</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>第二密度的那条路</b><span>双性繁殖为何是铺垫，以及一只猫的罕见之处</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>行星图与收官</b><span>诸行星的形而上学素描，以及本集留下的伏笔</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：这一集在问什么</h2></div>
+  <p class="sec-lead">本集是一集「把线索收拢」的集会：文中多次标注「如我们之前所描述」「正如你们已经讨论过」「你昨天说」，把此前散落的进化次序、火星状况与银河系统串成一条完整的链条，并首次铺开太阳系诸行星的形而上学素描。主要议题有五个：极性从哪一刻开始、心智/身体/灵性这三个词到底指什么、死亡之后失去什么、复合体如何从第一密度演化而来、以及第二密度在我们这个行星上留下的两条路径。结尾处器皿不适，Ra 主动截断了提问。</p>
+  <div class="card">
+    <h3>问答脉络：一路追问，最后两块收尾</h3>
+    <p>本集共 19 个问答块（含开场致意），其中 16 块是教导、2 块回到器皿照料。点节点看每一段在做什么。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="qaTrack"></div>
+      <div class="flow-detail" id="qaDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="qaPrev">← 上一步</button> <button class="tri-btn" id="qaNext">下一步 →</button></div>
+    </div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 后勤与收尾</span></summary>
+  <div class="body">
+    <p><b>(30.0) 开场：</b>Ra 以太一无限造物主的爱与光致意，宣布开始通讯。</p>
+    <p><b>(30.13) 个人向提问：</b>发问者关心公猫甘道夫是否在灵性上受益。Ra 先声明「我们检视了这项信息，发现它无害」——这类私人小问题 Ra 会先判定它是否会造成危害，其中的教导部分见第五章。</p>
+    <p><b>(30.16) 集会提前收束：</b>Ra 宣布这是本集最后一个完整问题，因为器皿有些不适、不愿把她耗尽；随后录音带在 Ra 说「我们欢迎任何简短的」处结束。</p>
+    <p><b>(30.17) 器皿的身体：</b>器皿询问一台名为 Sam Millar 极化器的装置能否帮助她的身体。Ra 扫描后发现她磁场有异常（这些异常反而有利于窄带管道的形成），现有状态的极化器不会有帮助，并建议此类设备不要带进集会。</p>
+    <p><b>(30.18) 器皿舒适度与收尾：</b>Ra 说器皿平衡良好、接触如其所应，只是肌肉痉挛这类变貌让静止的姿势不适；随后以「在爱与光中离开」与 Adonai 作结。</p>
+  </div></details>
+  <div class="case"><b>先复述，请对方校准：</b>把方案发出去之前，先写一句「我的理解是 A，对吗？」——本集开场就是这么做的：发问者先把一整套关于造物与服务的推理复述出来请 Ra 校准，Ra 回「相当有洞察力且正确，直到最后那个分句」。在问答实录里，复述本身就是一次校准动作。</div>
+  <div class="case"><b>读长文先看目录：</b>一份 19 节的会议记录摊在面前，你先扫一遍哪几节是决议、哪几节只是「设备还好吗」。(30.1)–(30.16) 是教导，(30.17)(30.18) 回到器皿照料——先分清这两类，精力才放得对。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>极性的门槛：天真阶段从哪里结束</h2></div>
+  <p class="sec-lead">发问者带来一条相当自洽的推理链：造物是单一实体，因此最初只有「服务自我」这一种服务概念；一旦这个实体细分，一部分服务另一部分的概念才诞生，服务自我与服务他人的平等性也随之出现；随着理则细分、个体化实体出现在空间/时间中，它们似乎就该具有极性了。Ra 说这条推理「相当有洞察力且正确，直到最后一个分句」——差别就在极性出现的时刻上。</p>
+  <div class="card">
+    <h3>纠正的落点：极性的起点不是个体化</h3>
+    <div class="q">我的推理是：造物若细分，各部分就会各自选择朝向，个体化实体一出现在空间/时间中便具有极性。这样说对吗？</div>
+    <div class="quote">
+      <p class="en">This statement is quite perceptive and correct until the final phrase in which we note that the polarities begin to be explored only at the point when a third-density entity becomes aware of the possibility of choice between the concept, or distortion, of service to self or service to others.</p>
+      <p class="zh">这个陈述相当有洞察力，而且正确——除了最后那个分句。我们要指出的是：极性只有当第三密度实体意识到「可以在服务自我或服务他人这个概念（或说变貌）之间做出选择」时，才开始被探索。</p>
+      <span class="src">—— Session 030 · (30.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This marks the end of what you may call the unselfconscious, or innocent, phase of conscious awareness.</p>
+      <p class="zh">这一刻标志着你们可以称为「无自我意识的、或者说天真的」意识觉知阶段的结束。</p>
+      <span class="src">—— Session 030 · (30.1)</span>
+    </div>
+    <div class="plain">极性不是个体化的自动附属品；它是「意识到自己在选」这件事的产物，而这份意识要到第三密度才出现。</div>
+    <div class="analogy"><b>像第一次意识到「我在选」：</b>岔路口本来就摆在那里，路也一直都在。但对你而言，选择是从你第一次明白「这是我挑的，而不是我该走的」那一刻才真正开始。在那一刻之前，无论走了多远，都还属于天真阶段。</div>
+  </div>
+  <div class="card">
+    <h3>两个阶段对照</h3>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">天真阶段</span><h4>尚未意识到选择</h4><p>存在、成长、寻找光——但没有「我可以在两种服务之间选」的自觉。Ra 用的词是 <b>unselfconscious, or innocent</b>（无自我意识的、天真的）。</p></div>
+      <div class="yuan-card"><span class="y-tag">门槛</span><h4>意识到选择的可能性</h4><p>第三密度实体第一次意识到「服务自我 / 服务他人」是一个<b>可以选</b>的岔口——极性从此刻开始被探索。</p></div>
+      <div class="yuan-card"><span class="y-tag">与 (30.5) 呼应</span><h4>同一个时刻的另一种说法</h4><p>Ra 在后面说：当心/身/灵复合体意识到服务自我或服务他人的可能性时，它才<b>被激活</b>。同一条线，两种表述。</p></div>
+    </div>
+  </div>
+  <div class="case"><b>孩子的「分享」还不是选择：</b>四岁的孩子会把饼干分给小朋友，也会护住自己那一块，但他还没有「我选择服务他人」这层自觉——按 (30.1)，极性要等到实体意识到自己可以在两种服务之间选择时才开始被探索，在那之前都属于天真阶段。</div>
+  <div class="case"><b>第一次意识到自己在选：</b>你做了十年工程师，从没觉得每天加班是在「选什么」；直到两个 offer 摆在面前——留下带团队，还是去薪水更高的新公司——你第一次意识到自己必须在服务他人与服务自己之间做取舍。这份自觉正是 Ra 所说的天真阶段的结束。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>心/身/灵：三个词为什么不能分开用</h2></div>
+  <p class="sec-lead">发问者请 Ra 分别定义心智、身体、灵性。Ra 的回答等于说「分别定义」这个前提本身就不太成立：三个词都只是简化的描述性说法，指向同一个能量聚焦复合体。接着 Ra 用一棵树讲心智的层次，用一条管道讲灵性的功能，最后用死亡这道关口说明三者为什么缺一不可。</p>
+  <div class="card">
+    <h3>前提：三个词说的是同一件事</h3>
+    <div class="q">你能否分别定义心智、身体和灵性？</div>
+    <div class="quote">
+      <p class="en">These terms are all simplistic descriptive terms which equal a complex of energy focuses</p>
+      <p class="zh">这些术语都是简化的描述性说法，它们所指的其实是同一个能量聚焦的复合体。</p>
+      <span class="src">—— Session 030 · (30.2)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Thus we refer to the mind/body/spirit complex rather than attempting to deal with them separately, for the work, shall we say, that you do during your experiences is done through the interaction of these three components, not through any one.</p>
+      <p class="zh">所以我们说「心/身/灵复合体」，而不试着把它们分开来讲——因为你们在体验中所做的工作，是通过这三者之间的互动完成的，不是靠其中任何一个单独完成。</p>
+      <span class="src">—— Session 030 · (30.2)</span>
+    </div>
+    <div class="plain">身体、心智、灵性不是三个零件，而是同一个复合体的三个面向；工作的发生靠互动，不靠单件。</div>
+    <div class="analogy"><b>像一台电脑的电源、主板和屏幕：</b>拆开来看各有名字、各有故障码，但「开机」这件事没有一个部件单独完成过。逐件体检能查到问题，功能本身却只属于整机。</div>
+  </div>
+  <div class="card">
+    <h3>心智之树：从感受一路下行到宇宙注入</h3>
+    <p>Ra 把心智比作一棵树：越往上越是「有意识」的层面，越往下越接近整体。点节点逐层下行。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="mindTrack"></div>
+      <div class="flow-detail" id="mindDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="mindPrev">← 上一步</button> <button class="tri-btn" id="mindNext">下一步 →</button></div>
+    </div>
+    <div class="quote">
+      <p class="en">The mind is a complex which reflects the inpourings of the spirit and the up-pourings of the body complex.</p>
+      <p class="zh">心智是一个复合体，它反映灵性的注入与身体复合体的上涌。</p>
+      <span class="src">—— Session 030 · (30.2)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Moving down to the roots of mind we find the progression of consciousness which gradually turns from the personal to the racial memory to the cosmic influxes, and thus becomes a direct contactor of that shuttle which we call the spirit complex.</p>
+      <p class="zh">一路向下到心智的根部，我们看到意识逐步展开：从个人记忆转向种族记忆，再转向宇宙的注入，于是成为我们称为灵性复合体那趟「穿梭载具」的直接接触者。</p>
+      <span class="src">—— Session 030 · (30.2)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This spirit complex is the channel whereby the inpourings from all of the various universal, planetary, and personal inpourings may be funneled into the roots of consciousness, and whereby consciousness may be funneled to the gateway of intelligent infinity through the balanced intelligent energy of body and mind.</p>
+      <p class="zh">这个灵性复合体就是那条管道：来自宇宙、行星与个人等各层面的注入，经它汇入意识的根部；而意识也经它、透过身体与心智平衡后的智能能量，上达智能无限的入口。</p>
+      <span class="src">—— Session 030 · (30.2)</span>
+    </div>
+    <div class="plain">心智是「上下交汇」的场所：灵性注入从上方来、身体上涌从下方来；而灵性是一条双向管道，决定了注入能不能下达、意识能不能上达。</div>
+  </div>
+  <div class="card">
+    <h3>死亡：失去的是表层，显明的是蒸馏</h3>
+    <div class="q">我们所谓死亡时失去化学身体，之后是否还有另一个身体？心/身/灵复合体还在吗？心智或灵性会因为失去这个化学身体而受损吗？</div>
+    <div class="quote">
+      <p class="en">The mind/body/spirit complex is quite intact; the physical body complex you now associate with the term "body" being but manifestation of a more dense, and intelligently informed, and powerful body complex.</p>
+      <p class="zh">心/身/灵复合体相当完好；你们现在用「身体」这个词所指的那个物质身体复合体，只不过是一个更致密、承载更多智能信息、也更有力量的身体复合体的显化。</p>
+      <span class="src">—— Session 030 · (30.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">In your terms, there is a great loss of mind complex due to the fact that much of the activity of a mental nature of which you are aware during the experience of this space/time continuum is as much of a surface illusion as is the chemical body complex.</p>
+      <p class="zh">用你们的话说，心智复合体确实损失很大——因为你们在空间/时间连续体的体验中所觉知的大部分心智活动，和化学身体一样，只是表层幻象。</p>
+      <span class="src">—— Session 030 · (30.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">In other terms, nothing whatever of importance is lost</p>
+      <p class="zh">换个说法：任何重要之物都没有丢失。</p>
+      <span class="src">—— Session 030 · (30.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">In terms of the spiritual, this channel is then much opened due to the lack of necessity for the forgetting characteristic of third density.</p>
+      <p class="zh">就灵性而言，这条管道此时会大大敞开，因为第三密度那种「遗忘」的特性不再有必要。</p>
+      <span class="src">—— Session 030 · (30.4)</span>
+    </div>
+    <div class="plain">死亡失掉的是表层的活动与幻象；情感、偏好、变貌与智慧被蒸馏出来，反而第一次变得清楚，而灵性管道也因不再需要「遗忘」而大大敞开。</div>
+    <div class="analogy"><b>像煮高汤时收汁：</b>水蒸发掉一大半，锅里的味道反而更清楚。整个过程没有任何「重要之物」被倒掉——被去掉的只是那些平时盖住味道的水。</div>
+  </div>
+  <div class="card">
+    <h3>术语卡：本集的六个关键词</h3>
+    <p>这几个词在本集反复出现，也贯穿全书。点击卡片翻看解释。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">心/身/灵复合体</div><div class="sub">mind/body/spirit complex</div><span class="tap">点击展开</span></div><div class="back">Ra 对人类存在的标准称谓：心智、身体、灵性三者构成的统一结构。(30.2) 说这三个词只是简化的描述性说法，指的是同一个能量聚焦复合体；你们所做的工作是通过三者互动完成的，不靠任何单独一个。<em>比喻：电源、主板、屏幕各有名字，但开机这件事没有一个部件单独完成。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">极性</div><div class="sub">polarity</div><span class="tap">点击展开</span></div><div class="back">在服务自我与服务他人之间做出选择所形成的「朝向」。本集的关键限定：极性不是伴随个体化自动出现的，只有当第三密度实体意识到自己可以在两者间选择时，才开始被探索。<em>案例：岔路一直都在，但只有你第一次意识到「我在选」，选择才算开始。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">理则</div><div class="sub">Logos</div><span class="tap">点击展开</span></div><div class="back">造物层面的「设计者」或「话语」。(30.1) 谈到理则细分而有个体化实体；(30.15) 说理则已将自身分布遍及你们的整个银河系，其他球体也是理则的一部分。<em>比喻：同一套设计图发到不同工地，各自盖出不同的楼。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">智能无限</div><div class="sub">intelligent infinity</div><span class="tap">点击展开</span></div><div class="back">Ra 体系中与太一无限造物主相通的无限智能，是一切存在的源头与基质。(30.2) 说灵性复合体是那条管道：意识经身体与心智平衡后的智能能量，上达智能无限的入口。<em>比喻：插座背后的电网——看不见，但所有电流都从那里来。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">变貌</div><div class="sub">distortion</div><span class="tap">点击展开</span></div><div class="back">对统一性的任何偏离状态，本身不含贬义。(30.1) 里「服务自我或服务他人的概念，或变貌」、(30.4) 里的「偏见-变貌」，都是同一源头分化后的形态；连「学习/理解」也是一种变貌。<em>比喻：白光过棱镜分成七色——颜色不是错，只是分开了。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">空间/时间 ↔ 时间/空间</div><div class="sub">space/time &amp; time/space</div><span class="tap">点击展开</span></div><div class="back">本集两次用到这对词：身体是「你在特定空间/时间或时间/空间中体验的该密度之物质」(30.2)；土星的磁场属于时间/空间，而银河中心那些太阳系统的时间/空间连续体更先进 (30.14)(30.15)。可以粗略理解为：前者是有前后次序的物质体验框架，后者是它的另一面。<em>比喻：同一卷素材，正着放与倒着看——取用的维度不同。</em></div></div>
+    </div>
+  </div>
+  <div class="case"><b>只换床垫治不好失眠：</b>有人长期失眠，换了更贵的床垫、买了助眠仪，还是睡不着——因为焦虑没有被处理。(30.2) 说心/身/灵三者密不可分、缺一不可，你们所做的工作是通过三者互动完成的，不是靠修好任何一个单独部件。</div>
+  <div class="case"><b>病房里最后被记住的东西：</b>体检报告上的血压、血脂会随着化学身体一起消失；但病房里那位老人被家人记住的，是「他一辈子温和还是不温和」——对应 (30.4)：大部分表层心智活动随身体失去，而情感与偏好的「纯粹蒸馏」反而第一次显明。</div>
+  <div class="case"><b>换手机时留下的那份排序：</b>换新手机，照片和 App 都要重装，但你最常联系的那几个人、你最在意的事，早就被习惯排好了序——Ra 说这些在物理生命里大部分被忽视或低估的偏好，到死亡之后反而第一次变得明显。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>复合体的来历：从随机之物到「被激活」</h2></div>
+  <p class="sec-lead">发问者想追溯起源，并提出一个顺序假设：是不是灵性形成心智、心智形成身体？Ra 提示这不是「谁造谁」的问题，而是进化的问题——意识最先出现，在密度中逐层展开。同一章里，发问者顺手问了我们这个行星第二密度的一件事：恐龙与双足实体同时存在过吗？Ra 确认了，并给出了两条路径并存的原因。</p>
+  <div class="card">
+    <h3>不是谁造谁，而是进化到哪一步</h3>
+    <div class="q">心/身/灵复合体是怎么起源的？是不是灵性形成心智、心智形成身体？</div>
+    <div class="quote">
+      <p class="en">We ask you to consider that you are attempting to trace evolution.</p>
+      <p class="zh">我们请你注意：你正在试图追溯的是「进化」这条线。</p>
+      <span class="src">—— Session 030 · (30.5)</span>
+    </div>
+    <div class="quote">
+      <p class="en">the consciousness being first, in first density, without movement, a random thing.</p>
+      <p class="zh">意识是最先的，在第一密度里，它没有运动，是一种随机之物。</p>
+      <span class="src">—— Session 030 · (30.5)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This mind/body complex then in second density discovering the growing and turning towards the light, thus awakening what you may call the spirit complex, that which intensifies the upward spiraling towards the love and light of the Infinite Creator.</p>
+      <p class="zh">接着，这个心/身复合体在第二密度中发现了「成长」与「转向光」，于是唤醒了你们可以称为灵性复合体的东西——它让朝向太一造物主之爱与光的向上螺旋变得更剧烈。</p>
+      <span class="src">—— Session 030 · (30.5)</span>
+    </div>
+    <div class="quote">
+      <p class="en">When the mind/body/spirit complex becomes aware of the possibility of service to self or other-self, then the mind/body/spirit complex is activated.</p>
+      <p class="zh">当心/身/灵复合体意识到服务自我或服务他人的可能性时，这个心/身/灵复合体就被激活了。</p>
+      <span class="src">—— Session 030 · (30.5)</span>
+    </div>
+    <div class="quote">
+      <p class="en">We call it mind/body complex, recognizing always that in the simplest iota of this complex exists, in its entirety, the One Infinite Creator.</p>
+      <p class="zh">我们称之为心/身复合体，并且始终认清：在这个复合体最微小的一点里，太一无限造物主完整地存在着。</p>
+      <span class="src">—— Session 030 · (30.5)</span>
+    </div>
+    <div class="plain">次序是：第一密度的意识（无运动、随机）→ 第二密度转向光、唤醒灵性 → 第三密度意识到「可以选择」，复合体才被激活。</div>
+    <div class="analogy"><b>像一颗种子：</b>你没法说「是根造出了芽、还是芽造出了叶」。种子先在那儿（随机、不动），找到光之后开始长（第二密度），直到它长成能自己决定往哪边伸的植株（第三密度）——「自己决定」这一步，才是激活。</div>
+    <div class="quote">
+      <p class="en">The addition of this spirit complex, though apparent rather than real, it having existed potentially from the beginning of space/time, perfects itself by graduation into third density.</p>
+      <p class="zh">这个灵性复合体的加入——虽然只是表面上的加入，而非真实的新增，因为它从空间/时间之初就已潜在地存在——它通过毕业进入第三密度而完成自身。</p>
+      <span class="src">—— Session 030 · (30.5)</span>
+    </div>
+  </div>
+  <div class="card">
+    <h3>条件模拟器：什么让复合体「被激活」</h3>
+    <p>Ra 在 (30.5) 给出的是一条有前提的次序。拨动下面的开关，看复合体停在哪个阶段。</p>
+    <div class="cond-row"><div class="name">意识存在<small>第一密度：无运动、随机之物</small></div><label class="switch"><input type="checkbox" id="condA" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">转向光<small>第二密度：发现成长、朝向光</small></div><label class="switch"><input type="checkbox" id="condB" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">灵性复合体被唤醒<small>向上螺旋朝向爱与光而加强</small></div><label class="switch"><input type="checkbox" id="condC" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">意识到服务自我 / 服务他人的选择可能<small>第三密度的门槛（呼应 (30.1)）</small></div><label class="switch"><input type="checkbox" id="condD" checked><span class="slider"></span></label></div>
+    <div id="condResult"></div>
+  </div>
+  <div class="card">
+    <h3>第二密度的岔路：恐龙与双足实体</h3>
+    <div class="q">在这个行星的第二密度，双足实体和恐龙曾同时栖息在同一个空间/时间，对吗？它们看起来并不相容，为什么能并存？恐龙又为什么突然消失了？</div>
+    <div class="quote">
+      <p class="en">Consider the workings of free will as applied to evolution.</p>
+      <p class="zh">请考虑自由意志在进化这件事上是怎么运作的。</p>
+      <span class="src">—— Session 030 · (30.7)</span>
+    </div>
+    <div class="quote">
+      <p class="en">these two arenas, or paths, of development being two among many.</p>
+      <p class="zh">这两个发展领域（或说路径），只是众多路径中的两条。</p>
+      <span class="src">—— Session 030 · (30.7)</span>
+    </div>
+    <div class="quote">
+      <p class="en">These entities could not feed their body complexes.</p>
+      <p class="zh">这些实体无法喂养它们的身体复合体。</p>
+      <span class="src">—— Session 030 · (30.8)</span>
+    </div>
+    <div class="plain">同一片空间/时间里并存多种生存路线，是自由意志在进化中的正常结果；恐龙消失的原因只有一句：它们无法喂养自己的身体复合体。</div>
+    <div class="analogy"><b>像同一片林地里的两种植物：</b>一种往高处长抢光，一种贴着地面铺开抢水，谁都不必「兼容」谁。生态位不同，路线就不同——不必解释成谁在跟谁竞争。</div>
+    <div class="case"><b>自己朝光长的绿萝：</b>阳台那盆绿萝没人教它，枝叶自己就往有光的方向伸——这就是 (30.5) 说的第二密度：心/身复合体「发现成长并转向光」，由此唤醒灵性复合体。转向光不需要谁下指令。</div>
+    <div class="case"><b>同一窝小狗，两种活法：</b>同一窝小狗，一只见人就往怀里钻，一只躲在沙发底下自己研究怎么翻垃圾桶——Ra 在 (30.7) 说，心/身复合体在求生存、繁衍与寻求成长上各走各的路径，这两条路径只是众多中的两条。</div>
+    <div class="case"><b>早餐店不是输给对手，是断了供货：</b>小区门口那家早餐店关门，不是因为隔壁更强，而是原料供应断了。恐龙消失的原因也一样简短：Ra 说「这些实体无法喂养它们的身体复合体」。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>双性繁殖：第二密度为第三密度铺的路</h2></div>
+  <p class="sec-lead">发问者接着问第二密度的双性繁殖：它背后的哲学是什么？Ra 的回答把这件事从「生物学机制」抬到「为第三密度铺垫」的位置——繁殖的基本机制在第三密度转化为服务他人与自我的巨大潜力。随后发问者追问第二密度实体能否借此获得灵性成长，Ra 给了一个带限定的答案，并把话题带到了他自己的猫身上。</p>
+  <div class="card">
+    <h3>机制背后的用意：靠近，才有服务的机会</h3>
+    <div class="q">身体复合体这种繁殖机制，背后的哲学是什么？</div>
+    <div class="quote">
+      <p class="en">The second density is one in which the groundwork is being laid for third-density work.</p>
+      <p class="zh">第二密度是一个为第三密度的工作打地基的密度。</p>
+      <span class="src">—— Session 030 · (30.10)</span>
+    </div>
+    <div class="quote">
+      <p class="en">the basic mechanisms of reproduction capitulate into a vast potential in third density for service to other-self and to self</p>
+      <p class="zh">繁殖的基本机制在第三密度里转化为一股巨大的服务他人与自我的潜力。</p>
+      <span class="src">—— Session 030 · (30.10)</span>
+    </div>
+    <div class="quote">
+      <p class="en">these entities thus having the opportunities for many types of service which would be unavailable to the independent entity.</p>
+      <p class="zh">于是这些实体获得了许多种服务的机会，而这些机会对独立存在的实体来说根本不存在。</p>
+      <span class="src">—— Session 030 · (30.10)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This is not merely correct but is the key to that which occurs in all densities.</p>
+      <p class="zh">这不仅正确，而且是所有密度中发生之事的关键。</p>
+      <span class="src">—— Session 030 · (30.11)</span>
+    </div>
+    <div class="plain">繁殖机制不只是一项「功能」：它把两个实体拉得足够近，于是产生出大量彼此服务的机会——这是第二密度给第三密度铺的地基，也是「增加太一造物主体验机会」这条总线索的落点。</div>
+    <div class="analogy"><b>像把两个工位并在一起：</b>隔着走廊两个工位，各自埋头做自己的；一旦并成一排，借笔、递水、互相看一眼屏幕这类「帮忙」的机会自然就出现了。机制本身只是让人靠近，服务的机会是靠近之后才长出来的。</div>
+  </div>
+  <div class="card">
+    <h3>限定：灵性潜力属于第三密度</h3>
+    <div class="q">双性繁殖的过程或其哲学，在第二密度实体的灵性成长中起了作用吗？</div>
+    <div class="quote">
+      <p class="en">For the greater part, by far, this is not the case in second density, the spiritual potentials being those of third density.</p>
+      <p class="zh">但就绝大部分而言，在第二密度中并非如此——灵性潜力是属于第三密度的。</p>
+      <span class="src">—— Session 030 · (30.12)</span>
+    </div>
+    <div class="plain">Ra 承认有例外：某些实体或物种感知高效，确实出现了孤立的情形；但整体上，第二密度并不承担灵性成长——那是第三密度的事。</div>
+  </div>
+  <div class="card">
+    <h3>甘道夫：一个罕见样本</h3>
+    <div class="q">那只叫甘道夫的公猫，是否通过这种机制或其他机制在灵性潜力与理解上受益了？</div>
+    <div class="quote">
+      <p class="en">We examine this information and find it harmless.</p>
+      <p class="zh">我们检视了这项信息，发现它无害。</p>
+      <span class="src">—— Session 030 · (30.13)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The second-density entity, sound vibration Gandalf, is a rare sample of its species due first to previous individualization, secondly due to a great amount of investment in this particular life experience.</p>
+      <p class="zh">这个第二密度实体、声音振动「甘道夫」，是它这个物种中罕见的样本：首先因为它此前已经个体化，其次因为它在这一次特定的生命体验中投入了巨大的量。</p>
+      <span class="src">—— Session 030 · (30.13)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Thus the formation of what could be seen to be recognizably love did exist in this relationship.</p>
+      <p class="zh">于是，在这段关系里确实形成了可以被辨认出来的、可以称为「爱」的东西。</p>
+      <span class="src">—— Session 030 · (30.13)</span>
+    </div>
+    <div class="plain">甘道夫之所以罕见，是因为它此前已个体化、且这一生投入巨大；它与另一只猫的关系在很小程度上带来了灵性效益——但那仍然是不寻常的例外，不是第二密度的常态。</div>
+    <div class="case"><b>独居十年 vs 和人同住三个月：</b>你独居十年，从没学会照顾别人的情绪；和人同住三个月，被迫学会的东西比十年还多。(30.10) 说的就是这个：繁殖机制在第三密度转化为巨大的服务潜力，不是因为「功能」本身，而是因为两个彼此磁性吸引的实体靠得足够近，才会有大量服务的机会——这些机会对独立实体根本不存在。</div>
+    <div class="case"><b>两只猫之间的「爱」：</b>Ra 检视了那只叫甘道夫的猫的信息，判定它无害，并说它是同类中罕见的样本：此前已个体化、这一生投入巨大；它与另一只猫的关系在很小程度上带来了灵性效益，形成了可被辨认的「爱」。Ra 同时提醒：这种情形非常不寻常，第二密度整体上并不承担灵性成长。</div>
+  </div>
+  <div class="card">
+    <h3>归类练习：天真阶段，还是已经在选？</h3>
+    <p>按本集的标准判断：下面每件事体现的是第二密度的天真（尚未涉入极性选择），还是第三密度的选择。</p>
+    <div id="sorterArea"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>行星图与收官：金星、火星、土星、天王星</h2></div>
+  <p class="sec-lead">本集最后一段教导是一个「总问」：请 Ra 简要介绍太阳周围每颗行星的形而上学原理及其对生命进化的功能。Ra 先限定范围——只讲那些有个体心/身/灵复合体在其上体验过的行星，其余只是理则的一部分——然后逐一点名。发问者接着追问银河中心的灵性密度，Ra 答了一句就宣布这是最后一个完整问题。</p>
+  <div class="card">
+    <h3>只讲有「体验者」的行星</h3>
+    <div class="quote">
+      <p class="en">We shall give you a metaphysical description only of those planets upon which individual mind/body/spirit complexes have been, are, or shall be experienced.</p>
+      <p class="zh">我们只为你描述那些「个体心/身/灵复合体曾经、正在或将要在其上体验」的行星的形而上学情况。</p>
+      <span class="src">—— Session 030 · (30.14)</span>
+    </div>
+    <div class="timeline">
+      <div class="tl-item"><div class="t">金星 · 快速进化</div><div class="d">Ra 说这是他的原生行星：表面心/身/灵复合体的进展之所以快，是因为「和谐的互动」。</div></div>
+      <div class="tl-item"><div class="t">火星 · 中途停下</div><div class="d">在第三密度中期被停止，因为表面缺乏适宜条件而无法继续进展；这颗行星要经历数千年的疗愈。</div></div>
+      <div class="tl-item"><div class="t">你们的地球 · 已谈过</div><div class="d">Ra 说其形而上学历史你们已熟知，愿意的话可以再问；但他已就此主题做过大量发言。</div></div>
+      <div class="tl-item"><div class="t">土星 · 与无限智能亲和</div><div class="d">那些希望保护你们星系的存在，居住在土星时间/空间的磁场之中。</div></div>
+      <div class="tl-item"><div class="t">天王星 · 刚起步</div><div class="d">正在缓慢地穿过第一密度，并且具有穿过所有密度的潜力。</div></div>
+    </div>
+    <div class="quote">
+      <p class="en">This planetary sphere was one of rapid evolution. It is our native Earth, and the rapidity of [the progress of] the mind/body/spirit complexes upon its surface was due to harmonious interaction.</p>
+      <p class="zh">这颗行星球体属于快速进化的一类。它是我们的原生地球；其表面上心/身/灵复合体的[进展]之所以快，是因为和谐的互动。</p>
+      <span class="src">—— Session 030 · (30.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">this entity was stopped in mid-third density, thus being unable to continue in progression due to the lack of hospitable conditions upon the surface.</p>
+      <p class="zh">这个实体在第三密度中途被停下了，因为其表面缺乏适宜的条件，无法继续进展。</p>
+      <span class="src">—— Session 030 · (30.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The planet known as Saturn has a great affinity for the infinite intelligence, and thus it has been dwelled upon in its magnetic fields of time/space by those who wish to protect your system.</p>
+      <p class="zh">你们称为土星的行星与无限智能有着深厚的亲和力，因此，那些希望保护你们所在星系的存在，居住在它时间/空间的磁场之中。</p>
+      <span class="src">—— Session 030 · (30.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The planetary entity known to you as Uranus is slowly moving through the first density and has the potential of moving through all densities.</p>
+      <p class="zh">你们称为天王星的行星实体正在缓慢地穿过第一密度，并且具有穿过所有密度的潜力。</p>
+      <span class="src">—— Session 030 · (30.14)</span>
+    </div>
+    <div class="case"><b>中途停工的工地：</b>一个项目盖到一半遇上地质灾害，只能封场，等地面稳定了再说——Ra 说火星在第三密度中期被停止，因为表面缺乏适宜条件而无法继续，这颗行星要经历数千年的疗愈。</div>
+    <div class="case"><b>不用指挥也能合上的合唱团：</b>有些团队不靠催，成员自己会让拍子、把和声补上——Ra 说他的原生行星金星之所以进化快速，正是因为其表面心/身/灵复合体之间「和谐的互动」。</div>
+  </div>
+  <div class="card">
+    <h3>银河中心：更早的空间/时间开端</h3>
+    <div class="q">你昨天说这个主银河系的大部分在灵性上作为理则的一部分而存在——那是不是越靠近银河中心，那里的恒星就没有行星系统？越靠中心，灵性密度就越大吗？</div>
+    <div class="quote">
+      <p class="en">The Logos has distributed itself throughout your galactic system. However, the time/space continua of some of your more central sun systems is much further advanced.</p>
+      <p class="zh">理则将自身分布遍及你们的银河系。不过，你们那些更靠近中心的太阳系统，其时间/空间连续体要先进得多。</p>
+      <span class="src">—— Session 030 · (30.15)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The spiritual density, or mass, of those more towards the center of your galaxy is known.</p>
+      <p class="zh">那些更靠近你们银河系中心的星体，其灵性密度（或说质量）是已知的。</p>
+      <span class="src">—— Session 030 · (30.16)</span>
+    </div>
+    <div class="quote">
+      <p class="en">this is due simply to the varying timelessness states during which the planetary spheres may coalesce, this process of space/time beginnings occurring earlier, shall we say, as you approach the center of the galactic spiral.</p>
+      <p class="zh">这仅仅是因为行星球体凝聚时所经历的无时间状态各不相同：随着你接近银河螺旋的中心，空间/时间开端的过程会更早发生。</p>
+      <span class="src">—— Session 030 · (30.16)</span>
+    </div>
+    <div class="plain">越靠银河中心，灵性「密度」越大，但原因很朴素：那里空间/时间的开端发生得更早，所以走得远。不是等级差异，而是起跑时间不同。</div>
+    <div class="analogy"><b>像城市的老城区：</b>越靠近市中心，街道和楼宇建得越早，积累的年头自然越多。新城区的路并不差，只是晚了很久才开始铺。</div>
+    <div class="quote">
+      <p class="en">This will be the last full question of this session as this instrument is somewhat uncomfortable. We do not wish to deplete the instrument.</p>
+      <p class="zh">这将是本次集会的最后一个完整问题，因为这个器皿有些不舒服。我们不想把她耗尽。</p>
+      <span class="src">—— Session 030 · (30.16)</span>
+    </div>
+    <div class="plain">Ra 在这里主动为集会设了上限——不是话题讲完了，而是器皿的状态优先。这句限定本身就是教导：工作不以「讲完」为目标。</div>
+  </div>
+  <div class="card">
+    <h3>器皿照料与「不必要的变貌」</h3>
+    <div class="quote">
+      <p class="en">However, we would suggest that no electrical or magnetic equipment not necessary for the recording of our words be brought into these sessions, for we wish no distortions that are not necessary.</p>
+      <p class="zh">不过我们建议：除了记录我们话语所必需的设备之外，不要把任何电气或磁性设备带进这些集会，因为我们不想要任何不必要的变貌。</p>
+      <span class="src">—— Session 030 · (30.17)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This instrument is well balanced, and the contact is as it should be.</p>
+      <p class="zh">这个器皿平衡良好，接触也如其所应。</p>
+      <span class="src">—— Session 030 · (30.18)</span>
+    </div>
+    <div class="plain">对极化器的询问，Ra 的回答是「按现状不会有帮助」，并顺手立了一条环境规则：多余的电气与磁性设备不要进集会——因为不需要的变貌就是不需要。</div>
+    <div class="case"><b>录音棚里的规矩：</b>录一段人声时，录音师会关掉空调、风扇和手机——不是设备不好，而是任何多余的干扰都会进到轨道里。Ra 对集会的建议正是这个逻辑：除了记录话语所必需的设备，不要带任何电气或磁性设备进来，「因为我们不想要任何不必要的变貌」。</div>
+  </div>
+  <div class="saying">
+    <p class="en">This is not merely correct but is the key to that which occurs in all densities.</p>
+    <p class="zh">这不仅正确，而且是所有密度中发生之事的关键。</p>
+    <span class="src">—— Session 030 · (30.11)</span>
+  </div>
+  <div class="card">
+    <h3>这一集留下的位置</h3>
+    <p>本集是一条完整链条的收拢：极性从「意识到可以选择」开始，心/身/灵复合体从第一密度的随机意识一路演化到第三密度被激活，第二密度的双性繁殖为第三密度的服务铺好地基，行星层面则各自走在不同的进度上。而它有明显的截断感——(30.16) 里 Ra 宣布那是最后一个完整问题，录音带也随之结束，银河中心那条线索只给了一句答案。</p>
+    <div class="plain">读下一集时可以带着这个问题：那些「时间/空间连续体更先进」的太阳系统，Ra 会不会展开讲？</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+<p>基于 The Ra Contact Session 030（split/Ra_Session_030.md）英文原文制作 · 交互式学习模块</p>
+<p>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文</p>
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra030-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+
+/* --- 本集问答脉络 --- */
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+  {t:'(30.0) 开场',d:'<b>致意与开场。</b>Ra 在太一无限造物主的爱与光中致意，宣布本次通讯开始。'},
+  {t:'(30.1) 极性的起点',d:'<span class="qa-q">问：造物若细分，个体化实体一出现在空间/时间中就该具有极性，对吗？</span><b>答：</b>推理相当有洞察力且正确，除最后那个分句——极性只在第三密度实体意识到「可以在服务自我或服务他人之间选择」时才开始被探索，那一刻标记着天真阶段的结束。'},
+  {t:'(30.2) 三个术语',d:'<span class="qa-q">问：能否分别定义心智、身体与灵性？</span><b>答：</b>三个词都只是简化的描述性说法，指向同一个能量聚焦复合体。Ra 用一棵树讲心智（从感受、情感、智性思维一路下行到直觉、个人/种族记忆、宇宙注入），用一条管道讲灵性（注入可下达，意识可上达智能无限的入口），并强调三者缺一不可。'},
+  {t:'(30.3)(30.4) 死亡之后',d:'<span class="qa-q">问：失去化学身体后还有一个身体吗？心智或灵性会受损吗？</span><b>答：</b>复合体相当完好，物质身体只是更致密有力的身体复合体的显化；损失的是表层的心智幻象，「任何重要之物都没有丢失」——情感与偏好的蒸馏反而第一次显明，灵性管道也因不再需要遗忘而大大敞开。'},
+  {t:'(30.5) 复合体的来历',d:'<span class="qa-q">问：心/身/灵复合体如何起源？是灵性造心智、心智造身体吗？</span><b>答：</b>这是追溯进化，不是追溯制造者。意识最先出现（第一密度，无运动、随机）；第二密度转向光、唤醒灵性复合体；当它意识到服务自我或服务他人的可能性时，才被激活。'},
+  {t:'(30.6)-(30.8) 第二密度的岔路',d:'<span class="qa-q">问：双足实体与恐龙曾同时栖息吗？为什么并存？恐龙为何消失？</span><b>答：</b>确曾同时存在。自由意志在进化中运作，求生存、繁衍、寻求成长的路径有两条（只是众多中的两条）；恐龙消失只因一句：它们无法喂养自己的身体复合体。'},
+  {t:'(30.9)-(30.13) 双性繁殖',d:'<span class="qa-q">问：双性繁殖背后的哲学是什么？第二密度实体能借此获得灵性成长吗？那只猫受益了吗？</span><b>答：</b>第二密度为第三密度铺地基；繁殖机制在第三密度转化为服务他人与自我的巨大潜力（靠得近，服务的机会才出现）。灵性潜力属于第三密度，只有孤立的例外；甘道夫是罕见样本，但同样属于例外。'},
+  {t:'(30.14)-(30.16) 行星与银河',d:'<span class="qa-q">问：各行星的形而上学历史与功能？银河中心的灵性密度更大吗？</span><b>答：</b>只讲有体验者的行星：金星快速进化（和谐的互动）、火星在第三密度中期被停止并将疗愈数千年、地球已谈过、土星与无限智能亲和、天王星正缓慢穿过第一密度。银河中心确实灵性密度更大，只因空间/时间的开端更早发生。Ra 随即宣布这是最后一个完整问题。'},
+  {t:'(30.17)(30.18) 收尾',d:'<span class="qa-q">问：极化器能帮到器皿的身体吗？还有什么能让器皿更舒适？</span><b>答：</b>按现状不会有帮助，并建议携带进集会的设备以「记录话语所必需」为限；器皿平衡良好、接触如其所应，肌肉痉挛使静止姿势不适。Ra 以「在爱与光中离开」与 Adonai 作结。'}
+]);
+
+/* --- 心智之树的下行 --- */
+initStepper('mindTrack','mindDetail','mindPrev','mindNext',[
+  {t:'心智表层',d:'<b>感受、情感、智性思维。</b>心智是一个复合体，反映灵性的注入与身体复合体的上涌；在它较有意识的层面里，装着你们所知的感受、情感和智性思维。'},
+  {t:'向下 · 直觉',d:'<b>直觉。</b>再往下是直觉——它属于心智中与「整体存在复合体」接触更紧密、更调谐的那一部分。'},
+  {t:'心智的根部',d:'<b>从个人到宇宙。</b>到达根部时，意识的进展一路转换：从个人记忆，到种族记忆，再到宇宙的注入。'},
+  {t:'穿梭载具',d:'<b>成为直接接触者。</b>走到这一步，意识就成了那趟「穿梭载具」——也就是灵性复合体——的直接接触者。'},
+  {t:'管道双向',d:'<b>注入下达，意识上达。</b>宇宙、行星与个人的各种注入，经灵性这条管道汇入意识根部；意识则经身体与心智平衡后的智能能量，上达智能无限的入口。'}
+]);
+
+/* --- 术语卡展开 --- */
+document.querySelectorAll('.fn-card').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('open')));
+
+/* --- 归类练习：天真阶段 vs 已在选择 --- */
+initSorter('sorterArea',[
+  {a:'路上遇到一只流浪猫，它每天在同一家门口等喂食，越等越熟',opts:['第二密度','第三密度'],ans:'第二密度',exp:'求生存与转向光是第二密度的特征；本集说灵性潜力属于第三密度，这类跟从生长的行为尚未涉入极性选择。'},
+  {a:'你放弃一个能拿奖金的项目，把机会让给刚入职的同事',opts:['第二密度','第三密度'],ans:'第三密度',exp:'已经意识到服务自我与服务他人之间的选择，并作出了选择——按 (30.1)，极性正是在这样的意识中出现。'},
+  {a:'院子里两株植物，一株朝着墙外的光长，另一株被遮住就慢慢不长了',opts:['第二密度','第三密度'],ans:'第二密度',exp:'「发现成长并转向光」正是 (30.5) 描述的第二密度：由此唤醒灵性复合体，但尚未进入选择。'},
+  {a:'家里养了两只狗：一只靠撒娇换零食，一只自己琢磨着怎么翻柜子',opts:['第二密度','第三密度'],ans:'第二密度',exp:'Ra 说心/身复合体在求生存、繁衍与寻求成长上各走各的路径，两条路径只是众多中的两条 (30.7)。'},
+  {a:'深夜你反复问自己：这件事到底是为了把事情做好，还是为了被看见',opts:['第二密度','第三密度'],ans:'第三密度',exp:'这正是「服务他人 / 服务自我」的选择在意识中浮现——Ra 说这一刻标志着天真阶段的结束 (30.1)。'}
+]);
+
+/* --- 条件模拟器：复合体何时被激活 --- */
+function updateCond(){
+  const on=['condA','condB','condC','condD'].map(id=>document.getElementById(id).checked);
+  const box=document.getElementById('condResult');
+  let html='',fail=false;
+  if(!on[0]){
+    html='<b>还没有起点。</b>Ra 说第一密度里的意识「没有运动，是一种随机之物」(30.5)——那时连把它称为心智复合体还是身体复合体都只是语义问题。';
+    fail=true;
+  }else if(!on[1]){
+    html='<b>停在第一密度。</b>意识已经存在，但没有「发现成长、转向光」这一步，灵性复合体就不会被唤醒——向上螺旋还没有加强的力量。';
+    fail=true;
+  }else if(!on[2]){
+    html='<b>停在第二密度。</b>心/身复合体已经转向光，但灵性复合体尚未被唤醒。Ra 说这个加入「只是表面上的加入，而非真实的新增」，因为它从一开始就潜在地存在 (30.5)。';
+    fail=true;
+  }else if(!on[3]){
+    html='<b>仍未被激活。</b>灵性复合体已苏醒，心/身/灵复合体成形了——但它还没有意识到服务自我或服务他人的可能性。按 (30.5)，激活要等到这份意识出现；这也正是 (30.1) 所说极性开始被探索的那一刻。';
+    fail=true;
+  }else{
+    html='<b>被激活。</b>当心/身/灵复合体意识到服务自我或服务他人的可能性时，它就被激活了 (30.5)——天真阶段在同一刻结束 (30.1)，极性从这里开始被探索。';
+  }
+  box.innerHTML=html;
+  box.classList.toggle('fail',fail);
+}
+['condA','condB','condC','condD'].forEach(id=>document.getElementById(id).addEventListener('change',updateCond));
+updateCond();
+
+renderPath();
+</script>
+</body>
+</html>

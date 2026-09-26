@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 087 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 087 · 交互式学习模块</h1>
+  <p class="sub">这一集先检修器材、校准术语，再解剖第五密度负面同伴的权力世界与第四密度负面的诱惑手法；最后把性能量转移讲透——从电池类比到红黄光芒的账本，收在「两性本性为何不同」的原型配对上。</p>
+  <div class="tagline">7 个主题 · 6 个学习步骤 · 25 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 负面同伴的权力世界</a>
+<a href="#s3">③ 自由意志与力量账本</a>
+<a href="#s4">④ 术语校准</a>
+<a href="#s5">⑤ 性能量转移：电池与阻塞</a>
+<a href="#s6">⑥ 红黄光芒的账本</a>
+<a href="#s7">⑦ 收官：振动的桥梁</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>29 个问答块怎么走：器材检修 → 负面同伴 → 术语校准 → 性能量转移（第 1 章）</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>走进负面同伴的世界</b><span>第五密度负面实体住哪里、如何取得并运用极性（第 2 章）</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>算清自由意志与力量的账</b><span>第四密度负面为何只能诱惑、成功之后力量如何流转（第 3 章）</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>校准一对术语</b><span>心/身/灵 vs 心/身/灵复合体——一次传输错误的前因后果（第 4 章）</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>弄懂性能量转移</b><span>电池类比、阻塞的根源，再到红黄光芒的高峰差异（第 5-6 章）</span></span></label></div>
+<div class="step-item" data-target="#s7"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官：金句与伏笔</b><span>振动的桥梁、两性本性的原型配对，以及本集最重的一句话（第 7 章）</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ 第 1 章 · 本章地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：这一集在回答什么</h2></div>
+  <p class="sec-lead">本集（1982 年 5 月 12 日）承接上一集的两个尾巴：香炉的物理对齐出了点状况，以及「罩纱之前性能量转移总是可能」这句让人惦记的话。29 个问答块走出一条清晰的线：先检修器材与术语，再解剖第五密度负面同伴的权力世界，最后把性能量转移讲成一幅两性互补的振动图景。</p>
+
+  <div class="card">
+    <h3>本集四大块</h3>
+    <div class="q">一眼看清结构：看起来最「玄」的负面实体，和最「日常」的性话题，被同一根线串着。</div>
+    <p>① <b>器材与器皿</b>（87.1-87.4）：香炉位置、最佳摆放；② <b>负面同伴专题</b>（87.5-87.16）：权力如何炼成极性、自由意志的边界、成功诱惑的力量账本；③ <b>术语校准</b>（87.17）：罩纱前后的两种称呼；④ <b>性能量转移</b>（87.18-87.28）：电池类比 → 红黄光芒 → 振动桥梁 → 两性本性。</p>
+    <div class="quote">
+      <p class="en">The nature of the densities above your own is that a purpose may be said to be shared by both positive and negative polarities. This purpose is the acquisition of the ability to welcome more and more the less and less distorted love/light and light/love of the One Infinite Creator.</p>
+      <p class="zh">在你们之上的密度里，正面与负面两极共享同一个目的：越来越能迎接太一无限造物主那越来越少变貌的爱/光与光/爱。——负面道路并不是「另一个目标」，而是通往同一处的另一条路，本集的负面同伴专题要放在这个框架里读。</p>
+      <span class="src">—— Session 087 · (87.6)</span>
+    </div>
+    <div class="case"><b>提问清单：</b>1982 年 5 月 12 日，集会开始前，Don 的清单上排着两件「小事」：香炉冒烟的起点会横向漂移约六英寸（上一集 Ra 提醒过对齐困难）；Ra 上次似乎把「心/身/灵」和「心/身/灵复合体」换着用了。他把器材问题放在开头、术语问题放在中段——先保证管道干净，再谈大主题。这正对应本集的结构：仪式精确度与语言精确度，是后面所有教导的地基。</div>
+    <div class="case"><b>通勤读法：</b>一位读者在地铁上把本集 29 个问答块划成四段：前四块是「设备检修」，中间十二块是「负面同伴专题」，一块是「术语校准」，最后十二块是「性能量转移」——划完发现，第 2-3 章讲的是「力量如何流动」（负面实体的权力账本），第 5-7 章讲的是「能量如何流动」（性能量转移）。本章地图就是这张站牌。</div>
+  </div>
+
+  <div class="card">
+    <h3>问答脉络推进器</h3>
+    <p>点节点或用左右按钮，走一遍本集的对话主线。</p>
+    <div class="flow-track" id="flowTrack1"></div>
+    <div class="flow-detail" id="flowDetail1"></div>
+    <div class="flow-ctrl"><button class="tri-btn" id="flowPrev1">← 上一问</button> <button class="tri-btn" id="flowNext1">下一问 →</button></div>
+  </div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 器材 · 收尾叮嘱</span></summary>
+  <div class="body">
+    <p><b>(87.1) 器皿状态：</b>肉体复合体的变貌没有变化，生命能量水平大大增强。</p>
+    <p><b>(87.2-87.4) 器材问答：</b>香炉若为全新的（virgin），改成单一水平冒烟位有帮助；圣杯与蜡烛的位置已属最佳，香炉宜置于那本书的后方、居中于打开的书脊处。</p>
+    <p><b>(87.17 末) 器皿叮嘱：</b>以祈祷准备后，朝向疼痛发作的变貌已大为好转，但因投胎前的身体变貌及负面存有的激活，仍会波动。</p>
+    <p><b>(87.29) 收尾：</b>Ra 确认香炉的重新调整会有帮助、校准良好，叮嘱大家尽责，在爱与光中离开。</p>
+  </div></details>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 2 章 · 负面同伴的权力世界 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>负面同伴的权力世界：第五密度负面如何取得并运用极性</h2></div>
+  <p class="sec-lead">发问者先问负面同伴的现状，再连追三层：它如何取得极性、住在哪里、怎么与第四密度负面协作。Ra 的回答画出一张第五密度负面实体的「生存画像」——而这幅画像的每一笔，都能在我们自己的世界里找到倒影。</p>
+
+  <div class="card">
+    <h3>它的极性从哪来、用来做什么</h3>
+    <div class="q">发问者想弄清：这个撤退「充电」的实体，取得极性之后究竟拿它干什么——除了为第六密度收割攒本钱这种显而易见的用途之外。</div>
+    <div class="quote">
+      <p class="en">Upon the negative path the wisdom density is one in which power over others has been refined until it is approaching absolute power. Any force such as the force your group and those of Ra offer which cannot be controlled by the power of such a negative fifth-density mind/body/spirit complex then depolarizes the entity which has not controlled other-selves.</p>
+      <p class="zh">在负面道路上，智慧密度（第五密度）是把「对他人的权力」精炼到接近绝对的阶段；而任何它控制不了的力量——比如你们小组与 Ra 提供的力量——都会使这个未能控制其他自我的实体去极化。</p>
+      <span class="src">—— Session 087 · (87.6)</span>
+    </div>
+    <div class="plain">第五密度负面道路的全部功课是把权力打磨到接近绝对；而小组一方真正的护身符不是智识上的对抗，而是和谐、彼此相爱、以及诚实地向光之力量呼求援助——Ra 说，「盾牌与防护」由此而来。</div>
+    <div class="case"><b>绩效认领：</b>某互联网公司的部门里，主管把下属每个人的成功都写进自己的季度汇报，下属因为害怕绩效考核而不敢吭声。这种「基于相对力量的无条件服从」正是 Ra 在 (87.8) 给出的判据：任何这样运作的组织，都在按负面道路的计划运转——不管它的口号是「奋斗」还是「光荣」。</div>
+    <div class="case"><b>深夜岩壁：</b>一名登山者的绳索被落石卡住，凭一己之力硬撑到力竭也没能解开；队友们没有各自逞强，而是稳住保护站、轮流喊话打气、向山下救援队发出信号，最终获救。Ra 说得直白：以你们有意识的自我，敌不过那种精炼的力量；真正护住小组的，是和谐、相互的爱与真诚的呼求。</div>
+  </div>
+
+  <div class="card">
+    <h3>它住在哪里、怎么生活</h3>
+    <div class="q">第五密度负面实体的「环境」听起来像个谜——Ra 的答案极简：岩石、洞穴、荒芜之地。</div>
+    <div class="quote">
+      <p class="en">The environment of your companion is that of the rock, the cave, the place of barrenness, for this is the density of wisdom. That which is needed may be thought and received.</p>
+      <p class="zh">你们同伴的环境是岩石、洞穴、荒芜之地——因为这是智慧的密度。所需之物可以想到并收到。</p>
+      <span class="src">—— Session 087 · (87.7)</span>
+    </div>
+    <div class="plain">这个密度几乎不需要空间/时间里的任何东西：意识在时间/空间里度过，尽量动用自我的力量与资源学习智慧之道——既然自我即造物主，这些经验对负面实体而言「有启发性而迷人」。</div>
+    <div class="case"><b>极简主义者的边界：</b>一位极简主义者把家清到只剩一张床垫，购物全靠「想到什么、次日送达」——但他仍依赖空间/时间的物流网络。Ra 描述的智慧密度实体走得更远：那里的「供给」根本不经由物理层面，所需之物以思想获得。形似而层次不同——这个对比恰好划出了密度的界线。</div>
+  </div>
+
+  <div class="card">
+    <h3>它与第四密度负面如何协作——地球上看得见吗</h3>
+    <div class="q">发问者接着问第五密度与第四密度负面实体的关系，并把它映射到人间：煽动战争的领袖与全然确信的追随者，是不是同一回事？</div>
+    <div class="quote">
+      <p class="en">The relationship of such an entity to fourth-density negative entities is one of the more powerful and the less powerful. The negative path posits slavery of the less powerful as a means of learning the desire to serve the self to the extent that the will is brought to bear. It is in this way that polarity is increased in the negative sense.</p>
+      <p class="zh">这样的实体与第四密度负面实体的关系，是更强大者与较不强大者的关系。负面道路假定奴役较弱者，作为学习「服务自我之渴望」的手段——负面意义上的极性正是由此增加。</p>
+      <span class="src">—— Session 087 · (87.7)</span>
+    </div>
+    <div class="plain">第四密度实体是第五密度实体的「自愿奴隶」——双方对力量差距毫无怀疑；而 Ra 把发问者的战争领袖例子收窄成一条判据：任何基于相对力量要求无条件服从的组织，都在按上述计划运作。</div>
+    <div class="case"><b>传销金字塔：</b>一个传销组织里，上线把「教你成功」包装成恩赐，下线全额上缴并发展更多下线——每一层都心甘情愿，因为整个结构只承认一件事：谁更有力量。Ra 描述的第四→第五密度关系正是这种结构的极致版本：奴役本身被设计成「学习渴望服务自我」的课程。</div>
+    <div class="case"><b>历史课的一问：</b>历史老师在讲两次大战时问学生：「为什么数百万普通人会坚信征服是对的？」一个学生答「因为宣传教育」，另一个答「因为恐惧惩罚」。Ra 的判据把两个答案都收进去了：只要服从建立在「谁权力大」之上、且不许提问，那个组织就在按负面计划运作——与旗号无关。</div>
+  </div>
+
+  <div class="card">
+    <h3>本节小词典</h3>
+    <div class="table-wrap"><table class="nine">
+      <tr><th>术语</th><th>英文</th><th>通俗理解</th></tr>
+      <tr><td>智慧密度</td><td>wisdom density</td><td>第五密度：负面道路上「对他人的权力已精炼至接近绝对」的阶段</td></tr>
+      <tr><td>去极化</td><td>depolarize</td><td>未能控制其他自我的负面实体，遇到无法控制的力量时的极性流失</td></tr>
+      <tr><td>盾牌与防护</td><td>shield and buckler</td><td>由和谐、相互的爱与真诚呼求光之援助形成的保护</td></tr>
+      <tr><td>自愿的奴隶</td><td>willing slaves</td><td>第四密度负面实体对第五密度的臣服：奴役被当作学习服务自我的课程</td></tr>
+    </table></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 3 章 · 自由意志与力量账本 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>自由意志的边界与力量的账本：第四密度负面能做什么</h2></div>
+  <p class="sec-lead">发问者真正想解开的是一个哲学疙瘩：第四密度负面实体明明理解第一变貌（自由意志），又活在无罩纱的状态里，为什么还能保持分离的心智配置？Ra 没有直接讲「为什么」，而是把账算给他们看：第四密度能做什么、做到之后力量怎么记账、代价是什么。</p>
+
+  <div class="card">
+    <h3>能做什么、不能做什么</h3>
+    <div class="q">发问者问：负面实体如何利用第一变貌去征服第三密度、并把它们「收编」进自己的社会记忆复合体？</div>
+    <div class="quote">
+      <p class="en">This latter plan is not one of which fourth-density negative social memory complexes are capable. The fourth-density habit is that of offering temptations and of energizing pre-existing distortions. Fourth-density entities lack the subtlety and magical practice which the fifth-density experience offers.</p>
+      <p class="zh">后面这个计划，第四密度负面的社会记忆复合体做不到。第四密度的习惯是提供诱惑、激活对方已有的变貌——它们缺乏第五密度经验所提供的那种微妙与魔法实践。</p>
+      <span class="src">—— Session 087 · (87.9)</span>
+    </div>
+    <div class="plain">第四密度负面做不到「在尊重自由意志的前提下直接收编」——它的全部手法是递诱惑、给已有变貌添柴；至于 UFO 接触，Ra 补充：能提供的负面信息都会提供，且随接收者是否正面导向而改变，因此许多接触是混合性质的（87.10）。</div>
+    <div class="case"><b>宿舍拉人：</b>大学宿舍里，有人想拉同学进考试作弊的小圈子：他不给对方灌输任何新观念，只是「不经意」提起上次没复习也能过的侥幸，勾起对方本来就有的侥幸心。这正是 Ra 说的第四密度手法——诱惑是递到已有变貌面前的一根火柴，而不是从零造出的火。</div>
+    <div class="case"><b>试吃摊：</b>超市里试吃摊的推销从不说「你必须买」，只把最诱人的一口递到你面前——买不买由你。但如果你本来就饿着肚子、正卡在减肥失败的边缘，这一口就格外「巧」。第四密度负面实体与第三密度的接触同理：它不强迫，它守在你已有欲望的必经之路上。</div>
+  </div>
+
+  <div class="card">
+    <h3>无知还是确信：分离的心智配置如何维持</h3>
+    <div class="q">发问者卡住了：让每个实体自由选择服务自我的道路，这难道不恰恰是服务他人吗？而 Ra 先补上前提——负面实体并非不懂自由意志：它在第三密度收割时已做出选择，知道观看宇宙的全部方法，却「确信」弃用绿色光芒能量中心（心轮，无条件之爱所在）最利于第四密度收割；它对尚未选择者所做的一切，只是递上「服务自我」的菜单。</div>
+    <div class="quote">
+      <p class="en">In your armed bands a large group marauds and pillages successfully. The success of the privates is claimed by the corporals, the success of corporals by sergeants, then lieutenants, captains, majors, and finally the commanding general. Each successful temptation, each successful harvestable entity is a strengthener of the power and polarity of the fourth-density social memory complex which has had this success.</p>
+      <p class="zh">在你们的武装队伍里，一大群人成功地劫掠。士兵的成功归下士认领，下士的归中士，再往上中尉、上尉、少校，最终归指挥官。每一次成功的诱惑、每一个被收割的实体，都是那个取得成功的第四密度社会记忆复合体之力量与极性的增强剂。</p>
+      <span class="src">—— Session 087 · (87.12)</span>
+    </div>
+    <div class="plain">提供选择看似服务他人，结出的果却全数计入负面账本——按武装队伍的规矩逐级向上认领。分离不是无知，而是「确信」：确信关掉心轮最划算。</div>
+    <div class="case"><b>菜单点餐：</b>一位食客在餐厅面对菜单：服务员不多劝，只把菜单放下，点哪道是食客自己的功课——但菜单上永远有一道「极其美味、只为你自己」的菜。Ra 说负面实体的运作正是如此：不强迫、不强求，只是让「服务自我」这道菜始终保持可选。</div>
+    <div class="case"><b>层层报功：</b>某销售团队月末复盘：新人小王签下大单，主管在总监面前汇报「我们组的成果」，总监在总裁会上汇报「我们部的成果」，年终评级时功劳记在总经理名下——小王只拿到口头表扬。Ra 的武装队伍类比正是这张认领链条：士兵→下士→中士→中尉→上尉→少校→指挥官，每一层都把下面的成功算作自己的。</div>
+  </div>
+
+  <div class="card">
+    <h3>吸收一个实体，力量涨多少、又如何显形</h3>
+    <div class="q">发问者追问数字：把一个第三密度实体吸收进第四密度负面社会记忆复合体，总力量会翻倍吗？新权力又怎么看出来？</div>
+    <div class="quote">
+      <p class="en">If one entity in the social memory complex is responsible for this addition to its being, that mind/body/spirit complex will absorb, in linear fashion, the power contained in the, shall we say, recruit. … Only very rarely is the social memory complex of negative polarity capable of acting totally as one being. The loss of polarity due to this difficulty, to which we have previously referred as a kind of spiritual entropy, is quite large.[87]</p>
+      <p class="zh">如果复合体中的某一个实体负责这次「扩员」，就由那个心/身/灵复合体以线性方式吸收新成员所含的力量。……负面极性的社会记忆复合体极少能全然作为一个整体行动——由此造成的极性损失（Ra 曾称之为一种精神熵）相当大。</p>
+      <span class="src">—— Session 087 · (87.14)</span>
+    </div>
+    <div class="plain">力量不翻倍：由负责者（个体或子群体）线性吸收；而「极少能如一体行动」的内耗——精神熵——时刻在扣分。新权力显形的方式有二：或是意志之战，武器是双方各自能形成的光；或是被直接承认，旁观者看好与更强者结盟的好处，助推它在结构中上升（87.15-87.16）。</div>
+    <div class="case"><b>球队转会：</b>一支篮球队签下一名球星：薪资和球权归明星本人与运作转会的经纪人小组，球队「总实力」并没有翻倍——化学反应甚至要重新磨合。Ra 的账本更冷：负责招募者线性吸收新成员之力，而整支「负面球队」几乎从不能真正拧成一股绳，内耗时刻在吃掉极性。</div>
+    <div class="case"><b>职场站队：</b>部门里空降一位能拿到大客户的经理：老牌副总监立刻感到位次不稳，两人开会时的每一次交锋都像在「比光」；更多的同事则默默盘算——跟谁走能分到好处，就帮谁往上爬。87.15-87.16 描述的负面社会记忆复合体内景，几乎是这张组织行为学的异界同款。</div>
+  </div>
+
+  <div class="card">
+    <h3>问答推进器：一次成功诱惑之后</h3>
+    <p>从递上菜单到位次重排，看负面群体内部的完整链条。</p>
+    <div class="flow-track" id="flowTrack2"></div>
+    <div class="flow-detail" id="flowDetail2"></div>
+    <div class="flow-ctrl"><button class="tri-btn" id="flowPrev2">← 上一步</button> <button class="tri-btn" id="flowNext2">下一步 →</button></div>
+  </div>
+
+  <div class="card">
+    <h3>归类练习：这是第四密度还是第五密度负面的手笔？</h3>
+    <div id="sorter1"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 4 章 · 术语校准 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>术语校准：罩纱前后为什么是两个称呼</h2></div>
+  <p class="sec-lead">一桩关于两个词的「纠错」，背后是本集最重要的工具升级：罩纱把一个实体劈成了需要重新整合的「复合体」，连称呼都因此一分为二。Ra 不但认账，还主动加报了一处漏词——这场较真本身就是教导。</p>
+
+  <div class="card">
+    <h3>Ra 真的用错词了吗</h3>
+    <div class="q">发问者核对上一集的文字记录，发现「心/身/灵」与「心/身/灵复合体」似乎被换着用了——是误用吗？</div>
+    <div class="quote">
+      <p class="en">The use of the term “mind/body/spirit” should refer to those entities dwelling in third density prior to the veiling process, the term “mind/body/spirit complex” referring to those entities dwelling in third density after the veiling process.</p>
+      <p class="zh">「心/身/灵」一词应指居住在罩纱过程之前的第三密度实体；「心/身/灵复合体」则指罩纱之后居住在第三密度的实体。</p>
+      <span class="src">—— Session 087 · (87.17)</span>
+    </div>
+    <div class="plain">Ra 确认这是传输错误：罩纱把心智与身体隔开，实体成了需要重新整合的结构，称呼随之分岔——连罩纱后说到 body 时也该补上 complex。</div>
+    <div class="case"><b>版本号风波：</b>一款软件在 2.0 版把「账号」改叫「账户」，客服文档却混用了半年，用户按旧口径理解扣费规则闹出误会。Don 的角色像那个较真的文档工程师：核对记录、主动求证；Ra 不但确认错误，还主动加报一处——罩纱后说到身体也漏了「复合体」。术语的精确，就是理解的精确。</div>
+    <div class="case"><b>例会纪要：</b>每次例会后，记录员都把纪要发给发言人逐条确认，当场修正口径偏差。Ra 的请求正是这个动作的镜像：「对这些传输保持警觉，发现错误务必提问」——因为目标是提供尽可能少变貌的词语。这份较真被标进原始记录（87.17 的 [88] 注记），成为文本自己的一部分。</div>
+  </div>
+
+  <div class="card">
+    <h3>本集术语卡（点击翻转）</h3>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">心/身/灵</div><div class="sub">mind/body/spirit</div><div class="tap">点击翻转</div></div><div class="back">罩纱之前第三密度实体的称呼：心智与身体之间没有那道「纱」，灵性信息可以直接进来，实体是未分裂的一体。<em>像一间没装窗帘的房间，屋内屋外一览无余。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">心/身/灵复合体</div><div class="sub">mind/body/spirit complex</div><div class="tap">点击翻转</div></div><div class="back">罩纱之后第三密度实体的称呼：心智与身体被隔开，灵性通道不再显白，实体成了需要靠自己重新整合的「复合体」。<em>窗帘拉上之后，只能靠记忆与推理去猜窗外有什么。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">第一变貌</div><div class="sub">First Distortion</div><div class="tap">点击翻转</div></div><div class="back">自由意志的变貌：太一造物主经验自己时最先戴上的面具。一切教导与干预都不得越过它——Ra 如此，负面实体同样如此。<em>像一场立了「不剧透」约定的观影团：故事只能自己看。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">智慧密度</div><div class="sub">wisdom density</div><div class="tap">点击翻转</div></div><div class="back">第五密度的别称。对负面道路而言，这是「对他人的权力已被精炼至接近绝对」的阶段；在岩穴荒芜之地，所需之物以思想获得。<em>同一所学校，两种校规：一种靠权力管人，一种靠领悟带人。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">精神熵</div><div class="sub">spiritual entropy</div><div class="tap">点击翻转</div></div><div class="back">Ra 对负面群体内耗的命名：负面社会记忆复合体极少能全然如一体行动——谁出的力算谁的、等级随时重排——这种困难造成的极性损失相当大（87.14）。<em>一支各算各账的球队，天赋再高也赢不了整体磨合的对手。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">绿色光芒能量中心</div><div class="sub">green-ray energy center</div><div class="tap">点击翻转</div></div><div class="back">心轮：无条件之爱所在的能量中心。第四密度负面实体「确信」弃用它最利于收割——负面道路的分离正是从这个节点上筑起的（87.11）。<em>明知正门在哪，却说服自己走侧门更快。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">母体与赋能者</div><div class="sub">Matrix / Potentiator</div><div class="tap">点击翻转</div></div><div class="back">心智与身体复合体的原型结构：母体是等待激活的基底，赋能者是将其点亮的动因。罩纱完成时，心智的母体吸向男性、赋能者吸向女性；身体的赋能者吸向男性、母体吸向女性（87.28）。<em>乐器与演奏它的手：必须相遇，声音才存在。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">能量转移</div><div class="sub">energy transfer</div><div class="tap">点击翻转</div></div><div class="back">空间/时间与时间/空间之间的振动桥梁。性能量转移是它在第三密度最贴近日常的形式：男性释放物理能量，女性释放心智与心智/情感能量，互为补给（87.27）。<em>不是一根水管单向送水，更像两座水库在汛期互相调峰。</em></div></div>
+    </div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 5 章 · 性能量转移 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>性能量转移：为什么罩纱前「总是可能」</h2></div>
+  <p class="sec-lead">上一集 Ra 说过：罩纱之前，性能量转移总是可能的。这句话看似简单，发问者却追问了四轮才挖到底——Ra 的回答方式本身也是一课：先把类比立起来，再把问题收窄，最后给出根本原因。</p>
+
+  <div class="card">
+    <h3>电池、灯泡与反接</h3>
+    <div class="q">「总是可能」是什么意思？罩纱之后为什么不总可能？——Ra 用手电筒电池作比，再要求问题精确，最后把根源钉在「爱」上。</div>
+    <div class="quote">
+      <p class="en">Two working batteries placed in series always offer the potential of the bulb’s illumination. After the veiling, to continue this gross analogy, the two batteries being placed not in series would then offer no possible illumination of the bulb. Many mind/body/spirit complexes after the veiling have, through blockages, done the equivalent of reversing the battery.</p>
+      <p class="zh">两节完好的电池串联放置，总是提供灯泡点亮的潜能。罩纱之后，继续这个粗略的类比：两节电池不再串联，灯泡便没有任何点亮的可能。许多罩纱后的心/身/灵复合体，通过阻塞，做了相当于把电池反接的事。</p>
+      <span class="src">—— Session 087 · (87.18)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Please query more specifically as to the mind/body/spirits or mind/body/spirit complexes about which you request information.</p>
+      <p class="zh">请更具体地询问你所请求的信息涉及哪些心/身/灵或心/身/灵复合体。</p>
+      <span class="src">—— Session 087 · (87.19)</span>
+    </div>
+    <div class="plain">根本原因（87.20-87.21）：阻塞源于「缺乏把其他自我视为造物主的能力」——换个说法，缺乏爱。这不是技术故障，是爱的问题。</div>
+    <div class="analogy"><b>类比自我校准：</b>注意 Ra 自己标注这是「粗略的类比」（gross analogy）。电池反接的问题不在器材——电池没坏、灯泡没烧，坏的是「方向与通路」。所以别把电池想得太实：它说的是潜能常在、通路常失。</div>
+    <div class="case"><b>装反的电池：</b>手电筒不亮，你拆开发现电池是满的、灯泡也没坏，只是有一节装反了。Ra 用这幅画面解释罩纱后的许多关系：双方都完整，却在阻塞中把「正负极」对反了——转移失败的多数情况，不是能量不足，而是通路与方向出了问题。</div>
+    <div class="case"><b>各刷各的手机：</b>一对并不缺爱的伴侣，晚饭后却各自抱着手机滑到深夜——没有争吵，没有故障，只是谁也没把当天的疲惫递给对方。Ra 给阻塞的定性落在这里：缺的不是「技巧」，是那种把眼前的其他自我看作造物主的瞬间；缺了它，电池就被悄悄装反。</div>
+  </div>
+
+  <div class="card">
+    <h3>条件模拟器：性能量转移需要什么？</h3>
+    <p>拨一拨三个开关，看「总是可能」是怎么变成「无从谈起」的。</p>
+    <div id="condSex">
+      <div class="cond-row"><div class="name">电池完好<small>双方能量可用——转移的「硬件」条件</small></div><label class="switch"><input type="checkbox" id="c087a" checked><span class="slider"></span></label></div>
+      <div class="cond-row"><div class="name">串联<small>通路畅通、没有阻塞</small></div><label class="switch"><input type="checkbox" id="c087b" checked><span class="slider"></span></label></div>
+      <div class="cond-row"><div class="name">看见对方为造物主<small>有爱——Ra 给出的根本条件（87.21）</small></div><label class="switch"><input type="checkbox" id="c087c" checked><span class="slider"></span></label></div>
+    </div>
+    <div id="condResult"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 6 章 · 红黄光芒的账本 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>红黄光芒的账本：高峰差异与高潮比例从哪来</h2></div>
+  <p class="sec-lead">性话题在 Ra 这里从来是双层记账：一层是黄色光芒的化学身体与红色光芒的繁殖冲动，一层是心/身/灵复合体层面的能量转移。发问者的每个「为什么」，都被 Ra 拆到这两层分别作答。</p>
+
+  <div class="card">
+    <h3>为什么男性的高峰在二十岁前，女性晚十年</h3>
+    <div class="q">发问者注意到：男性的性潜能在二十岁前见顶，女性约晚十年——这个差异从哪来？</div>
+    <div class="quote">
+      <p class="en">We must make clear distinction between the yellow-ray, third-density, chemical bodily complex, and the body complex which is a portion of the mind/body/spirit complex.</p>
+      <p class="zh">我们必须清楚区分：黄色光芒的第三密度化学身体复合体，与作为心/身/灵复合体一部分的身体复合体。</p>
+      <span class="src">—— Session 087 · (87.22)</span>
+    </div>
+    <div class="plain">男性：精子最活跃之时，黄芒渴望最盛——红芒（繁殖冲动）挑身体最能干的时候冲。女性：十五到十八个月才可能受孕一次，孕育哺乳又耗损黄芒身体——欲望只能持续增强来补偿，好让繁殖「尽量密集」。而身体复合体层面更完整的性，根本不参与这套黄芒显化，走的是能量转移与服务之路。</div>
+    <div class="case"><b>健身房的体能曲线：</b>一位健身教练观察学员十年：二十岁出头的男学员练什么冲什么，全凭身体本钱；二十八九岁的女学员反而进入稳定期，训练与恢复的节奏更可持续。Ra 的机制图恰好解释了这种直觉：男性高峰是「精子最可活的时点」驱动的黄芒渴望，女性的高峰则由「受孕间隔长＋孕育耗损大」逼出一条更平缓、更持久的补偿曲线。</div>
+    <div class="case"><b>新手爸妈：</b>一位母亲产后三年几乎把全部体力投给孩子：怀孕、分娩、哺乳，层层耗损。Ra 说正是这种耗损让女性的欲望被「设计」成持续增强——不是多情，而是黄芒身体要用更强的拉动，才能完成「尽量密集繁殖」的红芒任务。</div>
+  </div>
+
+  <div class="card">
+    <h3>高潮比例为什么偏向男性？罩纱前呢？</h3>
+    <div class="q">发问者接着问男女高潮比例的悬殊——Ra 的回答先把它放回生物账本，再掀开罩纱前的那页。</div>
+    <div class="quote">
+      <p class="en">The male orgasm which motivates the sperm forward to meet its ovum is essential for the completion of the red-ray desire to propagate the species. The female orgasm is unnecessary.</p>
+      <p class="zh">男性高潮推动精子向前与卵子相遇，对完成红芒繁殖物种的渴望是必需的；女性高潮则并非必需。</p>
+      <span class="src">—— Session 087 · (87.23)</span>
+    </div>
+    <div class="plain">生物层面：男性高潮是「把精子送到卵子面前」的推进器，缺它不可；女性高潮不在必需清单上。罩纱前，比例远比现在接近一比一——因为女性高潮的形而上价值清晰、没有阴影。当复合体开始用性能量转移来学习、服务与荣耀造物主，这个功能才重新显明。</div>
+    <div class="case"><b>纪录片里的分工：</b>动物纪录片里，雄性为交配权拼得头破血流，雌性掌握着基因是否传递的最终关口。Ra 的生理账本与此同构：雄性高潮是繁殖链条上的必需环节，雌性高潮在纯生物层面则不在必需清单上——它的形而上价值，要等性能量转移被「用对」了才显影。</div>
+  </div>
+
+  <div class="card">
+    <h3>第四密度还有「比例」可言吗</h3>
+    <div class="q">发问者想再要一个第四密度早期的比例数字——Ra 给了一个近乎拒答的限定，外加两幅图景。</div>
+    <div class="quote">
+      <p class="en">It may be said that the veil in fourth density is lifted and the choice has been made. In positive polarities true sharing is almost universal. In negative polarities true blockage so that the conqueror obtains orgasm, the conquered almost never, is almost universal.</p>
+      <p class="zh">可以说，第四密度中罩纱已揭开、选择已做出。正面极性中，真正的分享几乎是普遍的；负面极性中，真正的阻塞——征服者获得高潮、被征服者几乎从不——几乎是普遍的。</p>
+      <span class="src">—— Session 087 · (87.25)</span>
+    </div>
+    <div class="plain">更高密度里谈「男女高潮」已相当无意义——高潮越来越成为复合体作为整体的功能。而无论哪一种，性经验都是最高效的极化手段：分享把人推向正面，阻塞把人钉在负面。</div>
+    <div class="case"><b>两种署名：</b>两个小组各自完成项目：一个组的成果署名人人有份、收益共享；另一个组的主管独占署名，组员连名字都不出现。Ra 说第四密度中性经验的两幅图景正是如此——真正的分享 ↔ 真正的阻塞，而且两者都「高效」：一个高效地正面极化，一个高效地负面极化。</div>
+    <div class="case"><b>两章对读：</b>把本章和第 2 章连起来看：第五密度负面靠奴役与权力攒极性，第四密度负面靠诱惑攒极性，而性经验则是跨密度通用的「极化加速器」——同一条负面道路，在不同密度换不同的工具。</div>
+  </div>
+
+  <div class="card">
+    <h3>归类练习：这句话说的是哪个阶段？</h3>
+    <div id="sorter2"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 7 章 · 收官 ============ -->
+<section class="chapter" id="s7">
+  <div class="sec-head"><span class="num">07</span><h2>收官：振动的桥梁、两性本性与本集金句</h2></div>
+  <p class="sec-lead">收官前，发问者坦白了一个困惑：物理学的能量词汇（势能、动能、熵）在谈论性能量转移时全部失灵。Ra 的回答把本集推向一个安静的结论：性能量是空间/时间与时间/空间之间的振动桥梁；两性因罩纱而各存一种能量、互为补给；最后用母体与赋能者的配对，回答了「两性本性为何不同」。</p>
+
+  <div class="card">
+    <h3>性能量到底是什么「能」</h3>
+    <div class="q">发问者说：我大概永远无法理解这种能量的基本形式，但我直觉它是纯粹振动——Ra 请他追问，然后确认了这个直觉。</div>
+    <div class="quote">
+      <p class="en">You are correct in assuming that the energy of which we speak in discussing sexual energy transfers is a form of vibratory bridge between space/time and time/space.</p>
+      <p class="zh">你的假设是正确的：我们在讨论性能量转移时所说的能量，是空间/时间与时间/空间之间的一种振动桥梁。</p>
+      <span class="src">—— Session 087 · (87.27)</span>
+    </div>
+    <div class="plain">它不是势能变动能那种物理账目，而是两个密度面之间的一座振动桥梁。因罩纱而方向不同：男性储存物理能量，转移中释放，使女性恢复活力；女性储存心智与心智/情感能量，释出时为男性带来灵感、疗愈与祝福（87.27）。</div>
+    <div class="case"><b>自驾分工：</b>长途自驾，一人开车（耗体力），一人管导航、递水、陪聊（耗心力），到站时两人都不觉得太累——各自卸下了自己富余的那一份。Ra 描述的转移是双向互补：男性卸下物理能量，女性卸下心智/情感能量，交换之后两边都回血。</div>
+    <div class="case"><b>合租分工：</b>合租的两个室友把家务分成「力气活」与「操心活」：一人搬水修灯，一人排期缴费记日子。各有所储、各有所放——但记住 Ra 的提醒：这套不对称的互补格局是罩纱之后才成形的，别把它当成「本来就该如此」的天经地义。</div>
+  </div>
+
+  <div class="card">
+    <h3>两性本性为何不同</h3>
+    <div class="q">本集最后一问，由 Ra 主动邀请（「再多一个完整的问题」）引出：男性与女性的本性为什么不同？</div>
+    <div class="quote">
+      <p class="en">When the veiling process was accomplished, to the male polarity was attracted the Matrix of the Mind and to the female, the Potentiator of the Mind; to the male the Potentiator of the Body, to the female the Matrix of the Body.</p>
+      <p class="zh">罩纱过程完成时，心智的母体被吸引到男性极性、心智的赋能者被吸引到女性；身体的赋能者被吸引到男性、身体的母体被吸引到女性。</p>
+      <span class="src">—— Session 087 · (87.28)</span>
+    </div>
+    <div class="plain">一幅交叉配对的原型图：心智层面，男性持母体（基底）、女性持赋能者（点亮者）；身体层面，男性持赋能者（发力者）、女性持母体（承托者）。不同即互补的形状——用的是此前集会已经建立的原型词汇。</div>
+    <div class="analogy"><b>母体与赋能者怎么配：</b>母体（Matrix）是等待被激活的基底，赋能者（Potentiator）是把它点亮的动因。乐器与手必须相遇，声音才存在——而罩纱之后，男女两极恰好各持一半、交叉互补：男性是「心智的底盘＋身体的动力」，女性是「心智的动力＋身体的底盘」。</div>
+    <div class="case"><b>老夫妻的描述：</b>一对老夫妻这样形容彼此：「他出力气，我出主意；主意是我给他的劲儿，力气是他给我撑住的底。」Ra 的原型配对正是这种交叉：心智上女性是赋能者（点亮者）、男性是母体（基底）；身体上男性是赋能者（发力者）、女性是母体（承托者）。</div>
+  </div>
+
+  <div class="yuan-grid">
+    <div class="yuan-card"><span class="y-tag">男性极性 · 罩纱后</span><h4>母体×赋能者的交叉（一）</h4><p><b>心智的母体 + 身体的赋能者。</b>储存物理能量，转移中把它释放出去。</p></div>
+    <div class="yuan-card"><span class="y-tag">女性极性 · 罩纱后</span><h4>母体×赋能者的交叉（二）</h4><p><b>心智的赋能者 + 身体的母体。</b>储存心智与心智/情感能量，释出灵感、疗愈与祝福。</p></div>
+    <div class="yuan-card"><span class="y-tag">第四密度 · 正面</span><h4>真正的分享</h4><p><b>几乎普遍。</b>性经验成为高效的正面极化手段——从「两个人的消长」变成「作为整体的复合体的功能」。</p></div>
+    <div class="yuan-card"><span class="y-tag">第四密度 · 负面</span><h4>真正的阻塞</h4><p><b>几乎普遍。</b>征服者获得、被征服者几乎从不——同样高效，方向相反的极化。</p></div>
+  </div>
+
+  <div class="card">
+    <h3>收官盘点：本集留下的三处伏笔</h3>
+    <div class="plain">① 87.17 的术语更正被标注回写（[88]），原始记录从此多了一道「校对层」；② 香炉的重新调整在 87.29 得到 Ra 确认「会有帮助」——器材线将在下次集会兑现；③ 87.27 末 Ra 主动请求「再多一个完整的问题」，才引出「两性本性」一问，答案落在母体与赋能者的原型配对上——对话的引擎没有熄火。</div>
+  </div>
+
+  <div class="saying">
+    <p class="en">The root cause of blockage is the lack of the ability to see the other-self as the Creator, or to phrase this differently, the lack of love.</p>
+    <p class="zh">阻塞的根本原因，是缺乏把其他自我视为造物主的能力——换一种说法：缺乏爱。</p>
+    <span class="src">—— Session 087 · (87.21)</span>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 087（split/Ra_Session_087.md）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra087-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+/* 术语卡翻转 */
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+/* 推进器一：本集问答脉络 */
+const mapFlow=[
+  {t:'开场与器皿',d:'<span class="qa-q">问：器皿的状况如何？</span><b>答：</b>肉体复合体的变貌没有变化，生命能量水平大大增强——状态比上一集好得多。(87.0-87.1)'},
+  {t:'检修器材',d:'<span class="qa-q">问：香炉改成单一水平冒烟位会更好吗？最佳摆放是什么？</span><b>答：</b>若香炉是全新的，这样改有帮助；圣杯与蜡烛位置已最佳，香炉宜置于那本书的后方、对准书脊。(87.2-87.4)'},
+  {t:'负面同伴',d:'<span class="qa-q">问：第五密度负面同伴现状如何？</span><b>答：</b>它已撤退一段时间以恢复极性——由此引出本集最大的一块：负面道路的权力世界。(87.5-87.8)'},
+  {t:'自由意志与力量',d:'<span class="qa-q">问：第四密度负面实体能对第三密度做什么？</span><b>答：</b>只能在自由意志边界内递上诱惑、激活已有变貌；每次成功的诱惑都按「层层认领」给社会记忆复合体增力。(87.9-87.16)'},
+  {t:'术语校准',d:'<span class="qa-q">问：上一集是不是把「心/身/灵」和「心/身/灵复合体」用混了？</span><b>答：</b>确是传输错误：罩纱前用前者，罩纱后用后者；请一并更正并继续保持警觉。(87.17)'},
+  {t:'性能量转移',d:'<span class="qa-q">问：为什么罩纱前转移「总是可能」？</span><b>答：</b>两节电池串联，灯泡随时可能点亮；罩纱后阻塞常使电池「反接」——根源是缺乏把其他自我视为造物主的能力，即缺乏爱。(87.18-87.28)'},
+  {t:'收束',d:'<span class="qa-q">问：还能做些什么来改善接触？</span><b>答：</b>香炉的重新调整会有帮助，校准良好；在爱与光中离开。Adonai。(87.29)'}
+];
+initStepper('flowTrack1','flowDetail1','flowPrev1','flowNext1',mapFlow);
+
+/* 推进器二：一次成功诱惑之后 */
+const powerFlow=[
+  {t:'递上菜单',d:'<span class="qa-q">问：负面实体对尚未选择的第三密度实体做什么？</span><b>答：</b>只提供「考虑服务自我极性及其吸引力」的机会——菜单递到自由意志面前，选择仍是你的。(87.11)'},
+  {t:'层层认领',d:'<span class="qa-q">问：一次成功的诱惑，功劳记在谁的账上？</span><b>答：</b>武装队伍的规矩：士兵的成功归下士，逐级上达，最终归指挥官。每一次成功的诱惑、每一个被收割的实体，都加强第四密度社会记忆复合体的力量与极性。(87.12)'},
+  {t:'线性吸收',d:'<span class="qa-q">问：新成员入伙，总力量会翻倍吗？</span><b>答：</b>不会。谁负责招募——个体或子群体——就由谁以线性方式吸收新成员所含的力量。(87.13-87.14)'},
+  {t:'精神熵扣分',d:'<span class="qa-q">问：那为什么负面群体没有越滚越大？</span><b>答：</b>负面社会记忆复合体极少能全然如一体行动——这种困难造成的极性损失，Ra 称之为一种精神熵，相当大。(87.14)'},
+  {t:'位次重排',d:'<span class="qa-q">问：新到手的权力怎么显形？</span><b>答：</b>等级秩序立即受挑战：或是意志之战——武器是双方各自能形成的光；或是被直接承认，旁观者助推更强者上升。(87.15-87.16)'}
+];
+initStepper('flowTrack2','flowDetail2','flowPrev2','flowNext2',powerFlow);
+
+/* 归类练习一：第四密度还是第五密度负面的手笔 */
+initSorter('sorter1',[
+  {a:'提供诱惑，并激活对方本来就有的变貌',opts:['第四密度负面','第五密度负面'],ans:'第四密度负面',exp:'87.9：这是第四密度的习惯——它缺乏第五密度的微妙与魔法实践。'},
+  {a:'住在岩石、洞穴与荒芜之地，所需之物以思想获得',opts:['第四密度负面','第五密度负面'],ans:'第五密度负面',exp:'87.7：这是智慧密度（第五密度）实体的环境与生存方式。'},
+  {a:'以更微妙、魔法般的实践施加影响',opts:['第四密度负面','第五密度负面'],ans:'第五密度负面',exp:'87.9：这种微妙正是第四密度所缺乏、第五密度经验所提供的。'},
+  {a:'确信弃用绿色光芒能量中心最利于第四密度收割',opts:['第四密度负面','第五密度负面'],ans:'第四密度负面',exp:'87.11：第四密度负面实体在第三密度收割时已做出这个选择。'},
+  {a:'作为「自愿的奴隶」臣服于更强大的负面实体',opts:['第四密度负面','第五密度负面'],ans:'第四密度负面',exp:'87.7：第四密度实体是第五密度实体的自愿奴隶——奴役被当作学习的手段。'}
+]);
+
+/* 归类练习二：这句话说的是哪个阶段 */
+initSorter('sorter2',[
+  {a:'两节完好电池串联，灯泡随时可能点亮',opts:['罩纱前','罩纱后','第四密度'],ans:'罩纱前',exp:'87.18：罩纱之前，性能量转移「总是可能」。'},
+  {a:'电池未被串联，甚至被阻塞「反接」',opts:['罩纱前','罩纱后','第四密度'],ans:'罩纱后',exp:'87.18：罩纱后许多复合体因阻塞做了「反接电池」的等价之事。'},
+  {a:'男性与女性高潮之比远比现在接近一比一',opts:['罩纱前','罩纱后','第四密度'],ans:'罩纱前',exp:'87.24：罩纱前女性高潮的形而上价值清晰、没有阴影。'},
+  {a:'正面极性中「真正的分享」几乎普遍',opts:['罩纱前','罩纱后','第四密度'],ans:'第四密度',exp:'87.25：第四密度中罩纱已揭开、选择已做出。'},
+  {a:'征服者获得高潮，被征服者几乎从不',opts:['罩纱前','罩纱后','第四密度'],ans:'第四密度',exp:'87.25：负面极性中「真正的阻塞」几乎普遍。'}
+]);
+
+/* 条件模拟器：性能量转移需要什么 */
+function updateCond087(){
+  const a=document.getElementById('c087a').checked;
+  const b=document.getElementById('c087b').checked;
+  const c=document.getElementById('c087c').checked;
+  const r=document.getElementById('condResult');
+  if(a&&b&&c){
+    r.classList.remove('fail');
+    r.innerHTML='罩纱之前的常态，也是如今最通畅的转移：两节电池串联，灯泡点亮的潜能常在——Ra 所说「总是可能」指的就是这个。';
+  }else if(!a){
+    r.classList.add('fail');
+    r.innerHTML='电池本身缺电，谈何点亮——能量不可用时，转移无从谈起。先有电，才谈得上通路。';
+  }else if(!b){
+    r.classList.add('fail');
+    r.innerHTML='罩纱之后的常见情形：两节电池都不坏，只是不再串联——灯泡没有任何点亮的可能。潜能仍在，缺的是通路。';
+  }else{
+    r.classList.add('fail');
+    r.innerHTML='电池完好、通路也在，唯独缺了最根本的一味：把其他自我视为造物主。按 Ra 的说法，这等于把电池反接了——阻塞的根源是缺乏爱（87.21）。';
+  }
+}
+document.querySelectorAll('#condSex input').forEach(sw=>sw.addEventListener('change',updateCond087));
+updateCond087();
+
+renderPath();
+</script>
+</body>
+</html>

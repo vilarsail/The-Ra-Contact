@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 005 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 005 · 交互式学习模块</h1>
+  <p class="sub">本集先纠正一个根本误解——疗愈者不是施治者，只是催化剂；随后给出心智与身体两个领域的修炼次第，灵性领域留待下次。</p>
+  <div class="tagline">4 个主题 · 4 个学习步骤 · 9 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 疗愈的本质</a>
+<a href="#s3">③ 心智修炼五步</a>
+<a href="#s4">④ 身体修炼与收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>先看这一集的四个问答块各自在做什么，例行问答可跳过</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>疗愈的本质</b><span>Ra 纠正的核心：疗愈者不是施治者，只是催化剂</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>心智修炼五步</b><span>从「钥匙是静默」到观察四层心智的关系</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>身体修炼与收官</b><span>把心智的功课在身体上重做一遍，以及本集留下的伏笔</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：这一集在问什么</h2></div>
+  <p class="sec-lead">上一集开始谈疗愈，这一集把话题推进到「疗愈到底是怎么发生的」。发问者先复述自己已有的理解请 Ra 校准，得到纠正后，才问出真正的问题：要成为有效的疗愈者，第一步做什么。Ra 的回答把后面几集的内容一次铺开——心智、身体、灵性三个领域。</p>
+  <div class="card">
+    <h3>问答脉络：四问一收尾</h3>
+    <p>本集只有四个问答块，但每一块都换了层次：从「校准理解」，到「给出方法」，再到「收尾照料」。点击节点看每一段在做什么。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="qaTrack"></div>
+      <div class="flow-detail" id="qaDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="qaPrev">← 上一步</button> <button class="tri-btn" id="qaNext">下一步 →</button></div>
+    </div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿照料 · 集会节奏</span></summary>
+  <div class="body">
+    <p><b>(5.3) 器皿照料：</b>Ra 建议把蜡烛每次集会顺时针旋转约 10°，以改善螺旋能量流经器皿接收机制的流动；所用物品要以几何精度居中放置、时常检查，并且不要暴露在「工作不重要」的空间/时间里。</p>
+    <p><b>(5.2) 集会节奏：</b>Ra 主动结束身体部分的描述，把第三个领域（灵性）留到下一次工作，以便投入与它重要性相称的时间。</p>
+    <p><b>(5.0)/(5.3) 开场与收尾：</b>以「在无限造物主的爱与光中致意」开场，以「欢欣前行于太一造物主的力量与平安之中」作结（Adonai）。</p>
+  </div></details>
+  <div class="case"><b>开会先复述上次结论：</b>周一晨会上，你没有直接抛出方案，而是先说「我理解我们上次定的是 A，对吗？」——本集发问者就是这么开场的：先把上一集的结论复述一遍请 Ra 校准，再问新问题。在问答实录里，复述本身就是一次校准动作。</div>
+  <div class="case"><b>带着自己的模型去看医生：</b>你查了一堆资料，进门就说「我猜是胃食管反流，是不是该先忌口再吃药？」医生答：「大方向没错，但你说的『忌口』这个词不太准。」——这正是 Ra 对发问者的回应方式：先确认理解方向，再指出用词不够精确。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>疗愈的本质：疗愈者不是施治者</h2></div>
+  <p class="sec-lead">发问者带来一个相当完整的模型：先靠修炼净化自我，再用榜样和练习在病人心中造出一种「允许他自我疗愈的心智配置」。Ra 说这个理解「本质正确」，但用词不够精确——差别就在「谁在治」这件事上。</p>
+  <div class="card">
+    <h3>纠正的落点：运作不属于疗愈者</h3>
+    <div class="q">我以为疗愈要先净化自己，再以榜样和练习在病人身上造出让他自我疗愈的心智配置。我说得对吗？</div>
+    <div class="quote">
+      <p class="en">Although your learn/understanding-distortion is essentially correct, your choice of vibratory sound complex is not entirely as accurate as this language allows.</p>
+      <p class="zh">你的学习/理解变貌本质上是正确的，但你所选的声音振动复合体并不完全如这门语言所能允许的那样精确。</p>
+      <span class="src">—— Session 005 · (5.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">It is not by example that the healer does the working. The working exists in and of itself.</p>
+      <p class="zh">疗愈者并非通过榜样示范来完成这一运作。运作存在于其自身之中，并凭借其自身而存在。</p>
+      <span class="src">—— Session 005 · (5.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The healer is only the catalyst, much as this instrument has the catalysis necessary to provide the channel for our words…</p>
+      <p class="zh">疗愈者只是催化剂——正如这个器皿具备必要的催化作用，为我们的言语提供管道……</p>
+      <span class="src">—— Session 005 · (5.1)</span>
+    </div>
+    <div class="plain">疗愈不是疗愈者「做」出来的；他是催化剂，让一件本来就自存自成的运作得以发生。</div>
+    <div class="analogy"><b>像插座，不像发电机：</b>插座不发电，它只是让电得以流过。你不会感谢插座「给了你电」——但插座接触不良时，灯确实不亮。</div>
+    <div class="quote">
+      <p class="en">The healing working is congruent in that it is a form of channeling some distortion of the intelligent infinity.</p>
+      <p class="zh">疗愈运作在这一点上是相合的：它是一种对智能无限的某种变貌进行管道输送的形式。</p>
+      <span class="src">—— Session 005 · (5.1)</span>
+    </div>
+  </div>
+  <div class="card">
+    <h3>两种模型对照</h3>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">发问者的模型</span><h4>疗愈者施治</h4><p>先净化自我 → 以榜样示范 → 在病人心中造出「自我疗愈的配置」。<b>重心在疗愈者身上。</b></p></div>
+      <div class="yuan-card"><span class="y-tag">Ra 的纠正</span><h4>运作自存</h4><p>运作「存在于其自身之中并凭借其自身而存在」；疗愈者只是<b>催化剂</b>，不为此运作承担任何思虑。</p></div>
+      <div class="yuan-card"><span class="y-tag">疗愈的定位</span><h4>管道输送</h4><p>疗愈是一种对<b>智能无限</b>的某种变貌进行管道输送的形式——所以关键在通道是否通畅。</p></div>
+      <div class="yuan-card"><span class="y-tag">方法论提醒</span><h4>用词即精度</h4><p>Ra 特意指出发问者「所选的声音振动复合体不够精确」——<b>选词本身影响理解</b>，这不是修辞上的挑剔。</p></div>
+    </div>
+  </div>
+  <div class="case"><b>推拿师的那句话：</b>腰痛病人做完理疗说「是你把我治好了」。推拿师摇头：「我只是让你的身体有机会自己修好。」——他做的事真实有效，但他不是施治者，而是催化剂，正对应 5.1 的纠正。</div>
+  <div class="case"><b>深夜陪朋友走出低谷：</b>朋友凌晨发来长消息，你没法「替他」想通，能做的只是把话说准、陪他坐到天亮；转折发生在他自己身上。这对应 Ra 所说的：运作自在自存，你只是提供管道。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>心智修炼：五步打开那扇门</h2></div>
+  <p class="sec-lead">发问者问出本集真正的问题：要成为有效的疗愈者，第一步做什么。Ra 的回答是一个框架——三部分教导/学习（心智、身体、灵性），然后从心智讲起。而心智工作的第一把钥匙不是技巧，是静默。</p>
+  <div class="card">
+    <h3>前提：钥匙是静默</h3>
+    <div class="q">要成为有效的疗愈者，我们应该完成的第一个步骤是什么？</div>
+    <div class="quote">
+      <p class="en">The prerequisite of mental work is the ability to retain silence of self at a steady state when required by the self. The mind must be opened like a door. The key is silence.</p>
+      <p class="zh">心智工作的前提条件是：当自我要求时，有能力把自我的静默保持在一个稳定的状态。心智必须像一扇门那样被打开。钥匙是静默。</p>
+      <span class="src">—— Session 005 · (5.2)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Within the door lies an hierarchical construction you may liken unto geography and in some ways geometry, for the hierarchy is quite regular, bearing inner relationships.</p>
+      <p class="zh">这扇门之内，存在一个层级构造，你可以把它比作地理学，在某些方面又比作几何学，因为这个层级相当规则，承载着内在关系。</p>
+      <span class="src">—— Session 005 · (5.2)</span>
+    </div>
+    <div class="plain">静默不是「什么都不想」，而是把自我调到可被要求进入的稳定状态——门开了，里面那个规则层级才谈得上被观察。</div>
+    <div class="analogy"><b>像调频收音机：</b>不是把音量拧大就能收到台，而是要把频率对准、并保持稳定；杂音大的时候，往往不是信号不在，而是你在动。</div>
+  </div>
+  <div class="card">
+    <h3>五步：一条由内向外的链</h3>
+    <p>前三步是一个整体：先向内检视、再接纳、然后把同样的动作向外做一遍。第四步把第二步的接纳延伸到他人，第五步把视野抬到四种心智之间的关系。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="mindTrack"></div>
+      <div class="flow-detail" id="mindDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="mindPrev">← 上一步</button> <button class="tri-btn" id="mindNext">下一步 →</button></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>术语卡：本集的关键词</h3>
+    <p>点击卡片翻看解释。这几个词在全书反复出现，先在这里建立准确的直觉。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">变貌</div><div class="sub">distortion</div><span class="tap">点击展开</span></div><div class="back">对统一性的任何偏离状态，本身不含贬义。本集中发问者的「学习/理解变貌」指：他形成的理解本身也是一种偏离，所以需要校准。<em>比喻：同一束白光透过棱镜分成七色——颜色不是错，只是分开了。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">催化剂</div><div class="sub">catalyst</div><span class="tap">点击展开</span></div><div class="back">不是起作用的那一方，而是促成作用发生的中介。本集中疗愈者与器皿都是催化剂：他们在场，但运作不属于他们。<em>案例：酶不参与反应产物，却让反应得以发生。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">智能无限</div><div class="sub">Intelligent Infinity</div><span class="tap">点击展开</span></div><div class="back">Ra 体系中与「太一无限造物主」相通的无限智能，是一切存在的源头与基质。本集说疗愈就是输送它的某种变貌。<em>比喻：不是你去造电，而是让电通过你。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">心/身/灵复合体</div><div class="sub">mind/body/spirit complex</div><span class="tap">点击展开</span></div><div class="back">Ra 对人类存在的标准称谓，强调心智、身体、灵性三者构成的统一结构——本集的三部分修炼正是照着这个结构展开的。<em>比喻：同一栋房子的三个系统，分开讲，但住的是一个人。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">声音振动复合体</div><div class="sub">vibratory sound complex</div><span class="tap">点击展开</span></div><div class="back">Ra 对「名称/词语」的称谓——每个词都是一组振动。本集中 Ra 用这个词指出发问者「用词不够精确」，说明选词会改变理解的精度。<em>案例：同一个音高差一点，和弦就从和谐变成刺耳。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">器皿 / 管道</div><div class="sub">instrument / channel</div><span class="tap">点击展开</span></div><div class="back">出神通讯中承载 Ra 言语的人（本集会中是 Carla）。本集以器皿为类比，说明疗愈者「只是催化剂」这件事。<em>案例：麦克风不制造声音，只把声音传出去。</em></div></div>
+    </div>
+  </div>
+  <div class="case"><b>发现自己生气，同时找出对立面：</b>周三下午你被同事一句话激怒。第二步不是压住火气，而是问自己：「这份愤怒对应的另一面是什么？」——也许是「我很在意被认可」。这正是第一步：发现一种情绪，就有意识地找出它的对立面。</div>
+  <div class="case"><b>刷到刺眼的评论：</b>刷手机看到一条让你想立刻反驳的评论，先承认「我也有想骂人的那一面」，而不是把自己划到「理性的一方」——对应第二步：接纳意识内的完整性，不在属性中挑拣。</div>
+  <div class="case"><b>听朋友炫耀时在心里补上两面：</b>朋友反复讲自己的成绩，你心里有点烦。第三步不是压住烦躁，而是在理解里同时镜像出「炫耀/不炫耀」两面——你看见什么，就有责任在心里把它的对立面也放上。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>身体修炼与收官：把功课重做一遍</h2></div>
+  <p class="sec-lead">讲完心智，Ra 进入第二个领域：身体复合体。方法几乎是把心智的功课在化学/物理层面重做一遍——先了解、再理解极性、再接纳，最后延伸到他人的身体。灵性部分被 Ra 主动留到下一次。</p>
+  <div class="card">
+    <h3>身体：心智的造物，有自己的偏好</h3>
+    <div class="quote">
+      <p class="en">It is necessary to know your body well.</p>
+      <p class="zh">有必要好好认识你的身体。</p>
+      <span class="src">—— Session 005 · (5.2)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The body is a creature of the mind's creation.</p>
+      <p class="zh">身体是心智之造物的产物。</p>
+      <span class="src">—— Session 005 · (5.2)</span>
+    </div>
+    <div class="plain">身体的生物性偏好要先被完全理解，然后让相反的偏好在理解中获得充分表达——这才谈得上接纳身体是既平衡又极化的个体。</div>
+    <div class="analogy"><b>像调音，不像压音：</b>一把琴某根弦偏低，你不是把它拧到最高，而是先听清它偏低多少，再把它调到与其余弦相和的位置。</div>
+  </div>
+  <div class="card">
+    <h3>延伸到他人：每个生物学男性都是女性</h3>
+    <div class="quote">
+      <p class="en">each biological male is female; each biological female is male</p>
+      <p class="zh">每个生物学男性都是女性；每个生物学女性都是男性。</p>
+      <span class="src">—— Session 005 · (5.2)</span>
+    </div>
+    <div class="plain">Ra 说这是「最简单的例子」——真正的难点在于：理解自己或他人身体的极性，几乎总需要最精微的辨识。</div>
+  </div>
+  <div class="card">
+    <h3>归类练习：这是哪一层修炼？</h3>
+    <p>判断下面每件事属于本集所说的「心智修炼」还是「身体修炼」。</p>
+    <div id="sorterArea"></div>
+  </div>
+  <div class="saying">
+    <p class="en">The mind must be opened like a door. The key is silence.</p>
+    <p class="zh">心智必须像一扇门那样被打开。钥匙是静默。</p>
+    <span class="src">—— Session 005 · (5.2)</span>
+  </div>
+  <div class="card">
+    <h3>这一集留下的位置</h3>
+    <p>本集是「三部分教导/学习」的开头：心智讲了五步，身体讲了了解—理解—接纳—延伸，而灵性领域被 Ra 明确留到下一次工作。Ra 在收尾前特意说「如果问题简短，可以回答一个」——于是有了 (5.3) 的器皿照料，然后以 Adonai 作结。</p>
+    <div class="quote">
+      <p class="en">We can answer a query if it is a short one before we leave this instrument.</p>
+      <p class="zh">在离开这个器皿之前，如果问题简短，我们可以回答一个。</p>
+      <span class="src">—— Session 005 · (5.2)</span>
+    </div>
+    <div class="plain">读下一集时可以带着这个问题：灵性领域的修炼，Ra 会怎么讲？</div>
+  </div>
+  <div class="case"><b>久坐的人练相反的伸展：</b>程序员每天坐十小时，骨盆前倾。教练没让他「纠正姿势」，而是先让他感受自己偏好的坐姿，再练相反方向的伸展，让另一侧的偏好获得表达——对应「生物性偏好先理解，再让相反偏好充分表达」。</div>
+  <div class="case"><b>吵架时看到自己的另一面：</b>和伴侣争执到一半，你突然意识到自己此刻的强硬里也有一份怕被丢下的柔软——这就是「每个生物学男性都是女性」在日常里的样子：极性的另一面一直都在，只是需要被辨识出来。</div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+<p>基于 The Ra Contact Session 005（split/Ra_Session_005.md）英文原文制作 · 交互式学习模块</p>
+<p>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文</p>
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra005-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+  {t:'(5.0) 开场',d:'<b>致意与开场。</b>Ra 以「在无限造物主的爱与光中致意」开场，宣布本次通讯开始。'},
+  {t:'(5.1) 疗愈的本质',d:'<span class="qa-q">问：我以为疗愈要先净化自我，再用榜样在病人心中造出自我疗愈的配置，对吗？</span><b>答：</b>大方向对，但用词不够精确——疗愈者不是施治者，只是催化剂；运作存在于自身之中并凭借自身而存在。'},
+  {t:'(5.2) 第一步',d:'<span class="qa-q">问：要成为有效的疗愈者，第一步该做什么？</span><b>答：</b>从三部分教导/学习的第一部分（心智）开始：钥匙是静默，然后是五步心智修炼。'},
+  {t:'(5.2) 转入身体',d:'<b>答（续）：</b>第二个领域是身体——先了解身体、理解并接纳其极性，再延伸到他人的身体。灵性部分留待下次。'},
+  {t:'(5.3) 器皿照料',d:'<span class="qa-q">问：器皿舒适吗？还有什么能让她更舒适？</span><b>答：</b>蜡烛每次集会顺时针转约 10°，物品以几何精度居中并时常检查。Ra 随即收尾。'}
+]);
+
+initStepper('mindTrack','mindDetail','mindPrev','mindNext',[
+  {t:'第一步 · 检视自我',d:'<b>把外在维度的极性内化。</b>识别自己赞同与不赞同的一切，再用等量的对立面平衡每一个正负电荷——发现耐心时，也要有意识地找出相应的不耐烦。原文：「The mind contains all things. Therefore, you must discover this completeness within yourself.」'},
+  {t:'第二步 · 接纳完整性',d:'<b>接纳意识内的完整性。</b>处于极性中的存有不应在属性中挑拣；挑拣会造出角色，从而在已然变貌的心智复合体中造成阻塞与混淆。每一次接纳都会抚平「判断」这一官能所产生的众多变貌的一部分。'},
+  {t:'第三步 · 向外镜像',d:'<b>把第一步向外做一遍。</b>目光投向遇到的同伴实体，在他们身上同样看到完整性——看见耐心，就有责任在心智理解中镜像出「耐心/不耐烦」。Ra 说大多数心智配置有许多面向，这是精微的工作。'},
+  {t:'第四步 · 接纳他人极性',d:'<b>接纳他人自我的极性。</b>这一步是第三步的镜像工作，对应第二步的接纳，只是对象换成了他人。'},
+  {t:'第五步 · 观察四层心智',d:'<b>观察心智、他人心智、群体心智、无限心智之间的地理与几何关系和比例。</b>原文：「The fifth step involves observing the geographical and geometrical relationships and ratios of the mind, the other mind, the mass mind, and the infinite mind.」'}
+]);
+
+document.querySelectorAll('.fn-card').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('open')));
+
+initSorter('sorterArea',[
+  {a:'被同事一句话激怒时，有意识地找出这份情绪的对立面',opts:['心智','身体'],ans:'心智',exp:'第一步：把外在维度的极性内化，发现一种情绪就找出它的对立面。'},
+  {a:'用一段时间观察情绪如何在胃部、肩颈留下紧绷',opts:['心智','身体'],ans:'身体',exp:'Ra 说了解身体的方法，是用心智检视感受与情绪如何影响身体复合体的各部分。'},
+  {a:'听朋友炫耀时，在心里同时补上「炫耀/不炫耀」两面',opts:['心智','身体'],ans:'心智',exp:'第三步：把向内的镜像工作向外做，在他人身上也看到完整性。'},
+  {a:'久坐之后练相反方向的伸展，让另一侧的偏好获得表达',opts:['心智','身体'],ans:'身体',exp:'先理解生物性偏好，再让相反的偏好充分表达，是身体修炼的做法。'},
+  {a:'接纳自己意识里既想帮人又想被认可的两面，不做挑拣',opts:['心智','身体'],ans:'心智',exp:'第二步：接纳意识内的完整性，挑拣会在心智复合体中造出阻塞与混淆。'},
+  {a:'理解伴侣此刻的强硬里也有一份柔软',opts:['心智','身体'],ans:'身体',exp:'把身体极性的理解延伸到他人身体——正如 Ra 所说每个生物学男性都是女性。'}
+]);
+
+renderPath();
+</script>
+</body>
+</html>

@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 010 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 010 · 交互式学习模块</h1>
+  <p class="sub">本集把时间线一路推回 705,000 年前：一颗叫马尔戴克的行星毁于自己的战争，一个群体在恐惧里结成一团；随后是解结、业力减轻、向地球的转移，再讲到收割的机制、日常的四个练习，以及亚特兰蒂斯与利莫里亚两条截然不同的文明之路。</p>
+  <div class="tagline">6 个主题 · 6 个学习步骤 · 24 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 马尔戴克的覆灭</a>
+<a href="#s3">③ 恐惧之结与业力减轻</a>
+<a href="#s4">④ 收割的机制</a>
+<a href="#s5">⑤ 加速成长与四个练习</a>
+<a href="#s6">⑥ 两条文明的路与收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>先走一遍这一集的问答链：从一颗行星的毁灭，走到你今天的四个练习</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>马尔戴克的覆灭</b><span>一个自认为在服务他人的文明，如何把技术升级到极限，也把毁灭升级到极限</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>恐惧之结与业力减轻</b><span>结是怎么被解开的；为什么意识一直是第三密度，载具却被换成了第二密度</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>收割的机制</b><span>毕业时真正带走的只有「变貌的精华」，以及为什么要用「想」的方式就位</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>加速成长与四个练习</b><span>自由意志、当下每一刻的责任、呼唤的倍增，以及可操作的四个练习</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>两条文明的路与收官</b><span>穆与亚特兰蒂斯：一个有益无害却被淹没，一个技术飞跃却转向负面</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：从马尔戴克到亚特兰蒂斯的一条历史线</h2></div>
+  <p class="sec-lead">上一集把火星实体的转移、大脚怪的两种类型和周期的设定讲了一遍。这一集发问者把时间再往前推：在火星之前，还有一批灵魂是从别处「搬」过来的——他想看清楚这条搬迁链的起点。于是本集从马尔戴克的毁灭讲到亚特兰蒂斯的覆灭，中间夹着收割机制与四个可操作的练习；除了收尾的器皿照料，全篇都是教导内容。</p>
+  <div class="card">
+    <h3>问答脉络：一次不断往前追的追问</h3>
+    <p>这一集的推进方式很像考古：每得到一个答案，发问者就往上游再推一层——「那他们当时怎样了」「那现在呢」「那我们呢」。点击节点，看这条链条怎么走。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="qaTrack"></div>
+      <div class="flow-detail" id="qaDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="qaPrev">← 上一步</button> <button class="tri-btn" id="qaNext">下一步 →</button></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>这一集要处理的问题</h3>
+    <ul style="margin:0 0 4px 20px;font-size:.95rem;color:var(--ink-soft)">
+      <li>马尔戴克为什么失去星球？它的文明与极性是什么状态？</li>
+      <li>毁灭之后发生了什么：恐惧之结、较低星光层的疗愈、群体的业力减轻。</li>
+      <li>地球人口从何而来？「必须重复周期的人」为何让导向难以统一？</li>
+      <li>地球会不会重演同样的命运？Ra 对这个问题给了什么限定？</li>
+      <li>毕业与收割如何运作；移动靠「思想」还是靠「载具」。</li>
+      <li>如何有意识地加速成长；四个练习与它们共同的前提。</li>
+      <li>亚特兰蒂斯与利莫里亚：两条完全不同的文明之路。</li>
+    </ul>
+    <div class="quote">
+      <p class="en">I am Ra. I greet you in the love and the light of the Infinite Creator. I communicate now.</p>
+      <p class="zh">我是 Ra。我在无限造物主的爱与光中向你们致意。我现在开始通讯。</p>
+      <span class="src">—— Session 010 · (10.0)</span>
+    </div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿照料 · 集会节奏</span></summary>
+  <div class="body">
+    <p><b>(10.0) 开场：</b>Ra 以「在无限造物主的爱与光中致意」开场，宣布本次通讯开始；本集的收尾（10.19）同样以「把你们留在太一无限造物主的爱与光中」与 Adonai 作结。</p>
+    <p><b>(10.19) 器皿照料：</b>Ra 说若给身体复合体更多支撑，器皿会稍微舒适一些；除此之外只能重复那个请求——仔细对齐用于促进器皿平衡的符号，因为这次的接触是「窄带」的，随 Ra 带入的流入必须精确。</p>
+    <p><b>(10.15) 集会节奏：</b>Ra 在交代亚特兰蒂斯与利莫里亚之前先问：「在我们结束这次会议之前，你们有任何简短的问题吗？」即便被称作「本次工作的最后一个问题」，Ra 仍然按自己的节奏结束，而不是被问题牵着走。</p>
+  </div></details>
+  <div class="case"><b>点开纪录片先拉一遍进度条：</b>周末点开一部两小时的纪录片，你往往先拖进度条看章节标题——起源、崩坏、重建。本集就是这样一份目录：705,000 年前的毁灭、60 万年前的解结、50 万年前的搬迁，最后落到你今天可以做的四个练习。</div>
+  <div class="case"><b>体检时医生问家族史：</b>医生问你祖父那辈得过什么病，因为那会改变今天给你开的检查单。本集做的正是一次「灵魂家族史」的追溯：今天地球上许多人的来处，要追到那颗在 705,000 年前毁于战争的星球上。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>马尔戴克的覆灭：自以为在服务他人的负极性文明</h2></div>
+  <p class="sec-lead">发问者的第一个问题很直接：马尔戴克上的人到底做了什么，让整颗星球没了？Ra 的回答里有一个容易被忽略的关键——这个文明在极性上是负面的，但它自己并不这么看。接着发问者问出了所有人都会问的那句：「那么地球现在有同样的危险吗？」Ra 的回答是又一层限定。</p>
+  <div class="card">
+    <h3>毁灭的机制：技术用到极限，却不关心星球的存续</h3>
+    <div class="q">回到灵魂从马尔戴克转移之前——马尔戴克发生了什么，让他们失去了自己的星球？这发生在多久以前？</div>
+    <div class="quote">
+      <p class="en">The peoples of Maldek had a civilization somewhat similar to that of the societal complex known to you as Atlantis in that it gained much technological information and used it without care for the preservation of their sphere, following to a majority extent the complex of thought, ideas, and actions which you may associate with your so-called negative polarity, or the service to self.</p>
+      <p class="zh">马尔戴克的人民拥有一个与你们所知亚特兰蒂斯社会复合体有些相似的文明：它获得了大量科技信息，却在使用时不关心自身星球的存续，并且在大多数情况下遵循着你们会与所谓负面极性——服务自我——联系起来的思维、观念与行动复合体。</p>
+      <span class="src">—— Session 010 · (10.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This was, however, for the most part, couched in a sincere belief/thought structure which seemed to the perception of the mind/body complexes of this sphere to be positive and of service to others.</p>
+      <p class="zh">然而，这在很大程度上被包裹在一个真诚的信念/思维结构里，以致在该星球心/身复合体的感知中，它看起来是正面的、是在服务他人。</p>
+      <span class="src">—— Session 010 · (10.1)</span>
+    </div>
+    <div class="plain">决定极性的不是当事人主观上的真诚，而是这个文明的思维与行动实际朝向哪里——马尔戴克真诚地以为自己是在为他人好，行动上却是一路服务自我。</div>
+    <div class="analogy"><b>像不断加糖的厨师：</b>他真心觉得「更甜就是更好客」，每一勺都出于好意，直到整锅菜没人吃得下。主观的善意是真的，方向错了也是真的。</div>
+    <div class="quote">
+      <p class="en">The escalation went to the furthest extent of the technology this social complex had at its disposal in the space/time present of the then time.</p>
+      <p class="zh">升级达到了这个社会复合体在当时空间/时间里可支配技术的极限程度。</p>
+      <span class="src">—— Session 010 · (10.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The devastation that wracked their biosphere and caused its disintegration resulted from what you call war.</p>
+      <p class="zh">摧毁他们生物圈并导致其瓦解的破坏，源于你们所称的战争。</p>
+      <span class="src">—— Session 010 · (10.1)</span>
+    </div>
+    <div class="case"><b>为了季度报表砍掉运维：</b>一家公司为了财报好看，砍掉数据中心的冗余和运维预算。每个决策都有正当说法——「为股东负责」「先活下来再说」——三年后一次机房故障让全公司停摆两天。这正是 Ra 描述的马尔戴克：技术能力全都用上了，但没有一项是为「这个系统能不能活下去」服务的。</div>
+  </div>
+  <div class="card">
+    <h3>没有人能脱身：这是整个社会复合体的行动</h3>
+    <div class="q">马尔戴克的毁灭里，有没有人「先进到可以转移到其他星球」，因而逃过一劫？</div>
+    <div class="quote">
+      <p class="en">In the occurrence of planetary dissolution none escaped, for this is an action which redounds to the social complex of the planetary complex itself.</p>
+      <p class="zh">在行星瓦解的事件中，没有人逃脱，因为这是一个波及行星复合体本身的社会复合体的行动。</p>
+      <span class="src">—— Session 010 · (10.7)</span>
+    </div>
+    <div class="quote">
+      <p class="en">None escaped the knot or tangle.</p>
+      <p class="zh">没有人逃脱那个结或缠结。</p>
+      <span class="src">—— Session 010 · (10.7)</span>
+    </div>
+    <div class="plain">行星毁灭不是「部分人遭殃」的事故，而是整个社会复合体共同造下的行动——所以责任与后果都没有旁观的出口，谁也留不下一个「我早就走了」的位置。</div>
+    <div class="case"><b>整个项目群一起被裁：</b>一个事业部长期用违规手段冲业绩，事发后公司把整个部门裁掉——从默许的主管到刚入职的应届生。简历上写着同一个部门名字，谁也说不清「这跟我无关」。这就是 Ra 说的「波及社会复合体本身」。</div>
+  </div>
+  <div class="card">
+    <h3>那地球呢？Ra 的限定与那句「玩具」</h3>
+    <div class="q">那地球现在有发生这种事的危险吗？</div>
+    <div class="quote">
+      <p class="en">We feel this evaluation of your planetary mind/body/spirit complex's so-called future may be less than harmless.</p>
+      <p class="zh">我们觉得，对你们行星心/身/灵复合体所谓未来的这种评估，可能并非无害。</p>
+      <span class="src">—— Session 010 · (10.8)</span>
+    </div>
+    <div class="quote">
+      <p class="en">We say only the conditions of mind exist for such development of technology and such deployment.</p>
+      <p class="zh">我们只说：这种技术的发展和这种部署所需的心智条件确实存在。</p>
+      <span class="src">—— Session 010 · (10.8)</span>
+    </div>
+    <div class="quote">
+      <p class="en">It is the distortion of our vision/understanding that the mind and spirit complexes of those of your people need orientation rather than the "toys" needing dismantlement, for are not all things that exist part of the Creator?</p>
+      <p class="zh">在我们的视野/理解的变貌中，你们人民的心与灵复合体需要的是导向，而不是那些「玩具」需要被拆除——因为一切存在之物，不都是造物主的一部分吗？</p>
+      <span class="src">—— Session 010 · (10.8)</span>
+    </div>
+    <div class="plain">Ra 先声明这个评估本身可能有害，再给出一条刚好反过来的一般原则：要处理的不是工具，而是人的方向；因为工具也是造物主的一部分。</div>
+    <div class="quote">
+      <p class="en">Therefore, freely to choose is your honor/duty.</p>
+      <p class="zh">因此，自由地选择是你们的荣耀/责任。</p>
+      <span class="src">—— Session 010 · (10.8)</span>
+    </div>
+    <div class="analogy"><b>像收走孩子的手机：</b>把手机锁进抽屉，孩子并不会因此更会判断；能改变的只有他自己的方向。Ra 的立场正相反于「拆掉玩具」的直觉——工具不是问题，使用它的那个方向才是。</div>
+    <div class="case"><b>公司一纸禁令禁用 AI 工具：</b>管理层下发文件，禁止员工使用任何外部 AI 工具。三个月后，文件还在，工作照样在用，只是从「有记录、可讨论」变成「私下用、没人负责」。被禁掉的从来不是工具，而是那个本可以拿来讨论方向的空间。</div>
+  </div>
+  <div class="card">
+    <h3>归类练习：这是服务他人，还是服务自我？</h3>
+    <p>本集（10.1）特意提醒：负极性常常被包裹在真诚的信念里。请判断下面每个场景实际朝向哪一边。</p>
+    <div id="sorterArea"></div>
+  </div>
+  <div class="case"><b>群聊里的升级：</b>一个二十人的项目群里，两个人从小争论吵到互相攻击，接着拉人站队、翻旧账、最后有人去找对方的上级——冲突不会自动停在某个人的克制上，它会把所有可用的手段都用尽。这就是「升级到当时可支配技术的极限程度」在日常生活里的样子。</div>
+  <div class="case"><b>靠炸珊瑚盖酒店的海岛：</b>一个旅游城市用炸珊瑚取建材盖酒店，五年后海岸线没了、游客也不来了。没有人是出于恶意，每个决策都为了当期业绩；但整座岛的存续从来不是谁的考核指标。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>恐惧之结与业力减轻：意识仍是第三密度，载具却不是</h2></div>
+  <p class="sec-lead">毁灭不是故事的结尾。Ra 接着描述了一段长到几乎无法想象的康复过程，以及一个让很多人困惑的机制：这些实体的意识从头到尾都是第三密度的，被换掉的只是载具。本章也顺势回答了「那批人现在在哪」——包括上一集提过的大脚怪。</p>
+  <div class="card">
+    <h3>恐惧之结：连援助者都进不去</h3>
+    <div class="q">星球没了之后，那些人怎么样了？</div>
+    <div class="quote">
+      <p class="en">These entities were so traumatized by this occurrence that they were in what you may call a social complex knot, or tangle, of fear.</p>
+      <p class="zh">这些实体因这次事件受到如此严重的创伤，以致他们处在你们可称之为社会复合体的恐惧之结、或缠结之中。</p>
+      <span class="src">—— Session 010 · (10.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">No one could reach them. No beings could aid them.</p>
+      <p class="zh">没有人能接触到他们。没有任何存有能援助他们。</p>
+      <span class="src">—— Session 010 · (10.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Approximately six hundred thousand [600,000] of your years ago, the then-existing members of the Confederation were able to deploy a social memory complex and untie the knot of fear.</p>
+      <p class="zh">大约在你们六十万 [600,000] 年前，当时存在的星际联邦成员得以部署一个社会记忆复合体，解开了那个恐惧之结。</p>
+      <span class="src">—— Session 010 · (10.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The entities were then able to recall that they were conscious.</p>
+      <p class="zh">这些实体随后才得以回忆起他们是有意识的。</p>
+      <span class="src">—— Session 010 · (10.1)</span>
+    </div>
+    <div class="plain">创伤发生在「社会复合体」这一层，所以解救也必须从这一层入手——先解开整团的恐惧，个体才重新「记得自己是有意识的」。</div>
+    <div class="analogy"><b>像整台服务器宕机：</b>单台机器死机，重启就行；如果是整个集群一起挂了，问题就不是某台机器，而在于它们之间的那套连接——你得先修复连接本身。</div>
+    <div class="case"><b>灾后临时安置区里的沉默：</b>地震之后，整村人被安置在同一片板房区。心理队发现一对一辅导效果很差——村民之间形成了一种集体性的沉默，谁也不提那晚的事。必须先恢复「我们」这一层的基本安全感，个体才谈得上回忆、清点与哀悼。</div>
+  </div>
+  <div class="card">
+    <h3>业力减轻：为什么要换一副「不灵巧」的身体</h3>
+    <div class="q">所以这些实体现在还是第二密度吗？</div>
+    <div class="quote">
+      <p class="en">After this experience of learn/teaching, the group decision was to place upon itself a type of what you may call karma alleviation.</p>
+      <p class="zh">在这次学习/教导的经验之后，该群体决定给自己施加一种你们可称之为业力减轻的机制。</p>
+      <span class="src">—— Session 010 · (10.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">For this purpose they came into incarnation within your planetary sphere in what were not acceptable human forms.</p>
+      <p class="zh">为此目的，他们以不被接受的人类形态降生到你们行星领域。</p>
+      <span class="src">—— Session 010 · (10.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The consciousness of these entities has always been third-density.</p>
+      <p class="zh">这些实体的意识一直是第三密度。</p>
+      <span class="src">—— Session 010 · (10.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The alleviation mechanism was designed by the placement of this consciousness in second-dimensional physical chemical complexes which are not able to be dexterous or manipulative to the extent which is appropriate to the workings of the third-density distortions of the mind complex.</p>
+      <p class="zh">减轻机制的设计方式，是把这种意识放进第二密度的物理/化学复合体中；这些复合体无法达到第三密度心智复合体变貌的运作所应有的灵巧或操控程度。</p>
+      <span class="src">—— Session 010 · (10.3)</span>
+    </div>
+    <div class="plain">「降低密度」的说法是误解：意识始终是第三密度，被限制的是载具——它做不出那些曾经把事情做绝的灵巧动作。</div>
+    <div class="analogy"><b>让一双手暂时没东西可摆弄：</b>一个习惯动手改造一切的人，被要求在一段时间里只能用指尖碰触。意愿还在，能力也没消失，但「想改就改」这条路径被拿走了——直到那股冲动自己松开。</div>
+    <div class="case"><b>吊销驾照的十年：</b>一个人酒驾致人死亡，除服刑之外还被吊销驾照十年。他仍然是同一个人，也仍有同样的意愿，只是被放进一个无法再造成同类伤害的生活结构里，直到内心真正改变。</div>
+  </div>
+  <div class="card">
+    <h3>时间轴：结与解结之间的五十万年</h3>
+    <p>本集给出的这条时间线，跨度是七十余万年。顺序读下来，会发现「毁灭」与「复原」之间的间隔远比事件本身长。</p>
+    <div class="timeline">
+      <div class="tl-item"><div class="t">约 705,000 年前 · 战争与瓦解</div><div class="d">升级到当时技术的极限，生物圈被摧毁、星球瓦解；群体陷入「社会复合体的恐惧之结」，无人能接触、无存有能援助。</div></div>
+      <div class="tl-item"><div class="t">约 600,000 年前 · 联邦部署社会记忆复合体</div><div class="d">当时存在的星际联邦成员得以部署一个社会记忆复合体，解开恐惧之结；这些实体重新忆起自己是有意识的。</div></div>
+      <div class="tl-item"><div class="t">之后的较低星光层 · 疗愈</div><div class="d">觉知把他们带到你们所称的较低星光层，在那里被滋养，直到每个心/身/灵复合体都能检视前世生命幻象中所经历的变貌、并从创伤中痊愈。</div></div>
+      <div class="tl-item"><div class="t">学习/教导之后 · 群体自择业力减轻</div><div class="d">这是群体的集体决定：给自己施加业力减轻，以不被接受的人类形态降生，直到毁灭的变貌被「想要更少扭曲地服务他人」的渴望取代。</div></div>
+      <div class="tl-item"><div class="t">约 500,000 年前 · 向地球的转移开始</div><div class="d">由于这是马尔戴克经历中绝大多数存有的有意识决定，转移开始，并使用当时可得的那种身体复合体——发问者追问，那正是「猿类」，Ra 答：正确。</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>留下来的人，与大脚怪</h3>
+    <div class="q">有实体已经在七万五千年周期结束时「毕业」，从第二密度身体进入了第三密度身体吗？</div>
+    <div class="quote">
+      <p class="en">Many of these entities were able to remove the accumulation of what you call karma, thus being able to accept a third-density cycle within a third-density body.</p>
+      <p class="zh">这些实体中有许多能够移除你们所称业力的累积，从而得以在一个第三密度身体中接受第三密度的周期。</p>
+      <span class="src">—— Session 010 · (10.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">There remain a few who have not yet alleviated, through the mind/body/spirit coordination of distortions, the previous action taken by them. Therefore, they remain.</p>
+      <p class="zh">仍有一些尚未透过心/身/灵复合体变貌的协调，减轻他们先前所采取的行动。因此，他们留了下来。</p>
+      <span class="src">—— Session 010 · (10.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">These are one type of Bigfoot.</p>
+      <p class="zh">这些是一种类型的大脚怪。</p>
+      <span class="src">—— Session 010 · (10.5)</span>
+    </div>
+    <div class="plain">大部分实体完成了减轻，之后就散入造物其他地方做第三密度的功课；少数没完成的留在这里——Ra 用一句话把他们的形态归了档：一种类型的大脚怪。</div>
+    <div class="case"><b>读了七年还没毕业的同学：</b>班上有个同学大学读了七年，同一门必修挂了三次。他不是新生，也不是毕业生——是卡在一门课上，直到这门课过去。Ra 说仍有一些实体「尚未减轻……因此他们留了下来」，说的正是这种状态。</div>
+  </div>
+  <div class="card">
+    <h3>术语卡：这一章的关键词</h3>
+    <p>点击卡片翻看解释。这几个词在全书反复出现，先在这里建立准确的直觉。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">马尔戴克</div><div class="sub">Maldek</div><span class="tap">点击展开</span></div><div class="back">本集历史线的起点：一颗曾掌握大量科技、却在极性上朝服务自我的文明所居住的行星，约 705,000 年前因战争导致生物圈瓦解、星球解体。它的实体后来被转移到地球。<em>案例：它的文明形态被 Ra 直接类比为你们所知的亚特兰蒂斯。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">社会记忆复合体</div><div class="sub">social memory complex</div><span class="tap">点击展开</span></div><div class="back">社会复合体的进一步整合形态——群体共享记忆、共同成为一个可行动的「我们」。本集里，正是星际联邦部署了一个社会记忆复合体，才解开了马尔戴克的恐惧之结。<em>比喻：不是各自记笔记的一群人，而是共用一份文档、并且知道那是「我们的」记忆。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">恐惧之结</div><div class="sub">knot or tangle of fear</div><span class="tap">点击展开</span></div><div class="back">整个群体在同一处创伤上纠结成一团，以致「没有人能接触他们，没有存有能援助他们」。要点是：这个结存在于社会复合体层面，而不只是个体心里。<em>案例：一间公司经历一次集体裁员后，没人敢再提新方案——这不是某个人的问题，而是「结」。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">业力减轻</div><div class="sub">karma alleviation</div><span class="tap">点击展开</span></div><div class="back">群体自愿给自己施加的机制：把第三密度的意识放进第二密度的物理/化学复合体，使载具无法灵巧或操控到第三密度心智运作所需的程度。<em>比喻：让一双手暂时没东西可摆弄——不是惩罚，而是让想改就改的路径消失。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">第二密度载具 / 猿类</div><div class="sub">second-density body / ape type</div><span class="tap">点击展开</span></div><div class="back">约 500,000 年前转移开始时，当时可用的身体复合体；发问者问那是否即「猿类」，Ra 答「这是正确的」。要点是意识与载具的密度不是一回事。<em>案例：把一台高性能主机接到只能跑基础指令的终端上——处理能力在，出口被限住了。</em></div></div>
+    </div>
+  </div>
+  <div class="case"><b>手机桌面被换成老人机：</b>同一个人、同样的想法，但手机换成了只有电话和短信的老人机——刷不了、发不了、买不了。他的心思没变，能做的事却少了一个数量级。这就是 Ra 说的「意识一直是第三密度，载具却无法灵巧操控」。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>收割的机制：安置于爱/光、溶解过滤、用思想就位</h2></div>
+  <p class="sec-lead">发问者把视角从历史挪回机制：当毕业发生、实体要从一个行星去另一个行星时，「怎么去」？Ra 的回答给出三个动作——先被安置到爱/光的适当位置完成疗愈与调谐，再把整个周期的经验溶解过滤成精华，最后评估密度需求、选择新的环境。而移动的方式，出乎意料地简单。</p>
+  <div class="card">
+    <h3>毕业后的流程：三步</h3>
+    <div class="q">毕业发生时，实体从一颗行星到另一颗行星，是靠什么方式去的？</div>
+    <div class="quote">
+      <p class="en">In the scheme of the Creator, the first step of the mind/body/spirit totality/beingness is to place its mind/body/spirit complex-distortion in the proper place of love/light.</p>
+      <p class="zh">在造物主的计划中，心/身/灵全体/存在性的第一步，是将其心/身/灵复合体变貌安置在爱/光的适当位置。</p>
+      <span class="src">—— Session 010 · (10.9)</span>
+    </div>
+    <div class="quote">
+      <p class="en">After this is accomplished, the experience of the cycle is dissolved and filtered until only the distillation of distortions in its pure form remains.</p>
+      <p class="zh">在此完成之后，周期的经验被溶解与过滤，直到只剩下以纯粹形式存在的变貌之精华。</p>
+      <span class="src">—— Session 010 · (10.9)</span>
+    </div>
+    <div class="quote">
+      <p class="en">At this time, the harvested mind/body/spirit totality/beingness evaluates the density needs of its beingness and chooses the more appropriate new environment for either a repetition of the cycle or a moving forward into the next cycle.</p>
+      <p class="zh">此时，被收割的心/身/灵全体/存在性评估其存在性的密度需求，并选择更合适的新环境——要么重复这个周期，要么进入下一个周期。</p>
+      <span class="src">—— Session 010 · (10.9)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This is the manner of the harvesting, guarded and watched over by many.</p>
+      <p class="zh">这就是收割的方式，由许多存有守护与照看着。</p>
+      <span class="src">—— Session 010 · (10.9)</span>
+    </div>
+    <div class="plain">毕业不是「被打分后分配」，而是先在爱/光中就位、疗愈与调谐，再把一整个周期的经验熬成一瓶精华，然后由这个精华自己评估下一个环境该是什么——整个过程由许多存有守护与照看。</div>
+    <div class="analogy"><b>像熬汤收汁：</b>一整锅食材加水，慢慢熬、慢慢滤，最后只剩一小碗浓缩的汤底。那一小碗才是这个周期真正被你带走的东西——不是经历的全部细节，而是变貌的精华。</div>
+    <div class="case"><b>搬家只带走几个箱子：</b>搬家时你没法把整屋东西都带走。你会把这一年的生活过一遍筛：扔掉的、寄回的、随身带的。真正跟着你进新家的，是被压缩到最纯粹的那几件——Ra 说的「溶解与过滤」，就是这个动作。</div>
+  </div>
+  <div class="card">
+    <h3>用「想」的方式就位</h3>
+    <div class="q">实体是被以「思想」移动，还是被以某种「载具」移动？</div>
+    <div class="quote">
+      <p class="en">The mind/body/spirit totality/beingness is one with the Creator. There is no time/space distortion.</p>
+      <p class="zh">心/身/灵全体/存在性与造物主合一。没有时间/空间的变貌。</p>
+      <span class="src">—— Session 010 · (10.10)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Therefore, it is a matter of thinking the proper locus in the infinite array of time/spaces.</p>
+      <p class="zh">因此，这只是在一个无限的时间/空间阵列中「想到」那个适当位置的问题。</p>
+      <span class="src">—— Session 010 · (10.10)</span>
+    </div>
+    <div class="plain">没有载具、没有航程：既然全体/存在性与造物主合一，时间/空间的变貌就不成立，剩下的只是「想到正确的位置」。</div>
+    <div class="case"><b>换工位不用搬东西：</b>在一套共享云端的工作环境里，你要「换到三楼」不需要装箱搬运——改一下归属，文件与权限就在那里了。物理搬家的思路在这里根本不成立，正如「载具」在无时间/空间变貌的层面上不成立。</div>
+  </div>
+  <div class="card">
+    <h3>流程推演：收割的四步</h3>
+    <p>把 Ra 在（10.9）与（10.10）里给出的顺序连起来看：先是疗愈与调谐，再是浓缩，然后是评估与选择，最后是就位。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="hvTrack"></div>
+      <div class="flow-detail" id="hvDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="hvPrev">← 上一步</button> <button class="tri-btn" id="hvNext">下一步 →</button></div>
+    </div>
+    <div class="case"><b>换工作前先空出一段时间：</b>离职第二天就入职新公司的人，往往把上一份工作的情绪直接带进新岗位。有经验的人会先留出一段空档：先把状态调回来，再谈去哪。对应 Ra 说的第一步——先把心/身/灵复合体变貌安置在爱/光的适当位置，确保疗愈与调谐，之后才评估下一个环境。</div>
+  </div>
+  <details class="dict"><summary>术语旁枝：Ra 笔下「星系」这个词（可跳过）<span class="hint">用词的精度</span></summary>
+  <div class="body">
+    <p><b>(10.16) 发问者：</b>他想弄清 Ra 使用「galaxy」这个词的确切含义。</p>
+    <p>Ra 说，他们使用你们人民以「星系」这个声音振动复合体所知道的术语；他们接受有些星系包含一个行星与太阳群的系统，另一些则包含多个。但位置在无限的时间/空间维度中重要性如此之小，所以他们接受这个模糊术语里隐含的变貌。</p>
+    <p><b>(10.17)：</b>发问者问，我们这里九颗行星加太阳，是否可称为「太阳星系」？Ra 答：「我们不会。」</p>
+    <p><b>(10.18)：</b>一个星系里大约有多少颗恒星？Ra 答：取决于星系系统；你们自己的，如你们所知，包含许多许多百万的行星实体与恒星体。</p>
+    <p><b>为何值得留意：</b>这不是闲谈。Ra 在这里示范了他们校准用词的标准——影响义理处才校准（如上一章指出发问者「用词不够精确」），不影响处就接受模糊。这与（10.8）里「不是玩具需要被拆除」的态度一致。</p>
+  </div></details>
+  <div class="case"><b>翻译里的一处用词之争：</b>团队在争「rollout 该译成上线还是落地」，吵了半小时。最后决定：只统一会影响读者理解的那几个词，其余的按各人习惯。这正是 Ra 的取法——校准的判据是「会不会影响理解」，不是「够不够严格」。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>加速成长与四个练习：自由意志下的当下，与呼唤的倍增</h2></div>
+  <p class="sec-lead">发问者接着提出一个更贴近自身的问题：既然学习可以在「知道自己在学」与「不知道自己在学」两种状态下进行，后者之外的这一种，会不会大幅加速成长？Ra 确认，并给出机制——自由意志、对每一刻的责任，以及「呼唤」如何因人数而互相加倍。最后，Ra 给出了四个可以直接操作的练习。</p>
+  <div class="card">
+    <h3>两种学：知道自己在学，与不知道</h3>
+    <div class="q">投生在此的人，可以在不知道自己在做什么的情况下学习，也可以在意识到自己正照一的法则学习之后学习——第二种能大幅加速成长，对吗？</div>
+    <div class="quote">
+      <p class="en">This is correct.</p>
+      <p class="zh">这是正确的。</p>
+      <span class="src">—— Session 010 · (10.11)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The Law of One has, as one of its primal distortions, the Free Will distortion.</p>
+      <p class="zh">一的法则拥有自由意志变貌，作为它的首要变貌之一。</p>
+      <span class="src">—— Session 010 · (10.12)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Thus each entity is free to accept, reject, or ignore the mind/body/spirit complexes about it and ignore the creation itself.</p>
+      <p class="zh">因此每个实体都可以自由地接受、拒绝或忽略它周围的心/身/灵复合体，甚至可以忽略造物本身。</p>
+      <span class="src">—— Session 010 · (10.12)</span>
+    </div>
+    <div class="plain">加速的前提是自由意志：连「忽略造物本身」都在许可范围内——所以它不能靠强制发生，只能靠你愿意把注意力放到哪里。</div>
+    <div class="analogy"><b>像健身房里随手练与有意识地练：</b>同一个动作，一边刷剧一边做，做完什么也没留下；把注意力放在发力点上做，同样的组数效果不同。差别不在动作，在「知道自己在做什么」。</div>
+    <div class="quote">
+      <p class="en">There are many among your social memory complex-distortion who, at this time/space, engage daily, as you would put it, in the working upon the Law of One in one of its primal distortions; that is, the Ways of Love.</p>
+      <p class="zh">在你们的社会记忆复合体变貌中，有许多人在此时/空间，如你们所说，每天致力于依照一的法则的其中一个首要变貌而工作；那就是爱之道。</p>
+      <span class="src">—— Session 010 · (10.12)</span>
+    </div>
+  </div>
+  <div class="card">
+    <h3>加速器：接受对每一刻的责任</h3>
+    <div class="quote">
+      <p class="en">However, if this same entity—being biased from the depths of its mind/body/spirit complex towards love/light—were then to accept responsibility for each moment of the time/space accumulation of present moments available to it, such an entity can empower its progress in much the same way as we described the empowering of the call of your social complex-distortion to the Confederation.[7]</p>
+      <p class="zh">然而，如果这同一个实体——从其心/身/灵复合体的深处偏向爱/光——接着接受对可供它使用的当下时刻之时间/空间累积中每一刻的责任，这样一个实体便能增强自身的进展，其方式与我们描述过的「你们社会复合体变貌对星际联邦的呼唤如何被增强」大致相同。</p>
+      <span class="src">—— Session 010 · (10.12)</span>
+    </div>
+    <div class="plain">加速的机制不是「更多时间」，而是把每一刻都计入；Ra 明确说，这种增强与整个地球群体呼唤联邦时的那种增强是同一个机制。</div>
+    <div class="analogy"><b>像复利：</b>把每天的收益都计入本金，收益才会滚起来；那些「没记上」的日子不会产生力量。Ra 说的「当下时刻的累积」，算的正是这笔账。</div>
+    <div class="case"><b>记账 App 与每天早上两分钟：</b>只下载一个记账 App、月底看总额，和每天早上花两分钟核对昨天支出并调整今天的预算，一年后的差距不在记账本身，而在「每一天都被计入」。这正是「接受对每一刻的责任」在生活里的样子。</div>
+  </div>
+  <div class="card">
+    <h3>呼唤的倍增：为什么第一个最重要</h3>
+    <div class="q">你能换个说法讲讲，你们是如何「增强」这个呼唤的吗？</div>
+    <div class="quote">
+      <p class="en">The call begins with one. This call is equal to infinity and is not, as you would say, counted. It is the cornerstone.</p>
+      <p class="zh">呼唤始于一个人。这呼唤等同于无限，并且如你们所说的，不被计算。它是基石。</p>
+      <span class="src">—— Session 010 · (10.13)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The second call is added. The third call empowers or doubles the second, and so forth, each additional caller doubling or granting power to all the preceding call.</p>
+      <p class="zh">第二个呼唤被加入。第三个呼唤增强或加倍第二个，依此类推；每一个额外的呼唤者都会加倍或赋予之前所有呼唤以力量。</p>
+      <span class="src">—— Session 010 · (10.13)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Thus, the call of many of your peoples is many, many-powered and overwhelmingly heard to the infinite reaches of the One Creation.</p>
+      <p class="zh">因此，你们许多人民的呼唤被许多许多倍地增强，并被太一造物的无限领域压倒性地听见。</p>
+      <span class="src">—— Session 010 · (10.13)</span>
+    </div>
+    <div class="plain">第一个呼唤不参与计数，因为它「等同于无限」；后面每加一个人，都被计成对先前所有呼唤的加倍——所以关键不是总人数，而是有没有那第一个。</div>
+    <div class="case"><b>网上请愿的前十个签名：</b>一个人发起请愿，头三天零签名；第二个签名出现后，转发开始有人接；第十个之后，媒体注意到了。这就是 Ra 说的机制：第三个呼唤加倍第二个，每一个额外的呼唤者都加倍先前的所有呼唤。</div>
+    <div class="demo-area">
+      <div class="flow-track" id="callTrack"></div>
+      <div class="flow-detail" id="callDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="callPrev">← 上一步</button> <button class="tri-btn" id="callNext">下一步 →</button></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>条件模拟器：什么情况下成长会被「增强」？</h3>
+    <p>Ra 在（10.11）到（10.13）把加速的条件分散在三段话里。把三个开关都拨到「开」，看会发生什么。</p>
+    <div class="cond-row"><div class="name">有意识地觉察自己在学习<small>（10.11）区分了「不知道自己在做什么」与「意识到自己正照一的法则学习」</small></div><label class="switch"><input type="checkbox" id="cond1"><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">从心/身/灵深处偏向爱/光<small>（10.12）描述加速时的前提条件</small></div><label class="switch"><input type="checkbox" id="cond2"><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">接受对当下每一刻的责任<small>（10.12）Ra 说的「增强其进展」正落在这一条上</small></div><label class="switch"><input type="checkbox" id="cond3"><span class="slider"></span></label></div>
+    <div id="condResult"></div>
+  </div>
+  <div class="card">
+    <h3>四个练习：Ra 给的具体做法</h3>
+    <div class="q">为了本书读者的普遍发展，能否给出一些可以产生加速的练习？</div>
+    <div class="quote">
+      <p class="en">Exercise One. This is the most nearly centered and usable within your illusion complex. The moment contains love. That is the lesson/goal of this illusion or density.</p>
+      <p class="zh">练习一。这是在你们的幻象复合体中最接近中心、也最可用的一个。当下这一刻包含着爱。那是这个幻象或密度的课程/目标。</p>
+      <span class="src">—— Session 010 · (10.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The exercise is to consciously seek that love in awareness and understanding-distortions.</p>
+      <p class="zh">这个练习就是要带着觉知，在觉知与理解的变貌中有意识地寻求那爱。</p>
+      <span class="src">—— Session 010 · (10.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The first attempt is the cornerstone. Upon this choosing rests the remainder of the life-experience of an entity.</p>
+      <p class="zh">第一次尝试是基石。一个实体余生经验的其他部分，都建立在这个选择之上。</p>
+      <span class="src">—— Session 010 · (10.14)</span>
+    </div>
+    <div class="plain">练习一与「呼唤的倍增」是同一个结构：第二次寻求在第一次之上累加，第三次增强第二次，第四次加倍第三次——所以第一次尝试是基石，而「自我对自我」说出这个渴望本身就是核心的意志行动，即使因不够真诚而有损耗，也无所谓。</div>
+    <div class="analogy"><b>在嘈杂的房间里听一句很轻的话：</b>第一次听清最难；一旦听清过，后面的每一次都在前一次的力气上叠加。</div>
+    <div class="case"><b>早高峰地铁里被踩了一脚：</b>练习一不是「忍住不发火」，而是在那一刻有意识地去寻找「这里也有爱」——对方可能正赶去医院。关键在「有意识地寻求」，不在心情变好。</div>
+  </div>
+  <div class="card">
+    <h3>练习二、三、四：一个由远及近又由近及远的循环</h3>
+    <div class="quote">
+      <p class="en">Exercise Two. The universe is one being. When a mind/body/spirit complex views another mind/body/spirit complex, see the Creator.</p>
+      <p class="zh">练习二。宇宙是一个存有。当一个心/身/灵复合体注视另一个心/身/灵复合体时，看见造物主。</p>
+      <span class="src">—— Session 010 · (10.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Exercise Three. Gaze within a mirror. See the Creator.</p>
+      <p class="zh">练习三。凝视镜中。看见造物主。</p>
+      <span class="src">—— Session 010 · (10.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Exercise Four. Gaze at the creation which lies about the mind/body/spirit complex of each entity. See the Creator.</p>
+      <p class="zh">练习四。注视每个实体心/身/灵复合体周围的造物。看见造物主。</p>
+      <span class="src">—— Session 010 · (10.14)</span>
+    </div>
+    <div class="plain">三个练习其实是同一个动作换了三次焦距：看别人、看自己、看周围的一切——都停在「看见造物主」这一句上。</div>
+    <div class="case"><b>会前看那个总跟你对着干的同事：</b>进会议室前，看他一眼，练习「在他那个位置上也站着造物主」。Ra 说的正是这个动作：注视另一个心/身/灵复合体时，看见造物主。</div>
+  </div>
+  <div class="card">
+    <h3>共同前提：一个倾向，而不是一项技术</h3>
+    <div class="quote">
+      <p class="en">The foundation or prerequisite of these exercises is a predilection towards what may be called meditation, contemplation, or prayer.</p>
+      <p class="zh">这些练习的基础或前提，是倾向于可被称为冥想、沉思或祈祷的事物。</p>
+      <span class="src">—— Session 010 · (10.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Without it, the data will not sink down into the roots of the tree of mind, thus enabling and ennobling the body and touching the spirit.</p>
+      <p class="zh">没有它，这些数据不会沉入心智之树的根部，也就无法赋能并提升身体、触及灵性。</p>
+      <span class="src">—— Session 010 · (10.14)</span>
+    </div>
+    <div class="plain">Ra 把四个练习的门槛放在一个态度上：没有冥想/沉思/祈祷的倾向，这四条都只是停在表面的信息，渗不到「心智之树的根部」。</div>
+    <div class="analogy"><b>浇水要浇到根上：</b>水泼在叶子上，太阳一晒就干；只有渗进土里，树才真的喝到。这个「倾向」就是让水往下走的那条路径。</div>
+  </div>
+  <div class="card">
+    <h3>对照表：四个练习的焦距</h3>
+    <p>四个练习的差别很细——动作是同一个「看见造物主」，只是焦距不同。</p>
+    <div class="table-wrap">
+      <table class="nine">
+        <tr><th>练习</th><th>焦距</th><th>日常做法</th></tr>
+        <tr><td>练习一</td><td>当下这一刻</td><td>在觉知与理解的变貌中，有意识地寻求「此刻所含的爱」；第一次尝试是基石，之后每一次寻求都在前一次之上叠加。</td></tr>
+        <tr><td>练习二</td><td>另一个人</td><td>注视另一个心/身/灵复合体时，看见造物主。</td></tr>
+        <tr><td>练习三</td><td>自己</td><td>凝视镜中，看见造物主——把练习二的焦距向内收一格。</td></tr>
+        <tr><td>练习四</td><td>周围的造物</td><td>注视每个实体心/身/灵复合体周围的造物，看见造物主——把焦距再拉到环境上。</td></tr>
+      </table>
+    </div>
+    <div class="plain">这四条严格说来只是同一个动作的四种焦距：看此刻、看别人、看自己、看周围的造物；而它们共同的前提，是对冥想、沉思或祈祷的倾向。</div>
+  </div>
+  <div class="case"><b>刷牙时看镜子里的自己：</b>早上刷牙，你没有评估仪容，而是看着镜中的自己，练习「这里也有造物主」。这就是练习三——把练习二的焦距向内收一格。</div>
+  <div class="case"><b>通勤路上看一眼窗外：</b>公交车堵在高架上，你把视线从手机挪到窗外那排树、那片云。Ra 的练习四说的就是这个动作：注视自己心/身/灵复合体周围的造物，看见造物主。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>两条文明的路与收官：有益无害的穆，与技术飞跃的亚特兰蒂斯</h2></div>
+  <p class="sec-lead">这是本次工作的最后一个问题，也是本集历史叙事的另一半：发问者问亚特兰蒂斯与利莫里亚的来历。Ra 先纠正一个前提——它们不是一个文明而是两个，然后分别交代：一个原始却灵性先进、终于被地质变动吞没；一个从农业社会出发、技术飞跃之后转向了负面。最后按例收尾。</p>
+  <div class="card">
+    <h3>先纠正前提：不是一个，而是两个</h3>
+    <div class="quote">
+      <p class="en">The civilizations of Atlantis and Lemuria were not one but two.</p>
+      <p class="zh">亚特兰蒂斯与利莫里亚的文明，不是一个，而是两个。</p>
+      <span class="src">—— Session 010 · (10.15)</span>
+    </div>
+    <div class="plain">发问者把它们当成一件事来问，Ra 先把前提拆开——本集两次出现「先校准前提再作答」的动作，上一次是用词（星系），这一次是对象（两个文明）。</div>
+  </div>
+  <div class="card">
+    <h3>穆：原始却灵性先进，被板块吞没</h3>
+    <div class="quote">
+      <p class="en">They were beings of a somewhat primitive nature, but those who had very advanced spiritual distortions.</p>
+      <p class="zh">他们是具有某种原始性质的存有，但拥有非常先进的灵性变貌。</p>
+      <span class="src">—— Session 010 · (10.15)</span>
+    </div>
+    <div class="quote">
+      <p class="en">It was an helpful and harmless place which was washed beneath the ocean during a readjustment of your sphere's tectonic plates through no action of their own.</p>
+      <p class="zh">那是一个有益且无害的地方，在你们星球构造板块重新调整期间被冲入海底——并非出于他们自身的行动。</p>
+      <span class="src">—— Session 010 · (10.15)</span>
+    </div>
+    <div class="quote">
+      <p class="en">these particular entities were largely drawn from a second-density planet which had some difficulty, due to the age of its sun, in achieving third-density life conditions. This planet was from the galaxy Deneb.</p>
+      <p class="zh">这些特定的实体大多来自一颗第二密度行星；由于它的太阳年龄的关系，这颗行星在达成第三密度生命条件方面有些困难。这颗行星来自天津四星系。</p>
+      <span class="src">—— Session 010 · (10.15)</span>
+    </div>
+    <div class="plain">时间约在 53,000 年前，属于这个周期的早期；幸存者散入俄罗斯、北美、南美，成为发问者所同情的那支印第安人的祖先——而他们本身也是从别处（天津四星系）来的。</div>
+    <div class="analogy"><b>一块日照不足的田：</b>太阳的年龄决定了那片田能不能长出第三密度的生命——它总是差一季。Ra 用「太阳太老」解释的正是这种迟迟达不成的条件。</div>
+    <div class="case"><b>与世无争的岛村沉入海中：</b>一座没有军队、也从不与外界为敌的小岛村，在一次没人能预测的海底地壳调整后沉没。幸存者散落到几个大陆——他们不是被打败的，只是站在了板块上面。Ra 对此的措辞是「并非出于他们自身的行动」。</div>
+  </div>
+  <div class="card">
+    <h3>亚特兰蒂斯：从农庄到「创造生命形态」</h3>
+    <div class="quote">
+      <p class="en">It was a slow-growing and very agrarian society until approximately one five oh oh oh, fifteen thousand [15,000] of your years ago.</p>
+      <p class="zh">它是一个缓慢成长、非常农业化的社会，直到大约一万五千 [15,000] 年前。</p>
+      <span class="src">—— Session 010 · (10.15)</span>
+    </div>
+    <div class="quote">
+      <p class="en">It reached quickly a high technological understanding which caused it to be able to use intelligent infinity in a less informative manner.</p>
+      <p class="zh">它迅速地达到了高度的科技理解，这使它能够以一种不那么富有信息性的方式使用智能无限。</p>
+      <span class="src">—— Session 010 · (10.15)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This they began to do instead of healing and perfecting their own mind/body/spirit complexes, turning their distortions towards what you may call the negative.</p>
+      <p class="zh">他们开始做这件事，而不是去疗愈和完善自己的心/身/灵复合体，从而把他们的变貌转向了你们可称之为负面的方向。</p>
+      <span class="src">—— Session 010 · (10.15)</span>
+    </div>
+    <div class="plain">亚特兰蒂斯的转向点不在技术本身，而在选择：同样一份能力，用来疗愈和完善自己，还是用来创造生命形态——他们选了后者。</div>
+    <div class="analogy"><b>把公共灌溉渠改道：</b>那条渠原本是全村的水源，有人把它改道去浇自家的花园。私家花园一时茂盛，全村却开始缺水——「操控自然流入」短期很有效，代价落在本该被养护的那部分。</div>
+    <div class="case"><b>只顾升级产品，从不修内部流程：</b>一个团队把全部资源投在给产品加「输出能力」，内部的决策流程三年没动过。产品越来越强，出错时却没人知道该谁负责——这正是 Ra 说的「做这件事，而不是疗愈和完善自己的心/身/灵复合体」。</div>
+  </div>
+  <div class="card">
+    <h3>终局：两场战争与三群离开的人</h3>
+    <div class="quote">
+      <p class="en">Three of the positively oriented of the Atlantean groups left this geographical locus before that devastation, placing themselves in the mountain areas of what you call Tibet, what you call Peru, and what you call Turkey.</p>
+      <p class="zh">三群正面导向的亚特兰蒂斯群体在那场毁灭之前离开了这个地理位置，把自己安置在你们称为西藏、秘鲁和土耳其的山区。</p>
+      <span class="src">—— Session 010 · (10.15)</span>
+    </div>
+    <div class="plain">约 11,000 年前的第一场战争让大约四成人口因身体解体而离开这个密度；约 10,821 年前的第二次冲突最为毁灭性，改变了地球的构造，亚特兰蒂斯的大部分地区被淹没——而三群正面导向的群体在那之前就已经离开，去了西藏、秘鲁与土耳其的山区。</div>
+  </div>
+  <div class="card">
+    <h3>术语卡：这一章的三个词</h3>
+    <p>点击卡片翻看解释。它们是理解「亚特兰蒂斯为什么转向」的关键。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">智能无限</div><div class="sub">intelligent infinity</div><span class="tap">点击展开</span></div><div class="back">Ra 体系中与太一无限造物主相通的无限智能，是一切存在的源头与基质。本集说亚特兰蒂斯以一种「不那么富有信息性」的方式使用它——力量有了，调节没有。<em>比喻：把总闸直接短接到设备上，电是通的，但没有变阻器。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">智能能量</div><div class="sub">intelligent energy</div><span class="tap">点击展开</span></div><div class="back">本集里，亚特兰蒂斯除了使用智能无限，也使用智能能量——Ra 说他们「极大地操控了来自神圣或无限能量的靛蓝或松果体光芒的自然流入」。要点是：他们动的不是自己的功课，而是能量的流入方式。<em>案例：把公共灌溉渠改道去浇自家花园。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">靛蓝光芒 / 松果体</div><div class="sub">indigo or pineal ray</div><span class="tap">点击展开</span></div><div class="back">来自神圣或无限能量的自然流入。Ra 说亚特兰蒂斯大幅操控它，因此能够创造生命形态。这是本集对「技术」最具体的一次描述：不是造机器，而是动到能量流入的层级。<em>比喻：不是换灯泡，而是改电路。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">穆 / 利莫里亚</div><div class="sub">Mu / Lemuria</div><span class="tap">点击展开</span></div><div class="back">与亚特兰蒂斯并列的另一支文明：原始却灵性先进，约 53,000 年前被板块调整冲入海底，并非出于自身行动；幸存者散入俄罗斯、北美与南美，其大多来自天津四星系的第二密度行星。<em>案例：与世无争的岛村被海啸吞没——不是他们做错了什么。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">天津四</div><div class="sub">Deneb</div><span class="tap">点击展开</span></div><div class="back">穆实体主要来源的星系。Ra 说那颗行星因太阳的年龄，在达成第三密度生命条件方面有些困难。<em>比喻：一块日照不足的田，作物总差一季——条件不到，周期就得往后挪。</em></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>对比卡：两条路的四个侧面</h3>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">穆</span><h4>灵性先进，技术原始</h4><p>「具有某种原始性质，但拥有非常先进的灵性变貌」——能力弱、方向正。结局是被板块调整吞没，<b>并非出于自身行动</b>。</p></div>
+      <div class="yuan-card"><span class="y-tag">亚特兰蒂斯</span><h4>技术飞跃，方向转向</h4><p>从缓慢的农业社会出发，15,000 年前迅速取得高度科技理解，能用智能无限与智能能量「创造生命形态」，<b>却不去疗愈和完善自己</b>，变貌转向负面。</p></div>
+      <div class="yuan-card"><span class="y-tag">两条路的共同指向</span><h4>该做的功课是同一件</h4><p>Ra 把「没有做的事」说得很明确：<b>疗愈并完善自己的心/身/灵复合体</b>。穆缺技术却有方向，亚特兰蒂斯有技术却缺方向。</p></div>
+      <div class="yuan-card"><span class="y-tag">幸存者去向</span><h4>散落的地点成了线索</h4><p>穆的幸存者进入俄罗斯、北美、南美（印第安人的祖先）；亚特兰蒂斯三群正面导向者在毁灭前去了<b>西藏、秘鲁、土耳其</b>的山区。</p></div>
+    </div>
+  </div>
+  <div class="saying">
+    <p class="en">The moment contains love. That is the lesson/goal of this illusion or density.</p>
+    <p class="zh">当下这一刻包含着爱。那是这个幻象或密度的课程，也是它的目标。</p>
+    <span class="src">—— Session 010 · (10.14)</span>
+  </div>
+  <div class="card">
+    <h3>这一集留下的位置</h3>
+    <p>本集把两条历史线接上了：马尔戴克的搬迁（约 705,000 年前的那场战争）与亚特兰蒂斯的兴衰（约 31,000 年前成形、10,821 年前被淹没）。同时给出两个可以直接用的东西——收割的机制与四个练习。Ra 用（10.8）的那句话把「工具」的问题交还给每个人自己：</p>
+    <div class="quote">
+      <p class="en">Therefore, freely to choose is your honor/duty.</p>
+      <p class="zh">因此，自由地选择是你们的荣耀/责任。</p>
+      <span class="src">—— Session 010 · (10.8)</span>
+    </div>
+    <div class="quote">
+      <p class="en">I am Ra. I leave you in the love and the light of the One Infinite Creator. Go forth, therefore, rejoicing in the power and the peace of the One Creator. Adonai.</p>
+      <p class="zh">我是 Ra。我将你们留在太一无限造物主的爱与光中。因此，向前去吧，在太一造物主的力量与和平中欢欣鼓舞。Adonai。</p>
+      <span class="src">—— Session 010 · (10.19)</span>
+    </div>
+    <div class="plain">读下一集时可以带着这个问题：如果马尔戴克没有被战争毁灭，它会走上服务自我的第四密度吗？负极性这条路，后来是怎么在地球上运作的？</div>
+  </div>
+  <div class="case"><b>两家被并排分析的初创公司：</b>一家技术平平但团队方向一致，最后被行业寒冬拖死；另一家技术很强、增长很快，却在三年内因为内部治理失控而崩盘。放在一起看会发现，生死并不由「技术够不够强」决定——Ra 对穆与亚特兰蒂斯的并置，用的正是这种看法。</div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+<p>基于 The Ra Contact Session 010（split/Ra_Session_010.md）英文原文制作 · 交互式学习模块</p>
+<p>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文</p>
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra010-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+
+/* 问答脉络推进器 */
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+  {t:'(10.0) 开场',d:'<b>致意与开场。</b>Ra 以「在无限造物主的爱与光中致意」开场，宣布本次通讯开始。'},
+  {t:'(10.1) 马尔戴克为何失去星球',d:'<span class="qa-q">问：回到灵魂从马尔戴克转移之前，看看一的法则在这次转移中如何运作——马尔戴克发生了什么，多久以前？</span><b>答：</b>一个与亚特兰蒂斯相似的文明：取得大量科技信息却不关心星球的存续，多数上遵循服务自我的复合体——但它被包裹在一个自认为正面的真诚信念结构里；毁灭来自战争，约 705,000 年前。'},
+  {t:'(10.3) 那些实体现在怎样了',d:'<span class="qa-q">问：马尔戴克实体已经转变了吗？还是仍在第二密度？</span><b>答：</b>他们的意识一直是第三密度；减轻机制是把这种意识放进第二密度的物理/化学复合体，使其无法灵巧操控。'},
+  {t:'(10.6) 我们现在由谁组成',d:'<span class="qa-q">问：我们目前的种族由少数来自马尔戴克与相当多来自火星的人组成，还有来自别处的实体吗？</span><b>答：</b>有，来自造物中许多许多地方；一个行星复合体容纳这么多不同来源并不寻常，这也解释了为何导向一直难以统一。'},
+  {t:'(10.8) 地球会有同样的危险吗',d:'<span class="qa-q">问：目前地球有发生这种事的危险吗？</span><b>答：</b>Ra 先声明这种对未来的评估「可能并非无害」，随后只说：技术与部署所需的心智条件确实存在；需要的是导向，而不是把「玩具」拆掉——自由地选择是你们的荣耀/责任。'},
+  {t:'(10.9) 毕业后如何到另一个行星',d:'<span class="qa-q">问：实体在周期结束时从一颗行星到另一颗行星，靠什么方式？</span><b>答：</b>先被安置在爱/光的适当位置完成疗愈与调谐；周期的经验被溶解过滤，只剩变貌的精华；然后评估密度需求、选择重复周期或进入下一周期——这是由许多存有守护的收割方式。移动则是「想到适当的位置」。'},
+  {t:'(10.12) 可以加速成长吗',d:'<span class="qa-q">问：有意识地知道自己正在照一的法则学习，可以大幅加速成长，对吗？</span><b>答：</b>正确。自由意志是首要变貌之一；若实体从深处偏向爱/光，并接受对每一刻的责任，就能像地球群体的呼唤被增强那样增强自己的进展。'},
+  {t:'(10.14) 有什么练习可做',d:'<span class="qa-q">问：为了本书读者的普遍发展，能否给出一些能产生加速的练习？</span><b>答：</b>四个：在当下这一刻有意识地寻求那爱（第一次尝试是基石）；注视他人时看见造物主；凝视镜中看见造物主；注视周围的造物看见造物主。前提是对冥想、沉思或祈祷的倾向。'},
+  {t:'(10.15) 亚特兰蒂斯与利莫里亚',d:'<span class="qa-q">问：亚特兰蒂斯与利莫里亚这两个文明是如何出现的、又从哪来？</span><b>答：</b>Ra 说这是本次工作的最后一个问题——它们不是一个而是两个：穆原始却灵性先进，53,000 年前被板块调整吞没；亚特兰蒂斯 15,000 年前技术飞跃、转向负面，10,821 年前的大部分地区被淹没。随后 Ra 以 Adonai 收尾。'}
+]);
+
+/* 收割流程推演 */
+initStepper('hvTrack','hvDetail','hvPrev','hvNext',[
+  {t:'① 安置于爱/光',d:'<b>先疗愈与调谐。</b>心/身/灵全体/存在性的第一步，是把它的复合体变貌安置在爱/光的适当位置——目的是确保复合体得到适当疗愈，并最终与全体/存在性复合体调谐。这需要一段长度非常不确定的时间/空间。'},
+  {t:'② 溶解与过滤',d:'<b>只剩精华。</b>此后，周期的经验被溶解与过滤，直到只剩下以纯粹形式存在的变貌之精华——被带走的不是经历的全部细节，而是浓缩后的那一点。'},
+  {t:'③ 评估与选择',d:'<b>由精华自己决定去哪。</b>被收割的全体/存在性评估其存在性的密度需求，选择更合适的新环境：要么重复这个周期，要么进入下一个周期。'},
+  {t:'④ 守护与就位',d:'<b>许多人看着，而移动只是「想到」。</b>Ra 说这就是收割的方式，由许多存有守护与照看；至于移动，全体/存在性与造物主合一、没有时间/空间变貌，所以这只是在一个无限的时间/空间阵列中想到那个适当位置。'}
+]);
+
+/* 呼唤的倍增 */
+initStepper('callTrack','callDetail','callPrev','callNext',[
+  {t:'第一个人',d:'<b>基石，且不计入。</b>呼唤始于一个人。这个呼唤等同于无限，并且不被计算——Ra 说它是基石。所以「有没有第一个」比「总共有几个」更关键。'},
+  {t:'第二个人',d:'<b>叠加。</b>第二个呼唤被加入。从这一步开始，呼唤不再是「一个人的事」。'},
+  {t:'第三个人',d:'<b>加倍。</b>第三个呼唤增强或加倍第二个——注意加倍的对象是「先前的所有呼唤」，不只是前一个。'},
+  {t:'许多个人',d:'<b>压倒性地被听见。</b>每个额外的呼唤者都加倍或赋予先前所有呼唤以力量，于是你们许多人民的呼唤被许多许多倍地增强，被太一造物的无限领域压倒性地听见。'}
+]);
+
+/* 术语卡展开 */
+document.querySelectorAll('.fn-card').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('open')));
+
+/* 极性归类练习 */
+initSorter('sorterArea',[
+  {a:'一家公司为了财报好看关掉污水处理系统省钱，决策者真心觉得「公司活下去，员工才有饭碗」',opts:['服务他人','服务自我'],ans:'服务自我',exp:'Ra 说马尔戴克「使用科技信息却不关心其星球的存续」，并把这套思维与行动复合体与负面极性、服务自我联系起来；它同时被包裹在一个被感知为「正面、服务他人」的真诚信念结构里——主观的善意不改变它的朝向。'},
+  {a:'洪水过后，一个社区自发组织起来，把物资先分给最虚弱的人',opts:['服务他人','服务自我'],ans:'服务他人',exp:'穆的文明被 Ra 描述为一个「有益且无害的地方」——这正是正面导向在行为上的样子。'},
+  {a:'掌握了能创造生命形态的技术后，团队优先用它给自己升级，而不去疗愈和完善自己的心/身/灵复合体',opts:['服务他人','服务自我'],ans:'服务自我',exp:'Ra 描述亚特兰蒂斯时的原话：他们开始做这件事，「而不是疗愈和完善他们自己的心/身/灵复合体，将他们的变貌转向你们可称之为负面的方向」。'},
+  {a:'医生把检查结果如实告知病人，让病人自己决定治疗方案，不替病人做选择',opts:['服务他人','服务自我'],ans:'服务他人',exp:'Ra 在（10.8）说「自由地选择是你们的荣耀/责任」——把选择权留在对方手上，是正面导向的标志；替对方决定则相反。'},
+  {a:'短视频团队按情绪曲线精准投放内容，让用户停不下来',opts:['服务他人','服务自我'],ans:'服务自我',exp:'Ra 描述亚特兰蒂斯时用的是「操控」自然流入这个词；以操控他人的注意力来达成自己的目标，朝向的是服务自我。'}
+]);
+
+/* 条件模拟器：成长被增强的三个条件 */
+function updateCond(){
+  const on1=document.getElementById('cond1').checked;
+  const on2=document.getElementById('cond2').checked;
+  const on3=document.getElementById('cond3').checked;
+  const box=document.getElementById('condResult');
+  const miss=[];
+  if(!on1)miss.push('「有意识地觉察自己在学习」——Ra 说，不知道自己在做什么也是在学，只是那属于第一种方式，成长不会因此大幅加速。');
+  if(!on2)miss.push('「从心/身/灵深处偏向爱/光」——这是 Ra 描述加速时的前提：方向不对时，后面的每一条都使不上力。');
+  if(!on3)miss.push('「接受对每一刻的责任」——Ra 的加速器就落在这里：接受对可供使用的当下时刻累积中每一刻的责任，这个实体便能增强自身的进展。');
+  if(!miss.length){
+    box.classList.remove('fail');
+    box.innerHTML='<b>三条齐备——成长被增强。</b>Ra 说，这样的实体能增强自身的进展；他给的是同一个机制：如同你们社会复合体对星际联邦的呼唤，第三个呼唤加倍第二个、每一个额外的呼唤者都加倍先前所有呼唤。加速不是跑得更快，而是每一刻都被计入。';
+    return;
+  }
+  box.classList.add('fail');
+  box.innerHTML='<b>还差 '+miss.length+' 条。</b><ul style="margin:8px 0 0 20px">'+miss.map(m=>'<li>'+m+'</li>').join('')+'</ul>';
+}
+['cond1','cond2','cond3'].forEach(id=>document.getElementById(id).addEventListener('change',updateCond));
+updateCond();
+
+renderPath();
+</script>
+</body>
+</html>

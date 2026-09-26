@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 054 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 054 · 交互式学习模块</h1>
+  <p class="sub">本集把"能量的一生"一次问透：光从理则而来，被心智变貌成人格，又靠催化剂慢慢解除变貌；正负两条路各自给自己编程功课，最后看清能量怎样流进身体、怎样向上、又怎样向外辐射。</p>
+  <div class="tagline">7 个主题 · 6 个学习步骤 · 26 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本集地图</a>
+<a href="#s2">② 向导与不安</a>
+<a href="#s3">③ 从理则到人格</a>
+<a href="#s4">④ 阻塞与"允许"</a>
+<a href="#s5">⑤ 催化剂与编程</a>
+<a href="#s6">⑥ 能量的进出口</a>
+<a href="#s7">⑦ 收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>走一遍问答链：从 Jim 的个人经历到能量的进出口，本集到底在追问什么</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>向导与不安</b><span>搞清每个复合体的向导配置，以及"紧张"为什么间接地有用</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>从理则到人格</b><span>光的频率如何变成身体与人格；Ra 三次纠偏，各护住了什么</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>阻塞与"允许"</b><span>阻塞能到多彻底、"允许"一词为何要避开、催化剂的双重优先</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>催化剂与投生前编程</b><span>骨架→血肉→自制；正负两条路各自给自己写什么程序</span></span></label></div>
+<div class="step-item" data-target="#s7"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>能量的进出口与收官</b><span>先读第 6 章：两个进口、止于靛光的漏斗、从蓝光开始的辐射；再以金句收官</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ 第 1 章：本章地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：这一集在回答什么</h2></div>
+  <p class="sec-lead">前几集谈完正负极化、流浪者与守护的机制之后，本集发问者把镜头拉回最上游：太阳作为理则创造光——那光怎样变成我们？他从一句"我想追溯来自理则的能量"出发，一路问过七色与身体、变貌的意义、阻塞与催化剂、投生前的编程，最后落到能量怎样流进身体、怎样向上、又怎样向外辐射。全篇是一条"溯源之旅"，且Ra 多次在措辞上停下来纠偏——那些停顿本身就是教导。</p>
+
+  <div class="card">
+    <h3>本集的五个议题</h3>
+    <p>① 向导与不安：紧张为何"间接地"有用（54.2-54.3）　② 从理则到人格：光之频率与"音诗"（54.4-54.10）　③ 阻塞与"允许"：催化剂的双重优先（54.11-54.16）　④ 催化剂的演化与投生前编程：正负两路各写什么程序（54.17-54.25）　⑤ 能量的进出口：两个进口、一个漏斗、三种辐射（54.26-54.32）</p>
+  </div>
+
+  <div class="card">
+    <h3>问答脉络推进器</h3>
+    <p class="hint" style="font-size:.88rem;color:var(--ink-soft)">点击节点或用按钮，走一遍本集的问答链。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="flowTrack"></div>
+      <div class="flow-detail" id="flowDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="flowPrev">← 上一问</button>
+        <button class="tri-btn" id="flowNext">下一问 →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>先记住本集的地基</h3>
+    <div class="q">还没进入正题前，先立一块地基：七个能量中心，是后天慢慢"长出来"的，还是一开始就备好的？后面的讨论全压在这块地基上。</div>
+    <div class="quote">
+      <p class="en">These energy centers are in potential in macrocosm from the beginning of creation by the Logos. Coming out of timelessness, all is prepared. This is so of the infinite creation.</p>
+      <p class="zh">这些能量中心从理则开始创造之时，就在宏观宇宙中处于潜在状态。从无时间性中走出来时，一切已经备好。无限的造物也是如此。</p>
+      <span class="src">—— Session 054 · (54.9)</span>
+    </div>
+    <div class="plain">七个能量中心从造物之初就"在"——修炼不是安装零件，是启用早已备好的潜在结构。</div>
+    <div class="case"><b>追一件快递的旅程：</b>你签收的一件毛衣，往上追是纺纱厂、棉田、种棉时的雨水与阳光——本集做的就是这种"溯源"：从人格的烦恼（要解除的变貌）一路追到理则之光，再顺着流回来看它怎样经过身体。</div>
+    <div class="case"><b>体检报告的分层：</b>体检单从身高体重问到器官、再到血液指标，一层比一层深——发问者这一集的问法相同：先问光的来源（理则），再问身体（七色载具）、阻塞、催化剂与编程，最后问它怎样进出身体。</div>
+  </div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 后勤</span></summary>
+  <div class="body">
+    <p><b>(54.1) 器皿状态：</b>Ra 只答"如前所述"，与此前评估一致。</p>
+    <p><b>(54.33) 器皿舒适度：</b>Ra 请团队留意支撑器皿颈部的需要；一切安好，随后在爱与光中道别。</p>
+  </div></details>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 2 章：向导与不安 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>向导与不安：为什么"紧张"的用处是间接的</h2></div>
+  <p class="sec-lead">开场是 Jim 的个人问题：他初搬到自己的土地上时，一位自称 Angelica 的存有对他说，"你生存的关键间接地通过紧张而来"。Ra 借这个问题带出一段普遍教导——每个人身边有怎样的陪伴，以及"紧张"这种难受的东西为什么也能有用。</p>
+
+  <div class="card">
+    <h3>每个复合体有几位向导</h3>
+    <div class="q">说话的 Angelica 是谁？每个人得到的陪伴，是什么配置？</div>
+    <div class="quote">
+      <p class="en">As we have noted, each mind/body/spirit complex has several guides available to it.[85] The persona of two of these guides is the polarity of male and female. The third is androgynous and represents a more unified conceptualization faculty.</p>
+      <p class="zh">如我们已说过的，每个心/身/灵复合体都有几个向导可供使用。[85] 其中两位向导的人格是男与女的极性。第三位是雌雄同体的，代表一种更统一的概念化能力。</p>
+      <span class="src">—— Session 054 · (54.3)</span>
+    </div>
+    <p>Ra 确认：以"Angelica"这个名字说话的，是其中<b>女性极化的人格</b>。至于那条讯息本身，Ra 只说到一个程度——因混淆法则，它无法被完全阐明。这不是不肯说，而是自由意志的边界。</p>
+    <div class="plain">向导不是外在的救援队，是配置的一部分：两种极性人格，加一个更统一的"概念化"位。</div>
+    <div class="case"><b>项目组里的三种角色：</b>一个团队常有冲在前面的人（阳性极性）、托住后方的人（阴性极性），和不太站队、专门把各种想法统起来的统筹者——Ra 描述的向导配置正是这个结构：两种极性人格加一个"更统一的概念化"位。</div>
+  </div>
+
+  <div class="card">
+    <h3>"紧张"怎么间接地有用</h3>
+    <div class="q">"生存的关键间接地通过紧张而来"——紧张本身怎么可能有用？</div>
+    <div class="quote">
+      <p class="en">We may suggest that in order to progress, a state of some dissatisfaction will be present, thus giving the entity the stimulus for further seeking. This dissatisfaction, nervousness, or angst, if you will, is not of itself useful. Thus its use is indirect.</p>
+      <p class="zh">我们可以建议：为了进步，某种不满的状态会在场，从而给该实体继续寻求的刺激。这种不满、紧张，或焦虑——如果你愿意这样叫——本身并无用处。因此它的用途是间接的。</p>
+      <span class="src">—— Session 054 · (54.3)</span>
+    </div>
+    <div class="plain">不满与紧张本身无用——它的用处在于"推"，不在于"疼"。</div>
+    <div class="case"><b>入职第一年的紧绷：</b>搬去陌生城市的人，头一年总觉得"哪里不对劲"，正是这股不安推他去学技能、交朋友、重新安排生活——Ra 对 Jim 说的"紧张的用途是间接的"：不适本身没帮忙，帮忙的是它推动的寻求。</div>
+    <div class="case"><b>体检单上的黄灯：</b>指标亮黄灯的那一周，人才真正开始调整作息——警报本身不治病，它只是把人推进了"寻求"的门；这正是"不满作为继续寻求的刺激"。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 3 章：从理则到人格 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>从理则到人格：光如何变成经验</h2></div>
+  <p class="sec-lead">正题从一句"我想追溯来自理则的能量"开始。发问者先搭框架、请 Ra 纠错扩展：光从哪来、七色是什么、身体与频率什么关系、为什么会有需要"解除"的变貌。Ra 三次纠偏，其中两次都在护住同一个要点：别把活物当成机器。</p>
+
+  <div class="card">
+    <h3>太阳系，是一份经验的总和</h3>
+    <div class="q">我们太阳系的全部密度与经验，是不是就是太阳这个理则创造出来的全部？</div>
+    <div class="quote">
+      <p class="en">From the Logos comes all frequencies of radiation of light. These frequencies of radiation make up all of the densities of experience that are created by that Logos.</p>
+      <p class="zh">从理则而来的是光之辐射的一切频率。这些辐射频率构成了该理则所创造的全部经验密度。</p>
+      <span class="src">—— Session 054 · (54.4)</span>
+    </div>
+    <p>Ra 确认了这个框架：太阳是理则，行星系统在其所有密度中的经验总和，就是它作为理则的创造。这意味着"能量"不是抽象概念，而是一切经验的<b>原材料</b>。</p>
+    <div class="analogy"><b>三棱镜：</b>白光穿过棱镜分成连续光谱，每种颜色从未"离开"过白光——理则之光给出一切频率，密度与经验都在这份光里，只是各自对应一段"频谱"。</div>
+    <div class="plain">光的一切频率=一切经验密度：太阳系是一份完整的"作品集"，而我们是其中的共同作者。</div>
+    <div class="case"><b>一个城市的电磁频谱：</b>空气里同时飘着 Wi-Fi、调频广播、手机信号，各占一段频率互不干扰——理则之光也是这样"分频"的：一切频率同时在场，所谓密度，就是频段上的经验。</div>
+  </div>
+
+  <div class="card">
+    <h3>七具载具：可得，但要练</h3>
+    <div class="q">一个个体能不能"激活"七色中的任何一种，直接使用那具身体？</div>
+    <div class="quote">
+      <p class="en">If we grasp your query correctly, this is not correct in that the sub-sub-Logos resides not in dimensionalities but only in co-Creators, or mind/body/spirit complexes.</p>
+      <p class="zh">如果我们正确理解了你的询问，这并不正确——因为子子理则并不居于维度之中，只居于共同造物者，即心/身/灵复合体。</p>
+      <span class="src">—— Session 054 · (54.5)</span>
+    </div>
+    <p>这是第一次纠偏：发问者把"七色"想成了七个可以逐个"入住"的层级，Ra 指出创造权不在"维度"上，只在每个心/身/灵复合体手里。澄清之后，原命题成立——复合体确实可以激活七道光芒之一的身体，但 Ra 补了一个条件：如弹钢琴，<b>越进阶、越"轻"的载具，越需要技能与纪律</b>。</p>
+    <div class="plain">七具载具都潜在可得；能"够到"哪一具，取决于技能与纪律，不取决于资格。</div>
+    <div class="case"><b>学琴十年：</b>琴键对每个人开放，可要弹到开演奏会，得靠日复一日的练习——Ra 自己用钢琴作比：七具真实颜色载具潜在可得，更进阶的载具需要修炼才够得到。</div>
+  </div>
+
+  <div class="card">
+    <h3>为什么要"解除变貌"</h3>
+    <div class="q">智能能量被调制成人格变貌、再由复合体解除变貌、与原初对齐——图什么？除了第一变貌，还有别的答案吗？</div>
+    <div class="quote">
+      <p class="en">This statement is substantially correct. If you will penetrate the nature of the First Distortion in its application of self knowing self, you may begin to distinguish the hallmark of an Infinite Creator: variety. Were there no potentials for misunderstanding and, therefore, understanding, there would be no experience.</p>
+      <p class="zh">这个陈述基本正确。如果你深入第一变貌在"自我认识自我"之应用中的本质，你或许开始辨认出无限造物主的印记：多样性。若没有误解的潜能——因而也没有理解——就不会有经验。</p>
+      <span class="src">—— Session 054 · (54.7)</span>
+    </div>
+    <div class="plain">变貌不是缺陷：没有误解的可能，理解就无从发生——多样性是无限造物主的印记。</div>
+    <div class="case"><b>跨学科会议：</b>工程师、设计师、财务在同一张桌上彼此"误解"，磨到最后拿出的方案比任何单一视角都好——Ra 说没有误解的潜能就没有经验：多样性的印记，恰恰长在误解可能发生的地方。</div>
+  </div>
+
+  <div class="card">
+    <h3>不是机器，是音诗</h3>
+    <div class="q">那么"训练人格的七个领域、各对应一色"，是不是一套照做即可的校准流程？</div>
+    <div class="quote">
+      <p class="en">The precision with which each energy center matches the Original Thought lies not in the systematic placement of each energy nexus, but rather in the fluid and plastic placement of the balanced blending of these energy centers in such a way that intelligent energy is able to channel itself with minimal distortion. … The mind/body/spirit complex is not a machine. It is rather what you might call a tone poem.</p>
+      <p class="zh">每个能量中心与原初思想匹配的精确性，不在于每个能量联结点的系统化摆放，而在于这些能量中心的平衡混合之流动而可塑的摆放，好让智能能量能以最小的变貌引导自身。……心/身/灵复合体不是一台机器。它宁可说是你们可以称为音诗的东西。</p>
+      <span class="src">—— Session 054 · (54.8)</span>
+    </div>
+    <p>Ra 提醒：这个说法"虽对，却极有被误解的潜力"。随后补上本集的底牌——七个中心从造物之初就潜在（54.9）；而"七个认识领域"也不是造物主凭空设计的分类，而是<b>理则创造的光，其性质自然生出了催化与能量的层面</b>；下一个八度音程存有的最高荣耀/职责，是监督光在显化中的表现（54.10）。</p>
+    <div class="analogy"><b>音诗 vs 机器：</b>机器的"精确"是每个零件都在设定位置上；音诗的"精确"是各声部在流动中彼此成全。Ra 说复合体是后者——所以修炼的目标是"平衡混合"，不是"系统摆放"。</div>
+    <div class="plain">复合体不是机器，是音诗：精确来自流动的平衡混合，不是系统化的摆放。</div>
+    <div class="case"><b>合唱团合排：</b>把每个声部各自调到标准音高只是第一步；真正的"准"是排练中声部互相听、互相让，唱出只有在合奏里才存在的和声——七个中心的精确，不是对齐参数，是这种调和。</div>
+  </div>
+
+  <div class="card">
+    <h3>术语卡：读懂这一章的六个词</h3>
+    <p class="hint" style="font-size:.88rem;color:var(--ink-soft)">点击卡片翻面。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">理则</div><div class="sub">Logos</div><div class="tap">点击翻面 →</div></div><div class="back">创造一个星系级系统的造物原则。本集中"我们的太阳"是一个子理则；理则创造光，光的性质进而造出这造物里催化与能量的层面。<em>白话：作曲家，总谱是光。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">子理则</div><div class="sub">sub-Logos</div><div class="tap">点击翻面 →</div></div><div class="back">理则的下游创造者，如我们的太阳：为它的行星系统提供第一三元组（生存层）的基础催化剂；更高层的催化剂要实体自己造。<em>白话：分公司——总部给启动资金，业务要自己跑。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">子子理则</div><div class="sub">sub-sub-Logos</div><div class="tap">点击翻面 →</div></div><div class="back">即心/身/灵复合体。Ra 特别纠正：它"不居于维度中"，只居于共同造物者——创造权不在某个"层面"上，而在每个个体手里。<em>白话：下一级作者不是"楼层"，是"人"。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">智能能量</div><div class="sub">intelligent energy</div><div class="tap">点击翻面 →</div></div><div class="back">从理则流出、带着规律与倾向的能量；它被心智"调制/变貌"成带人格变貌的复合体，修炼就是把变貌解除、重新与原初精确对齐。<em>白话：上游来的"电"，被各家电器用出不同的杂音。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">第一变貌</div><div class="sub">First Distortion</div><div class="tap">点击翻面 →</div></div><div class="back">一的法则的第一变貌——自由意志，又称混淆法则（Law of Confusion）。Ra 拒用"允许"形容它：它不"允许"也不"禁止"，只给每个复合体的能量以自由的触及范围。<em>白话：不是审批窗口，是开放的地图。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">真实颜色载具</div><div class="sub">true-color vehicle</div><div class="tap">点击翻面 →</div></div><div class="back">与七色对应的身体/载具。每一种都"潜在可得"，但要动用更进阶、更轻的载具，需要技能与纪律——如钢琴人人可按，开演奏会要练。<em>白话：乐器都在那里，功夫决定你能弹哪首。</em></div></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 4 章：阻塞与"允许" ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>阻塞与"允许"：催化剂的双重优先</h2></div>
+  <p class="sec-lead">框架搭好后，发问者往下钻：心智配置可以挡住某色的流入能量——能挡多少？是谁"允许"的？催化剂是不是只为了疏通？这一段 Ra 两次纠正措辞、一次纠正预设，每一处都值得慢读。</p>
+
+  <div class="card">
+    <h3>阻塞可以到什么程度</h3>
+    <div class="q">一种颜色最多能挡掉多少流入能量——有没有"最多挡三成"这样的上限？</div>
+    <div class="quote">
+      <p class="en">There may be, in an entity's pattern of instreaming energy, a complete blockage in any energy, or color, or combination of energies, or colors.</p>
+      <p class="zh">在一个实体的流入能量模式中，可能在任何能量、颜色，或能量与颜色的组合里，存在完全的阻塞。</p>
+      <span class="src">—— Session 054 · (54.12)</span>
+    </div>
+    <div class="plain">阻塞可以到"完全"——没有安全的下限。</div>
+    <div class="case"><b>全关的闸门：</b>河上的水闸可以开一半，也可以整个放下——Ra 说某种颜色的流入能量可以被"完全"阻塞；长期拒绝面对某类感受的人，挡着挡着就可能彻底关死。</div>
+  </div>
+
+  <div class="card">
+    <h3>自由意志不"允许"任何东西</h3>
+    <div class="q">那么第一变貌是不是"允许"阻塞发生的那只手？</div>
+    <div class="quote">
+      <p class="en">Free will does not allow, nor would predetermination disallow, experiential distortions. Rather the Law of Confusion offers a free reach for the energies of each mind/body/spirit complex.</p>
+      <p class="zh">自由意志并不"允许"，预定性也不会"不允许"经验性变貌。毋宁说，混淆法则为每个心/身/灵复合体的能量给出一个自由的触及范围。</p>
+      <span class="src">—— Session 054 · (54.13)</span>
+    </div>
+    <p>Ra 自己补了一句："这可能看似微不足道，但以我们最好的思考方式，它有分量。"为什么计较一个词？因为<b>"允许"暗示对/错、许/不许的极性</b>——而自由意志不站在任何一边。</p>
+    <div class="plain">自由意志不"允许"也不"禁止"：它给的是自由的触及范围，不是许可清单。</div>
+    <div class="case"><b>"我允许你出门"：</b>父母对青少年说"我允许你周末出门"——话里已经预设了谁有权批准、什么算违规；Ra 拒用"允许"正是这个原因：它把开放的场域说成了审批关系。</div>
+  </div>
+
+  <div class="card">
+    <h3>催化剂不只为了疏通</h3>
+    <div class="q">催化剂是不是只在一个中心被堵住时才需要——没堵就不需要催化剂？</div>
+    <div class="quote">
+      <p class="en">While it is a primary priority to activate or unblock each energy center, it is also a primary priority at that point to begin to refine the balances between the energies so that each tone of the chord of total vibratory beingness resonates in clarity, tune, and harmony with each other energy.</p>
+      <p class="zh">虽然激活或疏通每个能量中心是首要优先，在那时，开始精炼能量之间的平衡同样是首要优先——好让整体振动存在之和弦的每一个音，以清晰、合调与和谐同彼此的能量共振。</p>
+      <span class="src">—— Session 054 · (54.15)</span>
+    </div>
+    <p>Ra 直接答"不"，并给出理由：疏通之外还有并行的另一桩首要——<b>精炼平衡</b>。没有纪律与欣赏（更深层人格、灵魂身份），每种能量也能被激活，却没有可能达到的美。发问者随即送上本集最美的类比：</p>
+    <div class="analogy"><b>七弦琴（发问者自己的类比）：</b>把每根弦拉满再放开，只能得到一个一个孤立的音；以创造性人格按恰当的量、恰当的顺序去弹，才有音乐。Ra 确认了这幅图景。</div>
+    <div class="plain">激活与平衡并行为两个首要：响，不等于和。</div>
+    <div class="case"><b>只练胸不练背：</b>健身只推不拉，单块肌肉是练出来了，体态与肩颈反而坏了——"激活"对应练出力量，"平衡"对应整条动力链的协调；缺了后者的激活没有美。</div>
+    <div class="case"><b>KTV 与合唱团：</b>人人都能在 KTV 吼出声音（激活），合唱团却要求彼此听、彼此让（平衡与和谐）——同一副嗓子，前者出了声，后者成了音乐。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 5 章：催化剂的演化 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>催化剂的演化：从骨架到"自我为自我制造"</h2></div>
+  <p class="sec-lead">讲清"催化剂不为疏通而设"之后，大问题来了：催化剂从哪来、谁提供、能不能自己造？Ra 给出一条从"骨架"到"血肉"再到"自制"的演化线，然后对比正负两条路各自给自己写的程序，最后落到投生的目的。</p>
+
+  <div class="card">
+    <h3>骨架与血肉</h3>
+    <div class="q">基础催化剂是谁提供的？能提供到什么程度？</div>
+    <div class="quote">
+      <p class="en">Thus the sub-Logos can offer only a basic skeleton, shall we say, of catalyst. The muscles and flesh—having to do with the, shall we say, survival of wisdom, love, compassion, and service—are brought about by the action of the mind/body/spirit complex on basic catalyst… The more advanced the entity, the more tenuous the connection between the sub-Logos and the perceived catalyst until, finally, all catalyst is chosen, generated, and manufactured by the self, for the self.</p>
+      <p class="zh">因此，子理则只能提供——我们可以说——催化剂的基本骨架。肌肉与血肉——关乎智慧、爱、悲悯与服务的"存活"——由心/身/灵复合体对基本催化剂的作用带来……实体越进阶，子理则与所感知催化剂之间的连接就越微弱，直到最终，一切催化剂都由自我为自我选择、产生并制造。</p>
+      <span class="src">—— Session 054 · (54.17)</span>
+    </div>
+    <p>Ra 的修正是"部分正确"：子理则只在<b>第一三元组</b>（红、橙、黄，关乎身体复合体的生存）提供催化剂；更高中心从复合体自身对一切随机与定向经验的<b>反应偏见</b>中获得催化剂——更有意识的实体则开始把基本催化剂加工成能作用于高阶中心的催化剂。</p>
+    <div class="quote">
+      <p class="en">We find your query indeterminate but can respond that the number of those which have mastered outer catalyst completely is quite small. … Most of those harvestable at this space/time nexus have partial control over the outer illusion and are using the outer catalyst to work upon some bias which is not yet in balance.</p>
+      <p class="zh">我们发现你的询问无法确定，但可以回应：完全掌握了外部催化剂的实体，数量相当少。……在这个空间/时间连接点上，大多数可收割的实体对外部幻象只有部分掌控，正用外部催化剂处理某个尚未平衡的偏见。</p>
+      <span class="src">—— Session 054 · (54.18)</span>
+    </div>
+    <div class="plain">子理则给骨架，复合体长血肉——终点的功课全是自制。</div>
+    <div class="case"><b>拆掉辅助轮：</b>孩子学车先靠辅助轮（子理则给的生存层骨架），骑稳之后辅助轮拆掉，路线与速度都由自己定——对应"骨架→血肉→一切催化剂自我制造"的演化线。</div>
+    <div class="case"><b>新员工的前三个月：</b>入职培训、固定的带教任务、标准流程，都是公司安排的"骨架"；几年后他开始自己找项目、自设难题——高阶的功课再没有人替你出题。</div>
+  </div>
+
+  <div class="card">
+    <h3>两条路各写什么程序</h3>
+    <div class="q">达到"能编程自己催化剂"的水平后，正面与负面实体分别会给自己编程什么？</div>
+    <div class="quote">
+      <p class="en">The negatively oriented entity will program for maximal separation from, and control over, all those things and conscious entities which it perceives as being other than the self.</p>
+      <p class="zh">负面导向的实体会为最大程度地分离于、并控制一切它感知为异于自我的事物与意识实体而编程。</p>
+      <span class="src">—— Session 054 · (54.19)</span>
+    </div>
+    <p>正面这边，发问者确认：正面实体可以在投生中选定一条狭窄的思想与活动路径，并编程"偏离此路即身体痛苦"的条件——Ra 确认。负面那边的默认程序则相反：</p>
+    <div class="quote">
+      <p class="en">A negatively oriented individual mind/body/spirit complex will ordinarily program for wealth, ease of existence, and the utmost opportunity for power. Thus many negative entities burst with the physical-complex distortion you call health. … Such an entity may use an entire incarnative experience honing a blunt edge of hatred, or anger, so that it may polarize more towards the negative, or separated, pole.</p>
+      <p class="zh">负面导向的个体心/身/灵复合体通常会为财富、安逸的存在与最大的权力机会而编程。因此许多负面实体满溢你们称为健康的身体复合体变貌。……这样的实体可能用一整段投生经验来磨砺仇恨或愤怒的钝刃，好让自己向负面或分离的极点极化得更多。</p>
+      <span class="src">—— Session 054 · (54.22)</span>
+    </div>
+    <div class="plain">负面的默认程序是分离与控制；正面可以用痛苦守住窄路——程序不同，作者都是自己。</div>
+    <div class="case"><b>攒权力的人：</b>有人把人生排成一场"资产与位置的累积"：更多财富、更省力的日子、更大的话语权——Ra 说这是负面实体通常编程的默认程序，所以许多负面实体"满溢健康"。</div>
+    <div class="case"><b>窄门：</b>一位修行者给自己立下清规，偏离就寝食难安甚至病倒——正面实体可以编程"偏离窄路即身体痛苦"的条件，用痛苦守住自己选定的那条窄路。</div>
+  </div>
+
+  <div class="card">
+    <h3>归类练习：这算哪条路的编程？</h3>
+    <p class="hint" style="font-size:.88rem;color:var(--ink-soft)">用 Ra 在本集给出的判据，判断下面的"编程"更接近正面还是负面。</p>
+    <div id="sorterArea"></div>
+  </div>
+
+  <div class="card">
+    <h3>为什么必须编程催化剂</h3>
+    <div class="q">从投生前看，投生物理状态的目的，是不是就是"体验已编程的催化剂"？</div>
+    <div class="quote">
+      <p class="en">The purpose of incarnative existence is evolution of mind, body, and spirit. In order to do this it is not strictly necessary to have catalyst. However, without catalyst the desire to evolve and the faith in the process do not normally manifest, and thus evolution occurs not.</p>
+      <p class="zh">投生存在的目的是心智、身体与灵性的进化。要做到这一点，并不严格需要催化剂。然而，没有催化剂，进化的渴望与对过程的信心通常不会显现，进化于是不发生。</p>
+      <span class="src">—— Session 054 · (54.24)</span>
+    </div>
+    <p>Ra 特意"为清晰起见"重述了一遍：目的不是"体验催化剂"本身，而是<b>进化</b>；催化剂不是严格必需，却是让渴望与信心显现的常规途径——因此催化剂被编程，且按每个复合体的独特需求设计。可取的态度是：觉察并倾听它。</p>
+    <div class="plain">投生的目的是进化；催化剂不是严格必需，却是让渴望与信心显现的常规途径——所以它被按需定制。</div>
+    <div class="case"><b>没有对手的棋局：</b>让一个人独自下棋，他很快失去兴致——没有催化剂，进化的渴望与对过程的信心通常不会显现；给自己摆上对手，棋局才开始。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 6 章：能量的进出口 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>能量的进出口：两个进口、一个漏斗、三种辐射</h2></div>
+  <p class="sec-lead">最后一程，发问者请 Ra 描述"进入能量中心的能量"：从哪来、以什么形式、产生什么效果。Ra 先说"这有一部分是可能的"——然后给出本集最开阔的一段：能量的起源、两条进口、向上的漏斗与向外的光。</p>
+
+  <div class="card">
+    <h3>前三道光芒：同三根弦，相反的弹法</h3>
+    <div class="q">正负两路对红、橙、黄三道光的目标，是不是精确相反？</div>
+    <div class="quote">
+      <p class="en">After this point, however, it is correct that the negative will use the three lower centers for separation from and control over others—by sexual means, by personal assertion, and by action in your societies. … Contrary-wise, the positively oriented entity will be transmuting strong red-ray sexual energy into green-ray energy transfers and radiation in blue and indigo, and will be similarly transmuting selfhood and place in society into energy transfer situations in which the entity may merge with and serve others and then, finally, radiate unto others without expecting any transfer in return.</p>
+      <p class="zh">然而，越过这一点之后，负面实体确实会用三个较低中心来分离与控制他人——通过性手段、个人主张，以及在你们社会中的行动。……相反，正面导向的实体将把强烈的红光性能量转码为绿光能量转移与蓝光、靛光的辐射，并将同样把自我身份与社会位置转码为能量转移的情境——在其中实体可以与他人融合并服务他人——最后，不期待任何回报的转移，向他人辐射。</p>
+      <span class="src">—— Session 054 · (54.25)</span>
+    </div>
+    <p>Ra 的措辞是"部分且基本上正确"——因为每个中心都有一小份能量用于<b>维持载具本身的完整</b>，正负实体都宜保留这一份，之后才谈得上怎么用。</p>
+    <div class="plain">同三根弦，相反的弹法：负面拿去分离与控制，正面拿去转码成服务与辐射。</div>
+    <div class="case"><b>亲密关系的两种走向：</b>同样一份亲密，一方拿来当控制的筹码（"不听我的就冷暴力"），另一方把它转成彼此支撑，让两个人都更能去照顾别人——红橙黄三道光还是那三道，用法相反。</div>
+    <div class="case"><b>同一个职位，两种用法：</b>两个人先后升到同样的管理岗：一位用职位让人不敢说话，一位用话语权替做事的人争取资源、把功劳让出去——"社会行动"这道黄光的两种弹法。</div>
+  </div>
+
+  <div class="card">
+    <h3>两个进口：内在的星与脚下的地</h3>
+    <div class="q">进入能量中心的能量，从哪里来、以什么形式、怎么进来？</div>
+    <div class="quote">
+      <p class="en">The origin of all energy is the action of Free Will upon Love. The nature of all energy is Light.</p>
+      <p class="zh">一切能量的起源，是自由意志对爱的作用。一切能量的本质是光。</p>
+      <span class="src">—— Session 054 · (54.27)</span>
+    </div>
+    <p>Ra 说进入的方式是"双重的"。第一条路在内：<b>内在之光</b>——他称之为"自我的北极星、指引之星"，是一切实体的天赋权利与真实本质，居于内在。第二条路在下：经双脚从地球、经脊柱下端进入——这股宇宙光能量在开始经过能量中心过滤之前，是无差别的。至于怎么用，取决于两件事：各中心的需求，加上个体<b>接入内在之光的熟练度</b>。</p>
+    <p>发问者顺势问：经验性催化剂也走同一条路吗？Ra 说这个问题并不愚蠢——</p>
+    <div class="quote">
+      <p class="en">This is not a pointless question, for catalyst and the requirements, or distortions, of the energy centers are two concepts linked as tightly as two strands of rope.</p>
+      <p class="zh">这不是一个没有意义的问题，因为催化剂与能量中心的需求或变貌，是两个如两股绳般紧密相连的概念。</p>
+      <span class="src">—— Session 054 · (54.28)</span>
+    </div>
+    <div class="analogy"><b>北极星与脚下的大地：</b>Ra 给了两幅画面——内在之光像"自我的北极星"，在头顶；另一股宇宙光像从大地经双脚、沿脊柱底端升上来。一颗星，一片地，两个方向同时供电。</div>
+    <div class="plain">一切能量的起源是自由意志对爱的作用，本质是光；进口有两条——内与下。</div>
+    <div class="case"><b>双路供电的房子：</b>屋顶的太阳能板（内在之光）与埋在地下的市电入户（经双脚与脊柱底端的宇宙光）同时给房子供电；电流怎么分配，取决于各回路（中心）的需求与户主接线的熟练度。</div>
+  </div>
+
+  <div class="card">
+    <h3>向上的漏斗与向外的光</h3>
+    <div class="q">是不是每个中心各"抽走"一份能量，从红到紫一路过滤上去？</div>
+    <div class="quote">
+      <p class="en">This is largely correct. The exceptions are as follows: The energy ingress ends with indigo. The violet ray is a thermometer, or indicator, of the whole.</p>
+      <p class="zh">这大体正确。例外如下：能量的进入终止于靛蓝。紫罗兰光芒是整体的温度计或指示器。</p>
+      <span class="src">—— Session 054 · (54.30)</span>
+    </div>
+    <p>两个例外改写了整幅图景：紫光不参与"过滤取用"。而在完全激活的实体里——</p>
+    <div class="quote">
+      <p class="en">…in the fully activated entity, only that small portion of instreaming light needed to tune the energy center is used, the great remainder being free to be channeled and attracted upwards.</p>
+      <p class="zh">……在完全激活的实体中，只有调谐能量中心所需的那一小部分流入之光被使用，其余的大部分则自由地被引导、被向上吸引。</p>
+      <span class="src">—— Session 054 · (54.31)</span>
+    </div>
+    <div class="quote">
+      <p class="en">…radiation without the necessity of response begins with blue ray; although the green ray, being the great transitional ray, must be given all careful consideration…</p>
+      <p class="zh">……不需要回应的辐射从蓝光开始；尽管绿光——那伟大的过渡光芒——必须得到全然的谨慎对待……</p>
+      <span class="src">—— Session 054 · (54.31)</span>
+    </div>
+    <p>绿光为何是门槛？Ra 说：在<b>各类能量转移被充分体验并掌握</b>之前，蓝光与靛光的辐射中会有阻塞。而紫罗兰放射是另一回事：它是经由靛光<b>接触智能无限</b>的资源——从那里出来的辐射不是紫光，而是绿、蓝或靛，视带过来的智能类型而定：</p>
+    <div class="table-wrap"><table class="nine">
+      <tr><th>辐射类型</th><th>英文</th><th>通俗理解</th></tr>
+      <tr><td>绿光型辐射</td><td>green-ray radiation</td><td>疗愈</td></tr>
+      <tr><td>蓝光型辐射</td><td>blue-ray radiation</td><td>沟通与灵感</td></tr>
+      <tr><td>靛光型辐射</td><td>indigo radiation</td><td>行家的能量——其位置在信心之中</td></tr>
+      <tr><td>紫罗兰光芒</td><td>violet ray</td><td>整体的温度计/指示器：不参与流入过滤，放射出的也不是紫光</td></tr>
+    </table></div>
+    <div class="plain">流入止于靛蓝；紫光是温度计；多余的光向上走，光从蓝光开始不求回应地向外辐射。</div>
+    <div class="case"><b>温度计不供热：</b>墙上的温度计显示全屋温度，自己并不发热——紫罗兰光芒是整体的指示器：流入止于靛蓝，紫光不参与"过滤取用"。</div>
+    <div class="case"><b>水压与分流：</b>整栋楼水压固定，各户取用多少看各自的需求与阀门；用得省的楼，水被送到更高的楼层——完全激活的实体只取调谐所需的一小份，其余被向上引导。</div>
+  </div>
+
+  <div class="card">
+    <h3>条件模拟器：光什么时候能"向上走、向外辐射"？</h3>
+    <p class="hint" style="font-size:.88rem;color:var(--ink-soft)">拨动开关，看三个条件如何决定结果。</p>
+    <div class="cond-row"><div class="name">各中心已激活，只取"调谐所需的小份"<small>完全激活的实体不整段耗用流入光</small></div><label class="switch"><input type="checkbox" id="swTune"><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">各类能量转移已被充分体验并掌握<small>绿光这道过渡光芒的功课大体完成</small></div><label class="switch"><input type="checkbox" id="swGreen"><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">靛光这道门已敞开<small>经由靛光，可从紫罗兰放射接触智能无限</small></div><label class="switch"><input type="checkbox" id="swIndigo"><span class="slider"></span></label></div>
+    <div id="condResult"></div>
+  </div>
+
+  <div class="card">
+    <h3>靛光处的感觉，是什么</h3>
+    <div class="q">冥想时在靛蓝中心感到一阵涌动——那是什么？</div>
+    <div class="quote">
+      <p class="en">One who feels this activation is one experiencing instreamings at that energy center to be used either for the unblocking of this center, for its tuning to match the harmonics of its other energy centers, or to activate the gateway to intelligent infinity.</p>
+      <p class="zh">感到这种激活的人，是正在该能量中心体验流入能量——它将被用于疏通这个中心、调谐它以匹配其他能量中心的谐波，或激活通往智能无限的大门。</p>
+      <span class="src">—— Session 054 · (54.32)</span>
+    </div>
+    <p>Ra 紧接着说：我们不能更具体，因为这三种运作<b>每一种都由感受它的实体自己体验</b>。这是本集最后一句完整回答——也是本集留给每个读者的功课。</p>
+    <div class="plain">靛光处的涌动有三种可能，Ra 不替你分辨——经验必须亲身完成。</div>
+    <div class="case"><b>眉心发热的三种可能：</b>冥想课上有人说眉心发热，老师不下断言"你打开了什么"，只说可能是疏通、可能是调谐、也可能是更深的门——Ra 同样拒绝替实体分辨这三者。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 7 章：收官 ============ -->
+<section class="chapter" id="s7">
+  <div class="sec-head"><span class="num">07</span><h2>收官：等那只手来拨出和谐</h2></div>
+  <p class="sec-lead">本集没有宏大的新宣言，但有一句把整集收拢的话——它回应的是发问者的七弦琴类比，也是整个"能量修炼"话题在这一集的落点：七根弦调好之后，还剩什么要做？</p>
+
+  <div class="saying">
+    <p class="en">In the balanced individual the energies lie waiting for the hand of the Creator to pluck harmony.</p>
+    <p class="zh">在平衡的个体中，能量静静等候着造物主之手来拨出和声。</p>
+    <span class="src">—— Session 054 · (54.16)</span>
+  </div>
+
+  <div class="card">
+    <h3>那句话从哪来，又把我们送到哪里</h3>
+    <div class="q">"拨出和谐"的那只手，和"我"的努力是什么关系——平衡做完之后，还剩什么要做？</div>
+    <p>它回答的是七弦琴的类比：激活是"把弦拉满"，平衡是"以恰当的量、恰当的顺序去弹"——让和弦的每个音彼此清晰、合调、和谐。之后的部分不是"再加把劲"，而是"让"。本集最后也把这份功课说成倾听：</p>
+    <div class="quote">
+      <p class="en">Thus it is desirable that a mind/body/spirit complex be aware of and hearken to the voice of its experiential catalyst, gleaning from it that which it incarnated to glean.</p>
+      <p class="zh">因此，一个心/身/灵复合体觉察并倾听其经验性催化剂的声音、从中收集它投生所要收集的东西，是可取的。</p>
+      <span class="src">—— Session 054 · (54.24)</span>
+    </div>
+    <div class="plain">平衡做完之后的部分，不是"再加把劲"，而是"等那只手"。</div>
+    <div class="case"><b>调好弦之后：</b>演出前的乐手把七根弦各自调准，然后不再拧紧什么，只是等指挥抬手——把该平衡的平衡好之后，练习"让"而不是"加"，正是"能量静候造物主之手"的日常版。</div>
+    <div class="case"><b>睡前复盘催化剂：</b>回想今天被激怒或被触动的三件事，各问一句"它替我指出哪个还没平衡的地方"——Ra 说的"倾听经验性催化剂的声音，收集投生要收集的东西"，最小可以缩到这三分钟。</div>
+  </div>
+
+  <div class="card">
+    <h3>本集留下的线头</h3>
+    <p>① Angelica 的讯息因混淆法则无法完全阐明——"紧张如何间接有用"只讲到"推人寻求"为止，Jim 的个案没有下文。<br>② 催化剂如何"先经南极、按生存评估"来感知，Ra 只重申了过滤过程、并请发问者"更具体地问"——具体展开留待后续。<br>③ 靛光处的感觉有三种可能，Ra 拒绝替实体分辨——分辨本身被交还给每个体验者的功课。</p>
+    <div class="plain">读后续集会时，留意这些线头何时被重新拾起。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 054（`split/Ra_Session_054.md`）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra054-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本集定制交互 ===== */
+
+/* ① 问答脉络推进器（第 1 章） */
+initStepper('flowTrack','flowDetail','flowPrev','flowNext',[
+  {t:'向导与不安',d:'<span class="qa-q">问：(54.2-54.3) Jim 初搬新居时收到 Angelica 的讯息："生存的关键间接地通过紧张而来"——这是谁？这话什么意思？</span><b>答：</b>每个心/身/灵复合体都有几个向导：两位是男/女极性人格，第三位雌雄同体、代表更统一的概念化能力；Angelica 是女性极化人格。讯息因混淆法则无法完全阐明：不满会作为继续寻求的刺激在场——紧张本身无用，用途是间接的。'},
+  {t:'光之来源',d:'<span class="qa-q">问：(54.4-54.6) 太阳系的全部经验是否就是太阳理则的创造？七色与身体是什么关系？</span><b>答：</b>确认：理则给出光的一切频率，构成全部经验密度。纠正：子子理则不居于维度，只居于共同造物者（心/身/灵复合体）；七色载具潜在可得，但更进阶的载具需要技能与纪律——如人人可按琴键，开演奏会要练。'},
+  {t:'为何有变貌',d:'<span class="qa-q">问：(54.7-54.10) 智能能量被变貌成人格、再要解除——为什么如此设计？</span><b>答：</b>深入第一变貌"自我认识自我"的应用，便见无限造物主的印记：多样性；没有误解的潜能就没有经验。且复合体不是机器而是音诗——精确在平衡混合的流动，不在系统化摆放。'},
+  {t:'阻塞与"允许"',d:'<span class="qa-q">问：(54.11-54.16) 一种颜色最多能挡多少流入能量？是谁"允许"阻塞？催化剂只为了疏通吗？</span><b>答：</b>可到完全阻塞，没有上限。自由意志不"允许"、预定不"禁止"——混淆法则只给自由的触及范围。催化剂也不只为疏通：激活与精炼平衡是并行的两个首要。'},
+  {t:'催化剂演化',d:'<span class="qa-q">问：(54.17-54.18) 基础催化剂是谁提供的？谁已能自制全部催化剂？</span><b>答：</b>子理则只在第一三元组（生存层）给"骨架"；智慧、爱、悲悯、服务的"血肉"由复合体自己加工。实体越进阶连接越微弱，最终一切催化剂自我制造——如今完全掌握外部催化剂者相当少。'},
+  {t:'投生前编程',d:'<span class="qa-q">问：(54.19-54.25) 正负两路各自编程什么？投生的目的是什么？</span><b>答：</b>负面编程分离与控制（默认财富、安逸、权力，也可用痛苦磨利仇恨）；正面可编程"偏离窄路即痛"的护栏。投生的目的是心、身、灵的进化——没有催化剂，渴望与信心通常不显现，故催化剂被按独特需求编程。'},
+  {t:'进与出',d:'<span class="qa-q">问：(54.26-54.32) 进入能量中心的能量从哪来、怎么流？</span><b>答：</b>起源是自由意志对爱的作用，本质是光；进口有二——内在之光（自我的北极星）与经双脚/脊柱底端的宇宙光。流入止于靛蓝，紫罗兰是整体的温度计；完全激活者只取调谐所需的小份，其余向上引导；不求回应的辐射自蓝光始，经由靛光可触智能无限。'},
+  {t:'收束',d:'<span class="qa-q">问：(54.33) 有什么能让器皿更舒适、接触更好？</span><b>答：</b>留意支撑器皿颈部的需要——随后 Ra 在太一无限造物主的爱与光中道别。'}
+]);
+
+/* ② 术语卡翻转（第 3 章） */
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+/* ③ 归类练习：这算哪条路的编程（第 5 章） */
+initSorter('sorterArea',[
+  {a:'一位隐修者给自己编程了清苦的处境：一旦偏离自己选定的窄路，身体就会病痛。',opts:['正面','负面'],ans:'正面',exp:'正面实体可选定狭窄的思想与活动路径，编程"偏离即身体痛苦"的条件来守住它。'},
+  {a:'一位实业家把人生安排成"最多的财富、最省力的日子、最大的权力机会"。',opts:['正面','负面'],ans:'负面',exp:'负面个体通常为财富、安逸的存在与最大的权力机会而编程——因此常满溢健康。'},
+  {a:'有人刻意选择长期被羞辱的处境，用一整段人生把仇恨的钝刃磨利。',opts:['正面','负面'],ans:'负面',exp:'负面实体也可选择痛苦状态——为的是磨利愤怒与仇恨，向分离的极点极化。'},
+  {a:'一位行动不便者投生前选定了日常依赖他人照料的处境，好练习接受与感激。',opts:['正面','负面'],ans:'正面',exp:'实体在投生前可编程有助于疏通与平衡的催化经验——这一课关于接受与给出感激。'},
+  {a:'一位掌权者不断安排"让身边人更离不开自己"的局面，以支配他能支配的一切。',opts:['正面','负面'],ans:'负面',exp:'负面编程的核心是：最大程度地分离于并控制一切被感知为"非我"的事物与实体。'}
+]);
+
+/* ④ 条件模拟器：光何时向上走、向外辐射（第 6 章） */
+function updateIngressSim(){
+  var t=document.getElementById('swTune').checked;
+  var g=document.getElementById('swGreen').checked;
+  var i=document.getElementById('swIndigo').checked;
+  var r=document.getElementById('condResult');
+  if(t&&g&&i){
+    r.className='';
+    r.innerHTML='<b>齐备：</b>多余的大半流入光被自由地引导、向上吸引；不需回应的辐射从蓝光开始；经由敞开的靛光，可以从紫罗兰放射这一资源接触智能无限——辐射呈绿、蓝或靛：绿是疗愈，蓝是沟通与灵感，靛是行家的信心。';
+  }else if(!t){
+    r.className='fail';
+    r.innerHTML='<b>缺第一道：</b>流入光还在被各中心整段耗用于疏通与调谐，所剩无几可供向上引导——先让各中心达到"只取小份"的激活程度。';
+  }else if(!g){
+    r.className='fail';
+    r.innerHTML='<b>缺过渡：</b>绿光是伟大的过渡光芒——各类能量转移尚未被充分体验并掌握之前，蓝光与靛光的辐射中会有阻塞，向外的光起不来。';
+  }else{
+    r.className='fail';
+    r.innerHTML='<b>缺那扇门：</b>蓝光的不求回应辐射可以发生，但经由靛光通往智能无限的那条路没有打开——紫罗兰放射仍是未动的资源。';
+  }
+}
+['swTune','swGreen','swIndigo'].forEach(function(id){
+  document.getElementById(id).addEventListener('change',updateIngressSim);
+});
+updateIngressSim();
+
+renderPath();
+</script>
+</body>
+</html>

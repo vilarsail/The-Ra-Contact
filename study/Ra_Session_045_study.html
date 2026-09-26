@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 045 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 045 · 交互式学习模块</h1>
+  <p class="sub">一场能量见底的短集：Ra 先确认暂停接触替器皿挡下了一场身体危机，随后用最少的篇幅点亮三个概念——流浪者团体的来源、"不侵犯"的界线、社会记忆复合体的目的。</p>
+  <div class="tagline">5 个主题 · 5 个学习步骤 · 17 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 流浪者的来源</a>
+<a href="#s3">③ 三人组的底细</a>
+<a href="#s4">④ 耳音与极性</a>
+<a href="#s5">⑤ 社会记忆复合体 · 收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>走一遍问答推进器，弄清这场短集为什么短、谈了哪几块</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>流浪者的来源</b><span>看 Ra 如何先接住一道没问准的问题，再给出第六密度团体的构成</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>三人组的底细</b><span>跟着三连问，看清 Ra 在"不侵犯"的极限前说了什么、停在哪里</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>耳音与极性</b><span>弄明白左右耳的分别为何写在身体的磁场构造里</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>社会记忆复合体与收官</b><span>用条件模拟器拆解"进化为什么需要我们"，再以金句收束</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：一场能量见底的短集，为什么仍然值得读</h2></div>
+  <p class="sec-lead">1981 年 4 月 6 日这一集是全书最短的集会之一。开场先处理器皿（instrument，接收 Ra 讯息的管道）的身体状况，Ra 主动把问答压到最少——"这是最后一个询问"这句话本身就说明了一切。真正展开的议题只有三块：流浪者团体的构成、三位在场者自己的来历与 Ra 肯说的边界、社会记忆复合体的目的。三块内容各有一个闪光点：报恩式的帮助、精确到近乎固执的回答方式、以及"进化为什么需要彼此"的框架。</p>
+
+  <div class="card">
+    <h3>为什么这一集这么短：保护管道本身就是法则的运用</h3>
+    <div class="q">发问者只求一个例行的身体状况评估，Ra 却先把"这一集能有多长"的边界讲明——保护器皿不是后勤琐事，而是这次通讯成立的前提。</div>
+    <div class="quote">
+      <p class="en">This is the last query as this instrument needs to be protected from depletion. Are there brief queries before we close?</p>
+      <p class="zh">这是最后一问了——这个器皿需要被保护、免于耗竭。在结束之前，还有简短的询问吗？</p>
+      <span class="src">—— Session 045 · (45.11)</span>
+    </div>
+    <div class="plain">器皿的身体已经亮红灯，Ra 宁可少教也不透支管道——通讯的可持续，优先于内容量。</div>
+    <div class="case"><b>替朋友喊停：</b>晚上十一点，你发现电话那头刚下夜班的朋友声音发颤，却还硬撑着陪你聊天，于是你主动说"今天就到这，你先睡"——少聊的半小时，换来的是这段友谊能长期走下去。Ra 宣布"最后一个询问"，算的正是同一笔账。</div>
+  </div>
+
+  <div class="card">
+    <h3>本集问答脉络：从身体状况走到"进化为什么需要彼此"</h3>
+    <p>按顺序点下面的节点，看这场短集怎么一步步推进。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="mapTrack"></div>
+      <div class="flow-detail" id="mapDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="mapPrev">← 上一步</button>
+        <button class="tri-btn" id="mapNext">下一步 →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>顺手留下的教导：互相矛盾的处方，才叫平衡</h3>
+    <div class="q">例行问答里藏着一条可带走的原则：Ra 指出，帮助这个器皿的手段彼此矛盾、需要平衡——本模块把这条原则单独拎出来。</div>
+    <div class="quote">
+      <p class="en">It is to be further noted that those things which aid this instrument are in some ways contradictory and require balance. Thus this instrument is aided by rest, but also by diversions of an active nature.</p>
+      <p class="zh">还要留意一点：能帮到这个器皿的手段，彼此之间有些是相反的，必须求取平衡——她既受益于静养，也受益于活跃的调剂。</p>
+      <span class="src">—— Session 045 · (45.2)</span>
+    </div>
+    <div class="plain">有效的帮助常常是两种相反手段的组合，而不是把单一"好办法"不断加码。</div>
+    <div class="case"><b>照护方案的组合：</b>家人术后休养，只让他卧床静养，肌肉会萎缩；只催他多活动，又拖累伤口——康复师给的方案是一对矛盾的组合：上午康复训练，下午强制午休。Ra 补了一句"一旦知道了这一点，平衡就可能更容易达成"——明白帮助本来就是相反事物的搭配，照护者就不再纠结哪一样才对。</div>
+  </div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 后勤</span></summary>
+  <div class="body">
+    <p><b>(45.1) 器皿状态：</b>Ra 评估为"身体复合体状况极差、并未休息"，但器皿渴望接触。</p>
+    <p><b>(45.2) 暂停接触的效果：</b>奏效——上次接触时器皿出现肺部或肾脏疾病的概率相当显著，这段时间的节制避开了一次严重的身体机能失调；祈祷的支持与器皿不带过度急躁地坚持练习，都被 Ra 点到有帮助。</p>
+    <p><b>(45.8) 耳音问题：</b>Ra 表示之前已讨论过，请发问者询问具体的增量细节（教学部分见第 4 章）。</p>
+    <p><b>(45.12-45.13) 收尾：</b>Ra 答"一切都好，我的兄弟们"；发问者没听清，Ra 完整重复同一句并作结束语。</p>
+  </div></details>
+
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>流浪者的来源：受过金字塔帮助的团体，为什么回来帮忙</h2></div>
+  <p class="sec-lead">发问者问的是一道"比例题"：现在地球上的流浪者（wanderer，自愿从更高密度投生到此处服务的实体）里，是不是有很大比例来自 Ra？Ra 先用两个字作答——"我能"（I can）——把"把问题问准"的功课留给发问者，下一问才给出构成：第六密度的流浪者由几个"兄弟姊妹团体"分享，它们都曾以金字塔等形状帮助过地球，如今以人身回来继续。</p>
+
+  <div class="card">
+    <h3>"我能"：Ra 怎么对待一道没问准的问题</h3>
+    <div class="q">发问者问"你<b>能不能</b>告诉我"流浪者的比例——Ra 只回答了"能不能"这一层，没有回答"比例"是多少。</div>
+    <div class="quote">
+      <p class="en">I am Ra. I can. … A significant portion of sixth-density wanderers are those of our social memory complex.</p>
+      <p class="zh">我是 Ra。我能。……第六密度流浪者中，相当一部分属于我们的社会记忆复合体（social memory complex，群体记忆互通合一的组织形态）。</p>
+      <span class="src">—— Session 045 · (45.3-45.4)</span>
+    </div>
+    <div class="plain">问"能不能"，Ra 就答"能"——你要的信息，得用问对了的问题去换；用词的精确本身就是这一集的功课。</div>
+    <div class="case"><b>把问题问准：</b>周会上实习生问导师"你能不能告诉我这份方案的漏洞在哪？"导师点头："能。"全场安静两秒，实习生才反应过来该直接问"这份方案最大的漏洞是什么"。Ra 对 "Can you tell me…" 的逐字回答，就是把这个时机摆上桌面。</div>
+    <div class="case"><b>受助者的转身：</b>一位工程师小学时在乡村学校被支教老师免费补过两年课，工作后每年暑假回同一所学校带孩子们做实验——"当年有人这样帮过我，我也能这样帮他们"。这正是 Ra 说的"统一的感受"：曾被金字塔这类形状帮助过，所以来帮助你们的人民。</div>
+  </div>
+
+  <div class="card">
+    <h3>第六密度的"兄弟团体"：一张共同的报恩网络</h3>
+    <div class="q">发问者想确认这些流浪者的"户口"——Ra 给出的不是单一来源，而是由几个团体组成的一张网络。</div>
+    <div class="quote">
+      <p class="en">Another large portion consists of those who aided those in South America; another portion, those aiding Atlantis—all sixth density and all brother and sister groups due to the unified feeling that as we had been aided by shapes such as the pyramid, so we could aid your peoples.</p>
+      <p class="zh">另一大部分由援助过南美洲的实体组成；还有一部分援助过亚特兰蒂斯——全都是第六密度，全都是出于同一种统一感受而结成的兄弟姊妹团体：正如我们曾得到金字塔这类形状的助益，我们也能这样帮助你们的人民。</p>
+      <span class="src">—— Session 045 · (45.4)</span>
+    </div>
+    <div class="plain">Ra、南美援助者、亚特兰蒂斯援助者——三个第六密度团体，因"曾被帮助，故来帮助"的同一种感受而互为兄弟姊妹。</div>
+    <div class="case"><b>自愿降级的服务：</b>一位三甲医院的主治医生报名驻点偏远县医院三年，从设备齐全的手术室走进只有基础条件的诊室——层级"降"了，想帮的人却具体了。流浪者从第六密度投生到第三密度，正是这种自愿的下行，为的是在更难的环境里服务。</div>
+    <div class="case"><b>同一种感受，三个团体：</b>几所不同大学的实验室曾联合资助过同一个山区中学的实验教室；多年后三校毕业生各自回到那间教室做讲座，互不认识却默契分工——"我们都受过它的好处"。Ra 说这几个第六密度团体"全都是兄弟姊妹"，靠的正是这种共同记忆，而不是隶属关系。</div>
+  </div>
+
+  <div class="card">
+    <h3>本集术语卡：点卡片翻面</h3>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">流浪者</div><div class="sub">wanderer</div><span class="tap">点击翻面</span></div>
+        <div class="back">自愿从更高密度投生到这里的实体：来时带着帮助的任务，落地后却要面对遗忘与艰难。<em>像从条件最好的总部，自愿申请去最艰苦的分部长驻——级别没降，难处全真。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">社会记忆复合体</div><div class="sub">social memory complex</div><span class="tap">点击翻面</span></div>
+        <div class="back">一个群体把各自的记忆与理解合而为一的组织形态；本集 Ra 说它的基本目的是进化，基础是把自我与其他自我理解为造物主。<em>像一个所有经验即时互通的团队大脑。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">第六密度</div><div class="sub">sixth density</div><span class="tap">点击翻面</span></div>
+        <div class="back">本集提到的流浪者团体（Ra、南美援助者、亚特兰蒂斯援助者）共同的"层级"——他们自称彼此是兄弟与姊妹。<em>像同一年级里的三个班：班级不同，层级相同。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">兄弟与姊妹团体</div><div class="sub">brother and sister groups</div><span class="tap">点击翻面</span></div>
+        <div class="back">Ra 对这几个援助团体之间的称呼：同为第六密度、同因"曾被帮助，故来帮助"的统一感受而来。<em>像同一批受过资助的留学生彼此认作校友——曾受同一种帮助，便认下同一种责任。</em></div></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>三人组的底细：Ra 走到"不侵犯"的极限才肯说</h2></div>
+  <p class="sec-lead">确认完流浪者团体的构成，发问者把镜头转向在场的三个人自己：我们仨是否也属于这些团体？Ra 先答"是"；被追问"谁属于哪个团体"时答"不能"；直到"我们是否都属于"这一问，才给出具体构成——并声明自己已经走到避免侵犯（infringement，不干预其他实体自身道路的自我约束）的极限。这一章最有价值的，恰是 Ra 说了什么、更是在哪里停下。</p>
+
+  <div class="card">
+    <h3>三连问，三种答法</h3>
+    <div class="q">发问者连问三次、一次比一次具体——Ra 的回答从"是"到"不能"再到"走到极限才给"，边界随问题的具体程度收紧。</div>
+    <div class="quote">
+      <p class="en">I am Ra. Yes. … I am Ra. No.</p>
+      <p class="zh">我是 Ra。有的。……我是 Ra。无法奉告。</p>
+      <span class="src">—— Session 045 · (45.5-45.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">We shall go to the limits of our attempts to refrain from infringement. Two are a sixth-density origin, one a fifth-density harvestable to sixth but choosing to return as a wanderer due to a loving association between teacher and student. Thus you three form a greatly cohesive group.</p>
+      <p class="zh">我们会走到避免侵犯之努力的极限。两人是第六密度起源；一人是第五密度、已达可收割（harvest，一届密度结束时向更高密度的毕业）至第六之境，却因师生间的一份有爱关联而选择作为流浪者回来。所以你们三人组成一个极其凝聚的团体。</p>
+      <span class="src">—— Session 045 · (45.7)</span>
+    </div>
+    <div class="plain">Ra 愿意说"团体的构成"，不愿说"哪个人属于哪团体"——界线画在信息会不会变成对具体实体的干预上。</div>
+    <div class="case"><b>不点名的 HR：</b>人事主管掌握每个人的测评与去留倾向，同事私下打听"我们组谁会被裁"时，她只答"团队整体是稳定的，每个人都在自己的轨道上"——不是不知道，而是名字一出口，信息就变成干预别人人生的力量。</div>
+    <div class="case"><b>为一段师生情回来：</b>一位学者已在海外拿到终身教职，回母校既不缺职位也不缺待遇，仍申请调回去接导师的课，理由只有一句"老师带过我，我陪他这几年"。那位第五密度实体"可收割至第六却选择回来"，Ra 给出的理由同样是师生间的有爱关联。</div>
+  </div>
+
+  <div class="card">
+    <h3>界线本身就是教导：本集的四种"不说"</h3>
+    <div class="q">Ra 的拒答不是敷衍——把本集所有"不直接给答案"的瞬间放在一起看，界线的形状就出来了。</div>
+    <p>给下面每个场景分类：Ra 是在逐字作答、描述构成、守住界线，还是把发问者转回前文？</p>
+    <div class="demo-area"><div id="sorterArea"></div></div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>耳音与头部极性：左耳右耳的分别，写在身体的构造里</h2></div>
+  <p class="sec-lead">发问者长期接收到左右耳的音调、痒感与"触觉接触"，本集他把三个具体困惑一次问完：这是怎么回事？痒感与音调的意义是否有别？为什么左耳对应服务自我（service-to-self）、右耳对应服务他人（service-to-others）？Ra 的回答分三层：旧内容请回到前文；痒感与音调含义无别；至于左右之分——答案不在神秘规则里，而在物理载具的磁场构造上。</p>
+
+  <div class="card">
+    <h3>旧话题只做增量：先把提问的精度补上</h3>
+    <div class="q">发问者想一次性问清"耳音现象"的全貌，Ra 只接"之前没讲过的部分"。</div>
+    <div class="quote">
+      <p class="en">This has been covered previously.[69] Please ask for specific further details.</p>
+      <p class="zh">这部分之前已经谈过了。请就具体的进一步细节提问。</p>
+      <span class="src">—— Session 045 · (45.8)</span>
+    </div>
+    <div class="plain">已讲过的不重复——提问者要自己把问题拆细，通讯的能量才花在刀刃上。</div>
+    <div class="case"><b>复诊的问法：</b>同一位患者，第一次问"医生我这是怎么回事"得到的是科普；复诊时问"报告里那项指标比上次高了 0.3，需要处理吗"，得到的才是方案。Ra 那句"请询问更具体的细节"，就是把发问者往第二种问法上带。</div>
+    <div class="case"><b>门铃的两下与三下：</b>门铃按两下和连按三下，节奏不同、意思一样——"有人来了"。发问者分不清"痒感"与"音调"是不是两码事，Ra 答得干脆：就意义而言，没有分别。</div>
+  </div>
+
+  <div class="card">
+    <h3>左右之分：一道写进载具的极性印记</h3>
+    <div class="q">为什么左耳是服务自我的接触、右耳是服务他人的？Ra 不从"象征"讲起，而从身体的磁场讲起。</div>
+    <div class="quote">
+      <p class="en">The nature of your physical vehicle is that there is a magnetic field, positive and negative, in complex patterns about the shells of your vehicle. The left portion of the head region of most entities is, upon the time/space continuum level, of a negative polarity.</p>
+      <p class="zh">你们物理载具的性质是这样的：载具外壳周围环绕着正负两极、模式复杂的磁场。对大多数实体而言，头部左侧区域在时间/空间连续体（time/space continuum）的层面上呈负极性。</p>
+      <span class="src">—— Session 045 · (45.10)</span>
+    </div>
+    <div class="plain">左右耳音的分别不是外加的密码，而是载具磁场极性模式的自然结果——大多数实体的头部左侧在时间/空间层面为负极性。</div>
+    <div class="analogy"><b>天线没有变，朝向决定频道：</b>同一台收音机摆在窗台，天线朝东收到的是新闻台，朝西收到的是音乐台——机器没换，收到什么取决于极性模式对上了哪一边。耳音的左右之分，是身体这台"接收器"自带的朝向印记。</div>
+    <div class="case"><b>同一振动，两种来源：</b>会议桌上两部手机同时嗡嗡连震：左边那台是购物 App 的促销推送，右边那台是家人发来的"到家了吗"——同样的物理信号，含义取决于它从哪一侧、经谁的渠道抵达。左耳右耳的接触之分，也是这种"渠道自带极性"的标记。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>社会记忆复合体：进化为什么需要"我们"（含收官）</h2></div>
+  <p class="sec-lead">本集最后一个问题把镜头从个人拉回整体：第四、第五、第六密度的正面与负面社会记忆复合体，背后到底是什么目的、什么哲学？Ra 用一段极紧凑的回答给出框架——目的是进化，基础是把自我与其他自我理解为造物主——再把三个密度各自的用法套进框架，随后宣布通讯结束，以一句重复了两遍的"一切都好，我的兄弟们"收尾。</p>
+
+  <div class="card">
+    <h3>框架：目的、基础、成熟</h3>
+    <div class="q">发问者要的是"目的或哲学"——Ra 给的是一套可以逐个密度套用的组织公式。</div>
+    <div class="quote">
+      <p class="en">The basic purpose of a social memory complex is that of evolution. Beyond a certain point the evolution of spirit is quite dependent upon the understanding of self and other-self as Creator. This constitutes the basis for social complexes. When brought to maturity, they become social memory complexes.</p>
+      <p class="zh">社会记忆复合体的基本目的就是进化。越过某个点之后，灵性的进化就相当依赖于"把自我与其他自我都理解为造物主"——这构成社会复合体的根基；当它被带到成熟，便成为社会记忆复合体。</p>
+      <span class="src">—— Session 045 · (45.11)</span>
+    </div>
+    <div class="plain">独行的进化有上限：越过某个点之后，"把彼此都看作造物主"这件事，必须在群体里才做得成。</div>
+    <div class="case"><b>开源社区的复利：</b>一位开发者凌晨两点踩进一个编译器深坑，第二天发现社区里半年前就有人留下完整的排查记录；他解决完自己的问题，补写的那篇文档又替下一个人省了一夜。群体的记忆成为每个人的记忆——这正是"社会记忆复合体"那种组织形态的雏形。</div>
+    <div class="case"><b>两个备考房间：</b>备考同一张执照的两个房间：一间全员共享错题本、轮流讲题，进度互相拉着走；另一间各自闭门、笔记锁在抽屉里。Ra 说社会复合体的"基础"是把自我与其他自我理解为造物主——两个房间差的正是这一步。</div>
+  </div>
+
+  <div class="card">
+    <h3>各密度的套用：同一个框架，三种用法</h3>
+    <div class="q">框架有了，Ra 立刻把它套到第四、第五、第六密度上——正面与负面各有自己的用法。</div>
+    <div class="quote">
+      <p class="en">The fourth density and sixth density find these quite necessary. The fifth positive uses social memory in attaining wisdom, though this is done individually. In fifth negative much is done without aid of others.</p>
+      <p class="zh">第四密度与第六密度觉得它相当必要。第五密度的正面极性用它来获得智慧，尽管走的是个人的路；第五密度的负面极性里，许多事是在没有他人协助下完成的。</p>
+      <span class="src">—— Session 045 · (45.11)</span>
+    </div>
+    <div class="case"><b>第五正面的用法：</b>资深工程师独自攻克一个疑难故障，靠的却是平时读过的社区复盘与前辈留下的运维手册——人是一个人在干活，用的却是群体的记忆。这就是"用社会记忆获得智慧，尽管是单独完成的"。</div>
+    <div class="case"><b>第五负面的用法：</b>交易室里那位明星操盘手信奉"谁求援谁出局"，所有判断独自完成、从不与人核对，连失误都不说出口。"第五负面中许多事在没有他人帮助的情况下完成"——不是没有组织，而是把"不依赖他人"当成了路径本身。</div>
+  </div>
+
+  <div class="card">
+    <h3>条件模拟器：一个社会复合体怎样"成熟"为社会记忆复合体</h3>
+    <p>拨动开关，看 Ra 给出的三个环节如何决定结果。</p>
+    <div class="cond-row"><div class="name">灵性进化已越过"某个点"<small>beyond a certain point——独行进化的收益开始见顶</small></div><label class="switch"><input type="checkbox" id="s045c1" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">成员把自我与其他自我都理解为造物主<small>understanding of self and other-self as Creator——社会复合体的基础</small></div><label class="switch"><input type="checkbox" id="s045c2" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">这个社会复合体已被带到成熟<small>brought to maturity——组织不再只是松散聚集</small></div><label class="switch"><input type="checkbox" id="s045c3" checked><span class="slider"></span></label></div>
+    <div id="condResult"></div>
+  </div>
+
+  <div class="saying">
+    <p class="en">I leave you now in the love and in the light of the One Infinite Creator. Go forth, then, rejoicing in the power and the peace of the One Infinite Creator.</p>
+    <p class="zh">此刻，我在太一无限造物主的爱与光中离开你们；那么向前走吧，在祂的力量与平安中欢呼前行。</p>
+    <span class="src">—— Session 045 · (45.13)</span>
+  </div>
+
+  <div class="card">
+    <h3>收官：这一集留下的与埋下的</h3>
+    <div class="case"><b>"一切都好"的告别：</b>发问者问"还有什么我们能做的吗"，Ra 只回"一切都好，我的兄弟们"；对方没听清请他重复，重复的仍是同一句。没有新教导的一次收尾，本身就是对"这个器皿今天需要被保护"的贯彻。</div>
+    <div class="case"><b>埋下的线头：</b>三人组的来历被点破一角——两人第六密度起源、一人第五密度可收割至第六却为师生情谊回来；"谁是谁"仍然悬着，这条线留待后续集会再看。</div>
+    <div class="plain">一场能量见底的短集，仍然把"流浪者、界线、群体进化"三个概念各点亮一处——短，不是空。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 045（`split/Ra_Session_045.md`）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra045-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+initStepper('mapTrack','mapDetail','mapPrev','mapNext',[
+ {t:'开场致意',d:'<span class="qa-q">（45.0）</span><b>答：</b>Ra 在太一无限造物主的爱与光中致意，宣布开始通讯。'},
+ {t:'器皿状态',d:'<span class="qa-q">问：她休息过了，现在身体状况如何？（45.1）</span><b>答：</b>身体复合体状况极差、并未休息——但这个器皿渴望接触。'},
+ {t:'暂停接触的效果',d:'<span class="qa-q">问：这段时间的节制有用吗？（45.2）</span><b>答：</b>有用。上次接触时出现肺、肾疾病的概率相当显著，这次节制避开了一场严重的身体机能失调；帮助器皿的手段彼此矛盾、需要平衡。'},
+ {t:'流浪者的来源',d:'<span class="qa-q">问：流浪者中很大比例是 Ra 吗？（45.3-45.4）</span><b>答：</b>Ra 先答"我能"，随后给出构成：第六密度流浪者中相当一部分来自 Ra，其余多来自曾援助南美、亚特兰蒂斯的兄弟团体——都因"曾被帮助，故来帮助"的统一感受而来。'},
+ {t:'三人组的底细',d:'<span class="qa-q">问：我们仨属于这些团体吗？谁是谁？（45.5-45.7）</span><b>答：</b>"有"——两人第六密度起源，一人第五密度可收割至第六、因师生情谊回来；至于是谁，Ra 走到"不侵犯"的极限，拒绝指认。'},
+ {t:'耳音与极性',d:'<span class="qa-q">问：左右耳音调、触觉接触是怎么回事？（45.8-45.10）</span><b>答：</b>之前讲过，请询问增量细节；痒感与音调含义无别；左右之分源于载具磁场的极性模式——大多数实体头部左侧在时间/空间层面为负极性。'},
+ {t:'社会记忆复合体',d:'<span class="qa-q">问：四、五、六密度正负社会记忆复合体的目的或哲学是什么？（45.11）</span><b>答：</b>目的是进化；基础是把自我与其他自我理解为造物主。第四、第六密度觉得它相当必要；第五正面用它获得智慧、尽管单独完成；第五负面许多事不求他人协助。'},
+ {t:'收束',d:'<span class="qa-q">问：还有什么可以做的吗？（45.12-45.13）</span><b>答：</b>"一切都好，我的兄弟们。"——这句重复了两遍，然后 Ra 在爱与光、力量与和平中离开。'}
+]);
+
+initSorter('sorterArea',[
+ {a:'问"能否告诉我流浪者的比例"，Ra 答：<i>I can.</i>',opts:['逐字作答','描述构成','守住界线','转回前文'],ans:'逐字作答',exp:'Ra 只回答"能不能"这一层——要比例，请把问题问准。'},
+ {a:'问"三人中是否有人属于这些团体"，Ra 答：<i>Yes.</i>',opts:['逐字作答','描述构成','守住界线','转回前文'],ans:'逐字作答',exp:'直接确认"有"，但到此为止——下一问就撞上界线。'},
+ {a:'问"我们各自属于哪个团体"，Ra 答：<i>No.</i>',opts:['逐字作答','描述构成','守住界线','转回前文'],ans:'守住界线',exp:'指认个人会构成对实体的干预，Ra 拒绝跨过这条线。'},
+ {a:'问左右耳音调与触觉接触，Ra 答：<i>This has been covered previously.[69] Please ask for specific further details.</i>',opts:['逐字作答','描述构成','守住界线','转回前文'],ans:'转回前文',exp:'已讲过的不重复——把"问得更细"的功课还给发问者。'},
+ {a:'Ra 说：<i>A significant portion of sixth-density wanderers are those of our social memory complex.</i>',opts:['逐字作答','描述构成','守住界线','转回前文'],ans:'描述构成',exp:'给出团体层面的构成，不落到任何个人。'}
+]);
+
+function updateS045(){
+  var c1=document.getElementById('s045c1').checked,
+      c2=document.getElementById('s045c2').checked,
+      c3=document.getElementById('s045c3').checked,
+      box=document.getElementById('condResult');
+  if(c1&&c2&&c3){
+    box.className='';
+    box.innerHTML='✓ 三个环节齐备：<b>社会复合体成熟为社会记忆复合体</b>——群体的记忆成为每个人的记忆，灵性的进化由此提速。';
+  }else if(!c1){
+    box.className='fail';
+    box.innerHTML='✗ 还没越过"某个点"：进化仍在个人层面推进，组织起来的必要性尚未显现——此时聚在一起，只是普通的社会复合体。';
+  }else if(!c2){
+    box.className='fail';
+    box.innerHTML='✗ 缺了基础：成员尚未把自我与其他自我都理解为造物主——组织可以照常运转，但 Ra 所说的那份"基础"并不在场。';
+  }else{
+    box.className='fail';
+    box.innerHTML='✗ 还未成熟：基础已经有了，但社会复合体尚未被带到成熟——它是社会记忆复合体的前身，而不是它本身。';
+  }
+}
+['s045c1','s045c2','s045c3'].forEach(function(id){document.getElementById(id).addEventListener('change',updateS045);});
+updateS045();
+
+renderPath();
+</script>
+</body>
+</html>

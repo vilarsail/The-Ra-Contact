@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 028 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 028 · 交互式学习模块</h1>
+  <p class="sub">这一集把镜头拉到造物的尺度：先否掉「智能无限可以被某种物理学描述」的设想，再一路讲下爱→振动→光→物质、个体化与空间/时间的先后、理则与子理则的层级、密度混合与八度音程，最后落回极性——潜能一开始就都在，极化才是意识复合体要做的事。</p>
+  <div class="tagline">6 个主题 · 6 个学习步骤 · 18 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 智能无限的边界</a>
+<a href="#s3">③ 爱→光→物质</a>
+<a href="#s4">④ 时间之外的创世</a>
+<a href="#s5">⑤ 理则与密度八度</a>
+<a href="#s6">⑥ 极性与收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>先看这一集在造物尺度上问了哪七件事，例行问答可跳过</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>智能无限的边界</b><span>为什么「气球模型」被否掉，而拉尔森在哪里是对的</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>爱→光→物质</b><span>走一遍爱、振动、光、旋转到化学元素的链条，并动手拨开关</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>时间之外的创世</b><span>个体化发生在空间/时间之外，行星曾长久处在无时间状态</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>理则与密度八度</b><span>一个理则造出两千五百亿恒星；子理则在规则内变花样；密度是混合的，八度是循环的</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>极性与收官</b><span>潜能由智能能量提供、极化由意识复合体完成；金句、告别与本集留下的追问</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ================= 01 ================= -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：一次关于造物的追问</h2></div>
+  <p class="sec-lead">上一集结束前，Ra 说关于光的颜色「还有更多信息乐意分享」，但时间不够了。本集就从这个半句话接上：（28.2）一发问，Ra 先「回弹」到拉尔森那套描述方式，把潜能如何经催化剂变成动能讲完；接着发问者一路问下去——个体化在何时发生、一个理则造多少、密度是否人人从第一层排队起步、八度音程有几个。这是全书最集中的一段宇宙论，它的特点不是给出模型，而是不断标出边界：哪里可以用物理学说，哪里只能说「我们假设」。本集没有留下「下次讲什么」的钩子，Ra 反而主动收束，把线头留在「披着神秘外衣」处。</p>
+  <div class="card">
+    <h3>问答脉络：七个议题，一条链</h3>
+    <p>Ra 在本集里反复用「正确 / 不正确 / 基本正确」校准发问者的模型，也两次用「我们无法以确切知识谈论」划界。点击节点，看这条链怎么走。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="qaTrack"></div>
+      <div class="flow-detail" id="qaDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="qaPrev">← 上一步</button> <button class="tri-btn" id="qaNext">下一步 →</button></div>
+    </div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿照料 · 集会节奏</span></summary>
+  <div class="body">
+    <p><b>(28.12) / (28.17) 两次请求咳嗽：</b>发问者两次中断追问，请 Ra 让器皿咳嗽一下；Ra 两次都只回一声 Cough——这是出神通讯中照料器皿生理状态的固定动作，与义理无关。</p>
+    <p><b>(28.19) 集会节奏：</b>Ra 主动宣布这是本次集会的最后一个完整问题，理由是希望培育器皿、让正在缓慢恢复的身体复合体能量得到照顾；并问是否可以简短回答一两个问题再收尾。</p>
+    <p><b>(28.21) 器皿状态与告别：</b>Ra 说这个器皿调整得很好、你们很尽责；以「在太一无限造物主的爱与光中离开你们」与 Adonai 作结。</p>
+  </div></details>
+  <div class="case"><b>把上次没讲完的半句话接上：</b>周会散场前，主管说「定价模型的边界我下次展开」，第二天你开场第一句就是「昨天那部分能讲完吗」。本集正是如此开场的——（28.2）发问者直接引用上一集 Ra 的原话，请 Ra 把没讲完的部分补完。</div>
+  <div class="case"><b>看出发言人嗓子哑了，主动砍议程：</b>评审会开到一半，主持人注意到主讲的同事声音已经沙了，于是宣布「这是今天最后一个完整议题，剩下的改线上」——Ra 在本集 (28.19) 做的正是这件事：以培育器皿为由，主动为整场集会画上线。</div>
+  <div class="case"><b>视频会议里等同事咳完再继续：</b>远程会上同事一阵咳嗽，你没有追问进度，而是停了两秒等他喝水——对应本集两次「请让器皿咳嗽一下」：教导再重要，器皿的生理状态也要即时照料。</div>
+  <div class="divider"></div>
+</section>
+
+<!-- ================= 02 ================= -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>智能无限的边界：为什么「气球模型」被否掉</h2></div>
+  <p class="sec-lead">发问者带着一个相当完整的模型来：他结合 Ra 之前的话和杜威·拉尔森的物理，设想智能无限像气球或气泡的表面，从每个点向所有方向均匀地以光速向外扩展。这是一个「听起来很对」的模型——Ra 的回答却把问题推到了另一个层级。</p>
+  <div class="card">
+    <h3>纠正的落点不是细节，而是层级</h3>
+    <div class="q">我把拉尔森的物理接上你之前说的话：智能无限从每一个点向所有方向均匀地向外扩展，如同气球或气泡的表面，以光速向外扩展。这个理解对吗？</div>
+    <div class="quote">
+      <p class="en">It expands outward in every direction uniformly like the surface of a balloon or a bubble, expanding outward from every point everywhere.</p>
+      <p class="zh">它向每个方向均匀地向外扩展，如同气球或气泡的表面，从每一个点、每一处向外扩展。</p>
+      <span class="src">—— Session 028 · (28.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This concept is incorrect, as is any concept of the one intelligent infinity.</p>
+      <p class="zh">这个概念是不正确的——正如任何关于那个太一智能无限的概念都不正确。</p>
+      <span class="src">—— Session 028 · (28.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This concept is correct in the context of one particular Logos, or Love, or focus of this Creator which has chosen Its, shall we say, natural laws and ways of expressing them mathematically and otherwise.</p>
+      <p class="zh">这个概念在某个特定理则（或爱，或造物主的某个焦点）的背景下是正确的——那个焦点选择了它自己的自然法则，以及用数学与其他方式表达这些法则的做法。</p>
+      <span class="src">—— Session 028 · (28.1)</span>
+    </div>
+    <div class="plain">气球模型不是错在算错了，而是错在层级：它是对某一个理则内部运作的正确描述，不是对太一智能无限的描述。</div>
+    <div class="analogy"><b>像城市地图，不像地球：</b>一张城市地图在这座城市里精确到每条街，非常好用；但你拿它去回答「地球表面是什么样」，它就不成立了。而「地球」并不是一张更大的城市地图——它属于另一个层级的东西。</div>
+    <div class="case"><b>手环的心率算法：</b>你戴的这款手环在你身上测得挺准，换个厂商、换个人就明显偏差。算法并没有「错」，它只是在一套被选定的条件里成立——正对应 Ra 说的「在某个特定理则的背景下是正确的」。把它当成对「心跳」本身的描述，就会失望。</div>
+  </div>
+  <div class="card">
+    <h3>那「一」本身：不可分化，也不可被指定</h3>
+    <div class="q">如果模型都不对，那么那个「一」本身是什么？</div>
+    <div class="quote">
+      <p class="en">The one undifferentiated intelligent infinity, unpolarized, full and whole, is the macrocosm of the mystery-clad being.</p>
+      <p class="zh">那太一一统的、未分化的智能无限，无极性、圆满而完整，是那披着神秘外衣的存有的宏观宇宙。</p>
+      <span class="src">—— Session 028 · (28.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Unity, at this approximation of understanding, cannot be specified by any physics but only be activated, or potentiated, intelligent infinity due to the catalyst of free will.</p>
+      <p class="zh">在这个理解的近似值上，合一无法被任何物理学所指定；它只能因自由意志这项催化剂而被激活、被潜能化，成为智能无限。</p>
+      <span class="src">—— Session 028 · (28.1)</span>
+    </div>
+    <div class="plain">合一不是「被描述」出来的，而是「被激活」出来的：物理学能指定的是分化之后的东西，而激活合一的钥匙是自由意志。</div>
+    <div class="analogy"><b>像乐谱与演奏：</b>乐谱可以精确标注每一个音符、力度与速度，但它不是音乐；音乐只在被演奏的那一刻才发生。你不能用乐谱的完备性代替演奏，也不能说乐谱「描述了音乐本身」。</div>
+  </div>
+  <div class="card">
+    <h3>使者与神秘：本集的钥匙句</h3>
+    <div class="q">Ra 为什么总是在给出框架之后，又强调「这只是近似」「我们无法以确切知识谈论」？</div>
+    <div class="quote">
+      <p class="en">We are messengers of the Law of One.</p>
+      <p class="zh">我们是一的法则的使者。</p>
+      <span class="src">—— Session 028 · (28.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">However, the understandings we have to share begin and end in mystery.</p>
+      <p class="zh">然而，我们要分享的理解始于神秘，也终于神秘。</p>
+      <span class="src">—— Session 028 · (28.1)</span>
+    </div>
+    <div class="plain">读这一集要记住这句话：后面 Ra 每一次说「我们只能假设」「我们无法以确切知识谈论所有造物」，都不是留一手，而是如实说出边界在哪。</div>
+    <div class="case"><b>医生查遍检查仍说「个体差异」：</b>血项、影像、基因都做了，医生最后仍说「这种情况我们无法预判，只能观察」。这不是敷衍，而是他知道仪器能指定的部分到哪里为止——正对应 Ra 把「任何关于智能无限的物理学」判为不正确，却仍愿意讲被激活之后的层级。</div>
+  </div>
+  <div class="card">
+    <h3>术语卡：读这一集先装好七个词</h3>
+    <p>点击卡片翻看解释。这几个词在本集反复出现，先建立准确的直觉，后面几章会一路用到。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">智能无限</div><div class="sub">intelligent infinity</div><span class="tap">点击展开</span></div><div class="back">Ra 体系中与「太一无限造物主」相通的无限智能，是一切存在的源头与基质。本集的关键限定是：它未分化、无极性、圆满而完整，任何物理学概念都无法指定它。<em>比喻：你可以列出一个人的全部生理参数，但列不出「他是谁」。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">理则（爱）</div><div class="sub">Logos / Love</div><span class="tap">点击展开</span></div><div class="back">本集把「理则」「爱」「造物主的焦点」并置：它是选定自身自然法则与表达方式的那一层。一个理则既可以创造一个恒星系统，也可以创造数十亿个。<em>案例：一个开源框架的维护者定下语法与运行规则，之后无数应用在其上生长。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">子理则</div><div class="sub">sub-Logos</div><span class="tap">点击展开</span></div><div class="back">由理则细分而出的更局部的创造焦点。本集说它在理则的指导方针之内寻找各种方式区分体验，而这些方式既不被移除、也不被增加——规则不动，花样无限。<em>比喻：乐理体系不变，曲子可以无限多。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">智能能量</div><div class="sub">intelligent energy</div><span class="tap">点击展开</span></div><div class="back">由自由意志作用于潜在智能无限而形成的「聚焦」形态。体验的潜能是它的一部分，且在体验开始之前就已固定；红宝石之红、各种光芒可被计数分类，都是它在此世的显现。<em>案例：出厂固件——你能用它做很多事，但它的功能清单不是你写的。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">催化剂</div><div class="sub">catalyst</div><span class="tap">点击展开</span></div><div class="back">不是起作用的那一方，而是促成作用发生的中介。本集说自由意志作为催化剂起作用，把潜能转变为动能，从而形成聚焦的智能能量。<em>比喻：酵母不构成面包，却让面团发起来。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">空间/时间</div><div class="sub">space/time</div><span class="tap">点击展开</span></div><div class="back">你们所熟悉的「连续统体验」。本集说它在理则（爱）的个体化完成之后才出现；行星这类智能能量的漩涡，曾以无时间状态度过大量你们所称第一密度的时光，而空间/时间的领悟正是第一密度的学习/教导之一。<em>比喻：先有作者的世界观设定，故事里的日历才开始走。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">密度八度音程</div><div class="sub">the octave of densities</div><span class="tap">点击展开</span></div><div class="back">一到八密度构成一个八度；第八密度在其后期阶段又兼作下一个八度音程的第一密度。本集说 Ra 只「假设」八度音程是无限的，而且整体是周期性凝聚、再次开始的循环，披着神秘外衣。<em>比喻：赛季循环——上一季的收官同时是下一季的起点。</em></div></div>
+    </div>
+  </div>
+  <div class="case"><b>拿本地天气模型解释「天气本身」：</b>气象台用一套流体方程预报本市降雨，准得让人服气。但你说「这套方程描述了天气本身」，就过头了——它只在这套模型被设定适用的范围内成立，跨出边界就要换一套。这正是 Ra 对气球模型的判语：错不在模型，而在把它当成了对「一」的描述。</div>
+  <div class="divider"></div>
+</section>
+
+<!-- ================= 03 ================= -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>爱、光与振动：物质是从光里凝聚出来的</h2></div>
+  <p class="sec-lead">上一集留下的问题在这里被兑现。Ra 说，要讲这些就得「回弹」到杜威（拉尔森）那套理解方式——因为这套方式对智能无限的「第二个含义」是正确的：潜能如何经催化剂成为动能。接着是一串快速的确认：光是振动的结果，振动是爱的结果；光在量子化的角速度单位上旋转，凝聚成你密度里的全部化学元素。</p>
+  <div class="card">
+    <h3>「第二个含义」：潜能经催化剂成为动能</h3>
+    <div class="q">昨天你说关于光的颜色还有更多信息，可以把它讲完吗？</div>
+    <div class="quote">
+      <p class="en">this being correct for the second meaning of intelligent infinity: the potential which then through catalyst forms the kinetic.</p>
+      <p class="zh">这对智能无限的第二个含义是正确的：那潜能，随后通过催化剂形成了动能。</p>
+      <span class="src">—— Session 028 · (28.2)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This information is a natural progression of inspection of the kinetic shape of your environment.</p>
+      <p class="zh">这个信息是对你们环境动能形态之检视的自然进展。</p>
+      <span class="src">—— Session 028 · (28.2)</span>
+    </div>
+    <div class="plain">拉尔森那套物理之所以可用，是因为它处理的就是「动能形态」——潜能已经被激活之后的那一层；这正是本集全部技术性讨论的适用区间。</div>
+  </div>
+  <div class="card">
+    <h3>宇宙是缩影：同一套模式层层重复</h3>
+    <div class="q">为什么你提到「物理与形而上的模式会重复」？这两层为什么会相同？</div>
+    <div class="quote">
+      <p class="en">The universe in which you live is recapitulation, in each part, of intelligent infinity. Thus you will see the same patterns repeated in physical and metaphysical areas</p>
+      <p class="zh">你们所生活的宇宙，在每一部分中，都是智能无限的缩影。因此你们会在物理领域与形而上领域看到相同的模式重复出现……</p>
+      <span class="src">—— Session 028 · (28.2)</span>
+    </div>
+    <div class="quote">
+      <p class="en">You may understand each color, or ray, as being, as we had said, a very specific and accurate apportion of intelligent energy’s representation of intelligent infinity</p>
+      <p class="zh">你可以把每一种颜色或光芒理解为：如我们曾说过的，智能能量对智能无限之呈现的一次非常特定而精确的分配……</p>
+      <span class="src">—— Session 028 · (28.2)</span>
+    </div>
+    <div class="plain">光芒（颜色）不是装饰，而是智能能量的「分配」；因为宇宙每一部分都是智能无限的缩影，所以同一套模式会在物理与形而上两层里重复出现。</div>
+    <div class="analogy"><b>像自相似的分形：</b>把图案放大或缩小，看到的仍是同一套规则生成的结构。Ra 说「物理与形而上领域会看到相同模式重复」，说的就是这种自相似——一层里的道理，另一层会再出现一次。</div>
+    <div class="case"><b>红宝石为什么是红的：</b>同一类矿物，成分上一点点差异就显出不同的颜色。Ra 特意举出「你们视为珍贵的结晶矿物」，说红宝石是红的、等等——他不是在献宝，而是要读者把这当成「缩影」的肉眼证据：光芒的分配就在你手边的石头里。</div>
+  </div>
+  <div class="card">
+    <h3>链条：爱 → 振动 → 光 → 旋转 → 化学元素</h3>
+    <div class="q">光作为振动的结果、振动作为爱的结果；而光又通过在量子化间隔（角速度单位）上的旋转，凝聚成我们密度中所有的化学元素。这个陈述对吗？</div>
+    <div class="quote">
+      <p class="en">This Light that occurred as a consequence of vibration, which is a consequence of Love</p>
+      <p class="zh">这光作为振动的结果而发生，而振动是爱的结果……</p>
+      <span class="src">—— Session 028 · (28.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This statement is correct.</p>
+      <p class="zh">这个陈述是正确的。</p>
+      <span class="src">—— Session 028 · (28.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This light then can condense into material as we know it in our density, into all of our chemical elements because of rotations of the vibration at quantized intervals, or units, of angular velocity.</p>
+      <p class="zh">这光随后可以凝聚成我们密度中所知的物质、凝聚成我们所有的化学元素，原因是振动在量子化间隔（即角速度单位）上的旋转。</p>
+      <span class="src">—— Session 028 · (28.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This is quite correct.</p>
+      <p class="zh">这完全正确。</p>
+      <span class="src">—— Session 028 · (28.4)</span>
+    </div>
+    <div class="plain">物质的来源被讲成一条清楚的链：爱产生振动，振动产生光，光在量子化的角速度单位上旋转，从而凝聚为你密度里的物质与全部化学元素。</div>
+    <div class="analogy"><b>像把连续的声音切成音阶：</b>频率本来是连续的，一旦被量化到固定档位，才成为可辨认的音；光也是这样——它在量子化的间隔上旋转，才凝聚为一个一个确定的元素，而不是一片模糊的光。</div>
+    <div class="case"><b>3D 打印机的参数表：</b>同一卷材料，层高、温度、速度这几个参数一改，出来的是完全不同强度的成品。参数不是打印机临场发挥出来的，而是先被设定好的——正对应「振动在量子化间隔上的旋转」决定了光凝聚成什么：决定性的不是意愿，而是那一组被设定的单位。</div>
+  </div>
+  <div class="card">
+    <h3>旋转的激活者：爱之焦点的有序功能</h3>
+    <div class="q">那么，让光开始旋转、进而凝聚的催化剂或激活者是什么？</div>
+    <div class="quote">
+      <p class="en">It is necessary to consider the enabling function of the focus known as Love.</p>
+      <p class="zh">有必要考虑那被称为爱的焦点之赋能功能。</p>
+      <span class="src">—— Session 028 · (28.5)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This energy is of an ordering nature. It orders in a cumulative way from greater to lesser so that when Its universe, as you may call it, is complete, the manner of development of each detail is inherent in the living light, and thus will develop in such and such a way</p>
+      <p class="zh">这个能量具有一种有序的本性。它以累积的方式从大至小进行排序，因此当它的宇宙——如你们可称之为的——完成时，每个细节的发展方式都内在于那活生生的光之中，于是就会以如此这般的方式发展……</p>
+      <span class="src">—— Session 028 · (28.5)</span>
+    </div>
+    <div class="plain">让光旋转的不是某个外力，而是爱的「有序性」：它在宇宙完成之时，就把每个细节的发展方式预先写进了活生生的光里。</div>
+    <div class="analogy"><b>像种子发芽：</b>长成什么、何时分枝、叶子的排列方式，早就写在这颗种子里了；发芽不是它在临场选择。区别在于：「把发育方式写进去」这件事，发生在生长开始之前。</div>
+    <div class="case"><b>合成器里的音阶旋钮：</b>你把一段连续扫频锁到音阶档位上，出来的是可用的乐句；不锁档，就只是一段滑音。锁定这个动作不是声音自己完成的，而是演奏者先做的设定——对应 Ra 所说：激活旋转的是爱之焦点的赋能功能，光随后照此发展。</div>
+  </div>
+  <div class="card">
+    <h3>条件模拟器：光要在什么条件下才能凝聚成物质</h3>
+    <p>按 (28.3)–(28.5) 的链条，拨动开关，看缺哪一环时链条会在哪里断开。</p>
+    <div class="cond-row"><span class="name">振动是爱的结果<small>链条的第一环：爱 → 振动 → 光</small></span><label class="switch"><input type="checkbox" id="condVib" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><span class="name">爱之焦点的赋能功能<small>提供有序性，把每个细节的发展方式写进活生生的光里</small></span><label class="switch"><input type="checkbox" id="condLove" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><span class="name">在量子化角速度单位上的旋转<small>光据此凝聚为确定的化学元素，而不是一片模糊的光</small></span><label class="switch"><input type="checkbox" id="condSpin" checked><span class="slider"></span></label></div>
+    <div id="condResult"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ================= 04 ================= -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>时间之外的创世：个体化与空间/时间的先后</h2></div>
+  <p class="sec-lead">发问者接着问了一个很自然的问题：意识的个体化什么时候开始发挥作用？又在哪一点开始作用于基本的光？Ra 的回答先承认「你们正谨慎地停留在创造本身的领域」，然后指出这件事麻烦的地方——它发生在你们熟悉的空间/时间之外，所以「什么时候」这个提问方式本身就不适用。</p>
+  <div class="card">
+    <h3>「什么时候」在这里问不下去</h3>
+    <div class="q">个体化（意识的个体化部分）何时开始发挥作用？它是怎么发生的，又在哪一点上，个体化意识开始作用于基本的光？</div>
+    <div class="quote">
+      <p class="en">You remain carefully in the area of creation itself.</p>
+      <p class="zh">你们谨慎地停留在创造本身的领域内。</p>
+      <span class="src">—— Session 028 · (28.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">the process by which Free Will acts upon potential intelligent infinity to become focused intelligent energy takes place without the space/time of which you are so aware</p>
+      <p class="zh">自由意志作用于潜在智能无限、使其成为聚焦的智能能量的这个过程，是在你们如此熟悉的那种空间/时间「之外」发生的……</p>
+      <span class="src">—— Session 028 · (28.6)</span>
+    </div>
+    <div class="plain">这一步发生在时间之外，所以「它发生在第几秒」没有答案；Ra 甚至说，要讲清楚这件事只会「进一步让你们困惑」。</div>
+    <div class="analogy"><b>像讨论剧本的定稿时间：</b>你可以问剧情里第三集发生了什么，却不能问「剧本定稿是剧情里的第几分钟」——剧本不在剧情的时间轴上。个体化与空间/时间的先后，正是这种关系。</div>
+    <div class="case"><b>先决定创业，才有排班表：</b>「我们几点上班」这类问题，只有在公司已经开起来之后才问得通。你不能用排班表上的一格去问「当初要不要创业」——前者已经是后者的产物。Ra 对「个体化何时发生」的为难，就在这个结构里。</div>
+  </div>
+  <div class="card">
+    <h3>空间/时间在理则个体化完成之后才出现</h3>
+    <div class="q">那空间和时间是什么时候才有的？行星与第一密度又处于什么状态？</div>
+    <div class="quote">
+      <p class="en">The experience, or existence, of space/time comes into being after the individuation process of Logos, or Love, has been completed</p>
+      <p class="zh">空间/时间的体验或存在，是在理则（或爱）的个体化过程完成之后才出现的……</p>
+      <span class="src">—— Session 028 · (28.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">these vortices of intelligent energy spending a large amount of what you would call first density in a timeless state, the space/time realization being one of the learn/teachings of this density of beingness.</p>
+      <p class="zh">这些智能能量的漩涡，在无时间状态中花费了大量你们称为第一密度的时光；而空间/时间的领悟，正是这一存在性密度的学习/教导之一。</p>
+      <span class="src">—— Session 028 · (28.6)</span>
+    </div>
+    <div class="plain">顺序是：自由意志 → 理则（爱）的个体化完成 → 空间/时间出现 → 太阳体造出无时间的混沌、凝聚成行星 → 行星以无时间状态度过大量第一密度时光，「进入时间」本身就是第一密度的功课。</div>
+    <div class="timeline">
+      <div class="tl-item"><div class="t">① 自由意志作用于潜在智能无限</div><div class="d">这一步没有「先后」也没有地点：它发生在你们所熟悉的空间/时间之外。</div></div>
+      <div class="tl-item"><div class="t">② 理则（爱）的个体化完成</div><div class="d">先有「谁」：一个焦点选定自己的自然法则与表达方式，此后它内部的描述才开始有意义。</div></div>
+      <div class="tl-item"><div class="t">③ 空间/时间出现</div><div class="d">物理宇宙凝聚，并开始向内吸引、同时向外移动——「何时、何处」从这一刻起才谈得上。</div></div>
+      <div class="tl-item"><div class="t">④ 太阳体造出无时间的混沌，凝聚成行星</div><div class="d">行星是智能能量的漩涡；它们在无时间状态中度过大量你们称为第一密度的时光。</div></div>
+      <div class="tl-item"><div class="t">⑤ 空间/时间的领悟成为第一密度的学习/教导</div><div class="d">对第一密度的存有来说，「进入时间」这件事本身就是功课的一部分。</div></div>
+    </div>
+    <div class="case"><b>照片的拍摄时间：</b>一张照片的 EXIF 里有拍摄时间，你可以精确到秒。但你没法用这个时间去问「相机在出厂前的设计决策是哪一年定下的」——那段时间不在照片的时间戳里。行星与第一密度的关系就是如此：它们先在没有时间的地方存在了很久。</div>
+  </div>
+  <div class="card">
+    <h3>Ra 的限定：这个问题我们答不了</h3>
+    <div class="q">那么原初创世与时间、空间之间到底是什么关系？</div>
+    <div class="quote">
+      <p class="en">Thus we have difficulty answering your questions with regard to time and space and their relationship to the, what you would call, original creation which is not a part of space/time as you can understand it.</p>
+      <p class="zh">因此，我们难以回答你们关于时间与空间、以及它们与你们所称的「原初创世」之关系的问题——那原初创世不是你们所能理解的空间/时间的一部分。</p>
+      <span class="src">—— Session 028 · (28.6)</span>
+    </div>
+    <div class="plain">这不是拒绝回答，而是指出问题的预设不成立：发问者默认「原初创世也在这条时间轴上」，而它不在。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ================= 05 ================= -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>理则与密度八度：层级怎么展开，又怎么循环</h2></div>
+  <p class="sec-lead">从这一章起，发问者开始问「规模」和「层级」：一个个体化的意识单元能不能创造一个银河系？我们的银河系是谁造的？既然造好了，为什么还要再细分成那么多意识？而密度又是怎么分配的——所有人都从第一密度排队起步吗？Ra 在这一段里给出一串确认、一个「明显的悖论」、以及一个关于「银河系」这个词的澄清。</p>
+  <div class="card">
+    <h3>一个理则，可以只是一个恒星系统，也可以是数十亿个</h3>
+    <div class="q">一个个体化的意识单元，会不会创造一个拥有数百万颗恒星的星系？这种事会发生吗？</div>
+    <div class="quote">
+      <p class="en">The possibilities are infinite.</p>
+      <p class="zh">可能性是无限的。</p>
+      <span class="src">—— Session 028 · (28.7)</span>
+    </div>
+    <div class="quote">
+      <p class="en">there are many different Logos entities or creations, and we would call each, using your sound vibration complexes, a galaxy.</p>
+      <p class="zh">存在着许多不同的理则实体或造物，而我们会用你们的声音振动复合体，把每一个都称作一个「银河系」。</p>
+      <span class="src">—— Session 028 · (28.7)</span>
+    </div>
+    <div class="plain">规模没有固定答案，但「银河系」这个词有麻烦：Ra 把每一层理则的造物都叫一个 galaxy，而你们也用这个词指自己所在的那一层，于是同一个词指了不同层级的东西。</div>
+    <div class="case"><b>会议上三个人都在说「平台」：</b>产品经理说的「平台」是整个生态，工程师说的是那套 API，客户说的是那个 App。三个人用的词一样，指的层级完全不同，讨论就会空转——这正是 Ra 说的「术语 galaxy 引起混淆」的日常版本。</div>
+  </div>
+  <div class="card">
+    <h3>我们的行星理则：两千五百亿个恒星系统</h3>
+    <div class="q">那么创造了我们这颗行星的同一个理则，一共造了多少造物？</div>
+    <div class="quote">
+      <p class="en">This planetary Logos is a strong Logos creating approximately two hundred fifty billion [250,000,000,000] of your star systems for Its creation.</p>
+      <p class="zh">这个行星理则是一个强大的理则，为它的造物创造了大约两千五百亿[250,000,000,000]个你们所称的恒星系统。</p>
+      <span class="src">—— Session 028 · (28.8)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The, shall we say, laws or physical ways of this creation will remain, therefore, constant.</p>
+      <p class="zh">因此，这个造物的——容我们说——法则或物理方式，将保持恒定。</p>
+      <span class="src">—— Session 028 · (28.8)</span>
+    </div>
+    <div class="plain">同一个理则造出的两千五百亿个恒星系统共享同一套法则——所以「物理方式保持恒定」，本银河系内的物理规律是同一套规则的产物。</div>
+    <div class="analogy"><b>同一个框架，无数应用：</b>一个开源框架的语法与运行规则对所有使用者都一样，但基于它写出的应用千差万别。规则的统一不但不妨碍多样性，反而正是多样性能被理解的前提。</div>
+  </div>
+  <div class="card">
+    <h3>「明显的悖论」：既然定好了，为何还要细分</h3>
+    <div class="q">既然这个理则已经为整个大系统定好了智能能量的方式，它为什么还要再细分成那么多意识？</div>
+    <div class="quote">
+      <p class="en">It would seem that if one Logos creates the intelligent energy ways for a large system, there would not be the necessity or possibility of the further sub-Logos differentiation. However, within limits, this is precisely the case, and it is perceptive that this has been seen.</p>
+      <p class="zh">看起来似乎：如果一个理则为一个大系统创造了智能能量的方式，就不会有必要、也没有可能再进一步分化出子理则。然而在限制范围内，这恰恰就是实际情况——能看出这一点，是有洞察力的。</p>
+      <span class="src">—— Session 028 · (28.11)</span>
+    </div>
+    <div class="quote">
+      <p class="en">within the, shall we say, guidelines, or ways, of the Logos, the sub-Logos may find various means of differentiating experiences without removing or adding to these ways.</p>
+      <p class="zh">在理则的——容我们说——指导方针或方式之内，子理则可以找到各种方式来区分体验，既不移除、也不增加这些方式。</p>
+      <span class="src">—— Session 028 · (28.20)</span>
+    </div>
+    <div class="plain">悖论之所以只是「明显」，是因为层级不是重复：理则定下不可增删的规则，子理则在规则之内区分体验——多样性发生在规则内部，而不是在规则之外另加规则。</div>
+    <div class="case"><b>总部定规则，分公司做业务：</b>集团统一财务与合规口径（不可增删），各分公司在口径之内做出完全不同的业务形态。你不会因为集团只有一套制度，就认为分公司没有存在的必要。</div>
+  </div>
+  <div class="card">
+    <h3>密度是混合的：不是排队，而是几乎立刻分层</h3>
+    <div class="q">大银河系里的个体化意识，是否都从第一密度开始、按一、二、三……七、八的顺序走完？还是有人从更高处起步，因此始终是混合的？</div>
+    <div class="quote">
+      <p class="en">The latter is more nearly correct. In each beginning, there is the beginning from infinite strength. Free Will acts as a catalyst.</p>
+      <p class="zh">后者更接近正确。在每一个开端里，都有一个从无限力量出发的开端。自由意志作为催化剂起作用。</p>
+      <span class="src">—— Session 028 · (28.13)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The potentials of experience are created as a part of intelligent energy and are fixed before experience begins.</p>
+      <p class="zh">体验的潜能被创造为智能能量的一部分，并在体验开始之前就已固定。</p>
+      <span class="src">—— Session 028 · (28.13)</span>
+    </div>
+    <div class="quote">
+      <p class="en">there is always, due to Free Will acting infinitely upon the creation, a great variation in initial responses to intelligent energy's potential.</p>
+      <p class="zh">由于自由意志无限地作用于造物，对智能能量之潜能的初始反应，总是存在巨大的差异。</p>
+      <span class="src">—— Session 028 · (28.13)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Thus almost immediately the foundations of the, shall we call it, hierarchical nature of beings begins to manifest as some portions of consciousness, or awareness, learn through experience in a much more efficient manner.</p>
+      <p class="zh">因此几乎立即地，存有之——容我们称之为——层级性本质的基础开始显现：某些意识或觉知的部分，以高效得多的方式通过体验来学习。</p>
+      <span class="src">—— Session 028 · (28.13)</span>
+    </div>
+    <div class="plain">潜能先被固定，自由意志再无限地作用其上演，于是初始反应差异巨大——层级性本质「几乎立即」就显现了，所以银河系里始终是混合的，而不是整齐排队。</div>
+    <div class="case"><b>同一起点的马拉松：</b>所有人同时出发，路线也一样，但几公里后就自然分成好几个集团。没有人替他们分配名次，分层来自每个人对同一段路程的不同反应——正对应「初始反应差异巨大，层级几乎立即显现」。</div>
+  </div>
+  <div class="card">
+    <h3>八度音程：第八密度也是起点</h3>
+    <div class="q">当大银河系被创造时，有八个密度被创造出来，对吗？八度音程是无限的吗？</div>
+    <div class="quote">
+      <p class="en">it is well to perceive that the eighth density functions also as the beginning density, or first density—in its latter stages—of the next octave of densities.</p>
+      <p class="zh">最好要认识到：第八密度在其后期阶段，也作为下一个密度八度音程的起始密度（即第一密度）而运作。</p>
+      <span class="src">—— Session 028 · (28.15)</span>
+    </div>
+    <div class="quote">
+      <p class="en">we cannot speak in firm knowledge of all the creations. We know only that they are infinite. We assume an infinite number of octaves.</p>
+      <p class="zh">我们不能以确切的知识谈论所有的造物。我们只知道它们是无限的。我们假设存在无限数量的八度音程。</p>
+      <span class="src">—— Session 028 · (28.16)</span>
+    </div>
+    <div class="quote">
+      <p class="en">there is a mystery-clad unity of creation in which all consciousness periodically coalesces and, again, begins.</p>
+      <p class="zh">存在一个披着神秘外衣的造物合一，在其中所有意识周期性地凝聚，然后再次开始。</p>
+      <span class="src">—— Session 028 · (28.16)</span>
+    </div>
+    <div class="quote">
+      <p class="en">we can only say we assume an infinite progression, though we understand it to be cyclical in nature and, as we have said, clad in mystery.</p>
+      <p class="zh">我们只能说，我们假设有一个无限的进展——尽管我们理解它在本质上是循环的，并且如我们所说，披着神秘的外衣。</p>
+      <span class="src">—— Session 028 · (28.16)</span>
+    </div>
+    <div class="plain">八度不是终点而是转折：第八密度后期兼作下一个八度的第一密度；而对「无限」这件事，Ra 只肯说到「我们假设」——因为他自称是谦卑的使者，不能以确切知识谈论所有造物。</div>
+    <div class="case"><b>游戏赛季的继承：</b>赛季结束不是角色消失，而是结算：部分数据保留下来，成为下一赛季的起点。你不会说「上一季结束了，所以没有下一季」——第八密度与下一个八度音程的关系正是如此。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ================= 06 ================= -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>极性与收官：潜能是给的，极化是你做的</h2></div>
+  <p class="sec-lead">倒数第二个问题看起来很小：大银河系形成时，是否已经存在「电极性」？Ra 的同意带了一个条件——「电的」这个词在这里要同时按形而上意义理解。顺着这个条件，发问者问出了本集最后一问：那么我们不但有电荷的极性，也有意识中的极性？答案把这一集的落点讲清楚了：一切都从一开始就潜在可用，但极化是意识复合体自己的功课。</p>
+  <div class="card">
+    <h3>「电的」要按两层理解</h3>
+    <div class="q">大银河系由理则形成时，就已经存在电极性了——对吗？</div>
+    <div class="quote">
+      <p class="en">I accept this as correct with the stipulation that what you term electrical be understood as not only the one, Larson, stipulated its meaning but also in what you would call the metaphysical sense.</p>
+      <p class="zh">我接受这是正确的，但有一个条件：你们所称的「电的」不仅应被理解为拉尔森所规定的那个含义，还应被理解为你们所称的形而上意义。</p>
+      <span class="src">—— Session 028 · (28.18)</span>
+    </div>
+    <div class="plain">Ra 的同意带条件：同一个词要同时覆盖物理层面与形而上层面——所以随之而来的不只是电荷的极性，还有意识里的极性。</div>
+    <div class="case"><b>同一段代码的两层评价：</b>一段程序既可能语法完全合法、跑得通（机器可判定的层面），也可能可读性极差、没人敢维护（需要在人这一层评价）。你只说「它合法」，就漏掉了另一半事实——这正是 Ra 给「电的」这个词附加条件的原因。</div>
+  </div>
+  <div class="card">
+    <h3>潜能由智能能量给，极化由意识复合体做</h3>
+    <div class="q">所以你是在说：那时我们不但有电荷的极性，也有意识中的极性？</div>
+    <div class="quote">
+      <p class="en">All is potentially available from the beginning of your physical space/time—it then being the function of consciousness complexes to begin to use the physical materials to gain experience, to then polarize, in a metaphysical sense.</p>
+      <p class="zh">从你们物理空间/时间的开端起，一切就都潜在可用——此后，意识复合体的功能就是开始使用这些物理材料来获取经验，然后在形而上意义上极化。</p>
+      <span class="src">—— Session 028 · (28.19)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The potentials for this are not created by the experiencer but by intelligent energy.</p>
+      <p class="zh">这件事的潜能不是由体验者创造的，而是由智能能量创造的。</p>
+      <span class="src">—— Session 028 · (28.19)</span>
+    </div>
+    <div class="plain">两件事要分清楚：能极化、能获取经验——这份潜能是智能能量给的，从一开始就在；真正去极化——那是意识复合体自己的工作。</div>
+    <div class="analogy"><b>像手机出厂的传感器：</b>传感器不是你装的，能测什么、量程多大，出厂时就定好了；但你会拿它来记录什么、养成什么习惯，是你自己的事。设备给你可能性，你用不用、怎么用，才是你的功课。</div>
+    <div class="case"><b>健身房的器械：</b>器械不是你造的，它提供什么样的动作轨迹、多大的阻力范围，早就固定了；但同样是这套器械，有人练出力量，有人练出体态，有人只是打卡。潜能是场地给的，偏好是你自己练出来的。</div>
+  </div>
+  <div class="card">
+    <h3>四组对照：本集最容易混的成对概念</h3>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">同一句话的两层</span><h4>电极性 ↔ 形而上极性</h4><p>「电的」既指拉尔森意义上的物理含义，也指<b>意识层面的极性</b>；Ra 只在附加这个条件后，才同意发问者的说法。</p></div>
+      <div class="yuan-card"><span class="y-tag">规则与花样</span><h4>理则 ↔ 子理则</h4><p>理则定下不可增删的智能能量方式；<b>子理则在规则之内</b>寻找各种方式区分体验——多样的前提是规则统一。</p></div>
+      <div class="yuan-card"><span class="y-tag">先与后</span><h4>潜能 ↔ 动能</h4><p>潜能作为智能能量的一部分，<b>在体验开始前就已固定</b>；催化剂（自由意志）把潜能转变为动能，此后才是拉尔森那套描述适用的区间。</p></div>
+      <div class="yuan-card"><span class="y-tag">有与无</span><h4>空间/时间 ↔ 无时间</h4><p>空间/时间在理则个体化完成之后才出现；行星这些智能能量的漩涡，曾以<b>无时间状态</b>度过大量第一密度时光。</p></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>归类练习：回头核对，Ra 认可了什么、纠正了什么</h3>
+    <p>本集 Ra 大量使用「正确 / 不正确 / 基本正确」来校准。判断下面每句话，Ra 是认可还是纠正。</p>
+    <div id="sorterArea"></div>
+  </div>
+  <div class="saying">
+    <p class="en">Unity, at this approximation of understanding, cannot be specified by any physics but only be activated, or potentiated, intelligent infinity due to the catalyst of free will.</p>
+    <p class="zh">在这个理解的近似值上，合一无法被任何物理学所指定；它只能因自由意志这项催化剂而被激活、被潜能化，成为智能无限。</p>
+    <span class="src">—— Session 028 · (28.1)</span>
+  </div>
+  <div class="card">
+    <h3>收官：Ra 主动画线，然后告别</h3>
+    <div class="quote">
+      <p class="en">This will be the last full question of this session due to our desire to foster this instrument as it slowly regains physical complex energy.</p>
+      <p class="zh">这将是本次集会的最后一个完整问题，因为我们希望培育这个器皿——它正在缓慢恢复身体复合体的能量。</p>
+      <span class="src">—— Session 028 · (28.19)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This instrument is well adjusted. You are conscientious.</p>
+      <p class="zh">这个器皿调整得很好。你们是尽责的。</p>
+      <span class="src">—— Session 028 · (28.21)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Go forth, then, rejoicing in the power and the peace of the One Creator. Adonai.</p>
+      <p class="zh">那么，向前去吧，在太一造物主的大能与和平中欢欣鼓舞。Adonai。</p>
+      <span class="src">—— Session 028 · (28.21)</span>
+    </div>
+    <div class="plain">本集停在边界上：任何关于太一智能无限的概念都不正确，八度音程的无限只是「假设」，能确定说出的只到「一切从一开始就潜在可用」。</div>
+    <p style="font-size:.94rem;color:var(--ink-soft);margin-top:12px">本集留下的追问：上一集承诺的「光的颜色的进一步信息」在这里被部分兑现（智能无限的第二个含义：潜能经催化剂成为动能）；但 Ra 没有给出下一个话题，反而以培育器皿为由收尾。可以带着两个问题读下去——那些「在体验开始前就已固定」的潜能，如何在各个密度里展开为具体的学习/教导？而意识复合体又是怎样「使用物理材料」完成形而上极化的？</p>
+  </div>
+  <div class="case"><b>新手机的第一天：</b>拆封开机，相机、陀螺仪、NFC 全都在，能做什么早就定好了；但两个月后你用这部手机记录的，可能是健身数据，也可能全是外卖订单。设备给的是潜能，两个月后形成的偏好才是极化——正对应 Ra 说的：潜能不是体验者创造的，极化才是体验者的事。</div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+<p>基于 The Ra Contact Session 028（split/Ra_Session_028.md）英文原文制作 · 交互式学习模块</p>
+<p>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文</p>
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra028-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+
+/* 问答脉络推进器 */
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+  {t:'28.0 开场',d:'<b>致意与开场。</b>Ra 以「我在无限造物主的爱与光中向你们致意」开场，宣布本次通讯开始。'},
+  {t:'28.1 气球模型',d:'<span class="qa-q">问：智能无限像气球或气泡的表面，从每个点均匀向外、以光速扩展——对吗？</span><b>答：</b>不正确——正如任何关于太一智能无限的概念都不正确；但它在一个特定理则（爱之焦点）的背景下是正确的。合一不能被物理学指定，只能因自由意志的催化剂而被激活、被潜能化。'},
+  {t:'28.2 光的颜色的后续',d:'<span class="qa-q">问：昨天你说关于光的颜色还有更多信息，可以讲完吗？</span><b>答：</b>要讲这个就得回弹到拉尔森那套理解方式——它适用于智能无限的第二个含义：潜能经催化剂成为动能。宇宙在每一部分都是智能无限的缩影，光芒是智能能量对智能无限的分派。'},
+  {t:'28.3–28.5 爱到物质的链条',d:'<span class="qa-q">问：光是振动的结果、振动是爱的结果；光在量子化角速度单位的旋转中凝聚成全部化学元素——对吗？是什么让光旋转？</span><b>答：</b>正确、完全正确。让光旋转的是爱之焦点的赋能功能：它具有有序性，把每个细节的发展方式写进活生生的光里。'},
+  {t:'28.6 个体化在时间之外',d:'<span class="qa-q">问：个体化意识何时开始作用于基本的光？</span><b>答：</b>那个过程发生在你们所熟悉的空间/时间之外；空间/时间是在理则的个体化完成之后才出现的，行星这些智能能量的漩涡曾以无时间状态度过大量第一密度时光。'},
+  {t:'28.7–28.11 理则与子理则',d:'<span class="qa-q">问：一个意识单元能创造一个银河系吗？我们的银河系是谁造的？既然定好了为何还要细分？</span><b>答：</b>可能性是无限的；我们的行星理则造了大约两千五百亿个恒星系统；理则细分出子理则看似悖论，但在限制范围内细分恰恰是事实——子理则在指导方针之内区分体验，不移除也不增加那些方式。'},
+  {t:'28.13–28.16 密度与八度',d:'<span class="qa-q">问：所有意识都从第一密度按顺序走完吗？有八个密度吗？八度音程是无限的吗？</span><b>答：</b>后者更接近正确：潜能先被固定，自由意志无限作用其上，初始反应差异巨大，层级几乎立即显现。第八密度后期兼作下一个八度的第一密度；至于无限，我们只能说「我们假设」。'},
+  {t:'28.18–28.21 极性与收官',d:'<span class="qa-q">问：那时已有电极性，是否也已有意识中的极性？还有什么能让器皿更舒适？</span><b>答：</b>「电的」要同时按形而上意义理解；一切从物理空间/时间的开端起就潜在可用，而极化是意识复合体的功能——潜能由智能能量创造，不由体验者创造。Ra 宣布这是最后一个完整问题，随后告别。'}
+]);
+
+/* 条件模拟器 */
+function updateCond(){
+  const box=document.getElementById('condResult');
+  const miss=[];
+  if(!document.getElementById('condVib').checked)miss.push('「振动是爱的结果」这一环');
+  if(!document.getElementById('condLove').checked)miss.push('爱之焦点的赋能功能（有序性）');
+  if(!document.getElementById('condSpin').checked)miss.push('在量子化角速度单位上的旋转');
+  if(miss.length===0){
+    box.className='';
+    box.innerHTML='<b>条件齐备：光凝聚为物质。</b>爱产生振动，振动产生光；爱之焦点的有序性把每个细节的发展方式写进活生生的光里；光再在量子化角速度单位上旋转，凝聚成你们密度中的物质与全部化学元素。这条链就是本集 (28.3)–(28.5) 的全部内容。';
+  }else{
+    box.className='fail';
+    box.innerHTML='<b>链条在缺环处断开——缺少：'+miss.join('；')+'。</b>补充说明：若缺「振动是爱的结果」，就没有光可谈，链条在第一步之前就断了；若缺爱之焦点的赋能功能，光即便存在也没有有序性，每个细节的发展方式不会被写进光里；若缺量子化的旋转，光仍是光，不会凝聚为确定的化学元素。';
+  }
+}
+['condVib','condLove','condSpin'].forEach(function(id){
+  document.getElementById(id).addEventListener('change',updateCond);
+});
+updateCond();
+
+/* 术语卡展开 */
+document.querySelectorAll('.fn-card').forEach(function(c){c.addEventListener('click',function(){c.classList.toggle('open')})});
+
+/* 归类练习：本集 Ra 的认可与纠正 */
+initSorter('sorterArea',[
+  {a:'智能无限像气球或气泡的表面，从每一个点向所有方向均匀地向外、以光速扩展',opts:['Ra 认可','Ra 纠正'],ans:'Ra 纠正',exp:'Ra 说「这个概念是不正确的，正如任何关于那个太一智能无限的概念都不正确」；它只在某个特定理则（爱之焦点）的背景下才成立（28.1）。'},
+  {a:'这光可以凝聚成我们密度中的物质，凝聚成我们所有的化学元素',opts:['Ra 认可','Ra 纠正'],ans:'Ra 认可',exp:'Ra 回「这完全正确」——条件是振动在量子化间隔（角速度单位）上的旋转（28.4）。'},
+  {a:'一个理则既然已为大系统定好智能能量的方式，就不需要、也不可能再细分出子理则',opts:['Ra 认可','Ra 纠正'],ans:'Ra 纠正',exp:'Ra 说「看似如此，然而在限制范围内，这恰恰就是实际情况」；看得出来这点的发问者被称为有洞察力（28.11）。'},
+  {a:'当大银河系被创造时，有八个密度被创造出来',opts:['Ra 认可','Ra 纠正'],ans:'Ra 认可',exp:'Ra 说「基本正确」，但要补一句：第八密度在其后期阶段也作为下一个八度音程的起始密度运作（28.15）。'},
+  {a:'大银河系里所有个体化意识都从第一密度开始，按顺序走到第八密度',opts:['Ra 认可','Ra 纠正'],ans:'Ra 纠正',exp:'Ra 说「后者更接近正确」：因自由意志无限作用于造物，初始反应差异巨大，存有的层级性本质几乎立即显现，所以始终是混合的（28.13）。'},
+  {a:'大银河系形成时，不仅存在电荷的极性，也存在意识中的极性',opts:['Ra 认可','Ra 纠正'],ans:'Ra 认可',exp:'Ra 认可，条件是「电的」不仅按拉尔森规定的含义理解，也要按形而上意义理解；从物理空间/时间的开端起一切就潜在可用（28.18–28.19）。'}
+]);
+
+renderPath();
+</script>
+</body>
+</html>

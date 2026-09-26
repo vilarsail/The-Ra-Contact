@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 057 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 057 · 交互式学习模块</h1>
+  <p class="sub">这一集是一堂「疗愈工具实操课」：从器皿遭心灵攻击的机制讲起，走过水晶疗愈的完整流程，再进入金字塔形状的用途、参数与危险，最后以「空间/时间与时间/空间只是幻象的标签」收束。</p>
+  <div class="tagline">8 个主题 · 6 个学习步骤 · 43 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 心灵攻击的机制</a>
+<a href="#s3">③ 水晶疗愈流程</a>
+<a href="#s4">④ 金字塔：强力与危险</a>
+<a href="#s5">⑤ 用途与实用参数</a>
+<a href="#s6">⑥ 入门与学习</a>
+<a href="#s7">⑦ 空间/时间与时间/空间</a>
+<a href="#s8">⑧ 收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>用问答推进器把整场集会的脉络走一遍，知道三大块在聊什么</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>理解心灵攻击为何只能「借道」</b><span>负面力量不能直接干涉，只能通过预先存在的变貌起作用</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>走一遍水晶疗愈的流程</b><span>先平衡自我，再激活「冻结之光」——并用推演器逐步看清机制</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>分清国王室与王后室效果</b><span>用条件模拟器试出「强力工具什么时候伤人」</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>掌握三种用途与实用参数</b><span>角度、材料、摆放、比例——并做一组归类练习巩固</span></span></label></div>
+<div class="step-item" data-target="#s8"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官：入门的含义与坐标词的分量</b><span>王后室的「入门」是什么、空间/时间为何无需考虑，最后带走金句</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ 01 本章地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：一堂从「攻击」讲到「坐标系」的工具课</h2></div>
+  <p class="sec-lead">本集延续前几集对疗愈与金字塔的探讨（发问者在 57.25 说「你也提到过金字塔被用于学习」），但落点全在「怎么用」：水晶怎么用、金字塔怎么搭、什么情况下危险。三大块之外，还有一个收束全场的升维问题——空间/时间与时间/空间。先用下面的推进器把整场问答走一遍。</p>
+  <div class="card">
+    <h3>问答脉络推进器：这一集是怎么问下来的</h3>
+    <div class="flow-track" id="flowMap"></div>
+    <div class="flow-detail" id="flowMapDetail"></div>
+    <div class="flow-ctrl"><button id="flowMapPrev">← 上一问</button> <button id="flowMapNext">下一问 →</button></div>
+  </div>
+  <div class="card">
+    <h3>本集的方法论：先懂机制，再谈应对</h3>
+    <div class="q">发问者遇到「攻击」这类麻烦时，本能反应是「多做点什么把它挡住」；而整场集会处处是「先理解，再行动」的节奏——这一句可以当作读整集的钥匙。</div>
+    <div class="quote">
+      <p class="en">There is nothing you can do to alleviate the attack. The understanding of its mechanism might be of aid.</p>
+      <p class="zh">没有什么做法能减轻攻击本身；能帮上忙的，是理解它的机制。</p>
+      <span class="src">—— Session 057 · (57.2)</span>
+    </div>
+    <div class="plain">攻击挡不住，但机制可以懂——水晶、金字塔、入门、坐标词，Ra 都是先给机制、再给参数。按这个次序读，本集不散。</div>
+    <div class="case"><b>读前热身：</b>把这集想象成一堂器材培训课——先讲安全须知（攻击为何能伤到人、强力工具为何危险），再讲操作规程（水晶挂在哪、金字塔比例多少），最后升到原理课（入门是什么、坐标词多重要）。读每一章时对号入座即可。</div>
+    <div class="case"><b>自测：</b>合上页面，试着回答三个问题——负面力量靠什么进入？水晶疗愈的第一步是什么？哪种金字塔角度危险？三个都答得上，本集的骨架你就拿到了。</div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 照护 · 收尾</span></summary>
+  <div class="body">
+    <p><b>(57.1) 器皿状态：</b>正遭最严重的心灵攻击，但因生命能量得到补充、加上一种被你们称为幽默感的「比例感」而承受良好；攻击可能在短期内干扰通讯。</p>
+    <p><b>(57.4-57.5) 照护与水晶：</b>手腕按扭伤包扎、吊带一天，复查后按需重复；每个人的疗愈工作可按需使用——水晶就是器皿右手手指上那块「有瑕疵但够用」的。</p>
+    <p><b>(57.34) 收尾：</b>一切和谐、调整令人满意，Ra 在太一无限造物主的爱与光中道别。</p>
+  </div></details>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 02 心灵攻击的机制 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>心灵攻击的机制：负面力量为何只能「借道」</h2></div>
+  <p class="sec-lead">开场 Ra 报告器皿正遭严重的心灵攻击（psychic attack，非物理层面的针对性干扰）。发问者想「做点什么挡住它」，Ra 却把话题引向机制——这次手腕受伤，被讲成一堂「负面力量如何进入」的公开课。</p>
+  <div class="card">
+    <h3>挡不住，但可以懂</h3>
+    <div class="q">发问者预设「只要我们做对什么，攻击就能被减轻」；Ra 先打破这个预设，再把「理解机制」作为真正能做、也该做的事交给他。</div>
+    <div class="quote">
+      <p class="en">There is nothing you can do to alleviate the attack. The understanding of its mechanism might be of aid.</p>
+      <p class="zh">没有什么做法能减轻攻击本身；能帮上忙的，是理解它的机制。</p>
+      <span class="src">—— Session 057 · (57.2)</span>
+    </div>
+    <div class="plain">面对干扰，Ra 的第一反应不是加防护，而是给机制图——看懂它怎么运作，应对自然浮出来。</div>
+    <div class="case"><b>消防演练：</b>入职第一天的安全培训不教你「徒手灭火」，而是先讲火怎么蔓延、烟往哪走——路径清楚了，逃生与处置的动作自然明白。Ra 对心灵攻击的处理是同一个次序：先机制，后应对。</div>
+    <div class="case"><b>钓鱼邮件：</b>一封诈骗邮件骗不到账户防护严密的人，它只能利用你已有的缺口——急着用钱、忘了核实发件人。攻击者无法凭空造出漏洞，只能借用现成的洞。这正是下一张卡的机制在生活里的样子。</div>
+  </div>
+  <div class="card">
+    <h3>机制：只能通过预先存在的变貌</h3>
+    <div class="q">「攻击是怎么打进来的？」——Ra 的回答把神神叨叨的问题变成了一条可以检查的原理。</div>
+    <div class="quote">
+      <p class="en">The Orion group cannot interfere directly but only through pre-existing distortions of mind/body/spirit complexes.</p>
+      <p class="zh">猎户集团（Orion group，本集所论攻击的来源方）没有直接干涉的权限，只能借心/身/灵复合体里本来就在的变貌（distortion，对原初状态的偏离）起作用。</p>
+      <span class="src">—— Session 057 · (57.3)</span>
+    </div>
+    <div class="q">落到这次事件：攻击的「入口」不是什么神秘法术，而是器皿单手去拿一件重物——这个误判动作让手腕的骨骼/肌肉结构变形。伤害借这条既有缺口进来。</div>
+    <div class="analogy"><b>防盗门与钥匙：</b>再好的防盗门也挡不住你自己把钥匙忘在锁孔里。负面力量没有「破门」的权限，它等的是你留缝的那一刻。</div>
+    <div class="plain">防护的重点因此不在「墙外」，而在减少自己可被借用的缺口——身体的误判动作、情绪的旧伤、认知的偏差，都是门缝。</div>
+    <div class="case"><b>健身房的扭伤：</b>明知重量已到极限，还是单手去挪那片大杠铃片——手腕扭伤后，教练能帮的是包扎固定与提醒动作规范，而不是替你重做那次决定。对应 Ra 说的：你们的帮助在于支持妥善护理、避免此类误判动作 (57.3)。</div>
+    <div class="case"><b>团队的信息安全：</b>公司被「黑」最常见的原因不是黑客攻破了防火墙，而是有人把密码贴在显示器上。外部力量通过内部疏漏起作用——「只能通过预先存在的变貌」在职场照样成立。</div>
+  </div>
+  <div class="card">
+    <h3>「无害的暂时信息」：Ra 为什么还是给了照护建议</h3>
+    <div class="q">发问者接着问「已经存在的问题能不能具体缓解」——Ra 答应给建议，却先给这份建议「定性」。</div>
+    <div class="quote">
+      <p class="en">This information is harmless, thus we share it though it is transient, lacking the principle but only offering a specific transient effect.</p>
+      <p class="zh">这份信息无害，所以我们愿意分享——尽管它只触及暂时层面：不含原则，只提供一种特定的暂时效果。</p>
+      <span class="src">—— Session 057 · (57.4)</span>
+    </div>
+    <div class="plain">包扎、吊带属于「对症处理」：有用、无害，但不含原则。Ra 连给一条护理建议都先说明它的层级——这是全书一贯的分寸感。</div>
+    <div class="case"><b>药师的两句话：</b>你去药店问扭伤，药师说「冰敷、别负重」——这是对症；又补一句「根治得靠康复训练」——这才是原则。Ra 把两层分开说，从不让临时处方冒充教导。</div>
+    <div class="case"><b>运维的重启：</b>服务挂了先重启，五分钟恢复业务（暂时效果）；要不再犯，得改代码改架构（原则）。重启不是假装修复，照护建议也不是假装教导——各安其位。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 03 水晶疗愈 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>水晶疗愈：先有结晶化的存有，才有冻结之光</h2></div>
+  <p class="sec-lead">发问者问「怎么用那块水晶」，Ra 回了一句「这是一个很大的问题」——因为器材只占一半，另一半是使用者自身的状态。这一章走完整条流程，再回答三个器材追问。</p>
+  <div class="card">
+    <h3>第一步不是拿水晶，而是准备自己</h3>
+    <div class="q">发问者想要的是操作手册；Ra 给的却是「操作者资格」：先平衡并极化自我，把内在光与向上螺旋流入的宇宙光连接起来——靠的是已经做过的那些练习。</div>
+    <div class="quote">
+      <p class="en">You first, as a mind/body/spirit complex, balance and polarize the self, connecting the inner light with the upward spiraling inpourings of the universal light.</p>
+      <p class="zh">你首先要做的，是作为心/身/灵复合体去平衡并极化自我，把内在光与宇宙光那向上螺旋的流入连接起来。</p>
+      <span class="src">—— Session 057 · (57.6)</span>
+    </div>
+    <div class="plain">疗愈的能量来自疗愈者自身的平衡与极化；水晶只是放大与聚焦的器材。先把自己调成「结晶化」（crystallized，经练习把能量场规律化到纯净稳定），再谈工具。</div>
+    <div class="case"><b>音响系统：</b>再贵的音箱，接上一台失真的音源，出来的仍是失真的声音——水晶是音箱，疗愈者自己的状态才是音源。Ra 后面那句「结晶化的实体与水晶的完美同等关键」说的正是这件事。</div>
+    <div class="case"><b>私教课上之前：</b>动作变形的教练纠正不了学员——绿光疗愈的能量要「流经疗愈者自身」，先过自己这关，才有资格站在别人旁边。</div>
+  </div>
+  <div class="card">
+    <h3>流程推演：一次水晶疗愈是怎么发生的</h3>
+    <div class="q">Ra 的描述是一条完整的能量链：从疗愈者的内在平衡，到被疗愈者自己做出选择。点下面的节点，一步一步看。</div>
+    <div class="flow-track" id="flowHeal"></div>
+    <div class="flow-detail" id="flowHealDetail"></div>
+    <div class="flow-ctrl"><button id="flowHealPrev">← 上一步</button> <button id="flowHealNext">下一步 →</button></div>
+    <div class="quote">
+      <p class="en">Take, then, the crystal, and feel your polarized and potentiated, balanced energy channeled in green-ray healing through your being, going into and activating the crystalline regularity of frozen light, which is the crystal.</p>
+      <p class="zh">然后拿起水晶，感受你那已极化、已强化、平衡的能量以绿光疗愈的方式流经你的存有，进入并激活那「冻结之光」（frozen light，水晶的本质——光被固定成规则的晶格）的结晶规律性。</p>
+      <span class="src">—— Session 057 · (57.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Thus the inner vibratory fields, from center to center in mind, body, and spirit, may be interrupted and adjusted momentarily, thus offering the one to be healed the opportunity to choose a less distorted inner complex of energy fields and vibratory relationships.</p>
+      <p class="zh">于是，心、身、灵中从中心到中心的内在振动场可以被暂时打断与调整——由此给被疗愈者一个机会，去选择一种较少变貌的内在能量场与振动关系。</p>
+      <span class="src">—— Session 057 · (57.6)</span>
+    </div>
+    <div class="plain">疗愈只是把对方的振动场暂时打断、调整，给出一个「换一种配置」的机会——做选择的，始终是被疗愈者自己。</div>
+    <div class="case"><b>心理咨询室：</b>咨询师能提供一个安全、被看见的空间，让来访者旧的应对模式「松开」一会儿——但换一种活法的决定只能由来访者自己做。对应「提供机会去选择」：疗愈者给不了痊愈，只给得了机会。</div>
+    <div class="case"><b>手机送修：</b>维修员可以帮你清出存储、重置系统（暂时打断与调整），但装哪些应用、怎么使用，还是你说了算——工具能恢复出厂，不能替你决定出厂之后怎么活。</div>
+  </div>
+  <div class="card">
+    <h3>器材三问：怎么拿、有无瑕疵、多大才好</h3>
+    <div class="q">三个细节追问：水晶该握在右手里吗？无瑕疵的是不是好很多？尺寸越大效果越强吗？Ra 的回答全部指向同一个原则。</div>
+    <div class="quote">
+      <p class="en">This is incorrect. There are two recommended configurations.</p>
+      <p class="zh">这个想法不对。推荐的配置有两种。</p>
+      <span class="src">—— Session 057 · (57.7)</span>
+    </div>
+    <div class="q">两种配置：其一，链条挂在脖子上，让水晶正好处于绿色光芒（green ray，与疗愈相应的能量中心振动）能量中心的物理位置；其二，链条绕在伸出的右手上，让水晶可以摆动，以实现精细的调整。</div>
+    <div class="quote">
+      <p class="en">Without attempting to deem the priorities you may choose, we may note that the regularized or crystallized entity, in its configuration, is as critical as the perfection of the crystal used.</p>
+      <p class="zh">不去评判你们可能怎么排优先级，我们只指出一点：使用者的规律化/结晶化状态，与水晶本身的完美程度同样关键。</p>
+      <span class="src">—— Session 057 · (57.8)</span>
+    </div>
+    <div class="quote">
+      <p class="en">In working with an individual mind/body/spirit complex the only requirement is that the crystal be in harmony with the crystallized being.</p>
+      <p class="zh">与个体的心/身/灵复合体工作时，唯一的要求是水晶与结晶化的存有相和谐。</p>
+      <span class="src">—— Session 057 · (57.9)</span>
+    </div>
+    <div class="plain">器材参数全部围绕「和谐」二字：与使用者的结晶状态相配，比器材贵不贵、大不大、纯不纯更重要。尺寸只在行星尺度的疗愈里才是考虑因素——Ra 还顺口补了一句：水也是有效的水晶，只是在你们的密度里不好挂在链子上。</div>
+    <div class="case"><b>配眼镜：</b>验光师关心的不是镜框多贵，而是度数与你的眼睛是否相配——配错了再贵的镜片也让你头晕。对应「唯一要求是和谐」。</div>
+    <div class="case"><b>老琴师与名琴：</b>一把便宜的练习琴在老琴师手里，胜过名琴在新手手里——器材的上限由使用者的状态决定。这就是「结晶化的实体与水晶的完美同等关键」。</div>
+    <div class="case"><b>理疗贴电极片：</b>电极片贴偏两厘米，效果就差了一截。水晶挂的位置同样精确：肚脐向心脏方向 2 到 5.4 厘米为最佳 (57.10)——发问者当场用铅笔和木块量了又量，确认到木头顶端 (57.11)。</div>
+  </div>
+  <div class="fn-grid">
+    <div class="fn-card"><div class="front"><div class="cn">冻结之光</div><div class="sub">frozen light</div><div class="tap">点击翻面</div></div><div class="back">水晶的本质：光被固定成规则的晶格，保有「光的规律」却不再流动。疗愈者的能量把它「点亮」，它便按所需的光振动送出疗愈能量。<em>比喻：整条流动的河冻成一块透明的冰——形状定了，光的秩序还在。</em></div></div>
+    <div class="fn-card"><div class="front"><div class="cn">结晶化的存有</div><div class="sub">crystallized being</div><div class="tap">点击翻面</div></div><div class="back">经过练习把自身能量场「规律化」到纯净、稳定、平衡状态的疗愈者。器材再完美也替代不了这个状态——它与水晶的完美同等关键。<em>比喻：校准过的音叉——本身准，才能带着别的乐器准。</em></div></div>
+    <div class="fn-card"><div class="front"><div class="cn">紫/红护甲</div><div class="sub">violet/red armoring</div><div class="tap">点击翻面</div></div><div class="back">包裹个体的保护性振动壳（violet/red-ray protective vibratory shield）。水晶疗愈时由被疗愈者自己打开；国王室配置则会自动瓦解它——这是力量，也是危险所在。<em>比喻：鸡蛋壳——从外面打破是伤害，从里面啄开是出生。</em></div></div>
+    <div class="fn-card"><div class="front"><div class="cn">宇宙普拉那</div><div class="sub">cosmic prana</div><div class="tap">点击翻面</div></div><div class="back">被强烈的寻求所吸引而来的宇宙光能量（万物的光能量）。内在的寻求在何处与它相遇，对太一的领悟就在何处发生 (57.33)。<em>比喻：收音机调准频率后涌入的信号——信号一直在空中，是你的「调谐」让它进来。</em></div></div>
+  </div>
+  <div class="divider"></div>
+</section>
+<!-- ============ 04 金字塔：强力与危险 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>金字塔疗愈：国王室的强力与危险</h2></div>
+  <p class="sec-lead">讲完水晶，发问者立刻把它与吉萨金字塔国王室（King's Chamber）的疗愈联系起来——Ra 借机解释国王室配置为何强力，也给出本集最重要的安全警告。</p>
+  <div class="card">
+    <h3>国王室配置的两个优势</h3>
+    <div class="q">「在国王室位置做疗愈，和刚才说的水晶疗愈有什么关系？」——Ra 的答案有两个部分：省力，与精准。</div>
+    <div class="quote">
+      <p class="en">Firstly, the disruption, or interruption, of the violet/red armoring, or protective shell, is automatic.</p>
+      <p class="zh">第一，紫/红护甲——也就是保护壳——的瓦解或中断，是自动的。</p>
+      <span class="src">—— Session 057 · (57.12)</span>
+    </div>
+    <div class="q">第二，光被这个位置在七种独特颜色/能量振动速率中的安放所配置：能量经由结晶化的存有、再以水晶聚焦，就能极其轻松地操纵那「精心划分的能量调色板」——于是未披甲的存有可以被快速调整；当护甲是身体在本密度里继续运作的最大成分时，这样尤其可取，中断护甲的创伤也较轻。</div>
+    <div class="plain">国王室是「自动拆甲」的房间：省去了对方手动开门这一步——但也正因为如此，它更危险。</div>
+    <div class="case"><b>手术室：</b>外科手术室把消毒、无影灯、麻醉全部预设好，医生一上台就能操作——国王室就是把「拆护甲」这道工序预设进建筑本身。但麻醉一旦过量，手术台也会变成事故现场，对应下面的危险警告。</div>
+    <div class="case"><b>手机越狱：</b>拿到系统最高权限后，装什么、改哪里都行——效率大增；可一旦装进恶意软件，破坏也是全系统级的。「未披甲的存有可被快速调整」从来都是双刃的。</div>
+  </div>
+  <div class="card">
+    <h3>危险警告：三个条件缺一不可</h3>
+    <div class="q">Ra 以金字塔建造者之一的身份履行「荣誉/职责」声明：达成疗愈绝无必要使用这个形状——振动的资历（seniority of vibration）已使被疗愈者较不易受护甲中断的创伤。那为什么还要警告？因为工具太强。</div>
+    <div class="quote">
+      <p class="en">Furthermore, as we have said, the powerful effect of the pyramid, with its mandatory disruption of the armoring—if used without the crystallized being, used with the wrong intention, or in the wrong configuration—can result in further distortions of entities…</p>
+      <p class="zh">此外，正如我们说过的，金字塔的强力效果伴随着对护甲的强制瓦解——若在没有结晶化存有的情况下使用、以错误的意图使用、或以错误的配置使用，可能给实体造成进一步的变貌……</p>
+      <span class="src">—— Session 057 · (57.12)</span>
+    </div>
+    <div class="quote">
+      <p class="en">However, we found that your peoples are not distorted towards the desire for purity to a great enough extent to be given this powerful and potentially dangerous gift.</p>
+      <p class="zh">然而我们发现，你们人类向「对纯净的渴望」的变貌，还没有深到足以被托付这份强力且潜在危险的礼物的程度。</p>
+      <span class="src">—— Session 057 · (57.17)</span>
+    </div>
+    <div class="plain">强效工具必须配「有资格的使用者」：结晶化的存有＋正确意图＋正确配置，缺一样，效果就可能等同于某些扰乱能量场的化学物质。</div>
+    <div class="case"><b>处方药：</b>同一种药，医生开了是治疗，自己乱吃是滥用——「强力且潜在危险的礼物」的前提是资格。Ra 收回国王室配置的建议，理由正是「人类尚未准备好」，而不是工具本身不好。</div>
+    <div class="case"><b>生产环境权限：</b>公司给实习生开放删库级别的数据库权限，热情越高风险越大——权限跟着成熟度走，不跟着意愿走。Ra 对当年「天真地」送出这份礼物、只看到用途被扭曲的反思，正是一次权限复盘。</div>
+  </div>
+  <div class="card">
+    <h3>条件模拟器：这块强力工具什么时候伤人？</h3>
+    <div class="q">把 57.12、57.17、57.30-57.32 的条件拼在一起拨一拨——危险不是形状本身的属性，而是形状与使用者、意图、配置的组合。</div>
+    <div id="cond057">
+      <div class="cond-row"><div class="name">顶角 76° 的大四边金字塔<small>大到足以形成国王室位置的强力形状 (57.30)</small></div><label class="switch"><input type="checkbox" id="c57a" checked><span class="slider"></span></label></div>
+      <div class="cond-row"><div class="name">没有结晶化的存有在场<small>「拆甲」过程无人引导、无人把关</small></div><label class="switch"><input type="checkbox" id="c57b" checked><span class="slider"></span></label></div>
+      <div class="cond-row"><div class="name">意图或配置有误<small>不是为了减少变貌的疗愈而使用</small></div><label class="switch"><input type="checkbox" id="c57c"><span class="slider"></span></label></div>
+    </div>
+    <div id="condResult">…</div>
+    <div class="case"><b>验算一下：</b>发问者追问「是不是任何情况下都不该用 76° 金字塔」，Ra 只回「由你们自行决定」(57.31)——连「禁令」都不替人下，边界给足、选择留给你，这是自由意志法则在参数问题上的样子。</div>
+    <div class="case"><b>记住两个数：</b>76° 是「强力形状」的特征 (57.30)；任何小于 70° 的顶角都不会产生这种危险效果 (57.32)——想把工具留在安全区，退两度半就够了。</div>
+  </div>
+  <div class="fn-grid">
+    <div class="fn-card"><div class="front"><div class="cn">国王室位置</div><div class="sub">King's Chamber position</div><div class="tap">点击翻面</div></div><div class="back">大金字塔中的强力节点：自动瓦解紫/红护甲，让未披甲的存有被快速调整。用于疗愈极高效，但要求结晶化的存有、正确意图与正确配置，否则会造成进一步的变貌。<em>比喻：强电闸——接对了全屋亮灯，接错了跳闸冒火。</em></div></div>
+    <div class="fn-card"><div class="front"><div class="cn">王后室位置</div><div class="sub">Queen's Chamber position</div><div class="tap">点击翻面</div></div><div class="back">温和节点：放大冥想状态、增强寻求的意志，不会强制拆甲。今天被推荐的使用方式（冥想、充能）都建立在这个位置的效果上；筒仓、圆锥、穹顶、帐篷等形状只具有王后室效果。<em>比喻：阅读灯——光线柔和不刺眼，陪你待多久都安全（但充能也别超过 30 分钟）。</em></div></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 05 用途与实用参数 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>现今的用途与实用参数：谨慎使用则有</h2></div>
+  <p class="sec-lead">问完危险，发问者把话题转向「那现在还有什么用」——Ra 给出三种用途、一套参数，并反复强调同一句话：效果相对固定，选择归你们。</p>
+  <div class="card">
+    <h3>三种用途，一个共同的边界词：谨慎</h3>
+    <div class="q">「金字塔形状今天还有没有任何有益用途？」——Ra 的答案分三条，每条都自带使用条件。</div>
+    <div class="quote">
+      <p class="en">The pyramid may be used for the improvement of the meditative state as long as the shape is such that the entity is in Queen's Chamber position, or entities are in balanced configuration about this central point.</p>
+      <p class="zh">金字塔可以用来改善冥想状态——只要形状使得实体处于王后室位置，或者实体们围绕这个中心点处于平衡配置之中。</p>
+      <span class="src">—— Session 057 · (57.13)</span>
+    </div>
+    <div class="q">另外两条：小金字塔放在身体某部分下方可以为身体充能——但只做短时间，不超过 30 分钟；用于平衡行星能量的用途只剩轻微作用，因为地球变化后金字塔们已不再为此正确对齐。</div>
+    <div class="quote">
+      <p class="en">This should be done for brief periods only, not to exceed 30 of your minutes.</p>
+      <p class="zh">这件事只应短时进行，不要超过你们的 30 分钟。</p>
+      <span class="src">—— Session 057 · (57.13)</span>
+    </div>
+    <div class="plain">用途有三种，共同的边界词是「谨慎」：位置要对、时间要短、别越权。</div>
+    <div class="case"><b>冥想定时器：</b>App 把 10 分钟冥想设了提醒，到点就停——「工具帮你进入状态，不是越久越好」。Ra 给充能画的上限是 30 分钟，同一个道理。</div>
+    <div class="case"><b>日光浴：</b>晒太阳补钙、改善情绪，但暴晒两小时就晒伤——一切「充能」类应用都带时长上限。Ra 不说「不能用」，只说「别超过 30 分钟」。</div>
+  </div>
+  <div class="card">
+    <h3>王后室为何助冥想：内在光与意志</h3>
+    <div class="q">「站在王后室位置冥想，得到的帮助到底是什么机制？」——Ra 的回答把功劳还给了冥想者自己。</div>
+    <div class="quote">
+      <p class="en">The inner light is that which is your heart of being. Its strength equals your strength of will to seek the light.</p>
+      <p class="zh">内在光是你存在的核心；它的强度，等于你寻求光的意志的强度。</p>
+      <span class="src">—— Session 057 · (57.14)</span>
+    </div>
+    <div class="q">机制：一个团体的位置或平衡位置会增强这意志的量、增强对内在光的觉察，从而把从存在的南磁极向上螺旋流入的光吸引上来。随着寻求强化，许多无关的杂项与变貌会离开实体，使它与那集中而净化的流入光合一——这是入门者的位置。</div>
+    <div class="plain">王后室不「给」你什么，它放大你本来就有的寻求意志。</div>
+    <div class="case"><b>图书馆自习室：</b>那张桌子没有魔力，让专注变强的是安静的环境和周围都在学习的人——「团体的平衡位置增强意志量」的日常版。</div>
+    <div class="case"><b>合唱团排练：</b>一个人练声容易松懈，一群人围成队形合唱，声音和状态都被托起来——围绕中心点的平衡配置，放大的是每个人的投入。</div>
+  </div>
+  <div class="card">
+    <h3>要王后室、不要国王室：换形状</h3>
+    <div class="q">发问者担心：用金字塔会不会被国王室位置的能量伤到？Ra 的解法简单得出人意料——把顶角做小，或干脆换形状。</div>
+    <div class="quote">
+      <p class="en">In this application a pyramid shape may be smaller if the apex angle is less, thus not allowing the formation of the King’s Chamber position. Also efficacious for this application are the following shapes: the silo, the cone, the dome, and the tepee.</p>
+      <p class="zh">在这个用途上，若顶角更小，金字塔形状便可以更小，从而不让国王室位置得以形成。同样有效的还有这些形状：筒仓形、圆锥形、穹顶形和圆锥帐篷形。</p>
+      <span class="src">—— Session 057 · (57.15)</span>
+    </div>
+    <div class="quote">
+      <p class="en">It is to be noted that a strongly crystallized entity is, in effect, a portable King’s Chamber position.</p>
+      <p class="zh">值得注意的是：一个高度结晶化的实体，实际上就是一个便携的国王室位置。</p>
+      <span class="src">—— Session 057 · (57.16)</span>
+    </div>
+    <div class="plain">换小顶角或圆顶形状＝只取「放大冥想」的效果、不要「自动拆甲」；而修到结晶的人走到哪儿，哪儿就是国王室。</div>
+    <div class="case"><b>瑜伽馆选教室：</b>小而圆的冥想穹顶足够沉浸，又不会给人过载的体验——「形状决定体验强度」在装修行业就是选型问题。</div>
+    <div class="case"><b>露营帐篷：</b>圆顶帐篷（dome tent）里睡一晚神清气爽，没人会「被帐篷伤到」——日常的圆顶形状天然只有「王后室效果」，安全边界已经内置。</div>
+  </div>
+  <div class="card">
+    <h3>参数速查表：角度、材料、摆放、比例</h3>
+    <div class="q">接下来是一串快速问答——Ra 用同一个原则回答所有参数问题：几何定效果，材料可排雷，剂量要节制，选择归你们。</div>
+    <div class="table-wrap"><table class="nine">
+      <tr><th>参数</th><th>Ra 的回答</th><th>通俗理解</th></tr>
+      <tr><td>顶角角度</td><td>由你们自行决定</td><td>效果相对固定，选最悦目的即可，审美不影响功能</td></tr>
+      <tr><td>材料</td><td>避免锡、铅等贱金属</td><td>几何关系才是主要考虑；木、塑料、玻璃皆可</td></tr>
+      <tr><td>充能摆放</td><td>直接放在头垫或床垫下方</td><td>「放在下方」就是字面意思；别超过 30 分钟</td></tr>
+      <tr><td>高度</td><td>无关紧要</td><td>只有比例重要，不是尺寸</td></tr>
+      <tr><td>比例</td><td>1.16</td><td>四条底边之和＝高度×1.16</td></tr>
+    </table></div>
+    <div class="quote">
+      <p class="en">The principle of circular, rounded, or peaked shapes is that the center acts as an invisible inductive coil.</p>
+      <p class="zh">圆形、圆弧形或尖顶形状的原理是：中心充当一个无形的感应线圈。</p>
+      <span class="src">—— Session 057 · (57.18)</span>
+    </div>
+    <div class="quote">
+      <p class="en">It matters not. Only the proportion of the height of the pyramid from base to apex to the perimeter of the base is at all important.</p>
+      <p class="zh">高度多少无关紧要；唯一重要的，是金字塔从底到顶的高度与底边周长之间的比例。</p>
+      <span class="src">—— Session 057 · (57.21)</span>
+    </div>
+    <div class="q">比例数值：1.16 (57.22-57.23)。另有两条安全线：充能金字塔可直接放在头垫或床垫正下方 (57.20)；但从顶点发出的「向上排列之光的第三螺旋」过量时最有害，不要使用过久 (57.20)。</div>
+    <div class="plain">Ra 的参数观：几何定效果，材料只排雷，剂量要节制，其余由你。</div>
+    <div class="case"><b>买锅三件事：</b>锅的形状（圆底/平底）决定受热方式——对应「几何是主要考虑」；材质只要避开劣质涂层就行——对应「排雷清单」；火候自己看着控——对应「选择归你们」。三件事互不替代。</div>
+    <div class="case"><b>路由器天线：</b>天线的方向与形状（几何）比外壳颜色重要得多；而顶点发出的强信号长期对着床头也不合适——「无形的感应线圈」与「第三螺旋勿过量」可以一起理解。</div>
+  </div>
+  <div class="card">
+    <h3>归类练习：这句话说的是哪种效果？</h3>
+    <div class="q">学完参数，来一组判断——每个场景属于国王室效果、王后室效果，还是水晶疗愈的范畴？点选项看对错与解释。</div>
+    <div id="sorterArea"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 06 入门与学习 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>入门与学习：王后室的真正含义</h2></div>
+  <p class="sec-lead">「王后室是入门场所」这句话让发问者追问到底。Ra 先声明无法细讲——因为他自认当年提供的过程并不平衡——再给出平衡之后的理解，并区分「入门」与「学习」。</p>
+  <div class="card">
+    <h3>Ra 的限定与平衡后的理解</h3>
+    <div class="q">「你说王后室是入门（initiation，把存有集中于寻求造物主的深入过程）场所，这是什么意思？」——Ra 的第一反应是划定边界：这是个大问题，我们无法描述入门的具体含义。</div>
+    <div class="q">原因何在？Ra 坦言：按照我们的信念/理解，当年向你们提供的那个入门过程，并不是一个平衡的过程。这份自省本身就是回答的一部分——拒答不是回避，而是不再推销自己也不满意的东西。</div>
+    <div class="quote">
+      <p class="en">Thus, seeking the Creator is done not just in meditation and the work of an adept but in the experiential nexus of each moment.</p>
+      <p class="zh">因此，寻求造物主不只是在冥想与行家的工作中进行，更是在每个时刻的体验联结之中进行。</p>
+      <span class="src">—— Session 057 · (57.24)</span>
+    </div>
+    <div class="q">Ra 想用一的法则来平衡「入门」的戏剧化想象：万物皆是太一造物主——所以「圣殿时刻」与「买菜时刻」在寻求面前是平的。</div>
+    <div class="plain">别把入门想成只在圣殿发生的大事；通勤、做饭、吵架后道歉，都是每个时刻的体验联结里的寻求。</div>
+    <div class="case"><b>地铁上被踩了一脚：</b>心跳上来的那一瞬，觉察它、平衡它、回到自己的寻求——这一刻的功课，比周末上山打坐更贴近「每个时刻的体验联结」。</div>
+    <div class="case"><b>加班夜的视频通话：</b>疲惫中给家人一句真心的问候——一的法则把「神圣时刻」摊平到一天 24 小时，没有哪个现场不算数。</div>
+  </div>
+  <div class="card">
+    <h3>王后室入门：光穿过所有中心，在靛蓝开门</h3>
+    <div class="q">拒答之后，Ra 还是给了这幅过程的「简笔画」——只描述光的路径，不讲考核与仪式。</div>
+    <div class="quote">
+      <p class="en">The initiation of [the] Queen’s Chamber has to do with the abandoning of self to such desire to know the Creator in full that the purified instreaming light is drawn, in balanced fashion, through all energy centers, meeting in indigo and opening the gate to intelligent infinity.</p>
+      <p class="zh">王后室的入门与「放弃自我」有关：放弃到如此渴望完全认识造物主的地步，以致净化的流入光以平衡的方式被牵引，穿过所有能量中心，在靛蓝相遇，打开通往智能无限（intelligent infinity，造物主的无限之源）的大门。</p>
+      <span class="src">—— Session 057 · (57.24)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Thus the entity experiences true life or, as your people call it, resurrection.</p>
+      <p class="zh">于是该实体体验到真正的生命——或者用你们的说法：复活。</p>
+      <span class="src">—— Session 057 · (57.24)</span>
+    </div>
+    <div class="plain">入门是光的事：净化的流入光平衡地穿过所有能量中心，在靛蓝打开智能无限之门——体验「真正的生命」。</div>
+    <div class="case"><b>长跑撞墙：</b>跑到极限处，放弃「我在受苦」的自我感之后，反而进入轻盈的节奏——「放弃自我到渴望认识」的体能版。不同的是，入门的光要平衡地穿过全部能量中心，不许跳级。</div>
+    <div class="case"><b>止语营的最后一天：</b>有人报告「边界消失、与万物连上」——对应「在靛蓝相遇、开门」。但 Ra 的版本强调「平衡地穿过所有中心」：先修满每一档，才有这一刻。</div>
+  </div>
+  <div class="card">
+    <h3>学习与入门之别：有没有其他自我在场</h3>
+    <div class="q">「金字塔还被用于学习——这是同一个过程吗？」Ra：有区别。发问者追问区别是什么，得到的答案只有一句话，却需要慢慢想。</div>
+    <div class="quote">
+      <p class="en">The difference is the presence of other-selves manifesting in space/time and—after some study in time/space—for the purpose of teach/learning.</p>
+      <p class="zh">区别在于：有其他自我在空间/时间中显现——并在时间/空间中经过一些学习之后——为了教导/学习的目的而在场。</p>
+      <span class="src">—— Session 057 · (57.26)</span>
+    </div>
+    <div class="q">发问者坦白「没听懂」，Ra 请他重新具体表述 (57.27)；发问者换成「是不是你们密度的老师显现来教导入门者」，Ra 给出下面的对照。</div>
+    <div class="quote">
+      <p class="en">In our system, experiences in the Queen’s Chamber position were solitary. In Atlantis and in South America teachers shared the pyramid experiences.</p>
+      <p class="zh">在我们的系统里，王后室位置的体验是独自进行的。在亚特兰蒂斯与南美洲，老师们共享金字塔的体验。</p>
+      <span class="src">—— Session 057 · (57.28)</span>
+    </div>
+    <div class="timeline">
+      <div class="tl-item"><div class="t">埃及 · Ra 的系统</div><div class="d">学校与金字塔分开：王后室里的体验独自进行——入门是个体与无限之间的事。</div></div>
+      <div class="tl-item"><div class="t">亚特兰蒂斯</div><div class="d">老师们共享金字塔体验：学习在同伴在场的情况下发生。</div></div>
+      <div class="tl-item"><div class="t">南美洲</div><div class="d">同样是「老师在场」的共享模式——教导/学习在团体中展开。</div></div>
+    </div>
+    <div class="q">发问者继续追问学习过程如何在金字塔里发生，Ra 反问了一句——把整个问题交还给发问者：</div>
+    <div class="quote">
+      <p class="en">How does teach/learning and learn/teaching ever take place?</p>
+      <p class="zh">教导/学习与学习/教导，究竟是怎样发生的呢？</p>
+      <span class="src">—— Session 057 · (57.29)</span>
+    </div>
+    <div class="plain">入门是独自面对无限；学习有老师与同伴在场——而 Ra 的反问提醒：教与学本是一体两面，答案要发问者自己长出来。</div>
+    <div class="case"><b>一对一导师与大课：</b>博士导师单独带着做研究，像「独自的入门式」；名师的几百人大讲堂，像亚特兰蒂斯与南美的「共享学习式」——两种传承各有各的位置。</div>
+    <div class="case"><b>自学与训练营：</b>一个人对着文档啃底层原理是独自的体验；训练营里同学互相点评代码，则是「有其他自我在场」的学习——你选哪种，取决于此刻要过哪一关。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+<!-- ============ 07 空间/时间与时间/空间 ============ -->
+<section class="chapter" id="s7">
+  <div class="sec-head"><span class="num">07</span><h2>空间/时间与时间/空间：幻象的两个坐标词</h2></div>
+  <p class="sec-lead">集会尾声，发问者插入一个别人的问题——Ra 宣布这是本次工作的最后一个完整询问，却给了本集最「升维」的回答：两个坐标词的定位，与一场寻求的完整机制。</p>
+  <div class="card">
+    <h3>两个词在描述什么：幻象的坐标系</h3>
+    <div class="q">「请阐述空间/时间与时间/空间，以及到哪个密度它们不再影响个体。」——Ra 先给这两个词「降级」：它们只是描述工具，不是宇宙的真相。</div>
+    <div class="quote">
+      <p class="en">The space/time and time/space concepts are those concepts describing, as mathematically as possible, the relationships of your illusion: that which is seen to that which is unseen.</p>
+      <p class="zh">空间/时间与时间/空间这两个概念，是在尽可能数学化地描述你们幻象中的关系：所见之物与未见之物之间的关系。</p>
+      <span class="src">—— Session 057 · (57.33)</span>
+    </div>
+    <div class="q">Ra 自己也承认：这些描述性术语是笨拙的——只是对这项工作而言够用了。而更重要的一句是：在寻求合一的神秘体验中，它们永远不需要被考虑，因为它们只是幻象系统的一部分。</div>
+    <div class="plain">它们是给幻象画坐标的标签，不是通往真理的门——寻求者寻求的是太一，不是坐标系。</div>
+    <div class="case"><b>等高线图：</b>等高线能帮你爬山，但「等高线」不是山本身——空间/时间与时间/空间就是幻象的等高线，寻道的人不必背着地图爬山。</div>
+    <div class="case"><b>照片的位置标签：</b>相册给照片标着经纬度，可标签不是那个下午——把标签当成经历本身，就错过了照片里的东西。</div>
+  </div>
+  <div class="card">
+    <h3>寻求的完整机制：从平衡到靛蓝</h3>
+    <div class="q">既然不用管坐标系，寻求者该做什么？Ra 给出一条完整的机制链——从自我接纳开始，到对太一的领悟，再到自动生出的服务。</div>
+    <div class="quote">
+      <p class="en">This One is to be sought, as we have said, by the balanced and self-accepting self, aware both of its apparent distortions and its total perfection.</p>
+      <p class="zh">这个太一，如我们所说，要由平衡且自我接纳的自我去寻求——这个自我既觉察自己表观的变貌，也觉察自己完全的完美。</p>
+      <span class="src">—— Session 057 · (57.33)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Resting in this balanced awareness, the entity then opens the self to the universe, which it is.</p>
+      <p class="zh">安住于这种平衡的觉察，实体接着向宇宙敞开自我——而它自己就是那宇宙。</p>
+      <span class="src">—— Session 057 · (57.33)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The purpose of clearing each energy center is to allow that meeting place to occur at the indigo-ray vibration, thus making contact with intelligent infinity and dissolving all illusions.</p>
+      <p class="zh">清理每一个能量中心的目的，是让那个相遇之处发生在靛蓝色光芒（indigo ray）的振动上——由此接触智能无限，并消融一切幻象。</p>
+      <span class="src">—— Session 057 · (57.33)</span>
+    </div>
+    <div class="q">把链条串起来：安住平衡觉察 → 向宇宙（它就是宇宙）敞开 → 强烈的寻求吸引万物的光能量 → 内在寻求与宇宙普拉那相遇之处，对太一的领悟发生 → 清理各能量中心，是为了让这场相遇发生在靛蓝振动。还有一句收尾：由这种意识状态所释放的能量，服务他人是自动达成的。</div>
+    <div class="plain">寻求者的任务不是研究坐标系，而是平衡、自我接纳、向宇宙敞开——剩下的，在靛蓝之处自动发生。</div>
+    <div class="case"><b>睡前复盘：</b>承认今天既搞砸了一件事、也做对了一件事——「表观变貌」与「完全的完美」同时看见，不苛责也不自夸。这就是「平衡且自我接纳的自我」的一天版本。</div>
+    <div class="case"><b>跑步进入心流：</b>不再想配速与路线（放下坐标），身体与路「连成一体」——心流那场相遇几乎人人都体验过；靛蓝是它的深层版本，只是相遇的深度不同。</div>
+  </div>
+  <div class="card">
+    <h3>密度答案与一条数字提醒</h3>
+    <div class="q">回到发问者的问题：「到哪个密度这些概念不再影响个体？」——Ra 的答案分两半。</div>
+    <div class="quote">
+      <p class="en">The space/time and time/space distinctions, as you understand them, do not hold sway except in third density.</p>
+      <p class="zh">如你们所理解的这种空间/时间与时间/空间之分，只在第三密度中有支配力。</p>
+      <span class="src">—— Session 057 · (57.33)</span>
+    </div>
+    <div class="q">但注意后半句：第四、第五密度，以及某种程度上第六密度，仍在某种极化的空间/时间与时间/空间系统中运作——出了第三密度，这套区分不再当家，但更高密度也有自己的坐标版本。</div>
+    <div class="quote">
+      <p class="en">Therefore, we have the most difficulty sharing numerical concepts with you and take this opportunity to repeat our request that you monitor our numbers and query any that seem questionable.</p>
+      <p class="zh">因此，我们在与你们分享数字概念时最为困难，并借此机会重复我们的请求：请监督我们的数字，对任何看起来可疑的数字提出质疑。</p>
+      <span class="src">—— Session 057 · (57.33)</span>
+    </div>
+    <div class="plain">跨维度的换算「有些困难」，所以数字最容易传错——Ra 的请求既是校对素养，也是一次诚实的谦逊。</div>
+    <div class="case"><b>公里换英里：</b>出国自驾，单位系统一换，所有数值都得重算，错一个就偏一个路口——「从一个系统移动到另一个系统的计算有些困难」，在导航上天天发生。</div>
+    <div class="case"><b>会议纪要传阅：</b>越复杂的数字越容易被抄错，负责任的做法是在纪要末尾加一句「数字请复核」——Ra 对 1.16、2-5.4 厘米、76°、30 分钟这些数，全都主动请小组复核。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 08 收官 ============ -->
+<section class="chapter" id="s8">
+  <div class="sec-head"><span class="num">08</span><h2>收官：把这一集带走的三样东西</h2></div>
+  <p class="sec-lead">本集没有宏大的宣告，却有可以带走的东西：一个方法论（先懂机制）、一条分界线（结晶化存有与正确意图），和一句道别。</p>
+  <div class="card">
+    <h3>收束回顾：五步走完本集</h3>
+    <div class="q">最后把五大块串成一条线：负面力量只能借道既有变貌 → 水晶疗愈先要求使用者结晶化，被疗愈者保留选择权 → 金字塔几何定效果、剂量要节制、76° 是危险线 → 入门不是圣殿专属，它在每个时刻的体验联结里 → 空间/时间与时间/空间只是标签，寻求太一无需背着它们。</div>
+    <div class="plain">这一集反复出现的姿态是：给机制、给参数、给边界，唯独不替你做决定——「由你们自行决定」出现了不止一次。</div>
+    <div class="case"><b>未来一周的练习：</b>下次遇到「这个工具/环境能不能帮我」的问题，按本集的次序自问三层——使用者状态准备好了吗（结晶化）？意图与配置对不对？剂量会不会过量？三层过了再动手。</div>
+    <div class="case"><b>把「理解机制」变成习惯：</b>身体出了小状况，处理症状之余多问一句「这是怎么发生的」——(57.2) 的方法论，最小的生活应用就是遇事先画机制图，而不是急着加防护。</div>
+  </div>
+  <div class="quote">
+    <p class="en">I leave you in the love and in the light of the One Infinite Creator. Go forth, therefore, rejoicing in the power and in the peace of the One Infinite Creator. Adonai.</p>
+    <p class="zh">我在太一无限造物主的爱与光中离开你们。因此，向前去吧，在太一无限造物主的力量与和平中欢欣。Adonai。</p>
+    <span class="src">—— Session 057 · (57.34)</span>
+  </div>
+  <div class="quote">
+    <p class="en">All is harmonious. We greet you all in joy. The adjustments are satisfactory.</p>
+    <p class="zh">一切和谐。我们在喜悦中向你们所有人致意。调整是令人满意的。</p>
+    <span class="src">—— Session 057 · (57.34)</span>
+  </div>
+  <div class="saying">
+    <p class="en">Go forth, therefore, rejoicing in the power and in the peace of the One Infinite Creator. Adonai.</p>
+    <p class="zh">那么，前行吧——在太一无限造物主的力量与安宁中欢喜。Adonai。</p>
+    <span class="src">—— Session 057 · (57.34)</span>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 057（<code>split/Ra_Session_057.md</code>）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra057-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+/* 问答推进器：整集脉络（8 站） */
+initStepper('flowMap','flowMapDetail','flowMapPrev','flowMapNext',[
+  {t:'器皿状况',d:'<span class="qa-q">问：器皿现在状况如何？(57.1)</span><b>答：</b>该器皿正遭受最严重的心灵攻击，但因生命能量得到补充、加上一种被称为幽默感的「比例感」，目前承受良好。攻击可能在短期内干扰这次通讯。'},
+  {t:'攻击机制',d:'<span class="qa-q">问：能做点什么减轻攻击吗？它的机制是什么？(57.2-57.3)</span><b>答：</b>攻击无法被减轻，能做的是理解机制：猎户集团不能直接干涉，只能通过心/身/灵复合体中预先存在的变貌起作用——这次的「入口」是器皿单手去拿重物的误判动作，伤了手腕。小组能帮的是支持照护、避免再次误判。'},
+  {t:'水晶疗愈',d:'<span class="qa-q">问：怎么用那块水晶疗愈？(57.4-57.11)</span><b>答：</b>先平衡并极化自我，让绿光疗愈能量流经自身、激活水晶「冻结之光」的结晶规律性，再把疗愈能量聚焦送往被疗愈者的磁场；对方打开紫/红护盾，内在振动场被暂时调整，选择权在他自己。水晶挂脖或绕手均可，位置在肚脐向心脏 2-5.4 厘米处。'},
+  {t:'国王室与王后室',d:'<span class="qa-q">问：这与吉萨金字塔国王室的疗愈有什么关系？现在还能用吗？(57.12-57.17)</span><b>答：</b>国王室配置自动瓦解紫/红护甲、可快速调整未披甲的存有——强力但危险，需要结晶化的存有、正确意图与正确配置；今天推荐的用途（冥想、充能）都走王后室效果；而高度结晶化的实体本身就是「便携的国王室位置」。'},
+  {t:'实用参数',d:'<span class="qa-q">问：自己搭一个，形状、材料、比例怎么定？(57.15-57.23)</span><b>答：</b>筒仓、圆锥、穹顶、圆锥帐篷都只有王后室效果；几何是主要考虑，避免锡、铅等贱金属；充能金字塔放头垫或床垫下、不超过 30 分钟，顶点第三螺旋勿过量；高度无关紧要，比例取 1.16（底边周长＝高度×1.16）。'},
+  {t:'入门与学习',d:'<span class="qa-q">问：王后室的「入门」是什么意思？(57.24-57.29)</span><b>答：</b>Ra 先声明无法细讲（当年提供的过程并不平衡），再给平衡后的理解：寻求造物主不只在冥想里，更在每个时刻的体验联结里；入门是净化的流入光平衡穿过所有能量中心、在靛蓝打开智能无限之门。学习与入门之别在于有无其他自我在场。'},
+  {t:'危险角度',d:'<span class="qa-q">问：多大的金字塔危险？(57.30-57.32)</span><b>答：</b>四边、大到足以产生国王室效果、顶角 76° 的金字塔是强力形状；用不用由你们自行决定；任何小于 70° 的顶角都不会产生这种危险效果。'},
+  {t:'收束大问题',d:'<span class="qa-q">问：空间/时间与时间/空间是什么？到哪个密度失效？(57.33)</span><b>答：</b>它们只是尽可能数学化地描述幻象中「所见与未见」关系的笨拙标签，神秘寻求无需考虑；这套区分只在第三密度有支配力，第四、第五及某种程度上第六密度仍在某种极化系统中运作。Ra 并重请小组监督数字。'}
+]);
+
+/* 流程推演：水晶疗愈五步 */
+initStepper('flowHeal','flowHealDetail','flowHealPrev','flowHealNext',[
+  {t:'① 平衡自我',d:'<b>准备使用者：</b>疗愈者作为心/身/灵复合体，先平衡并极化自我，把内在光与向上螺旋流入的宇宙光连接起来——这一步靠平时做过的练习，器材还没上场。'},
+  {t:'② 绿光流经',d:'<b>能量过身：</b>感受平衡的能量以绿色光芒疗愈的方式流经自己的存有——能量先经过疗愈者，再谈给别人。'},
+  {t:'③ 激活冻结之光',d:'<b>点亮水晶：</b>能量进入并激活水晶「冻结之光」的结晶规律性；水晶与充盈的爱/光能量共振，开始以特定方式辐射。'},
+  {t:'④ 波束聚焦',d:'<b>送往对方：</b>水晶以所需的光振动把疗愈能量聚焦、强化成波束，指向待疗愈的心/身/灵复合体的磁场。'},
+  {t:'⑤ 对方开门',d:'<b>选择归他：</b>请求疗愈的实体自己打开紫/红护盾的铠甲；内在振动场被暂时打断与调整，他由此获得机会，去选择较少变貌的能量场配置——疗愈给机会，选择在被疗愈者。'}
+]);
+
+/* 归类练习：三种效果 */
+initSorter('sorterArea',[
+  {a:'「团体围绕中心点的平衡配置，能放大寻求意志、改善冥想状态」',opts:['国王室效果','王后室效果','水晶疗愈'],ans:'王后室效果',exp:'王后室位置或平衡配置放大冥想——它不强制拆甲，只增强你本来就有的寻求 (57.13-57.14)。'},
+  {a:'「紫/红护甲的保护壳被自动瓦解，未披甲的存有可被快速调整」',opts:['国王室效果','王后室效果','水晶疗愈'],ans:'国王室效果',exp:'自动中断护甲是国王室配置的第一优势，也因此需要结晶化存有与正确意图来把关 (57.12)。'},
+  {a:'「链条挂脖，让水晶处在绿光能量中心的物理位置；或绕在伸出的右手上」',opts:['国王室效果','王后室效果','水晶疗愈'],ans:'水晶疗愈',exp:'这是水晶的两种推荐配置——与金字塔形状无关 (57.7)。'},
+  {a:'「一个高度结晶化的实体，实际上就是它的便携版本」',opts:['国王室效果','王后室效果','水晶疗愈'],ans:'国王室效果',exp:'高度结晶化的实体＝便携的国王室位置：走到哪儿都能完成「拆甲—调整」的强力操作 (57.16)。'},
+  {a:'「筒仓形、圆锥形、穹顶形、圆锥帐篷形——它们只有这一种效果」',opts:['国王室效果','王后室效果','水晶疗愈'],ans:'王后室效果',exp:'这些圆/尖顶形状只有王后室效果，适合想要冥想增强而不想要强制拆甲的场合 (57.15-57.16)。'}
+]);
+
+/* 条件模拟器：强力工具什么时候伤人 */
+function cond057(){
+  const a=document.getElementById('c57a').checked,
+        b=document.getElementById('c57b').checked,
+        c=document.getElementById('c57c').checked;
+  const r=document.getElementById('condResult');
+  let txt,cls='';
+  if(!a){
+    txt='不在强力区：没有 76° 顶角、不形成国王室位置，形状只提供王后室式的温和应用（冥想增强、短时充能）。另外两个开关拨不拨都影响不大。';
+  }else if(b&&c){
+    txt='危险俱全：强制拆甲、无人引导、意图与配置皆误——Ra 明说这类误用可能给实体造成进一步的变貌，其程度或许等同于某些扰乱能量场的化学物质 (57.12)。';
+    cls='fail';
+  }else if(b||c){
+    txt='进入风险区：强力工具缺了必要条件——结晶化的存有与正确意图/配置缺一不可；补齐缺失的那一项，才回到 Ra 当年设计的疗愈用途 (57.17)。';
+    cls='fail';
+  }else{
+    txt='符合 Ra 的设计：结晶化的存有在场、意图正确、配置正确——金字塔「一如既往地是一套精心设计的参数，用于分配光及其能量，以辅助疗愈催化剂」(57.17)。';
+  }
+  r.textContent=txt;
+  r.classList.toggle('fail',!!cls);
+}
+document.querySelectorAll('#cond057 input').forEach(i=>i.addEventListener('change',cond057));
+cond057();
+
+/* 术语卡翻面 */
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+renderPath();
+</script>
+</body>
+</html>

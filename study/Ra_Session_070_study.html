@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 070 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 070 · 交互式学习模块</h1>
+  <p class="sub">上一集结尾留下一个悬念：高我不愿进入负面时间/空间。这一集 Ra 把「高我」讲透——它是第六密度中期回头的未来之你——并顺带讲清时间/空间与空间/时间的机制：为什么误入负面时间/空间，要以一次投生来化解。</p>
+  <div class="tagline">「7 个主题 · 6 个学习步骤 · 19 组案例」</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 攻击为何加剧</a>
+<a href="#s3">③ 回溯催眠</a>
+<a href="#s4">④ 高我</a>
+<a href="#s5">⑤ 负面空间/时间</a>
+<a href="#s6">⑥ 归途与飞船</a>
+<a href="#s7">⑦ 收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>用问答脉络推进器看清这场对话问了什么、怎么推进，例行问答收进折叠区。</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>心灵攻击为何加剧</b><span>理解「攻击强度＝寻求强度」的镜像关系，以及器皿的防护从哪来；顺带看一个插入的小问题：回溯催眠是服务还是伤害。</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>认识高我：未来的你</b><span>本集主线——高我是谁、与「现在的你」什么关系、为何绝不操控。</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>负面空间/时间的机制</b><span>匹配律与重力井：为什么被错置的正面实体不能「直接捞回来」，而要以一次投生化解。</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>流浪者归途与钟形飞船</b><span>用两个具体样本把抽象的「时间/空间」变成看得见的东西。</span></span></label></div>
+<div class="step-item" data-target="#s7"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官：什么才值得研究</b><span>Ra 对物理学问题的定位、对发问者的邀请，以及那句收尾的祝福。</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ S1 本章地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：一场围绕「高我」的深潜</h2></div>
+  <p class="sec-lead">上一集结尾 Ra 说过：从第六密度负面时间/空间回归之路，首先围绕高我（higher self）对进入负面时间/空间的不情愿。本集几乎整场都在消化这句话——高我到底是什么、它与「现在的你」是什么关系、被错置进负面时间/空间为什么必须以一次投生来化解。中途穿插两组外围问答：心灵攻击为何加剧、回溯催眠是服务还是伤害；随后用流浪者归途与钟形飞船给「时间/空间」一个看得见的样本，最后以一句温和的定位收束。先走一遍问答脉络，再看细节。</p>
+  <div class="card">
+    <h3>本集问答脉络（点节点查看一问一答）</h3>
+    <div class="flow-track" id="flowTrack1"></div>
+    <div class="flow-detail" id="flowDetail1"></div>
+    <div class="flow-ctrl"><button class="tri-btn" id="flowPrev1">上一问</button> <button class="tri-btn" id="flowNext1">下一问</button></div>
+  </div>
+  <div class="card">
+    <h3>开场：为什么 Ra 说「欣慰」</h3>
+    <div class="q">发问者照例先问器皿状况，并追问 Ra 为什么特意用了「欣慰」这个词——他想知道这次通讯的「燃料」到底稳不稳。</div>
+    <div class="quote">
+      <p class="en">As long as this complex of energies is satisfactory we may use this instrument without depletion regardless of the distortions previously mentioned.</p>
+      <p class="zh">只要这个能量复合体令人满意，我们就能使用这个器皿而不致耗损——无论先前提到过的那些变貌如何。</p>
+      <span class="src">—— Session 070 · (70.2)</span>
+    </div>
+    <div class="plain">器皿的「燃料」叫生命能（vital energy，让器皿可被通讯使用而不受损的能量）。本集它维持在正常振动强度——这是 Ra 欣慰的原因，也是后面一切教导能展开的前提。</div>
+    <div class="case"><b>深潜前的计划表：</b>自由潜水员下水前先看天气、查气表、定好减压站——本集的节奏正是如此：先确认器皿的「气表」（生命能）充足，再潜入「高我在哪儿」的深水区，中途用钟形飞船这样的具体问题当减压站，最后上水复盘（Ra 提醒下次朝核心发问）。一场集会的编排，本身就是教学设计。</div>
+    <div class="case"><b>先看全线路图：</b>不熟悉地铁系统的新住户会先研究线路图再上站台——这张地图就是本页：主线是「高我与时间/空间」两个深站，两端是例行的器皿照料与收尾叮嘱。先看清全貌，再逐站细读，才不会在中途的术语里迷路。</div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 收尾叮嘱</span></summary>
+  <div class="body">
+    <p><b>(70.1–70.2) 器皿状态：</b>Ra 欣慰地报告「如前所述」——生命能维持在正常振动强度，只要这个能量复合体令人满意，便可使用器皿而不致耗损。</p>
+    <p><b>(70.24) 收尾叮嘱：</b>Ra 称小组非常尽责、校准尤其良好；为保护器皿，将从本次工作起保留能量储备——器皿已安排潜意识接受这一配置。</p>
+  </div></details>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ S2 心灵攻击为何加剧 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>心灵攻击为何加剧：寻求越深，袭击越猛</h2></div>
+  <p class="sec-lead">器皿报告过去一天遭受强烈心灵攻击。发问者问：这时候加剧，有没有原因？Ra 的回答把一件「坏事」翻转成一张成绩单——攻击的强度，跟着小组寻求的强度走。</p>
+  <div class="card">
+    <h3>原因不在别处，就在你们自己</h3>
+    <div class="q">发问者的预设是「攻击加剧＝哪里出了问题」，想知道是不是这个小组做错了什么。</div>
+    <div class="quote">
+      <p class="en">The cause is that with which you are intimately involved; that is, the cause is the intensive seeking for what you may call enlightenment.</p>
+      <p class="zh">原因正是与你们密切相连的那件事：也就是你们对可称为「启蒙」的那种密集寻求。</p>
+      <span class="src">—— Session 070 · (70.4)</span>
+    </div>
+    <div class="plain">攻击加剧不是出了事故，而是寻求升级的镜像——阻力的大小，是认真程度的水位表。</div>
+    <div class="case"><b>开源项目被盯上：</b>某程序员把周末玩具项目开源并认真维护，关注度上来后，匿名投诉、抄袭举报、杠精评论一起暴涨。他没做错什么——「认真」本身提高了曝光。这正是 Ra 的诊断：心灵攻击加剧，是因为小组寻求的强度升级了，而不是因为哪里出了错。</div>
+  </div>
+  <div class="card">
+    <h3>器皿的「防护罩」从哪里来</h3>
+    <div class="q">追问一层：攻击如此猛烈，器皿为什么还撑得住？Ra 点出两个因素——一般规律与这个器皿的特殊防护。</div>
+    <div class="quote">
+      <p class="en">Thus the Orion visitor strives with more and more intensity to disturb this vital energy as this group intensifies its dedication to service through enlightenment.</p>
+      <p class="zh">于是，随着这个小组通过启蒙加强其服务奉献，猎户访客也以越来越强的强度，试图扰乱这股生命能。</p>
+      <span class="src">—— Session 070 · (70.4)</span>
+    </div>
+    <div class="plain">一般情况下，痛苦这类变貌要先耗尽身体能量，才会开始耗尽生命能；而这个器皿因先前的错误经历学会守护生命能——异常强大的潜意识意志给能量复合体设下了防护（ward），猎户访客（Orion visitor，对器皿施加心灵攻击的负面势力）只能越撞越猛。</div>
+    <div class="case"><b>锁进抽屉的手机：</b>一位备考者曾因刷手机失手过几次，如今每逢学习就把手机锁进抽屉——习惯本身成了防护。器皿的潜意识防护与此同理：先前的失手教会它守住「生命能」，攻击再猛，也先撞在这道墙上。</div>
+    <div class="case"><b>门锁与撬锁者：</b>一家店装了更结实的锁，窃贼并未放弃，反而带来了更专业的工具——防护不会让攻击消失，只会改变攻击的形态与强度。Ra 说的「strives with more and more intensity」正是这层意思：两边都在升级。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ S3 回溯催眠 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>回溯催眠：分界线在记忆的使用者手里</h2></div>
+  <p class="sec-lead">发问者临时插入一个「小问题」：用回溯催眠帮人忆起前世，是服务还是伤害？Ra 先声明：我们扫描到，这个答案将被应用于你们的未来——因此关切第一变貌（First Distortion，即自由意志法则）；但问题也具有一般性，仍值得回答。</p>
+  <div class="card">
+    <h3>催眠师不是关键</h3>
+    <div class="q">发问者想给「回溯催眠」贴一个非黑即白的标签——要么服务，要么伤害，二选一。</div>
+    <div class="quote">
+      <p class="en">It has nothing to do with the hypnotist. It has only to do with the use which the entity so hypnotized makes of the information so gleaned.</p>
+      <p class="zh">这与催眠师无关。它只与被催眠的实体如何使用由此获得的信息有关。</p>
+      <span class="src">—— Session 070 · (70.5)</span>
+    </div>
+    <div class="plain">工具是中性的：同一段被唤起的记忆，可以解开一个人的结，也可以变成另一个人的新剧本——服务与伤害的可能性有无限范围，分界在被催眠者怎么用。</div>
+    <div class="case"><b>误用记忆的人：</b>有人经回溯催眠忆起前世画面后，把它当成新剧本——辞职去「寻回前世的身份」，现实生活反而失序。对应 Ra 说的伤害面：信息本身中性，误用即伤害。</div>
+    <div class="case"><b>解开怕水的人：</b>另一人忆起「溺水」的前世片段，忽然明白自己无端怕水的来处，主动去学了游泳——同一种催眠在他这里是服务。同一工具，两种结局，判定权在使用者手里。</div>
+  </div>
+  <div class="card">
+    <h3>服务者的两条底线</h3>
+    <div class="q">追问一层：既然结果取决于使用者，施术者这一方要满足什么条件，才算「在服务」？</div>
+    <div class="quote">
+      <p class="en">If the hypnotist desires to serve, and if such a service is performed only upon sincere request, the hypnotist is attempting to be of service.</p>
+      <p class="zh">如果催眠师渴望服务，并且这样的服务只在真诚请求下执行，那么催眠师就是在尝试服务。</p>
+      <span class="src">—— Session 070 · (70.5)</span>
+    </div>
+    <div class="plain">想以催眠助人，只需守住两条：真心渴望服务；且只在对方真诚请求下进行。请求，是自由意志的门把手。</div>
+    <div class="case"><b>没被请求的「帮忙」：</b>一位催眠师想替挚友「打开前世记忆」，可好友从未提出请求。按 Ra 的标准，动机再善也已越过界线——真诚请求是服务的前提，正如正规的心理咨询绝不会替陌生人预约自己。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ S4 高我 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>高我：第六密度中期回头的未来之你</h2></div>
+  <p class="sec-lead">这是本集的主线。发问者引用上一集 Ra 的话追问高我的「立场」，Ra 先说「简而言之，你已经回答了你自己的问题」，然后随着追问一层层展开：高我是谁、在哪里、与「现在的你」什么关系、会不会操控你。注意 Ra 的节奏——先纠正用词与预设，再给机制。</p>
+  <div class="card">
+    <h3>高我是谁：一个回头服务的独立单元</h3>
+    <div class="q">发问者问：高我是否拥有一个第六密度的心/身/灵复合体，与这个被错置到负面时间/空间的复合体相互独立？</div>
+    <div class="quote">
+      <p class="en">The higher self is the entity of mid-sixth density which, turning back, offers this service to its self.</p>
+      <p class="zh">高我是第六密度中期的实体，它回过头来，向它自己的过去提供这项服务。</p>
+      <span class="src">—— Session 070 · (70.8)</span>
+    </div>
+    <div class="plain">高我不是「上级」，而是同一个你——走到了第六密度中期、回头向过去的自己提供服务的那个你。</div>
+    <div class="analogy"><b>成稿与草稿：</b>同一本书，一本已写到结局（高我），一本还在写第三章（此刻的你）。终稿不替你写下一句，只在你翻开查阅时提供路标——同一个存在，两种完成度。</div>
+    <div class="case"><b>资深同事不替你做决定：</b>新人入职时，那位「十年后的资深同事」不会替他选岗位，只在他开口请教时给建议、在他明显要摔跤时扶一把——对应高我「可能时保护、被请求时引导」，而自由意志始终至上。</div>
+  </div>
+  <div class="card">
+    <h3>同时存在：你不止在「这里」</h3>
+    <div class="q">发问者意识到自己的困惑来自空间与时间的直觉，于是问：我是不是同时存在于这里和第六密度中期两个地方？</div>
+    <div class="quote">
+      <p class="en">You are existing at all levels simultaneously. It is specifically correct that your higher self is you in mid-sixth density and, in your way of measuring what you know of as time, your higher self is your self in your future.</p>
+      <p class="zh">你同时存在于所有层级。确切地说：你的高我是第六密度中期的你；并且，按你们衡量所谓时间的方式，你的高我是位于你未来的你。</p>
+      <span class="src">—— Session 070 · (70.9)</span>
+    </div>
+    <div class="plain">不止两处——你同时存在于所有层级；高我只是「按时间衡量」时位于你未来的那一站。他还进一步确认：所有低于第六密度中期的复合体，都有一个第六密度中期的高我。</div>
+    <div class="case"><b>地图上同时亮灯的城市：</b>打开地图软件，北京、巴黎、纽约在同一个屏幕上同时亮着、各自忙碌——没有任何一座城「更早存在」。Ra 用类似的地理画面说明时间/空间中的自我：所有「时刻的你」都在，高我只是其中第六密度中期的那一站。</div>
+  </div>
+  <div class="card">
+    <h3>会保护、会引导、绝不操控</h3>
+    <div class="q">发问者提出一个自然的图像：高我像不像「幕后玩家」——操控低密度的自己去收集经验，最后在第六密度中期合并？</div>
+    <div class="quote">
+      <p class="en">The higher self does not manipulate its past selves. It protects when possible and guides when asked, but the force of free will is paramount.</p>
+      <p class="zh">高我不操控它过去的自我。它在可能时保护，在被请求时引导，但自由意志的力量是至高无上的。</p>
+      <span class="src">—— Session 070 · (70.11)</span>
+    </div>
+    <div class="plain">Ra 明确否认「操控」：高我在可能时保护、在被请求时引导。至于「决定论与自由意志为何不矛盾」——Ra 给出的钥匙是真正的同时性：在所有时间并存的视角里，「注定」与「选择」只是同一事件的两种描述，矛盾自行消融。</div>
+    <div class="case"><b>棋手复盘：</b>一位棋手复盘三年前的败局：复盘的「他」看得见全盘，当年的「他」却只能凭当时的信息落子——回看时像「注定」，落子时是「自由」。两个视角同时为真，正如高我与第三密度的你同时存在。</div>
+  </div>
+  <div class="card">
+    <h3>本集术语卡（点卡片翻面）</h3>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">高我</div><div class="sub">higher self</div><div class="tap">点击翻面</div></div><div class="back">第六密度中期的「未来的你」，回头向过去的自我提供保护与引导。不操控、不强迫——引导必须等你开口请求。<em>像已写完的书的终稿：不替你写下一句，只在被翻开时提供路标。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">心/身/灵复合体</div><div class="sub">mind/body/spirit complex</div><div class="tap">点击翻面</div></div><div class="back">你在此密度的完整存在单位：心智、身体、灵性三者一体。Ra 谈「你」时，指的总是这个复合体。<em>三者像同一根绳的三股，合在一起才成其为你。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">时间/空间</div><div class="sub">time/space</div><div class="tap">点击翻面</div></div><div class="back">与空间/时间互补的「内侧」体验层：那里所有时间同时存在，位置反而可以变动；投生安排与死后回顾发生在这一侧。<em>像地图上同时亮灯的所有城市——没有哪座「更早」。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">空间/时间</div><div class="sub">space/time</div><div class="tap">点击翻面</div></div><div class="back">我们熟悉的物质世界：位置可测、时间单向流逝；物理学研究的正是这一侧。<em>像只能一帧一帧往前播的电影。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">形态制造身体</div><div class="sub">form-making body</div><div class="tap">点击翻面</div></div><div class="back">负责「排下一场投生」的功能性身体：按实体当前的振动，把它放进相称的位置。<em>像排课系统：按你当前的成绩与选课，决定你下学期进哪间教室。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">靛蓝光体</div><div class="sub">indigo body</div><div class="tap">点击翻面</div></div><div class="back">靛蓝色光芒对应的能量体；在物理复合体死亡后的阶段，它支持大量疗愈与回顾。<em>像夜班后的休息室：先躺一会儿、写好交接记录，再决定要不要接下一班。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">流浪者</div><div class="sub">wanderer</div><div class="tap">点击翻面</div></div><div class="back">自愿从更高密度投生到第三密度、帮助收割的存有；按九人议会批准的计划执行，使命完成便回归家园振动。<em>像签了合同的外派员工：任期与任务都写在计划里。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">生命能</div><div class="sub">vital energy</div><div class="tap">点击翻面</div></div><div class="back">器皿被通讯使用而不受损所需的「燃料」。本集它维持在正常振动强度——这是 Ra 开场「欣慰」的原因。<em>像手机的电池健康度：只要电量结构稳，怎么用都不伤机。</em></div></div>
+    </div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ S5 负面空间/时间 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>负面空间/时间：为什么「捞回来」不是选项</h2></div>
+  <p class="sec-lead">高我不愿进入负面时间/空间，而一个被错置进去的正面实体，下一步竟是要再投生到负面空间/时间。发问者反复追问「为什么不能直接提取回家园」。Ra 先请他把「不情愿」从方程式中移除，再给出机制；本集末尾（70.23）补上完整答案：纯粹负面性如重力井，要先积够极性，才有逆转的势差。</p>
+  <div class="card">
+    <h3>匹配律：每个时间/空间对应一种振动</h3>
+    <div class="q">发问者问：为什么进入负面时间/空间之后，必须投生到负面空间/时间？</div>
+    <div class="quote">
+      <p class="en">Each time/space is an analog of a particular sort, or vibration, of space/time. When a negative time/space is entered by an entity, the next experience will be that of the appropriate space/time.</p>
+      <p class="zh">每个时间/空间都是某种特定的空间/时间——某种特定振动的类似物。当一个实体进入负面时间/空间，它的下一个体验将是与之相称的空间/时间。</p>
+      <span class="src">—— Session 070 · (70.14)</span>
+    </div>
+    <div class="plain">位置由机制而非愿望决定：进入某种振动的时间/空间，下一个体验就是与之相称的空间/时间——通常由形态制造身体安排妥当。这也回答了「为什么不能插队提取」：没有走后门这一说。</div>
+    <div class="case"><b>签证与机票：</b>一个人持旅游签误入了不允许降落的国度，边检不会把他「传送」回家，而是按流程把他送进对应的处置程序——进入哪种状态，就进入与之匹配的下一步。实体与空间/时间的对应，同样不讲人情、只讲振动。</div>
+  </div>
+  <div class="card">
+    <h3>重力井：为什么正面极性守不住</h3>
+    <div class="q">本集压轴，发问者把真正想问的摊开：一个正面实体陷入负面环境后，为什么必须重修「服务自我」的课程、发展出极性，才能释放势差、改变极性？</div>
+    <div class="quote">
+      <p class="en">The entity which incarnates into negative space/time will not find it possible to maintain any significant positive polarity as negativity, when pure, is a type of gravity well, shall we say, pulling all into it.</p>
+      <p class="zh">投生到负面空间/时间的实体将发现，自己无法维持任何显著的正面极性——因为纯粹的负面性像一口重力井，把一切拉向它自身。</p>
+      <span class="src">—— Session 070 · (70.23)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Thus the entity, while remembering its learned and preferred polarity, must needs make use of the catalyst given and recapitulate the lessons of service to self in order to build up enough polarity in order to cause the potential to occur for reversal.</p>
+      <p class="zh">于是，这个实体在记得自己已学与偏好的极性的同时，必须利用所给予的催化剂、重修服务自我的课程，以积累足够的极性，让逆转所需的势差得以发生。</p>
+      <span class="src">—— Session 070 · (70.23)</span>
+    </div>
+    <div class="plain">在纯负面的环境里守不住正面极性——像在漩涡里保持「逆流姿势」；要掉头，得先顺着流积攒足以反转的动能。Ra 同时坦率指出：这一系列提问有些混乱，并邀请发问者下次朝关切的核心发问（详见收官章）。</div>
+    <div class="case"><b>逆流游泳：</b>游进激流回旋赛道主流的人会发现，在吸力里根本无法保持「逆流姿势」——想改变方向，得先顺着水势积攒足够的动能与角度。对应 Ra 的机制：正面极性在负面环境中无法维持，须先积累极性才能形成逆转的势差。</div>
+    <div class="case"><b>内卷团队里的合作者：</b>一位信奉协作的工程师被调进纯业绩导向的团队：不抢资源就出局。他记得自己偏好的方式，却先得按系统规则攒够筹码，才谈得上改变方向——对应「记得已学与偏好的极性，同时必须利用催化剂、重修服务自我的课程」。</div>
+  </div>
+  <div class="card">
+    <h3>六步推演：误入之后如何回头（点节点查看）</h3>
+    <div class="flow-track" id="flowTrack2"></div>
+    <div class="flow-detail" id="flowDetail2"></div>
+    <div class="flow-ctrl"><button class="tri-btn" id="flowPrev2">上一步</button> <button class="tri-btn" id="flowNext2">下一步</button></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ S6 归途与飞船 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>时间/空间的地理：流浪者归途与钟形飞船</h2></div>
+  <p class="sec-lead">发问者承认自己「真的很困惑」，决定用一连串具体问题给抽象机制搭脚手架：流浪者死后去哪？为什么不能从负面时间/空间直接提取？Ra 顺手用自家飞船的造法，把「时间/空间」变成看得见的东西。</p>
+  <div class="card">
+    <h3>流浪者的归途：合同期满，回到家园振动</h3>
+    <div class="q">一个第四、第五或第六密度的流浪者死在这第三密度行星上，死后会进入第三密度的时间/空间吗？</div>
+    <div class="quote">
+      <p class="en">If the agreed-upon mission is complete the wanderer’s mind/body/spirit complex will go to the home vibration.</p>
+      <p class="zh">如果约定的使命已经完成，流浪者的心/身/灵复合体将回到家园振动。</p>
+      <span class="src">—— Session 070 · (70.15)</span>
+    </div>
+    <div class="plain">看合同：去留取决于九人议会批准的计划——有人只献身一次投生，有人长达两个 25,000 年周期；使命完成就走，不在第三密度逗留。至于人数：过去五万年间「有一些」，更多人选择加入最后一个 25,000 年周期，而为收割（harvest，密度毕业的时刻）而来的则许许多多。</div>
+    <div class="case"><b>外派合同到期：</b>一名外派员工的合同（由双方批准）写明任期，期满即回国——对应流浪者按计划执行：任期长短不一，但「使命完成即回归」这条规则人人相同。</div>
+  </div>
+  <div class="card">
+    <h3>死后不是「回家」，而是去另一个区域</h3>
+    <div class="q">发问者的困惑在此：既然流浪者死后能回家园行星，为什么不能把误入负面时间/空间的实体也「提取」回去？</div>
+    <div class="quote">
+      <p class="en">After the death of the physical complex in yellow-ray activation, the mind/body/spirit complex moves to a far different portion of time/space in which the indigo body will allow much healing and review to take place before any movement is made towards another incarnative experience.</p>
+      <p class="zh">黄色光激活的物理复合体死亡之后，心/身/灵复合体会移入时间/空间中一个远为不同的区域；在那里，靛蓝光体将允许大量疗愈与回顾发生，然后才朝下一次投生体验迈出任何移动。</p>
+      <span class="src">—— Session 070 · (70.17)</span>
+    </div>
+    <div class="plain">Ra 指出发问者算错了一处：先前谈的负面时间/空间是「投生前」的位置，与死后所在是时间/空间中不同的区域。而时间/空间并不比空间/时间更「同质」——它有自己完整的幻象、模式与法则，不是一块可以随意搬运的均匀空间。</div>
+    <div class="case"><b>夜班后的休息室：</b>急诊护士下夜班不直接接下一班，先在休息室躺一会儿、写好交接记录，再决定是否续班——对应死后阶段：靛蓝光体先支持疗愈与回顾，之后才考虑下一次投生。两个「区域」各有各的用途，不能混着走。</div>
+  </div>
+  <div class="card">
+    <h3>钟形飞船：把构念穿在光上</h3>
+    <div class="q">为了理解这种「地理学」，发问者问起 18,000 与 11,000 年前 Ra 乘坐的钟形飞船——上部有舷窗、底部三个相隔 120° 的半球，曾被 George Adamski 拍下。Ra 确认细节无误后，讲出造法。</div>
+    <div class="quote">
+      <p class="en">When we were where we wished to be, we then clothed the construct of light with that which would appear as the crystal bell.</p>
+      <p class="zh">当我们到达希望抵达之处，我们便为光之构念「穿上」那会显现为水晶钟的形态。</p>
+      <span class="src">—— Session 070 · (70.19)</span>
+    </div>
+    <div class="plain">造船分两步：先在时间/空间形成思想构念（那里接近光速——时间变得无限、质量止息，能掠过边界者可被放置到想去之处）；到达后再为光之构念穿上水晶钟外形，穿过边界进入空间/时间。于是有两个构念：非物质的与物质化的。钟形与底部三个半球在美学上悦目，兼具推进系统的一部分功能，并非起落架。</div>
+    <div class="timeline">
+      <div class="tl-item"><div class="t">第一步 · 在时间/空间成形</div><div class="d">一个思想构念先在时间/空间中形成——那是一段接近光速的区域。</div></div>
+      <div class="tl-item"><div class="t">边界条件 · 时间无限、质量止息</div><div class="d">在这种接近下，能掠过这片时间/空间「边界强度」者，可以被放置到它想去的地方。</div></div>
+      <div class="tl-item"><div class="t">穿上外形 · 水晶钟</div><div class="d">到达目的地后，Ra 为光之构念「穿上」那会显现为水晶钟的形态。</div></div>
+      <div class="tl-item"><div class="t">进入空间/时间</div><div class="d">外形穿过边界显形——于是有两个构念：非物质的时间/空间构念，与物质化的空间/时间构念。</div></div>
+    </div>
+    <div class="case"><b>建模与打印：</b>先用软件建好三维模型（无形的思想构念），3D 打印机再把模型物化成手中实物——对应钟形飞船的造法：先在时间/空间成形构念，再让它「穿上外形」进入空间/时间。设计不占地方，却决定一切。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ S7 收官 ============ -->
+<section class="chapter" id="s7">
+  <div class="sec-head"><span class="num">07</span><h2>收官：机械不是核心，朝问题的核心发问</h2></div>
+  <p class="sec-lead">问完飞船，发问者担心自己在「浪费时间」。Ra 给出温和而清晰的定位：物理学与形而上学概念都是机械性的，并非灵性进化的核心；对爱与光的研究远为富有成效——但这段材料「有些许趣味且无害」。</p>
+  <div class="card">
+    <h3>Ra 的定位：这些概念是机械性的</h3>
+    <div class="q">发问者直问：我研究空间/时间与时间/空间，是在浪费时间吗？这个问题值得继续挖吗？</div>
+    <div class="quote">
+      <p class="en">Since the concepts of space/time, or physics, and time/space, or metaphysics, are mechanical, they are not central to the spiritual evolution of the mind/body/spirit complex.</p>
+      <p class="zh">由于空间/时间（物理学）与时间/空间（形而上学）的概念是机械性的，它们并非心/身/灵复合体灵性进化的核心。</p>
+      <span class="src">—— Session 070 · (70.22)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The study of love and light is far more productive in its motion towards unity in those entities pondering such concepts. However, this material is, shall we say, of some small interest and is harmless.</p>
+      <p class="zh">对那些沉思这类概念的实体而言，对爱与光的研究在朝向合一的运动中远为富有成效。不过，这份材料容我们说有些许趣味，且是无害的。</p>
+      <span class="src">—— Session 070 · (70.22)</span>
+    </div>
+    <div class="plain">机械知识可以「无害地有趣」，但真正推动进化的功课是爱与光——优先级要摆对。Ra 不否定发问者的好奇心，只是把它放回合适的位置。</div>
+    <div class="case"><b>沉迷底层源码：</b>一位工程师研究框架底层源码入了迷，导师提醒：用户价值与产品设计才是核心功课——底层机制「有趣且无害」，但别让它取代真正推动成长的部分。这正是 Ra 给这类问题划的位置。</div>
+  </div>
+  <div class="card">
+    <h3>Ra 的邀请与发问者的回应</h3>
+    <div class="q">压轴回答之后，Ra 主动发出一个不同寻常的邀请——发问者这一系列提问该怎么调整？</div>
+    <div class="quote">
+      <p class="en">There is much in this line of questioning which is somewhat muddled. May we, at this point, allow the questioner to rephrase the question or to turn the direction of query more towards that which is the heart of its concern.</p>
+      <p class="zh">这一系列提问中有许多内容有些混乱。在这一点上，可否容许发问者重新表述问题，或把询问的方向更转向其关切的核心？</p>
+      <span class="src">—— Session 070 · (70.23)</span>
+    </div>
+    <div class="plain">如实记录这一幕：Ra 不替发问者圆场，而是把「如何提问」也当成功课。发问者接受邀请——下次集会将更转向核心，并为走偏致歉；Ra 回应：你们非常尽责，校准尤其良好，并将从本次起保留器皿能量储备。</div>
+    <div class="case"><b>绕远路的学生：</b>学生考完发现自己答偏了题，向老师道歉；老师答：你的卷面态度无可挑剔，下次先看清题目要考的核心——对应发问者的致歉与 Ra 的安抚：方法可以修正，认真本身已被看见。</div>
+  </div>
+  <div class="saying">
+    <p class="en">Go forth, therefore, rejoicing and glorying in the power and in the peace of the One Infinite Creator.</p>
+    <p class="zh">因此，前行吧，在太一无限造物主的力量与平安中欢欣、并引以为荣。</p>
+    <span class="src">—— Session 070 · (70.24)</span>
+  </div>
+  <div class="card">
+    <h3>归类练习：这句话说的是哪一侧？（点选项作答）</h3>
+    <p class="sec-lead" style="margin-bottom:8px">本集反复在空间/时间与时间/空间之间切换。判断下面每个场景属于哪一侧。</p>
+    <div id="sortArea1"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 070（<code>split/Ra_Session_070.md</code>）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra070-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本集定制交互 ===== */
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+initStepper('flowTrack1','flowDetail1','flowPrev1','flowNext1',[
+ {t:'器皿状况',d:'<span class="qa-q">问：器皿的状况如何？</span><b>答：</b>Ra 欣慰地报告「如前所述」——生命能维持在正常振动强度；只要这个能量复合体令人满意，就可以使用器皿而不致耗损。(70.1–70.2)'},
+ {t:'攻击为何加剧',d:'<span class="qa-q">问：过去一天心灵攻击猛烈加剧，有原因吗？</span><b>答：</b>有——原因正是你们对「启蒙」的密集寻求：寻求加强，猎户访客的扰动也随之加码；而器皿的潜意识意志早已给生命能设下防护。(70.3–70.4)'},
+ {t:'插入：回溯催眠',d:'<span class="qa-q">问：用回溯催眠揭示前世记忆，是服务还是伤害？</span><b>答：</b>与催眠师无关，只与被催眠的实体如何使用这些信息有关；若出于服务之心、且只在真诚请求下进行，催眠师就是在尝试服务。(70.5)'},
+ {t:'高我是什么',d:'<span class="qa-q">问：高我与心/身/灵复合体是什么关系？</span><b>答：</b>高我是第六密度中期的实体，回过头来向它过去的自我提供服务；你同时存在于所有层级，高我是「未来的你」。(70.6–70.10)'},
+ {t:'高我会操控吗',d:'<span class="qa-q">问：高我是否在操控过去的自己走完各密度？</span><b>答：</b>不——可能时保护，被请求时引导，自由意志至高无上；接受「真正的同时性」后，决定论与自由意志的矛盾自行消融。(70.11–70.13)'},
+ {t:'为何投生负面空间/时间',d:'<span class="qa-q">问：被错置进负面时间/空间的正面实体，为何必须投生负面空间/时间？</span><b>答：</b>每个时间/空间都是某种空间/时间振动的类似物；下一个体验将是与之相称的空间/时间，由形态制造身体安排。(70.14)'},
+ {t:'流浪者与飞船',d:'<span class="qa-q">问：流浪者死后去哪？钟形飞船又是怎么造的？</span><b>答：</b>使命完成即回「家园振动」；飞船则先在时间/空间形成思想构念，再穿上水晶钟外形进入空间/时间。(70.15–70.21)'},
+ {t:'收束',d:'<b>答：</b>Ra 温和定位：空间/时间（物理学）与时间/空间（形而上学）是机械性的，并非灵性进化的核心；对爱与光的研究远为富有成效。并邀发问者下次朝关切的核心发问。(70.22–70.24)'}
+]);
+
+initStepper('flowTrack2','flowDetail2','flowPrev2','flowNext2',[
+ {t:'误入',d:'一个正面实体在某种情形下进入（被错置到）负面时间/空间——高我不愿随行进入的那一侧。'},
+ {t:'匹配律',d:'每个时间/空间都是某种特定振动之空间/时间的类似物：进入负面时间/空间，下一个体验便是与之相称的空间/时间。(70.14)'},
+ {t:'安排',d:'由心/身/灵复合体的形态制造身体（form-making body）把实体放进适当的投生位置——没有「直接捞回」的例外通道。'},
+ {t:'守不住',d:'投生负面空间/时间后，正面极性无法维持：纯粹的负面性如重力井（gravity well），把一切拉向它自身。(70.23)'},
+ {t:'重修',d:'实体记得自己已学与偏好的极性，却必须利用所给予的催化剂，重修服务自我（service to self）的课程。'},
+ {t:'势差',d:'极性积累到足够，逆转所需的势差才得以发生——从负面路径回头的前提，由此形成。(70.23)'}
+]);
+
+initSorter('sortArea1',[
+ {a:'你此刻正对着屏幕读这一页——身体活动所发生的体验层。',opts:['空间/时间','时间/空间'],ans:'空间/时间',exp:'物质、可测位置、单向时间——我们熟悉的日常世界，即空间/时间（物理学的领域）。'},
+ {a:'Ra 建造钟形飞船时，最先形成思想构念的那一侧。',opts:['空间/时间','时间/空间'],ans:'时间/空间',exp:'构念先在时间/空间成形，抵达目的地后再物质化到空间/时间。'},
+ {a:'物理复合体死亡后，靛蓝光体进行大量疗愈与回顾之处。',opts:['空间/时间','时间/空间'],ans:'时间/空间',exp:'黄色光激活的物理复合体死亡后，复合体移入时间/空间中远为不同的区域。'},
+ {a:'「黄色光激活的物理复合体」发生死亡的那一侧。',opts:['空间/时间','时间/空间'],ans:'空间/时间',exp:'死亡发生在物质侧的身体上——那是空间/时间的事件。'},
+ {a:'所有时刻同时运转、如地图上各城市同时亮灯之处。',opts:['空间/时间','时间/空间'],ans:'时间/空间',exp:'在时间/空间里，所有时间是同时的——这是它与空间/时间最大的分别。'}
+]);
+
+renderPath();
+</script>
+</body>
+</html>

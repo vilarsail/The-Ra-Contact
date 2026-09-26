@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 066 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 066 · 交互式学习模块</h1>
+  <p class="sub">这一集顺着「治疗者到底做了什么」追问到底：治疗者不疗愈，疗愈只发生在寻求者自己的意志里；随后又用金字塔充能螺旋与负面行星的疾病，把「身体为什么生病」拉回一个词——催化剂的使用效率。</p>
+  <div class="tagline">6 个主题 · 6 个学习步骤 · 17 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 疗愈的机制</a>
+<a href="#s3">③ 疗愈的真相</a>
+<a href="#s4">④ 充能螺旋</a>
+<a href="#s5">⑤ 疾病与极化</a>
+<a href="#s6">⑥ 收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>用问答推进器走一遍 35 个问答的脉络，例行问答收进折叠区</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>疗愈的机制：人体金字塔</b><span>能量如何流经治疗者自身的中心、从绿色中心出手</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>疗愈的真相：治疗者不疗愈</b><span>机会与自由意志、时间/空间中的以太体、意志归谁</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>金字塔充能螺旋</b><span>像电一样给细胞充电，却没有直接疗愈的应用</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>疾病与极化</b><span>负面行星的收割、未极化者的随机催化剂、地球的低效账本</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官：金句与伏笔</b><span>记住本集核心宣告，带上两个书面问题去读后续集会</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ s1 本章地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：一条从「怎么治」追到「为何有病」的问答线</h2></div>
+  <p class="sec-lead">本集承接前几次集会对疗愈与金字塔能量的铺垫：发问者不再问「疗愈是什么」，而是把镜头怼近——治疗者的能量从哪来、走哪条路、谁有资格操作；追问到底之后他忽然掉头，问起一个更大的问题：疾病这种「身体变貌」到底为什么存在。开场四问是例行照料，主体是一场围绕疗愈机制的深挖，结尾落在地球的「催化剂账本」上。</p>
+
+  <div class="card">
+    <h3>本集议题一览</h3>
+    <div class="table-wrap">
+    <table class="nine">
+      <tr><th>议题</th><th>出处</th><th>一句话</th></tr>
+      <tr><td>疗愈的机制</td><td>66.5</td><td>治疗者类似国王密室的金字塔作用，但能量要流经他自己的中心，从绿色中心出手</td></tr>
+      <tr><td>谁能疗愈</td><td>66.6-66.8</td><td>流浪者像学说话的婴儿——记忆在、能力待练；治疗先在自我身上实践</td></tr>
+      <tr><td>疗愈的真相</td><td>66.9-66.19</td><td>治疗者不疗愈，只提供机会；真正的疗愈在时间/空间中由以太体采纳</td></tr>
+      <tr><td>充能螺旋</td><td>66.22-66.28</td><td>金字塔顶端第三螺旋像电一样给每个细胞充电，却不能直接治病</td></tr>
+      <tr><td>疾病与极化</td><td>66.29-66.34</td><td>未被心智使用的催化剂会沉入身体成为变貌——地球的病，源于催化剂的低效</td></tr>
+    </table>
+    </div>
+    <p>整条追问线的终点，是 66.34 里这句朴素的总纲——它既是结尾的答案，也反照了前面所有关于疗愈的问答：</p>
+    <div class="quote">
+      <p class="en">Catalyst is offered to the entity. If it is not used by the mind complex it will then filter through to the body complex and manifest as some form of physical distortion.</p>
+      <p class="zh">催化剂被提供给实体；若心智复合体不使用它，它就下渗到身体复合体，显现为某种形式的身体变貌——疾病是「没被心智接住的功课」。</p>
+      <span class="src">—— Session 066 · (66.34)</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>问答脉络推进器：对话是怎么一步步展开的</h3>
+    <p>点节点或用上一步/下一步，看本集 35 个问答块如何收束成一条追问线。</p>
+    <div class="flow-track" id="mapTrack"></div>
+    <div class="flow-detail" id="mapDetail"></div>
+    <div class="flow-ctrl"><button class="tri-btn" id="mapPrev">上一步</button> <button class="tri-btn" id="mapNext">下一步</button></div>
+  </div>
+
+  <div class="case"><b>读书会上的老问题：</b>周五晚的读书会上，有人举手：「我认识一位很有灵气的老师，帮我『调』了好几次都没用，是不是我缘分不够？」——这正是本集要拆的问题：66.6 会告诉你能力受限于载具，66.10 会告诉你疗愈从头到尾只发生在寻求者自己身上，跟老师「灵不灵」关系不大。</div>
+  <div class="case"><b>胃痛与日记：</b>一位上班族长期胃痛，检查时好时坏；他开始每晚写日记，记录情绪波动与胃痛发作的对应关系，三个月后发作明显变少——这对应 66.34 的框架：催化剂若未被心智使用，就下沉到身体显现为变貌；被觉察、被使用了，就不必再走身体这条通道。</div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 后勤</span></summary>
+  <div class="body">
+    <p><b>(66.1) 器皿状态：</b>生命能有些耗竭但不严重，物理能量水平极低，其余如前所述。</p>
+    <p><b>(66.2) 能否请联邦帮忙：</b>发问者问能否在第一变貌（自由意志）之内寻求星际联邦减轻器皿的身体问题——Ra 的回答只有一个字：不。</p>
+    <p><b>(66.3-66.4) 照料重述：</b>按能力运动而不超量、营养、与同伴的社交、绿光芒或以上的性活动、以有帮助且充满爱的方式分享彼此经验——小组做得相当和谐；并叮嘱继续最近开始的练习，练习中身体变貌「似乎不那么强制了」。</p>
+  </div></details>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ s2 疗愈的机制 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>疗愈的机制：治疗者如何成为一座「人体金字塔」</h2></div>
+  <p class="sec-lead">发问者带着一个酝酿已久的模型来：结晶化治疗者像金字塔一样左手收光、右手放光，穿透身体的振动外壳，让对方的能量中心重新归位。Ra 肯定了方向，却改掉了最关键的一处——能量不是「抄近道」穿过治疗者，而是要走遍他自己的能量中心。</p>
+
+  <div class="card">
+    <h3>发问者的猜想与 Ra 的修正</h3>
+    <div class="q">我猜治疗者像金字塔：左手收集光、右手发出光，穿透振动外壳就能给对方「重新排线」——这个模型对吗？</div>
+    <div class="quote">
+      <p class="en">You are correct in your assumption that the crystallized healer is analogous to the pyramidal action of the King's Chamber position. There are a few adjustments we might suggest.</p>
+      <p class="zh">你对了一半：结晶化治疗者确实可以类比国王密室位置上的金字塔作用——但有几处需要调整。</p>
+      <span class="src">—— Session 066 · (66.5)</span>
+    </div>
+    <p>调整在哪？能量并非从左手直通右手：它要被极化伸出的手引入治疗者的场复合体，然后<b>流经治疗者自己的主要能量中心</b>，一路螺旋下行、转向、上升，最后才从绿色中心进入极化的右手，送往被治疗者。</p>
+    <div class="quote">
+      <p class="en">It is from the green center that the healing prana moves into the polarized healing right hand and therefrom to the one to be healed.</p>
+      <p class="zh">治疗用的普拉纳（prana，生命能量流）是从绿色中心出发、进入极化的治疗右手，再送达被治疗者的——出手点是「心」，不是「手」。</p>
+      <span class="src">—— Session 066 · (66.5)</span>
+    </div>
+    <div class="plain">治疗者不是光源，而是一条让能量走完全程的通道；通道的「出口」开在绿色光芒——也就是爱与接纳的那一层——而不是生存或权力的层面。</div>
+    <div class="analogy"><b>放大镜生火：</b>放大镜不产生任何热，它只是把已有的阳光聚成一点。结晶化治疗者同理：光来自智能能量（源头是造物主），治疗者只是一枚把光聚焦成可用的「治疗普拉纳」的透镜——所以说他「类似国王密室的金字塔作用」，作用相同，身份不同。</div>
+  </div>
+
+  <div class="card">
+    <h3>普拉纳的能量路径：一次疗愈在治疗者体内的五段旅程</h3>
+    <p>Ra 描述的路径有严格的次第，像一条规定好站点的环形线路——下面是这条线路的五个节点。</p>
+    <div class="timeline">
+      <div class="tl-item"><div class="t">引入：极化伸出的手</div><div class="d">能量经由以极化方式伸出的手，被带入治疗者的场复合体——入口是一双「摆好极性」的手。</div></div>
+      <div class="tl-item"><div class="t">汇流：脊柱底部与双脚</div><div class="d">能量流经各个能量点，下行到脊柱底部，并在一定程度上到达双脚——先「落地」，再谈上行。</div></div>
+      <div class="tl-item"><div class="t">转向与螺旋：红、黄中心</div><div class="d">穿过治疗者的主要能量中心：螺旋经双脚、在红色能量中心处转向、于黄色能量中心形成螺旋——生存与情感两层被依次通过。</div></div>
+      <div class="tl-item"><div class="t">绿色中心：国王密室的微观缩影</div><div class="d">普拉纳穿过绿色能量中心，形成国王密室普拉纳能量配置的微观缩影——治疗者的身体在此刻「变成」了一座小金字塔。</div></div>
+      <div class="tl-item"><div class="t">蓝色与门户：送回智能无限</div><div class="d">第三次螺旋经由蓝色能量中心，从那里通过门户送回智能无限；而治疗用的部分，则已从绿色中心分流进入右手。</div></div>
+    </div>
+    <div class="case"><b>充电宝要先有电：</b>你不会指望一个空充电宝给手机续命——它自己得先储好电。同样，想从右手送出治疗能量，能量必须先在治疗者自己的红、黄、绿各中心里走完整条回路；治疗者平日的平衡与畅通练习，就是在「给自己充电」。</div>
+  </div>
+
+  <div class="card">
+    <h3>黄色光芒的「快捷方式」：为什么 Ra 说效果可疑</h3>
+    <div class="q">有人用黄色光芒（生存与情感层）直接转移能量，也号称在「治疗」——这条路走得通吗？</div>
+    <div class="quote">
+      <p class="en">We may note that there are some who use the yellow-ray configuration to transfer energy, and this may be done, but the effects are questionable…</p>
+      <p class="zh">确实有人用黄色光芒配置来转移能量——做得到，但其效果是可疑的。可疑在哪？Ra 给出原因：这种转移<b>穿不透盔甲外壳</b>，于是寻求者会不断回来「续杯」，真正的疗愈却从未发生。</p>
+      <span class="src">—— Session 066 · (66.5)</span>
+    </div>
+    <div class="case"><b>续杯式「能量疗愈」：</b>某位来访者每逢焦虑就去找能量师「充一次电」，当下舒服，回家一周又打回原形，十年间离不开那位能量师——这正是 Ra 说的形态：盔甲外壳未被穿透，转移来的能量造不出来访者自己内部的重新校准，于是依赖取代了疗愈。</div>
+  </div>
+
+  <div class="card">
+    <h3>谁能操作这条路：流浪者像学说话的婴儿</h3>
+    <div class="q">来自第五、第六密度的流浪者记得「疗愈轻而易举」，为什么在地球上尝试却几乎无效？他失去了什么？</div>
+    <div class="quote">
+      <p class="en">You may see the wanderer as the infant attempting to verbalize the sound complexes of your peoples.</p>
+      <p class="zh">你可以把流浪者看成一个努力想开口说话的婴儿：沟通能力的记忆就在他尚未发育完全的心智里，但「说出话来」这件事不会立刻发生。</p>
+      <span class="src">—— Session 066 · (66.6)</span>
+    </div>
+    <p>Ra 接着把比喻补完：流浪者记得在家乡密度里做调整何等容易，可一旦进入第三密度，就受限于<b>自己选择加入的这份经验</b>——载具的规格限制了能力的展现。他能疗愈的几率只比本土实体略高，理由不是血统，而是他服务的渴望可能更强、并选定了这种服务方式。</p>
+    <div class="case"><b>海归工程师：</b>一位在海外顶尖实验室工作多年的工程师回国，发现老设备的工具、流程、电压全不一样，那些「闭着眼都会做」的技能一下使不上劲，得从头适配。流浪者同理：家乡密度的「轻而易举」还记在记忆里，但此刻他穿的是第三密度的「工作服」。</div>
+    <div class="quote">
+      <p class="en">This is correct. Only insofar as the healer has become balanced may it be a channel for the balancing of an other-self.</p>
+      <p class="zh">发问者确认「流浪者该先专注自身能量中心的平衡与畅通」——Ra 说：对。治疗者唯有自己先平衡，才能成为平衡另一个自我的管道。</p>
+      <span class="src">—— Session 066 · (66.8)</span>
+    </div>
+    <div class="plain">想疗愈别人？先疗愈自己——「治疗首先在自我身上实践」；至于双重激活的第四密度初学者，能力虽在，渴望却未必到位。</div>
+  </div>
+
+  <div class="fn-grid">
+    <div class="fn-card"><div class="front"><div class="cn">结晶化治疗者</div><div class="sub">crystallized healer</div><div class="tap">点击翻面</div></div><div class="back">能量中心已平衡、畅通的治疗者——不是「会治人的人」，而是一根通了电的导管：智能能量经他聚焦后，可供对方自我疗愈。<em>比喻：一枚聚焦阳光的放大镜，自身不是光源。</em></div></div>
+    <div class="fn-card"><div class="front"><div class="cn">普拉纳</div><div class="sub">prana</div><div class="tap">点击翻面</div></div><div class="back">生命能量流。本集语境里，它沿着治疗者的能量中心螺旋流动，穿过绿色中心后成为「治疗普拉纳」，进入极化的右手送达对方。<em>比喻：沿规定站点运行的环形电流。</em></div></div>
+    <div class="fn-card"><div class="front"><div class="cn">盔甲外壳</div><div class="sub">armoring shell</div><div class="tap">点击翻面</div></div><div class="back">身体外围的振动外壳（发问者口中的第一与第七脉轮包络）。能量转移若穿不透它，就无法带来真正的疗愈——这是黄色光芒「快捷方式」失效的原因。<em>比喻：只擦玻璃不修电路的「充电」，终究要回来续杯。</em></div></div>
+    <div class="fn-card"><div class="front"><div class="cn">时间/空间</div><div class="sub">time/space</div><div class="tap">点击翻面</div></div><div class="back">与「空间/时间」相对的「内侧」维度。本集的关键：疗愈是在时间/空间中完成的，再由以太体采纳、交给身体。<em>比喻：云端上的系统镜像——改的是模板，不是眼前这台机器。</em></div></div>
+    <div class="fn-card"><div class="front"><div class="cn">以太体</div><div class="sub">etheric body / form-making body</div><div class="tap">点击翻面</div></div><div class="back">形态形成体：身体在时间/空间中的「模板」。健康与否，取决于它采纳了哪一套配置。<em>比喻：模具——浇出来的成品（身体）长得像模具，而不像工人的心情。</em></div></div>
+    <div class="fn-card"><div class="front"><div class="cn">流浪者</div><div class="sub">wanderer</div><div class="tap">点击翻面</div></div><div class="back">从更高密度自愿投生到第三密度参与服务的实体。他记得家乡密度的轻易，却受限于所选载具——所以像婴儿学说话：记忆在，展现能力待练。<em>比喻：被外派到设备陈旧分厂的资深工程师。</em></div></div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ s3 疗愈的真相 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>疗愈的真相：治疗者不疗愈，疗愈发生在时间/空间</h2></div>
+  <p class="sec-lead">这是本集的重头戏。发问者一路追问：治疗者对「编程好的催化剂」下手算不算干预？自愈与被治有何区别？菲律宾的灵性手术到底改了什么？意志属于谁？Ra 的回答层层递进，最后收拢成一句话：治疗者从头到尾都不疗愈，他只是不执着地递出一个机会。</p>
+
+  <div class="card">
+    <h3>对「编程好的催化剂」下手，算干预吗？</h3>
+    <div class="q">对方的病是他自己用催化剂「编」出来的——治疗者去改它，会不会破坏对方给自己安排的功课？</div>
+    <div class="quote">
+      <p class="en">The role of the healer is to offer an opportunity for realignment, or aid in realignment, of either energy centers or some connection between the energies of mind and body, spirit and mind, or spirit and body.</p>
+      <p class="zh">治疗者的角色，是提供重新校准的机会、或协助校准——校准的对象可能是能量中心，也可能是心智与身体、灵性与心智、灵性与身体之间的连接（最后一种非常罕见）。</p>
+      <span class="src">—— Session 066 · (66.9)</span>
+    </div>
+    <p>关键在「机会」二字：寻求者由此得到一份对等的选择权——接受一种自我的新视角、一种能量流入的新排布。<b>若实体在任何层面想留在旧的变貌配置里，它就会留下</b>；若选择新配置，那是经由自由意志完成的。Ra 还顺带指出黄色光芒的先天局限：它本就不携带自由意志的过程。</p>
+    <div class="plain">治疗者递出选项，按不按下「接受」永远轮不到他来决定——这不是冷漠，而是对自由意志法则的遵守。</div>
+  </div>
+
+  <div class="card">
+    <h3>自愈与被治，有区别吗？——治疗者不疗愈</h3>
+    <div class="q">从哲学上讲，「我自己想通了病好了」和「被治疗者治好了」是一回事吗？</div>
+    <div class="quote">
+      <p class="en">The healer does not heal. The crystallized healer is a channel for intelligent energy which offers an opportunity to an entity that it might heal itself.</p>
+      <p class="zh">治疗者并不疗愈。结晶化治疗者是智能能量的管道，为一个实体提供「它或许可以自我疗愈」的机会——疗愈的执行者从来只有病人自己。</p>
+      <span class="src">—— Session 066 · (66.10)</span>
+    </div>
+    <p>因此两种情况<b>没有区别</b>——前提是治疗者绝不主动接近一个未曾先向他请求帮助的人。Ra 还把这盏灯照向所有普通从业者：如果传统治疗者能 fully 明白自己只负责「提供机会」而不负责「疗愈」，许多人肩上那副错位的责任重担会当场卸下。</p>
+    <div class="case"><b>好的心理咨询师：</b>资深咨询师从不说「我治好了你」——她提供一段安全的关系与一面镜子，来访者自己完成了改变。若她认定「我必须让这个人好起来」，焦虑和挫败会立刻压垮这段关系——这正是 Ra 说的「误解的责任」。</div>
+    <div class="quote">
+      <p class="en">Perhaps the greatest healer is within the self and may be tapped with continued meditation, as we have suggested.</p>
+      <p class="zh">也许最伟大的治疗者就在自我之内，可以通过持续的冥想来接通——结晶化的实体、金字塔形，只是「寻求疗愈」的其中一些方式。</p>
+      <span class="src">—— Session 066 · (66.12)</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>菲律宾灵性手术：改掉的到底是什么？</h3>
+    <div class="q">发问者的观察：灵性手术像一种「训练辅助」——病人看见物质化的血液，于是重配心智、相信疗愈已完成，从而自愈。对吗？</div>
+    <div class="quote">
+      <p class="en">For instance, in this instrument the removal of three small cysts was the removal of material having no interest to the entity.</p>
+      <p class="zh">器皿（Carla）身上的三个小囊肿就是例子：那是对她「毫无兴趣」的物质，于是在灵性手术体验之后一直保持非物质化，谁看都看不见。</p>
+      <span class="src">—— Session 066 · (66.13)</span>
+    </div>
+    <p>但另一次手术的对象是她的肾脏——这个部位承载着大量情感、心智与灵性负荷（其功能失调曾酿成重病，最终促成她有意识地选择服务）。结果：任何客观扫描仍会显示先前那副严重失调的样子。<b>表面上「没治好」，实际上她已接纳了新的存在配置。</b></p>
+    <div class="quote">
+      <p class="en">The key is not in the continuation of the dematerialization of distortion to the eye of the beholder but, rather, lies in the choosing of the newly materialized configuration which exists in time/space.</p>
+      <p class="zh">关键不在于变貌在旁观者眼里持续消失，而在于对那个存在于时间/空间中的新配置的「选择」——客观指标只是幻觉层面的旧照片。</p>
+      <span class="src">—— Session 066 · (66.13)</span>
+    </div>
+    <div class="case"><b>云端镜像更新：</b>运维改系统从来不改你眼前这台机器，而是改云端模板——下次开机设备就按新镜像跑。灵性手术改的正是「镜像层」（时间/空间中的配置）；至于本地屏幕上（空间/时间的身体）的旧状态要不要立刻刷新，由实体的意志决定。</div>
+  </div>
+
+  <div class="card">
+    <h3>疗愈在哪个维度发生：以太体采纳健康的配置</h3>
+    <div class="quote">
+      <p class="en">It is the adoption of the configuration which you call health by the etheric body in time/space which is the key to what you call health, not any event which occurs in space/time.</p>
+      <p class="zh">你们称为「健康」的关键，是以太体在时间/空间中对健康配置的<b>采纳</b>——而不是发生在空间/时间中的任何事件。手术刀、药片都只是外围道具。</p>
+      <span class="src">—— Session 066 · (66.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">for it is the will, the seeking, the desire of the entity which causes the indigo body to use the novel configuration and to reform the body which exists in space/time.</p>
+      <p class="zh">正是实体的意志、寻求与渴望，驱动靛蓝色体启用新配置、重塑空间/时间中的身体——这件事瞬间完成，可以说不考虑时间。</p>
+      <span class="src">—— Session 066 · (66.14)</span>
+    </div>
+    <p>Ra 还堵住一个漏洞：幼儿的疗愈「看起来」全由治疗者完成、孩子没参与——<b>从来不是这样</b>。</p>
+    <div class="quote">
+      <p class="en">This is never so, for the mind/body/spirit complex in time/space is always capable of willing the distortions it chooses for experience no matter what the apparent age, as you call it, of the entity.</p>
+      <p class="zh">时间/空间中的心/身/灵复合体始终有能力意愿它为体验所选的变貌，无论实体的表面年龄多小——连婴儿也是自己功课的作者。</p>
+      <span class="src">—— Session 066 · (66.14)</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>意志归谁：治疗者没有意志</h3>
+    <div class="q">这份穿透到时间/空间的渴望与意志，是被疗愈者独有的功能，还是治疗者也出一份力？</div>
+    <div class="quote">
+      <p class="en">the crystallized healer has no will. It offers an opportunity without attachment to the outcome, for it is aware that all is one, and that the Creator is knowing Itself.</p>
+      <p class="zh">结晶化治疗者没有意志。它不执着于结果地提供一个机会——因为它知道一切是太一，造物主正在认识祂自己。Ra 先说了一句更大的话：这整个活动，是造物主的活动。</p>
+      <span class="src">—— Session 066 · (66.15)</span>
+    </div>
+    <p>那「强烈的渴望」呢？Ra 的回答很细：渴望只需在<b>某一个层面</b>成立——有人意识上没求医，潜意识却准备好迎接疗愈带来的新一组变貌；有人嘴上求医心切，存在深处却认定某些「看似很扭曲」的配置其实是适当的，因为它们服务于自己沿期望极性进化的目标。</p>
+    <div class="quote">
+      <p class="en">An entity may not consciously seek healing and yet subconsciously be aware of the need to experience the new set of distortions which result from healing.</p>
+      <p class="zh">一个实体可能并没有在意识层面寻求疗愈，却在潜意识里知道：自己需要去体验疗愈将带来的那一组新变貌。</p>
+      <span class="src">—— Session 066 · (66.16)</span>
+    </div>
+    <div class="case"><b>同一间病房：</b>两位病人，同一个医生、同一套方案；一位三个月后能下地走路，一位病情原地踏步。把功劳全记在医生头上说不通——差别在于病人存在深处对「回到健康的生活」这件事是否真的点头。这正是 66.16-66.17 的场景化版本：渴望必须在某个层面成立，疗愈才有抓手。</div>
+    <div class="plain">疗愈=治疗者递机会＋寻求者某个层面的意志点头；两者缺一不可，而唯一算得上「疗愈」的，是后者。</div>
+    <div class="case"><b>冥想与坐姿的小注脚：</b>发问者顺势问「冥想时脊柱垂直有没有用」——Ra 只答「有些帮助」；对于「意识到机制的人能否借冥想理解所需心智配置、以求在这个节点更好地服务他人」，Ra 肯定，但提醒：身体模式的编程常有复杂原因，无论如何，冥想永远有助于认识自我（66.18-66.19）。</div>
+  </div>
+
+  <div class="card">
+    <h3>条件模拟器：一次疗愈要发生，需要哪几件事？</h3>
+    <p>拨动开关，看哪些条件是疗愈的「硬前提」——以及缺件时 Ra 会怎么说。</p>
+    <div id="healSim">
+      <div class="cond-row"><div class="name">寻求者先已发出请求<small>治疗者绝不主动接近未曾请求帮助的人（66.10）</small></div><label class="switch"><input type="checkbox" id="cond1" checked><span class="slider"></span></label></div>
+      <div class="cond-row"><div class="name">治疗者自身已平衡<small>唯有自己平衡，才能作他人平衡的管道（66.8）</small></div><label class="switch"><input type="checkbox" id="cond2" checked><span class="slider"></span></label></div>
+      <div class="cond-row"><div class="name">寻求者在意志的某个层面选择新配置<small>渴望只需在一个层面成立（66.16）</small></div><label class="switch"><input type="checkbox" id="cond3" checked><span class="slider"></span></label></div>
+    </div>
+    <div id="condResult"></div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ s4 充能螺旋 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>金字塔充能螺旋：能给细胞充电，却不能治病</h2></div>
+  <p class="sec-lead">话题一转，进入一组非常「工程」的问答：金字塔顶端发出的第三个螺旋（充能螺旋）对身体有什么用？怎么选材料、定尺寸、定频次？Ra 一一作答，但始终划清一条线——它是充电器，不是治疗仪。</p>
+
+  <div class="card">
+    <h3>第三个螺旋做了什么：像接电一样给每个细胞充电</h3>
+    <div class="q">你说头顶发出的充能螺旋可放在头下受益——它到底给了身体什么？</div>
+    <div class="quote">
+      <p class="en">The keenness of mind, the physical and sexual energy of body, and the attunement of will of spirit are all touched by this energizing influence.</p>
+      <p class="zh">心智的敏锐、身体的物理与性能量、灵性意志的调谐——都被这种充能影响触及；三种用途随取随用。</p>
+      <span class="src">—— Session 066 · (66.22)</span>
+    </div>
+    <p>Ra 先给了一个对比：可摄入的提神物质是「粗糙的」，靠粗暴地增加肾上腺素起效；而充能螺旋的振动让空间/时间与时间/空间中的<b>每个细胞</b>都如同接到电网上一般被充电。副作用只有一个——电池可能被过充。</p>
+    <div class="quote">
+      <p class="en">It is possible to over-charge a battery, and this is the cause of our cautioning any who use such pyramidal energies to remove the pyramid after a charge has been received.</p>
+      <p class="zh">电池是可能被过度充电的——正因如此，Ra 告诫所有使用金字塔能量的人：收到充能之后，就把金字塔移开。</p>
+      <span class="src">—— Session 066 · (66.22)</span>
+    </div>
+    <div class="plain">充能螺旋=温和版的全身充电宝：增益活力与心智，但「充完拔线」是铁律。</div>
+    <div class="case"><b>晒太阳与防晒：</b>适度的日晒让人精神抖擞、骨骼受益；暴晒则会晒伤。Ra 用同一逻辑描述这股能量：它「很像你们的太阳光线」，因此应当小心使用——这不是神秘禁忌，而是任何辐射都有的剂量常识。</div>
+  </div>
+
+  <div class="card">
+    <h3>使用细则：尺寸、材料、频次</h3>
+    <div class="q">放在头下的小金字塔，用什么材料、多大尺寸、一天几次？</div>
+    <p>Ra 的答案朴素得出奇：<b>尺寸</b>——以比例能发展出吉萨螺旋为前提，总高度以「垫在头下舒服」为准；<b>材料</b>——更贵的材料好不了多少，唯一不正确的选择是卑金属；<b>顶角</b>——就顶角能量而言吉萨是极好模型，但务必小到没有任何实体能爬进去；<b>频次</b>——多数人一天不超过一次（约三十分钟内），做灵性工作或可尝试两个较短时段。</p>
+    <div class="quote">
+      <p class="en">This is a radiation much like your sun's rays. Thus it should be used with care.</p>
+      <p class="zh">这是一种很像你们太阳光线的辐射——因此应当小心使用。Ra 甚至纠正了发问者「这是靛蓝中心功能」的猜测：它不属于以太体，也不属于自由意志。</p>
+      <span class="src">—— Session 066 · (66.26)</span>
+    </div>
+    <div class="case"><b>快充与过充：</b>手机整夜插着快充，电池健康度悄悄下降——「充满即拔」才是爱惜。金字塔充能同理：超过一次、或出现「突然的疲倦」，就是 Ra 说的过度辐射信号，身体在替你按下停止键。</div>
+    <div class="case"><b>金字塔帽子治腰痛：</b>有人听说金字塔能量神奇，买了一顶「金字塔帽」戴一整天，指望治好多年腰痛——方向完全错了：Ra 明确说这种能量<b>没有直接疗愈的应用</b>，它能缓解疲倦、提振身体活动、配合冥想助益冥想，仅此而已。</div>
+    <div class="quote">
+      <p class="en">There is no application for direct healing using this energy, although if used in conjunction with meditation it may offer to a certain percentage of entities some aid in meditation.</p>
+      <p class="zh">这种能量没有直接疗愈的应用——虽然与冥想结合时，或许能给一定比例的实体在冥想上一些帮助；大多数情况下，它最有助于缓解疲倦。</p>
+      <span class="src">—— Session 066 · (66.28)</span>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ s5 疾病与极化 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>疾病与极化：负面行星的收割 vs 地球的「催化剂账本」</h2></div>
+  <p class="sec-lead">结尾一组问答把镜头从个人疗愈拉到行星尺度：一个整体走向负面收割的行星，会像地球一样疾病泛滥吗？病到底是怎么「生成」的？Ra 的回答纠正了一个流行的因果想象，最后给出本集最实际的结论——疾病的多少，是催化剂使用效率的读数。</p>
+
+  <div class="card">
+    <h3>完全负面收割的行星：不和谐会写在行星脸上</h3>
+    <div class="q">一个整体负面极化、即将收割进第四密度的行星，收割前会经历地球式的疾病变貌吗？</div>
+    <div class="quote">
+      <p class="en">You are perceptive. The negative harvest is one of intense disharmony, and the planet will express this.</p>
+      <p class="zh">你很有洞察力。负面收割是一种强烈的不和谐，而行星会把这种不和谐表达出来——只是表达的方式未必是你想的「疾病遍地」。</p>
+      <span class="src">—— Session 066 · (66.29)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Physical-complex distortions of which you speak are likely to be less found as fourth-density negative begins to be a probable choice of harvest due to the extreme interest in the self which characterizes the harvestable third-density negative entity.</p>
+      <p class="zh">可收割的负面实体以对自我的极端兴趣为特征——对身体更多照料、对自我更多心智纪律。所以在收割临近时，身体变貌反而更少被见到。</p>
+      <span class="src">—— Session 066 · (66.32)</span>
+    </div>
+    <p>那这个行星收割前的主题是什么？<b>好战行动</b>——全球规模的战争态度恰恰是达成必要负面极化的常见途径；进入第四密度后，好战的参数从显化的武器变成思想层面。而振动层面，第三到第四密度的变化在正货行星上完全相同：第四密度更稠密、真实振动更难隐藏，负面实体同样借此形成社会记忆复合体，用一组新参数展示对他人的权力、服务自我。</p>
+    <div class="case"><b>极端的「自律狂」：</b>某位把人生全部资源投入权力目标的高管，饮食、作息、体能训练、心智训练样样严格——身体状态反而好得惊人。把「自律」换成「自我利益」的发动机，就接近 66.32 描述的可收割负面实体：自我关注与自我纪律，顺带养好了身体。</div>
+  </div>
+
+  <div class="card">
+    <h3>疾病是为制造极化而设计的吗？——不是</h3>
+    <div class="q">发问者猜想：疾病以某种方式被「生成」，用来在第三密度制造最初的极化分裂——这个因果对吗？</div>
+    <div class="quote">
+      <p class="en">It is more likely for positively oriented individuals to be experiencing distortions within the physical complex due to the lack of consuming interest in the self and the emphasis on service to others.</p>
+      <p class="zh">Ra 先否定「疾病制造极化」的因果，再给出真实的分布：正面导向的个体反而更可能有身体变貌——因为他们的注意力不在自我，而在服务他人。</p>
+      <span class="src">—— Session 066 · (66.33)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Moreover, in an unpolarized entity catalyst of the physical distortion nature will be generated at random.</p>
+      <p class="zh">而在一个未极化的实体那里，身体变貌性质的催化剂会被随机产生——期望的结果是你说的「极性的最初选择」；选择常常没做出来，催化剂就继续产生。</p>
+      <span class="src">—— Session 066 · (66.33)</span>
+    </div>
+    <div class="plain">疾病不是「制造极化的工具」，而是「需要极化经验的存有」身边随机或必然出现的催化剂——正负两极对它的处理方式截然不同。</div>
+    <div class="case"><b>永远在照顾别人的她：</b>社区里最热心的志愿者，谁的忙都帮，自己的体检一拖三年，小毛病一个接一个——这正是 66.33 说的正面导向画像：不是「好人多病」的诅咒，而是注意力从不在自己身上的自然结果。</div>
+    <div class="case"><b>压抑成病的员工：</b>一位员工把每份愤怒都咽进肚子，胃痛、失眠轮着来；学会觉察并恰当表达后，身体明显轻松——未觉察的催化剂走了身体的通道；被心智接住的催化剂，就不再需要以病的形式「送达」。</div>
+  </div>
+
+  <div class="card">
+    <h3>地球的「污水池」感：一笔催化剂的效率账</h3>
+    <div class="q">发问者直言：地球像个「变貌的污水池」，疾病总量在行星排行榜上一定名列前茅——这个感觉对吗？</div>
+    <div class="quote">
+      <p class="en">Catalyst is offered to the entity. If it is not used by the mind complex it will then filter through to the body complex and manifest as some form of physical distortion. The more efficient the use of catalyst, the less physical distortion to be found.</p>
+      <p class="zh">催化剂被提供给实体；若心智复合体不使用它，它就下渗到身体复合体，显现为某种形式的身体变貌——催化剂用得越高效，身体变貌就越少。</p>
+      <span class="src">—— Session 066 · (66.34)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Indeed, on some third-density planetary spheres catalyst has been used more efficiently. In the case of your planetary sphere there is much inefficient use of catalyst and, therefore, much physical distortion.</p>
+      <p class="zh">确实有一些第三密度球体把催化剂用得更高效；而你们的行星球体存在大量低效使用——所以身体变貌众多。地球的高患病率，是效率读数，不是惩罚。</p>
+      <span class="src">—— Session 066 · (66.34)</span>
+    </div>
+    <p>Ra 还补了一句对流浪者的体恤：他们不仅有应对第三密度振动模式的天生困难，还带着一份隐约的回忆——这些变貌在家乡振动里并不必要、也不常见。当然，Ra 也照例声明这是「一如既往的过度概括」：许多身体限制源于投生前的决定。</p>
+  </div>
+
+  <div class="card">
+    <h3>归类练习：这段描述属于谁？</h3>
+    <p>把每个场景归到正确的取向：正面导向 / 负面导向 / 未极化实体。点按钮即出答案与依据。</p>
+    <div id="sorterArea"></div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ s6 收官 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>收官：金句、伏笔与一句叮嘱</h2></div>
+  <p class="sec-lead">集会能量将尽（66.34 末 Ra 说只剩一次问答的余量），发问者用最后的机会留下了两个「书面问题」，Ra 给出了这批集会里少见的教学姿态：先听学生的观察，再谈细化。本集就以这两个伏笔和一句叮嘱收束。</p>
+
+  <div class="saying">
+    <p class="en">The healer does not heal. The crystallized healer is a channel for intelligent energy which offers an opportunity to an entity that it might heal itself.</p>
+    <p class="zh">治疗者并不疗愈。结晶化治疗者是智能能量的管道，为一个实体提供「它或许可以自我疗愈」的机会。——本集全部问答，都是这句话的展开。</p>
+    <span class="src">—— Session 066 · (66.10)</span>
+  </div>
+
+  <div class="card">
+    <h3>两个书面问题：留给你的功课</h3>
+    <div class="q">发问者掏出写好的两个问题：身体极性清单，以及原型心智的结构与内容——Ra 为什么不直接答？</div>
+    <div class="quote">
+      <p class="en">Each unmanifested self is unique. The basic polarities have to do with the balanced vibratory rates and relationships between the first three energy centers and, to a lesser extent, each of the other energy centers.</p>
+      <p class="zh">关于身体极性：每个未显化的自我都是独特的——基本极性关乎前三个能量中心之间平衡的振动速率与关系（其余中心较次要）。Ra 甚至说，这个问题本身就可能有助于对它的冥想。</p>
+      <span class="src">—— Session 066 · (66.20)</span>
+    </div>
+    <div class="quote">
+      <p class="en">You must realize that we offered these concepts to you so that you might grow in your own knowledge of the self through the consideration of them.</p>
+      <p class="zh">关于原型心智，Ra 婉拒了「直接讲授」：提供这些概念，是为了让你通过思考它们来增长对自我的认识——Ra 宁愿先听学生的观察，再建议细化探究的途径。</p>
+      <span class="src">—— Session 066 · (66.21)</span>
+    </div>
+    <div class="case"><b>先自己想，再翻答案：</b>读后续集会前，先拿一张纸冥想这两个问题——「我的身体极性可能是什么」「原型心智大概如何告知直觉」，写下自己的观察再去看 Ra 的展开。这正是 Ra 教学法的用法：他给的不是标准答案，而是思考的支架。</div>
+  </div>
+
+  <div class="card">
+    <h3>收束的叮嘱：在爱中继续</h3>
+    <div class="q">最后一问照旧：能做些什么让器皿更舒适、让通讯更好？</div>
+    <div class="quote">
+      <p class="en">Continue as always in love. All is well. You are conscientious.</p>
+      <p class="zh">一如既往地在爱中继续。一切都好。你们是尽责的。——随后 Ra 以惯常的告别收束集会：在太一无限造物主的爱与光中离开，向前去，在力量与和平中欢欣。</p>
+      <span class="src">—— Session 066 · (66.35)</span>
+    </div>
+    <div class="case"><b>把「提供机会」带回家：</b>下次安慰失恋的同事、帮陷入低谷的朋友时，试着只做一件事——递上一个倾听的时段、一杯热水，然后把选择权完整地留给对方，也不背「我必须让他好起来」的包袱。卸下错位的责任，你给出的帮助反而更干净——这就是 66.10 说的那副「会掉下来的重担」。</div>
+    <div class="plain">本集三件事：能量要流经治疗者自己的中心；疗愈只发生在寻求者的意志里；疾病的多少是催化剂使用效率的读数。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 066（<code>split/Ra_Session_066.md</code>）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra066-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+/* 问答脉络推进器：本集问答链 */
+initStepper('mapTrack','mapDetail','mapPrev','mapNext',[
+  {t:'例行照料',d:'<span class="qa-q">问：器皿状况如何？能否在第一变貌内请联邦帮忙减轻身体问题？（66.1-66.2）</span><b>答：</b>生命能有些耗竭但不严重，物理能量极低；第二个问题的回答只有一个字——「不」。照料要点早已给过：运动、营养、社交、分享，照做即可。'},
+  {t:'机制猜想',d:'<span class="qa-q">问：治疗者是否像金字塔——左手收光、右手放光，穿透振动外壳？（66.5）</span><b>答：</b>方向对——结晶化治疗者类似国王密室位置的金字塔作用；但要修正：能量须流经治疗者自身的主要能量中心，最后从绿色中心进入右手，送往被治疗者。'},
+  {t:'流浪者之谜',d:'<span class="qa-q">问：来自第五、六密度的流浪者为何几乎治不动？（66.6-66.7）</span><b>答：</b>像婴儿学说话——沟通的记忆在，展现能力受限于所选第三密度载具；能疗愈的几率只略高于本土实体，因为服务的渴望更强。双重激活的第四密度初学者则「渴望可能尚不存在」。'},
+  {t:'先疗愈谁',d:'<span class="qa-q">问：有渴望的流浪者该专注什么？（66.8）</span><b>答：</b>自身能量中心的平衡与畅通——唯有自己平衡，才能作他人平衡的管道：「治疗首先在自我身上实践」。'},
+  {t:'谁在疗愈',d:'<span class="qa-q">问：对「编程好的催化剂」施治算什么？自愈与被治有区别吗？（66.9-66.10）</span><b>答：</b>治疗者只提供重新校准的机会，接受与否由寻求者的自由意志决定；而「治疗者不疗愈」——他只是智能能量的管道，条件是绝不接近未曾先请求帮助的人。'},
+  {t:'在哪疗愈',d:'<span class="qa-q">问：灵性手术改掉了什么？意志属于谁？（66.13-66.16）</span><b>答：</b>疗愈在时间/空间中完成、由以太体采纳，再交给空间/时间的身体；关键是对新配置的选择，而非旁观者眼中的消失。意志是寻求者的——结晶化治疗者没有意志，不执着地递出机会。'},
+  {t:'充能螺旋',d:'<span class="qa-q">问：金字塔顶端的第三螺旋有什么用？（66.22-66.28）</span><b>答：</b>像接电一样给每个细胞充电——增益心智、体能与灵性意志的调谐；但充完要移开，一天至多一次，且没有直接疗愈的应用。'},
+  {t:'疾病与极化',d:'<span class="qa-q">问：负面行星收割前疾病遍地吗？地球为何像个「污水池」？（66.29-66.34）</span><b>答：</b>可收割的负面实体因极端自我关注反而更少身体变貌；未被心智使用的催化剂才沉入身体成为变貌——地球的病，是催化剂低效使用的读数。本集问答链就此收束。'}
+]);
+
+/* 术语卡翻面 */
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+/* 疗愈条件模拟器 */
+function healSim(){
+  const c1=document.getElementById('cond1').checked;
+  const c2=document.getElementById('cond2').checked;
+  const c3=document.getElementById('cond3').checked;
+  const r=document.getElementById('condResult');
+  const missing=[];
+  if(!c1)missing.push('请求先已发出');
+  if(!c2)missing.push('治疗者自身已平衡');
+  if(!c3)missing.push('意志在某个层面选择新配置');
+  if(missing.length===0){
+    r.classList.remove('fail');
+    r.innerHTML='<b>疗愈作为机会被给出，并被寻求者采纳：</b>以太体在时间/空间中接受健康的新配置，空间/时间的身体随之更新——瞬间完成。但请注意：即便如此，功劳也不属于治疗者，它只是一根不执着的管道（66.10、66.15）。';
+  }else{
+    r.classList.add('fail');
+    let why='';
+    if(!c1)why+='治疗者不能主动上门：疗愈对象必须先向他请求帮助，否则边界被越过（66.10）。';
+    if(!c2)why+='治疗者自身未平衡时还当不了管道——疗愈先要在自我身上实践（66.8）。';
+    if(!c3)why+='机会已递出，但寻求者在意志的某个层面仍认定旧变貌是「适当的」——他会留在原配置里。这不是失败，而是自由意志（66.9、66.16）。';
+    r.innerHTML='<b>缺少：'+missing.join('、')+'。</b>'+why;
+  }
+}
+document.querySelectorAll('#healSim input').forEach(el=>el.addEventListener('change',healSim));
+healSim();
+
+/* 归类练习：取向判断 */
+initSorter('sorterArea',[
+  {a:'他把作息、饮食、心智训练管理得极其严格，身体被照顾得很好——但这一切是为了保持对他人的掌控。',opts:['正面导向','负面导向','未极化实体'],ans:'负面导向',exp:'可收割的负面实体以极端自我兴趣为特征：对身体更多照料、对自我更多心智纪律（66.32）。'},
+  {a:'她把几乎所有时间用来照顾别人，很少留意自己的身体，小毛病一个接一个。',opts:['正面导向','负面导向','未极化实体'],ans:'正面导向',exp:'正面导向个体更可能有身体变貌——缺乏对自我的热切关注，注意力全在服务他人（66.33）。'},
+  {a:'他还没想清楚要走哪条路，身体问题莫名其妙地随机冒出来，像在不断催他做选择。',opts:['正面导向','负面导向','未极化实体'],ans:'未极化实体',exp:'未极化实体中，身体变貌性质的催化剂随机产生，期望的结果是极性的最初选择（66.33）。'},
+  {a:'面对愤怒，他不压在心里生闷病，而是把它用作针对愤怒对象的、有表达性的破坏力量。',opts:['正面导向','负面导向','未极化实体'],ans:'负面导向',exp:'可收割的负面实体更可能把情绪变貌用作表达性、破坏性的催化剂，指向愤怒的对象（66.32）。'},
+  {a:'一个行星群体靠全球规模的好战态度达成了必要的负面极化，战争是收割前的主题。',opts:['正面导向','负面导向','未极化实体'],ans:'负面导向',exp:'第三密度负面晚期，好战行动是更紧迫的关切；全球规模的好战态度常是实现必要负面极化的途径（66.31）。'}
+]);
+
+renderPath();
+</script>
+</body>
+</html>

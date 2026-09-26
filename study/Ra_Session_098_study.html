@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 098 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 098 · 交互式学习模块</h1>
+  <p class="sub">这一集几乎整场都在「善后」：Ra 逐层拆解第五密度负面魔法工作凭什么还在起作用——蓝光阻塞、过敏这条续供管道、散步时为何发作——并给出移除的路径；随后转入猫 Gandalf 的愤怒与癌症，讲清「可收割的第三密度」；最后以磁带咔哒声后的收工约定与一张会唱歌的松木桌收尾。</p>
+  <div class="tagline">「6 个主题 · 6 个学习步骤 · 25 组案例」</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 准备与净化</a>
+<a href="#s3">③ 工作的续命机制</a>
+<a href="#s4">④ 辨析与出路</a>
+<a href="#s5">⑤ 猫 Gandalf</a>
+<a href="#s6">⑥ 收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>一场「善后」集会：喉咙保卫战与猫咪门诊，两条线怎么走（§1）</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>准备与净化</b><span>取消会前冥想的后果：致意只是换了时间点，效力不减（§2）</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>工作的续命机制</b><span>立足点、续供渠道与强化回路：魔法工作凭什么还在站岗（§3）</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>辨析与出路</b><span>橙花是谁、踩踏是谁、过敏的根在哪、散步为何发作（§4）</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>猫 Gandalf</b><span>愤怒如何长成肿瘤，一只猫为何是「可收割的第三密度」（§5）</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官</b><span>咔哒声收工协议、会唱歌的松木桌与道别（§6）</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ §1 本章地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：一场「善后」集会，两条线索</h2></div>
+  <p class="sec-lead">1982 年 9 月 24 日。上一场的魔法工作余波未平——本集几乎没有新的宇宙论，发问者沿两条线推进：一是器皿的喉咙，负面工作借过敏续命，怎么辨析致意、怎么移除；二是老猫 Gandalf 的癌症，愤怒如何变成疾病、一只猫为何被称作「可收割的第三密度」。收尾处 Ra 破例主动预告离场时间，并验收了 Jim 新造的松木桌。</p>
+
+  <div class="card">
+    <h3>本集在全书中的位置：管道保卫战与猫咪门诊</h3>
+    <p>Ra 称那次负面同伴的工作是「一次强效的工作」，它试图关闭器皿的喉咙与嘴。本集要回答的是：它凭什么还在起作用、能怎么拆。另一条线由器皿的猫引出——Gandalf 脊柱附近的增生要不要手术、愤怒是不是病因、一只猫何以是「可收割的第三密度」。最后 Ra 主动打破常规，给出一条可选的收工协议。</p>
+    <div class="quote">
+      <p class="en">The working of your fifth-density companion, which still affects the instrument, was, as we have stated, a potent working. The totality of those biases which offer to the instrument opportunities for increased vital and physical strength, shall we say, were touched by the working.</p>
+      <p class="zh">你们第五密度同伴的那次工作——它至今仍在影响器皿——如我们先前所说，是一次强效的工作；那些能带给器皿增强生命与身体力量之机会的种种偏向，其全体都被这次工作触及。</p>
+      <span class="src">—— Session 098 · (98.5)</span>
+    </div>
+    <div class="plain">这一集教的是「拆除」：问掉一次攻击不等于拆掉一次攻击——要找到工作的立足点、断掉它的补给、识破它的帮手。</div>
+    <div class="case"><b>管道漏水检查：</b>工人上个月修过一次水管（上一场的询问处理），但墙里还藏着渗水点——本集干的全是「查漏」：水从哪儿继续渗（过敏渠道）、哪条缝在帮忙（蓝光阻塞）、彻底修好要动哪几处（两条移除建议）。两只猫的诊室，则是同一天里开的第二台「手术」。</div>
+    <div class="case"><b>大病复诊日：</b>大病初愈的人回医院，不是去学新知识，而是查指标、调药、定复查节奏。本集没有新的「大道理」，却把「为什么还难受、接下来怎么办」讲得极清楚——这正是复诊日的价值。</div>
+  </div>
+
+  <div class="card">
+    <h3>问答脉络推进器：八步走完这一集</h3>
+    <div class="flow-track" id="mapTrack"></div>
+    <div class="flow-detail" id="mapDetail"></div>
+    <div class="flow-ctrl"><button class="tri-btn" id="mapPrev">上一步</button> <button class="tri-btn" id="mapNext">下一步</button></div>
+  </div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 后勤</span></summary>
+  <div class="body">
+    <p><b>(98.0) 开场致意：</b>Ra 在太一无限造物主的爱与光中问候，通讯开始。</p>
+    <p><b>(98.1) 器皿状态：</b>物理能量赤字有所增加，生命能量变貌有所改善。</p>
+    <p><b>(98.17) 何时结束：</b>由团体自行斟酌——器皿仍开放可用，但物理变貌开始累积。</p>
+    <p><b>(98.18) 收尾关切：</b>对「改善接触或让器皿更舒适」的回应是「一切安好，你们的关切是恰当的」。</p>
+  </div></details>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ §2 准备与净化 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>准备与净化：取消冥想，攻击只是换了时间点</h2></div>
+  <p class="sec-lead">集会前，小组决定省掉惯常的会前冥想。发问者想确认这个改动有没有副作用，还带上一个他自称「胡乱猜测」的推断：负面实体是不是钻了那次冥想的空子。Ra 的回答把「准备」的本质讲透了——也顺带揭示了对面那位对手的行事风格。</p>
+
+  <div class="card">
+    <h3>准备的目的：净化，而非仪式</h3>
+    <div class="q">取消会前冥想，Ra 会怎么看？防护动作少了，攻击会不会跟着变少？</div>
+    <div class="quote">
+      <p class="en">The purpose of preparation for a working is the purification of each entity involved with the working. The removal of a portion of this preparation has a value determined by the purity of each, which takes part in the working, has achieved without that particular aid.</p>
+      <p class="zh">为一次工作做准备的用意，是让参与工作的每一个实体得到净化；取消其中一部分准备，其价值由各实体在不借助这份辅助时所达到的纯净程度决定。</p>
+      <span class="src">—— Session 098 · (98.2)</span>
+    </div>
+    <div class="plain">准备不是给 Ra 的礼仪，而是给参与者自己的净化；少做一份准备，后果由你本来的纯净度决定。</div>
+    <div class="case"><b>考前刷题与裸考：</b>平时靠错题本兜底的学生，某天决定不复习直接上场——分数掉不掉，取决于他不靠错题本时底子有多扎实。Ra 说的正是这个：被取消的那部分准备「价值几何」，要问你离开它还剩多少纯净。</div>
+    <div class="case"><b>被取消的热身：</b>教练赛前宣布取消热身，对手不会因此取消比赛——威胁照旧，只是你以更「生」的状态走进场地。这正对应下一问的答案：致意的效力并未因取消冥想而打折扣。</div>
+  </div>
+
+  <div class="card">
+    <h3>致意的时刻表：贴着工作来</h3>
+    <div class="q">发问者猜：负面朋友是利用那次会前冥想下的手——Ra 纠正的不是结论，而是机制。</div>
+    <div class="quote">
+      <p class="en">This entity greets the instrument as close to the working in your space/time continuum as is practicable. The elimination of that preparation caused the fifth-density entity to greet this instrument at this juncture of decision not to meditate. The greeting does not take what you would call a noticeable amount of your time.</p>
+      <p class="zh">这个实体向来把致意安排在尽可能贴近工作展开的时刻；取消了那项准备，第五密度实体便改在「决定不冥想」的关口上前致意——而且这次致意几乎不占用你们所说的明显时间。</p>
+      <span class="src">—— Session 098 · (98.3)</span>
+    </div>
+    <p>追问随之而来：那这次致意与做了冥想时同样有效吗？Ra 的回答只有一个词：「是」（98.4）。省掉防护动作，不会省掉攻击——只会换个时间点、以同等效力到来。</p>
+    <div class="plain">对手不挑「你做准备时」下手，挑「离工作最近的时刻」下手；防线的缺口挪到哪里，它就出现在哪里。</div>
+    <div class="case"><b>撤掉的门岗：</b>小区为省事撤了正门岗，访客并不会消失——他们改从侧门进来，而且照样掐着业主到家那一刻出现。负面致意「贴近工作时刻」的习性，与这种如影随形一模一样。</div>
+    <div class="case"><b>午休关机的空档：</b>有人习惯午休关机，某天没休息，推销电话立刻在「本该午休」的间隙打进来——对方一直在线，等的就是你的空档；整个「通话」耗时短到让你毫无察觉。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ §3 工作的续命机制 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>工作的续命机制：立足点、续供渠道与强化回路</h2></div>
+  <p class="sec-lead">器皿自己递上问题：是什么让负面同伴能继续致意？Ra 先声明这道题贴近混淆法则的边缘——只因确信器皿缺了信息仍会继续服务，才开口作答。随后给出一张三层结构的诊断图：工作本身、为它续供的渠道、以及替它加码的回路。</p>
+
+  <div class="card">
+    <h3>先划界限：Ra 为什么肯答这道题</h3>
+    <div class="q">问「敌方凭什么还能动手」，会不会问到不该问的地方？Ra 的开场白先处理了这个分寸。</div>
+    <div class="quote">
+      <p class="en">We tread close to the Law of Confusion, saved only by the awareness that given lack of information this instrument would, nonetheless, continue to offer its service.</p>
+      <p class="zh">我们此答已贴近混淆法则的边缘；之所以还能开口，只因知道一点：即便得不到这些信息，这个器皿也仍会继续她的服务。</p>
+      <span class="src">—— Session 098 · (98.5)</span>
+    </div>
+    <div class="plain">混淆法则（Law of Confusion，即自由意志法则）划出的界限不是「不能说」，而是「说了会不会替谁做决定」——器皿的意愿已定，信息才给得。</div>
+    <div class="case"><b>医生告知病情的分寸：</b>医生决定要不要向病人交代全部风险时，会掂量「说了之后病人会怎么选」。Ra 的分寸感类似：贴近法则的边缘仍肯作答，只因确信器皿无论听不听都会继续服务——信息不会动摇她的自由意志。</div>
+  </div>
+
+  <div class="card">
+    <h3>三层诊断：工作、续供、强化</h3>
+    <div class="q">那次工作的威胁半径有多大？它凭什么在询问之后还能继续起作用？</div>
+    <div class="quote">
+      <p class="en">The potential of this working is significant. The physical exercising, the sacred music, the varieties of experience, and indeed simple social intercourse are jeopardized by a working which attempts to close the throat and the mouth. It is to be noted that there is also the potential for the loss of this contact.</p>
+      <p class="zh">这次工作的潜力可观：体育锻炼、神圣音乐、种种体验，乃至最普通的社交往来，都受到一次试图关闭喉咙与嘴的工作的威胁；同样要注意，这次接触本身也有失去的可能。</p>
+      <span class="src">—— Session 098 · (98.5)</span>
+    </div>
+    <p>Ra 的诊断分三层。其一，<b>工作本身</b>强效且目标明确——封住喉咙与嘴。其二，<b>强化回路</b>：蓝光困难在第一次询问后并未结束，小组再次经历了对自己而言罕见的不清晰沟通阻塞，工作效力借此得到强化。其三，<b>续供渠道</b>：过敏不断为工作造成的变貌续命——要移除工作，必须完全清除喉咙区域的变貌，而过敏的持续加重让这件事变得棘手。</p>
+    <div class="quote">
+      <p class="en">The blue-ray difficulties were not entirely at an end after the first asking. Again, this group experienced blockage rare for the group; that is, the blue-ray blockage of unclear communication. By this means the efficacy of the working was reinforced.</p>
+      <p class="zh">第一次询问之后，蓝光的困难并未就此收场；这个小组又一次遇到对你们而言相当罕见的阻塞——沟通不清晰的蓝光阻塞。工作的效力正是借这条路子得到加强。</p>
+      <span class="src">—— Session 098 · (98.5)</span>
+    </div>
+    <div class="quote">
+      <p class="en">We suggest that the instrument’s allergies create a continuous means whereby the distortion created by the magical working may be continued. As we have stated, it shall be necessary, in order to remove the working, to completely remove the distortion within the throat area caused by this working. The continuous aggravation of allergic reactions makes this challenging.</p>
+      <p class="zh">器皿的过敏，为那次魔法工作造成的变貌提供了一条持续给它续命的途径；要移除这个工作，就必须把它在喉咙区域造成的变貌彻底清除——而过敏反应的不断加重，让这件事变得棘手。</p>
+      <span class="src">—— Session 098 · (98.5)</span>
+    </div>
+    <div class="plain">工作还站着，是因为它有立足点（喉咙变貌）、有续供（过敏）、有帮手（蓝光阻塞）——拆除也要按这三层来。</div>
+    <div class="case"><b>反复被抠开的结痂：</b>伤口刚结痂就被抠开（过敏持续加重），愈合自然遥遥无期（喉咙变貌无法被彻底清除）——Ra 点出的正是这个死循环：续供不断，拆除就无从谈起。</div>
+    <div class="case"><b>传话传走样的项目群：</b>团队里信息层层传走样，外部的搅局者反而如鱼得水——「不清晰的沟通」被阻塞，正是工作效力被强化的途径；这也解释了为什么小组会罕见地再次经历这种阻塞。</div>
+
+    <h3 style="margin-top:20px">条件模拟器：魔法工作凭什么还站着</h3>
+    <p>把 Ra 的诊断拆成三个开关。逐个关掉，看工作在哪一环松动。</p>
+    <div id="workingBox">
+      <div class="cond-row"><div class="name">立足点仍在<small>喉咙区域的变貌尚未被完全清除（98.5）</small></div><label class="switch"><input type="checkbox" id="wThroat" checked><span class="slider"></span></label></div>
+      <div class="cond-row"><div class="name">续供未断<small>过敏反应持续加重，为变貌续命（98.5）</small></div><label class="switch"><input type="checkbox" id="wAllergy" checked><span class="slider"></span></label></div>
+      <div class="cond-row"><div class="name">强化未停<small>蓝光阻塞未清，不清晰的沟通替它加码（98.5）</small></div><label class="switch"><input type="checkbox" id="wBlue" checked><span class="slider"></span></label></div>
+    </div>
+    <div id="workingResult"></div>
+  </div>
+
+  <div class="fn-grid">
+    <div class="fn-card"><div class="front"><div class="cn">魔法工作</div><div class="sub">magical working</div><div class="tap">点击翻转</div></div>
+      <div class="back">第五密度负面同伴施加在器皿身上的一次强效灵性攻击，试图关闭喉咙与嘴。只要喉咙区域的变貌不被彻底清除，它就能借过敏一直「续命」。<em>像一台装了备用电池的窃听器——拆掉主机没用，得连备用电源一起拔。</em></div></div>
+    <div class="fn-card"><div class="front"><div class="cn">蓝光阻塞</div><div class="sub">blue-ray blockage</div><div class="tap">点击翻转</div></div>
+      <div class="back">蓝光对应喉咙与沟通。「不清晰的沟通」被阻塞，本小组再次经历了对己而言罕见的一次——而工作的效力正借此被强化。<em>项目群里话传不清，错误决策就有人钻空子。</em></div></div>
+    <div class="fn-card"><div class="front"><div class="cn">混淆法则</div><div class="sub">Law of Confusion</div><div class="tap">点击翻转</div></div>
+      <div class="back">即自由意志法则：不得提供会剥夺他人选择的信息。本集 Ra 自陈此答「贴近混淆法则的边缘」，只因确信器皿缺了信息仍会继续服务，才开口。<em>老师可以画地图，不能替你选路。</em></div></div>
+    <div class="fn-card"><div class="front"><div class="cn">第二密度物质</div><div class="sub">second-density substances</div><div class="tap">点击翻转</div></div>
+      <div class="back">较低密度的动植物性材质与物质。器皿对它们中的多种过敏——散步时症状加重，这也是促成因素之一。<em>对过敏体质的人来说，公园本身就是一张花粉地图。</em></div></div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ §4 辨析与出路 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>辨析与出路：谁在致意，过敏的根在哪，散步为何发作</h2></div>
+  <p class="sec-lead">器皿列举了异常体验：喉咙症状、头晕、橙花香、踩到小生物的感觉。Ra 逐一「验明正身」——并非所有异常都来自敌人；随后给出移除工作的一急一缓两条路，顺手把「过敏是什么」讲到了心智的深层，最后回答「为什么总在散步时发作」。（头晕一项 Ra 未单独归属来源，不必强行安一个主。）</p>
+
+  <div class="card">
+    <h3>验明正身：橙花是朋友，踩踏是致意</h3>
+    <div class="q">橙花香味与「踩到想象生物」的感觉，分别来自谁？同一天出现的两种异常，源头可能完全相反。</div>
+    <div class="quote">
+      <p class="en">The orange blossom is the odor which you may associate with the social memory complex of fifth-density positive which is known to you as sound vibration, Latwii.</p>
+      <p class="zh">橙花的气味，你们可以把它认作第五密度正面社会记忆复合体——就是你们以声音振动「Latwii」所称的那位——的标志。</p>
+      <span class="src">—— Session 098 · (98.5)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The sensation of stepping upon the small animal and killing it was a greeting from your fifth-density negative companion also made possible by the above circumstance.</p>
+      <p class="zh">脚下踩到并压死小动物的那种感觉，是你们第五密度负面同伴的又一次致意——它同样是借着刚才那股敏感劲儿才成为可能。</p>
+      <span class="src">—— Session 098 · (98.5)</span>
+    </div>
+    <p>那次 Latwii 是应器皿自己的请求而陪伴的；气味之所以被感知，还因器皿正处于十八天周期的顶峰、格外敏感。同一双眼睛、同一天，接收到了正负两路的信号——分辨它们，是器皿的功课，也是这份记录给读者的功课。</p>
+    <div class="plain">异常不等于敌情：先问「这是谁」，再决定怎么回应——把朋友的香气当成攻击、或把攻击当成错觉，都会走错下一步。</div>
+    <div class="case"><b>同一条街的两种敲门声：</b>楼下既有快递员也有骗子出没——听见敲门声先问「谁」，而不是一律当坏人躲开，也不一律开门。器皿对致意的分辨正是这个功课：橙花要认出是 Latwii，踩踏感要认出是负面致意。</div>
+    <div class="case"><b>灵敏度调到最高的天线：</b>生病或情绪低谷时，人对气味与声音的感知会被放大——器皿处在十八天周期的顶峰，「接收灵敏度」被调到最高，正负两路信号都更容易被她收到。</div>
+
+    <h3 style="margin-top:20px">归类练习：这段体验来自谁？</h3>
+    <p>把下列日常场景归到正确的来源上——注意 Ra 的分法从不「一刀切」。</p>
+    <div id="sortArea"></div>
+  </div>
+
+  <div class="card">
+    <h3>过敏的深层定义与两条移除建议</h3>
+    <div class="q">过敏只是身体的小毛病吗？Ra 为什么一面建议动用药物，一面又把常规脱敏排除在外？</div>
+    <div class="quote">
+      <p class="en">The allergy may be seen to be the rejection, upon a deep level of the mind complex, of the environment of the mind/body/spirit complex. Thus the allergy may be seen in its pure form as the mental/emotional distortion of the deeper self.</p>
+      <p class="zh">过敏可以被看成：心智复合体的深层，对心/身/灵复合体整个环境的排斥；在它最纯粹的形式里，过敏就是深层自我的心智/情绪变貌。</p>
+      <span class="src">—— Session 098 · (98.5)</span>
+    </div>
+    <p>移除工作，Ra 给出一急一缓两条路。<b>急路</b>借用医生的知识：类固醇或抗生素类，或许能彻底清除工作赖以滋生的困难——但 Ra 同时提醒，这类强烈化学物质几乎总会带来远超预期的改变；疗程结束后过敏依旧，只是工作的效果不再起作用。在这种非正统的医疗情境里，Jerome 或能帮上忙。<b>缓路</b>是一位不愿具名、代号「祈祷轮」的治疗者：十次治疗，加上清晰解读并遵循过敏的优先事项——尤其是对食物的过敏。至于常规脱敏（以温和形式摄入同类毒素），Ra 明确排除：只治症状，对身体复合体的改变「相当不可取」。</p>
+    <div class="plain">急路拆的是「工作的着床处」，缓路调的是「排斥的源头」——两条路都不在「脱敏」这个治标的层面停留。</div>
+    <div class="case"><b>拔草不拔根：</b>喷除草剂只让叶子蔫下去，根还在土里；Ra 的两条建议都指向「把根挖出来」——要么清除工作着床的喉咙变貌，要么从深层心智入手调理那份排斥。</div>
+    <div class="case"><b>贴在冰箱上的忌口清单：</b>做完过敏原检测，真正起作用的是照着清单忌口——「清晰解读并遵循过敏的优先事项，尤其是食物」正是这件事的原话版本：数据要变成每天的餐盘决定。</div>
+  </div>
+
+  <div class="card">
+    <h3>为什么总在散步时发作</h3>
+    <div class="q">喉咙症状为何偏偏在散步时找上门？是走路招来的，还是它一直在？</div>
+    <div class="quote">
+      <p class="en">Lastly, the effects of the working become apparent upon the walking when the body complex has begun to exert itself to the point of increased respiration.</p>
+      <p class="zh">最后说散步：当身体复合体使劲到呼吸开始加重的那个点上，工作的效果就会显形。</p>
+      <span class="src">—— Session 098 · (98.5)</span>
+    </div>
+    <p>另一个促成因素，是器皿过敏的第二密度物质之多——户外正是这些东西密集出现的地方。所以不是「走路惹祸」，而是身体一发力、环境一喂料，本来就潜伏着的东西现了形。</p>
+    <div class="plain">散步只是显影液，不是病灶——发作的时机由「呼吸加快」与「户外过敏原」共同决定。</div>
+    <div class="case"><b>爬楼才闪的灯丝：</b>台灯的灯丝早就接触不良，平时亮着看不出来，爬了一趟楼回来才发现它在闪——工作的效果平时潜伏，身体一发力（呼吸加快）就现形；不是楼梯招来的，是它一直在。</div>
+    <div class="case"><b>春天的公园路线：</b>同一条遛弯路线，别的季节没事，一到春天就喷嚏不断——户外把花粉、毛屑这些「第二密度物质」成倍送到敏感者面前，症状自然挑散步发作。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ §5 猫 Gandalf ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>猫 Gandalf：愤怒如何长成肿瘤，以及一只猫的毕业资格</h2></div>
+  <p class="sec-lead">第二条线由器皿的猫引出。手术要不要做、观想与仪式短语管不管用、愤怒是不是病因——问题一路收窄，最后停在一个出人意料的推广上：任何心/身复合体都可能因愤怒发展出癌症。这一段也是全集中少有的、正面谈论动物灵性地位的段落。</p>
+
+  <div class="card">
+    <h3>手术之问与「可收割的第三密度」</h3>
+    <div class="q">老猫 Gandalf 脊柱附近长了增生——这次摘除比去年四月那次更需谨慎吗？术中观想光环绕他、定期重复仪式短语，能帮他康复吗？</div>
+    <div class="quote">
+      <p class="en">Although this entity is in body complex old—and, therefore, liable to danger from what you call your anesthetic—its mental, emotional, and spiritual distortions are such that it is strongly motivated to recover that it might once again rejoin the loved one. Keep in mind that this entity is harvestable third density.</p>
+      <p class="zh">这个实体的身体虽然已入老年——因此容易受你们所谓麻醉剂的伤害——但它在心智、情绪与灵性上的变貌，让它带着强烈的动机想要康复，好回到所爱的那个人身边。请记住：这个实体是可收割的第三密度。</p>
+      <span class="src">—— Session 098 · (98.6)</span>
+    </div>
+    <div class="q">Ra 特意补一句「可收割的第三密度」，是做什么用的？发问者随即追问了这一点。</div>
+    <div class="quote">
+      <p class="en">We stated this in order to elucidate our use of the term “spirit complex” as applied to what might be considered a second-density entity. The implications are that this entity shall have far more cause to abide and heal that it may seek the presence of the loved ones.</p>
+      <p class="zh">我们特意补上这一句，是为了说明「灵性复合体」这个词怎么会用在一个看起来只是第二密度的存有身上——含义是：它因此有远更充分的理由撑住、疗愈，好去寻求所爱之人的陪伴。</p>
+      <span class="src">—— Session 098 · (98.7)</span>
+    </div>
+    <p>至于还有没有别的建议——Ra 的回答是「没有」（98.8）。教学之外的分寸感也在此：说清该说的，不多添一条。</p>
+    <div class="plain">「可收割的第三密度」不是荣誉称号，而是康复资源的说明：一只心志坚定的猫，求生意愿本身就是药。</div>
+    <div class="case"><b>手术同意书上的麻醉风险栏：</b>兽医会指着「高龄动物麻醉风险」一行请主人签字——Ra 也点出老迈身体易受麻醉之害；但 Gandalf 的求生意志（回到所爱的人身边）本身就是康复的本钱。</div>
+    <div class="case"><b>床头的全家福：</b>有人靠床头摆着家人的照片撑过整个疗程——「有远更充分的理由撑住、疗愈，好去寻求所爱之人的陪伴」，这句话放在猫身上同样成立。</div>
+  </div>
+
+  <div class="fn-grid">
+    <div class="fn-card"><div class="front"><div class="cn">心/身复合体</div><div class="sub">mind/body complex</div><div class="tap">点击翻转</div></div>
+      <div class="back">尚未开启灵性通道的存有（如大多数动物）。Ra 确认：任何心/身复合体都可能因愤怒发展出癌症——这条规律不挑物种。<em>情绪落到细胞上，不需要先「毕业」。</em></div></div>
+    <div class="fn-card"><div class="front"><div class="cn">灵性复合体</div><div class="sub">spirit complex</div><div class="tap">点击翻转</div></div>
+      <div class="back">通往智能无限的通道。Ra 借 Gandalf 说明：一只猫也可能拥有灵性复合体——这取决于它的进化程度，而非物种标签。<em>毕业资格看学分，不看学籍。</em></div></div>
+    <div class="fn-card"><div class="front"><div class="cn">可收割的第三密度</div><div class="sub">harvestable third density</div><div class="tap">点击翻转</div></div>
+      <div class="back">已完成第三密度课程、准备好进入第四密度的存有。Gandalf 便是——因此它有「远更充分的理由」坚持疗愈，以回到所爱之人身边。<em>它是这门课的应届毕业生，不是陪读的。</em></div></div>
+    <div class="fn-card"><div class="front"><div class="cn">橙色光芒身体</div><div class="sub">orange-ray body</div><div class="tap">点击翻转</div></div>
+      <div class="back">橙色光芒对应身体复合体。多数生命路径借某种变貌（如癌症）离开物理身体时，离开的正是这具橙光身体。<em>房子旧了，搬家的时机常由房子先说。</em></div></div>
+  </div>
+
+  <div class="card">
+    <h3>原始原因与近因：愤怒如何长成肿瘤</h3>
+    <div class="q">增生是因为新猫进家、Gandalf 生气吗？Ra 把「因果」拆成了两层来回答。</div>
+    <div class="quote">
+      <p class="en">The original cause of what you call cancer was the distortion caused by this event. The proximate cause of this growth is the nature of the distortion of the body cells which you call cancer.</p>
+      <p class="zh">你们叫做癌症的东西，其最初的原因，是那件事造成的变貌；而这次增生的近因，则是你们叫做癌症的那种细胞变貌自身的性质。</p>
+      <span class="src">—— Session 098 · (98.9)</span>
+    </div>
+    <p>Ra 还确认 Gandalf 体内另有癌细胞变貌——右髋关节连接处一处、肝附近很小的一处、两侧「臂」下的小片细胞变貌——此刻无一能被缓解（98.10-98.11）。发问者随即追问：愤怒致癌，是否要求 Gandalf 是「可收割第三密度的心/身/灵复合体」？答案是否定的——任何心/身复合体都可能（98.14-98.15）。</p>
+    <div class="plain">愤怒是火种，细胞的变貌是干柴——Ra 分开「点火的那件事」与「柴本身的性质」，两层因果各自成立。</div>
+    <div class="case"><b>车祸与疤：</b>车祸（事件）留下疤（细胞变貌），疤的形态决定它日后会不会反复发炎——「最初的原因」是那次事件，「近因」是疤自身的性质；Ra 拆开的正是这两层。</div>
+    <div class="case"><b>家里添了新猫之后：</b>老猫因新成员进门而持续紧张，体检时查出肿瘤——情绪事件先落在心里，再落在细胞上；这不要求它是「特殊品种」的猫，正如不要求人有什么特殊体质。</div>
+  </div>
+
+  <div class="card">
+    <h3>非手术之路：赞美、感恩与两条结局</h3>
+    <div class="q">不动手术的话，我们能做什么帮 Gandalf？Ra 给出的建议出乎意料地简单，也把结局交还给了自由意志。</div>
+    <div class="quote">
+      <p class="en">Continue in praise and thanksgiving, asking for the removal of these distortions. There are two possible outcomes:…Firstly, the entity shall dwell with you in contentment until its physical vehicle holds it no more due to distortions caused by the cancerous cells.</p>
+      <p class="zh">在赞美与感恩中继续下去，请求这些变貌被移走。可能出现两种结局：……其一，该实体满足地与你们同住，直到物理载具因癌细胞造成的变貌而不再能容纳它。</p>
+      <span class="src">—— Session 098 · (98.12)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Secondly, the life path may become that which allows the healing.</p>
+      <p class="zh">其二，生命路径或许会转成允许疗愈的那一种。</p>
+      <span class="src">—— Session 098 · (98.12)</span>
+    </div>
+    <div class="quote">
+      <p class="en">We do not infringe upon free will by examining this life path although we may note the preponderance of life paths which use some distortion such as this to leave the physical body, which in this case is the orange-ray body.</p>
+      <p class="zh">端详这条生命路径并不构成对自由意志的侵犯；不过我们可以指出：多数生命路径正是借着某种这样的变貌离开物理身体的——在 Gandalf 这里，就是那具橙色光芒的身体。</p>
+      <span class="src">—— Session 098 · (98.12)</span>
+    </div>
+    <p>第一种结局：该实体满足地与你们同住，直到物理载具因癌细胞造成的变貌而不再能容纳它。至于另一只猫 Fairchild——Ra 确认它此刻没有同类问题（98.13）。建议只有一句：在赞美与感恩中继续，请求移除；其余的交给它的生命路径。</p>
+    <div class="plain">家属能做的是把每一天过好（赞美与感恩），同时尊重病人自己的生命路径——「替他决定痊愈」既不可能，也不该。</div>
+    <div class="case"><b>陪床的两手准备：</b>医生说「也许带瘤生存，也许出现转机」，家属能做的是把陪伴质量提上去，同时不替病人做主——两种结局都摆在桌上，选择权在走这条路的人（或猫）自己。</div>
+    <div class="case"><b>一间教室的流感：</b>同班有人中招有人没事——Fairchild 没有同样的问题（98.13），说明癌症不是「猫都逃不掉」的命运，而是路径与状态之别。</div>
+  </div>
+
+  <div class="card">
+    <h3>问答推进器：猫咪门诊六步走</h3>
+    <div class="flow-track" id="gandalfTrack"></div>
+    <div class="flow-detail" id="gandalfDetail"></div>
+    <div class="flow-ctrl"><button class="tri-btn" id="gandalfPrev">上一步</button> <button class="tri-btn" id="gandalfNext">下一步</button></div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ §6 收官 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>收官：磁带咔哒声、一张会唱歌的桌子与道别</h2></div>
+  <p class="sec-lead">本集结尾有两件小事，却都不小：Ra 破例主动「预告离场」，并给小组一条可选的收工协议；随后验收了 Jim 新造的松木桌——木头在 Ra 眼里不是家具，而是盛住了整个工作之投入的东西。</p>
+
+  <div class="card">
+    <h3>破例的观察：把结束的时刻交给一个声音</h3>
+    <div class="q">Ra 为什么主动谈起磁带的咔哒声？一向被动作答的 Ra，这一次先开了口。</div>
+    <div class="quote">
+      <p class="en">…we may safely predict the probability/possibility vortex approaching certainty that within one-half of an hour we shall need to depart from this working.</p>
+      <p class="zh">……我们可以有把握地预言：那股概率/可能性的漩涡正逼近确定——半小时之内，我们将不得不离开这次工作。</p>
+      <span class="src">—— Session 098 · (98.15)</span>
+    </div>
+    <p>喉咙因过敏引起的黏液充血已到临界；恰在此时，录音设备的咔哒声也被 Ra 听见了。Ra 提出一个可选项——注意，是「如果这个团体愿意」——此后每次集会都在咔哒声后不久结束，直到负面工作的效果被移除为止，这能把器皿喉部的不适压到最小。发问者一口答应：咔哒声正好在每面四十五分钟处（98.16）。至于何时真正结束，Ra 仍交由团体自行斟酌（98.17），团体随即决定收工以保全器皿的物理能量。</p>
+    <div class="quote">
+      <p class="en">If this group desires it may choose to have sessions which are brought to an ending soon after this sound vibration occurs. This decision would ensure the minimal distortions within the instrument towards the discomfort/comfort within the throat until the effects of the magical working of your fifth-density companion have been removed.</p>
+      <p class="zh">如果这个团体愿意，可以定下一条规矩：磁带的声响一出现，集会就在其后不久结束——直到负面工作的效果被移除为止，这条规矩能把器皿喉部的不适压到最小。</p>
+      <span class="src">—— Session 098 · (98.15)</span>
+    </div>
+    <div class="plain">Ra 出的是「可选项」，不是「命令」——把决定权连同信息一起交出去，正是自由意志法则在收尾处的样子。</div>
+    <div class="case"><b>视频会议的整点提醒：</b>到点弹出的提示音，被团队直接当作散会铃——决定「听到就收」的不是软件，而是团队为保护发言人嗓子定下的共同约定。Ra 的建议正是这种「用外部信号替自己踩刹车」。</div>
+    <div class="case"><b>马拉松配速员：</b>配速员按表跑，选手跟着走——器皿不必每场自己判断「还撑不撑得住」，咔哒声替所有人把关；把节奏交给固定信号，省下的正是每场的犹豫。</div>
+  </div>
+
+  <div class="card">
+    <h3>新松木桌：木头也会唱歌</h3>
+    <div class="q">Jim 新造的桌子放器具合适吗？保持原样，还是上亚麻籽油、清漆或油漆？</div>
+    <div class="quote">
+      <p class="en">We view this appurtenance. It sings with joy. The pine vibrates in praise. Much investment of this working in wood has been done. It is acceptable. We may suggest it be left either as it is or rubbed with the oil which also is easily magnetized and holds the proffered vibration to a profound extent.</p>
+      <p class="zh">我们端详这件器具：它欢喜地歌唱着，松木在赞美中振动。这项工作的许多投入已经留在这块木头里。它可以使用。Ra 只给两个选项：保持原样，或用油擦一遍——那种油同样容易被磁化，能把被赋予的振动深深地留存下来。</p>
+      <span class="src">—— Session 098 · (98.16)</span>
+    </div>
+    <p>漆与颜料不在选项里——这是本集一处安静的教导：物料会记住你投入的东西，而保存那份记忆的方式，恰恰是少往上头加东西。</p>
+    <div class="plain">木头不是中性道具：它被工作「投资」过，就持住了振动；对待它的最好方式，是别用覆盖物把这份振动封死。</div>
+    <div class="case"><b>新壶开壶：</b>新紫砂壶要么清水养着，要么用茶汤慢慢养出包浆——「擦上易被磁化的油、持住所赋予的振动」与养壶是同一件事：材质会记住你对它做的一切。</div>
+    <div class="case"><b>琴匠挑木头：</b>制琴师挑的是会「唱歌」的木头，刷厚漆反而闷了音色——「保持原样，或上一层透气的油」，正是 Ra 给松木桌的版本。</div>
+  </div>
+
+  <div class="saying">
+    <p class="en">We leave you in the love and in the light of the One Infinite Creator. Go forth, therefore, rejoicing in the power and in the peace of the One. Adonai.</p>
+    <p class="zh">我们在太一无限造物主的爱与光中离开你们；那么，向前走吧，在太一的大能与平安中欢喜。Adonai。</p>
+    <span class="src">—— Session 098 · (98.18)</span>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 098（`split/Ra_Session_098.md`）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra098-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+
+/* 术语卡翻转 */
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+/* 问答脉络推进器（本章地图） */
+initStepper('mapTrack','mapDetail','mapPrev','mapNext',[
+ {t:'例行开场',d:'<span class="qa-q">问：器皿状态如何？</span><b>答：</b>物理能量赤字有所增加，生命能量变貌有所改善。(98.1)'},
+ {t:'取消冥想',d:'<span class="qa-q">问：这次取消会前冥想，有何影响？</span><b>答：</b>准备即净化——取消一部分准备的价值，取决于各实体不靠这份辅助时已达成的纯净度。(98.2)'},
+ {t:'致意改点',d:'<span class="qa-q">问：负面朋友是不是钻了冥想的空子？</span><b>答：</b>机制相反——该实体总在尽量贴近工作的时刻致意；取消冥想使致意改在「决定不冥想」的关头发生，且效力不减。(98.3-98.4)'},
+ {t:'器皿之问',d:'<span class="qa-q">问：是什么让负面同伴还能继续致意？如何减轻？为何散步时发作？</span><b>答：</b>Ra 先声明此答贴近混淆法则的边缘，只因确信器皿缺了信息仍会继续服务，才逐项作答。(98.5)'},
+ {t:'工作三层',d:'<b>答：</b>强效工作试图关闭喉咙与嘴；蓝光阻塞——不清晰的沟通——替它强化效力；过敏则为它持续续供，散步时呼吸一加快就显形。(98.5)'},
+ {t:'致意辨析',d:'<b>答：</b>橙花香来自第五密度正面同伴 Latwii（应器皿之请陪伴）；踩踏感是负面致意；两者都借着器皿在十八天周期顶峰的敏感而被感知。(98.5)'},
+ {t:'两条建议',d:'<b>答：</b>立即路——类固醇或抗生素类清除工作赖以滋生的困难（Jerome 或能相助）；一般路——代号「祈祷轮」的治疗者十次治疗，并遵循过敏优先事项、尤其对食物。(98.5)'},
+ {t:'猫咪门诊',d:'<span class="qa-q">问：Gandalf 的增生与康复？</span><b>答：</b>手术无需更多谨慎，仪式短语有帮助；愤怒是原始原因，任何心/身复合体都可能因愤怒生癌；能做的是在赞美与感恩中继续。(98.6-98.15)'},
+ {t:'收束排期',d:'<b>答：</b>Ra 建议磁带咔哒声后不久收工，直到工作被移除；新松木桌可保留或擦油；随后在爱与光中道别。(98.15-98.18)'}
+]);
+
+/* 猫咪门诊推进器 */
+initStepper('gandalfTrack','gandalfDetail','gandalfPrev','gandalfNext',[
+ {t:'手术合适吗',d:'<span class="qa-q">问：这次摘除比去年四月那次更需谨慎吗？观想光与仪式短语有用吗？</span><b>答：</b>无需更多谨慎；短语会有帮助——老迈身体易受麻醉之害，但它有强烈动机康复、以重回所爱之人身边。(98.6)'},
+ {t:'为何说「可收割」',d:'<b>答：</b>为阐明把「灵性复合体」用于一个看似第二密度实体的用法——它因此有远更充分的理由撑住、疗愈，以寻求所爱之人的陪伴。(98.7)'},
+ {t:'增生从哪来',d:'<b>答：</b>原始原因是新猫到来引发的愤怒；近因则是被称为癌症的细胞变貌自身的性质——两层因果分开说。(98.9)'},
+ {t:'还有别的吗',d:'<b>答：</b>有——右髋关节、肝附近、两侧「臂」下都有小的细胞变貌，此刻无一能被缓解。(98.10-98.11)'},
+ {t:'非手术能做什么',d:'<b>答：</b>在赞美与感恩中继续、请求移除；两种结局——满足同住至载具不支，或生命路径转为允许疗愈；检视路径不侵犯自由意志。(98.12)'},
+ {t:'愤怒致癌的普遍性',d:'<span class="qa-q">问：必须是可收割第三密度的心/身/灵复合体，愤怒才会致癌吗？</span><b>答：</b>不必——任何心/身复合体都可能。(98.14-98.15)'}
+]);
+
+/* 归类练习：这段体验来自谁 */
+initSorter('sortArea',[
+ {a:'散步中闻到一阵橙花香——器皿这个月对气味的感知格外灵敏',opts:['正面同伴 Latwii','第五密度负面同伴','身体过程叠加工作'],ans:'正面同伴 Latwii',exp:'(98.5) 橙花是第五密度正面社会记忆复合体 Latwii 的气味——那是应器皿之请而来的陪伴。'},
+ {a:'走路时脚下传来「踩到并压死小动物」的感觉',opts:['正面同伴 Latwii','第五密度负面同伴','身体过程叠加工作'],ans:'第五密度负面同伴',exp:'(98.5) 这是第五密度负面同伴的致意，借器皿在十八天周期顶峰的敏感而成为可能。'},
+ {a:'快走几步、呼吸加重之后，喉咙的症状变得明显',opts:['正面同伴 Latwii','第五密度负面同伴','身体过程叠加工作'],ans:'身体过程叠加工作',exp:'(98.5) 工作的效果在身体发力、呼吸增加时显形；对多种第二密度物质的过敏也是促成因素。'},
+ {a:'小组沟通时词不达意、话说不清楚',opts:['Ra 的拒答','工作效力被强化的途径','器皿的巧合'],ans:'工作效力被强化的途径',exp:'(98.5) 蓝光阻塞——不清晰的沟通——在第一次询问后并未结束，它的再次出现强化了工作的效力。'},
+ {a:'一吃某些食物就起反应、皮肤发痒',opts:['单纯的物理小毛病','深层自我的心智/情绪变貌','Latwii 的提醒'],ans:'深层自我的心智/情绪变貌',exp:'(98.5) 过敏是心智复合体深层对环境的排斥，其纯粹形式即深层自我的心智/情绪变貌。'}
+]);
+
+/* 条件模拟器：魔法工作凭什么还站着 */
+function simWorking(){
+  const t=document.getElementById('wThroat').checked;
+  const a=document.getElementById('wAllergy').checked;
+  const b=document.getElementById('wBlue').checked;
+  const box=document.getElementById('workingResult');
+  const gone=[];
+  if(!t)gone.push('立足点已清（喉咙变貌被完全移除）');
+  if(!a)gone.push('续供已断（过敏不再持续加重）');
+  if(!b)gone.push('强化已停（蓝光阻塞已清，沟通恢复清晰）');
+  let html;
+  if(gone.length===0){
+    html='<b>工作稳稳站着。</b>喉咙变貌是它的立足点，过敏反应持续为它续供，蓝光阻塞又替它加码——这正是本集小组面对的局面：上一次的致意问掉了，工作本身却还站着。(98.5)';
+    box.classList.add('fail');
+  }else if(gone.length===3){
+    html='<b>移除完成。</b>立足点、续供、强化三路齐断——这正是 Ra 给出的路径图：完全清除喉咙变貌、处理过敏的优先事项、让沟通回到清晰。(98.5)';
+    box.classList.remove('fail');
+  }else{
+    html='<b>工作正在松动。</b>'+gone.join('；')+'。——按 Ra 的建议，剩余环节仍须逐项拆除：彻底清除喉咙变貌、遵循过敏优先事项、恢复清晰的沟通。';
+    box.classList.add('fail');
+  }
+  box.innerHTML=html;
+}
+document.querySelectorAll('#workingBox input').forEach(el=>el.addEventListener('change',simWorking));
+simWorking();
+
+renderPath();
+</script>
+</body>
+</html>

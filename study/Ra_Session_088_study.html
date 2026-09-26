@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 088 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 088 · 交互式学习模块</h1>
+  <p class="sub">上一集讲完面纱如何把心智的母体与赋能者分派给男女两性，这一集顺着「原型」往下挖：塔罗从金星来，是打磨了许多世代的训练辅助；二十二个原型不可浓缩；大奥秘不算命、只照镜。最后 Ra 交出教导原型的三阶段课程。</p>
+  <div class="tagline">7 个主题 · 6 个学习步骤 · 14 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 塔罗的起源</a>
+<a href="#s3">③ 原型不可浓缩</a>
+<a href="#s4">④ 教学方法</a>
+<a href="#s5">⑤ 占卜与自我认识</a>
+<a href="#s6">⑥ 训练三阶段</a>
+<a href="#s7">⑦ 收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>先看清本集在塔罗系列（88-95 集）开篇的位置：照护问答、出书照片、塔罗开题三件事怎么排布</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>塔罗的起源</b><span>金星第三密度为何造出它，以及第 22 号「选择」这个迟到的重要突破</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>原型为何不可浓缩</b><span>Ra 如何拆解「把原型压成一条公式」的诱惑：每个原型都是自在之物</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>教学方法：观想与口传</b><span>Ra 第三密度不用卡片；卡片是埃及学生的记录，牌制则另有来历</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>占卜与自我认识之分</b><span>行星影响如何像月亮推动海水；原型被「磁化」进占卜牌堆后发生什么</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>训练三阶段与收官</b><span>从全体浏览、成对比较到「成为原型」，再听 Ra 的告别叮嘱</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ s1 本章地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：这一集从罩纱之后走向哪里</h2></div>
+  <p class="sec-lead">第 88 集是原型塔罗系列（约 88-95 集）的开篇。上一集（87）讲到面纱过程如何把心智的母体与赋能者分派给男女性极性；本集顺着「原型」这条线继续挖：这套被称作塔罗的图像从哪来、怎么用、Ra 当年怎么教。上半场是例行的照护问答与出书照片的魔法考量，下半场才是正题。</p>
+
+  <div class="card">
+    <h3>本集的三件事</h3>
+    <p><b>① 照护与边界：</b>器皿的能量状态、负面访客的动向、水晶充能者的是非——顺带见识 Ra 如何守住第一变貌（自由意志）的边界，拒绝替人贴「正／负」标签。</p>
+    <p><b>② 出书照片：</b>出版社要照片，Ra 给出三条魔法考量，核心只有一条——记录必须真实。</p>
+    <p><b>③ 塔罗研究开题：</b>起源（金星）、方法论（原型不可浓缩）、教学（观想与口传）、用途之分（占卜 vs 自我认识）、训练课程（三阶段）。</p>
+    <div class="case"><b>书店场景：</b>一位读者在书店翻开《一的法则》，被内页的塔罗牌插图吸引，以为是本算命攻略——本集（以及整个塔罗系列）要做的第一件事，就是把「占卜用的塔罗」与「代表二十二原型的大奥秘」分开，好让你把它当镜子，而不是当水晶球。</div>
+    <div class="case"><b>读书小组场景：</b>几个朋友共读《一的法则》，想找人帮忙把二十二个原型压缩成一页「速查对照表」方便背诵——本集 (88.17) 里 Ra 直接泼了冷水：每个原型都是自在之物，浓缩本身就是错误的尝试。</div>
+    <div class="quote">
+      <p class="en">The one great breakthrough which was made after our work in third density was done was the proper emphasis given to the Arcanum Number Twenty-Two which we have called The Choice.</p>
+      <p class="zh">金星第三密度的工作结束之后，最大的一个突破是给第二十二号奥秘——Ra 称之为「选择」——以恰当的强调。整个塔罗系列的焦点，都落在这张统一一切的原型上。</p>
+      <span class="src">—— Session 088 · (88.16)</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>问答脉络推进器：一眼看清对话怎么走</h3>
+    <p>本集 26 个问答块，按下面这条线推进。点节点或用按钮逐步走。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="flow1"></div>
+      <div class="flow-detail" id="detail1"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="prev1">← 上一步</button>
+        <button class="tri-btn" id="next1">下一步 →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>开场与例行问答</h3>
+    <div class="quote">
+      <p class="en">I am Ra. I greet you in the love and in the light of the One Infinite Creator. We communicate now.</p>
+      <p class="zh">我是 Ra，在太一无限造物主的爱与光里向你们问候——本集的通讯自此展开。</p>
+      <span class="src">—— Session 088 · (88.0)</span>
+    </div>
+    <details class="dict"><summary>本集例行问答（可跳过）<span class="hint">器皿状态 · 负面访客 · 后勤</span></summary>
+      <div class="body">
+        <p><b>(88.1-88.2) 器皿状态：</b>肉体能量赤字相当大、生命能量明显损耗，但仍在「力量」的变貌范围内；Ra 特别点名——第四密度负面仆从正加剧器皿双手（其次胸部）的失衡，叮嘱避免任何不必要的用手。</p>
+        <p><b>(88.3) 第五密度负面同伴：</b>此刻不在场，但它并没有在休息。</p>
+        <p><b>(88.4) 香炉：</b>新配置对更精微的能量模式有帮助；若须二选一，宁让香燃尽，也不要烟雾过量。</p>
+        <p><b>(88.5) 器皿「渗入」通讯：</b>她开始隐约觉察思想的流动，如婴儿感知最初的词语——这是这类工作与她供身方法的自然产物，会持续。</p>
+        <p><b>(88.6) 会前的如厕冲动：</b>与低生命能量相关；她长期承受少有人能承受的疼痛，劝阻排解活动又添消耗，服务意志因此得到一次考验。</p>
+        <p><b>(88.7-88.9) 水晶：</b>由名为 Neil 的人充能，只要充能者以正面方式运作即有益；追问「他现在还是正面的吗」被 Ra 确认是对第一变貌的缩减，不予回答。</p>
+        <p><b>(88.25) 收尾叮嘱：</b>再次警告双手——若不缓解，「手术」将几乎立即必要；排列是好的。</p>
+      </div>
+    </details>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ s2 塔罗的起源 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>塔罗的起源：金星第三密度为何造出它</h2></div>
+  <p class="sec-lead">发问者把话题从照片转到塔罗：这套图像最初在哪里形成？是给金星人自己用的，还是金星人做给地球人的？Ra 的回答把塔罗放回一个久远的语境——它不是地球的发明，而是金星文明许多世代研究的成果。</p>
+
+  <div class="card">
+    <h3>起源：金星的世代工程</h3>
+    <div class="q">发问者想知道塔罗这个概念的最初出处——是谁、在哪里、为了什么目的把它造了出来。</div>
+    <div class="quote">
+      <p class="en">The concept of the tarot originated within the planetary influence you call Venus.</p>
+      <p class="zh">塔罗概念的源头，在你们称之为金星的那股行星影响之中。</p>
+      <span class="src">—— Session 088 · (88.13)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The product of many, many generations of work upon what we conceived to be the archetypical mind produced the tarot which was used by our peoples as a training aid in developing the magical personality.</p>
+      <p class="zh">对我们所理解的原型心智进行了许多、许多世代的工作，其成果就是塔罗——我们的人民用它作训练辅助，来发展魔法人格。</p>
+      <span class="src">—— Session 088 · (88.14)</span>
+    </div>
+    <p>Ra 接着点明设计者：是金星第三密度的人口，在你们过去的极久远之处造出它。他还补了一句背景：金星实体的第三密度经验，在与他者的关系、性能量转移工作、哲学与形而上研究上都远比地球更深入和谐——所以这套工具在金星就已被打磨得相当成熟。</p>
+    <div class="plain">塔罗不是占卜道具的祖师爷，而是一份「教材」：金星文明用许多代人研究原型心智的积累，做成了发展魔法人格的训练辅助。</div>
+    <div class="case"><b>百年词典：</b>想象一部修订了一百年的词典——每一届编者把手头的条目补全、勘误，再完整交给下一届。金星人对原型心智的工作正是这种接力：许多、许多世代的打磨，才凝出塔罗这件训练辅助。</div>
+  </div>
+
+  <div class="card">
+    <h3>发问者的猜测被确认，考证的请求被婉拒</h3>
+    <div class="q">他猜：是不是最初部分穿透面纱的金星实体，窥见了原型心智与面纱过程的性质，才据此设计塔罗来教别人？他又问：现在这套二十二个名字跟 Ra 的原版一致吗？</div>
+    <div class="quote">
+      <p class="en">each archetype is a concept complex and may be viewed not only by individuals but by those of the same racial and planetary influences in unique ways.</p>
+      <p class="zh">每个原型都是一个概念复合体——不仅个体能以独特方式看见它，同种族、同行星影响的人群也一样。</p>
+      <span class="src">—— Session 088 · (88.16)</span>
+    </div>
+    <p>猜测本身得到了确认（「正是如此」）；但重建金星级塔罗与埃及级塔罗之间「描述性术语的微小差异」，Ra 认为不具启发性，拒绝展开。</p>
+    <div class="plain">看原型的方式本来就不止一种——版本之间措辞的出入不是重点，每个原型自身的概念复合体才是。</div>
+    <div class="case"><b>古籍异体字：</b>有人拿到一部古籍的几个抄本，发现字句略有出入，于是花十年考证异体字；另一人直接把书读通、照着修行。Ra 拒绝考证牌名差异，选的是后一条路——差异「相当微小」，重建它们没有启发性。</div>
+  </div>
+
+  <div class="card">
+    <h3>本集术语卡（点按翻面）</h3>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">塔罗</div><div class="sub">tarot</div><span class="tap">点击翻面</span></div><div class="back">二十二张图像构成的训练体系。本集讲它的出生地（金星）与用途之分：可以是占卜牌堆里的联结介质，也可以是研究原型的教材。<em>像同一盒卡片既可当教材又可当扑克——用哪个身份，决定你拿它做什么。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">原型</div><div class="sub">archetype</div><span class="tap">点击翻面</span></div><div class="back">一个概念复合体：心智底层既成的「人物／乐章」。个体与族群都能以独特方式看见它；把它浓缩成一句话是错误的尝试。<em>像一部交响曲——你可以分析乐章之间的关系，但十五秒的铃声不是它。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">原型心智</div><div class="sub">archetypical mind</div><span class="tap">点击翻面</span></div><div class="back">心智复合体中最伟大而根本的部分之一，是寻求太一无限造物主者最丰富的信息来源之一；它先「通知」思想，思想再影响心、身、灵。<em>像一座图书馆——书不会自动上楼，得有人去借。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">魔法人格</div><div class="sub">magical personality</div><span class="tap">点击翻面</span></div><div class="back">塔罗在金星被设计的最初用途：作为发展魔法人格的训练辅助——有意地披上某种人格状态去完成灵性工作。<em>像演员穿上角色排练——脱下时清楚地知道自己是谁。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">大奥秘</div><div class="sub">Major Arcana</div><span class="tap">点击翻面</span></div><div class="back">代表原型心智二十二原型的图像。Ra 明确说：它们在占卜中没有正当位置，是自我认识、深入当下的工具。<em>像镜子——照的是你自己，不预言明天的天气。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">宫廷奥秘与小奥秘</div><div class="sub">Court Arcana / Minor Arcana</div><span class="tap">点击翻面</span></div><div class="back">迦勒底与苏美尔影响的产物，占星取向，构成占卜牌的主体；原型混入其中便被磁化、充当联结介质。<em>像往正餐里加了调味料——风味变了，用途也跟着变了。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">自在之物</div><div class="sub">ding an sich</div><span class="tap">点击翻面</span></div><div class="back">借自哲学的用语（物自体）：每个原型自成一体，拥有自己的概念复合体，不依附于其他原型的流程而存在。<em>像各自成套的乐器——可以合奏，但不能焊成一件。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">选择</div><div class="sub">The Choice · 第二十二号奥秘</div><span class="tap">点击翻面</span></div><div class="back">统一一切的原型。金星人知道它存在，却未给它恰当的概念复合体；金星之后最大的突破就是给它「正确的强调」——这是整个塔罗系列的核心。<em>像一门课把最关键的考核放在最后：前面所学都通向这一次抉择。</em></div></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ s3 原型不可浓缩 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>原型不可浓缩：为什么没有「一页速查表」</h2></div>
+  <p class="sec-lead">发问者抛出一个很有诱惑力的想法：既然心智、身体、灵性各自走一遍「催化剂→体验→转化→大道」，那整套原型是不是可以浓缩成一句「让催化剂更高效地制造转化」？Ra 的回应是本集方法论上分量最重的一段。</p>
+
+  <div class="card">
+    <h3>Ra 的诊断：正确与误解缠在一起</h3>
+    <div class="q">他陈述：三个指涉者各被催化剂作用，产生体验，导向转化与大道——原型只是同一流程在三个层面的重复，那么把指涉者变成复合体，就能让催化剂更高效地制造转化，对吗？</div>
+    <div class="quote">
+      <p class="en">In your statement, correctness is so plaited up with tendrils of the most fundamental misunderstanding that correction of your statement is difficult.</p>
+      <p class="zh">在你的陈述里，正确之处与最根本误解的卷须缠绕得太紧，以至于难以直接修正。</p>
+      <span class="src">—— Session 088 · (88.17)</span>
+    </div>
+    <div class="quote">
+      <p class="en">To attempt to condense the archetypes is to make an erroneous attempt. Each archetype is a significant ding an sich, or thing in itself, with its own complex of concepts.</p>
+      <p class="zh">试图浓缩原型，本身就是一次错误的尝试——每个原型都是重要的自在之物，拥有自己的概念复合体。</p>
+      <span class="src">—— Session 088 · (88.17)</span>
+    </div>
+    <p>Ra 还给出方向：审视原型之间的关系虽有启发性，却次于发现每个原型最纯粹的格式塔（gestalt）、愿景或旋律——那份对智力与直觉心智同时成立的完整感知。</p>
+    <div class="plain">原型不是流程图上的节点，而是二十二首完整的乐曲——你可以研究乐曲之间的关系，但不能把它们压成一段和弦。</div>
+    <div class="case"><b>精华铃声：</b>有人把贝多芬九部交响曲各剪十五秒，做成一段「贝多芬精华」铃声合集，然后宣称自己听完了贝多芬。Ra 说每个原型都有自己的旋律——浓缩的尝试本身就是错误；正确的方向是去发现那个完整的旋律。</div>
+  </div>
+
+  <div class="card">
+    <h3>原型怎么「抵达」身体与灵性</h3>
+    <div class="q">既然不能把原型当成作用于三层面的同一台机器，那原型与身体、灵性到底什么关系？</div>
+    <div class="quote">
+      <p class="en">The archetypes do not have a direct linkage to body or spirit. All must be drawn up through the higher levels of the subconscious mind to the conscious mind, and thence they may flee whither they have been bidden to go. When used in a controlled way they are most helpful.</p>
+      <p class="zh">原型与身体、灵性并无直接联系；一切都须经潜意识的高层被抽取到显意识，再从那里前往它们被吩咐的方向——受控地使用时，它们最有帮助。</p>
+      <span class="src">—— Session 088 · (88.17)</span>
+    </div>
+    <p>换句话说：原型心智先「通知」思想，思想才可能影响到心、身、灵——路径是「向上抽取、再受控派遣」，不是自动写进身体或灵性的底层代码。说完这些，Ra 不越出发问者原陈述的边界继续发挥，而是请他重新提问，以便回答得更精确。</p>
+    <div class="plain">原型影响的路径是「先上调、再派遣」——从心智底层抽到显意识，由你吩咐它去哪儿它才去哪儿。</div>
+    <div class="case"><b>三张流程图：</b>一位管理者把同一张「催化剂→体验→转化→大道」的流程图复印三份，分别贴在心智、身体、灵性三个部门的墙上，以为流程相同、只是输入不同——这正是被 Ra 纠正的模型：原型与后两者并无直接联系，须经显意识受控取用。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ s4 教学方法 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>教学方法：没有卡片时怎么教原型</h2></div>
+  <p class="sec-lead">澄清了「不可浓缩」，发问者换个角度问教学：Ra 当年用什么工具？他点明这看似考据的问题别有用心——教导的方法可能给他理解概念本身的线索。</p>
+
+  <div class="card">
+    <h3>不用卡片，用持续观想</h3>
+    <div class="q">Ra 在第三密度训练时，用类似塔罗牌的卡片吗？</div>
+    <p>Ra 的回答只有两个字：不。那用什么？靠的是训练有素的心智观想——图像用心「画」出来。Ra 举的例子很彻底：在你们文化众所周知的弥撒中，一小块食物被观想为心智上配置、却完全真实的耶稣（Jehoshua）。</p>
+    <div class="quote">
+      <p class="en">It was by this method of sustained visualization over a period of training that we worked with these concepts.</p>
+      <p class="zh">我们正是靠着一段训练期内的持续观想，来与这些概念一起工作的。</p>
+      <span class="src">—— Session 088 · (88.19)</span>
+    </div>
+    <p>这些概念偶尔也被画下来，但「一卡一观想」的点子从未在 Ra 心中出现过——那是后来者的发明。</p>
+    <div class="plain">教具不在手里，在心里——图像靠训练有素的观想力呈现，纸牌反而是后来才有的载体。</div>
+    <div class="case"><b>表象训练：</b>一位跳水运动员赛前在脑中一遍又一遍完整地「跳」整套动作，多年训练后，身体会自动执行心中的图像。Ra 的训练正是这种「持续的观想」——只是对象不是动作，而是二十二个原型。</div>
+  </div>
+
+  <div class="card">
+    <h3>口传、埃及的卡片、迦勒底的牌</h3>
+    <div class="q">那老师怎么把观想传给学生？教埃及人时方法一样吗？宫廷奥秘和小奥秘呢？</div>
+    <div class="quote">
+      <p class="en">The process was cabalistic; that is, of the oral tradition of mouth to ear.</p>
+      <p class="zh">这一过程是秘传的：从口到耳的口头传统。</p>
+      <span class="src">—— Session 088 · (88.20)</span>
+    </div>
+    <div class="quote">
+      <p class="en">However, those which were teach/learners after us first drew these images to the best of their ability within the place of initiation and later began the use of what you call cards bearing these visualizations’ representations.</p>
+      <p class="zh">不过，我们之后的教导/学习者先在启蒙之地尽力绘下这些图像，后来才开始使用你们所称的、承载这些观想表象的卡片。</p>
+      <span class="src">—— Session 088 · (88.21)</span>
+    </div>
+    <p>教埃及人用的是同一套过程（观想加口传）；画图与制卡是 Ra 之后的教导/学习者的记录方式。至于宫廷奥秘与小奥秘——Ra 说它们不是自己的教导，而是迦勒底与苏美尔影响的产物。</p>
+    <div class="plain">Ra 传的原型图像走「口传＋心智观想」；把图像画上纸牌是埃及学生的做法，而占卜用的整套牌制则另有来历。</div>
+    <div class="case"><b>寿司学徒：</b>传统寿司店里，学徒头几年几乎不动刀，全靠站在师傅身边口耳相传、耳濡目染。Ra 的口传（mouth to ear）正是这种传递——不是发讲义，而是一代人对一代人的面对面。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ s5 占卜与自我认识 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>占卜与自我认识：大奥秘为何不算命</h2></div>
+  <p class="sec-lead">发问者请 Ra 解释此前说过的「塔罗是一种占卜方法」。Ra 的回答先做切割：占卜用的塔罗与代表二十二原型的大奥秘必须分开——然后讲清行星影响如何「推动」人，以及原型混进占卜牌堆之后会发生什么。</p>
+
+  <div class="card">
+    <h3>先切割：一副牌的两个身份</h3>
+    <div class="q">你之前说塔罗是占卜方法——那大奥秘这二十二张图像，到底能不能用来算命？</div>
+    <div class="quote">
+      <p class="en">We must first divorce the tarot as a method of divination from this Major Arcana as representative of twenty-two archetypes of the archetypical mind.</p>
+      <p class="zh">必须先把作为占卜方法的塔罗，与作为原型心智二十二原型之代表的大奥秘分开。</p>
+      <span class="src">—— Session 088 · (88.23)</span>
+    </div>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">行星影响</span><h4>占星术</h4><p>看受孕与出生两个时点的行星流入，读出一段旅程的地貌；使用者须是理解<b>混淆法则</b>错综考量的启蒙者。</p></div>
+      <div class="yuan-card"><span class="y-tag">联结介质</span><h4>占卜塔罗（宫廷＋小奥秘）</h4><p>迦勒底与苏美尔影响的产物；原型混入后被灵性印象磁化，成为占卜者与问事者之间的<b>联结器皿</b>。</p></div>
+      <div class="yuan-card"><span class="y-tag">自我认识</span><h4>大奥秘研究</h4><p>二十二张图像代表原型心智的原型；<b>不算命</b>，用于发现每个原型最纯粹的格式塔、愿景或旋律。</p></div>
+    </div>
+    <div class="plain">同一副牌的两个身份：混着占星牌的牌堆可充当通灵联结的介质；二十二张大奥秘则不是占卜工具，而是自我认识的镜子。</div>
+  </div>
+
+  <div class="card">
+    <h3>行星影响：月亮与水</h3>
+    <div class="q">占星为什么「有用」？它凭什么描绘一个人的旅程？</div>
+    <div class="quote">
+      <p class="en">As each planetary influence enters the energy web of your sphere, those upon the sphere are moved much as the moon which moves about your sphere moves the waters upon your deeps.</p>
+      <p class="zh">每股行星影响进入你们星球的能量网络时，星球上的众生便被推动——恰如环绕你们的月亮推动深海之水。</p>
+      <span class="src">—— Session 088 · (88.23)</span>
+    </div>
+    <p>理由在于你们的本性：作为心/身/灵复合体，你如水般易被影响与推动。每个实体进入行星能量网络时都经历两次主要流入——受孕之时（关乎转世肉体黄色光芒的显化）与你称为出生的时刻（第一次呼吸）。因此通晓星辰者能看到一幅「相当广泛绘制的地图」：实体已经、正在、可能旅行的国度——在肉体、心智或灵性任一层面上。但 Ra 紧接着点出守夜的本质：不只被推动，还要教导自己在心智、身体、灵性中运动的偏好方式。</p>
+    <div class="plain">占星之所以「有用」，是因为人如水易被推动；而这段守夜恰恰是要在水里学会自己选泳姿。</div>
+    <div class="case"><b>塔罗店：</b>周六下午，顾客问「我该不该换工作」，占卜师洗牌、抽牌、解牌——若牌堆里混着占星取向的宫廷牌与小牌，原型便会被问事者的灵性印象「磁化」，充当双方之间的联结介质；而隔壁书房里，另一个人摊开二十二张大奥秘，逐张研究自己。两条路，目的完全不同。</div>
+  </div>
+
+  <div class="card">
+    <h3>原型被「磁化」之后 + 归类练习</h3>
+    <div class="quote">
+      <p class="en">When the archetypes are shuffled into the mix of astrologically oriented cards which form the so-called Court Arcana and Minor Arcana, these archetypes become magnetized to the psychic impressions of the one working with the cards…</p>
+      <p class="zh">当原型被洗入构成所谓宫廷奥秘与小奥秘的占星取向牌堆，它们会被执牌者的灵性印象磁化……</p>
+      <span class="src">—— Session 088 · (88.23)</span>
+    </div>
+    <p>于是它们成为占卜实践者与问事者之间的联结器皿，结果往往「看似有趣、对提问者的配置有意义」。而大奥秘本身——Ra 在这一段结尾给出本集最重要的定性：它们不属于占卜，而是自我认识、深入当下的工具。</p>
+    <p>下面几句话，你分得清它说的是哪一路吗？</p>
+    <div id="sorter1"></div>
+    <div class="case"><b>出生星图：</b>有人拿着精确到分钟的出生时间找占星师，得到一张大致绘制的「人生地貌图」：性格的底色、已经走过与可能要走的路。Ra 的描述与之对应——两个行星流入是地图的坐标，但那只是「相当广泛绘制的地图」，不是判决书；地图之外，怎么游仍是你自己的功课。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ s6 训练三阶段 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>训练课程：三步把原型「住进」自己</h2></div>
+  <p class="sec-lead">Ra 宣布这是本次工作的最后一个完整问答，然后交出压箱底的东西：当年教导启蒙者的完整课程表。三个阶段层层递进——先看整体、再作比较、最后「成为」。结尾那句「我们没有教条」，是整个塔罗系列的方法论底色。</p>
+
+  <div class="card">
+    <h3>阶段一：全体浏览</h3>
+    <div class="q">教二十二个原型，第一课怎么上？</div>
+    <div class="quote">
+      <p class="en">Our first stage was the presentation of the images, one after the other, in the following order:</p>
+      <p class="zh">我们的第一阶段，是按下述次序把图像一张接一张地呈现——</p>
+      <span class="src">—— Session 088 · (88.24)</span>
+    </div>
+    <div class="table-wrap">
+      <table class="nine">
+        <tr><th>原型类别</th><th>英文</th><th>呈现次序</th><th>一句话理解</th></tr>
+        <tr><td>母体</td><td>Matrix</td><td>1 · 8 · 15</td><td>三层面经验的「底片」，等待被印上内容</td></tr>
+        <tr><td>赋能者</td><td>Potentiator</td><td>2 · 9 · 16</td><td>让底片显影的潜力与照亮</td></tr>
+        <tr><td>催化剂</td><td>Catalyst</td><td>3 · 10 · 17</td><td>促成转变的经历素材</td></tr>
+        <tr><td>体验</td><td>Experience</td><td>4 · 11 · 18</td><td>经历催化剂后沉淀的果实</td></tr>
+        <tr><td>指涉者</td><td>Significator</td><td>5 · 12 · 19</td><td>代表「此刻的你」的那张牌</td></tr>
+        <tr><td>转化</td><td>Transformation</td><td>6 · 13 · 20</td><td>把经历转化为改变的枢纽</td></tr>
+        <tr><td>大道</td><td>Great Way</td><td>7 · 14 · 21</td><td>转化之后行走的道路</td></tr>
+        <tr><td>选择</td><td>The Choice</td><td>22</td><td>统一一切原型的极性抉择</td></tr>
+      </table>
+    </div>
+    <p>编号沿用此前集会中发问者读出的二十二原型列表：1-7 属心智、8-14 属身体、15-21 属灵性、22 是「选择」。这样并排呈现，心智、身体、灵性之间的基本关系就开始被发现——例如把心智的矩阵与身体、灵性的矩阵对照观看，可以得出初步结论。</p>
+  </div>
+
+  <div class="card">
+    <h3>阶段二与阶段三：成对、成为</h3>
+    <p>待学生掌握全部观想、逐类审视过三层面的关系后，再改看成对的原型：一和二、三和四、六和七——身体与灵性照此套用。第五号（心智的指涉者）刻意留为未配对。推演走一遍：</p>
+    <div class="demo-area">
+      <div class="flow-track" id="flow2"></div>
+      <div class="flow-detail" id="detail2"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="prev2">← 上一步</button>
+        <button class="tri-btn" id="next2">下一步 →</button>
+      </div>
+    </div>
+    <div class="quote">
+      <p class="en">You will note that the consideration of the Significator was left unpaired, for the Significator shall be paired with Archetype Twenty-Two.</p>
+      <p class="zh">你会注意到，指涉者的考量被留为未配对——因为它应与第二十二号原型配对。</p>
+      <span class="src">—— Session 088 · (88.24)</span>
+    </div>
+    <div class="plain">课程的终点不是「背下二十二个含义」，而是能随时「成为」某个原型，并且知道什么时候该穿上这套人格。</div>
+    <div class="case"><b>把抉择放最后的课：</b>一门课不设期末笔试，而是让学生用整学期所学做出自己的抉择并陈述理由——考核本身就是内容的总和。Ra 的课程同理：指涉者（「你」）单独留白，直到最后与第二十二号「选择」配对。</div>
+  </div>
+
+  <div class="card">
+    <h3>没有教条</h3>
+    <div class="q">这么完整的一套课程，学生照做就行了吗？</div>
+    <div class="quote">
+      <p class="en">We have no dogma to offer. Each perceives that which is needful and helpful to the self.</p>
+      <p class="zh">我们没有教条可以提供——每个人感知那对自我必要且有益的东西。</p>
+      <span class="src">—— Session 088 · (88.24)</span>
+    </div>
+    <p>Ra 强调：大量工作由每个启蒙者创造性地完成。课程给的是路径，不是标准答案——这正是自由意志法则在教学方法上的体现。</p>
+    <div class="case"><b>自学编程：</b>两个自学编程的人，一个四处寻找「唯一正确」的学习路线图，越找越焦虑；另一个把官方文档当地图、按自己的项目需要选路，半年后做出自己的作品。Ra 的课程没有标准作业——每个人感知对自我必要且有益的东西。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ s7 收官 ============ -->
+<section class="chapter" id="s7">
+  <div class="sec-head"><span class="num">07</span><h2>收官：金句、伏笔与告别</h2></div>
+  <p class="sec-lead">收官。Ra 在离开前第三次点名器皿的双手——这不是客套，而是一个悬而未决的伏笔；本集真正的「金句」，则要回到 (88.23)：大奥秘不是算命工具，而是自我认识、更深刻进入当下的工具。</p>
+
+  <div class="card">
+    <h3>伏笔：双手的警告</h3>
+    <div class="q">走之前还有什么要叮嘱的吗？</div>
+    <div class="quote">
+      <p class="en">We again ward you concerning the distortions of the instrument’s hands. The fourth-density influence upon them could be inconvenient in that, if allowed to proceed without abatement, what you call your surgery shall be almost immediately necessary.</p>
+      <p class="zh">我们再次就器皿双手的失衡提醒你们：第四密度的影响若不加缓解，你们所称的手术将几乎立即变得必要。</p>
+      <span class="src">—— Session 088 · (88.25)</span>
+    </div>
+    <p>紧接着 Ra 补了一句肯定：排列是好的——「你们一直很细致」。灵性工作从来不是「只管出神」：负面影响的物理后果是真实的，照护器皿的身体本身就是修行的一部分。</p>
+    <div class="case"><b>团队守护：</b>一位同事的手腕旧伤加重，医生说再硬撑就要手术——团队二话不说把她手上的活儿接了过来。Ra 对小组的收尾叮嘱正是这个结构：影响在加剧、后果具体（手术），而小组能做的是分流——避免她任何不必要的用手。</div>
+    <div class="case"><b>纪录片摄制组：</b>拍人物纪录片时不重演、不摆拍，素材标注日期、原样剪入——观众才信。Ra 对出书照片的三条要求同理：只拍真实的工作、出神中不拍、拍照全程让器皿持续应答；他更把这件琐事上升为行家的功课——不要想着快速抹掉一个不重要的细节，而要像行家必须做的那样，做你们自己，不带任何伪装地奉献你们所是。</div>
+  </div>
+
+  <div class="saying">
+    <p class="en">In and of themselves the Major Arcana have no rightful place in divination, but rather are tools for the further knowledge of the self by the self for the purpose of entering a more profoundly, acutely realized present moment.</p>
+    <p class="zh">大奥秘本身在占卜中并无正当位置——它是自我借以进一步认识自我的工具，为的是进入一个更深刻、更敏锐地实现的当下时刻。</p>
+    <span class="src">—— Session 088 · (88.23)</span>
+  </div>
+
+  <div class="card">
+    <h3>告别</h3>
+    <div class="quote">
+      <p class="en">Go forth, therefore, rejoicing merrily in the power and in the glorious peace of the One Infinite Creator.</p>
+      <p class="zh">因此，向前走去吧——在太一无限造物主的力量与荣耀的平安里，满心欢喜地前行。</p>
+      <span class="src">—— Session 088 · (88.25)</span>
+    </div>
+    <p>下集预告：塔罗系列才刚开题——起源已明、课程已授，第八十九集起将逐个深入原型本身。</p>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 088（`split/Ra_Session_088.md`）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra088-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+initStepper('flow1','detail1','prev1','next1',[
+ {t:'开场',d:'<span class="qa-q">（88.0）集会开始。</span><b>答：</b>Ra 在太一无限造物主的爱与光中问候小组，开始通讯。'},
+ {t:'器皿状态',d:'<span class="qa-q">问：器皿今天状况如何？（88.1-88.2）</span><b>答：</b>肉体能量赤字相当大，生命能量也有明显损耗，但仍在「力量」的变貌范围内。Ra 特别点名：第四密度负面仆从正加剧她双手（其次胸部）的失衡，叮嘱避免任何不必要的用手。'},
+ {t:'负面访客',d:'<span class="qa-q">问：第五密度负面同伴还在休整吗？（88.3）</span><b>答：</b>它此刻没有陪伴你们——但它并没有在休息。'},
+ {t:'香炉与渗入',d:'<span class="qa-q">问：香炉熄灭得早有关系吗？器皿说的「渗入」是怎么回事？（88.4-88.5）</span><b>答：</b>香炉宁让它燃尽，也不要烟雾过量；「渗入」则是器皿从体验光与活动的摇篮中醒来、开始觉察思想流动——如婴儿感知最初的词语，会持续且属正常。'},
+ {t:'疼痛与意志',d:'<span class="qa-q">问：会前反复想上厕所，是因为生命能量低吗？（88.6）</span><b>答：</b>是部分原因——她长期承受少有人能承受的疼痛而能量耗竭，劝阻排解活动又添消耗。服务造物主的意志因此得到一次考验：她动用生命能量，再次有意识地选择服务。'},
+ {t:'水晶边界',d:'<span class="qa-q">问：她身上那颗小水晶有益还是有害？是谁充的能？那人现在还是正面的吗？（88.7-88.9）</span><b>答：</b>有益，前提是充能者（Neil）以正面方式运作；至于他现在如何——Ra 答道：你已回答了你自己的问题。第一变貌（自由意志）不容缩减。'},
+ {t:'出书照片',d:'<span class="qa-q">问：出版社要照片，用这个布置的照片好不好？（88.10-88.12）</span><b>答：</b>三条魔法考量：只拍真实的工作；出神时不拍器皿与工作间；拍照全程器皿须持续应答言语。任何照片都要讲述真相、标注日期、清晰无伪。'},
+ {t:'塔罗起源',d:'<span class="qa-q">问：塔罗最初在哪里形成？给谁用？（88.13-88.16）</span><b>答：</b>起源于金星，由金星第三密度人口设计——许多世代研究原型心智的成果，用以发展魔法人格的训练辅助。二十二原型相同、牌名差异不必考证；金星之后最大的突破，是给第 22 号「选择」以正确的强调。'},
+ {t:'不可浓缩',d:'<span class="qa-q">问：原型能否浓缩成「让催化剂更高效制造转化」的公式？（88.17）</span><b>答：</b>不能——正确与最根本的误解缠在一起；每个原型都是自在之物，各有概念复合体与旋律；原型与身体、灵性并无直接联系，须经显意识受控取用。Ra 请他重新提问。'},
+ {t:'方法与占卜',d:'<span class="qa-q">问：Ra 当年用什么教？塔罗怎么又成了占卜工具？（88.18-88.23）</span><b>答：</b>不用卡片，靠持续观想与口耳相传；宫廷/小奥秘出自迦勒底与苏美尔；原型混入占星牌堆会被磁化、成为联结介质，而大奥秘在占卜中没有正当位置——它是自我认识、深入当下的工具。'},
+ {t:'课程与叮嘱',d:'<span class="qa-q">问：教导二十二原型的课程长什么样？（88.24-88.25）</span><b>答：</b>三阶段：依次浏览全部图像、成对考虑、学习成为每个原型——没有教条。离开前再次警告双手：若不缓解，手术几乎立即必要。'}
+]);
+
+initStepper('flow2','detail2','prev2','next2',[
+ {t:'阶段一 · 全体浏览',d:'把二十二张图像按 1·8·15 / 2·9·16…… 的次序一张张呈现——同类原型在心智、身体、灵性三个层面并排出现，学生由此开始发现三者的基本关系。'},
+ {t:'阶段二 · 成对比较',d:'掌握全部观想、逐类审视过后，改看成对的原型：一和二、三和四、六和七（身体与灵性照此套用）；第五号指涉者刻意留白——它与第二十二号「选择」配对。'},
+ {t:'阶段三 · 成为原型',d:'借助各种灵性演化的辅助，鼓励启蒙者学习「成为」每个原型，并尽可能知道：何时采用原型的角色，在灵性或形而上层面是有帮助的。'},
+ {t:'没有教条',d:'大量工作由每个启蒙者创造性地完成——Ra 没有教条可提供，每个人感知对自我必要且有益的东西。'}
+]);
+
+initSorter('sorter1',[
+ {a:'有人请占星师按出生时刻画一张「人生地貌图」，看自己已经、正在、可能走的路',opts:['大奥秘','占卜塔罗','占星术'],ans:'占星术',exp:'Ra 描述的正是占星：受孕与出生两个行星流入之后，通晓星辰者能看到实体旅程的广阔地图。'},
+ {a:'把二十二张图像逐张研究，为的是更深刻地进入当下这一刻',opts:['大奥秘','占卜塔罗','占星术'],ans:'大奥秘',exp:'大奥秘代表原型心智的二十二原型，「在占卜中没有正当位置」——它是自我认识自我、深入当下的工具。'},
+ {a:'宫廷牌与小牌被洗进占星取向的牌堆，对执牌者的灵性印象「磁化」',opts:['大奥秘','占卜塔罗','占星术'],ans:'占卜塔罗',exp:'迦勒底与苏美尔影响下的宫廷/小奥秘是占卜牌的主体；原型混入其中便成为占卜者与问事者之间的联结器皿。'},
+ {a:'问「我该不该换工作」，洗牌抽牌，抽到的图像「碰巧」很有意思',opts:['大奥秘','占卜塔罗','占星术'],ans:'占卜塔罗',exp:'结果「看似有趣、对提问者的配置有意义」正是原型被磁化后的典型表现——但这是占卜塔罗的领域。'},
+ {a:'宣称「你的星座决定你的性格，无从更改」',opts:['大奥秘','占卜塔罗','占星术'],ans:'占星术',exp:'即便按 Ra 对占星的描述，那也只是「相当广泛绘制的地图」——这段守夜的本质恰恰是要教导自己偏好的运动方式。'}
+]);
+
+renderPath();
+</script>
+</body>
+</html>

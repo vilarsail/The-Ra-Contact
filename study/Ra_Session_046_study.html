@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 046 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 046 · 交互式学习模块</h1>
+  <p class="sub">器皿能量极低的一晚，Ra 用大半篇幅讲透一件事：同一份愤怒，正面极化者以「接纳」使用，负面极化者以「控制」使用——两条路都不走时，能量落到身体上，这正是本集对癌症的解释。</p>
+  <div class="tagline">5 个主题 · 5 个学习步骤 · 16 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 两只猫的防护</a>
+<a href="#s3">③ 愤怒的两把钥匙</a>
+<a href="#s4">④ 癌症的机制</a>
+<a href="#s5">⑤ 收官与悬念</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>低能量集会里的一堂催化剂专课：先用推进器走一遍问答脉络</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>两只猫的防护</b><span>谁在通灵层面是「开放」的：从一场宠物手术看攻击与防护</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>愤怒的两把钥匙</b><span>本集核心：催化剂看用途不看立场——接纳与控制的完整对照</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>癌症的机制</b><span>拆掉拟人化预设：未被使用的催化剂如何变成身体的接管者</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>收官：金句与悬念</b><span>两把钥匙合成一句话，再看本集留给下一集的大问题</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ 第 1 章 · 本章地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：低能量集会里的一堂「催化剂用法」专课</h2></div>
+  <p class="sec-lead">1981 年 4 月 15 日的这次集会在特殊条件下进行：器皿身体能量极低、攻击仍在持续，Ra 甚至中途收工。正因时间有限，这一集出奇地专注——从两只猫的小手术，一路讲到「癌症为何发生」。先看地图，再进正文。</p>
+
+  <div class="card">
+    <h3>本集在全书中的位置</h3>
+    <p>往前承接：Ra 说甘道夫这类增生物的成因「先前已经讨论过」（46.5），发问者也提及「更早的联系」里讲过的情绪平衡（46.13）——本集是在旧话题（情绪与身体）上往深处挖。往后开启：集会末尾发问者抛出一个大问题——正面与负面极化社会记忆复合体的计划目的是什么——因器皿疲倦没有得到回答，原封不动留给了下一集（46.17）。</p>
+  </div>
+
+  <div class="card">
+    <h3>问答脉络推进器：对话是怎么展开的</h3>
+    <p>点节点，看每个回合问了什么、Ra 答了什么；最后一格是本集的收束。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="flowTrack1"></div>
+      <div class="flow-detail" id="flowDetail1"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="flowPrev1">← 上一问</button>
+        <button class="tri-btn" id="flowNext1">下一问 →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>为什么值得细读这一小集</h3>
+    <div class="quote">
+      <p class="en">This instrument scans at present at extremely low physical energy and is under attack. This will continue for some of your weeks. However, the vital energy of this instrument is gradually restoring its former level.</p>
+      <p class="zh">这个器皿目前的身体能量极低，且正遭受攻击；这还将持续你们的一些星期。不过，它的生命能量正逐步恢复到先前的水平。</p>
+      <span class="src">—— Session 046 · (46.1)</span>
+    </div>
+    <div class="plain">条件最差的一次集会，反而讲出了最实用的一课：愤怒这份能量本身不挑人，挑的是你怎么用它。</div>
+    <div class="case"><b>一堂被压缩的课：</b>1981 年 4 月 15 日晚，Ra 开场即说明器皿身体能量极低、攻击仍在持续（46.1），讲到 (46.17) 又因器皿疲倦而收工。这次集会像一节只剩半节课时的补习课：老师不铺百科，只把一个概念——「催化剂怎么用」——讲透。读这一集不必求全，力量全在「愤怒→接纳/控制/生病」这一条线上。</div>
+    <div class="case"><b>从小事滑入大主题：</b>集会的引线琐碎到家——带猫看牙医、甘道夫腿上的小增生物。Ra 说这增生物危险轻微，「前提是没有重复的愤怒刺激」（46.5），一句随口的回答把全场的注意力引向「愤怒这份能量去了哪里」。读实录时留意这种接缝：重大的教导常从一个生活细节里长出来。</div>
+  </div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 后勤</span></summary>
+  <div class="body">
+    <p><b>(46.1) 器皿状态：</b>身体能量极低、正遭攻击，将持续数周；生命能量正逐步回升。</p>
+    <p><b>(46.6) 是否收工：</b>发问者问要不要因低活力结束，Ra 答：既已投入本集，这一点无关紧要——继续，由 Ra 监测生命能量。</p>
+    <p><b>(46.17) 集会安排：</b>器皿疲倦提前收工；这几周每周约可举行两次集会；Ra 表示很高兴与这个团体同在，并感谢小组的忠诚。</p>
+    <p><b>(46.18) 器具叮嘱：</b>一切良好，唯独器具的布置与朝向不可有任何疏忽。</p>
+  </div></details>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 2 章 · 两只猫的防护 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>两只猫的防护：谁在通灵层面是「开放」的</h2></div>
+  <p class="sec-lead">集会开场，发问者带着一个「不好意思问」的担忧：当天要带两只猫去清洁牙齿、切除甘道夫腿上的小增生物，他冥想中得到的印象是——猎户座集团可能借这个机会侵入。Ra 没有把这当成小题大做，而是认真回答了「动物会不会被通灵攻击」。</p>
+
+  <div class="card">
+    <h3>为什么猫也会被「点名」</h3>
+    <div class="q">两只猫只是去做个常规的牙齿清洁和小手术——发问者凭什么担心这会成为负面势力的入口，甚至说这个问题对「器皿和我们的心理状态至关重要」？</div>
+    <div class="quote">
+      <p class="en">The entity, mind/body/spirit complex, Gandalf, being harvestable third density, is open to the same type of psychic attack to which you yourselves are vulnerable.</p>
+      <p class="zh">甘道夫这个实体——一个心/身/灵复合体——已是可收割的第三密度实体，对与你们自身同型的通灵攻击敞开。</p>
+      <span class="src">—— Session 046 · (46.2)</span>
+    </div>
+    <p>Ra 紧接着说明攻击的进入方式：通过影像与梦境的机制，负面概念可能被提供给这个心/身/灵复合体，从而可能产生有害的结果。能否被攻击，不看物种、看状态——心智的活跃与投入本身就是通灵层面的「开放度」。</p>
+    <div class="plain">已经「可收割」的第三密度实体，攻击面就和你们一样打开了——而递送负面概念的渠道，是影像与梦境。</div>
+    <div class="case"><b>同一屋檐下的差别：</b>甘道夫与费尔柴尔德同为这个小组的猫，Ra 对两者的评估却不同：前者是可收割的第三密度实体、与人同样暴露于通灵攻击；后者虽也可收割，却因缺少「有意识奉献」这种深层心智活动而不那么脆弱。可见在本集的框架里，心智投入本身就是通灵层面的「开放度」。</div>
+  </div>
+
+  <div class="card">
+    <h3>两种防护：光之铠甲与熟悉的语句</h3>
+    <div class="q">那「我们能做什么」？发问者要的是马上就能用的防护动作。</div>
+    <div class="quote">
+      <p class="en">Firstly, the meditation putting on the armor of light. Secondly, the repetition of short ritual sentences known to this instrument from the establishment which distorts spiritual oneness for this instrument.</p>
+      <p class="zh">第一，冥想着披上光之铠甲；第二，重复几段简短的仪式语句——它们是这个器皿从那个「为这个器皿扭曲灵性合一」的机构中学来的。</p>
+      <span class="src">—— Session 046 · (46.2)</span>
+    </div>
+    <p>Ra 补充了两个细节：冥想要安排在「为这两只猫做事的当时」；仪式语句则从当下到安全返回、以方便的间隔反复念诵即可。语句不必另学——「这个器皿的知识就足够了」。它之所以有效，是因为会惊动「许多同样知晓这些语句的无形实体」：守护不是孤军奋战。</p>
+    <div class="plain">防护一在当下的冥想（光之铠甲），二在反复诵起自己传统里最熟悉的句子——熟悉的语句会唤来无形的守望者。</div>
+    <div class="case"><b>宠物医院前的默诵：</b>有人带猫去做绝育手术，在路上反复默念自己从小背诵的一段祈祷文。按 Ra 的解释，这类语句的力量不在词句本身有魔法，而在它同时惊动了许多同样知晓它的无形实体来守望——熟悉感即是号召力。</div>
+    <div class="case"><b>一次沉默也是回答：</b>发问者坦白自己不熟悉那些仪式语句、追问「你指的是哪些」（46.3），Ra 以沉默回应，只确认器皿自己知道（46.4）。Ra 不替另一个人挑好他的防护词句——工具得从每个人自己的传统与记忆里长出来，这正是自由意志的边界。</div>
+  </div>
+
+  <div class="card">
+    <h3>甘道夫腿上的小增生物：一句伏笔</h3>
+    <div class="q">腿上那个小增生物是怎么来的、危险吗？发问者想弄清楚这场手术值不值得做。</div>
+    <div class="quote">
+      <p class="en">The danger to the physical body complex is slight given the lack of repeated stimulus to anger.</p>
+      <p class="zh">若没有重复的愤怒刺激，这肉体复合体面临的危险是轻微的。</p>
+      <span class="src">—— Session 046 · (46.5)</span>
+    </div>
+    <p>Ra 只说成因「先前已经讨论过」，重点放在条件上：危险之所以轻微，是因为没有「重复的愤怒刺激」。这句话轻轻埋下了全集的引线——愤怒的能量若反复无处可去，最终会落到身体上。下一章就从这里接手。</p>
+    <div class="plain">小增生物本身不足惧；要盯住的是「重复的愤怒刺激」这个变量——它正是全集正题的门把手。</div>
+    <div class="case"><b>无处发作的猫：</b>一只新领养的猫总被家里原来的老猫拦路哈气，又无处躲藏。按本集的说法，「重复的愤怒刺激」正是把增生物的危险从「轻微」放大的变量——慢性敌意环境对身体的记账方式，人和动物并无不同。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 3 章 · 愤怒的两把钥匙 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>愤怒这份能量：正面用「接纳」，负面用「控制」</h2></div>
+  <p class="sec-lead">正题在 (46.7) 展开。发问者问了一个看似医学、实则直指极性的问题：愤怒是不是只在正面极化的实体身上才会变成身体疾病（比如癌症），走服务自我之路的人能否免疫？Ra 的回答把问题从「你是谁」扭到「你怎么用」。值得一提的是，(46.8) 里 Ra 先声明将「以与具体问题不同的方式」作答——他不纠缠个例，直接给出机制。</p>
+
+  <div class="card">
+    <h3>关键之问：催化剂看用途，不看立场</h3>
+    <div class="q">是不是只有「好人」才会因愤怒得病，负面极化者就对癌症免疫？——发问者的预设里，疾病像一位只惩罚某一方的裁判。</div>
+    <div class="quote">
+      <p class="en">The catalytic mechanisms are dependent not upon the chosen polarity of a mind/body/spirit complex, but upon the use, or purpose, to which this catalysis is put.</p>
+      <p class="zh">催化机制并不取决于一个心/身/灵复合体所选的极性，而取决于这份催化被投入的用途或目的。</p>
+      <span class="src">—— Session 046 · (46.7)</span>
+    </div>
+    <p>Ra 紧接着补了一句：凡有意识地用愤怒去极化的实体——无论正面还是负面——都「不体验身体催化剂，而是在心智配置中使用催化剂」。换句话说，疾病不是道德的罚单，而是能量去向的收据。</p>
+    <div class="plain">愤怒是一份中性的能量；它被有意识地使用时走心智，未被使用时才落到身体。</div>
+    <div class="analogy"><b>比喻：</b>家里水管突然水压过大——你可以引它去浇花园（接纳：让它滋养），可以装阀门把它全部导向自己选定的水车（控制：让它服从），也可以什么都不接，任它顶爆水管（两极之间：身体接管）。水本身无所谓善恶，分流方式才见极性。</div>
+    <div class="case"><b>会上被抢功的三个晚上：</b>项目会上，同事当众把你的方案说成他的想法。当晚你可以：一、承认「我现在很愤怒」，把它想透、看见对方也是被考核逼急的人，把能量转成第二天把分工重新讲清楚的勇气——正面：接纳整合；二、不动声色，记下每个细节，把狠劲全部组织进三周后的述职答辩，一举拿回评价权——负面：控制导向；三、既不面对也不处理，只在心里反刍、回家对家人摆脸色——能量无人认领，身体接管。按 Ra 的框架，前两种人「不体验身体催化剂」，第三种正站在两极之间。</div>
+  </div>
+
+  <div class="card">
+    <h3>正面用法：祝福它、强化它、看穿它</h3>
+    <div class="q">「接纳」愤怒听起来像纵容——正面极化的实体具体怎么做，才不至于变成压抑或发泄？</div>
+    <div class="quote">
+      <p class="en">This entity, if using this catalyst mentally, blesses and loves this anger in itself. It then intensifies this anger consciously in mind alone until the folly of this red-ray energy is perceived, not as folly in itself, but as energy subject to spiritual entropy due to the randomness of energy being used.</p>
+      <p class="zh">若在心智中使用这份催化剂，它会祝福并爱这愤怒本身；然后在心智中独自有意识地强化它，直到这红色光芒能量的愚蠢被感知——不是愚蠢本身，而是「能量被随机使用会遭遇灵性熵增」这件事。</p>
+      <span class="src">—— Session 046 · (46.9)</span>
+    </div>
+    <p>步骤是反直觉的：先感知并祝福这愤怒，再在心智中独自把它强化到顶点——不是为了发作，而是为了看清：这股红色光芒（red ray，第一能量中心，与生存本能相连的基底能量）若被随机使用，只会遭遇灵性熵增（spiritual entropy，能量因无序而耗损）。看清之后，意志与信心接手，让愤怒被理解、接纳、并与整个心/身/灵复合体整合；愤怒所指的那个他者，随之变成接纳与包容的对象。</p>
+    <div class="plain">正面的「接纳」不是消气，而是把愤怒用尽全力想明白——想明白的那一刻，它的能量归入整体。</div>
+    <div class="case"><b>把愤怒放到最大再看清：</b>邻居的装修钻连续三周在早七点响起。有人不骂回去也不硬压，而是在心里允许这股火气烧到最大——大到看清「它若乱烧，先烧掉的是我的睡眠、心律和第二天所有事的判断」。看清这红色光芒能量的「愚蠢」（能量被随机使用只是耗损）之后，它转成了第二天心平气和却立场坚定的时段约定谈判。这正是 Ra 说的：在心智中强化，直到愚蠢被感知，再整合为接纳。</div>
+  </div>
+
+  <div class="card">
+    <h3>负面用法：拒绝随机，导向控制</h3>
+    <div class="q">同一份愤怒，负面极化的实体拿它做什么？他们的路数和正面者差在哪里？</div>
+    <div class="quote">
+      <p class="en">The negatively oriented mind/body/spirit complex will use this anger in a similarly conscious fashion, refusing to accept the undirected, or random, energy of anger and instead, through will and faith, funneling this energy into a practical means of venting the negative aspect of this emotion so as to obtain control over other-self or otherwise control the situation causing anger.</p>
+      <p class="zh">负面导向的心/身/灵复合体会以同样有意识的方式使用愤怒：拒绝接纳那无定向的、随机的能量，而以意志与信心把它导入一个实际的宣泄出口，以取得对他者自我的控制，或控制引发愤怒的局面。</p>
+      <span class="src">—— Session 046 · (46.9)</span>
+    </div>
+    <p>差别在于对「随机」的态度：正面者拥抱这份无定向的能量并把它整合进整体；负面者视随机为失控，必须先压抑混乱的部分，再用意志把它组织成精确的压制工具。Ra 随后点出两把钥匙（见收官金句），并说明两极之间正是疾病潜藏的位置。</p>
+    <div class="plain">控制是负面极化使用催化剂的关键，接纳是正面极化的关键；两者都不做时，能量由身体认领。</div>
+    <div class="case"><b>谈判桌上的冷愤怒：</b>采购经理被供应商三次放鸽子，他不当场发作，而是把火气整个转成策略：冻结尾款、扶植备选供应商、在续约谈判前刻意冷处理，逼对方回到让步席上。愤怒没有消失，而是被压抑掉无序的部分、再以有组织的方式全部导出，服务于「夺回控制」——负面极化使用催化剂的完整动作。</div>
+  </div>
+
+  <div class="card">
+    <h3>先对自我做工：压抑什么，平衡什么</h3>
+    <div class="q">发问者把接纳/控制的对象理解成「他者」——Ra 纠正了什么？所谓「压抑」，压的又是谁？</div>
+    <p>Ra 说发问者的复述「部分正确」（46.10）：第一个接纳或控制——依极性而定——的对象是自我。愤怒只是众多「要作为自我的一部分被爱与接纳，或被控制」的东西之一。顺着这条线，发问者问出关键一问：负面极化者若控制不了自己的愤怒，会怎样？Ra 答「完全正确」，并指出负面极化对控制与压抑有着巨大要求（46.11）。压什么？任何本身混乱的情绪性心智变貌——都要先压抑、再以有组织的方式取用；Ra 甚至举了性欲的例子：负面极化者会控制并压抑这类最基本的身体需求，以便在「允许」性行为发生时，意志能更高效地强加于他者（46.12）。而正面导向的实体不压抑情绪，而是平衡情绪；Ra 确认这一点「阐明了合一之路」（46.13）。</p>
+    <div class="plain">无论哪条路，第一战场都是自我：正面把自我的情绪爱纳整合，负面把自我的情绪锁好待用。</div>
+    <div class="case"><b>压抑与平衡的对照：</b>同一笔奖金分配不公：A 宣布「我不该有情绪」，把委屈全部锁死，只在三个月后的评估会上让积累的怨气一次性精准引爆，逼主管让步——压抑之后有组织地取用；B 允许自己在心里把委屈、嫉妒、愤怒逐一翻出来看，给每种情绪留位置，平衡之后既能平静谈判，也不需要靠「赢过谁」来收场。Ra 对后者的评语是：这阐明了合一之路（46.13）。</div>
+  </div>
+
+  <div class="card">
+    <h3>术语卡：本集的核心词汇</h3>
+    <p>点击卡片翻面。每个术语都给出本集语境下的白话定义，未读过前文也能看懂。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">催化剂</div><div class="sub">catalyst</div><div class="tap">点击翻面</div></div><div class="back">促成体验发生、但本身不起作用的中介；本集强调它「无意识、不以智能运作」，只负责把体验端上桌。<em>像一条提前铺好的滑道——滑不滑、滑向哪，由走的人决定。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">学/教机制</div><div class="sub">learn/teaching</div><div class="tap">点击翻面</div></div><div class="back">子理则在空间/时间开始之前就设立好的教学装置；催化剂是它的一部分。<em>像开学前就排好的课表——课程在那里，学不学在学生。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">子理则</div><div class="sub">sub-Logos</div><div class="tap">点击翻面</div></div><div class="back">造出这个太阳系统的「理则之子」；本集说学/教机制由它在空间/时间开始之前设立。<em>若理则是写下整套物理规则的设计师，子理则就是照图施工的本地工程师。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">极性</div><div class="sub">polarity</div><div class="tap">点击翻面</div></div><div class="back">服务他人/服务自我两条极化方向；本集关键：催化剂不问你站在哪边，只问你拿它做什么。<em>同一把锤子，能钉钉子，也能砸锁。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">接纳</div><div class="sub">acceptance</div><div class="tap">点击翻面</div></div><div class="back">正面使用催化剂的钥匙：把愤怒等体验当作自我的一部分去感知、祝福、理解并整合。<em>把涌进来的水引进花园——有处可去，还能浇灌点什么。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">控制</div><div class="sub">control</div><div class="tap">点击翻面</div></div><div class="back">负面使用催化剂的钥匙：拒绝随机能量，用意志把它导入有组织的出口，以掌控他者或局面。<em>给涌进来的水装上阀门与管道，全部导向自己选定的水车。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">红色光芒</div><div class="sub">red ray</div><div class="tap">点击翻面</div></div><div class="back">第一能量中心，与生存、本能相连的基底能量；Ra 称愤怒为「红色光芒能量」，随机使用会带来灵性熵增。<em>像灶膛最底层的那档大火——火力最猛，烧什么却不看路标。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">可收割的第三密度</div><div class="sub">harvestable third density</div><div class="tap">点击翻面</div></div><div class="back">已达到可从第三密度毕业状态的实体；本集以此说明甘道夫为何与人同样对通灵攻击开放。<em>毕业班的学生和老师坐在同一间考场——面门也随之打开。</em></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>归类练习：这份能量被用了吗</h3>
+    <p>下面五个日常场景，各对应哪一条出路？点选你认为对的标签。</p>
+    <div id="sortArea"></div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 4 章 · 癌症的机制 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>癌症为何发生：未被使用的催化剂</h2></div>
+  <p class="sec-lead">发问者追着问癌症的「原理」，Ra 连续拆掉他的拟人化预设：癌症不是有智能的老师，催化剂不挑极性站队，患病者「毫无认知」也不妨碍机制本身——因为很多时候，催化剂根本没被使用。</p>
+
+  <div class="card">
+    <h3>催化剂没有智能</h3>
+    <div class="q">癌症是不是一种「训练催化剂」——像老师一样，对两种极性以大致相同的方式运作、分别引导极化？</div>
+    <div class="quote">
+      <p class="en">This is incorrect in that catalyst is unconscious and does not work with intelligence but rather is part of the, shall we say, mechanism of learn/teaching set up by the sub-Logos before the beginning of your space/time.</p>
+      <p class="zh">这是不正确的：催化剂是无意识的，并不以智能方式运作；它是一部分——容我们说——由子理则在你们的空间/时间开始之前设立的学/教机制。</p>
+      <span class="src">—— Session 046 · (46.14)</span>
+    </div>
+    <div class="plain">催化剂是预先装好的机制，不是临场出题的老师；它提供体验，但不认识任何体验它的人。</div>
+    <div class="analogy"><b>比喻：</b>重力。重力不「想」让你摔跤，也不替你挑选台阶；它只是被设定的机制——在哪里走、怎么走稳，全是你的事。催化剂之于这个密度，正是这种「预先设立、毫无智能」的在场。</div>
+    <div class="case"><b>被石头绊倒的一课：</b>你赶路时看手机，被台阶上一块石头绊得膝盖淤青。石头不「想」教训你，也认不得你——但这次摔跤确实让你记住了走路要看路。绊倒的机制毫无智能，学不学在你：催化剂正是这样一座事先铺好的台阶（46.14）。</div>
+  </div>
+
+  <div class="card">
+    <h3>催化剂的「使用计划」：端上体验，两条出路</h3>
+    <div class="q">既然催化剂没有智能，那问它「使用计划是什么」还有意义吗？Ra 给出了一个漂亮的回答。</div>
+    <div class="quote">
+      <p class="en">The catalyst, and all catalyst, is designed to offer experience. This experience in your density may be loved and accepted, or it may be controlled. These are the two paths.</p>
+      <p class="zh">催化剂——以及一切催化剂——被设计来提供体验。这体验在你们的密度中可以被爱与接纳，或被控制。这就是两条道路。</p>
+      <span class="src">—— Session 046 · (46.16)</span>
+    </div>
+    <p>Ra 把话说尽：体验端上来，正面把它爱之纳之，负面把它控之驭之；两条路都不选，催化剂就「未能达成其设计」——实体继续前行，直到某次催化剂击中它，迫使它形成偏见：要么走向接纳与爱，要么走向分离与控制。而「可供这催化剂工作的时间/空间并不缺乏」——这个机制没有截止日期。</p>
+    <div class="plain">催化剂只负责提供体验；用与不用、怎么用，决定权完全在体验者手里。</div>
+    <div class="case"><b>抽屉里的复查单：</b>体检报告写着「结节建议三个月后复查」，有人扫一眼就塞进抽屉，生活一切照旧。这份提醒作为催化剂没有达成它的设计——生活不会就此翻篇，同一道题会在下一轮换个形式再端上来，「可供它工作的时间/空间并不缺乏」（46.16）。</div>
+    <div class="case"><b>同一份裁员通知：</b>部门裁员名单公布：A 把它当作一次体验去接纳，借机重新盘点自己真正想做的事；B 把屈辱全部转化为对前雇主的精准竞争，一年后带队抢下对方最大的客户；C 既不消化也不行动，只在焦虑里熬着——失眠、暴食、背痛接踵而来。A、B 都「用了」催化剂，C 的处境正是「两条道路都没被选择」：随机能量开始由身体买单。</div>
+  </div>
+
+  <div class="card">
+    <h3>「在许多情况下，催化剂未被使用」</h3>
+    <div class="q">患癌的人大多根本不知道发生在自己身上的事——这种「学/教」是怎么进行的？发问者在这里触到了要害。</div>
+    <div class="quote">
+      <p class="en">In many cases catalyst is not used. … When neither path is chosen, the catalyst fails in its design, and the entity proceeds until catalyst strikes it which causes it to form a bias towards acceptance and love or separation and control. There is no lack of space/time in which this catalyst may work.</p>
+      <p class="zh">在许多情况下，催化剂并未被使用。……当两条路都没有被选择，催化剂就未能达成其设计；实体继续前行，直到催化剂击中它，使它形成一种朝向接纳与爱、或朝向分离与控制的偏见。可供这催化剂工作的时间/空间并不缺乏。</p>
+      <span class="src">—— Session 046 · (46.15)(46.16)</span>
+    </div>
+    <div class="plain">癌症的来处不是「被用错了」，而是「没被用」：随机无定向的能量无人认领，身体复合体只好接管。</div>
+    <div class="case"><b>十年换了四份工作：</b>一个人每次离职的原因都一模一样——「上司不识货」。按本集的图景，同一种催化剂会一击再击，「时间/空间并不缺乏」，直到它要么被接纳成对自己的重新认识、要么被组织成一次彻底的策略转变——否则它就一直换着形式回来。</div>
+  </div>
+
+  <div class="card">
+    <h3>条件模拟器：身体催化剂何时出现</h3>
+    <p>把本集的机制做成三个开关。试试只拨动其中两个，看结果如何变化。</p>
+    <div class="cond-row"><div class="name">催化剂在场<small>一次愤怒或创伤体验已经发生（它总归会发生——催化剂被设计来提供体验）</small></div><label class="switch"><input type="checkbox" id="condA" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">走了正面之路<small>感知、祝福、理解，把愤怒整合进心/身/灵复合体</small></div><label class="switch"><input type="checkbox" id="condB"><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">走了负面之路<small>压抑随机部分，以有组织的方式导出以取得控制</small></div><label class="switch"><input type="checkbox" id="condC"><span class="slider"></span></label></div>
+    <div id="condResult">拨动开关，看这份能量的去向。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 5 章 · 收官 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>收官：两把钥匙与一个悬念</h2></div>
+  <p class="sec-lead">这一集的分量几乎全部压在 (46.9) 的几句话上。收官之前，把它们放回原位，再看一眼本集留下的伏笔。</p>
+
+  <div class="card">
+    <h3>本集核心：一句话带走</h3>
+    <div class="saying">
+      <p class="en">Control is the key to negatively polarized use of catalyst. Acceptance is the key to positively polarized use of catalyst. Between these polarities lies the potential for this random and undirected energy creating a bodily complex analog of what you call the cancerous growth of tissue.</p>
+      <p class="zh">控制是负面极化使用催化剂的钥匙，接纳是正面极化使用催化剂的钥匙。而在这两极之间，潜藏着这种随机、无定向的能量造出肉体复合体类似物的可能——也就是你们所说的癌性组织增生。</p>
+      <span class="src">—— Session 046 · (46.9)</span>
+    </div>
+    <p>三句话是一个完整的结构：一把钥匙、另一把钥匙、以及两把都不用时的去处。发问者接着追问「正面与负面极化社会记忆复合体的计划目的」（46.17），Ra 却因器皿疲倦而收工——这个大问题原封不动地留给了下一集。</p>
+    <div class="quote">
+      <p class="en">I am Ra. I leave you, my friends, in the love and in the light of the One Infinite Creator. Go forth, therefore, rejoicing in the power and the peace of the One Infinite Creator. Adonai.</p>
+      <p class="zh">我是 Ra。我的朋友们，我怀着太一无限造物主的爱与光离开你们。那么，向前走去吧，在祂的大能与平安中欢欣。Adonai。</p>
+      <span class="src">—— Session 046 · (46.18)</span>
+    </div>
+    <div class="case"><b>被别车后的三秒钟：</b>高速上被一辆车强行切入，火气「腾」地起来。这三秒就是一次微型的催化剂投放：或把它在心里祝福、放大、看穿，化成保持车距的清醒（接纳）；或冷静记住车牌、在下一个匝道用一次教科书式的路权压制「回敬」（控制）；或什么都不做，让这口闷气顶在胸口一路到家（两极之间，身体接管）。三秒钟，三条路，同一份能量。</div>
+    <div class="case"><b>工位上的一张便签：</b>把「接纳」「控制」两个词写上便签贴在显示器边，月底自查一次：这个月哪几次火气被用掉了——变成了修复关系或清晰边界；哪几次没被认领——变成了胃痛、失眠或一场迁怒。本集教的就是这张自查表的用法。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 046（<code>split/Ra_Session_046.md</code>）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra046-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本集定制交互 ===== */
+
+/* 问答推进器：本集问答脉络 */
+initStepper('flowTrack1','flowDetail1','flowPrev1','flowNext1',[
+ {t:'器皿状态',d:'<span class="qa-q">问：开始前能否报告一下器皿的状态？（46.1）</span><b>答：</b>身体能量极低，且正在遭受攻击，这种状况还将持续数周；但生命能量正逐步恢复到先前水平。稍后 Ra 又说：既已投入本集就继续进行，由它来监测生命能量（46.6）。'},
+ {t:'两只猫',d:'<span class="qa-q">问：今天要带两只猫去清洁牙齿、做小手术，猎户座集团会不会借机侵入？（46.2）</span><b>答：</b>甘道夫作为可收割的第三密度实体，和你们一样对同型通灵攻击开放；防护有二——活动当时冥想披上光之铠甲，并间歇重复器皿自幼熟悉的仪式语句。追问「哪些语句」时，Ra 沉默不答（46.3）。'},
+ {t:'甘道夫的增生物',d:'<span class="qa-q">问：甘道夫腿上的小增生物危险吗？（46.5）</span><b>答：</b>危险轻微——前提是没有重复的愤怒刺激。这句看似随口的回答，为全集主题（愤怒与身体）埋下引线。'},
+ {t:'是否收工',d:'<span class="qa-q">问：器皿活力这么低，要不要就此结束？（46.6）</span><b>答：</b>既已投入这次集会，这一点无关紧要；你们可以继续，Ra 会监测生命能量。'},
+ {t:'愤怒与极性',d:'<span class="qa-q">问：愤怒对负面极化者的身体影响是否一样？（46.7）</span><b>答：</b>催化剂机制不取决于所选极性，而取决于这份催化被投入的用途——随后 Ra 展开正面（接纳）与负面（控制）两种用法的完整对照（46.8-46.13）。'},
+ {t:'癌症的机制',d:'<span class="qa-q">问：癌症这种「训练催化剂」是如何运作的？（46.14-46.16）</span><b>答：</b>Ra 一一拆掉拟人化预设：催化剂无意识、不智能；它只提供体验——被爱与接纳，或被控制；两条路都不走时催化剂失效，而可供它工作的时间/空间从不缺乏。'},
+ {t:'收束',d:'<span class="qa-q">问：正面/负面社会记忆复合体的计划目的是什么？（46.17）</span><b>答：</b>器皿疲倦，Ra 选择提前收工、不作回答，只预告这几周每周约两次集会——这个大问题成为下一集的开场。'}
+]);
+
+/* 术语卡翻面 */
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+/* 归类练习：这份能量被用了吗 */
+initSorter('sortArea',[
+ {a:'项目复盘会上，工程师承认「我当时火大了没沟通」，把这件事从头到尾想透，第二天主动把接口约定重新讲清楚。',opts:['正面 · 接纳','负面 · 控制','两极之间'],ans:'正面 · 接纳',exp:'感知、接纳、理解并整合——愤怒的能量被转成更清晰的协作，这正是正面用法的日常形态。'},
+ {a:'被同行恶意压价后，店主不动声色，默默摸清对方的所有客源，半年后一次性抢下对方最大的客户。',opts:['正面 · 接纳','负面 · 控制','两极之间'],ans:'负面 · 控制',exp:'拒绝让能量停留在无序状态，而以意志把它组织成一次精准的压制——控制是负面极化的钥匙。'},
+ {a:'遭遇不公后既不肯承认自己在愤怒，也不做任何处理，只在深夜反复回想，半年后查出胃部问题。',opts:['正面 · 接纳','负面 · 控制','两极之间'],ans:'两极之间',exp:'两条路都没走，随机无定向的能量无人认领，身体复合体接管——Ra 说这正是「癌性组织增生」一类肉体类似物的来处。'},
+ {a:'吵架后强迫自己「不能失态」，转头用一连串冷暴力精准打击对方最在意的东西。',opts:['正面 · 接纳','负面 · 控制','两极之间'],ans:'负面 · 控制',exp:'表面「没发火」，实际是把愤怒压抑后再以有组织的方式释放以取得控制——负面路径的典型动作。'},
+ {a:'兄弟争旧宅，他先在心里承认「我嫉妒也愤怒」，爱这份情绪如同爱自己的一部分，看清乱用它只会毁掉关系，最后主动提出折中方案。',opts:['正面 · 接纳','负面 · 控制','两极之间'],ans:'正面 · 接纳',exp:'把情绪当作自我的一部分去接纳与爱，并让它指向理解与包容——合一之路。'}
+]);
+
+/* 条件模拟器：身体催化剂何时出现 */
+function updateCatalystResult(){
+  var a=document.getElementById('condA').checked,
+      b=document.getElementById('condB').checked,
+      c=document.getElementById('condC').checked;
+  var el=document.getElementById('condResult'),txt;
+  if(!a){
+    txt='还没有催化剂可言：一切催化剂都被设计来「提供体验」。体验尚未发生，就谈不上被使用或未被使用。';
+  }else if(b&&!c){
+    txt='正面用法：愤怒被感知、祝福、理解并与心/身/灵复合体整合——Ra 说这样的实体不体验身体催化剂，而是在心智配置中把它用掉。';
+  }else if(c&&!b){
+    txt='负面用法：随机能量被拒绝接纳，经意志与信心导入有组织的出口以取得控制——同样不会落到身体上。';
+  }else if(!b&&!c){
+    txt='两极之间：随机、无定向的能量无人认领——它开始制造「你们所说的癌性组织增生」的肉体复合体类似物。这就是本集对癌症的核心解释。';
+  }else{
+    txt='Ra 说这是「两条道路」，一次催化通常择一而行；若两条都「走」了，多半意味着哪一条都没有走透。';
+  }
+  el.textContent=txt;
+  el.classList.toggle('fail',a&&!b&&!c);
+}
+document.getElementById('condA').addEventListener('change',updateCatalystResult);
+document.getElementById('condB').addEventListener('change',updateCatalystResult);
+document.getElementById('condC').addEventListener('change',updateCatalystResult);
+updateCatalystResult();
+
+renderPath();
+</script>
+</body>
+</html>

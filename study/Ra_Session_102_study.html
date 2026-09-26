@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 102 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 102 · 交互式学习模块</h1>
+  <p class="sub">这一集几乎整集都在回答一个问题：器皿的身体出了什么事——从能量层面的黄光阻塞与负面「工作」，到以「糖的悖论」为核心的饮食医嘱、一个月内好转或手术的岔路口，最后 Ra 指出：最大的治愈是牵手同行。</p>
+  <div class="tagline">6 个主题 · 6 个学习步骤 · 14 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 病因诊断</a>
+<a href="#s3">③ 饮食医嘱</a>
+<a href="#s4">④ 两次「不能」</a>
+<a href="#s5">⑤ 岔路口</a>
+<a href="#s6">⑥ 收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>用问答推进器走一遍本集的完整对话链，例行问答收进折叠区</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>病因诊断</b><span>身体的病为什么先往能量中心看；痉挛与耗竭在说什么</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>饮食医嘱</b><span>糖为什么不能一刀切戒掉；「高概率安全」的食物清单</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>Ra 的两次「不能」</b><span>没有万无一失的食物；黄光靠爱解除</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>一个月的岔路口</b><span>感染的「工作宿主」、手术机理，拨一拨条件模拟器</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官金句</b><span>最大的治愈是牵手同行</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：一场围绕器皿身体的危机</h2></div>
+  <p class="sec-lead">第 102 集（1983 年 3 月 22 日）处于资料后段：整集几乎都在回答同一个问题——「这具身体怎么了，我们该怎么办」。教导退居幕后，负面干扰在这具身体上显形为一场具体的消化道急症；而全集的收束不在医术里，而在「牵手同行」的叮嘱里。</p>
+
+  <div class="card">
+    <h3>开场即定调：这具身体已绷到极限</h3>
+    <div class="q">照例的开场问状态，这次的答案却不同寻常——发问者大概已经预感到情况不妙。</div>
+    <div class="quote">
+      <p class="en">The physical energy deficit of this entity is the most substantial across which we have come.</p>
+      <p class="zh">这具实体此刻的物理能量亏缺，是我们所经历过的最沉重的一次。</p>
+      <span class="src">—— Session 102 · (102.1)</span>
+    </div>
+    <div class="plain">身体亏空到了极点，但器皿靠自己的意志把生命能量撑向健康；心智与情绪反而接近平衡。本集所有讨论都以此为背景。</div>
+  </div>
+
+  <div class="card">
+    <h3>问答脉络推进器：这一集是怎么问下来的</h3>
+    <p style="font-size:.95rem;color:var(--ink-soft)">本集议题链：器皿状态 → 病因（能量中心 + 两种原因）→ 饮食医嘱（糖的悖论）→ 治疗的两条线 → 一个月的岔路口 → 最大的治愈。点节点或用按钮逐步推进。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="mapTrack"></div>
+      <div class="flow-detail" id="mapDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="mapPrev">← 上一步</button>
+        <button class="tri-btn" id="mapNext">下一步 →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="case"><b>单点故障：</b>凌晨的急诊走廊里，一位照顾重病家人两年的家属自己先倒下了——全家人的日程、经济与情绪都系在他一个人身上。这正对应本集的处境：小组与 Ra 的通讯完全依赖器皿这一具「最脆弱的框架」，她的身体就是整项工作的单点。</div>
+  <div class="case"><b>把焦虑压成清单：</b>家人群里为一张体检报告吵开了：有人主张严格忌口，有人主张找专家，有人建议再观察——人在焦虑中最想把不确定压缩成一张确定的清单。本集发问者一句句追问「能不能吃这个、该找谁治」，正是这种焦虑的写照，而 Ra 的回答反复把镜头拉回清单之外的心态与关系。</div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 后勤</span></summary>
+  <div class="body">
+    <p><b>(102.1) 器皿状态：</b>物理能量亏缺为历次之最；心智与情感接近平衡，整体生命能量靠器皿的意志偏向健康。</p>
+    <p><b>(102.3-102.4) 后勤问答：</b>那位可以提供更强抗痉挛药的「Arthur」姓 Schoen，就在本地。</p>
+    <p><b>(102.18) 后勤确认：</b>若需要就医，建议求助的对抗疗法专家即 Arthur Schoen 本人。</p>
+    <p><b>(102.20) 集会收尾：</b>Ra 说明器皿的框架极其脆弱，请求只再回答一个正常长度的问题。</p>
+  </div></details>
+
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>病因诊断：为什么要往能量中心看身体</h2></div>
+  <p class="sec-lead">发问者把胃部剧痛当一个待诊断的病例来问。Ra 却先换镜头：要找身体的病因，先看被阻塞的能量中心——然后才谈胰腺、肝脏与那顿晚饭。</p>
+
+  <div class="card">
+    <h3>病在「线路」，不在「电器」</h3>
+    <div class="q">发问者问：器皿胃部的疼痛和痉挛到底是什么引起的、能做什么来治——他预设这是一个纯生理的病例。</div>
+    <div class="quote">
+      <p class="en">In order to observe the cause of physical distortions toward illness one must look to the energy center which is blocked. In this situation, the blockage being yellow-ray, the experience has had the characteristics of that region of the chemical body. The so-called lacuna in the wind-written armor of light and love was closed and not only repaired but much improved.</p>
+      <p class="zh">要找出身体为什么生病，得看被阻塞的能量中心——这次阻塞在黄光，所以体验带有化学身体那个部位的特征；那层光与爱写成的铠甲上的缺口已经合拢，不仅修复，还大大改善了。</p>
+      <span class="src">—— Session 102 · (102.2)</span>
+    </div>
+    <div class="analogy"><b>配电箱与电器：</b>屋里电器不工作，先看配电箱哪一路跳了闸。身体症状像失灵的电器，能量中心像配电箱——黄光这一路「跳闸」，腹部这条「线路」上的器官就出状况。</div>
+    <div class="plain">身体的病，先查能量中心的「跳闸」：这次是黄光被阻，症状才落在腹部；而防护上的缺口其实已经修复。</div>
+  </div>
+
+  <div class="card">
+    <h3>满身的「陪抽」：耗竭的报警器</h3>
+    <div class="q">发问者猜剧痛来自回肠痉挛，想锁定具体病灶——Ra 答部分正确，并铺开一张更大的痉挛地图。</div>
+    <div class="quote">
+      <p class="en">These sympathetic spasms are a symptom of the exhaustion of the entity’s physical vehicle.</p>
+      <p class="zh">这些连带发生的痉挛，是这实体的物理载具已经耗竭的信号。</p>
+      <span class="src">—— Session 102 · (102.8)</span>
+    </div>
+    <div class="plain">横结肠、肝部管道在痉挛之外，还有从胸腔到盆腔大片「陪抽」的肌肉——那不是新病灶，而是整台载具在报警：它已耗竭。</div>
+  </div>
+
+  <div class="card">
+    <h3>镜头拉回心态：专注造物主超过九成</h3>
+    <div class="q">在药与食谱的细节之间，Ra 为什么突然谈起「专注」？发问者关心吃什么，Ra 先确认心在哪。</div>
+    <div class="quote">
+      <p class="en">We may note that the instrument has remained centered upon the Creator at a percentage exceeding ninety. This is the key. Continue in thanksgiving and gratitude for all things.</p>
+      <p class="zh">我们可以指出，器皿始终以超过九成的比例专注于造物主——这就是关键。继续对一切事物保持感恩与感谢。</p>
+      <span class="src">—— Session 102 · (102.2)</span>
+    </div>
+    <div class="plain">药方可以开得很节制，前提是心还在该在的地方——专注与感恩本身就是治疗的一半。</div>
+  </div>
+
+  <div class="case"><b>扳机与火药：</b>一位长期肩颈紧绷的上班族，某天赶工吞下一顿油腻外卖后胃痉挛发作。那顿饭只是扳机，长期的紧张与压抑才是火药——正对应 Ra 区分的「直接原因」与被激活的旧况（102.10）。</div>
+  <div class="case"><b>眼皮跳会蔓延：</b>熬夜赶论文的学生，先是左眼皮跳，几天后蔓延到脸颊。周边肌肉跟着主问题一起抽，说明整个系统在超载——这就是「交感性痉挛」：载具耗竭的症状，而非新毛病（102.8）。</div>
+  <div class="case"><b>感谢清单：</b>一位慢性病患者把注意力从「为什么是我」挪到每晚写三件值得感谢的小事，复诊时医生发现她的状态比指标更好看——器皿「专注造物主超过九成」的写照：心态稳住，身体才有得治（102.2）。</div>
+
+  <div class="card">
+    <h3>本段术语卡：点开看背面</h3>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">黄色光芒</div><div class="sub">yellow ray</div><span class="tap">点击展开</span></div><div class="back">能量中心体系中与亲密关系、情绪接纳相关的中心。Ra 教的原则：找身体的病因，先看哪个中心被阻塞——本集的阻塞就在黄光，所以症状落在腹部。<em>好比配电箱的一路保险烧了，这条线路上的电器就会出状况。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">风写的铠甲</div><div class="sub">wind-written armor of light and love</div><span class="tap">点击展开</span></div><div class="back">Ra 对器皿能量防护层的称呼：一层由光与爱写成的铠甲。之前出现的缺口（lacuna）如今已关闭、修复并大大改善——但修复前的短暂中断，足以激活身体的旧弱点。<em>像堤坝上的管涌口已经堵上，可渗漏那几天泡软的土，还需要时间干回来。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">交感性痉挛</div><div class="sub">sympathetic spasms</div><span class="tap">点击展开</span></div><div class="back">主痉挛之外，周边肌群跟着一起抽——从支气管覆盖层到盆腔、从肩胛到臀部。Ra 明确说这是整个物理载具耗竭的症状，而不是新的病灶。<em>一台电机过载时，连外壳和底座都在抖。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">对抗疗法</div><div class="sub">allopathy</div><span class="tap">点击展开</span></div><div class="back">即现代常规西医体系（药物、手术、检测）。本集里十二指肠的刺激被指为此前对抗疗法治疗所遗留；而若感染查不出来，Ra 也建议回头求助对抗疗法专家。<em>同一套工具既能留下刺激，也能在关键时刻兜底。</em></div></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>饮食医嘱：糖为什么不能一刀切戒掉</h2></div>
+  <p class="sec-lead">既然饮食是核心，发问者顺理成章地想要一张「戒口清单」。Ra 给出的却是一份精确到时段的「用糖时间表」——这具身体已经把糖当碳水用了，戒断反而是伤害。</p>
+
+  <div class="card">
+    <h3>一份精确到时段的用糖时间表</h3>
+    <div class="q">发问者问该从饮食里戒掉哪些东西——他默认「戒掉」是治疗的标准动作，结果 Ra 的答案方向相反。</div>
+    <div class="quote">
+      <p class="en">There is a complex addiction, due to long-standing eating habits, to your sugars.</p>
+      <p class="zh">由于长年的饮食习惯，她对你们的糖已形成一种复杂的依赖。</p>
+      <span class="src">—— Session 102 · (102.5)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Small amounts of the fructose, maple, or raw honey may be ingested periodically, for, as we have said, the chemistry of this yellow-ray body is such that the sugar is being used by blood enzymes as would carbohydrates in a less distorted yellow-ray, physical vehicle.</p>
+      <p class="zh">果糖、枫糖或生蜂蜜可以定期少量摄入——因为这具黄光身体的化学性质特殊，血液酶正在把糖当作碳水来使用。</p>
+      <span class="src">—— Session 102 · (102.7)</span>
+    </div>
+    <div class="analogy"><b>换药不改方：</b>像给长期服某种药的人调时间表——不是停药，而是把剂量挪到身体最需要它的时段：浓缩糖（甜点、冰淇淋、饼干）放在下午晚些时候，含糖饮料安排在晚餐后一两小时，睡前再补少量低糖碳水（102.5）。</div>
+    <div class="plain">医嘱不是「戒糖」，而是「换时段、换形式地给糖」：这具身体已经把糖当碳水用了，不能突然断供。</div>
+  </div>
+
+  <div class="card">
+    <h3>「高概率安全」的食物区</h3>
+    <div class="q">被拒绝「绝对安全」之后（下一章细说），发问者退一步，只要一份「高概率不引发痉挛」的清单——Ra 立刻给了。</div>
+    <div class="quote">
+      <p class="en">The liquids not containing carbonation, the well-cooked vegetable which is most light and soft, the well-cooked grains, the non-fatted meat such as the fish.</p>
+      <p class="zh">不含碳酸的液体、煮得最轻最软的蔬菜、煮透的谷物、如鱼那样的瘦肉。</p>
+      <span class="src">—— Session 102 · (102.16)</span>
+    </div>
+    <div class="table-wrap">
+    <table class="nine">
+      <tr><th>食物类型</th><th>英文原词</th><th>通俗理解</th></tr>
+      <tr><td>非碳酸液体</td><td>liquids not containing carbonation</td><td>不冒泡的饮品，减少腹胀与刺激</td></tr>
+      <tr><td>煮透的轻软蔬菜</td><td>well-cooked vegetable, most light and soft</td><td>软到不用费力消化</td></tr>
+      <tr><td>煮透的谷物</td><td>well-cooked grains</td><td>粥、软饭一类的温和主食</td></tr>
+      <tr><td>非肥肉如鱼</td><td>non-fatted meat such as the fish</td><td>低脂蛋白，减轻消化负担</td></tr>
+    </table>
+    </div>
+    <div class="plain">没有百分百的保证，但有高概率的安全区：软、熟、清淡、非碳酸——而糖虽有潜在风险，此时仍被建议保留。</div>
+  </div>
+
+  <div class="case"><b>戒糖戒出头痛：</b>戒糖第一周的上班族，到下午头痛手抖、注意力涣散——长年习惯已成依赖，一刀切比有安排地保留更伤身。这正是 Ra 所说的「复杂依赖」：戒法比戒本身更重要（102.5）。</div>
+  <div class="case"><b>水果代饭的健身者：</b>把米饭全换成水果，两周后训练乏力——身体早已把糖当作主要碳水来源，突然撤掉等于断供。Ra 的解释如出一辙：这具身体的血液酶把糖当碳水用（102.7）。</div>
+  <div class="case"><b>病号餐：</b>家人肠胃炎恢复期，你煮的是白粥、蒸蛋、去油的鱼汤——一切煮到软、易嚼。这正是 102.5 的「soft and easily macerated」与 102.16 清单的日常版：不是忌口清单，而是一套「让肠胃省力」的烹饪原则。</div>
+
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>Ra 的两次「不能」：没有万无一失的食物</h2></div>
+  <p class="sec-lead">发问者把治愈归纳成两件事——修好黄光、管住饮食。前半，Ra 给出一条「爱的定义」；后半，他两次说「不能」：不是不肯，而是那样的保证在物理上不存在。</p>
+
+  <div class="card">
+    <h3>黄光怎么完全解除：一条关于爱的定义</h3>
+    <div class="q">发问者确认「治愈靠黄光修复 + 饮食」两件事，并以为黄光阻塞已经完全修复——Ra 借机说明「完全解除」意味着什么。</div>
+    <div class="quote">
+      <p class="en">Each entity must, in order to completely unblock yellow ray, love all which are in relationship to it, with hope only of the other-selves’ joy, peace, and comfort.</p>
+      <p class="zh">要完全解除黄光的阻塞，每个实体必须爱一切与它相关的人，且只盼望其他自我的喜悦、平静与舒适。</p>
+      <span class="src">—— Session 102 · (102.11)</span>
+    </div>
+    <div class="plain">黄光的完全解除不靠技巧，靠关系：对一切相关之人，只愿其喜悦——不求回报的爱才是那把钥匙。</div>
+  </div>
+
+  <div class="card">
+    <h3>「绝无风险」的清单为什么给不了</h3>
+    <div class="q">发问者想要一份「绝不会引发痉挛」的食物清单；被拒后追问原因，甚至猜到「第一变貌（自由意志）」头上——Ra 一一否认，给出真正的理由。</div>
+    <div class="quote">
+      <p class="en">There are no foods which this instrument can take with total confidence that no spasm shall occur. The spasming portions of the vehicle have become sensitized through great distortions towards that which you call pain.</p>
+      <p class="zh">没有任何食物能让这器皿完全放心地吃下而不痉挛——载具中痉挛的部位，已经因剧烈的疼痛而变得敏感。</p>
+      <span class="src">—— Session 102 · (102.14)</span>
+    </div>
+    <div class="plain">Ra 的「不能」不是权变或避讳：组织已经敏感化，那样的保证在物理上不存在——这不是自由意志的界限，而是身体的实情。</div>
+  </div>
+
+  <div class="case"><b>「有没有绝对安全的餐厅？」</b>一位多重过敏体质的患者问医生：能不能推荐一家绝不会让她过敏的餐厅。医生答不了——不是不愿，而是她的消化系统已经敏感化，任何餐厅都有风险；医生能给的是「高概率安全」的选择原则。对应 102.12-102.14 的整段问答。</div>
+  <div class="case"><b>「绝不吵架的话术」：</b>朋友请你列一份「保证永不吵架的沟通话术」——你列不出，因为冲突与否取决于关系本身有没有被好好爱着，而不是话术清单。正如黄光的完全解除要求「爱一切相关者、只愿其喜悦」（102.11），关键变量在关系里，不在技巧里。</div>
+
+  <div class="card">
+    <h3>归类练习：Ra 是怎么回应的</h3>
+    <p style="font-size:.95rem;color:var(--ink-soft)">同一集里，Ra 有时直接给答案、有时明确拒绝、有时只确认一半。判断下面每个回应属于哪一种。</p>
+    <div id="replySorter"></div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>一个月的岔路口：好转，还是手术</h2></div>
+  <p class="sec-lead">医嘱都拿到了，发问者问出时间维度：照做的话，最坏的情况还会持续多久。Ra 的回答把未来摊开成两条分支——而这个「工作」的宿主，是消化道里一处难以清除的感染。</p>
+
+  <div class="card">
+    <h3>摊开的未来：一条时间线，两个分支</h3>
+    <div class="q">发问者想知道：遵循这些治疗措施的话，极端严重的情况还会持续多久——他在向 Ra 要一个预后。</div>
+    <div class="quote">
+      <p class="en">One of your moon’s revolutions has a good possibility/probability vortex of seeing either the worsening of the spastic condition so that surgery becomes indicated, or the bettering of the situation so that the diet continues to be watched but the spasms be removed. The housing of the working is within the infection within the duodenum, the stomach, the jejunum, the ileum, the transverse colon, and portions of the liver. This shall be somewhat difficult to remove and constitutes perhaps the most efficient working to date.</p>
+      <p class="zh">一个月亮周期内，有很好的可能性漩涡：要么痉挛恶化到需要手术，要么好转到只需继续留意饮食、痉挛消退。这次「工作」的宿主，在十二指肠、胃、空肠、回肠、横结肠与部分肝脏的感染里——它难以清除，也许是至今最有效的一次工作。</p>
+      <span class="src">—— Session 102 · (102.17)</span>
+    </div>
+    <div class="timeline">
+      <div class="tl-item"><div class="t">发作时刻</div><div class="d">黄光短暂中断，横结肠痉挛倾向被激活，大片交感性痉挛随后出现（102.2、102.8）。</div></div>
+      <div class="tl-item"><div class="t">「工作」的宿主</div><div class="d">感染落在十二指肠、胃、空肠、回肠、横结肠与部分肝脏，仅可勉强检测——这是至今最有效的一次工作（102.17）。</div></div>
+      <div class="tl-item"><div class="t">一个月窗口</div><div class="d">可能性/或然率聚焦：恶化到手术，或好转到只需留意饮食（102.17）。</div></div>
+      <div class="tl-item"><div class="t">分支 A · 手术</div><div class="d">极度酸性环境持续 → 肠壁出现孔洞与溃疡 → 检测显现 → 外科医生依报告切除，位置在空肠之后（102.19-102.20）。</div></div>
+      <div class="tl-item"><div class="t">分支 B · 好转</div><div class="d">饮食继续留意，痉挛被移除（102.17）。</div></div>
+    </div>
+    <div class="plain">一个月见分晓——两个分支都摆在桌上，走向取决于这组人怎么照顾身体与彼此。</div>
+  </div>
+
+  <div class="card">
+    <h3>手术是怎么「自己走来」的</h3>
+    <div class="q">如果真走到手术那一步，那会是一场什么样的手术？发问者以为是「切十二指肠溃疡」那一类——Ra 纠正了位置与机理。</div>
+    <div class="quote">
+      <p class="en">The body cannot long bear the extreme acidity which is the environment of such spasms and will develop the holes or ulcerations which then do appear upon the allopathic testings and suggest to the chirurgeon that which is to be excised.</p>
+      <p class="zh">身体无法长期承受痉挛环境中的极度酸性，将会出现破洞或溃疡——它们会在对抗疗法的检测中显现，并「建议」外科医生该切除什么。</p>
+      <span class="src">—— Session 102 · (102.19)</span>
+    </div>
+    <div class="analogy"><b>失衡的鱼缸：</b>水的 pH 一直偏酸，玻璃再好也会被腐蚀出细纹——酸性环境不解除，肠壁迟早出现孔洞；检测报告只是把这件事「翻译」给外科医生看。</div>
+    <div class="plain">手术不是 Ra 选的方案，而是酸性环境若持续、身体自己会走到的结果——位置在空肠之后，最可能涉及回肠与横结肠上部（102.20）。</div>
+  </div>
+
+  <div class="case"><b>医生的「一个月」：</b>消化科医生对溃疡病人说：规范饮食服药，一个月内复查——要么好转，要么出血就得手术。这不是威胁而是预后：时间窗口 + 两条分支，正是 102.17 的结构。</div>
+  <div class="case"><b>不愿请工程师的住户：</b>墙体已出现细微裂缝（「仅可勉强检测」），住户犹豫要不要请结构工程师——不请，裂缝不会自己消失。Stuart「若愿意能查出那处感染，但可能宁愿不做」（102.17）：回避检查改变不了感染的存在，只会把选择权让给恶化分支。</div>
+
+  <div class="card">
+    <h3>条件模拟器：拨一拨，走向哪个分支</h3>
+    <p style="font-size:.95rem;color:var(--ink-soft)">Ra 没有宣判结局——他给出的是条件与或然率。试试拨动这三个开关，看一个月后的走向。</p>
+    <div class="cond-row"><div class="name">饮食守住<small>一切煮软、少油、糖按 Ra 的时段安排（102.5-102.7）</small></div><label class="switch"><input type="checkbox" id="condDiet" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">黄光修复<small>爱一切相关之人，只愿其喜悦、平静与舒适（102.11）</small></div><label class="switch"><input type="checkbox" id="condLove" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">感染被处理<small>请 Bob 协助、Stuart 查感染，或求助专科医生（102.17）</small></div><label class="switch"><input type="checkbox" id="condInfect" checked><span class="slider"></span></label></div>
+    <div id="forkResult"></div>
+  </div>
+
+  <div class="card">
+    <h3>本段术语卡：点开看背面</h3>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">可能性/或然率漩涡</div><div class="sub">possibility/probability vortex</div><span class="tap">点击展开</span></div><div class="back">Ra 描述未来的方式：未来不是一条定死的线，而是一束尚未收拢的分支；「漩涡」指某一走向当前的浓度。本集的漩涡：一个月内恶化或好转。<em>像天气预报里的降水概率——不是注定，而是趋势的浓度。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">工作</div><div class="sub">the working</div><span class="tap">点击展开</span></div><div class="back">Ra 对这次负面干扰的称呼：负面势力借激活器皿的旧病，把她从与 Ra 同工的队伍中移除、让小组无法运作。感染就是这次工作的「宿主」（housing），被评价为「也许至今最有效的一次」。<em>不正面破门，而是反复拧松你家的门轴。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">转移能量</div><div class="sub">transferred energy</div><span class="tap">点击展开</span></div><div class="back">小组用来维持 Ra 接触的能量转移方式。Ra 提到器皿虽已充满足够的转移能量，可供使用的「框架」却极其脆弱——所以请发问者只再问一个正常长度的问题。<em>信号满格，电池却只剩最后一格电。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">第一变貌</div><div class="sub">First Distortion</div><span class="tap">点击展开</span></div><div class="back">Ra 体系的第一变貌即自由意志法则：一切教导不得越过学习者的选择。但注意本集的细节：Ra 明确说拒绝给「绝对安全食物清单」并非因为第一变貌，而是因为身体已敏感化——拒答也有不同的理由。<em>有的门是规定不让开，有的门是根本不存在。</em></div></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>收官：最大的治愈是牵手同行</h2></div>
+  <p class="sec-lead">发问者做最后的尝试：能不能绕开手术，找一位治愈者？Ra 致敬他的好意，却把答案引向一个谁都给不了、也谁都能给的地方——彼此。</p>
+
+  <div class="card">
+    <h3>「治愈之手」的限度</h3>
+    <div class="q">发问者想避开手术：能不能推荐一位非西医的治愈者？或者 Jim 和他自己上阵？——这是一个出于同情的请求。</div>
+    <div class="quote">
+      <p class="en">The healing hands of each have limited use when the distortion has so many metaphysical layers and mixtures.</p>
+      <p class="zh">当变貌有这么多形而上的层次与混合时，每个人的治愈之手用途有限。</p>
+      <span class="src">—— Session 102 · (102.21)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Therefore, look not to a healing but to the joy of companionship, for each is strong and has its feet set upon the way.</p>
+      <p class="zh">所以，不要寻求一次治愈，而要寻求相伴的喜悦——每个人都强壮，双脚都已踏在路上。</p>
+      <span class="src">—— Session 102 · (102.21)</span>
+    </div>
+    <div class="plain">你们已经在治愈的氛围里了；缺的不是另一双手，而是彼此——Ra 对物理载具能给的，远比发问者期望的少，这是如实的告知，不是敷衍。</div>
+  </div>
+
+  <div class="card">
+    <h3>最后的问答：还能做什么</h3>
+    <div class="q">方法都问完了，发问者放下技术层面，问最后还能为器皿做什么——这是一个收束式的问题。</div>
+    <div class="quote">
+      <p class="en">All is well. Find love and thanksgiving together, and each shall support each. The alignments are conscientious.</p>
+      <p class="zh">一切都好。一同寻找爱与感恩，每个人都会支撑彼此。你们的对齐是认真尽责的。</p>
+      <span class="src">—— Session 102 · (102.22)</span>
+    </div>
+    <div class="plain">收束不在技术里，而在关系里：爱与感恩、互相支撑——照顾彼此，就是照顾这场接触。</div>
+  </div>
+
+  <div class="case"><b>病房里的电影之夜：</b>家属停止追问「还有什么治疗没试」，转而握住病人的手一起看老电影、说笑话——病人当晚睡得最沉。这正是「不要寻求一次治愈，而要寻求相伴的喜悦」（102.21）：陪伴本身就是处方。</div>
+  <div class="case"><b>倒下之后：</b>团队里有人病倒，成员没有互相追责排班失误，而是自发轮班送饭、代班。项目照常推进，病人的愧疚感也卸下了——「每个人都会支撑彼此」（102.22）：小组的相互支撑，就是对「移除器皿」这一攻击的最好回应。</div>
+
+  <div class="saying">
+    <p class="en">The moon casts its shadows. What shall you see? Link hands and walk towards the sun. In this instance this is the greatest healing.</p>
+    <p class="zh">月亮投下它的阴影。你们将看见什么？牵起手，走向太阳。此时此地，这就是最大的治愈。</p>
+    <span class="src">—— Session 102 · (102.21)</span>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 102（`split/Ra_Session_102.md`）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra102-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本集定制交互 ===== */
+/* 问答推进器：本集问答链 */
+const MAP_STEPS=[
+{t:'器皿状态',d:'<span class="qa-q">问：照例先报告器皿的状态。（102.1）</span><b>答：</b>物理能量亏缺是 Ra 迄今所遇最严重的一次；心智与情感接近平衡，整体生命能量靠器皿自己的意志撑向健康——这集的一切都围绕这具吃紧的身体。'},
+{t:'病从何来',d:'<span class="qa-q">问：胃部的疼痛与痉挛是什么引起的？（102.2）</span><b>答：</b>往被阻塞的能量中心看——这次是黄光。铠甲的缺口已修复并改善，但短暂中断激活了横结肠痉挛的倾向，加上胰腺、肝脏的旧弱点；饮食是核心。'},
+{t:'糖怎么吃',d:'<span class="qa-q">问：饮食上该戒掉什么？（102.5-102.7）</span><b>答：</b>按 Bob 的信息执行，一切煮软。糖不能一刀切断——浓缩糖放到下午晚些时候，果糖、枫糖、生蜂蜜可定期少量；这具身体把糖当碳水用。'},
+{t:'两种原因',d:'<span class="qa-q">问：痉挛还有什么别的原因？（102.8-102.10）</span><b>答：</b>近因是那顿油多、菜未煮透的饭；深层原因是负面势力刻意激活旧况，好把器皿移出与 Ra 同工的队伍。'},
+{t:'两条治疗线',d:'<span class="qa-q">问：治愈要从哪里入手？（102.11-102.16）</span><b>答：</b>黄光靠「爱一切相关者、只愿其喜悦」完全解除；饮食谨慎——但没有「绝对安全」的食物，只有「高概率安全」的清单。'},
+{t:'一个月岔路口',d:'<span class="qa-q">问：照做的话，情况会怎样？（102.17-102.20）</span><b>答：</b>一个月内见分晓：要么恶化到需要手术，要么好转到只需继续留意饮食；感染的「工作宿主」难以清除，是至今最有效的一次工作。'},
+{t:'最大的治愈',d:'<span class="qa-q">问：要不要另请一位治愈者？（102.21-102.22）</span><b>答：</b>你们本就在治愈氛围中，治愈之手对如此多形而上层次的变貌用途有限——求相伴之喜，牵手走向太阳，这就是最大的治愈。'}
+];
+initStepper('mapTrack','mapDetail','mapPrev','mapNext',MAP_STEPS);
+
+/* 术语卡翻转 */
+document.querySelectorAll('.fn-card').forEach(function(c){c.onclick=function(){c.classList.toggle('open');};});
+
+/* 归类练习：Ra 怎么回应 */
+const RA_REPLIES=[
+{a:'「有没有绝不会引起痉挛的食物？」',opts:['直接给出','明确拒绝','部分确认'],ans:'明确拒绝',exp:'102.12-102.14：没有任何食物能让器皿完全放心——痉挛部位已敏感化；Ra 还否定了「因为第一变貌」的猜测。'},
+{a:'「高概率不引起痉挛的食物有哪些？」',opts:['直接给出','明确拒绝','部分确认'],ans:'直接给出',exp:'102.15-102.16：非碳酸液体、煮透的轻软蔬菜、煮透的谷物、如鱼的非肥肉。'},
+{a:'「剧痛的痉挛是回肠痉挛吗？」',opts:['直接给出','明确拒绝','部分确认'],ans:'部分确认',exp:'102.8：Ra 答「部分是」——横结肠、肝下部管道也在痉挛，还有大片交感性痉挛。'},
+{a:'「拒绝给清单，是因为第一变貌吗？」',opts:['直接给出','明确拒绝','部分确认'],ans:'明确拒绝',exp:'102.13：Ra 只答「不是」——理由不在自由意志，而在身体已敏感化的实情。'},
+{a:'「让 Arthur 提供更强的抗痉挛药，Ra 推荐吗？」',opts:['直接给出','明确拒绝','部分确认'],ans:'明确拒绝',exp:'102.2：推荐被收回——那不夺命也不保命，却会减少器皿借此学习的机会，只建议留意饮食。'}
+];
+initSorter('replySorter',RA_REPLIES);
+
+/* 条件模拟器：一个月后的走向 */
+function updateFork(){
+  var diet=document.getElementById('condDiet').checked;
+  var love=document.getElementById('condLove').checked;
+  var inf=document.getElementById('condInfect').checked;
+  var el=document.getElementById('forkResult');
+  var miss=[];
+  if(!diet)miss.push('饮食医嘱（煮软、少油、糖按安排）');
+  if(!love)miss.push('黄光修复（爱相关之人，只愿其喜悦）');
+  if(!inf)miss.push('感染的处理（Bob / Stuart / 专科医生）');
+  if(miss.length===0){
+    el.className='';
+    el.innerHTML='<b>好转分支（102.17）：</b>一个月的窗口里痉挛被移除，饮食继续留意即可——两条治疗线都守住了，那场「工作」就失去了支点。';
+  }else if(miss.length===1){
+    el.className='fail';
+    el.innerHTML='<b>仍悬而未决：</b>还差一项——'+miss[0]+'。窗口内两种走向都有可能，把这一项补上。';
+  }else{
+    el.className='fail';
+    el.innerHTML='<b>恶化风险升高：</b>缺：'+miss.join('；')+'。按 102.17-102.19，酸性环境若持续，肠壁可能出现孔洞与溃疡，手术或被提上日程。';
+  }
+}
+['condDiet','condLove','condInfect'].forEach(function(id){
+  document.getElementById(id).onchange=updateFork;
+});
+updateFork();
+
+renderPath();
+</script>
+</body>
+</html>

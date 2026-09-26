@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 035 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 035 · 交互式学习模块</h1>
+  <p class="sub">这一集把三个真实历史人物放进同一台仪器：同一套能量中心结构，为什么一个从权力的变貌里绕了回来，一个在正负两边自我抵消，还有一个由别的存有接棒把没走完的路走完？</p>
+  <div class="tagline">6 个主题 · 6 个学习步骤 · 18 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 名人议题的两条限定</a>
+<a href="#s3">③ 罗斯福（上）：潜能与激活</a>
+<a href="#s4">④ 罗斯福（下）：限制即催化剂</a>
+<a href="#s5">⑤ 反例：过快极化</a>
+<a href="#s6">⑥ 林肯案与收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>三个人物、一台共同的仪器，以及九段问答的走向</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>先接住 Ra 的两条限定</b><span>为什么「谈名人」要先声明两件事，以及提问的责任在谁</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>能量中心：潜能与激活</b><span>罗斯福的成长轨迹，以及三重加速原因与伴侣催化剂</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>限制如何变成催化剂</b><span>权力变貌的代价，与那道被提前设好的闸门</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>反例：极化跳级的代价</b><span>缺了绿色钥匙、自我抵消、暮光世界与人格解体</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>林肯案、术语与收官</b><span>一次双方同意的交换、本集术语卡与留下的伏笔</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：这一集在问什么</h2></div>
+  <p class="sec-lead">发问者开场就交代了这次的做法：他不再追问抽象机制，而是列了一张历史人物清单，想看看同一个「幻象的催化剂」在不同人身上究竟怎么运作。Ra 没有拒绝这个做法，但先给整张清单加了两条限定，然后依次展开三张样本——罗斯福、希特勒，以及之前就被提过的林肯。本集结尾因为器皿的生命能偏低而提前收束。</p>
+  <div class="card">
+    <h3>三个人物，一台共同的仪器</h3>
+    <div class="q">我打算拿历史上几位知名人物的经历当样本，直接看催化剂在真实人生里怎么起作用——这样可行吗？</div>
+    <div class="quote">
+      <p class="en">When any entity comes into third-density incarnation, each of its energy centers is potentiated but must be activated by the self using experience.</p>
+      <p class="zh">当任何实体进入第三密度投生时，它的每一个能量中心都已被赋予潜能，但必须由自我通过经验来激活。</p>
+      <span class="src">—— Session 035 · (35.1)</span>
+    </div>
+    <div class="plain">本集不是三段名人故事，而是同一条机制在三种不同参数下跑出来的结果。</div>
+    <div class="analogy"><b>像同一份体检报告看三个人：</b>医生不会说「你这台机器和别人不同」，他先讲清三个人共用的是同一副结构，再看各自哪一项超标、哪一项偏弱。</div>
+  </div>
+  <div class="card">
+    <h3>问答脉络：这一集是怎么走的</h3>
+    <p>从「能不能把名人当样本」，到「最后一次完整询问」，本集的十段问答其实是一条清楚的链。点击节点看每一段在做什么。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="qaTrack"></div>
+      <div class="flow-detail" id="qaDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="qaPrev">← 上一步</button> <button class="tri-btn" id="qaNext">下一步 →</button></div>
+    </div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 集会节奏 · 收尾</span></summary>
+  <div class="body">
+    <p><b>(35.0) 开场：</b>Ra 以「我在太一无限造物主的爱与光中向你们致意」开场，宣布通讯开始。</p>
+    <p><b>(35.8) 提前收束：</b>Ra 声明这将是本次集会的最后一个完整询问，因为器皿的生命能相当低。</p>
+    <p><b>(35.9) 器皿状态：</b>发问者把其余问题留到大约四天后的下次集会，不愿让器皿过度劳累；他只问还有什么能让器皿更舒适或改善通讯。Ra 答「一切安好」。</p>
+    <p><b>(35.9) 收尾：</b>Ra 在爱与光中告别，以「欢欣前行于太一造物主的力量与和平之中」与 Adonai 作结。</p>
+  </div></details>
+  <div class="case"><b>事故复盘会的第一句话：</b>你主持复盘，投影上列了三起事故（扩张期的 A、崩塌期的 B、交接期的 C），你先说一句「这三起其实是同一个根因的三个变体」，然后才逐个讲——本集也是先给出三人共用的结构，再往下细看。</div>
+  <div class="case"><b>放射科的读片顺序：</b>医生拿到一叠片子，不会先逐张惊叹「这张好严重」，而是先确认「这三张拍的是同一个部位、同一套判断标准」，再挑出真正异常的几张——「每个能量中心都被赋潜能，但必须由自我激活」就是本集的判断标准。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>名人议题的两条限定：别当特例，也别当档案</h2></div>
+  <p class="sec-lead">用真人当教材，在问答实录里是个敏感操作。Ra 没有说「我们不谈这个」，而是在同一段里先加了两条限定；随后在 (35.6)(35.7) 那组往返里，又把「这件事值不值得问」的判断权交回发问者手上。</p>
+  <div class="card">
+    <h3>限定一：伟大设计对每个实体大致相同</h3>
+    <div class="q">我想借几位知名人物的经历，来看幻象的催化剂如何造出灵性成长，可以吗？</div>
+    <div class="quote">
+      <p class="en">It is to be noted that in discussing those who are well known among your peoples there is the possibility that information may be seen to be specific to one entity whereas, in actuality, the great design of experience is much the same for each entity.</p>
+      <p class="zh">需要注意：在讨论你们人群中那些知名人物时，信息有可能被看成只适用于某一个实体，而实际上，经验的伟大设计对每个实体而言大致相同。</p>
+      <span class="src">—— Session 035 · (35.1)</span>
+    </div>
+    <div class="plain">名人不是特殊物种——把他当特例读，就学不到任何可迁移的东西。</div>
+    <div class="analogy"><b>像看病例，不像看八卦：</b>病例的价值在于它演示的普遍病理，不在于那位病人有多特别。你若只记住「这位病人真不一般」，就白读了。</div>
+  </div>
+  <div class="card">
+    <h3>限定二：近期投生者的资料多有误传</h3>
+    <div class="quote">
+      <p class="en">It is further to be noted that in the case of those entities lately incarnate upon your plane much distortion may have taken place in regard to misinformation and misinterpretation of an entity's thoughts or behaviors.</p>
+      <p class="zh">还需注意：对于那些最近才在你们层面投生的实体，关于其思想或行为的错误信息与误读，可能已经造成了许多变貌。</p>
+      <span class="src">—— Session 035 · (35.1)</span>
+    </div>
+    <div class="plain">越靠近我们时代的人物，围绕他的说法就越不可靠——读这类材料要先打上这个折扣。</div>
+  </div>
+  <div class="card">
+    <h3>提问的责任在谁：把判断权交回去</h3>
+    <div class="q">我先问「能不能讲林肯那件事」，Ra 说「这是可能的」；我接着问「让读者知道这一点有价值吗」，Ra 却没有回答价值问题。</div>
+    <div class="quote">
+      <p class="en">This is possible.</p>
+      <p class="zh">这是可能的。</p>
+      <span class="src">—— Session 035 · (35.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">You must shape your queries according to your discernment.</p>
+      <p class="zh">你必须依你的辨别力来塑造你的询问。</p>
+      <span class="src">—— Session 035 · (35.7)</span>
+    </div>
+    <div class="plain">Ra 只回答「能不能做到」，不替你判断「值不值得知道」——辨别问题本身就是发问者的功课。</div>
+    <div class="analogy"><b>像问路：</b>向导可以说「这条路走得通」，但要不要走、为什么走，他始终不替你决定。这不是敷衍，而是把选择权留在你身上。</div>
+  </div>
+  <div class="case"><b>职业顾问不说「你该不该跳槽」：</b>顾问帮你把两条路的收入、风险、时间成本全算清，但始终不说「你应该跳」。他会说「这是可行的」，然后让你自己决定——(35.6)(35.7) 那组往返就是同一件事。</div>
+  <div class="case"><b>刚去世的名人，版本互相矛盾：</b>一位公众人物去世后，坊间同时流传好几个版本：有人引他早年的访谈，有人引二手转述，有人只凭印象——Ra 说近期投生者的思想与行为多有被误传与误读，看这类材料先别当档案读。</div>
+  <div class="case"><b>新闻发言人先设口径：</b>发言人开场先说「今天只谈已结案的三个项目，未结案的一律不评论」——本集 Ra 的两条限定，就是给「谈名人」这件事先设好口径：哪些能谈、谈到什么尺度。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>罗斯福（上）：潜能生来就有，激活只能靠自己</h2></div>
+  <p class="sec-lead">清单上的第一个人被点名了。Ra 的回答前半段是一条通用总则，后半段才是具体到这位实体：他的能量中心如何被激活、为什么快得异乎寻常，以及那位与他蓝色光芒强度相当的伴侣在其中扮演什么角色。</p>
+  <div class="card">
+    <h3>成长快，可以被拆成三个原因</h3>
+    <div class="q">这位实体的能量中心是怎么运作的？为什么他上升得那么快？</div>
+    <div class="quote">
+      <p class="en">The one known as Franklin developed very quickly up through red, orange, yellow, and green, and began to work in the blue-ray energy center at a tender age, as you would say.</p>
+      <p class="zh">那位被称为富兰克林的实体非常迅速地向上发展，穿过红色、橙色、黄色与绿色，并在如你们所说的幼年时期就开始在蓝色光芒能量中心中工作。</p>
+      <span class="src">—— Session 035 · (35.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This rapid growth was due, firstly, to previous achievements in the activation of these rays; secondly, to the relative comfort and leisure of its early existence; thirdly, due to the strong desire upon the part of the entity to progress.</p>
+      <p class="zh">这种快速的成长首先归因于先前在激活这些光芒方面的成就；其次归因于其早年生活相对的舒适与闲暇；第三归因于该实体自身强烈的进步渴望。</p>
+      <span class="src">—— Session 035 · (35.1)</span>
+    </div>
+    <div class="plain">快慢不是运气：先前成就、早年的舒适与闲暇、本人的进步渴望，三者叠加才有「幼年就进入蓝色光芒」这件事。</div>
+    <div class="analogy"><b>像学乐器上手快的人：</b>他快，是因为（一）以前学过别的乐器（先前成就），（二）早年有时间和钱天天练（舒适与闲暇），（三）自己非常想练（进步渴望）。三条少一条，速度就不同。</div>
+  </div>
+  <div class="card">
+    <h3>伴侣：一台贯穿一生的催化剂</h3>
+    <div class="q">那他的伴侣在这件事里是什么位置？</div>
+    <div class="quote">
+      <p class="en">This entity mated with an entity whose blue-ray vibrations were of a strength more than equal to its own, thus acquiring catalyst for further growth in that area that was to persist throughout the incarnation.</p>
+      <p class="zh">该实体与一个蓝色光芒振动强度不低于其自身的实体结为伴侣，从而获得了在该领域进一步成长的催化剂，而这股催化剂持续了整个投生。</p>
+      <span class="src">—— Session 035 · (35.1)</span>
+    </div>
+    <div class="plain">与蓝色光芒强度不低于自己的实体结合，等于给自己装了一台不会停的成长催化剂——Ra 在 (35.2) 确认，这位「导师」就是他的妻子。</div>
+    <div class="analogy"><b>像找搭子练口语：</b>一定要找比你略强的人。强度低于你的搭档只会让你停在原地；「不低于你」才逼得动你。</div>
+  </div>
+  <div class="card">
+    <h3>能量中心轨迹：一条一层层往上走的线</h3>
+    <p>把 (35.1) 关于这位实体的描述按顺序走一遍。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="raysTrack"></div>
+      <div class="flow-detail" id="raysDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="raysPrev">← 上一步</button> <button class="tri-btn" id="raysNext">下一步 →</button></div>
+    </div>
+  </div>
+  <div class="case"><b>两个应届生，为什么「成长快」的那个快：</b>同一天入职的两个应届生，一个大学四年做过两年社团外联（先前成就），一个家里不需要他打工、时间宽裕（舒适与闲暇），而两个人都很想进这一行（进步渴望）——招聘时说的「他成长快」，往往是这三条同时成立，而不是天赋二字能解释的。</div>
+  <div class="case"><b>买琴是潜能，拉响才是激活：</b>家长给孩子买了很贵的小提琴，那只是「具有潜能」。孩子自己上手、用经验去拉，那个中心才被激活；琴在柜子里放十年，潜能依然只是潜能。</div>
+  <div class="case"><b>故意挑比你强一档的球友：</b>你练网球，专门找了比你强一点的球友，每周被压着打、很不舒服，半年后水平却明显上去了——这正是「与强度不低于自己的实体结合，取得进一步成长的催化剂」。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>罗斯福（下）：限制即催化剂，从滥用权力转向理想主义的权力</h2></div>
+  <p class="sec-lead">这是本集最反直觉的一段：一场让身体部分失去行动能力的病，在 Ra 的说法里既不是意外，也不是惩罚，而是一道在投生前就被仔细设定、当「机会开始减少」时才被激活的闸门。发问者追问了两件事——那位导师到底是谁，以及限制是不是他自己加上的。</p>
+  <div class="card">
+    <h3>绿色的困难：权力变貌的代价落在身体上</h3>
+    <div class="q">他在绿色光芒上为什么会出现困难？</div>
+    <div class="quote">
+      <p class="en">This entity had some difficulty with continued green-ray activity due to the excessive energy which was put into the activities regarding other-selves in the distortion towards acquiring power. This was to have its toll upon the physical vehicle, as you may call it.</p>
+      <p class="zh">该实体在持续进行绿色光芒活动时有些困难，因为过多的能量被投入到关于其他自我的活动中，其变貌倾向于获取权力。这对你们所称的物理载具造成了损耗。</p>
+      <span class="src">—— Session 035 · (35.1)</span>
+    </div>
+    <div class="plain">能量是有限的：过多投在橙色与黄色光芒（关于其他自我的活动、倾向获取权力），绿色与蓝色就受损，代价最后落在物理载具上。</div>
+    <div class="analogy"><b>像把预算全拨给一个部门：</b>预算就那么多，全砸在冲业绩的那个部门，维护、培训、恢复就没了配额——最先出问题的是那台一直在跑的机器。</div>
+  </div>
+  <div class="card">
+    <h3>限制把权力的方向翻转过来</h3>
+    <div class="q">那这个限制到底起了什么作用？</div>
+    <div class="quote">
+      <p class="en">The limitation of the non-movement of a portion of the physical vehicle opened once again, for this entity, the opportunity for concentration upon the more, shall we say, universal, or idealistic, aspects of power; that is, the non-abusive use of power.</p>
+      <p class="zh">物理载具一部分无法活动的限制，再次为这个实体打开了机会：去专注于更——容我们说——普遍或理想主义的权力面向，也就是对权力的非滥用。</p>
+      <span class="src">—— Session 035 · (35.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Thus at the outset of a bellicose action this entity had lost some positive polarity due to excessive use of the orange- and yellow-ray energies at the expense of green- and blue-ray energies, then had regained the polarity due to the catalytic effects of a painful limitation upon the physical complex.</p>
+      <p class="zh">因此在一场好战行动开始时，该实体因过度使用橙色与黄色光芒能量、牺牲了绿色与蓝色光芒能量，而失去了一些正向极性；随后又因为物理复合体上那道痛苦限制的催化剂效应，重新获得了极性。</p>
+      <span class="src">—— Session 035 · (35.1)</span>
+    </div>
+    <div class="plain">极性可以失去，也可以失而复得——这一次的「得」，靠的是痛苦限制带来的催化剂效应。</div>
+    <div class="analogy"><b>像被调离一线的主管：</b>他不能再亲自冲业绩了，只好坐下来想「权力到底是用来做什么的」——正是这条限制，把「怎么赢」换成了「怎么不滥用」。</div>
+  </div>
+  <div class="card">
+    <h3>同一段里的五个要点</h3>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">受限之前</span><h4>橙黄过度</h4><p>能量投向关于其他自我的活动、变貌倾向获取权力；结果是<b>绿蓝受损</b>，并在好战行动开始时失去一部分正向极性。</p></div>
+      <div class="yuan-card"><span class="y-tag">受限之后</span><h4>转向理想的权力面向</h4><p>专注更普遍或理想主义的权力面向，即<b>非滥用权力</b>；先前失去的极性因痛苦限制的催化剂效应而重新获得。</p></div>
+      <div class="yuan-card"><span class="y-tag">他的本性</span><h4>并非好战</h4><p>Ra 特意澄清：该实体本性不好战，在冲突期间<b>继续在绿色光芒中振动</b>，并运用蓝色光芒能量。</p></div>
+      <div class="yuan-card"><span class="y-tag">导师的作用</span><h4>蓝色光芒激活器</h4><p>那位「导师」在此期间也极大地发挥蓝色光芒激活器的作用，<b>不只对伴侣，也在更普遍的意义上表达</b>。</p></div>
+      <div class="yuan-card"><span class="y-tag">代价的另一面</span><h4>业力模式</h4><p>在普遍意义上持续正向极化；但在较不普遍的意义上，发展出与伴侣/导师之间<b>不和谐关系变貌</b>有关的业力模式。</p></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>两点澄清：导师是妻子；限制是「部分自设」</h3>
+    <div class="q">那位导师就是他妻子？这个限制是他自己加在自己身上的吗？</div>
+    <div class="quote">
+      <p class="en">The basic guidelines for the lessons and purposes of incarnation had been carefully set forth before incarnation by the mind/body/spirit complex totality.</p>
+      <p class="zh">投生课程与目的的基本方针，在投生之前就已由心/身/灵复合体全体仔细设定。</p>
+      <span class="src">—— Session 035 · (35.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">If the one known as Franklin had avoided the excessive enjoyment of or attachment to the competitiveness which may be seen to be inherent in the processes of its occupation, this entity would not have had the limitation.</p>
+      <p class="zh">如果那位被称为富兰克林的实体避开了对其职业过程中可被视为固有之竞争性的过度享受或执着，这个实体本不会受到那项限制。</p>
+      <span class="src">—— Session 035 · (35.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">However, the desire to serve and to grow was strong in this programming, and when the opportunities began to cease due to these distortions towards love of power, the entity's limiting factor was activated.</p>
+      <p class="zh">然而，服务与成长的渴望在这份编程中很强烈；当机会因这些倾向热爱权力的变貌而开始减少时，该实体的限制因素就被激活了。</p>
+      <span class="src">—— Session 035 · (35.3)</span>
+    </div>
+    <div class="plain">答案不是「他自己按下的按钮」：限制在投生前已被设好，当机会开始减少时它自动生效——所以 Ra 说「部分正确」。</div>
+    <div class="analogy"><b>像出发前写好的导航设定：</b>你上高速前先设好「若绕路两次就自动提醒我下匝道」。路上真的绕了两次，提醒弹出来——不是你当时按的，是你提前写好的。</div>
+  </div>
+  <div class="case"><b>被迫停训三个月的跑者：</b>马拉松爱好者膝盖受伤，医生禁止他跑，这三个月他把跑量全换成了核心与呼吸训练——限制把「怎么跑得更快」换成了「怎么不把身体用坏」，正是 (35.1) 说的「转向更普遍或理想主义的面向」。</div>
+  <div class="case"><b>最赚钱的项目被拿走了：</b>公司把最肥的项目从你手里撤走，让你去做内部流程。一年后你成了最懂「怎么不靠权力推动事情」的人——失去的不是能力，而是滥用能力的机会。</div>
+  <div class="case"><b>夫妻同开一家店：</b>你和伴侣一起经营小店，对方在这行的判断力不比你弱，于是你每天都能收到最直接的反馈（蓝色光芒激活器）；但也正因为如此，争吵的题材全年不断——Ra 说的正是这份「与伴侣/导师之间不和谐关系变貌」所生的业力。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>反例：缺绿色钥匙、过快极化，正负两边都抵消</h2></div>
+  <p class="sec-lead">第二张样本一开口，Ra 先声明「困难」：这个实体的生命模式里混淆极多，而任何关于他的讨论本身也充满困惑。接下来的诊断，是本集最锋利的一段，也是全篇唯一被 Ra 当作「警示案例」使用的例子。末尾发问者还追问了当时他手下人的下落。</p>
+  <div class="card">
+    <h3>诊断一：跳级去激活最高光芒，结果两边都没成</h3>
+    <div class="q">这位实体的极化究竟发生了什么？</div>
+    <div class="quote">
+      <p class="en">Here we see an example of one who, in attempting activation of the highest rays of energy while lacking the green-ray key, canceled itself out as far as polarization either towards positive or negative.</p>
+      <p class="zh">在此我们看到一个例子：一个实体在缺乏绿色光芒这把钥匙的情况下，尝试激活最高的能量光芒，结果在正向或负向的极化上都把自己抵消了。</p>
+      <span class="src">—— Session 035 · (35.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">However, its confusion was such that the personality disintegrated, thus leaving the mind/body/spirit complex unharvestable and much in need of healing.</p>
+      <p class="zh">然而，它的混淆严重到人格解体，于是使这个心/身/灵复合体变得不可收割，且极需疗愈。</p>
+      <span class="src">—— Session 035 · (35.4)</span>
+    </div>
+    <div class="plain">想跳过绿色光芒这把钥匙直接去激活最高光芒，不是极化得更快，而是正负两边都落空——人格解体，变得不可收割。</div>
+    <div class="analogy"><b>像不打地基要封顶：</b>楼不是盖得更高，而是整个塌掉；塌掉的楼既不在这一层，也不在下一层。</div>
+  </div>
+  <div class="card">
+    <h3>诊断二：暮光世界——梦境取代了事件</h3>
+    <div class="q">他走的明明是服务自我的路线，为什么连这条路也走不到头？</div>
+    <div class="quote">
+      <p class="en">This entity followed the pattern of negative polarization which suggests the elite and the enslaved, this being seen by the entity to be of an helpful nature for the societal structure.</p>
+      <p class="zh">该实体遵循的是负向极化的模式——它主张精英与被奴役者，并认为这对社会结构具有助益性。</p>
+      <span class="src">—— Session 035 · (35.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">However, in drifting from the conscious polarization into what you may call a twilight world where dream took the place of events in your space/time continuum, this entity failed in its attempt to serve the Creator in an harvestable degree along the path of service to self.</p>
+      <p class="zh">然而，当它从有意识的极化漂移进你们可称为暮光世界之处——在那里面，梦境取代了你们空间/时间连续体中的事件——这个实体便未能沿着服务自我的道路，以可收割的程度服务造物主。</p>
+      <span class="src">—— Session 035 · (35.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Thus we see the so-called insanity which may often arise when an entity attempts to polarize more quickly than experience may be integrated.</p>
+      <p class="zh">于是我们看到了所谓的疯狂——当一个实体试图以快过经验整合的速度去极化时，这种情况常会出现。</p>
+      <span class="src">—— Session 035 · (35.4)</span>
+    </div>
+    <div class="plain">问题不在方向，而在速度：极化快过经验能被整合的速度，人就从有意识的极化漂进暮光世界，连服务自我的路都到不了可收割的程度。</div>
+  </div>
+  <div class="card">
+    <h3>Ra 的结论：谨慎与耐心，把基础落在坚实的地面</h3>
+    <div class="quote">
+      <p class="en">We have advised and suggested caution and patience in previous communications and do so again, using this entity as an example of the over-hasty opening of polarization without due attention to the synthesized and integrated mind/body/spirit complex.</p>
+      <p class="zh">我们在先前的通讯中已经建议并提示过谨慎与耐心，现在再次如此，并以这个实体为例，说明在没有适当照顾那已被综合与整合的心/身/灵复合体之前，就过于仓促地开启极化会怎样。</p>
+      <span class="src">—— Session 035 · (35.4)</span>
+    </div>
+    <div class="plain">这份警示不是说「别极化」，而是说：先把整栋楼建在坚实的地面上，再谈往哪一端走。</div>
+  </div>
+  <div class="card">
+    <h3>条件模拟器：跳级极化会走到哪一步</h3>
+    <p>Ra 在 (35.4) 用这个实体当反例，说明「过快开启极化」缺了哪些前提。拨动开关，看四种结果。</p>
+    <div id="condBox">
+      <div class="cond-row"><span class="name">绿色光芒的钥匙<small>先把较低的光芒整合好，再往最高的光芒走</small></span>
+        <label class="switch"><input type="checkbox" id="c1" checked><span class="slider"></span></label></div>
+      <div class="cond-row"><span class="name">经验的整合跟得上<small>极化速度不快过经验能被整合的速度</small></span>
+        <label class="switch"><input type="checkbox" id="c2" checked><span class="slider"></span></label></div>
+      <div class="cond-row"><span class="name">心/身/灵已被综合与整合<small>先认识你自己，基础落在坚实的地面上</small></span>
+        <label class="switch"><input type="checkbox" id="c3" checked><span class="slider"></span></label></div>
+      <div class="cond-row"><span class="name">极化是有意识的<small>不漂入那个梦境取代事件的暮光世界</small></span>
+        <label class="switch"><input type="checkbox" id="c4" checked><span class="slider"></span></label></div>
+    </div>
+    <div id="condResult"></div>
+  </div>
+  <div class="card">
+    <h3>追问：他手下人里有谁走通了？</h3>
+    <div class="q">当时他手下的人当中，有没有谁能够以可收割的方式在负向极化？</div>
+    <div class="quote">
+      <p class="en">We can speak only of two entities who may be harvestable in a negative sense, others still being in the physical incarnation: one known to you as Hermann; the other known, as it preferred to be called, Himmler.</p>
+      <p class="zh">我们只能说得出两个可能在负向意义上可收割的实体，其余实体仍在物理投生之中：一位是你们称为赫尔曼的那位；另一位，则更喜欢被称为希姆莱。</p>
+      <span class="src">—— Session 035 · (35.5)</span>
+    </div>
+    <div class="plain">Ra 只点了两位，并特别说明其余人「仍在物理投生中」——功课还没走完，现在下判断没有意义。</div>
+  </div>
+  <div class="case"><b>实习生被直接推上总监位：</b>入职三个月的人被硬推到总监位子，他既没学会怎么跟人协作，也没搞清自己要什么，三个月后团队散掉，他自己都说不清失败在哪——「缺乏绿色光芒的钥匙，却去激活最高的光芒」，说的正是这种跳级。</div>
+  <div class="case"><b>健身新手直接上大重量：</b>跳过基础动作，第一次卧推就上 120 公斤。结果是腰伤加上信心崩塌——跳级不等于加速，缺的往往不是力气，是那把钥匙。</div>
+  <div class="case"><b>1.5 倍速刷完一门课：</b>你把 20 小时的课用 1.5 倍速两天刷完，笔记一行没写、练习一道没做，一周后什么都想不起来——「极化快过经验能被整合的速度」，剩下的只有「我学过」这个印象。</div>
+  <div class="case"><b>只对离职的同事下结论：</b>你评价一位同事「到底做成了什么」，通常要等他离职、事情定局之后；还在职的人，结论随时可能翻转——Ra 说其余实体「仍在物理投生中」，所以只谈那两个已有定局的。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>林肯案：一次双方同意的交换，与不落业力的超然</h2></div>
+  <p class="sec-lead">最后一张样本最特殊——发问者提到「之前我们讨论过亚伯拉罕·林肯是一个相当独特的案例」，Ra 在本次集会用它作为收束。这段答案分成两半：一半是机制（第四密度存有的接触、交换、原主进入悬置），一半是动机（在「自由」这个概念上的那场战斗）。</p>
+  <div class="card">
+    <h3>机制：不是夺占，是交接</h3>
+    <div class="q">为什么会有第四密度存有使用亚伯拉罕的身体？这件事又发生在什么时候？</div>
+    <div class="quote">
+      <p class="en">In your time, 1853, this entity was contacted in sleep by a fourth-density being.</p>
+      <p class="zh">在你们的时间 1853 年，该实体在睡眠中被一个第四密度存有接触。</p>
+      <span class="src">—— Session 035 · (35.8)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This entity accepted the honor/duty of completing the one known as Abraham’s karmic patterns, and the one known as Abraham discovered that this entity would attempt those things which the one known as Abraham desired to do but felt it could not. Thus the exchange was made.</p>
+      <p class="zh">这个存有接受了「完成那位被称为亚伯拉罕者的业力模式」这份荣耀/责任；而那位被称为亚伯拉罕的实体发现，这个存有会去尝试那些他渴望去做、却感到自己做不到的事。于是交换就这样发生了。</p>
+      <span class="src">—— Session 035 · (35.8)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The entity, Abraham, was taken to a plane of suspension until the cessation of its physical vehicle, much as though we of Ra would arrange with this instrument to remain in the vehicle, come out of the trance state, and function as this instrument…</p>
+      <p class="zh">亚伯拉罕这个实体被带到一个悬置平面，直到其物理载具终止；这很像是我们 Ra 会与这个器皿做的安排：留在载具里、从出神状态中出来、以这个器皿的身份运作……</p>
+      <span class="src">—— Session 035 · (35.8)</span>
+    </div>
+    <div class="plain">这不是夺占，而是一次双方同意的交接：原主进入悬置状态，等物理载具终止；来接手的存有去完成他渴望却做不到的事。</div>
+    <div class="analogy"><b>像接力赛的接棒：</b>接棒的人不是抢棒，而是把前一位已经跑不动的那段路跑完——棒是递出去的，不是被夺走的。</div>
+  </div>
+  <div class="card">
+    <h3>动机与结局：为光而战，却不落业力</h3>
+    <div class="q">那这次交接的动机是什么？结果又如何结算？</div>
+    <div class="quote">
+      <p class="en">This entity, therefore, went forward into what it saw as the battle for the light, for healing of a rupture in the concept of freedom.</p>
+      <p class="zh">因此，这个存有向前进入它视为「为光而战」的战斗，为了疗愈「自由」这一概念上的一道裂痕。</p>
+      <span class="src">—— Session 035 · (35.8)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This entity did not gain or lose karma by these activities due to its detachment from any outcome. Its attitude throughout was one of service to others, more especially to the downtrodden or enslaved.</p>
+      <p class="zh">这个存有并未因这些活动而获得或失去业力，因为它对任何结果都保持超然。它自始至终的态度都是服务他人，尤其是对受压迫者与被奴役者。</p>
+      <span class="src">—— Session 035 · (35.8)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The polarity of the individual was somewhat, but not severely, lessened by the cumulative feelings and thought-forms which were created due to large numbers of entities leaving the physical plane due to trauma of battle.</p>
+      <p class="zh">这个个体的极性有所减弱，但不算严重——减弱的来源是大量实体因战斗创伤而离开物理层面所累积起来的感受与思想形态。</p>
+      <span class="src">—— Session 035 · (35.8)</span>
+    </div>
+    <div class="plain">对结果完全超然，所以既不获得也不失去业力；但同一条路上大量生命的创伤会累积成感受与思想形态，让极性略微减弱——不是罪责，是重量。</div>
+    <div class="timeline">
+      <div class="tl-item"><div class="t">1853 · 睡眠中被接触</div><div class="d">该实体在睡眠中被一个第四密度存有接触；这位存有关注的是第四密度中光之力量与黑暗力量之间那场已持续许多年的战斗。</div></div>
+      <div class="tl-item"><div class="t">接受荣耀 / 责任</div><div class="d">这个存有接受了「完成亚伯拉罕的业力模式」这份荣耀与责任。</div></div>
+      <div class="tl-item"><div class="t">交换发生</div><div class="d">亚伯拉罕发现这个存有会去尝试那些他渴望去做、却感到自己做不到的事；随后原主被带到悬置平面，直到物理载具终止。</div></div>
+      <div class="tl-item"><div class="t">为光而战</div><div class="d">当时行星能量处于临界点：自由已被许多人群接纳为一种可能性，而刚开始的民主自由概念正面临被「奴役实体」这一原则的信仰与使用所削弱或废除的危险——于是它向前投入它视为为光而战的战斗。</div></div>
+      <div class="tl-item"><div class="t">结算 · 未增未减</div><div class="d">因对任何结果都超然，它未获得也未失去业力；态度始终是服务他人，尤其对受压迫者与被奴役者；极性因大量实体在战斗创伤中离开物理层面所累积的感受与思想形态而略减，但并不严重。</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>术语卡：本集的关键词</h3>
+    <p>点击卡片翻看解释。这几个词在本集被反复使用，先把直觉建准。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">能量中心</div><div class="sub">energy center</div><span class="tap">点击展开</span></div><div class="back">Ra 用来描述一个存在体内在振动层级的说法。本集的总则是：进入第三密度投生时，每一个能量中心都「已被赋予潜能」，但必须由自我通过经验来激活——潜能是出厂的，激活是自己的事。<em>比喻：器械都在健身房里摆好了，但没人替你练。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">光芒</div><div class="sub">ray</div><span class="tap">点击展开</span></div><div class="back">本集以颜色称呼这些能量层级：红、橙、黄、绿、蓝，并常把橙黄、绿蓝各作一组来谈，用来说明「能量投向了哪里、代价由谁承担」。<em>案例：同一笔预算，全拨给冲业绩的部门，维护与培训就没有配额。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">催化剂</div><div class="sub">catalyst</div><span class="tap">点击展开</span></div><div class="back">不是起作用的那一方，而是促成作用发生的中介。本集把两样东西都称为催化剂：一位蓝色光芒强度不低于自己的伴侣，以及一道痛苦的限制。<em>案例：水平相当的搭档逼你成长；一道伤病逼你改掉错误的发力方式。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">极性</div><div class="sub">polarity</div><span class="tap">点击展开</span></div><div class="back">朝服务他人或服务自我方向累积起来的极化程度。本集强调它是会变动的：可以失去一部分，也可以重新获得，还可以因为两边互相抵消而归零。<em>比喻：像充值——方向对了才累加，方向来回摇摆就充不进去。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">绿色光芒的钥匙</div><div class="sub">green-ray key</div><span class="tap">点击展开</span></div><div class="back">本集把绿色光芒称为一把「钥匙」：缺了它却强行去激活最高的能量光芒，结果是在正向与负向极化上「把自己抵消」——两边都到不了。<em>比喻：不打地基就封顶，楼不会更高，只会塌。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">可收割</div><div class="sub">harvestable</div><span class="tap">点击展开</span></div><div class="back">在某个极化方向上累积到足以进入下一阶段的程度。本集用它做了两次评价：那个混淆严重到人格解体的实体「不可收割，且极需疗愈」；另两位则「可能在负向意义上可收割」。<em>比喻：学分够了才能升学——不是「努力过」就算数。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">心/身/灵复合体全体</div><div class="sub">mind/body/spirit complex totality</div><span class="tap">点击展开</span></div><div class="back">投生前为今生设定「课程与目的」基本方针的那一层自己。本集说限制并非当下临时决定，而是这份提前写好的编程在条件成立时被激活。<em>比喻：出发前自己写好的行程设定，路上自动生效。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">悬置平面</div><div class="sub">plane of suspension</div><span class="tap">点击展开</span></div><div class="back">本集唯一一次出现的机制：亚伯拉罕被带到一个悬置平面，直到其物理载具终止。Ra 用自己与器皿的关系作类比——载具继续运作，而原主的心智与灵性复合体处于悬置状态。<em>比喻：替身上台演出时，原主在休息室里沉睡。</em></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>归类练习：这属于哪一种极化？</h3>
+    <p>本集出现了几条不同的路线。判断下面每一条在 Ra 的说法里落向哪里。</p>
+    <div id="sorterArea"></div>
+  </div>
+  <div class="saying">
+    <p class="en">To know yourself is to have the foundation upon firm ground.</p>
+    <p class="zh">认识你自己，就是把基础落在坚实的地面上。</p>
+    <span class="src">—— Session 035 · (35.4)</span>
+  </div>
+  <div class="card">
+    <h3>这一集留下的三条线</h3>
+    <div class="quote">
+      <p class="en">This shall be the last full query of this session as we find the instrument quite low in vital energies.</p>
+      <p class="zh">这将是本次集会的最后一个完整询问，因为我们发现器皿的生命能相当低。</p>
+      <span class="src">—— Session 035 · (35.8)</span>
+    </div>
+    <div class="plain">Ra 因为器皿状态提前收束，下一次集会约在四天后——本集的清单并没有念完。</div>
+    <p style="font-size:.93rem;color:var(--ink-soft)">没走完的三条线：① 发问者手上那张人物清单还有下文（他只说了「首先」谈罗斯福）；② 「悬置平面」这个机制本次只出现一次，没有再展开；③ 第四密度中光与暗的战斗，本集只交代了它作为背景存在。下次集会可以从这里接着看。</p>
+  </div>
+  <div class="case"><b>重病创始人委托受托人：</b>创始人确诊重病，把公司交给一位他信得过的受托人，只为一件他惦记多年、却自觉做不到的转型——对应「这个存有会去尝试那些亚伯拉罕渴望去做却感到自己做不到的事」。</div>
+  <div class="case"><b>辞职去救灾的人：</b>地震后有人辞掉工作去现场搬物资，从不盘算「这对我将来有什么用」——Ra 说那位存有因对任何结果都超然而未获得也未失去业力，态度始终是服务他人。</div>
+  <div class="case"><b>项目失败后办公室里留下的那口气：</b>一次严重事故之后，团队里弥漫的怨气会挂在负责人身上，即使他自己心里并无亏欠——这正是「大量实体离开物理层面所累积的感受与思想形态，使极性略有减弱」在日常里的样子。</div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+<p>基于 The Ra Contact Session 035（split/Ra_Session_035.md）英文原文制作 · 交互式学习模块</p>
+<p>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文</p>
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra035-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+  {t:'(35.0) 开场',d:'<b>致意。</b>Ra 以「我在太一无限造物主的爱与光中向你们致意」开场，宣布通讯开始。'},
+  {t:'(35.1) 样本与方法',d:'<span class="qa-q">问：我想拿历史上几位知名人物的经历当样本，看幻象的催化剂如何造出灵性成长，先从罗斯福谈起？</span><b>答：</b>可以谈，但要先记住两件事：经验的伟大设计对每个实体大致相同；近期投生者的思想与行为多被误传与误读。随即给出总则——能量中心生来具有潜能，必须由自我用经验激活。'},
+  {t:'(35.1) 罗斯福的成长',d:'<b>答（续）：</b>该实体迅速穿过红、橙、黄、绿，幼年即开始在蓝色光芒中心工作；加速有三重原因：先前的成就、早年的舒适与闲暇、强烈的进步渴望；与蓝色光芒强度不低于自己的实体结为伴侣，得到贯穿整个投生的成长催化剂。'},
+  {t:'(35.1) 代价与转机',d:'<b>答（续）：</b>过多能量投入关于其他自我、变貌倾向获取权力的活动，使持续的绿色光芒活动出现困难并损耗物理载具；部分身体无法活动的限制，反而打开了专注「非滥用权力」的机会——在好战行动开始时失去的正向极性，因痛苦限制的催化剂效应而重新获得。'},
+  {t:'(35.2)(35.3) 两点澄清',d:'<span class="qa-q">问：那位导师就是他妻子？这个限制是他自己加上的吗？</span><b>答：</b>导师即妻子，正确；限制则是「部分正确」——投生课程与目的的基本方针在投生前已由心/身/灵复合体全体仔细设定，当他因热爱权力的变貌而使机会开始减少时，限制因素被激活。'},
+  {t:'(35.4) 希特勒',d:'<span class="qa-q">问：那么另一位呢？</span><b>答：</b>Ra 先说谈这个实体有困难，因为其生命模式中混淆极多。诊断是：在缺乏绿色光芒钥匙的情况下尝试激活最高光芒，正负两边都自我抵消；该实体基本上是负面的，混淆严重到人格解体，以致心/身/灵复合体不可收割、极需疗愈。'},
+  {t:'(35.5) 他的下属',d:'<span class="qa-q">问：当时他手下的人里，有谁能够以可收割的方式在负向极化？</span><b>答：</b>Ra 只说得出两位——你们称为赫尔曼的那位，以及更喜欢被称为希姆莱的那位；其余实体仍在物理投生之中。'},
+  {t:'(35.6)(35.7) 林肯',d:'<span class="qa-q">问：能说说第四密度存有使用亚伯拉罕的身体这件事吗？让读者知道有价值吗？</span><b>答：</b>「这是可能的。」但对第二个问题，Ra 把判断交了回去：你必须依你的辨别力来塑造你的询问。'},
+  {t:'(35.8) 最后一次完整询问',d:'<span class="qa-q">问：那动机是什么？</span><b>答：</b>Ra 先声明这将是本次集会的最后一个完整询问（器皿生命能相当低），随后给出 1853 年的那次接触、荣耀/责任的接受、交换与悬置的始末，以及「为光而战」的动机与不落业力的结算。'},
+  {t:'(35.9) 收尾',d:'<span class="qa-q">问：还有什么能让器皿更舒适，或改善通讯？</span><b>答：</b>一切安好。Ra 在爱与光中告别，以「欢欣前行于太一造物主的力量与和平之中」与 Adonai 作结。'}
+]);
+
+initStepper('raysTrack','raysDetail','raysPrev','raysNext',[
+  {t:'起点 · 生来赋潜能',d:'<b>出厂即带潜能。</b>Ra 的总则：任何实体进入第三密度投生时，每一个能量中心都已被赋予潜能，但必须由自我通过经验来激活。'},
+  {t:'红 → 橙 → 黄 → 绿',d:'<b>非常迅速地穿过。</b>该实体「非常迅速地向上发展，穿过红色、橙色、黄色与绿色」——顺序是一层一层往上走的。'},
+  {t:'幼年即进入蓝色',d:'<b>早得异乎寻常。</b>他在「如你们所说的幼年时期」就开始在蓝色光芒能量中心中工作。'},
+  {t:'三重加速原因',d:'<b>为什么这么快：</b>①先前的成就（在激活这些光芒方面）；②早年生活相对的舒适与闲暇；③本人强烈的进步渴望。'},
+  {t:'伴侣作为催化剂',d:'<b>蓝色光芒的同伴。</b>他与一个蓝色光芒振动强度不低于自己的实体结为伴侣，由此取得在该领域进一步成长的催化剂，并持续整个投生。'},
+  {t:'代价 · 绿色的困难',d:'<b>另一面：</b>过多能量投入「关于其他自我、变貌倾向获取权力」的活动，导致持续的绿色光芒活动出现困难，并对物理载具造成损耗。<i>（下一章展开）</i>'}
+]);
+
+const condEls=['c1','c2','c3','c4'].map(function(id){return document.getElementById(id)});
+function updateCond(){
+  const on=condEls.map(function(e){return e.checked});
+  const box=document.getElementById('condResult');
+  let html='',fail=false;
+  if(!on[0]){
+    fail=true;
+    html='<b>正负相互抵消。</b>缺了绿色光芒这把钥匙却去激活最高的能量光芒，结果是既不在正向也不在负向成立——Ra 用这个例子给出的原话是「在正向或负向的极化上都把自己抵消了」。';
+  }else if(!on[1]||!on[2]){
+    fail=true;
+    html='<b>人格解体的风险。</b>极化快过经验能被整合的速度，或心/身/灵复合体尚未被综合与整合，就会出现 Ra 所说的「所谓的疯狂」：人格解体，使心/身/灵复合体不可收割、且极需疗愈。';
+  }else if(!on[3]){
+    fail=true;
+    html='<b>漂入暮光世界。</b>一旦从有意识的极化漂移出去，梦境就会取代空间/时间连续体里的事件——连服务自我的那条路，也走不到可收割的程度。';
+  }else{
+    html='<b>可以扎实地朝一端极化。</b>钥匙在手、经验跟得上、心/身/灵已被综合与整合、极化又是有意识的——Ra 由此给出他反复重申的建议：谨慎与耐心，让基础落在坚实的地面上。';
+  }
+  box.innerHTML=html;
+  box.classList.toggle('fail',fail);
+}
+condEls.forEach(function(e){e.addEventListener('change',updateCond)});
+updateCond();
+
+document.querySelectorAll('.fn-card').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('open')));
+
+initSorter('sorterArea',[
+  {a:'在冲突持续期间继续在绿色光芒中振动，并运用蓝色光芒能量',opts:['正向极化','负向极化','两者相互抵消'],ans:'正向极化',exp:'Ra 特意澄清该实体并非好战本性，而是在冲突期间持续以这种方式振动。'},
+  {a:'主张精英与被奴役者，并认为这对社会结构具有助益性',opts:['正向极化','负向极化','两者相互抵消'],ans:'负向极化',exp:'Ra 说这属于服务自我的极化模式，本是一条可走的路线。'},
+  {a:'缺少绿色光芒的钥匙，却尝试激活最高的能量光芒',opts:['正向极化','负向极化','两者相互抵消'],ans:'两者相互抵消',exp:'Ra 的原话：在正向或负向的极化上都把自己抵消了。'},
+  {a:'对任何结果都保持超然，态度始终是服务他人',opts:['正向极化','负向极化','两者相互抵消'],ans:'正向极化',exp:'该存有因此既不获得也不失去业力，极性也只是因累积的感受与思想形态而略有减弱。'},
+  {a:'混淆严重到人格解体，以致无法收割',opts:['正向极化','负向极化','两者相互抵消'],ans:'两者相互抵消',exp:'Ra 说这个心/身/灵复合体因此不可收割，且极需疗愈。'}
+]);
+
+renderPath();
+</script>
+</body>
+</html>

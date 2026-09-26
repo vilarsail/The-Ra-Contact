@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 081 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 081 · 交互式学习模块</h1>
+  <p class="sub">这一集先照例盘点器皿的疲倦——它不是事故，而是接触本身的代价；随后补完身体原型四张牌，再把镜头拉向无限星系：Ra 以「放射爱」代替旅行，而面纱实验的极性模式早已同时传遍整个八度。</p>
+  <div class="tagline">7 个主题 · 6 个学习步骤 · 20 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 疲倦的机制</a>
+<a href="#s3">③ 身体原型收官</a>
+<a href="#s4">④ 知识的边界</a>
+<a href="#s5">⑤ 星系与爱的放射</a>
+<a href="#s6">⑥ 极性与八度通讯</a>
+<a href="#s7">⑦ 收官金句</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>从例行体检到「由近及远」的镜头运动，先看清这集对话怎么展开</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>疲倦的机制与三种结局</b><span>弄清接触的代价从哪里来、小组怎么分担、靠什么撑下去</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>身体原型收官：四张牌</b><span>用推进器核对命运之轮、女巫、死亡与炼金术士</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>Ra 的知识边界</b><span>向导交底：哪里是亲身体验，哪里只剩转述与证据</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>星系尺度：以爱代行</b><span>无限星系的合一；Ra 的接触半径与「放射爱」的通讯方式</span></span></label></div>
+<div class="step-item" data-target="#s7"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官：金句与伏笔</b><span>看完第⑥章的极性模式与八度通讯后，带走本集的三句话</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ 第 1 章：本章地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：一次「由近及远」的镜头运动</h2></div>
+  <p class="sec-lead">上一集把「身体的原型」清单讲到一半，本集先照例体检、把「疲倦」问题问透，再补完四张身体原型牌。随后发问者宣布了一条新航线——退回这个八度音程的最开始——于是镜头从一张塔罗牌，一路拉远到两千亿颗恒星的银河系，再拉到无限个星系。</p>
+
+  <div class="card">
+    <h3>本集在全书中的位置</h3>
+    <p><b>承接上一集：</b>身体原型的第 10-14 号尚未讲完，本集中段（81.11-81.14）补完这张清单。</p>
+    <p><b>开启新线：</b>发问者在 (81.15) 提出新方法——比较「面纱降下之后」与「之前」的体验，从八度起点查起，看「我们是怎么走到今天这个状态的」。本集后半（81.16-81.33）就是这个视角下的第一次勘察：Ra 的知识边界 → 无限星系的合一 → 极性模式如何传遍八度。</p>
+    <div class="quote">
+      <p class="en">I have guessed that a way that I could enter into a better comprehension of the development experience that is central to our work is to compare what we experience now, after the veil was dropped, with what was experienced prior to that time…</p>
+      <p class="zh">我猜，进入「发展经验」这个核心课题的一条路，是把面纱降下之后我们此刻的体验，与那之前的体验做比较……——发问者为整条新提问线交代的任务书。</p>
+      <span class="src">—— Session 081 · (81.15)</span>
+    </div>
+    <div class="plain">这一集是「从病床边退到天文台」的一集：先照料器皿，再校准术语，最后把整个八度音程当作一张地图摊开。</div>
+  </div>
+
+  <div class="card">
+    <h3>问答脉络推进器：八步走完本集</h3>
+    <p>点击节点或用按钮推进，看对话如何从一张病床走到无限星系。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="mapTrack"></div>
+      <div class="flow-detail" id="mapDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="mapPrev">← 上一步</button>
+        <button class="tri-btn" id="mapNext">下一步 →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="case"><b>像追一部宇宙纪录片：</b>上一集的镜头停在一张原型牌的特写上；本集先补完特写（四张身体原型牌），随即镜头逐级拉远——Ra 的知识边界、银河系、无限星系、直到「八度音程」这个最大取景框。看这一集时抓住这条「由近及远」的运动线，就不会在术语里迷路。</div>
+  <div class="case"><b>例行问答像项目晨会：</b>动手之前先同步成员状态——器皿的身体能量还剩多少、持续疲倦是不是接触的副作用、小组长期扛下去会有什么结果，都对齐之后才进入正题。本集开头的十个问答块（81.1-81.10）就是这份「晨会记录」，而它恰好引出了本集第一个真正的教导主题：疲倦的机制。</div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 个人问题 · 后勤</span></summary>
+    <div class="body">
+      <p><b>(81.1) 器皿状态：</b>身体复合体能量亏缺，源于心灵因素对既有变貌的长期强化；其余能量水平如前。</p>
+      <p><b>(81.2) 持续疲倦：</b>不是心灵致意的症状，而是这个接触的必然结果——机制详见第 ② 章。</p>
+      <p><b>(81.4-81.5) 会持续吗：</b>疲倦效应将持续增加，但与日常物理能量水平是两回事；已知有助的事物继续有助。Ra 并预告器皿振动的「透明度」将渐增。</p>
+      <p><b>(81.6-81.7) 支持小组也受累：</b>是的，两位支持者各承受约 10-15% 的同类效应，累积且同样持续。</p>
+      <p><b>(81.9) 为何感觉生命能量增加：</b>Carla 的私人问题；Ra 把答案留给她自己。</p>
+      <p><b>(81.10) 对食物更敏感？</b>该器皿对一切刺激都更敏感，宜谨慎行事。</p>
+      <p><b>(81.32) 中途提醒：</b>器皿此刻异常脆弱，已用去大量转移的能量，Ra 只再回答一个完整问题。</p>
+      <p><b>(81.34) 收尾建议：</b>很难测定能量水平，但建议每次工作都尽量以最理想的能量配置进入；「一切都好，校准良好」。</p>
+    </div></details>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 2 章：疲倦的机制 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>疲倦的机制：为什么接触必然带来沉重</h2></div>
+  <p class="sec-lead">发问者从「器皿为何持续疲倦」一路追问到「这个小组还能撑多久」。Ra 给出的答案既是机制性的，也是形而上的：疲倦不是故障，而是服务的代价；而唯一能平衡它的，是服务的意志。</p>
+
+  <div class="card">
+    <h3>疲倦从哪里来</h3>
+    <div class="q">器皿的持续疲倦到底是什么性质——是之前说的心灵致意的后遗症，还是别的什么？它的机制在哪里？</div>
+    <div class="quote">
+      <p class="en">The mechanism creating weariness is that connection betwixt the density wherein this instrument’s mind/body/spirit complex is safely kept during these workings, and the altogether variant density in which the instrument’s physical body complex resides at this space/time. As the instrument takes on more of the coloration of the resting density, the third-density experience seems more heavy and wearisome.</p>
+      <p class="zh">制造疲倦的机制，是「工作期间这个器皿的心/身/灵复合体被安全保存的那个密度」与「她的身体此刻栖居的完全不同的密度」之间的连接。当器皿染上越多休息密度的色彩，第三密度的体验就显得越沉重、越令人疲倦。</p>
+      <span class="src">—— Session 081 · (81.3)</span>
+    </div>
+    <div class="plain">疲倦不是损伤，而是「两个密度之间来回切换」的必然代价——器皿在工作时一半活在更高的休息密度里，回到第三密度就像负重行走。</div>
+    <div class="analogy"><b>类比：</b>在深水里作业过的人回到地面，会觉得四肢格外沉——不是生了病，而是身体在两种环境之间切换的反应。器皿的疲倦正是「休息密度的色彩」与第三密度之间的切换反应；Ra 补了一句：这是器皿为服务而自愿接受的，「就我们所知，对此无计可施」。</div>
+    <div class="case"><b>十年临终关怀的护士：</b>一位做了十年安宁疗护的护士，身体不是在某一次加班后垮掉的，而是常年「白天在病房、夜里在笔记本前消化情绪」两种状态之间来回切换的累积代价——她若被问「为什么总是倦」，答案不在某一天，而在切换本身。这正对应 Ra 所说：疲倦来自两个密度之间的「连接」，而非某次具体事故。</div>
+    <div class="case"><b>降噪耳机族回到地铁：</b>一个整月戴降噪耳机在安静书房工作的人，某天摘下耳机挤早高峰地铁，会觉得噪音刺耳得反常——不是环境突然变糟，而是他的「振动」变纯净了，对不纯净环境的反应变尖锐。这对应 Ra 对「透明度」的解释：时间/空间性质的疲倦，是透明或纯净的振动与不纯净、混乱、不透明环境之间的反应。</div>
+  </div>
+
+  <div class="card">
+    <h3>谁在分担这份代价</h3>
+    <div class="q">这个代价只落在器皿一个人身上吗？另外两位支持者会不会也被波及、波及多少？</div>
+    <div class="quote">
+      <p class="en">…experiences between 10 and 15 percent, roughly, of this effect. It is cumulative and identical in the continual nature of its manifestation.</p>
+      <p class="zh">……（支持小组的每一位）大约承受这个效应的 10% 到 15%。它是累积性的，且在其持续表现的性质上与器皿的相同。</p>
+      <span class="src">—— Session 081 · (81.7)</span>
+    </div>
+    <div class="plain">器皿由于接触的本质承受主要冲击；两位支持者因无条件支持与能量转移，各分担约 10-15%，同样累积、同样持续。</div>
+    <div class="case"><b>巡演中的乐队：</b>主唱每场巡演后都要失声休养一周，而两位和声与乐手也各自带着轻一些的同款嗓子疼回家——台前那一份最重，但没人真正「置身事外」。这对应 Ra 的分配：器皿承受主要冲击（brunt），支持小组以无条件支持与能量转移参与，各承受约 10-15%。</div>
+  </div>
+
+  <div class="card">
+    <h3>三种结局与一个变量</h3>
+    <div class="q">如果这份疲倦年复一年地累积，一个小组最终会走向哪里？Ra 先声明：这是个「有无限答案的普遍问题」，只能过度概括。</div>
+    <p>Ra 列出三种「故事结束」的方式：<b>被诱惑</b>——小组失去那个造成困难的接触本身；<b>失去忠诚</b>——起初坚强，却在困难面前散伙；<b>殉道路线</b>——把器皿一直用到生命能量耗尽、身体衰竭。而本组此刻走的是另一条路：保存生命能量、平衡服务的爱与智慧、在困难面前保持忠诚。</p>
+    <div class="quote">
+      <p class="en">The significant factor is the will of the instrument and of the group to serve. That is the only cause for balancing the slowly increasing weariness which will continue to distort your perceptions.</p>
+      <p class="zh">关键的因素，是器皿与小组服务的意志。那是平衡这缓慢增加的疲倦的唯一原因——这疲倦将持续扭曲你们的感知。</p>
+      <span class="src">—— Session 081 · (81.8)</span>
+    </div>
+    <div class="plain">未来不可知，但状况大概率会延续相当长时间；唯一能平衡日增疲倦的，是器皿与小组「服务的意志」——没有它，接触或许仍可能，却终会显得太费力。</div>
+    <div class="case"><b>三种社团的结局：</b>一个读书会因几次争吵后各自拉黑（被诱惑放弃）；一个跑团热情三年，在经费与伤病面前悄悄散伙（不能保持忠诚）；一个公益组织把唯一的骨干用到住院才停手（殉道路线）。Ra 的三种结局在现实社团史里都能找到对应，而活得久的组织共同点是：既省着用人，又记得当初为什么出发。</div>
+    <p><b>拨动开关，看看哪条路通向哪种结局：</b></p>
+    <div class="cond-row"><div class="name">服务的意志<small>器皿与小组仍想在困难中继续服务</small></div><label class="switch"><input type="checkbox" id="swWill" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">抵挡诱惑<small>不因困难与代价而放弃这个接触</small></div><label class="switch"><input type="checkbox" id="swResist" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">保存生命能量<small>不走「把器皿用到耗竭」的殉道路线</small></div><label class="switch"><input type="checkbox" id="swKeep" checked><span class="slider"></span></label></div>
+    <div id="condResult"></div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 3 章：身体原型收官 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>身体原型收官：从命运之轮到炼金术士</h2></div>
+  <p class="sec-lead">回到上一集未完的清单。发问者逐张报出他对身体原型第 10-14 号的理解，Ra 逐一确认、补充或纠正——前三张基本通过，最后一张被明确指出「不完全正确」，并借纠正给出本段最漂亮的一个意象：身体是炼金炉。</p>
+
+  <div class="card">
+    <h3>命运之轮：外部刺激从不单一供货</h3>
+    <div class="q">第十号原型「身体的催化剂／命运之轮」代表与其他自我的互动——这样说对吗？</div>
+    <div class="quote">
+      <p class="en">The most carefully noted addition would be that the outside stimulus of the Wheel of Fortune is that which offers both positive and negative experience.</p>
+      <p class="zh">最需要仔细注意的补充是：命运之轮的外部刺激，是同时提供正面与负面体验的。</p>
+      <span class="src">—— Session 081 · (81.11)</span>
+    </div>
+    <div class="plain">「与其他自我互动」的大方向没错，但别忘记：命运之轮转动时递来的，从来是正负成对的体验——没有只发好牌的轮盘。</div>
+    <div class="case"><b>同一场部门重组：</b>公司架构调整的通知发到同一个十人团队：有人拿到期待已久的晋升（正面体验），有人被调离核心项目（负面体验），而所有人收到的是同一份「外部刺激」。命运之轮的特点正在于此——它转一圈，同时派发两种牌，如何接牌才是各人的功课。</div>
+  </div>
+
+  <div class="card">
+    <h3>四张牌的核对：用推进器走一遍</h3>
+    <div class="q">发问者像交作业一样逐张陈述，Ra 在第 10、11、13 号上确认或补充，在第 14 号上按下暂停键。</div>
+    <div class="demo-area">
+      <div class="flow-track" id="archTrack"></div>
+      <div class="flow-detail" id="archDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="archPrev">← 上一步</button>
+        <button class="tri-btn" id="archNext">下一步 →</button>
+      </div>
+    </div>
+    <div class="table-wrap"><table class="nine">
+      <tr><th>原型</th><th>英文原名</th><th>通俗理解</th></tr>
+      <tr><td>第 10 号 · 身体的催化剂（命运之轮）</td><td>Catalyst of the Body (Wheel of Fortune)</td><td>与其他自我的互动；外部刺激同时供给正负体验</td></tr>
+      <tr><td>第 11 号 · 身体的体验（女巫）</td><td>Experience of the Body (Enchantress)</td><td>已被心/身/灵处理过的催化剂，产出进一步成长的种子</td></tr>
+      <tr><td>第 13 号 · 身体的转化（死亡）</td><td>Transformation of Body (Death)</td><td>死亡使身体转为更高振动以继续学习；每一刻都在提供小死小生</td></tr>
+      <tr><td>第 14 号 · 身体之道（炼金术士）</td><td>Way of the Body (Alchemist)</td><td>心智活动推力的镜像；身体是显化心智与灵性成果的炼金炉</td></tr>
+    </table></div>
+  </div>
+
+  <div class="card">
+    <h3>「死亡」比想象中宽</h3>
+    <div class="q">第十三号「身体的转化」被称为死亡，因为死后身体转为更高振动的身体、继续学习——这个理解对吗？</div>
+    <div class="quote">
+      <p class="en">This is correct and may be seen to be additionally correct in that each moment, and certainly each diurnal period of the bodily incarnation, offers death and rebirth to one which is attempting to use the catalyst which is offered it.</p>
+      <p class="zh">这是正确的，而且可以更进一步地正确：每一刻——当然还有身体投生的每一个日周期——都在为尝试使用所给催化剂的实体提供死亡与重生。</p>
+      <span class="src">—— Session 081 · (81.13)</span>
+    </div>
+    <div class="plain">「死亡」不只在生命终点营业：每个瞬间、每个昼夜循环都在提供小型的死亡与重生，供使用催化剂的实体练习。</div>
+    <div class="case"><b>熬了一个通宵之后：</b>程序员小林交付上线后睡了十四个小时，醒来那天，前一天的急躁和错误决定像被「清了缓存」——睡了一觉的他和昨夜的他，已经不是同一个身心状态。Ra 把这类日常重启也算进第十三号原型：每个日周期（diurnal period）都在提供死亡与重生，不必等到生命终点才动用这张牌。</div>
+  </div>
+
+  <div class="card">
+    <h3>炼金术士的炉子</h3>
+    <div class="q">发问者把「身体之道＝炼金术士」解释为「时间无限，足够各种身体学完进化所需课程」——这个说法站得住吗？</div>
+    <div class="quote">
+      <p class="en">The body is the creature of the mind and is the instrument of manifestation for the fruits of mind and spirit. Therefore, you may see the body as providing the athanor through which the alchemist manifests gold.</p>
+      <p class="zh">身体是心智的造物，是心智与灵性成果得以显化的工具。因此，你可以把身体看作提供了那座炼金炉（athanor），炼金术士借以显化黄金。</p>
+      <span class="src">—— Session 081 · (81.14)</span>
+    </div>
+    <div class="plain">Ra 纠正的重点不在「时间无限」：一切身体原型都是心智活动推力的镜像——身体不是独立学徒，而是心智与灵性用来「炼金」的那座炉子。</div>
+    <div class="case"><b>一份健身计划的一生：</b>教练给学员定好渐进超负荷的计划（心智的蓝图），真正的肌肉却在之后八个月的每一次训练与睡眠里长出来（身体的执行与显化）。计划再聪明，没有身体这座「炉子」，增肌的「黄金」无处凝结——这正是「身体是心智造物、是显化工具」的日常版本。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 4 章：Ra 的知识边界 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>Ra 的知识边界：八度音程即孤岛</h2></div>
+  <p class="sec-lead">发问者请求「退回八度起点」做勘察，第一件事却是给向导做「地形交底」：Ra 认识多远的地形？哪里是亲身体验，哪里只剩转述？Ra 的回答坦率得近乎朴素：本八度之内几乎是过来人，八度之外只剩证据。</p>
+
+  <div class="card">
+    <h3>向导的交底</h3>
+    <div class="q">Ra 声明只拥有本八度的知识，但看起来像是「完整知识」——真的是这样吗？</div>
+    <div class="quote">
+      <p class="en">Firstly, we do not have complete knowledge of this octave. There are portions of the seventh density which, although described to us by our teachers, remain mysterious.</p>
+      <p class="zh">首先，我们并不拥有本八度的完整知识。第七密度的某些部分，虽然经由我们的老师向我们描述过，仍然保持神秘。</p>
+      <span class="src">—— Session 081 · (81.16)</span>
+    </div>
+    <div class="plain">Ra 的知识是体验性的而非全知的：对本八度的大量催化剂已亲历并精炼，但第七密度仍有「老师描述过却依然神秘」的角落；发问者随后确认——Ra 尚未进化到或穿透第七层级。</div>
+    <div class="case"><b>物理学家的前沿：</b>一位凝聚态物理学家对实验室能复现的领域有一手体验，讲到普朗克尺度以下时却只能说「按某某理论的同行，情况应当如此」——转述替代了亲历。Ra 的处境与此相似：第七密度的某些部分属于「老师描述过、自己尚未走到」的区域，所以 Ra 拒绝「完整知识」这顶帽子。</div>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">八度音程</div><div class="sub">octave</div><div class="tap">点击展开</div></div><div class="back">造物的一个完整「音阶」：从第一密度一路到第八密度构成一次大循环，我们所处在当前这个八度里。本集确认：无限个星系同属一个八度。<em>像钢琴上的一个八度——弹完一遍，更高处还有下一个八度。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">理则</div><div class="sub">Logos</div><div class="tap">点击展开</div></div><div class="back">星系尺度的创造者：银河系即一个理则的造物。Ra 的物理旅行默认以「本理则」为边界——也就是本银河系。<em>像一位建筑师，银河系是他的作品，恒星与行星是图纸里的房间。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">子理则</div><div class="sub">sub-Logos</div><div class="tap">点击展开</div></div><div class="back">理则之下的次级创造者，例如太阳这样的恒星系统。Ra 到过的半人马座阿尔法星、太阳、仙王座、网罟座泽塔星都属于子理则；本集末尾还说：子理则负责精炼「较早子理则」的发现。<em>建筑师手下的几位主创，各自负责一栋楼。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">流浪者</div><div class="sub">wanderer</div><div class="tap">点击展开</div></div><div class="back">自愿从更高密度投生到较低密度的实体，为回应特定召唤而来。本集说：有来自其他主要星系的流浪者被单一召唤吸引而至；Ra 中也有成员成为其他主要星系的流浪者。<em>像主动请调到艰苦地区的外派员工。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">社会记忆复合体</div><div class="sub">social memory complex</div><div class="tap">点击展开</div></div><div class="back">群体意识合一后形成的记忆共享体，Ra 即是这样一个复合体。它的成员可以分别以流浪者身份去往别的星系，但复合体整体从未「旅行」到其他主要星系。<em>像一支共享全部经验记忆的团队——人可以出差，档案库不搬家。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">结晶</div><div class="sub">crystallized</div><div class="tap">点击展开</div></div><div class="back">人格（或心/身/灵复合体）被精炼到像晶体般清晰稳定的状态。本集的关键句：人格已结晶者，「宇宙是一个地方，旅行没有障碍」。<em>像一块磨透的镜片——光线（爱）可以毫不费力地穿过去。</em></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>孤岛类比：八度之外只剩证据</h3>
+    <div class="q">那「八度开始之前」的事，为什么 Ra 一点也不知道？</div>
+    <div class="quote">
+      <p class="en">It may be that the inhabitants of an island are not alone upon a planetary sphere, but if an ocean-going vehicle in which one may survive has not been invented, true knowledge of other islands is possible only if an entity comes among the islanders and says, “I am from elsewhere.”</p>
+      <p class="zh">岛上的居民也许并非独自存在于一颗行星上，但倘若一种能让人在其中存活的远洋载具尚未被发明，那么对其他岛屿的真知，只有当一位实体来到岛民中间、说出「我来自别处」时才成为可能。</p>
+      <span class="src">—— Session 081 · (81.18)</span>
+    </div>
+    <div class="plain">八度像一座岛：没有能跨洋的「载具」，岛民对外界的真知只能来自亲口作证的访客；Ra 手里握有的，是关于先前造物与未来造物的证据——以及在时空之流中看到的、明显非同时性的事件。</div>
+    <div class="case"><b>文字发明之前的历史：</b>考古队研究没有文字的年代，读不到当事人的自述，只能靠地层、器物、炭化的种子这些「证据」一块块拼出图景——他们知道「此前还有人」，却说不出那些人的名字。Ra 对「八度之前」的知识正是这种证据式的：确认先前造物与未来造物存在，但无法像本八度那样亲历。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 5 章：无限星系与爱的放射 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>无限星系：以爱代行，只去被召唤处</h2></div>
+  <p class="sec-lead">确认「星系无限且同属一个八度」之后，真正的要点浮出水面：合一。接下来发问者步步追问 Ra 的接触半径——在多少星系体验过意识？去过哪些地方？答案出人意料地安静：几乎不出差，只广播。</p>
+
+  <div class="card">
+    <h3>无限星系与合一</h3>
+    <div class="q">银河系约有两千亿颗恒星，而这样的星系在宇宙中数以百万计——它们数目无限吗？都属于同一个八度吗？</div>
+    <p>Ra 回答：完全正确，而且这是一个<b>重要的点</b>。发问者随即点破要点所在——「重点在于我们拥有合一」，Ra 赞许道：「你很有洞察力。」随后发问者确认：望远镜刚刚开始察觉的无限星系，全部同属这一个八度。</p>
+    <div class="plain">无限的星系、同一个八度——这个事实本身就在说「合一」：取景框拉到最大，看到的不是分裂，而是同一个造物的多重显影。</div>
+    <div class="case"><b>一次深空夜拍：</b>爱好者把望远镜对准仙女座，拍下那团一百多万年前出发的光；换一个方向，又是几十个星系在取景框里。天文学家的常识是「星系数以千亿计、可能无限」，而本集给这张星空照片补了一条注释：你看到的所有光点，都刻在同一个八度音阶上。</div>
+  </div>
+
+  <div class="card">
+    <h3>Ra 的接触方式：放射爱，而非旅行</h3>
+    <div class="q">Ra 在多少个其他星系亲身体验过意识？它的「接触半径」到底有多大？</div>
+    <p>问「是否在许多其他星系体验过意识」，答：<b>否</b>。问「是否有任何形式的经验、知识或旅行」，答：<b>是</b>。那这种「是」是什么？Ra 给出了本集最动人的回答之一：</p>
+    <div class="quote">
+      <p class="en">All of the infinite Logoi are one in the consciousness of love. This is the type of contact which we enjoy rather than travel.</p>
+      <p class="zh">所有无限的理则，都在爱的意识中合为一体。这是我们所享受的接触类型——而非旅行。</p>
+      <span class="src">—— Session 081 · (81.23)</span>
+    </div>
+    <div class="plain">Ra 的「远距通讯」是心对心的广播：已向整个造物敞开心扉放射爱，约 90% 的造物在某个层面能接收并回应——不到场，却几乎处处在场。</div>
+    <div class="case"><b>短波电台的听众：</b>一座短波电台向全球广播，不必派信使跑到每个国家；哪台收音机开着、调到了这个频率，哪台就能收到并回信——大约九成的「开机者」有回应。这对应 Ra 的接触方式：以爱的放射覆盖整个造物，约 90% 的造物在某层面意识到这份发送并能回应。</div>
+    <div class="case"><b>只出诊的医生：</b>一位乡村医生有能力走遍全省，但他的出诊记录里只有那些捎来口信求医的村子——病家的「召唤」决定路线。这对应 Ra 的物理旅行：在本理则（银河系）内本可随意移动，却只去被召唤服务之处——半人马座阿尔法星、你们太阳系的诸行星、仙王座与网罟座泽塔星；这些召唤一般并非来自第三密度，唯独太阳子理则的情形由第三密度发出。</div>
+  </div>
+
+  <div class="card">
+    <h3>为什么不去别的星系</h3>
+    <div class="q">既然爱可以抵达一切，Ra 为什么从不以社会记忆复合体的身份去其他主要星系？</div>
+    <div class="quote">
+      <p class="en">Thus there has been knowledge of other major galaxies, for to one whose personality, or mind/body/spirit complex, has been crystallized the universe is one place, and there is no bar upon travel. … We have not done this, nor do we contemplate it, for we can reach in love with our hearts.</p>
+      <p class="zh">因此对其他主要星系是有了解的：对于人格（或心/身/灵复合体）已经结晶的存有，宇宙是一个地方，旅行没有障碍。……我们没有这样做，也不打算这样做，因为我们能够以心在爱中触及。</p>
+      <span class="src">—— Session 081 · (81.27)</span>
+    </div>
+    <div class="plain">不是不能去，而是不必去：结晶者眼中「宇宙是一个地方」；Ra 与其他星系的知识往来，靠彼此互派的流浪者，也靠爱——「我们可以用爱以心触及」。</div>
+    <div class="case"><b>持多国签证的航海者：</b>一位集齐航海执照与各国签证的人摊开世界地图，处处皆可达；但他大部分时间仍坐在自家门廊给全球笔友写信——对他而言「远方」只是一个邮戳。这对应那句话：人格已结晶者，宇宙是一个地方、旅行没有障碍；而 Ra 选择了另一种抵达——爱的放射。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 6 章：极性实验与八度通讯 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>极性的实验与八度通讯：一个发现如何传遍宇宙</h2></div>
+  <p class="sec-lead">最后一程把镜头推到最宏观：双极性在其他星系也存在吗？面纱实验何时、如何铺开？亿万个星系之间怎样「互通有无」？Ra 给出的图景是：路径各异，模式相同；通讯如身，一所皆知。</p>
+
+  <div class="card">
+    <h3>模式：中心纯净，边缘实验</h3>
+    <div class="q">在其他星系，双极性也像这里一样出现吗？有没有统一的规律？</div>
+    <div class="quote">
+      <p class="en">Various Logoi and sub-Logoi had various methods of arriving at the discovery of the efficiency of free will in intensifying the experience of the Creator by the Creator. However, in each case this has been a pattern.</p>
+      <p class="zh">各个理则与子理则以不同的方法，抵达同一个发现：自由意志在「造物主经由造物主体验自身」的强化上是有效率的。然而，在每种情形里，这都构成一种模式。</p>
+      <span class="src">—— Session 081 · (81.30)</span>
+    </div>
+    <div class="plain">路径各异、模式一致：服务自我的极化出现在离星系螺旋中心更远处——Ra 的流浪者在其他主要星系同样会遇到服务自我与服务他人的双重极性。</div>
+    <div class="case"><b>老城与新开发区：</b>一座千年老城的巷子里，邻里互助是几代人内化的默认规则；而城郊新开的开发区里，各种生存策略鱼龙混杂、包括损人利己的那一种。距离「中心」越远、开垦越新，自由意志的试验越充分、双极性越明显——这正是「服务自我极化出现在星系外围」的地面版本。</div>
+    <div class="case"><b>老论坛与新平台：</b>一个运转十年的老社区，规范早已长进成员的直觉里，恶意行为罕有土壤；刚上线的新平台则什么策略都会冒头，直到治理机制长出来为止。「极性分化出现在新开垦处」不是道德堕落，而是扩展自由意志的实验必然从边缘开始。</div>
+  </div>
+
+  <div class="card">
+    <h3>细胞式通讯：一所学，一切皆知</h3>
+    <div class="q">八度内星系林立，「第一个实验成功」的消息是怎么传开的？</div>
+    <div class="quote">
+      <p class="en">Communication in such an environment is the communication of cells of the body. That which is learned by one is known to all. The sub-Logoi, then, have been in the position of refining the discoveries of what might be called the earlier sub-Logoi.</p>
+      <p class="zh">在这样的环境里，通讯就是身体细胞之间的通讯。一个所学的，一切皆知。于是，子理则一直处于精炼那些可称为「较早子理则」之发现的位置。</p>
+      <span class="src">—— Session 081 · (81.33)</span>
+    </div>
+    <div class="plain">许多造物从未与这个八度的单一理则分离、栖居于太一无限造物主之内——在这种环境里，一处所学，处处皆知；各星系不是白手起家，而是在接力精炼先行者的发现。</div>
+    <div class="case"><b>跨国实验室的工艺升级：</b>总部实验室凌晨验证了一条新工艺，当天下午全球分部的参数表同步更新，各分部再根据本地条件各自改进——半年后回看，没有一家是「从零开始」的。这对应本集的图景：面纱实验在许多萌芽星系大致同时启动，其知识迅速传遍八度，子理则们接力精炼较早子理则的发现。</div>
+    <p><b>顺手做个归类练习，体会「命运之轮式」的外部刺激：</b></p>
+    <div id="sortArea"></div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 7 章：收官 ============ -->
+<section class="chapter" id="s7">
+  <div class="sec-head"><span class="num">07</span><h2>收官：金句与伏笔</h2></div>
+  <p class="sec-lead">本集在 Ra「只再答一个完整问题」的提醒后收束。发问者表示这条新航线「没有更多要问的了」，起点详情留待下一次工作——本集就此停在星系尺度的「序章」处。</p>
+
+  <div class="saying">
+    <p class="en">We have opened our hearts in radiation of love to the entire creation. Approximately 90 percent of the creation is, at some level, aware of the sending and able to reply.</p>
+    <p class="zh">我们已向整个造物敞开心扉，放射爱。造物中约有百分之九十，在某个层面上意识到这份发送，并能够回应。</p>
+    <span class="src">—— Session 081 · (81.23)</span>
+  </div>
+
+  <div class="card">
+    <h3>本集带走的三句话</h3>
+    <p><b>① 疲倦是服务的代价，意志是唯一的平衡。</b>持续的沉重不是故障，而是「两个密度之间的连接」；能平衡它的，只有器皿与小组服务的意志（第 ② 章）。</p>
+    <p><b>② 身体是心智的炼金炉。</b>身体不是独立学徒，而是心智与灵性成果的显化工具——炼金术士要出黄金，得靠这座炉子（第 ③ 章）。</p>
+    <p><b>③ 爱是比旅行更远的抵达方式。</b>Ra 不去其他主要星系，「因为我们能够以心在爱中触及」；一所学，一切皆知（第 ⑤⑥ 章）。</p>
+    <div class="quote">
+      <p class="en">Go forth, therefore, rejoicing in the power and in the peace of the Infinite Creator. Adonai.</p>
+      <p class="zh">那么，向前去吧，在无限造物主的大能与平安中欢欣。Adonai。——疲倦会继续，但临别的祝福仍是同一句。</p>
+      <span class="src">—— Session 081 · (81.34)</span>
+    </div>
+    <div class="case"><b>照护者的初心便签：</b>长期照护失能家人的子女，常在冰箱上贴一张写着「当初为什么」的便签——不能平衡消耗的是排班技巧，能平衡的是那张便签。这对应 Ra 的收束：唯一能平衡缓慢增加之疲倦的，是器皿与小组服务的意志。</div>
+    <div class="case"><b>已宣布的方法论：</b>发问者在 (81.15) 交代的任务书——比较面纱降下前后的体验——本集只走到「确认星系尺度的模式」这一步；他明确说这条线上「没有更多要问的了」，勘察八度起点细节的请求，留给了下一次工作。读完本集，你手里握着的是这张宇宙地图的序章。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 081（split/Ra_Session_081.md）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra081-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+initStepper('mapTrack','mapDetail','mapPrev','mapNext',[
+  {t:'例行体检',d:'<span class="qa-q">问：器皿的状况如何？</span><b>答：</b>身体复合体能量亏缺，源于心灵因素对既有变貌的长期强化；持续疲倦并非心灵致意的症状，而是这个接触的必然结果。'},
+  {t:'疲倦的机制',d:'<span class="qa-q">问：接触为什么必然带来疲倦？</span><b>答：</b>疲倦来自工作期间心/身/灵被安全保存的密度，与身体此刻所在的密度之间的连接；器皿越染上休息密度的色彩，第三密度体验就越沉重。'},
+  {t:'小组分担',d:'<span class="qa-q">问：另外两位也受影响吗？</span><b>答：</b>是。器皿因接触的本质承受主要冲击；支持小组以无条件支持与能量转移参与，各承受约 10-15%，累积且同样持续。'},
+  {t:'三种结局',d:'<span class="qa-q">问：长期下去会怎样？</span><b>答：</b>被诱惑而失去接触；起初坚强却不能在困难面前保持忠诚；或走上完全的殉道路线。本组则以服务的意志平衡日增的疲倦。'},
+  {t:'补完原型',d:'<span class="qa-q">问：接着核对身体的原型牌。</span><b>答：</b>命运之轮同时供给正负体验；女巫产出成长的种子；死亡即向更高振动的转化；炼金术士——身体是心智显化黄金的炼金炉。'},
+  {t:'宣布新航线',d:'<span class="qa-q">问：能否退回八度音程的最开始，比较面纱降下前后的体验？</span><b>答：</b>问题的方向是你们的权限——但 Ra 先交底：第七密度的某些部分虽经老师描述，仍然神秘。'},
+  {t:'八度即孤岛',d:'<span class="qa-q">问：为何没有八度之前的知识？</span><b>答：</b>八度如岛，没有跨洋载具，真知只能等访客说「我来自别处」；但 Ra 手里有先前造物与未来造物的证据。'},
+  {t:'星系与模式',d:'<span class="qa-q">问：星系无限，Ra 的半径有多大？</span><b>答：</b>以爱的放射接触约 90% 的造物，物理旅行只到被召唤处；双极性实验的同一模式，已同时传遍各萌芽星系。'}
+]);
+
+initStepper('archTrack','archDetail','archPrev','archNext',[
+  {t:'10 · 命运之轮',d:'<span class="qa-q">问：第十号原型代表与其他自我的互动？</span><b>答：</b>大致正确——每个催化剂处理的都是进入能量网络与振动感知的体验；关键补充：命运之轮的外部刺激同时提供正面与负面体验。'},
+  {t:'11 · 女巫',d:'<span class="qa-q">问：第十一号（身体的体验）代表已被处理过的催化剂？</span><b>答：</b>正确——它被称为女巫，因为它产出进一步成长的种子。'},
+  {t:'12 · 意指者',d:'发问者跳过这一张——意指者已在前次集会讨论过，本集清单从第十号直接接到第十三号。'},
+  {t:'13 · 死亡',d:'<span class="qa-q">问：身体的转化被称为死亡，死后身体转为更高振动以继续学习？</span><b>答：</b>正确，且不止于此——每一刻、每个日周期，都在为尝试使用催化剂的实体提供死亡与重生。'},
+  {t:'14 · 炼金术士',d:'<span class="qa-q">问：身体之道称为炼金术士，因为时间无限、够身体学完课程？</span><b>答：</b>不完全正确——它须视为心智活动推力的镜像；身体是心智的造物与显化工具，提供炼金炉以显化黄金。'}
+]);
+
+initSorter('sortArea',[
+  {a:'同事顺手帮你把咖啡放到桌上，什么也没图。',opts:['服务他人','服务自我','两者皆是'],ans:'服务他人',exp:'纯粹的正向外溢——命运之轮式外部刺激中「正面」的那一面。'},
+  {a:'把同事的方案在会上说成自己的，好抢下季度绩效。',opts:['服务他人','服务自我','两者皆是'],ans:'服务自我',exp:'以他人为工具来强化自我——「负面」的那一面。'},
+  {a:'一次部门重组：有人借机晋升，有人被调离核心岗位。',opts:['服务他人','服务自我','两者皆是'],ans:'两者皆是',exp:'同一份外部刺激同时供给正面与负面体验——这正是第 10 号原型被补充的要点。'},
+  {a:'深夜在小区群里帮邻居找跑丢的猫，找到才睡。',opts:['服务他人','服务自我','两者皆是'],ans:'服务他人',exp:'不求回报的助人行为。'},
+  {a:'散播对竞争者的不实传闻，好保住自己的职位。',opts:['服务他人','服务自我','两者皆是'],ans:'服务自我',exp:'损人利己的极化——在星系尺度上，这类模式出现在离中心更远处。'}
+]);
+
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+function updateFate(){
+  var will=document.getElementById('swWill').checked;
+  var resist=document.getElementById('swResist').checked;
+  var keep=document.getElementById('swKeep').checked;
+  var out=document.getElementById('condResult');
+  if(!will){out.className='fail';out.innerHTML='<b>没有服务的意志：</b>接触或许仍可能发生，但最终会显得太过费力——疲倦没有能平衡它的东西。';}
+  else if(!resist){out.className='fail';out.innerHTML='<b>被诱惑：</b>一个小组可能受诱惑，从而失去那个造成困难的接触本身——故事就此结束。';}
+  else if(!keep){out.className='fail';out.innerHTML='<b>殉道路线：</b>不保存生命能量，把器皿一直用到身体复合体耗竭——故事同样结束。';}
+  else{out.className='';out.innerHTML='<b>本组此刻的路：</b>保存生命能量，平衡服务的爱与智慧，在困难面前保持忠诚——诱惑尚未结束这个小组的故事。';}
+}
+['swWill','swResist','swKeep'].forEach(function(id){document.getElementById(id).addEventListener('change',updateFate);});
+updateFate();
+
+renderPath();
+</script>
+</body>
+</html>

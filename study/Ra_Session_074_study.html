@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 074 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 074 · 交互式学习模块</h1>
+  <p class="sub">这一集先解释出神中疼痛为何能动摇接触的管道，再借原型心智划出「教与学」的边界，然后把「人格的修炼」如何为魔法工作供能的因果链掰直，最后落到仪式与声音振动复合体为何有效的原理。</p>
+  <div class="tagline">5 个主题 · 5 个学习步骤 · 24 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 原型心智</a>
+<a href="#s3">③ 人格的修炼</a>
+<a href="#s4">④ 声音与仪式</a>
+<a href="#s5">⑤ 收官与伏笔</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>先走过问答脉络推进器，弄清疼痛与管道的关系，看清这一集要谈的四件事</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>弄懂原型心智</b><span>定义、魔法师与女祭司的定位、对应关系，以及 Ra 为何只给注释不代学习</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>掰直修炼的因果链</b><span>靛蓝门户为何不能代劳下面的清理，三步心法如何为魔法工作供能</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>搞懂声音与仪式</b><span>拨号比喻、效力的三个来源、以及部分元音的「先于时空」</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>收官：背下三步心法</b><span>带走本集金句，看清留给下一程的伏笔</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：疼痛如何动摇管道，这一集要谈什么</h2></div>
+  <p class="sec-lead">本集承接第 73 集留下的两件事——器皿疼痛加剧导致的接触修正，与没答完的原型心智问题；随后把「人格的修炼→能量中心→魔法力量」这条因果链讲透，再展开仪式与声音振动复合体的原理。先随下面的问答链把全篇走一遍。</p>
+
+  <div class="card">
+    <h3>出神与管道：疼痛怎么会影响到「没有感觉」的器皿</h3>
+    <div class="q">发问者的困惑：出神状态下身体不该有痛感，那疼痛为什么还能干扰接触，甚至造成上一次集会里两处需要当场纠正的传输错误？他以为「无感觉」就等于「无影响」。</div>
+    <div class="quote">
+      <p class="en">This instrument, while fully open to our narrow-band contact, at times experiences a sudden strengthening of the distortion which you call pain.</p>
+      <p class="zh">这个器皿虽对我们的窄带接触完全开放，却会不时经历所谓「疼痛」变貌的突然加剧——前两周这类加剧更频繁，上一次工作因此两次被迫修正接触。</p>
+      <span class="src">—— Session 074 · (74.2)</span>
+    </div>
+    <div class="quote">
+      <p class="en">However, the distortion which you call pain, when sufficiently severe, mitigates against proper contact, and—when the increased distortion is violent—can cause the tuning of the channel to waver.</p>
+      <p class="zh">疼痛变貌足够剧烈时，会妨碍适当的接触；若加剧得剧烈，甚至会让管道的调谐摇摆——随后必须重新校正。</p>
+      <span class="src">—— Session 074 · (74.3)</span>
+    </div>
+    <div class="plain">器皿出神时确实感觉不到痛，但 Ra 借以发声的正是这具黄芒身体——人已离席，线路还在；剧痛会让调谐摇摆，需要重新校正。</div>
+    <div class="analogy"><b>像无线话筒：</b>歌手已离台，话筒仍架在台上（黄芒身体仍是 Ra 使用的管道）；有人在旁边重重敲击音箱（疼痛剧烈加剧），接收端就得立刻重新调频——受影响的不是歌手，是话筒的「调谐」。</div>
+    <div class="case"><b>远程演播室：</b>一位主持人离开直播间，把设备留给远程导播控制，机身仍挂在线路里。这半个月机房开始频繁波动，上次直播中信号两次中断、导播两次当场重新校准——正对应「前两周疼痛加剧更频繁，上次工作中两次修正或纠正接触」。</div>
+    <div class="case"><b>排练厅的麦克风：</b>合唱排练时主唱去了后台，麦克风还架在台上；有人搬椅子碰到支架，声音忽高忽低，调音师必须当场推回推子——器皿本人毫无感觉，受影响的是「管道的调谐」，这正是出神与疼痛可以并存的原因。</div>
+  </div>
+
+  <div class="card">
+    <h3>问答脉络推进器：本集对话怎么展开</h3>
+    <div class="flow-track" id="flow1"></div>
+    <div class="flow-detail" id="flowD1"></div>
+    <div class="flow-ctrl"><button class="tri-btn" id="flowPrev">◀ 上一问</button> <button class="tri-btn" id="flowNext">下一问 ▶</button></div>
+  </div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 团队备注</span></summary>
+  <div class="body">
+    <p><b>(74.1) 器皿状态：</b>发问者照例先问，Ra 只答「如前所述」。</p>
+    <p><b>(74.19 末) 团队备注：</b>Ra 指出上次工作接触曾短暂错位后纠正——在「火之练习」中可见初始顺时针螺旋从绿芒中心经肩颈头部、肘部到左手。</p>
+    <p><b>(74.20) 收尾状态：</b>器皿仍处疼痛、颈部最重，近期的调整略有帮助，校准良好；Ra 以 Adonai 祝福作结。</p>
+  </div></details>
+
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>原型心智：为什么 Ra 只画地图、不代开车</h2></div>
+  <p class="sec-lead">发问者想接着上一集没答完的原型心智问题。Ra 先指出问题本身尚未触及要害，然后给出一组「一般性注释」——并顺手示范了什么叫教与学的边界：路可以画，车得你自己开。</p>
+
+  <div class="card">
+    <h3>定义：原型心智与宇宙全体心智是什么关系</h3>
+    <div class="q">发问者想继续追问原型心智。Ra 却先给一个更基础的东西——定义：这个行星的「原型心智」到底是什么、和更大的心智背景差在哪里。</div>
+    <div class="quote">
+      <p class="en">The archetypical mind may be defined as that mind which is peculiar to the Logos of this planetary sphere. Thusly, unlike the great cosmic all-mind, it contains the material which it pleased the Logos to offer as refinements to the great cosmic beingness.</p>
+      <p class="zh">原型心智可以定义为本行星的理则所特有的心智：不同于伟大的宇宙全体心智，它包含理则乐意提供的、对宇宙存在性的种种精炼。</p>
+      <span class="src">—— Session 074 · (74.4)</span>
+    </div>
+    <div class="plain">原型心智（archetypical mind，本行星理则特有的心智）是这片星空的「本地精炼包」，涵盖可能影响心智或体验的所有面向。</div>
+    <div class="analogy"><b>像操作系统与主题包：</b>宇宙全体心智是各台设备共享的基础系统，原型心智是本行星这台设备上预装的定制主题——底层一致，界面本地化。</div>
+    <div class="case"><b>连锁健身房：</b>同一品牌的门店全球遵循同一套训练原理（宇宙全体心智），但每家店按本地会员的身体数据与习惯调整了课程表（本行星理则的精炼）——原型心智就是这份「本地课程表」。</div>
+  </div>
+
+  <div class="card">
+    <h3>定位纠错：魔法师是意志，不是潜意识</h3>
+    <div class="q">上一集把「魔法师」点名为重要原型，发问者的理解里它似乎藏在深层潜意识中——Ra 指出这个定位错了。</div>
+    <div class="quote">
+      <p class="en">However, it was not recognized that this portion of the archetypical mind represents not a portion of the deep subconscious, but the conscious mind and, more especially, the will.</p>
+      <p class="zh">这一原型并不代表深层潜意识的一部分，而是显意识心智——尤其是意志；与之配对的女祭司才是直觉、潜意识官能。</p>
+      <span class="src">—— Session 074 · (74.4)</span>
+    </div>
+    <div class="plain">魔法师（The Magician）＝显意识与意志；女祭司（The High Priestess）＝对应的直觉与潜意识官能。一主动一承接，是一对。</div>
+    <div class="case"><b>手与地图：</b>开车时握方向盘的手（显意识与意志）与车厢里那张随时能翻的地图加司机的方向感（直觉与潜意识）——发问者把「魔法师」错记成了藏在深处的仓库，Ra 纠正：魔法师是那只正在操作的手。</div>
+  </div>
+
+  <div class="card">
+    <h3>对应关系：每个名字都是一条入口</h3>
+    <div class="q">行家要怎么使用这套系统？Ra 拿团队净化仪式里现成的两个词当例子，示范「对应」可以精炼到什么程度。</div>
+    <div class="quote">
+      <p class="en">“Ve Geburah” is the correspondence of Michael, of Mars, of the positive, of maleness.</p>
+      <p class="zh">「Ve Geburah」对应迈克尔、火星、正面性、男性性——一个名字背后是一整串可以继续精炼的对应（「Ve Gedulah」则对应木星、女性性、负面性等）。</p>
+      <span class="src">—— Session 074 · (74.4)</span>
+    </div>
+    <div class="plain">对应关系（correspondence，一个名字与一组属性、原型之间的映射）越精炼，入口越好用；还可以做颜色、原型间关系等更深层的精炼——但那是行家的功课。</div>
+    <div class="case"><b>多线索记忆：</b>背单词时把一个词与图像、场景、发音多线绑定，日后任何一条线索都能唤起整块记忆——行家精炼对应关系（火星、迈克尔、正面性、男性性……）正是为了给原型修更多条「提取路径」，让它可以随意召唤。</div>
+  </div>
+
+  <div class="card">
+    <h3>边界与建议：Ra 为什么不把答案讲完</h3>
+    <div class="q">既然 Ra 懂得这么多，为什么不把对应关系一条条讲完？这一段本身就是回答：教与学有它不可代劳的部分。</div>
+    <div class="quote">
+      <p class="en">We may not teach/learn for any other to the extent that we become learn/teachers.</p>
+      <p class="zh">我们不能替任何他人教导/学习，到我们自己反而变成学习/教导者的程度——所以 Ra 只做一般性注释，让发问者自己精炼询问。</p>
+      <span class="src">—— Session 074 · (74.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">It is more nearly well if the adept go beyond whatever has been written and make such correspondences that the archetype can be called upon at will.</p>
+      <p class="zh">若行家能超越一切已写就的典籍、建立自己的对应，使原型可以随意召唤——那就更接近「好」。</p>
+      <span class="src">—— Session 074 · (74.4)</span>
+    </div>
+    <div class="plain">Ra 只指路不代步：先选一套研究体系仔细钻研，再在典籍之上建立自己的对应系统——学习这件事没有代打。</div>
+    <div class="case"><b>教练不代举：</b>健身教练给你计划表、纠正动作，但不会替你完成那一组深蹲——Ra 同样把「超越典籍、建立自己的对应」交还给行家本人。</div>
+  </div>
+
+  <div class="card">
+    <h3>术语卡：本集的六个关键词（点击翻面）</h3>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">原型心智</div><div class="sub">archetypical mind</div><div class="tap">点击翻面</div></div><div class="back">本行星的理则特有的心智：包含所有可能影响心智或体验的面向，是行家研究对应关系的地图。<em>像本地门店的定制课程表：底层原理全球一致，界面按本地调整。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">宇宙全体心智</div><div class="sub">great cosmic all-mind</div><div class="tap">点击翻面</div></div><div class="back">更大的心智背景，众理则共享的存在底座；原型心智是它在本行星的精炼版，二者不可混同。<em>像基础操作系统与这台设备上预装的主题包。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">理则</div><div class="sub">Logos</div><div class="tap">点击翻面</div></div><div class="back">一个行星尺度上的创造性心智原则；本集说原型心智「为这个行星的理则所特有」，即它由这片领域的理则提供。<em>像为一片新校区编写课程标准的那位总设计师。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">魔法师</div><div class="sub">The Magician</div><div class="tap">点击翻面</div></div><div class="back">重要原型之一：代表显意识心智，尤其是意志——不是深层潜意识。<em>像正在握方向盘的那只手。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">女祭司</div><div class="sub">The High Priestess</div><div class="tap">点击翻面</div></div><div class="back">与魔法师配对的原型：对应的直觉、潜意识官能。<em>像车厢里那张随时能翻的地图与司机的方向感。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">行家</div><div class="sub">adept</div><div class="tap">点击翻面</div></div><div class="back">有意识地做魔法与灵性工作的人；本集后文说「靛蓝光芒是行家的光芒」，精炼对应关系正是行家的功课。<em>像已经出师、开始独立接案的学徒。</em></div></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>人格的修炼：靛蓝门户为何不能代劳下面的清理</h2></div>
+  <p class="sec-lead">发问者带着自己拟好的答案来让 Ra 批改，结果被一句「不」打回。这一段把「修炼→能量中心→魔法力量」的因果链掰直：高处的光再亮，也替代不了从红色开始的逐层清理。</p>
+
+  <div class="card">
+    <h3>批改时刻：靛蓝再结晶，也不能代劳</h3>
+    <div class="q">发问者自答：人格的修炼通过疏通较低能量中心、让向上螺旋的光自由流到靛蓝，从而「喂养」靛蓝中心、增强白色魔法师的力量——听起来很顺，Ra 却只回了一个字。</div>
+    <div class="quote">
+      <p class="en">However, it cannot, no matter how crystallized, correct to any extent whatsoever imbalances or blockages in other energy centers. They must needs be cleared seriatim from red upwards.</p>
+      <p class="zh">靛蓝中心对行家的工作确实至关重要；然而无论它多么结晶化，都无法纠正其他能量中心的失衡或阻塞——它们必须从红色起依次向上清理。</p>
+      <span class="src">—— Session 074 · (74.6)</span>
+    </div>
+    <div class="plain">靛蓝再亮也照不进别的中心：下面的中心必须从红色开始依次（seriatim）清理，没有「跳层修理」这回事。</div>
+    <div class="case"><b>一楼爆管：</b>顶楼装修得再豪华，一楼水管一爆整栋楼停水——靛蓝中心再结晶，也替代不了从红色起逐层检修。</div>
+    <div class="case"><b>补基础：</b>学生想直接刷考研真题，一诊断发现初等公式有漏洞，补课只能从最早的缺环一章章补起——能量中心的失衡同样如此。</div>
+  </div>
+
+  <div class="card">
+    <h3>靛蓝是行家之光：结晶化意味着什么</h3>
+    <div class="q">发问者确认：原来那个问题（人格的修炼如何喂养靛蓝中心并影响白色魔法师的力量）本身是成立的——那答案到底是什么？</div>
+    <div class="quote">
+      <p class="en">The indigo ray is the ray of the adept. A great deal of the answer you seek is in this sentence.</p>
+      <p class="zh">靛蓝光芒是行家的光芒——你所寻求的答案，大半就在这句话里。</p>
+      <span class="src">—— Session 074 · (74.8)</span>
+    </div>
+    <div class="quote">
+      <p class="en">There is an identification between the crystallization of that energy center and the improvement of the working of the mind/body/spirit as it begins to transcend space/time balancing and to enter the combined realms of space/time and time/space.</p>
+      <p class="zh">该中心的结晶化与心/身/灵工作的提升是同一件事：当它开始超越空间/时间的平衡，进入空间/时间与时间/空间的联合领域。</p>
+      <span class="src">—— Session 074 · (74.8)</span>
+    </div>
+    <div class="plain">靛蓝（indigo ray，第七道可见光芒中的行家之光）的结晶化不是「多了一格进度条」，而是整个心/身/灵的工作方式升了级。</div>
+    <div class="case"><b>光纤升级：</b>同一台路由器，入户线从铜线换成光纤，能同时传的数据立刻变多——靛蓝中心结晶化后，同一个心/身/灵能从智能无限表达更多。</div>
+  </div>
+
+  <div class="card">
+    <h3>镜子：修炼过的人格不是「单点修理」</h3>
+    <div class="q">发问者又猜：对单一个体同伴保持平衡态度，就能清理自己的橙芒？Ra 说这不算错，只是「不够完整」——完整的图景大得多。</div>
+    <div class="quote">
+      <p class="en">The disciplined personality, when faced with an other-self, has all centers balanced according to its unique balance. Thusly the other-self looks in a mirror seeing itself.</p>
+      <p class="zh">修炼过的人格面对另一个自我时，所有中心都按其独特的平衡而平衡——于是对方像照镜子，看见的是它自己。</p>
+      <span class="src">—— Session 074 · (74.9)</span>
+    </div>
+    <div class="plain">人格的修炼是全中心的整体平衡，不是针对某段关系做单点修补；修炼到位的人会自然成为别人的镜子。</div>
+    <div class="case"><b>老友如镜：</b>你向一位自我功课扎实的老友抱怨同事，他不评判也不附和，你聊到一半反而看清了自己的模式——他没有动手「修」你的橙芒，是他整体的平衡成了你的镜子。</div>
+    <div class="case"><b>不接招的面试官：</b>面试官既不严厉施压也不刻意讨好你，紧张的反而在他面前看清了自己的讨好习惯——这正是「另一个自我在镜中看到它自己」。</div>
+  </div>
+
+  <div class="card">
+    <h3>三步心法：修炼的核心只有三句</h3>
+    <div class="q">绕了一圈，发问者终于问到根上：这些修炼到底如何影响能量中心与魔法力量？Ra 给出的答案短得像口诀。</div>
+    <div class="quote">
+      <p class="en">One, know yourself. Two, accept yourself. Three, become the Creator.</p>
+      <p class="zh">一，认识你自己。二，接纳你自己。三，成为造物主。</p>
+      <span class="src">—— Session 074 · (74.11)</span>
+    </div>
+    <div class="quote">
+      <p class="en">To become the Creator is to become all that there is. There is, then, no personality in the sense with which the adept begins its learn/teaching.</p>
+      <p class="zh">成为造物主，就是成为一切万有——于是行家起始时那种意义上的「人格」不复存在。</p>
+      <span class="src">—— Session 074 · (74.11)</span>
+    </div>
+    <div class="plain">认识自己→接纳自己→成为造物主：第三步成就的是万物最谦卑的仆人——人格透明，完全能认识并接纳其他自我；行家由此清出通往伟大靛蓝门户的路。</div>
+    <div class="case"><b>三分钟复盘：</b>睡前写三行日记——今天看清了自己什么（认识）；哪一部分还想划掉（接纳，写下来、不删）；哪一刻纯粹在帮忙且没留名（成为造物主的透明仆人）。</div>
+    <div class="case"><b>接力三棒：</b>三步像接力赛——认识是接棒，接纳是奔跑，成为造物主是冲线后把奖牌挂到全队脖子上：个人风格淡出，服务与透明浮出。</div>
+  </div>
+
+  <div class="card">
+    <h3>条件模拟器：通往靛蓝门户的路修通了没有</h3>
+    <p>Ra 给的因果链可以拆成三个开关。拨一拨，看看少了哪块拼图时工作会卡在哪里。</p>
+    <div class="cond-row"><div class="name">低层中心已依次清理<small>从红色起 seriatim 向上（74.6）</small></div><label class="switch"><input type="checkbox" id="gate1"><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">认识并接纳自己<small>三步心法的前两步（74.11）</small></div><label class="switch"><input type="checkbox" id="gate2"><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">靛蓝中心开始结晶<small>行家之光的亮度（74.8）</small></div><label class="switch"><input type="checkbox" id="gate3"><span class="slider"></span></label></div>
+    <div id="gateResult"></div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>声音与仪式：为什么念对词像拨对号码</h2></div>
+  <p class="sec-lead">从「服务他人的工作如何唤起光之力量」开始，发问者一路追问仪式的效力来源：教会祷告与行家咒语差在哪、能否自创仪式、旧仪式为何有效、哪些声音居然先于时空而有力。</p>
+
+  <div class="card">
+    <h3>拨号原理：声音振动复合体如何「唤起」光之力量</h3>
+    <div class="q">发问者引用 Ra 之前的话——服务他人的工作有潜力唤起一大群光之力量——要求讲清机制与用途。</div>
+    <div class="quote">
+      <p class="en">There are sound vibratory complexes which act much like the dialing of your telephone. When they are appropriately vibrated with accompanying will and concentration, it is as though many upon your metaphysical or inner planes received a telephone call.</p>
+      <p class="zh">有些声音振动复合体的作用很像拨电话：配上意志与专注适当振动，就仿佛内在层面的许多实体接到了来电。</p>
+      <span class="src">—— Session 074 · (74.12)</span>
+    </div>
+    <div class="plain">仪式词是拨号盘：号码本身不会替你打电话，决定有没有人接、接得多认真的，是拨号时的意志与专注。</div>
+    <div class="case"><b>群里 @所有人：</b>在公司群里 @全体成员只是机制，真正决定响应度的是你平时的信用与请求的分量——「伴随意志与专注地适当振动」才是那通被接听的电话。</div>
+    <div class="case"><b>求助热线：</b>接线中心一直在那里，但只有拨号的人才接得通；接通后对方是否全力以赴，取决于你的请求有多清晰恳切——内在层面的许多实体「以关注你的工作来接听」。</div>
+  </div>
+
+  <div class="card">
+    <h3>教会与法阵：词一样，效力差在哪</h3>
+    <div class="q">社会上最常见的「仪式词」在教会而不在法阵：教堂祷告与行家咒语，效果差别来自哪里？</div>
+    <div class="quote">
+      <p class="en">If all in your churches were adepts consciously full of will, of seeking, of concentration, of conscious knowledge of the calling, there would be no difference.</p>
+      <p class="zh">若教会里的每个人都满满是意志、寻求、专注与对召唤的自觉知识，那么教会与行家的咒语毫无区别。</p>
+      <span class="src">—— Session 074 · (74.13)</span>
+    </div>
+    <div class="plain">召唤的效力是召唤者魔法品质的函数——不在词属于教堂还是法阵，而在召唤的人。</div>
+    <div class="case"><b>同一首生日歌：</b>孩子跑调地唱给母亲，与职业歌手唱给陌生客户，打动程度天差地别——词完全一样，差别全在唱歌的人。</div>
+    <div class="case"><b>会上要支援：</b>两位同事说出同一句「我需要支援」，一个平时只索取、一个平时总在帮人，会议室的反应截然不同——效力是召唤者品质的函数。</div>
+  </div>
+
+  <div class="card">
+    <h3>选仪式与魔法人格：手术刀与钝器</h3>
+    <div class="q">团队最终选定小五芒星驱逐仪式作保护（Ra 确认这正属于此类召唤）；发问者追问：若自创新词仪式会更好吗？又追问各因素的相对重要性——Ra 对后者踩了刹车。</div>
+    <div class="quote">
+      <p class="en">With the appropriate emotional will, polarity, and purity, work may be done with or without proper sound vibration complexes. However, there is no need for the blunt instrument when the scalpel is available.</p>
+      <p class="zh">有适当的情感意志、极性与纯净度，有没有正规的仪式词都能做工——但有手术刀时，就不必用钝器。</p>
+      <span class="src">—— Session 074 · (74.16)</span>
+    </div>
+    <div class="plain">魔法人格的召唤才是关键中的关键（Ra 说它「本身就是一门研究」）；仪式词好用在顺手，自创仪式的相对优点会更低，因为典籍里已有正面（服务他人）力量之名可用。</div>
+    <div class="case"><b>老字号药方：</b>经千百次验证的成方与自行重新配药：后者未必不能奏效，但风险与门槛高得多——对应「自创仪式的相对优点会更低」。</div>
+    <div class="case"><b>步道与开路：</b>登同一座山，走现成步道还是自己在无路坡面开路都行——只要体力、装备、方向到位（情感意志、极性、纯净）；但开路消耗大得多，「有手术刀就不必用钝器」。</div>
+  </div>
+
+  <div class="card">
+    <h3>旧仪式为何有效：印记与例外</h3>
+    <div class="q">发问者猜：旧仪式有效，是因为词语在历代工作者的意识里建好了「通道」，后来者一念就接上了。Ra 说大体如此——但有一个惊人的例外。</div>
+    <div class="quote">
+      <p class="en">This is, to a great extent, correct. The exception is the sounding of some of what you call your Hebrew and some of what you call your Sanskrit vowels. These sound vibration complexes have power before time and space and represent configurations of light which built all that there is.</p>
+      <p class="zh">这在很大程度上正确：例外是部分希伯来语与梵语元音的发音——它们先于时空而有力，代表构建一切万有的光之配置。</p>
+      <span class="src">—— Session 074 · (74.17)</span>
+    </div>
+    <div class="plain">大部分仪式词靠「用惯了」的意识印记起效；但部分元音是例外——它们本身就是造物的光之配置，对应关系是数学性的。</div>
+    <div class="case"><b>前奏与音叉：</b>老歌前奏一响全场自然大合唱（效力来自共同的记忆印记），而 440Hz 的音叉一响所有乐器自动校准（声音本身的数学对应）——旧仪式词走的是第一条路，部分元音走的是第二条。</div>
+    <div class="case"><b>π 的比例：</b>圆周率不是谁约定出来的，而是结构本身的比例——元音的振动对应也是数学性的（74.18），先于时空而有效。</div>
+  </div>
+
+  <div class="card">
+    <h3>元音的两条来路：内训与无师自通</h3>
+    <div class="q">那这些声音当初是怎么被确定的？希伯来语与梵语，各有一条完全不同的来路。</div>
+    <div class="quote">
+      <p class="en">In the case of the Hebrew that entity known as Yahweh aided this knowledge through impression upon the material of genetic coding which became language, as you call it.</p>
+      <p class="zh">就希伯来语而言，被称为耶和华的实体通过对基因编码材料的印象辅助了这一知识——由此成为你们所说的语言。</p>
+      <span class="src">—— Session 074 · (74.19)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Thus the sound vibration complexes seemed to fall into place as from the Logos.</p>
+      <p class="zh">梵语则因当时没有先前的字母命名，声音振动纯净，仿佛从理则那里自然到位——一条更自然、未经辅助的路。</p>
+      <span class="src">—— Session 074 · (74.19)</span>
+    </div>
+    <div class="plain">希伯来语像「官方内训」——有实体直接把知识印进基因编码；梵语像「无师自通」——没有旧字母的干扰，声音自然落位。</div>
+    <div class="case"><b>语言的两条来路：</b>一门语言由总设计师直接写入课程大纲（希伯来语），另一门在没有教材的白地上自然长成（梵语）——来路不同，都可能落到同一套数学对应上。</div>
+  </div>
+
+  <div class="card">
+    <h3>归类练习：这个效力来自哪里</h3>
+    <p>图例：A＝召唤者的魔法品质 · B＝词语在意识中的印记 · C＝声音本身的数学对应。点选你认为的答案。</p>
+    <div id="sort1"></div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>收官：三步心法与留给下一程的功课</h2></div>
+  <p class="sec-lead">本集没有宏大宣告，收束在一组可执行的修炼与一句祝福里：原型心智的对应系统、「魔法人格」这门课，以及器皿的康复，都留给行家与团队自己走下去。</p>
+
+  <div class="saying">
+    <p class="en">One, know yourself. Two, accept yourself. Three, become the Creator.</p>
+    <p class="zh">一，认识你自己。二，接纳你自己。三，成为造物主。</p>
+    <span class="src">—— Session 074 · (74.11)</span>
+  </div>
+
+  <div class="card">
+    <h3>收束与伏笔：这门课还没上完</h3>
+    <div class="q">这一集在收尾时给下一程留下了什么？三件事：一门要单独修的课、一套要自己建的系统、一个还在疼痛中的器皿。</div>
+    <div class="quote">
+      <p class="en">We may only say that you correctly surmise the paramount import of the magical personality. This is a study in itself.</p>
+      <p class="zh">Ra 只确认：发问者猜对了魔法人格的至高重要性——这本身就是一门值得单独修的研究。</p>
+      <span class="src">—— Session 074 · (74.16)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Go forth, then, glorying and rejoicing in the power and in the peace of the One Infinite Creator.</p>
+      <p class="zh">出发吧，在太一无限造物主的力量与和平中荣耀并欢欣。</p>
+      <span class="src">—— Session 074 · (74.20)</span>
+    </div>
+    <div class="plain">修炼的次第已经给全：认识、接纳、成为——剩下的是行家自己的功课、自己的对应系统，与日复一日的练习。</div>
+    <div class="case"><b>行家的功课表：</b>一位自学原型学的读者每周精炼一条对应（本周把「火星」与纪律、红色、意志串起来），目标是灵感来时能「随口召唤」原型——对应 Ra 的建议：超越已写就的典籍。</div>
+    <div class="case"><b>换上魔法人格再开口：</b>练习在重要谈话前静坐一分钟，有意识地「换上」那个透明、平衡的自己再说话——Ra 说魔法人格本身就是一门研究，值得当一学期的课来修。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 074（<code>split/Ra_Session_074.md</code>）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra074-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本集定制交互 ===== */
+/* 问答脉络推进器（第 1 章） */
+initStepper('flow1','flowD1','flowPrev','flowNext',[
+ {t:'器皿状态',d:'<span class="qa-q">问：能先告诉我器皿的状态吗？</span><b>答：</b>如前所述。（74.1）'},
+ {t:'上次失误',d:'<span class="qa-q">问：上次那处传输错误是怎么造成的？</span><b>答：</b>疼痛变貌突然加剧会瞬时削弱接触——前两周加剧更频繁，上次工作因此两次修正接触。（74.2）'},
+ {t:'出神与管道',d:'<span class="qa-q">问：出神中怎么还会有痛感？</span><b>答：</b>器皿对感觉确无觉知，但 Ra 以黄芒激活的身体为说话管道；剧痛会让调谐摇摆，须重新校正。（74.3）'},
+ {t:'原型心智',d:'<span class="qa-q">问：请继续上一集没答完的原型心智问题。</span><b>答：</b>Ra 只给一般性注释——不能替他人教导/学习到成为学习/教导者的程度；并纠正：魔法师代表显意识与意志，女祭司才是直觉/潜意识。（74.4）'},
+ {t:'修炼纠错',d:'<span class="qa-q">问：人格修炼是否靠疏通低层中心来喂养靛蓝？</span><b>答：</b>不。靛蓝再结晶也不能纠正其他中心的阻塞——须从红色起依次清理。（74.5-74.6）'},
+ {t:'三步心法',d:'<span class="qa-q">问：修炼的核心究竟是什么？</span><b>答：</b>认识自己、接纳自己、成为造物主；第三步成就的是最谦卑的仆人，人格透明。（74.10-74.11）'},
+ {t:'声音与仪式',d:'<span class="qa-q">问：服务他人的工作如何唤起光之力量？</span><b>答：</b>声音振动复合体像拨号盘，配上意志与专注，内在层面实体以关注来接听；效力取决于召唤者的魔法品质。（74.12-74.13）'},
+ {t:'元音与收束',d:'<span class="qa-q">问：这些声音为何有力？</span><b>答：</b>多数效力来自意识中的印记；部分希伯来语与梵语元音是例外——先于时空、以数学方式对应光之配置。最后 Ra 以 Adonai 祝福作结。（74.17-74.20）'}
+]);
+
+/* 术语卡翻面（第 2 章） */
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+/* 条件模拟器（第 3 章） */
+function updateGate(){
+  var a=document.getElementById('gate1').checked;
+  var b=document.getElementById('gate2').checked;
+  var c=document.getElementById('gate3').checked;
+  var el=document.getElementById('gateResult');
+  if(a&&b&&c){
+    el.classList.remove('fail');
+    el.textContent='三条全满足：通往造物主的伟大靛蓝门户已被清理敞开——靛蓝意识越结晶，能做的工作越多，能从智能无限表达更多。（74.11）';
+  }else if(c&&!a){
+    el.classList.add('fail');
+    el.textContent='缺第一块拼图：靛蓝中心无论多么结晶，都不能纠正其他中心的失衡或阻塞——它们必须从红色起依次（seriatim）清理。（74.6）';
+  }else if(c&&!b){
+    el.classList.add('fail');
+    el.textContent='缺第二块拼图：持续的人格修炼——认识自己、接纳自己——正是清理通往靛蓝门户之路的方式。（74.11）';
+  }else{
+    el.classList.add('fail');
+    el.textContent='靛蓝是行家之光：还没有它的结晶化，工作尚未开始超越空间/时间的平衡、进入空间/时间与时间/空间的联合领域——先从下面的依次清理与人格修炼做起。（74.8）';
+  }
+}
+['gate1','gate2','gate3'].forEach(id=>document.getElementById(id).addEventListener('change',updateGate));
+updateGate();
+
+/* 归类练习（第 4 章） */
+initSorter('sort1',[
+ {a:'周日教堂里会众齐声祷告，多数人并非行家',opts:['A','B','C'],ans:'A',exp:'召唤的效力是召唤者魔法品质的函数——若人人都是有意志、寻求、专注与自觉知识的行家，教会与行家咒语便毫无区别。（74.13）'},
+ {a:'历代行者反复使用的古老仪式名字',opts:['A','B','C'],ans:'B',exp:'词语在历代工作者的意识中建立了倾向（印记），相应实体回应的是这一印记。（74.17）'},
+ {a:'部分希伯来语与梵语元音的发音',opts:['A','B','C'],ans:'C',exp:'它们先于时空而有力，代表构建一切万有的光之配置——振动对应是数学性的。（74.17-74.18）'},
+ {a:'在尚无字母命名的年代自然成形的梵语',opts:['A','B','C'],ans:'C',exp:'因缺乏先前字母，声音振动纯净，仿佛从理则（Logos）自然到位——未经辅助的过程。（74.19）'},
+ {a:'自创新词仪式相较经典仪式较低的优点',opts:['A','B','C'],ans:'B',exp:'构建仪式宜研究现有典籍，其中已有正面（服务他人）力量之名可用；自创者缺少这份现成的通道。（74.15）'}
+]);
+
+renderPath();
+</script>
+</body>
+</html>

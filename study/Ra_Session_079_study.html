@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 079 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 079 · 交互式学习模块</h1>
+  <p class="sub">这一集把镜头拉回帷幕拉开之前：九个简单的原型如何运作、帷幕如何作为理则的第一个工具被拉上、「选择」与两极如何随之诞生——最后开始逐张辨认今天心智的塔罗原型。</p>
+  <div class="tagline">「7 个主题 · 6 个学习步骤 · 22 组案例」</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 帷幕之前的世界</a>
+<a href="#s3">③ 九个原型</a>
+<a href="#s4">④ 帷幕实验</a>
+<a href="#s5">⑤ 魔法的代价</a>
+<a href="#s6">⑥ 心智七张牌</a>
+<a href="#s7">⑦ 收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>用问答推进器走一遍本集的三层问题链，例行问答收进折叠区</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>帷幕之前的世界</b><span>没有遗忘的转世长什么样？为什么帷幕只是「第一个工具」</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>九个原型</b><span>心、身、灵各有一组矩阵、赋能者、意指者——九宫格逐格看懂</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>帷幕实验</b><span>帘子如何被拉上、「选择」如何随之诞生、影子是什么</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>魔法的代价</b><span>为什么潜能最大时意志最小？拨一拨「帷幕 × 意志」模拟器</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>心智七张牌与收官</b><span>逐张对照今天的塔罗原型，最后带走三句话与悬置的线头</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ 01 本章地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：本集在回答什么</h2></div>
+  <p class="sec-lead">上一集 Ra 留下一句让发问者念念不忘的话：「为了延伸自由意志，意指者必须成为一个复合体」。本集整场对话都围着这句话转：先把帷幕之前的宇宙翻出来看（那是复合体还不存在的时代），再看帷幕怎么被拉上、拉上之后多了什么，最后开始逐张辨认今天心智的原型。别被四十多个问答吓到——问题链其实只有三层。</p>
+
+  <div class="card">
+    <h3>三层问题链：先立参照系，再看实验，最后读地图</h3>
+    <div class="q">发问者这回不问「发生了什么」，而问「在被改变之前，它是什么样」——他想给「帷幕改变了什么」找一个前后对照的基准线。</div>
+    <p>第一层（79.6-79.9）：帷幕之前的第三密度长什么样——有没有遗忘、怎么转世、一生多长。第二层（79.10-79.33）：帷幕作为「第一个工具」如何被设计、拉上之后实验造出了什么、魔法能力为何反而变小。第三层（79.34-79.42）：帷幕之后的今天，心智的七张牌各自对应什么。用下面的推进器把整场对话走一遍。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="flowTrack"></div>
+      <div class="flow-detail" id="flowDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="flowPrev">← 上一步</button>
+        <button class="tri-btn" id="flowNext">下一步 →</button>
+      </div>
+    </div>
+    <div class="case"><b>三层套娃的读法：</b>2026 年的一个读者翻开本集，先在纸上画三个格子——「帷幕之前」「帷幕落下那一刻」「帷幕之后的今天」，再把后面每一段问答塞进对应格子。塞不进的（器皿状况、护具叮嘱）都归入边角的「杂务」格。这样读，四十多段问答就只剩三件事：参照系、实验、地图。</div>
+    <div class="case"><b>比脚能走的更快：</b>一个刚办健身卡的人第一天就想试场馆里最重的杠铃——动作没学会，重量先压垮人。发问者问「要不要提前进入魔法人格」，Ra 的回答正是这个道理：这项工作确实在基本意义上是魔法性的，但只要你对维持它还有怀疑，就先按现在能走的速度走（79.5）。</div>
+    <div class="quote">
+      <p class="en">The practice of magical workings demands the most rigorous honesty.</p>
+      <p class="zh">魔法工作的实践要求最严格的诚实——对自己的能力评估到哪一步，就走到哪一步。</p>
+      <span class="src">—— Session 079 · (79.5)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The result of these experiments has been a more vivid, varied, and intense experience of Creator by Creator.</p>
+      <p class="zh">这些实验的结果，是造物主借由造物获得更生动、更多样、更强烈的体验——这就是整场帷幕实验的意义所在。</p>
+      <span class="src">—— Session 079 · (79.27)</span>
+    </div>
+    <div class="plain">本集一句话：帷幕不是事故而是设计——理则用「拉上帘子」这个第一个工具，让原本不存在的「选择」诞生，从此造物主对造物主的体验更生动、更强烈。</div>
+  </div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 能量转移 · 魔法人格 · 护具</span></summary>
+  <div class="body">
+    <p><b>(79.1) 器皿状态：</b>如前所述，没有新变化。</p>
+    <p><b>(79.2-79.4) 能量转移：</b>在器皿目前状态下接收过多转移能量没有危险；上次集会那次很大的转移确实是性转移。它的功能是加强接收流入通讯的「穿梭器」——通讯自身会监控器皿、在虚弱或疼痛的变貌浮现时停止，而通道的强度可以被能量转移帮助。</p>
+    <p><b>(79.5) 魔法人格的取舍：</b>要不要在执行「一的圆圈」时保持魔法人格？Ra：只要对维持它有怀疑就不可取；器皿应在入定前归还魔法人格，以清醒人格作管道——她尚不具备在出神中运作所需的魔法技能。</p>
+    <p><b>(79.13) 中途插曲：</b>器皿左臂与手部突发疼痛，Ra 请众人不要触碰、自行检查并重置肢体，两分钟后请发问者重复问题。</p>
+    <p><b>(79.43) 收尾叮嘱：</b>建议器皿在未来一段时间戴上她忽略使用的护具；双手与双臂有创伤，本次工作因此略有缩短。</p>
+  </div></details>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 02 帷幕之前的世界 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>帷幕之前的世界：无遗忘的转世长什么样</h2></div>
+  <p class="sec-lead">要理解「帷幕改变了什么」，得先知道帷幕之前是什么样。发问者从大处问起：那时 entities 的第三密度体验和我们今天有何不同？Ra 先声明这类材料先前讲过、请他问得具体些（79.6）——这本身就是一种回应方式：不重复，只补缺口。</p>
+
+  <div class="card">
+    <h3>无遗忘、照常转世、千年级的一生</h3>
+    <div class="q">发问者追问三个具体点：那时有没有关于前世记忆的帷幕？转世机制一样吗？一次人生有多长？</div>
+    <p>三个答案依次是：没有帷幕（79.7）；转世机制与今天相同——在周期中多次进入并离开第三密度身体（79.8）；最佳转世周期接近一千年，且是不随其他因素改变的常数（79.9）。注意最后一项的分量：连「一生多长」都不因帷幕的有无而改变——被改变的只有觉知，不是生命的形式。</p>
+    <div class="quote">
+      <p class="en">The optimal incarnative period is somewhere close to a measure you call a millennium.</p>
+      <p class="zh">最佳的转世周期接近你们所称的一千年——无论第三密度体验的其他因素如何，它是个常数。</p>
+      <span class="src">—— Session 079 · (79.9)</span>
+    </div>
+    <div class="case"><b>开卷与封卷考试：</b>同一个学生，上学期的笔记可以带进这学期的考场（无帷幕），或者每学期都要从零摸索（有帷幕）。考场的桌椅、铃声、学制都没变——变的是他能不能看见自己已经知道什么。Ra 说的正是这件事：我们的宇宙在某个时刻从「开卷」换成了「封卷」（79.7）。</div>
+    <div class="case"><b>千年学制：</b>不管选哪所学校、哪条专业路线，一学期的长度都固定在千年量级——这就是 Ra 所说的「常数」。换句话说，帷幕前后的人生都按同一个钟摆走，钟摆本身没被动过手脚（79.9）。</div>
+    <div class="plain">帷幕之前的第三密度照样转世、照样千年级一生，但前世的知识敞开着——被发明的是遗忘，不是转世。</div>
+  </div>
+
+  <div class="card">
+    <h3>「主要工具」还是「第一个工具」：一次精确的措辞纠正</h3>
+    <div class="q">发问者顺势总结：既然帷幕以前不存在，那它应该就是延伸第一变貌的「主要工具」吧？——Ra 只认可一半。</div>
+    <p>Ra 的回应很短：「你的正确性有限。这是第一个工具。」帷幕之后也没有出现「许多别的工具」——发问者问是否还有大量新工具被构想出来，Ra 只说「已有了精炼」（79.12）。整幅图景是：理则（Logos，星系尺度的造物者）为了「成为它所不是」，设计出在物理转世期间把潜意识与意识分开的机制（79.11），此后的一切改动都是围绕这第一个工具的迭代。</p>
+    <div class="quote">
+      <p class="en">Your correctness is limited. This was the first tool.</p>
+      <p class="zh">你的正确性有限。这是第一个工具——不是「主要」工具，而是「第一」：之后的一切都是在此基础上的精炼。</p>
+      <span class="src">—— Session 079 · (79.10)</span>
+    </div>
+    <div class="case"><b>初稿与定稿：</b>开会时有人把设计团队的第一版方案说成「最终定稿」，主讲人立刻纠正：「这只是初稿，后面还有很多轮迭代。」帷幕之于第一变貌，就是初稿之于整个产品线——把「第一」说成「主要」，会让人误以为后来再没有别的手段（79.10-79.12）。</div>
+    <div class="plain">帷幕是理则的第一个工具，不是唯一工具：此后没有新增的工具，只有对这一个工具的不断精炼。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 03 九个原型 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>九个原型：矩阵、赋能者与意指者</h2></div>
+  <p class="sec-lead">发问者接着猜帷幕之前原型心智的结构。他先猜对了数量（九个，心、身、灵各三，79.14-79.15），却在「对应哪些牌」上猜错——他以为心智的三张是魔法师、皇帝、战车（79.16），Ra 说不是。真正的那九个名字，是本集一切讨论的地基：矩阵（Matrix）、赋能者（Potentiator）、意指者（Significator）。</p>
+
+  <div class="card">
+    <h3>三乘三：帷幕前的原型九宫格</h3>
+    <div class="q">「复合体」到底指什么？发问者猜它是几张牌拼在一起——Ra 否了，并给出本集最干净的一句定义。</div>
+    <p>帷幕之前，身体、心智、灵性各自在矩阵、赋能者、意指者的庇护下运作（79.17）。而当时的意指者与今天心/身/灵复合体的意指者并不相同——这个「不相同」，正是上一集那句「意指者必须成为复合体」的伏笔。复合体的定义很简单：由不止一个特征元素或概念组成（79.19）。</p>
+    <div class="quote">
+      <p class="en">The body, the mind, and the spirit each contained and functioned under the aegis of the Matrix, the Potentiator, and the Significator.</p>
+      <p class="zh">身体、心智、灵性各自包含于并在矩阵、赋能者、意指者的庇护下运作——这就是帷幕前的九个原型。</p>
+      <span class="src">—— Session 079 · (79.17)</span>
+    </div>
+    <div class="case"><b>猜错了牌堆：</b>发问者像拿到一副没见过的新牌，凭直觉猜「魔法师、皇帝、战车总该是心智三件套吧」。Ra 的回答相当于告诉他：你手里的牌堆不是这一副——帷幕前的三件套叫矩阵、赋能者、意指者（79.16-79.17）。猜错不是失败，是这场对话推进的方式。</div>
+    <div class="case"><b>「复杂」的日常语义：</b>我们说一个人「很复杂」，意思是她身上不止一种特征、几种声音在她内部协商。Ra 给「复合体」下的定义正是如此：由不止一个特征元素或概念组成。帷幕前的意指者是独奏者，帷幕后的意指者更像一个委员会（79.19）。</div>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">矩阵</div><div class="sub">Matrix</div><span class="tap">点击展开</span></div><div class="back"><p>一切的源头与原材料层：自身不动，却让一切从它那里生出来——心智的矩阵是「万物所由来」。</p><em>像舞台的地板：演员（活动）在它上面走，它自己不走。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">赋能者</div><div class="sub">Potentiator</div><span class="tap">点击展开</span></div><div class="back"><p>巨大的资源库：意识往里潜得越深，能带来的创造、构思与自我意识就越多。</p><em>像一片可以下潜的海：潜得越深，捞上来的东西越不寻常。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">意指者</div><div class="sub">Significator</div><span class="tap">点击展开</span></div><div class="back"><p>回答「这是谁／这是什么」的那一张：帷幕前是简单而统一的概念，帷幕后被迫成为复合体。</p><em>像证件照：帷幕前一张脸代表一个人；帷幕后一张脸下面住着好几个声音。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">复合体</div><div class="sub">complex</div><span class="tap">点击展开</span></div><div class="back"><p>由不止一个特征元素或概念组成——这是 Ra 在本集给出的原话式定义（79.19）。</p><em>独奏与委员会：帷幕前的意指者是独奏，帷幕后是必须内部协商的委员会。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">帷幕</div><div class="sub">veil</div><span class="tap">点击展开</span></div><div class="back"><p>理则的第一个工具：在心智的矩阵与赋能者（即意识与无意识）之间拉上的帘子——门没锁，只是看不见。</p><em>魔术师的幕布：机关还在原处，只是你看不见了，于是「猜」成为可能。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">第一变貌</div><div class="sub">First Distortion</div><span class="tap">点击展开</span></div><div class="back"><p>自由意志——造物的第一变貌。本集讨论的正是它被「延伸」到子理则的过程，帷幕是延伸所用的第一个工具。</p><em>像总公司把「自行决策权」下放给各分部：分部从此需要自己的选择机制。</em></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>九格逐一描述：Ra 在本集给出的完整楼层图</h3>
+    <div class="q">发问者说：矩阵既是意识、又是心智由之而造的东西，我分不清这三者——能不能展开讲讲？</div>
+    <p>Ra 于是逐格描述了原型一至九（79.20）。心智的矩阵是万物所由来、不动却激活一切心智活动；赋能者是可以无限下潜的大海。身体是心智的「对立镜像」：矩阵化作不受限制的运动，赋能者则是在收到通知后调节活动的那一方。灵性最特别：它与时间/空间关系更近、没有动态运动，矩阵如最深的黑暗，赋能者如最突然的觉醒与照亮。</p>
+    <div class="quote">
+      <p class="en">The Matrix of Mind is that from which all comes. It is unmoving yet is the activator in potentiation of all mind activity.</p>
+      <p class="zh">心智的矩阵是万物所由来之处：它自身不动，却在潜能中激活一切心智活动。</p>
+      <span class="src">—— Session 079 · (79.20)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Thusly one may see the Matrix as the deepest darkness and the Potentiator of Spirit as the most sudden awakening, illuminating, and generative influence.</p>
+      <p class="zh">因此，可以把灵性的矩阵看作最深的黑暗，把灵性的赋能者看作最突然的觉醒、照亮与生成性影响。</p>
+      <span class="src">—— Session 079 · (79.20)</span>
+    </div>
+    <div class="table-wrap">
+    <table class="nine">
+      <tr><th>术语</th><th>英文</th><th>通俗理解</th></tr>
+      <tr><td>心智的矩阵</td><td>Matrix of Mind</td><td>万物所由来之处；不动，却在潜能中激活一切心智活动</td></tr>
+      <tr><td>心智的赋能者</td><td>Potentiator of Mind</td><td>一片大海：意识潜得越深，越能创造、构思、变得更有自我意识</td></tr>
+      <tr><td>身体的矩阵</td><td>Matrix of the Body</td><td>心智的对立镜像——不受限制的运动</td></tr>
+      <tr><td>身体的赋能者</td><td>Potentiator of the Body</td><td>被通知（informed）之后调节活动的那一方</td></tr>
+      <tr><td>灵性的矩阵</td><td>Matrix of the Spirit</td><td>最深的黑暗；灵性不具动态运动、与时间/空间更近</td></tr>
+      <tr><td>灵性的赋能者</td><td>Potentiator of the Spirit</td><td>最突然的觉醒、照亮与生成性影响</td></tr>
+      <tr><td>意指者（帷幕前形态）</td><td>Significator</td><td>简单而统一的概念——每个心、身、灵各有一份</td></tr>
+    </table>
+    </div>
+    <div class="case"><b>三层楼，每层三间房：</b>把这九个原型想成一栋三层小楼——心智、身体、灵性各占一层，而每层都是同样的格局：一间源点房（矩阵，一切从它生出）、一间资源房（赋能者，取之不尽的库存）、一间身份房（意指者，「这是谁」）。发问者第一次拿到完整楼层图，后面的讨论全在这栋楼里进行（79.20）。</div>
+    <div class="plain">帷幕前的原型心智是一张 3×3 的九宫格：心、身、灵各有一组「矩阵—赋能者—意指者」，而当时的意指者还是单一概念，不是复合体。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 04 帷幕实验 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>帷幕实验：「选择」如何诞生</h2></div>
+  <p class="sec-lead">参照系立好之后，发问者开始逼近本集的核心：第一个改动到底是什么？他先自己给了一个说法——「让矩阵与赋能者之间的沟通相对不可用」，Ra 连措辞都要修正，然后一步步确认：帷幕落在哪里、设计意图是什么、实验造出了什么。这一段是整集的枢纽。</p>
+
+  <div class="card">
+    <h3>第一改动：不是上锁，是拉帘</h3>
+    <div class="q">发问者说：第一个改变是让矩阵与赋能者在转世期间「相对不可用」彼此沟通——这正确吗？</div>
+    <p>Ra 宁愿换一个词：与其说「相对不可用」，不如说「相对更充满神秘」（79.21）。随后他确认：设计就是在两者之间创造某种帷幕（79.22），帷幕落在我们现在所说的意识与潜意识心智之间（79.23）。注意这个差别——「不可用」像上了锁，「充满神秘」像拉上了帘：通道还在，只是不再直接可见。</p>
+    <div class="quote">
+      <p class="en">We would perhaps rather term the condition as relatively more mystery-filled than relatively unavailable.</p>
+      <p class="zh">我们或许更愿意把这种状态称为「相对更充满神秘」，而非「相对不可用」——帘子拉上了，门没有锁死。</p>
+      <span class="src">—— Session 079 · (79.21)</span>
+    </div>
+    <div class="case"><b>魔术的悬念：</b>一场魔术若让观众全程看穿机关，惊喜根本不存在；把机关遮进幕布，「猜」与「哇」才成为可能。Ra 的措辞正是这个分寸——机关（矩阵与赋能者的沟通）还在原处，只是被幕布（帷幕）遮住：不是「不可用」，是「充满神秘」（79.21-79.22）。</div>
+    <div class="plain">帷幕的第一改动是修辞级的重要：不是切断矩阵与赋能者，而是让它们之间「更充满神秘」——意识看不见无意识，但通道仍在。</div>
+  </div>
+
+  <div class="card">
+    <h3>设计意图与实验规模：一次还是无数次</h3>
+    <div class="q">发问者补上一个目的论的解释：理则这样做，是为了让意识心智在第一变貌下获得更大自由？Ra 评「大致正确」，发问者请他「去粗糙化」，Ra 说：先得讲完中间的材料。</div>
+    <p>设计意图的骨架是：把意识的个体化部分与同总体心智沟通更多的赋能者（无意识）分隔开，于是「未受教育的」意识部分诞生了（79.24）。至于实验本身，发问者问「这个简单实验是否做了一次、观察了结果才继续」，Ra 纠正：那是一大批连续实验（79.26）。而结果——造物主对造物主更生动、多样、强烈的体验（79.27）。</p>
+    <div class="case"><b>孩子第一次选择：</b>一直替孩子安排好一切的父母，孩子从不需要「选」。某天父母退后一步——相当于把个体化的意识与「什么都知道」的深层分开——孩子第一次面对「帮同学，还是抢他的玩具」。两极几乎立刻出现，但离「真正会选」还差千万次练习：这正是 79.24 与 79.28 合起来讲的故事。</div>
+    <div class="plain">帷幕的意图是给意识让出选择的空间；而实验不是一次定稿，是一大批连续迭代。</div>
+  </div>
+
+  <div class="card">
+    <h3>实验的产物：两极立即出现，「选择」随之隐含</h3>
+    <div class="q">发问者最关心的问题来了：第一次帷幕实验，就立刻造出了服务自我的极化吗？</div>
+    <p>答案比他问的更进一步：早期理则立即产出服务自我（service-to-self）与服务他人（service-to-others）两种心/身/灵复合体——但「可收割性」（harvestability，能否毕业）并不立即到来，于是原型的精炼快速展开（79.28）。此刻的结构是「九个原型和许多影子」：影子不是小型偏见，而是尚未完全构想的有益结构的初期思想（79.29-79.30）。最关键的一句：帷幕或两个原型的分离，本身就隐含着选择的概念（79.31）。</p>
+    <div class="quote">
+      <p class="en">The early, if we may use this term, Logoi produced service-to-self and service-to-others mind/body/spirit complexes immediately. The harvestability of these entities was not so immediate, and thus refinements of the archetypes began apace.</p>
+      <p class="zh">早期的理则立即产出服务自我与服务他人的心/身/灵复合体；但这些实体的可收割性并不那么立即，于是原型的精炼快速展开。</p>
+      <span class="src">—— Session 079 · (79.28)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Implicit in the veiling, or separation of two archetypes, is the concept of choice.</p>
+      <p class="zh">在帷幕——或两个原型的分离——之中，隐含着选择的概念：帘子一拉，「选」才第一次成为可能。</p>
+      <span class="src">—— Session 079 · (79.31)</span>
+    </div>
+    <div class="case"><b>影子是草图，不是偏见：</b>产品上市前，白板上画满来不及定形的草图——功能还没敲定、结构若隐若现。发问者猜「影子」是小型原型偏见，Ra 纠正：它们是「尚未完全构想的有益结构的初期思想」——不是跑偏的产物，而是还没长成的骨架（79.29-79.30）。</div>
+    <div class="case"><b>帘子与两极同刻出现：</b>把「拉上帘子」想成按下同一个开关的两半：帘子落下的同一瞬间，房间被分成明暗两侧——服务他人与服务自我同时登场。Ra 没有说先有帘子、后来才演化出两极，而是「立即」（79.28、79.31）。</div>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">帷幕前</span><h4>觉知敞开</h4><p><b>前世知识不设帷幕</b>，意识与无意识直接通达——没有需要跨越的神秘（79.7、79.21）。</p></div>
+      <div class="yuan-card"><span class="y-tag">帷幕后</span><h4>神秘取代直视</h4><p><b>沟通「更充满神秘」而非「不可用」</b>：通道仍在，帘子在中间（79.21-79.23）。</p></div>
+      <div class="yuan-card"><span class="y-tag">帷幕前</span><h4>九个简单原型</h4><p><b>3×3 的九宫格</b>，意指者还是单一概念，没有影子（79.17、79.29）。</p></div>
+      <div class="yuan-card"><span class="y-tag">帷幕后</span><h4>原型+影子+精炼</h4><p><b>九个原型与许多影子</b>，可收割性不立即到来，原型开始快速迭代（79.28-79.30）。</p></div>
+    </div>
+    <div class="plain">帷幕实验的产物清单：两极立即出现、「选择」隐含其中、收割还要等、原型开始精炼——四个后果写在同一段里。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 05 魔法的代价 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>魔法的代价：潜能最大、意志最小</h2></div>
+  <p class="sec-lead">发问者在此提出了本集他自己的一个哲学观察：第一次帷幕实验就造出服务自我极性，这可能是「魔法体系」的开端——一个此前未被设想的系统（79.32）。Ra 没有对这句话表态，只回答了他实际问出的问题：帷幕之前，魔法潜能有多大？这一问一答之间，藏着整集最锋利的一组反差。</p>
+
+  <div class="card">
+    <h3>反差：潜能远更大，意志远远更少</h3>
+    <div class="q">发问者小心翼翼地组织了一个绕口的问题：在只有服务他人极化的时代，第四密度末期的魔法能力，和帷幕拉上之后的第四密度末期相比如何？</div>
+    <p>Ra 的回答分两半：第三、第四密度的魔法潜能在改变之前「远大于」改变之后；然而使用这种潜能的欲望或意志「远远、远远更少」（79.32）。潜能与动力是两个变量——帷幕之前门不上锁，但几乎没人想进门。发问者那句「魔法体系的开端」的假说，Ra 未置可否：只答所问，不替发问者背书。</p>
+    <div class="quote">
+      <p class="en">As you understand, if we may use this misnomer, magic, the magical potential in third and fourth density was then far greater than after the change. However, there was far, far less desire or will to use this potential.</p>
+      <p class="zh">第三与第四密度的魔法潜能在改变之前远大于改变之后；然而，使用这种潜能的欲望或意志远远、远远更少。</p>
+      <span class="src">—— Session 079 · (79.32)</span>
+    </div>
+    <div class="case"><b>遗产与动力：</b>一个人继承了祖上整座藏书馆，钥匙常年插在门上（无帷幕=意识直接通达无意识），可他从没想进去翻一本书（意志缺席）。房子还是那座房子——「门不锁」与「想进门」是两件独立的事。Ra 说的反差正是这两个变量的错位（79.32）。</div>
+    <div class="case"><b>假说与只答所问：</b>会上有人抛出一个漂亮的猜想「这次事故可能是整个行业的转折点」，专家只回答了被直接问到的那半句，既不确认也不否认。发问者把「帷幕实验创造服务自我极性」解读为魔法体系的可能开端，Ra 没有接这句话——如实记录这种沉默，比替 Ra 补一个结论更忠实（79.32）。</div>
+    <div class="plain">帷幕之前：门不上锁，但没人想进；帷幕之后：想进门的人，必须先学会跨过帘子。</div>
+  </div>
+
+  <div class="card">
+    <h3>魔法的定义：有意识地使用无意识</h3>
+    <div class="q">那「魔法能力」到底指什么？Ra 给出一个可以整集引用的定义。</div>
+    <p>魔法能力，是「有意识地使用所谓无意识」的能力——因此在子理则的自由意志创新之前，能力是最大的（79.33）。把这句话和上一张卡合起来读：帷幕之前的实体不需要「学会」使用无意识，因为之间没有帘子；帷幕之后的我们，潜能仍在原处，但要先跨越神秘才能有意识地取用。魔法从天赋变成了一条修炼的路。拨一拨下面的开关，看看两个变量如何组合。</p>
+    <div class="quote">
+      <p class="en">Magical ability is the ability to consciously use the so-called unconscious. Therefore, there was maximal ability prior to the innovation of sub-Logoi’s free will.</p>
+      <p class="zh">魔法能力是有意识地使用所谓无意识的能力——因此在子理则自由意志的创新之前，能力是最大的。</p>
+      <span class="src">—— Session 079 · (79.33)</span>
+    </div>
+    <div class="cond-row"><div class="name">帷幕已拉上<small>意识与无意识之间是否隔着帘子（开=今天的处境）</small></div><label class="switch"><input type="checkbox" id="swVeil" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">有动用它的意志<small>是否想「有意识地使用无意识」</small></div><label class="switch"><input type="checkbox" id="swWill" checked><span class="slider"></span></label></div>
+    <div id="condResult"></div>
+    <div class="case"><b>明眼人与蒙眼登山者：</b>帷幕前的实体像视力健全的登山者，「有意识地使用无意识」是本能级的直视；帷幕后的我们像被蒙上眼的登山者——山还在脚下（潜能仍在），但每一步都得靠绳子与地图（修炼、学习原型）去摸。Ra 的定义让「魔法」从超能力变成一门功课（79.33）。</div>
+    <div class="plain">魔法能力=有意识地使用无意识：帷幕拿走了「免费直视」，却逼出了「想要跨越」的意志——代价与礼物是同一件东西。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 06 心智七张牌 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>心智的七张牌：今天体验的原型</h2></div>
+  <p class="sec-lead">讲完「之前」与「实验」，发问者转向「今天」：我们现在体验的更复杂的心智原型，在塔罗里如何对应？他逐张猜，Ra 的回应分成清晰的三档——「缺中间材料，无法回答」「关系正确但太僵化」「核心错了」。看懂这三档，比记住对应表更重要。</p>
+
+  <div class="card">
+    <h3>前四张：猜对的与被悬置的</h3>
+    <div class="q">发问者猜：魔法师与女祭司对应矩阵与赋能者、其间的帷幕是延伸第一变貌的主创者——Ra 直接说：没有中间材料，无法回答。</div>
+    <p>接着他猜女皇是心智的催化剂（作用于意识心智、使其改变的东西）、皇帝是心智的体验（储存在无意识中、造出持续偏见的材料）。Ra 这次的回应是第二档：陈述「远过于僵化」，但关系正确——前四个原型之间有大量的动态相互关系（79.35）。注意 Ra 没有给女皇、皇帝盖章为「就是」，只承认了他感知到的关系。</p>
+    <div class="quote">
+      <p class="en">Though far too rigid in your statements, you perceive correct relationships. There is a great deal of dynamic interrelationship in these first four archetypes.</p>
+      <p class="zh">尽管你的陈述远过于僵化，你感知到了正确的关系——这前四个原型之间，存在大量的动态相互关系。</p>
+      <span class="src">—— Session 079 · (79.35)</span>
+    </div>
+    <div class="case"><b>三档回应，像批改作业：</b>老师批三份答案：一份「这题要等下一章才能讲」（缺中间材料，79.34）、一份「思路对，表述太死」（79.35）、一份「核心错了」（教皇，79.36）。发问者学一门新语言的过程正是如此——有时缺词汇，有时语法不对，有时整个问题问歪了。</div>
+    <div class="plain">对今天的原型，Ra 只确认「关系」而拒绝「定义」：女皇与体验、催化剂的关联成立，但把动态关系说成固定公式就僵化了。</div>
+  </div>
+
+  <div class="card">
+    <h3>教皇：本集最难啃的一张牌</h3>
+    <div class="q">发问者猜教皇是「调节者或分类者」，让无意识恰当地同化来自意识的东西——Ra 评：考虑周到，但核心错了。</div>
+    <p>Ra 接下来说了一句让发问者更困惑的话：教皇是身体复合体的意指者（79.37）——而发问者说的那些特征只与心智复合体的意指者有关、却不是其核心；心智复合体的核心是那个吸收、寻求并尝试学习的动态实体。发问者又猜「教皇是心智与身体的连接」，Ra 评「过于宽泛」（79.38）。直到本集最后，Ra 给出更深一层：教皇是经由意识与潜意识的微妙运动而被「复杂化」的原始心智原型——心智自身成为拥有自由意志、尤其是意志的行动者：有求知的意志，但要用知识做什么？为何寻求？（79.42）两层说法在本集内并存，发问者自称「仍在黑暗中」——这个线头保持敞开。</p>
+    <div class="quote">
+      <p class="en">The Hierophant is the Significator of the Body[57] complex, its very nature.</p>
+      <p class="zh">教皇是身体复合体的意指者——它的本质。（这层说法与 79.42 的「被复杂化的原始心智原型」在本集中并存。）</p>
+      <span class="src">—— Session 079 · (79.37)</span>
+    </div>
+    <div class="case"><b>终身借书证：</b>一个人拿到图书馆的终身借书证（求知的意志），但办卡只是开始——读什么书、为什么读，才决定「知道」会不会长成「道路」。Ra 对教皇的追问正是这两个问题：它有求知的意志，但它将用知识做什么、又出于什么原因寻求（79.42）？</div>
+    <div class="case"><b>别急着合并条目：</b>做笔记的人遇到两段看似矛盾的材料，最省事的做法是强行合并成一个「统一解释」；更诚实的做法是并排列出、注明「此处未解」。Ra 在 79.37 与 79.42 对教皇的两层说法、发问者「我仍在黑暗中」的自评，都值得原样保留在笔记里——本集没有提供统一的钥匙。</div>
+    <div class="plain">教皇的谜面有两层：意指者（79.37）与被复杂化的原始心智原型（79.42）；本集把「它将用知识做什么」这个问题留在原地。</div>
+  </div>
+
+  <div class="card">
+    <h3>恋人与战车：转变，与走完的路</h3>
+    <div class="q">发问者跳过教皇，猜恋人是意识与无意识的融合或沟通——Ra：你又错过了核心，它更恰当的名字是「心智的转变」。</div>
+    <p>转变成什么？观察原型六：奥秘的学生因需要在心智的光明与黑暗之间做出选择而被转变（79.40）。接着发问者猜战车（征服者）是前六个原型行动的顶点、甚至可能移除帷幕——Ra 称赞「这是最有洞察力的」，并命名原型七为「心智的伟大道路」：它是对原型一至六的反映与实质总结；心智如同皇家狮子或骏马牵引的战车，庄严地穿行于它所构想的材料（79.41）。</p>
+    <div class="quote">
+      <p class="en">As you observe Archetype Six you may see the student of the mysteries being transformed by the need to choose betwixt the light and the dark in mind.</p>
+      <p class="zh">观察原型六，你会看到奥秘的学生因需要在心智的光明与黑暗之间做出选择而被转变。</p>
+      <span class="src">—— Session 079 · (79.40)</span>
+    </div>
+    <div class="case"><b>复盘到自成体系：</b>一个坚持每日复盘的人：起初逐条记录（吸收）、被事件冲击（催化）、沉淀出经验（体验）、一次次站队（在明暗间选择）——某天发现整套流程自己会往前跑了，像装上了引擎。这正是战车作为「前六者之总结」的画像：路走顺了，心智如皇家骏马牵引的战车般庄严前行（79.41）。</div>
+    <div class="case"><b>选择先于融合：</b>发问者想把恋人读成「意识与无意识终于接通」的浪漫画面；Ra 指向的却是更朴素的一幕：一个学生在明与暗之间必须站队、并在站队中被改变。先有选择与转变，融合是更后面的事（79.39-79.40）。</div>
+    <p>把本段学到的对应关系放进下面的归类练习里检验——注意：所有答案都只依据本集 Ra 原话。</p>
+    <div id="sorterArea"></div>
+    <div class="plain">恋人=心智的转变（因选择而变），战车=心智的伟大道路（前六者的总结）——一个在岔路口，一个在走通之后。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 07 收官 ============ -->
+<section class="chapter" id="s7">
+  <div class="sec-head"><span class="num">07</span><h2>收官：三句话、悬置的线头与告别</h2></div>
+  <p class="sec-lead">本集信息密度极高，但能带走的东西出奇地少而清晰：三个陈述、三个线头、一句告别。合上页面之前，试着不看正文把它们复述出来。</p>
+
+  <div class="card">
+    <h3>带走三句话</h3>
+    <div class="q">如果只能记住本集三件事，该是哪三件？</div>
+    <p>第一，帷幕之前的宇宙：九个简单原型、前世知识敞开、转世照常、最佳周期约一千年。第二，帷幕是理则的第一个工具：不是上锁而是拉帘，「选择」隐含其中，两极立即出现而收割尚远，此后只有精炼。第三，帷幕的代价与礼物：潜能最大时意志最小；帷幕后魔法成为「有意识地使用无意识」的修炼。</p>
+    <div class="case"><b>三句话复习法：</b>睡前合上本页，用自己的话各写一句——「帷幕之前什么样」「帷幕拉开了什么」「帷幕改变了谁」——再对照：无遗忘的九宫格（79.14-79.20）；拉帘而非上锁、选择随之而生（79.21-79.31）；心智成为拥有意志的行动者（79.42）。写不出的那句，就是明天该重读的章节。</div>
+    <div class="case"><b>把线头抄进待办：</b>本集 Ra 两次明确挂起问题——阐明帷幕设计意图要等「中间材料」（79.25），魔法师与女祭司的对应「无法回答」（79.34）；教皇更是发问者自称「仍在黑暗中」的区域（79.39-79.42）。把这三个问题原样抄进笔记的「未解」栏，比写下一个仓促的答案更有价值。</div>
+    <div class="saying">
+      <p class="en">The mind itself became an actor possessed of free will and, more especially, will.</p>
+      <p class="zh">心智自身成为了行动者——拥有自由意志，尤其是：拥有意志。</p>
+      <span class="src">—— Session 079 · (79.42)</span>
+    </div>
+    <div class="quote">
+      <p class="en">We leave you in the love and in the light of the One Infinite Creator. Go forth, therefore, rejoicing in the power and the peace of the One Glorious Infinite Creator.</p>
+      <p class="zh">我们在太一无限造物主的爱与光中离开你们。因此，向前去吧，在太一荣耀无限造物主的力量与和平中欢欣鼓舞。</p>
+      <span class="src">—— Session 079 · (79.44)</span>
+    </div>
+    <div class="plain">本集的落点：帷幕让心智第一次真正「成为」行动者——有意志去知，还要决定拿知识做什么。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 079（split/Ra_Session_079.md）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra079-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+/* 术语卡点击翻转 */
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+/* 01 · 本集问答脉络推进器 */
+initStepper('flowTrack','flowDetail','flowPrev','flowNext',[
+  {t:'开场',d:'<span class="qa-q">问：（79.0-79.1）今天器皿的状况如何？</span><b>答：</b>如前所述。开场从简，随即进入正题。'},
+  {t:'能量转移',d:'<span class="qa-q">问：（79.2-79.4）接收过多转移能量有危险吗？上集那次大转移是什么性质？</span><b>答：</b>没有危险；那次大转移确实是性转移。它的功能是加强接收流入通讯的「穿梭器」——通讯自身会监控器皿、在虚弱或疼痛浮现时停止，而通道的强度可以被能量转移帮助。'},
+  {t:'魔法人格',d:'<span class="qa-q">问：（79.5）要不要在执行「一的圆圈」时保持魔法人格？</span><b>答：</b>魔法工作要求最严格的诚实：只要还有怀疑，就不可取；器皿应归还魔法人格、以清醒人格作管道——「走得比脚能走的速度更快是不恰当的」。'},
+  {t:'帷幕之前',d:'<span class="qa-q">问：（79.6-79.9）第一变貌延伸之前的第三密度体验，和今天有何不同？</span><b>答：</b>那时没有遗忘帷幕，转世机制相同，最佳转世周期约一千年——先为「帷幕实验」立起参照系。'},
+  {t:'九个原型',d:'<span class="qa-q">问：（79.14-79.20）当时有多少个原型？心智的三张对应哪些牌？</span><b>答：</b>九个：心、身、灵各有一组矩阵、赋能者、意指者——不是发问者猜的魔法师、皇帝、战车。'},
+  {t:'帷幕实验',d:'<span class="qa-q">问：（79.21-79.31）第一个改动是什么？实验结果如何？</span><b>答：</b>在矩阵与赋能者之间拉起帷幕——Ra 更愿称之为「更充满神秘」；服务自我与服务他人立即出现，「选择」隐含其中，原型的精炼随即展开。'},
+  {t:'魔法对比',d:'<span class="qa-q">问：（79.32-79.33）帷幕之前的魔法潜能更大吗？</span><b>答：</b>潜能远更大，但使用的意志远远更少；魔法能力就是「有意识地使用所谓无意识」的能力。'},
+  {t:'心智七牌',d:'<span class="qa-q">问：（79.34-79.42）今天体验的心智原型如何对应塔罗？</span><b>答：</b>女皇对应催化剂、皇帝对应体验、恋人对应转变、战车对应伟大道路；教皇（意指者）最绕，本集给出两轮回答仍未完结。'},
+  {t:'收束',d:'<b>本集收束：</b>心智自身成为拥有自由意志——尤其是意志——的行动者；加上双手护具的叮嘱与「你们是尽责的」的告别（79.42-79.44）。'}
+]);
+
+/* 05 · 帷幕 × 意志 模拟器 */
+(function(){
+  const veil=document.getElementById('swVeil'),will=document.getElementById('swWill'),res=document.getElementById('condResult');
+  function upd(){
+    const v=veil.checked,w=will.checked;let html='';
+    if(v&&w){res.classList.remove('fail');html='<b>帷幕后 · 有意志：</b>这正是我们此刻的处境。潜能仍在（无意识还在原处），但帘子已拉上——魔法能力=有意识地使用无意识，必须先跨越帷幕（79.33）。魔法由此从天赋变成一条修炼之路。';}
+    else if(v&&!w){res.classList.add('fail');html='<b>帷幕后 · 无意志：</b>帘子已拉上，又没有掀开的动力——潜能沉睡：无意识照常运作，却无人有意识地取用。';}
+    else if(!v&&w){res.classList.remove('fail');html='<b>帷幕前 · 又想用：</b>本集没有描述这种组合——Ra 只说当时意志远更少。能确定的只有一半：没有帷幕，取用不需要跨越任何障碍。';}
+    else{res.classList.remove('fail');html='<b>帷幕前 · 无意志：</b>帷幕之前的常态：意识直接通达无意识，潜能远大于改变之后；但「使用这种潜能的欲望或意志远远更少」（79.32）——门不上锁，也没人想进。';}
+    res.innerHTML=html;
+  }
+  veil.onchange=upd;will.onchange=upd;upd();
+})();
+
+/* 06 · 原型归类练习 */
+initSorter('sorterArea',[
+  {a:'「作用于意识心智、使其改变的东西」——本集中这与哪张牌的描述对应？',opts:['女皇 · 心智的催化剂','皇帝 · 心智的体验','恋人 · 心智的转变'],ans:'女皇 · 心智的催化剂',exp:'79.35：发问者此说被 Ra 评为「过于僵化但关系正确」——催化剂作用于意识、促其改变。'},
+  {a:'「储存在无意识中、造出持续偏见的材料」——这与哪张牌的描述对应？',opts:['女皇 · 心智的催化剂','皇帝 · 心智的体验','战车 · 心智的伟大道路'],ans:'皇帝 · 心智的体验',exp:'79.35：皇帝被发问者描述为心智的体验——经验沉淀在无意识里，塑出持续的偏见；Ra 认可其中正确的关系。'},
+  {a:'「奥秘的学生因在光明与黑暗之间作选择而被转变」——这是哪张牌的核心？',opts:['恋人 · 心智的转变','皇帝 · 心智的体验','女皇 · 心智的催化剂'],ans:'恋人 · 心智的转变',exp:'79.40：原型六的核心不是「意识与无意识的融合」，而是心智的转变。'},
+  {a:'「原型一至六的反映与实质总结，心智庄严穿行的道路」——这是哪张牌？',opts:['战车 · 心智的伟大道路','恋人 · 心智的转变','教皇'],ans:'战车 · 心智的伟大道路',exp:'79.41：原型七是心智的伟大道路——前六者的反映与总结；发问者此猜被评「最有洞察力」。'},
+  {a:'「本集中 Ra 称之为身体复合体的意指者」——这是哪张牌？',opts:['教皇','魔法师','女祭司'],ans:'教皇',exp:'79.37：Ra 说教皇是身体复合体的意指者；它的完整含义在本集仍是敞开的线头。'}
+]);
+
+renderPath();
+</script>
+</body>
+</html>

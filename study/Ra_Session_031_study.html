@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 031 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 031 · 交互式学习模块</h1>
+  <p class="sub">这一集把上一本书里谈过的性能量转移重新摊开：从红色的随机生殖、橙色与黄色的占有阻塞，到绿色光芒不索报偿的给予，最后一问追到根上——这些扭曲的起因不是猎户座，而是人群的自由选择。</p>
+  <div class="tagline">6 个主题 · 6 个学习步骤 · 24 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 能量转移是什么</a>
+<a href="#s3">③ 光芒阶梯与后代</a>
+<a href="#s4">④ 磁性吸引与人群密度</a>
+<a href="#s5">⑤ 铭印、猎户座与支配</a>
+<a href="#s6">⑥ 根因是自由选择</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>先看这一集七段问答各自在做什么，器皿与后勤问答可跳过</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>能量转移是什么</b><span>电位差、闭合的电路，以及「这是不是造物主经验自身的原初机制」</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>光芒阶梯与后代</b><span>红色光芒的随机生殖、绿色光芒的自由给予，以及生育的随机与选择</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>磁性吸引与人群密度</b><span>极性为什么不由生理性别决定，拥挤的城市又放大了什么</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>铭印、猎户座与支配</b><span>什么经验才会印下偏好，以及橙色光芒里「凌驾他人」的阻塞</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>根因是自由选择（收官）</b><span>金句、心智之树、种族记忆，以及本集留下的位置</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：这一集在谈什么</h2></div>
+  <p class="sec-lead">本集不是接着上一集的某个议题往下走，而是发问者主动「调取旧档」：他宣布要把上一本书结尾处的一段材料（编号 26.38）插进现在这本书里，因为正在讲双性生殖，他需要把定义补全。于是本集前半段在重新铺性能量转移的光芒阶梯，后半段则一路追问到这些扭曲的根因——最后停在「种族记忆」这一点上，线头没有收完，是可以直接续下去的地方。</p>
+  <div class="card">
+    <h3>本集议题清单</h3>
+    <p><b>一、定义：</b>性能量转移到底是什么（电位差的释放、电路闭合、造物主经验自身）；双性方式认识自身有两个潜在优势。</p>
+    <p><b>二、后代与生育：</b>红色光芒的转移是随机的；绿色光芒则是自由给予、不索报偿；受精与否在「某些限度之内」随机，除非实体已选择不具生殖能力的身体，或以自由意志采取避孕手段。</p>
+    <p><b>三、吸引与人群：</b>磁性吸引取决于每个实体的男/女性极化配置；多世性别经验加上行星振动艰难与城市灵光侵扰，让同性倾向在当代活跃地出现；Ra 给了一个约 65% 的易感门槛。</p>
+    <p><b>四、铭印与猎户座：</b>只有强烈参与的第一次经验会印下偏好；猎户座只在机会已具备时进场；橙色光芒的「凌驾他人」是一种性能量阻塞。</p>
+    <p><b>五、根因：</b>不是猎户座，而是人群的自由选择——先接受了好战与占有贪欲的概念，变貌才沿心智之树渗进身体表达，并透过种族记忆留下污染。</p>
+  </div>
+  <div class="card">
+    <h3>问答脉络：七段推进</h3>
+    <p>本集从一个器皿个人问题开场，中段是密集的定义与追问，最后一段是收尾嘱咐。点击节点，看每一段在做什么。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="qaTrack"></div>
+      <div class="flow-detail" id="qaDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="qaPrev">← 上一步</button> <button class="tri-btn" id="qaNext">下一步 →</button></div>
+    </div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 集会节奏 · 进场离场</span></summary>
+  <div class="body">
+    <p><b>(31.0) 开场：</b>Ra 以「我在太一无限造物主的爱与光中向你们致意」开场，宣布本次通讯开始。</p>
+    <p><b>(31.1) 器皿独自散步：</b>器皿本人问，既然感觉好些了，独自散步是否可取；Ra 只答「这是可以接受的」——不禁止、也不代作决定。</p>
+    <p><b>(31.15) 集会节奏：</b>Ra 声明那将是最后一次发问的机会，除非可以就该问题进一步阐明，或在这之前回答任何简短的疑问。</p>
+    <p><b>(31.17) 收尾与器皿状态：</b>Ra 说器皿有些疲劳、管道非常清晰，但生命能量偏低；它不愿耗尽器皿，同时表示「当这个器皿开启自身时，提供这种能量交换是我们的荣誉/职责」，因此建议器皿在把自己献出作为开放管道之前，仔细评估生命能量。最后一句评语是「一切安好。你们很尽责」，并以「在太一造物主的力量与平安中欢欣雀跃」收束（Adonai）。</p>
+  </div></details>
+  <div class="case"><b>开会前先把旧底稿从抽屉里翻出来：</b>项目做到一半，你突然说「等一下，上次那版材料里有段定义，我们得先把它插回这一节，后面的讨论才站得住」。本集发问者就是这么开场的：不等别人提醒，自己把 26.38 的旧材料放回原位，再请 Ra 补上定义——在问答实录里，「把材料放回原处」本身就是一次结构性的动作。</div>
+  <div class="case"><b>复查时问医生「我可以自己下楼走走吗」：</b>康复中的病人问出这个问题，医生只答「可以，注意别过量」。Ra 对器皿的问题也只用一句「这是可以接受的」——它不阻拦，也不替她决定，自由意志留在当事人手上。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>能量转移是什么：电位差、闭合的电路与造物主经验自身</h2></div>
+  <p class="sec-lead">发问者把旧材料放回书里之后，问出本集的第一个定义题：请定义「性能量转移」，并说明它的含义。Ra 的回答把这件事从「性」里抽出来，放进一个更一般的物理图像里——位能、电位差、闭合的电路。紧接着发问者追问一句想「一网打尽」的话：那这是不是造物主经验自身的原初机制？Ra 立刻纠正了他的用词。</p>
+  <div class="card">
+    <h3>定义：位能在「带电位的空间」中释放</h3>
+    <div class="q">你在这份材料里谈到了性能量转移——请定义这种能量转移，并展开说明它的含义。</div>
+    <div class="quote">
+      <p class="en">Energy transfer implies the release of potential energies across, shall we say, a potentiated space.</p>
+      <p class="zh">能量转移意味着位能在（容我们说）一个已被赋予电位的空间中被释放。</p>
+      <span class="src">—— Session 031 · (31.2)</span>
+    </div>
+    <div class="quote">
+      <p class="en">In the cases where transfer takes place, you may liken this to a circuit being closed.</p>
+      <p class="zh">在转移确实发生的情形里，你可以把它比作一个电路被闭合。</p>
+      <span class="src">—— Session 031 · (31.2)</span>
+    </div>
+    <div class="plain">性能量转移不是「谁对谁做了什么」，而是两个极化不同的心/身/灵复合体之间出现了电位差，位能因此开始流动；有转移，也有阻塞，两者都只是这两个电位相互作用的函数。</div>
+    <div class="analogy"><b>像两块水位不同的水箱：</b>把管道接通，水就流；两边水位一样，接上管道也不流。Ra 说转移发生时像「电路被闭合」，讲的正是这种一通就流的状态；而水位差从哪来，就是两个人各自的极化程度。</div>
+    <div class="case"><b>两块电量不同的电池并联：</b>新电池和快没电的电池接在一起，会互相充放，直到趋于一致——能量转移需要「差」，没有差就没有流动。这对应 Ra 所说的「位能」与「电位差」：转移的性质，就是这两个电位如何相互作用。</div>
+  </div>
+  <div class="card">
+    <h3>纠正：不是「原初机制」，而是「一种适宜的方式」</h3>
+    <div class="q">那么这是否就是造物主用来经验自身的<strong>原初机制</strong>？（我大概以为找到了那个总开关。）</div>
+    <div class="quote">
+      <p class="en">This is not a proper term. Perhaps the adjective would be “one appropriate” way of the Creator knowing Itself, for in each interaction, no matter what the distortion, the Creator is experiencing Itself.</p>
+      <p class="zh">这不是一个恰当的用词。或许那个形容词该是「一种适宜的」方式——因为在每一次互动中，无论其变貌为何，造物主都在经验其自身。</p>
+      <span class="src">—— Session 031 · (31.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">You may also see this activity, as all experiential activities, as the Creator experiencing Itself.</p>
+      <p class="zh">你也可以把这项活动，如同所有经验性活动一样，看作造物主在经验其自身。</p>
+      <span class="src">—— Session 031 · (31.2)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The bisexual knowing of the Creator by Itself has the potential for two advantages.</p>
+      <p class="zh">造物主借由双性方式认识其自身，具有两种潜在的优势。</p>
+      <span class="src">—— Session 031 · (31.3)</span>
+    </div>
+    <div class="plain">Ra 的纠正有两层：一是用词——性不是唯一的、也不是最根本的机制，只是「一种适宜的」方式；二是范围——每一次互动都是造物主在经验自身，所以性并不特殊，它只是被特别点出的其中一种。</div>
+    <div class="analogy"><b>像问「吃饭是不是人体验世界的原初机制」：</b>吃饭确实是一种适宜的方式，但呼吸、走路、交谈、发呆也都是。把其中一种说成总开关，就把其余的全都抹掉了——这正是 Ra 说「这不是一个恰当的用词」的意思。</div>
+    <div class="case"><b>团队里被神化的那个环节：</b>有人认定「只有头脑风暴才能出好点子」，于是所有讨论都必须先风暴一轮。这个环节确实有效，但它不是唯一有效的方式——把它当制度性总开关，反而让安静写方案的人没有出口。Ra 对「原初机制」的纠正，就是这种用词上的收紧。</div>
+  </div>
+  <div class="card">
+    <h3>两种优势与一个阻塞条件</h3>
+    <div class="q">既然它仍是一种「适宜的方式」，那这种方式特殊在哪里？</div>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">优势一</span><h4>喜悦的类比物</h4><p>在绿色光芒被激活的存有中，存在一种直接而简单的类比物——你们可能称之为<b>喜悦</b>；那是存在于智能能量中的属灵或形而上本质。</p></div>
+      <div class="yuan-card"><span class="y-tag">优势二</span><h4>通往智能无限的门户</h4><p>可能形成一种神圣的理解或连结：经过适当准备，可以进行你们所称的<b>魔法</b>运作，并获得智能无限的经验，再由正面的个体把它导向自己想做的工作。</p></div>
+      <div class="yuan-card"><span class="y-tag">推论</span><h4>服务他人的渴望之门</h4><p>这种能量转移的强度有一个推论：它打开了这个复合体「以无限多种方式服务其他自我」的渴望之门，<b>从而导向正面极化</b>。</p></div>
+      <div class="yuan-card"><span class="y-tag">阻塞条件</span><h4>对占有的恐惧</h4><p>这种转移唯有在一方或双方怀有对<b>占有、被占有、渴望占有、渴望被占有</b>的恐惧时，才会被阻塞。</p></div>
+    </div>
+    <div class="quote">
+      <p class="en">there is the potential for a direct and simple analog of what you may call joy—the spiritual, or metaphysical, nature which exists in intelligent energy.</p>
+      <p class="zh">存在着一种直接而简单的类比物的潜能，即你们可能称之为喜悦的东西——那存在于智能能量中的属灵或形而上学的本质。</p>
+      <span class="src">—— Session 031 · (31.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">for with appropriate preparation, work in what you may call magic may be done, and experiences of intelligent infinity may be had.</p>
+      <p class="zh">因为经过适当的准备，可以进行你们可能称为魔法的运作，并可获得智能无限的经验。</p>
+      <span class="src">—— Session 031 · (31.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">this energy transfer being blocked only if one, or both, entities have fear of possession, of being possessed, of desiring possession or desiring being possessed.</p>
+      <p class="zh">这种能量转移唯有在一方或双方实体怀有对占有、被占有、渴望占有或渴望被占有的恐惧时，才会被阻塞。</p>
+      <span class="src">—— Session 031 · (31.2)（编者按，原文引 26.38）</span>
+    </div>
+    <div class="plain">两个优势说的是同一件事的两面：绿色光芒里那点「喜悦」帮人领会存有的真实本质，而经准备的连结则让人把智能无限导去服务。至于阻塞，Ra 把它精确地锁定在「占有」这个词上。</div>
+    <div class="analogy"><b>像两个人一起合奏：</b>状态好的乐手会互相带起来，一个人被带进去，另一个人找到灵感——这就是 Ra 说的「相互强化的能量转移」；而一旦有人开始担心「这首曲子算谁的」，合奏就立刻走调。参照点不是技术，是那份占有感。</div>
+    <div class="case"><b>「我给你带了咖啡，你帮我改 PPT」：</b>这句话一出口，给予就变成了交换——账开始记，通道就有了条件。Ra 把绿色光芒定义为「对身体、心智、灵都不索取任何报偿」的给予，这条线正好划在记账与不记账之间。</div>
+  </div>
+  <div class="card">
+    <h3>术语卡：本集前半段的关键词</h3>
+    <p>点击卡片翻看解释。这几个词在本集反复出现，先在这里建立准确的直觉。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">性能量转移</div><div class="sub">sexual energy transfer</div><span class="tap">点击展开</span></div><div class="back">两个心/身/灵复合体之间位能的释放，发生在「已被赋予电位的空间」；因双方各自极化而形成电位差，转移或阻塞都是这两种电位相互作用的结果。本集把它看作造物主经验自身的一种方式。<em>比喻：两块水位不同的容器一接通，水才会流。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">电位差 / 位能</div><div class="sub">potential difference / potential energies</div><span class="tap">点击展开</span></div><div class="back">两个实体各自的极化程度不同所形成的差异，是能量能否流动的前提；没有差，接通也不流动。<em>案例：电量不同的两块电池并联，会互相充放直到趋于一致。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">光芒（能量中心）</div><div class="sub">ray</div><span class="tap">点击展开</span></div><div class="back">Ra 描述能量中心层级的用语，依次为红、橙、黄、绿、蓝、靛、紫。本集中性互动可以停在不同光芒：红色与生殖系统有关，橙色是个人权力，黄色是交换与占有，绿色才是普世之爱。<em>比喻：同一股水从不同高度的出口流出，去的方向完全不同。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">绿色光芒</div><div class="sub">green ray</div><span class="tap">点击展开</span></div><div class="back">一种完全普世性的爱，是不期望回报的给予；出现的条件是双方的振动频率在要害意义上没有被黄色或橙色的交换、占有能量所变貌。<em>案例：帮助一个人而不把这份帮助记在账上。</em></div></div>
+    </div>
+  </div>
+  <details class="dict"><summary>本集复述的旧材料：七道光芒的能量转移与阻塞（可跳过）<span class="hint">31.2 编者按 · 原文引 26.38</span></summary>
+  <div class="body">
+    <p>发问者把这段材料插进书里时，只说它更适合较进阶的材料。它的内容是逐道光芒说明性能量转移与阻塞：</p>
+    <p><b>红色光芒：</b>只与生殖系统相关的随机转移。</p>
+    <p><b>橙色、黄色光芒：</b>试图性交时，如果只有一方在这个区域振动，会先造成阻塞，使那一方对这项活动产生永无止境的欲求；这些振动层次所寻求的其实是绿色光芒。若真的发生橙色或黄色光芒的转移，则导向负面极化——一方被视为对象而非其他自我，另一方把自己看作掠夺者或情境的主宰者。</p>
+    <p><b>第四光芒之一：</b>双方都在此振动时，会出现互相强化的转移——负极（女性）把能量自存有的根部向上抽引、穿过各能量中心而得到肉体上的焕发；正极（男性）则从中获得满足并滋养灵之部分的灵感。双方都被极化，并把各自丰盈过剩的部分释放出去。</p>
+    <p><b>第四光芒之二：</b>一方提供绿色光芒而另一方不提供宇宙之爱的能量，未处于绿色光芒的那一方就会能量阻塞，挫折感或欲求随之增加；绿色光芒本身则略微导向服务他人的极化。</p>
+    <p><b>蓝色光芒：</b>在此时的人群中较为罕见，但因涉及「使人能毫无保留或恐惧地表达自我」的转移而极具助益。</p>
+    <p><b>靛蓝色光芒：</b>极其罕见，是身体复合体中神圣的部分，可透过紫色光芒与智能无限建立接触。</p>
+    <p><b>后两道的特性：</b>在蓝与靛这两个层次不会发生阻塞——如果双方实体尚未准备好接受这种能量，它便不可见，转移与阻塞皆无从发生；好比从一台强大的引擎中移除了配电器。</p>
+    <p><b>附带的一例：</b>材料提到这个器皿曾在 LSD 经验期间「挫败猎户座群体」，因为它把其他自我完全打开至绿色光芒，并部分打开至蓝色光芒的互动；Ra 在此中间插了一句修正，说器皿的生命能量正在变得低下。</p>
+  </div></details>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>从红色到绿色：随机生殖、后代与不索报偿的给予</h2></div>
+  <p class="sec-lead">定义讲完，发问者连续往下推了三个问题：这项行为是否也造出后代、让另一个实体进入这个密度？如果性能量只在绿色光芒中转移（他自己假设没有红色光芒），那还能不能怀孕？以及——性结合不必然导致受精，这背后有没有某种形而上法则？Ra 先补上被漏掉的红色光芒，再说明绿色光芒的条件，最后把生育放回「限度之内的随机」。</p>
+  <div class="card">
+    <h3>红色光芒与后代：随机，但给出一片服务的场</h3>
+    <div class="q">这项行为不只是让造物主更认识自己，似乎还创造了一个后代、让另一个实体进入这个密度的通路——能展开讲讲吗？</div>
+    <div class="quote">
+      <p class="en">The first energy transfer is red ray. It is a random transfer having to do only with your reproductive system.</p>
+      <p class="zh">第一个能量转移是红色光芒。它是一个只与你们的生殖系统相关的随机转移。</p>
+      <span class="src">—— Session 031 · (31.2)（编者按，原文引 26.38）</span>
+    </div>
+    <div class="quote">
+      <p class="en">The offspring, as you call the incarnated entity which takes on the mind/body complex opportunity offered by this random act or event called the fertilization of egg by seed, causes an entity to have the opportunity to then enter this density as an incarnate entity.</p>
+      <p class="zh">后代——你们如此称呼那个投生实体——承接了由「卵子受精于精子」这个随机行为或事件所提供的心/身复合体机会，使一个实体获得随后作为投生实体进入这个密度的机会。</p>
+      <span class="src">—— Session 031 · (31.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This gives the two who were engaged in this bisexual reproductive energy transfer the potential for great service in this area of the nurturing of the small-experienced entity as it gains in experience.</p>
+      <p class="zh">这赋予参与这种双性生殖能量转移的双方一种潜能：在养育这个经验尚浅的实体、使其逐渐获得经验的领域里提供极大的服务。</p>
+      <span class="src">—— Session 031 · (31.4)</span>
+    </div>
+    <div class="plain">红色光芒的转移是随机的、只与生殖系统相关；Ra 说这是性互动的一项「恰当功能」。而它带来的后代，反过来又给了这对伴侣一片巨大的服务场——养育一个经验尚浅的实体。</div>
+    <div class="analogy"><b>像抽签分到的长期任务：</b>谁被分到哪个孩子，是随机的；但接下来十几年的养育，是一份能持续提供服务的实职。随机的是入口，不是后面的路。</div>
+    <div class="case"><b>半夜起来喂奶的父母：</b>凌晨三点，孩子哭了第三次，父母轮流起身——没有人觉得这是「能量转移」的成果，但按 (31.4) 的说法，这正是那个随机事件给双方开出的服务机会：养育一个经验尚浅的实体，直到它自己积累起经验。</div>
+  </div>
+  <div class="card">
+    <h3>负面极化的可能：被社会变貌遮蔽的服务面向</h3>
+    <div class="q">那这项行为除了服务，是不是也有可能被用来走反方向？</div>
+    <div class="quote">
+      <p class="en">there is always the possibility of using these opportunities to polarize towards the negative</p>
+      <p class="zh">始终存在着利用这些机会导向负面极化的可能性。</p>
+      <span class="src">—— Session 031 · (31.4)</span>
+    </div>
+    <div class="plain">Ra 特意指出另一条路：同样的机会可以被用来导向负面极化；而这一点被数千年来社会复合体变貌的逐渐累积所助长——那些变貌造成一种混淆，把这项能量转移中「服务他人」的面向以及随后服务其他自我的诸多机会遮住了。</div>
+    <div class="case"><b>把家庭当成合伙公司：</b>有人把亲密关系算成一本账——谁洗碗、谁加班、谁付出得多，月底对一次账。账越算越清，服务的那一面就越看不见。Ra 说的「社会复合体的变貌遮蔽服务面向」，在饭桌上就是这副样子。</div>
+  </div>
+  <div class="card">
+    <h3>绿色光芒与红色光芒并不互斥</h3>
+    <div class="q">如果一次性能量转移发生在绿色光芒里——我假设这种情况下没有红色光芒的转移——那就不可能受精、不可能有孩子了吧？</div>
+    <div class="quote">
+      <p class="en">This is incorrect. There is always the red-ray energy transfer due to the nature of the body complex.</p>
+      <p class="zh">这是不正确的。由于身体复合体的本质，红色光芒能量转移始终存在。</p>
+      <span class="src">—— Session 031 · (31.5)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The green-ray energy transfer occurs due to the vibratory rate of each entity being undistorted in any vital sense by the yellow- or orange-ray energies; thus the gift, shall we say, being given freely, no payment being requested either of the body, of the mind, or of the spirit.</p>
+      <p class="zh">绿色光芒能量转移之所以发生，是由于每个实体的振动频率在任何要害意义上都未被黄色光芒或橙色光芒的能量所变貌；因此这份礼物（容我们说）是自由给予的，无论是对身体、心智还是灵，都不索取任何报偿。</p>
+      <span class="src">—— Session 031 · (31.5)</span>
+    </div>
+    <div class="plain">红色光芒由身体复合体的本质决定，始终都在，它的结果（是否受精）仍然随机；绿色光芒讲的是另一件事——有没有把对方当成交换对象。两者可以同时发生，所以绿色光芒里的性爱也可能受孕。</div>
+    <div class="analogy"><b>像送一份不谈条件的礼物：</b>礼物可以顺便带来别的结果，但「不谈条件」才是它成为礼物的那个定义。Ra 的分工很干净：红色光芒管生殖，绿色光芒管这份给予是否自由。</div>
+    <div class="case"><b>两对伴侣的同一个夜晚：</b>一对伴侣彼此欣赏、什么都不索取，另一对则整晚在计算「上次是我先让步」。表面上做了同一件事，按 (31.5) 的判断，前者在绿色光芒、后者卡在黄色光芒——而红色光芒的随机结果对两对都照样成立，与他们之间的品质无关。</div>
+  </div>
+  <div class="card">
+    <h3>条件模拟器：绿色光芒的给予何时发生、何时被阻塞</h3>
+    <p>拨动下面三个开关，看这条通道打开或被阻塞的样子。（依据 (31.5) 的绿色光芒条件，以及 (31.2) 编者按中关于「对占有的恐惧」的阻塞条件。）</p>
+    <div class="cond-row"><div class="name">振动未被黄/橙色光芒变貌<small>不把对方当作交换对象，也不当作权力的对象</small></div>
+      <label class="switch"><input type="checkbox" id="condA"><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">不索取报偿<small>对彼此的身体、心智、灵都不要求回报</small></div>
+      <label class="switch"><input type="checkbox" id="condB"><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">没有对占有的恐惧<small>不害怕被占有，也不渴望占有对方</small></div>
+      <label class="switch"><input type="checkbox" id="condC"><span class="slider"></span></label></div>
+    <div id="condResult"></div>
+  </div>
+  <div class="card">
+    <h3>生育：某些限度之内的随机</h3>
+    <div class="q">我不问化学或物理层面的原因，我想知道：性结合不必然导致受精这件事，背后有没有某种形而上法则？还是纯粹随机？</div>
+    <div class="quote">
+      <p class="en">This is random within certain limits.</p>
+      <p class="zh">这在某些限度之内是随机的。</p>
+      <span class="src">—— Session 031 · (31.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">If an entity has reached the seniority whereby it chooses the basic structure of the life experience, this entity may then choose to incarnate in a physical complex which is not capable of reproduction.</p>
+      <p class="zh">如果一个实体已达到能够选择生命经验之基本结构的资历，该实体便可以选择投生于一个不具备生殖能力的肉体复合体中。</p>
+      <span class="src">—— Session 031 · (31.6)</span>
+    </div>
+    <div class="plain">Ra 给了两条「限度」：一是实体已达到能选择这一生基本结构的资历，于是选择投生到一个不具备生殖能力的身体；二是实体以自由意志使用各种装置确保不孕。除掉这两种情况，剩下的是随机。</div>
+    <div class="analogy"><b>像掷骰子，但你可以选不同的骰子：</b>在你选定的这颗骰子上，点数确实是随机的；但要不要换一颗「不生子」的骰子，属于你的自由意志。Ra 把「随机」和「选择」切成了两层，而不是二选一。</div>
+    <div class="case"><b>体检都正常、却迟迟没消息的夫妻：</b>两人把能做的检查都做了一轮，医生只能说「指标都好，再试试看」。按 (31.6)，他们正落在「某些限度之内随机」的那个区间——不是谁有错，也不是谁在惩罚他们。</div>
+    <div class="case"><b>深思之后决定不生孩子的伴侣：</b>一对伴侣认真谈过几次，确认「这一生要过的日子不是养育孩子」，并做了相应安排。Ra 说的第一种限度正是这种状况：实体已有资历选择生命经验的基本结构，于是选了一个不具生殖能力的方向。</div>
+  </div>
+  <div class="card">
+    <h3>归类练习：这段描述停在哪一道光芒？</h3>
+    <p>按本集的判定方式，判断下面每个情境主要落在哪道光芒。橙色与黄色的共同特征是交换与占有，绿色则是自由给予。</p>
+    <div id="sorterArea"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>磁性吸引：极性不由生理性别决定，人群密度会放大混淆</h2></div>
+  <p class="sec-lead">话题从机制转到吸引。发问者先请 Ra 定义前面提过的「磁性吸引」，接着问出本集最敏感的一段：为什么现在似乎有越来越多带着同性倾向投生的实体？为什么人口密度会造成混淆？大致要多少次相反性别的投生才会走到那一步？Ra 的回答是一条双层解释，并在最后补上一条常被忽略的注记。</p>
+  <div class="card">
+    <h3>磁性吸引：极性是可变的，且不看生理性别</h3>
+    <div class="q">你之前提到「磁性吸引」，请定义并展开说明这个术语。</div>
+    <div class="quote">
+      <p class="en">We used the term to indicate that in your bisexual natures there is that which is of polarity.</p>
+      <p class="zh">我们使用这个术语，是为了指出：在你们的双性本质中，存在着某种属于极性的东西。</p>
+      <span class="src">—— Session 031 · (31.7)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Thus you may see the magnetism when two entities with the appropriate balance, male/female versus female/male polarity, meeting and thus feeling the attraction which polarized forces will exert, one upon the other.</p>
+      <p class="zh">因此你可以看到磁性：当两个具有适当平衡的实体——男性/女性极性对女性/男性极性——相遇，因而感受到那被极化的力量彼此施加的吸引时。</p>
+      <span class="src">—— Session 031 · (31.7)</span>
+    </div>
+    <div class="quote">
+      <p class="en">It does not take an act of will to decide to feel attraction for one who is oppositely polarized sexually. It will occur in an inevitable sense, giving the free flow of energy a proper, shall we say, avenue.</p>
+      <p class="zh">要对一个在性方面极性相反的对象感受到吸引，并不需要一个意志的行为来决定；它将以一种不可避免的方式发生，为能量的自由流动提供一条（容我们说）恰当的通道。</p>
+      <span class="src">—— Session 031 · (31.7)</span>
+    </div>
+    <div class="plain">磁性吸引指双性本质中属于极性的那部分：它取决于每个实体的男/女性极化配置，而不取决于该实体在生物学上是男是女——所以「谁被谁吸引」不是由生理性别决定的。</div>
+    <div class="analogy"><b>像磁石与铁：</b>Ra 自己就用了这个比喻——不需要决定，靠近就会吸。被吸住不是意志薄弱，只是极性碰上了。</div>
+    <div class="quote">
+      <p class="en">the basic mechanism functions as simply as would, shall we say, the magnet and the iron.</p>
+      <p class="zh">其基本机制运作起来就如同（容我们说）磁石与铁一般简单。</p>
+      <span class="src">—— Session 031 · (31.7)</span>
+    </div>
+    <div class="case"><b>条件全不匹配、却互相被吸引的两个人：</b>年龄、职业、家庭背景样样不搭，见面却彼此来电。按 (31.7) 的说法，这不需要谁做决定，是两股极性力量互相施加的结果——像磁石与铁，谈的是极性配置，不是条件清单。</div>
+    <div class="case"><b>被家里劝住的这段吸引：</b>有人明明被吸引，却因为「家里希望我找另一类人」而把这份感觉压下去。Ra 说得很准确：这条通道可能被「某种信念/状态告诉实体这种吸引不被渴望」的变貌所阻塞——被堵住的不是吸引本身，是流动。</div>
+  </div>
+  <div class="card">
+    <h3>同性倾向：多世性别经验 + 行星振动条件</h3>
+    <div class="q">我们这里现在似乎有越来越多投生的实体，带着所谓的同性恋倾向。你能解释并展开这个概念吗？</div>
+    <div class="quote">
+      <p class="en">Entities of this condition experience a great deal of distortion due to the fact that they have experienced many incarnations as biological male and as biological female.</p>
+      <p class="zh">处于这种状况的实体经历了大量的变貌，原因在于他们曾以生物学上的男性和生物学上的女性经历过许多次投生。</p>
+      <span class="src">—— Session 031 · (31.8)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This would not suggest what you call homosexuality in an active phase were it not for the difficult vibratory condition of your planetary sphere. There is what you may call great aura infringement among your crowded urban areas in your more populous countries</p>
+      <p class="zh">若非你们行星领域艰难的振动状况，这并不会暗示出你们所称的、处于活跃阶段的同性恋。在你们人口较为稠密的国家，那些拥挤的城市区域中存在着你们可能称之为的巨大灵光侵扰。</p>
+      <span class="src">—— Session 031 · (31.8)</span>
+    </div>
+    <div class="plain">Ra 的解释是双层的：许多世以男性和女性身份投生，会累积大量变貌；但单凭这一点，不足以造成「活跃期」的同性倾向——还要加上行星振动艰难与城市里巨大的灵光侵扰，混淆才会发生。</div>
+    <div class="analogy"><b>同一份底色放进不同房间：</b>同一个人的底色（多世性别经验）在安静房间里不显眼，放进拥挤嘈杂的房间（城市灵光侵扰）才会被放大成看得见的样貌。Ra 把「成因」和「显现条件」分得很清楚。</div>
+    <div class="case"><b>早高峰地铁里的「灵光侵扰」：</b>住在超大城市、每天在满员车厢里被人群挤着，到家只想把门一关，谁也不想理。这正是 (31.8)、(31.9) 描述的状况：持续的轰击下，人会更难感受到服务他人的渴望——Ra 把这种日常压迫感当作一个真实的条件在谈。</div>
+  </div>
+  <div class="card">
+    <h3>人口密度：被轰击的敏感者会失去服务的渴望</h3>
+    <div class="q">为什么人口密度会造成这些混淆？</div>
+    <div class="quote">
+      <p class="en">The bisexual reproductive urge has as its goal, not only the simple reproductive function, but more especially the desire to serve others being awakened by this activity.</p>
+      <p class="zh">双性生殖冲动的目标不仅是单纯的生殖功能，更尤其是由这项活动所唤醒的服务他人的渴望。</p>
+      <span class="src">—— Session 031 · (31.9)</span>
+    </div>
+    <div class="quote">
+      <p class="en">In an over-crowded situation where each mind/body/spirit complex is under a constant bombardment from other-selves, it is understandable that those who are especially sensitive would not feel the desire to be of service to other-selves.</p>
+      <p class="zh">在一个过度拥挤的情境中，每个心/身/灵复合体持续遭受来自其他自我的轰击，那些特别敏感的实体不会感受到服务其他自我的渴望，这是可以理解的。</p>
+      <span class="src">—— Session 031 · (31.9)</span>
+    </div>
+    <div class="quote">
+      <p class="en">In an uncrowded atmosphere this same entity would, through the stimulus of feeling the solitude about it, then have much more desire to seek out someone to whom it may be of service thus regularizing the sexual reproductive function.</p>
+      <p class="zh">在一个不拥挤的氛围中，同一个实体会通过感受周围孤独的刺激，从而有更多渴望去寻觅某个它可以为之服务的对象，由此使性生殖功能规律化。</p>
+      <span class="src">—— Session 031 · (31.9)</span>
+    </div>
+    <div class="plain">性冲动的目标不只是生殖，更主要是唤醒服务他人的渴望。拥挤让人被其他自我持续轰击，敏感的实体反而失去服务意愿，红色光芒的生殖能量也更容易阻塞；不拥挤时，「孤独」本身会把人推去找一个可以服务的对象。</div>
+    <div class="analogy"><b>像信号被噪声淹没：</b>服务他人的渴望是一段信号，人群的轰击是噪声。噪声大到一定程度，不是信号消失了，是你收不到——换个安静的房间，同一段信号又出现了。Ra 说「同一个实体」在两种环境下的差别，正是这一点。</div>
+    <div class="case"><b>搬到安静小城之后：</b>有人从大城市搬去一个安静的小城，独居一阵子之后，反而开始主动想认识邻居、想帮楼下的老人带点东西。按 (31.9)，这不是人格变了，而是「感受周围孤独的刺激」把服务他人的渴望重新推了出来。</div>
+  </div>
+  <div class="card">
+    <h3>约 65% 的易感门槛，与一条常被忽略的注记</h3>
+    <div class="q">大致说来，一个男性实体过去要有多少次以女性身份的投生，才会在这一生有高度同性恋倾向？只要大致数字。</div>
+    <div class="quote">
+      <p class="en">If an entity has had roughly 65% of its incarnations in the sexual/biological body complex, the opposite polarity to its present body complex, this entity is vulnerable to the aura infringement of your urban areas, and may, perhaps, become of what you call an homosexual nature.</p>
+      <p class="zh">如果一个实体大约有百分之六十五的投生处于与其当前身体复合体极性相反的性/生物身体复合体中，该实体便易受你们城市区域灵光侵扰的影响，并且或许可能成为你们所称的同性恋性质。</p>
+      <span class="src">—— Session 031 · (31.10)</span>
+    </div>
+    <div class="quote">
+      <p class="en">It is to be noted at this juncture that although it is much more difficult, it is possible in this type of association for an entity to be of great service to another in fidelity and sincere green-ray love of a nonsexual nature, thus adjusting or lessening the distortions of its sexual impairment.</p>
+      <p class="zh">在此关头值得注意的是，尽管困难得多，但在这类结合中，一个实体仍有可能以忠诚和真诚的、非性的绿色光芒之爱对另一个实体提供极大服务，从而调整或减轻其性障碍的变貌。</p>
+      <span class="src">—— Session 031 · (31.10)</span>
+    </div>
+    <div class="plain">Ra 给了一个大致门槛：约 65% 的投生处于相反的性/生物身体复合体，该实体就对城市区域的灵光侵扰显得脆弱，「或许」会成为所谓的同性恋性质。紧接着它自己补了一条注记：在这类结合中，忠诚而真诚、非性的绿色光芒之爱依然能提供极大服务，并减轻性障碍的变貌。</div>
+    <div class="analogy"><b>65% 是易感阈值，不是判决书：</b>像过敏体质——不是必然发病，而是在某个环境里更容易有反应。Ra 用的词是「易受」（vulnerable）与「或许」（perhaps），两个词都留了余地；它自己随后补的那条注记，也是在同一段里把话说完整。</div>
+    <div class="case"><b>多年互相扶持的同性伴侣：</b>他们一起搬家、照顾彼此的父母、生病时守在医院走廊——日常里更多的是陪伴与照顾，而不是性。Ra 的那条注记说的正是这种情形：忠诚与真诚、非性的绿色光芒之爱，本身就能为对方提供极大的服务，并减轻性障碍的变貌。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>铭印、猎户座与橙色光芒：谁在选择刺激物</h2></div>
+  <p class="sec-lead">这一段发问者带来一个外部说法：蒂莫西·利里研究过青春期在 DNA 编码上的铭印，并认为性倾向由早期性经验印成。Ra 判它「部分正确」，并给出自己的判准——不是事件类型，而是参与的强度。随后发问者追问猎户座是否利用这个门户，并在本集最后一问里举了第三帝国的极端例子，Ra 借它讲清了橙色光芒的权力阻塞。</p>
+  <div class="card">
+    <h3>铭印：不是每段经历都定影</h3>
+    <div class="q">蒂莫西·利里写道，青春期乃至那个时期会在实体的 DNA 编码上发生铭印，性倾向就由早期的性经验印成。类似的事情真的会发生吗？</div>
+    <div class="quote">
+      <p class="en">This is partially correct. Due to the nature of solitary sexual experiences, it is in most cases unlikely that what you call masturbation has an imprinting effect upon later experiences.</p>
+      <p class="zh">这在一定程度上是正确的。由于独自性经验的本质，在大多数情况下，你们所称的手淫不太可能对后来的经验产生铭印效应。</p>
+      <span class="src">—— Session 031 · (31.11)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This is similarly true with some of the encounters which might be seen as homosexual among those of this age group. These are often, instead, innocent exercises in curiosity.</p>
+      <p class="zh">对于这个年龄群体中某些可能被视为同性恋的接触，情况也同样如此；这些接触往往反而是出于好奇的天真尝试。</p>
+      <span class="src">—— Session 031 · (31.11)</span>
+    </div>
+    <div class="quote">
+      <p class="en">However, it is quite accurate that the first experience in which the mind/body/spirit complex is intensely involved will indeed imprint upon the entity, for that life experience, a set of preferences.</p>
+      <p class="zh">然而，相当准确的是：心/身/灵复合体强烈参与其中的第一次经验，确实会为那次生命经验在实体身上铭印下一套偏好。</p>
+      <span class="src">—— Session 031 · (31.11)</span>
+    </div>
+    <div class="plain">「部分正确」。Ra 的判准不是事件的类型，而是强度：独自的经验、以及出于好奇的早年尝试，多半不具铭印效应；真正会印下偏好的，是心/身/灵复合体强烈参与其中的第一次经验。</div>
+    <div class="analogy"><b>像拍照：</b>不是每按一次快门都留有照片——手抖、曝光不足的那些不会定影，只有真的对上焦的那一次才留下来。Ra 说「部分正确」，正是在区分「发生过」和「定影了」。</div>
+    <div class="case"><b>高中那次强烈的心动：</b>某人十六岁时第一次真正喜欢上一个人，此后很多年都对同一类型的人动心。按 (31.11)，起作用的是「强烈参与」这个强度条件——被印下的是一套偏好，而那套偏好会影响之后整段人生经验。</div>
+    <div class="case"><b>青春期出于好奇的尝试：</b>一个孩子在那个年纪和同性别的人有过几次试探，事后一直拿它当「我是不是就这样了」的证据。Ra 的说法恰好相反：这往往是天真的好奇练习，不必被读成人格的判决书。</div>
+  </div>
+  <div class="card">
+    <h3>猎户座只在机会已经具备时进场</h3>
+    <div class="q">那么猎户座群体是否利用这一点，当作一个门户，向实体施加会造成负面极化的偏好？</div>
+    <div class="quote">
+      <p class="en">Just as we of the Confederation attempt to beam our love and light whenever given the opportunity, including sexual opportunities, so the Orion group will use an opportunity, if it is negatively oriented, or if the individual is negatively oriented.</p>
+      <p class="zh">正如我们星际联邦在任何被赋予机会之时都试图放射我们的爱与光（包括性方面的机会），猎户座群体同样会利用机会——如果那机会是负面导向的，或者如果那个体是负面导向的。</p>
+      <span class="src">—— Session 031 · (31.12)</span>
+    </div>
+    <div class="plain">猎户座不是无中生有地植入偏好：只有当机会本身是负面导向的，或个体本身是负面导向的，它才会利用这个机会——这与星际联邦在任何机会上（包括性的机会）放射爱与光，是同一种「机会结构」。</div>
+    <div class="analogy"><b>推荐算法推不动没兴趣的人：</b>平台只在你已经点过同类内容时才使劲推。猎户座进场的条件也是这样——它放大已有的倾向，而不是凭空造出倾向。</div>
+    <div class="case"><b>只对「已经上钩的号码」生效的推销电话：</b>骚扰电话打不进完全不相关的群体，它在名单上已经有你这类需求时才起作用。Ra 把「猎户座是否施加了影响」这个问题改写成「机会和个体本身是不是负面导向」——判断的落点从对方换到了这一端。</div>
+  </div>
+  <div class="card">
+    <h3>一次少见的反问：前提不成立，问题就不成立</h3>
+    <div class="q">有没有任何与男性/女性性极性无关的情感倾向，也能在一个实体中造成性能量累积？</div>
+    <div class="quote">
+      <p class="en">The sexual energy buildup is extremely unlikely to occur without sexual bias upon the part of the entity. Perhaps we did not understand your question, but it seems obvious that it would take an entity with the potential for sexual activity to experience a sexual energy buildup.</p>
+      <p class="zh">若实体一方没有性倾向，性能量累积极不可能发生。或许我们没有理解你的问题，但似乎显而易见的是，需要一个具有性活动潜能的实体才能经历性能量的累积。</p>
+      <span class="src">—— Session 031 · (31.13)</span>
+    </div>
+    <div class="plain">Ra 少见地说了一句「或许我们没有理解你的问题」——它给出的前提是：要有具备性活动潜能的实体，才会经历性能量累积；若实体一方没有性倾向，累积极不可能发生。</div>
+    <div class="analogy"><b>像问「没装电池的手电筒能不能放电」：</b>不是不愿意回答，而是前提不成立。Ra 的反问在这里不是推托，而是把问题还原到它自己的前提上——这也是本集里它最不客气的一次回应方式。</div>
+    <div class="case"><b>「我一点欲望都没有，是不是把性能量攒着了？」：</b>有人长期疲惫、性欲几乎消失，却担心能量越攒越多。按 Ra 的表述，先要确认的是前提——有没有性倾向与性活动潜能在；若那一端不成立，「累积」这个说法本身就搭不起来。</div>
+  </div>
+  <div class="card">
+    <h3>橙色光芒的支配：把处死当作终极的权力</h3>
+    <div class="q">我想到的是猎户座是否影响了第三帝国的某些成员——有报告说，他们从观看毒气室里实体被毒死和杀害的过程中获得性满足。</div>
+    <div class="quote">
+      <p class="en">these entities had the potential for sexual energy buildup. The choice of stimulus is certainly the choice of the entity.</p>
+      <p class="zh">这些实体具有性能量累积的潜能；而刺激物的选择当然是实体自己的选择。</p>
+      <span class="src">—— Session 031 · (31.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">these entities were strongly polarized orange ray, thus finding the energy blockage of power over others, the putting to death being the ultimate power over others; this then being expressed in a sexual manner, though solitary.</p>
+      <p class="zh">这些实体被强烈地极化于橙色光芒，因而发现了「凌驾他人之权力」的能量阻塞——将人处死即是凌驾他人的终极权力；而这随后以一种性的方式表达出来，尽管是独自进行的。</p>
+      <span class="src">—— Session 031 · (31.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">In this case the desire would continue unabated and be virtually unquenchable.</p>
+      <p class="zh">在这种情况下，这种渴望会持续不减，且几乎无法满足。</p>
+      <span class="src">—— Session 031 · (31.14)</span>
+    </div>
+    <div class="plain">Ra 把这件事归为橙色光芒的权力阻塞：刺激物的选择是实体自己的选择；当「凌驾他人」成为能量的唯一出口，处死就是这种权力的极致，它以性的方式被表达——而且这种渴望会持续不减、几乎无法满足。Ra 随即把范围拉开：性行为的整个光谱里，凡是靠支配（强奸或其它支配手段）获得满足的，都是同一类能量阻塞。</div>
+    <div class="analogy"><b>像越喝越渴的盐水：</b>阻塞性的快感不因满足而平息，反而要求下一剂更大——Ra 用「几乎无法满足」说的正是这个结构，而不是某一次行为的强度。</div>
+    <div class="case"><b>办公室里那个越压越起劲的人：</b>有人靠当众贬低同事获得快感，一次打压带来的满足越来越短暂，于是要挑更大的场合、更弱的人。按 (31.14)，这不是「脾气问题」，而是橙色光芒中权力阻塞的样子：渴望持续不减、几乎无法满足。</div>
+    <div class="case"><b>专门围观羞辱性直播的人：</b>有人不看别的，专挑羞辱、霸凌他人的内容找快感，隔着屏幕也能获得满足。Ra 明确指出「观看者」这种形态：满足来自支配感，即便不亲自出手，那也依旧是本质属于性的能量阻塞。</div>
+  </div>
+  <div class="card">
+    <h3>术语卡：后半段的四个关键词</h3>
+    <p>这四个词在本集后半段反复出现，点开看它们在 Ra 体系里的意思。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">磁性吸引</div><div class="sub">magnetic attraction</div><span class="tap">点击展开</span></div><div class="back">双性本质中属于极性的那部分：吸引取决于每个实体的男/女性极化配置，而非生理性别；它不需要意志决定就会发生，像磁石与铁，也可能被「这种吸引不被渴望」的信念阻塞。<em>案例：条件样样不搭，见面却来电。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">灵光侵扰</div><div class="sub">aura infringement</div><span class="tap">点击展开</span></div><div class="back">在人口稠密的城市区域，众多实体的灵光彼此侵入、互相干扰的状况；特别敏感的实体在这种持续轰击下会产生混淆。本集用它解释同性倾向为何在当代活跃地出现。<em>案例：早高峰地铁里被人群裹着回到家，一句话也不想说。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">铭印</div><div class="sub">imprint</div><span class="tap">点击展开</span></div><div class="back">心/身/灵复合体强烈参与其中的第一次经验，会为那一生在实体身上印下一套偏好。Ra 特别说明：独自的经验、以及出于好奇的早年尝试，多半不具铭印效应——判准是强度，不是事件类型。<em>比喻：没对上焦的快门不会留下照片。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">种族记忆</div><div class="sub">racial memory</div><span class="tap">点击展开</span></div><div class="back">包含所有曾被经历过内容的集体记忆。本集说污染能透过它传播：在当代文化里，它主要表现为把亲密关系预备成敌对关系，而不是彼此自由的给予。<em>比喻：方言不是谁教的，是长在那个环境里就带上了。</em></div></div>
+    </div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>根因不是猎户座：自由选择、心智之树与种族记忆</h2></div>
+  <p class="sec-lead">在 Ra 宣布「除非就此问题进一步阐明，否则这将是最后一个问题」之前，发问者问出了本集最根本的一问：猎户座能不能把这些橙色光芒效应施加给实体？这是否就是这些概念在这颗行星上出现的原初起因？Ra 的回答把因果顺序整个颠倒过来。发问者随即补上最后一问——那会不会透过种族记忆感染整个人群。</p>
+  <div class="card">
+    <h3>因果顺序被倒过来讲</h3>
+    <div class="q">那么猎户座是否能把这种橙色光芒效应施加在实体身上？这是否就是这些概念在这颗行星上出现的方式？因为如果回溯到第三密度的开端，其中必然有某个原初起因。</div>
+    <div class="quote">
+      <p class="en">The cause of this is not Orion. It is the free choice of your peoples. This is somewhat difficult to explain. We shall attempt.</p>
+      <p class="zh">这件事的起因不是猎户座。它是你们人群的自由选择。这有点难以解释。我们将尝试。</p>
+      <span class="src">—— Session 031 · (31.15)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The sexual energy transfers and blockages are more a manifestation, or example, of that which is more fundamental than the other way about.</p>
+      <p class="zh">性能量转移与阻塞更多地是那更为根本之物的一种显现或例证，而非反过来。</p>
+      <span class="src">—— Session 031 · (31.15)</span>
+    </div>
+    <div class="quote">
+      <p class="en">as your peoples became open to the concepts of bellicosity and the greed of ownership, these various distortions then began to filter down through the tree of mind into body complex expressions, the sexual expression being basic to that complex.</p>
+      <p class="zh">随着你们人群对好战与所有权贪欲的诸多概念变得开放，这些各式各样的变貌便开始向下渗透，穿过心智之树，进入身体复合体的表达之中，而性的表达是那个复合体的基础。</p>
+      <span class="src">—— Session 031 · (31.15)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Thus these sexual energy blockages, though Orion influenced and intensified, are basically the product of the beingness chosen freely by your peoples.</p>
+      <p class="zh">因此这些性能量阻塞，尽管受猎户座影响并被其强化，但根本上是你们人群自由选择的存有状态的产物。</p>
+      <span class="src">—— Session 031 · (31.15)</span>
+    </div>
+    <div class="plain">Ra 把顺序讲反了：不是先有猎户座的干预才产生这些扭曲，而是人群先向「好战」与「占有贪欲」的概念开放，这些变貌才沿着心智之树向下渗进身体表达，性的表达只是那个复合体的基础层。猎户座做的只是「影响并强化」，产物本身出自人群自由选择的存有状态。</div>
+    <div class="analogy"><b>像洪水与风：</b>风能推高浪，但水位是河自己涨起来的。把整场水患都归给风，就看不见真正该修的是堤坝——Ra 说「这不是一个关于猎户座的故事」，说的正是这个位置。</div>
+    <div class="case"><b>把家暴归咎于「某个坏人带坏的」：</b>如果解释停在「谁带坏的」，就绕开了这件事能在这个文化里被延续下去的土壤。按 (31.15)，性方面的阻塞来自人群自由选择的存有状态，猎户座只能强化它——修堤坝比追风更实际。</div>
+  </div>
+  <div class="card">
+    <h3>种族记忆：污染是怎么留下来的</h3>
+    <div class="q">我只需要知道，这是否随后通过种族记忆，以某种方式感染了整个人群。那类事情会发生吗？</div>
+    <div class="quote">
+      <p class="en">The racial memory contains all that has been experienced.</p>
+      <p class="zh">种族记忆包含了所有曾被经历过的东西。</p>
+      <span class="src">—— Session 031 · (31.16)</span>
+    </div>
+    <div class="quote">
+      <p class="en">this showing mostly in your own culture as the various predispositions to adversary relationships—or, as you call them, marriages—rather than the free giving one to another in the love and the light of the Infinite Creator.</p>
+      <p class="zh">这在你们自己的文化中主要表现为对敌对关系的各种倾向——或者，你们所称的婚姻——而非在无限造物主的爱与光中彼此自由的给予。</p>
+      <span class="src">—— Session 031 · (31.16)</span>
+    </div>
+    <div class="plain">种族记忆包含所有曾被经历过的内容，所以连性方面也带着某种污染；在当代文化里，它主要表现为把亲密关系预备成敌对关系——Ra 在这里直接把「你们所称的婚姻」放进了这个句式——而不是在无限造物主的爱与光中彼此自由的给予。</div>
+    <div class="analogy"><b>像方言：</b>没人专门教过你，但你在那个环境里长大就带上了口音。种族记忆也是这样，把「关系就是要争输赢」这个预设一代代带下来——它不是某个人塞给你的，是环境替你存好的。</div>
+    <div class="case"><b>饭桌上学会的「婚姻就是互相较量」：</b>孩子从小听着父母在饭桌上争谁贡献大、谁付出多，长大后在亲密关系里不自觉地照做。这正是 (31.16) 描述的那种污染：预设「亲密关系是敌对关系」，而不是彼此自由的给予。</div>
+  </div>
+  <div class="saying">
+    <p class="en">The green ray is one of complete universality of love. This is a giving without expectation of return.</p>
+    <p class="zh">绿色光芒是一种完全普世性的爱。这是一种不期望回报的给予。</p>
+    <span class="src">—— Session 031 · (31.5)</span>
+  </div>
+  <div class="card">
+    <h3>这一集留下的位置</h3>
+    <p>本集从头到尾都在处理同一件事的两端：一端是光芒阶梯上「给予是否自由」的判断，另一端是这些阻塞从哪儿来。Ra 在最后一问之前先声明了节奏——除非进一步阐明，否则那将是最后一个问题；发问者于是把最后一问放在「种族记忆」上，Ra 答完，本集就收在收尾嘱咐里。</p>
+    <div class="quote">
+      <p class="en">This will be the final question unless we may speak further upon this question to clarify, or answer any short queries before we close.</p>
+      <p class="zh">这将是最后一个问题，除非我们可以就此问题进一步阐明，或在我们结束之前回答任何简短的疑问。</p>
+      <span class="src">—— Session 031 · (31.15)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Therefore, counsel we this instrument to attempt to assess the vital energies carefully before offering itself as open channel.</p>
+      <p class="zh">因此，我们建议这个器皿在将自身作为开放管道献出之前，尝试仔细评估其生命能量。</p>
+      <span class="src">—— Session 031 · (31.17)</span>
+    </div>
+    <div class="quote">
+      <p class="en">All is well. You are conscientious.</p>
+      <p class="zh">一切安好。你们很尽责。</p>
+      <span class="src">—— Session 031 · (31.17)</span>
+    </div>
+    <div class="plain">本集停在「污染如何透过种族记忆延续」这一点上，线头没收完；而 Ra 在收尾时留下的嘱咐是可以直接带走的：把自己献出去之前，先评估自己还剩多少生命能量。</div>
+    <div class="case"><b>连轴转的志愿者：</b>有人长期做志工，凭一股热情一直答应，直到某天在活动现场站都站不住。Ra 对器皿的那句嘱咐——「献出自身作为开放管道之前，仔细评估生命能量」——说的就是这种状态：服务的前提是自己还有余量。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+<p>基于 The Ra Contact Session 031（split/Ra_Session_031.md）英文原文制作 · 交互式学习模块</p>
+<p>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文</p>
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra031-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+  {t:'(31.0)-(31.1) 开场与器皿之问',d:'<span class="qa-q">问（器皿本人）：我现在感觉好些了，独自散步是否可取？</span><b>答：</b>这是可以接受的。（Ra 对个人事务只给一句裁定，不禁止、也不代作决定。）'},
+  {t:'(31.2) 把旧材料放回来',d:'<span class="qa-q">问：我把上一本书结尾处谈性能量转移的材料插到这一处，请定义这种能量转移并展开说明它的含义。</span><b>答：</b>能量转移意味着位能在「已被赋予电位的空间」中释放；性能量转移因两个复合体各自的极化而产生电位差，转移或阻塞都是这两种电位相互作用的函数——转移发生时，可比作电路被闭合。你也可以把这项活动看作造物主在经验其自身。'},
+  {t:'(31.3) 是不是「原初机制」',d:'<span class="qa-q">问：那么这是不是造物主经验自身的原初机制？</span><b>答：</b>这不是一个恰当的用词——或许是「一种适宜的」方式。双性方式认识自身有两个潜在优势：绿色光芒中的喜悦类比物，以及与通往智能无限之门户相连的神圣理解；其强度的推论，是打开以无限多种方式服务其他自我的渴望，从而导向正面极化。'},
+  {t:'(31.4)-(31.6) 后代、绿色光芒与生育',d:'<span class="qa-q">问：这项行为是否也造出后代、让另一个实体进入这个密度？绿色光芒中没有红色光芒，还能受孕吗？性结合不必然受精，背后有法则吗？</span><b>答：</b>红色光芒的转移始终存在，其后代给双方一片养育服务的场；绿色光芒的出现取决于双方的振动未被黄色、橙色能量变貌，礼物因此自由给予、不索报偿；受精在「某些限度之内」随机，除非实体已选择不具生殖能力的身体，或以自由意志采取避孕手段。'},
+  {t:'(31.7)-(31.10) 磁性吸引与同性倾向',d:'<span class="qa-q">问：什么是磁性吸引？为什么同性倾向的实体增多？为什么人口密度造成混淆？需要多少次相反性别的投生？</span><b>答：</b>极性取决于每个实体的男/女性极化配置，不看生理性别，像磁石与铁；成因是多世性别经验，叠加行星振动艰难与城市灵光侵扰，约 65% 相反性别的投生是易感门槛。Ra 另补一条注记：忠诚、真诚而非性的绿色光芒之爱依然能提供极大服务。'},
+  {t:'(31.11)-(31.16) 铭印、猎户座与自由选择',d:'<span class="qa-q">问：青春期的铭印是真的吗？猎户座是否利用它？这和第三帝国的例子有关吗？这是这颗行星上的原初起因吗？会透过种族记忆感染人群吗？</span><b>答：</b>只有强烈参与的第一次经验会印下偏好；刺激物的选择是实体自己的选择，第三帝国的例子是橙色光芒的权力阻塞；根因不是猎户座，而是人群的自由选择——先接受好战与占有贪欲的概念，变貌才沿心智之树渗进身体表达，并透过种族记忆留下污染。'},
+  {t:'(31.17) 收尾',d:'<span class="qa-q">问：还有什么能让器皿更舒适、或改善这次接触？</span><b>答：</b>器皿有些疲劳，管道非常清晰，但生命能量偏低；Ra 不愿耗尽器皿，并嘱咐她在献出自身作为开放管道之前仔细评估生命能量。「一切安好。你们很尽责。」'}
+]);
+
+initSorter('sorterArea',[
+  {a:'一对伴侣真心为对方好，无论对身体、心智还是灵都不索取报偿',opts:['红色光芒','橙色光芒','绿色光芒'],ans:'绿色光芒',exp:'(31.5)：绿色光芒之所以发生，是由于双方的振动未被黄色或橙色能量变貌——礼物是自由给予的，不索取任何报偿。'},
+  {a:'有人只看重对方的外貌与身份，把对方当作可以占有的对象',opts:['红色光芒','橙色光芒','绿色光芒'],ans:'橙色光芒',exp:'(31.2) 编者按：橙色或黄色光芒的转移导向负面极化——一方被视为对象而非其他自我，另一方把自己当作掠夺者或情境的主宰者。'},
+  {a:'一对感情很好的伴侣，因为身体复合体的本质，仍然可能受孕',opts:['红色光芒','橙色光芒','绿色光芒'],ans:'红色光芒',exp:'(31.5)：红色光芒能量转移始终存在，只与生殖系统相关，它的结果是随机的，与两人之间的品质无关。'},
+  {a:'有人从凌驾他人的支配（强奸或其它支配手段）中获得满足，而且越来越不满足',opts:['红色光芒','橙色光芒','绿色光芒'],ans:'橙色光芒',exp:'(31.14)：这是强烈极化于橙色光芒所产生的权力阻塞，渴望持续不减、几乎无法满足。'},
+  {a:'伴侣双方都在绿色光芒中振动，能量互相强化，各自释放丰盈过剩的部分',opts:['红色光芒','橙色光芒','绿色光芒'],ans:'绿色光芒',exp:'(31.2) 编者按：双方都在第四/绿色光芒中振动时会出现互相强化的能量转移，双方都被极化，并把各自凭借智能能量本性而丰盈过剩的部分释放出去。'}
+]);
+
+function updateCond(){
+  const a=document.getElementById('condA').checked,
+        b=document.getElementById('condB').checked,
+        c=document.getElementById('condC').checked;
+  const box=document.getElementById('condResult');
+  const miss=[];
+  if(!a)miss.push('双方的振动仍在黄色或橙色光芒里（交换与权力）');
+  if(!b)miss.push('仍在向彼此的身体、心智或灵索取报偿');
+  if(!c)miss.push('仍带着对占有或被占有的恐惧');
+  if(a&&b&&c){
+    box.className='';
+    box.innerHTML='<b>三个条件都满足：</b>按 (31.5)，这份礼物是自由给予的，无论对身体、心智还是灵都不索取任何报偿——绿色光芒是一种完全普世性的爱，这种给予本身会略微导向服务他人的极化。(31.2) 编者按也提到，双方都在此振动时，会出现彼此强化的能量转移，各把自己丰盈过剩的部分释放出去。';
+  }else if(miss.length===1){
+    box.className='fail';
+    box.innerHTML='<b>还差一条：</b>'+miss[0]+'。按 (31.2) 编者按，橙色或黄色光芒中的尝试若只有一方在此振动，会先造成阻塞，使那一方对这项活动产生永无止境的欲求——而这些振动层次真正寻求的，正是绿色光芒。';
+  }else{
+    box.className='fail';
+    box.innerHTML='<b>缺的还多：</b>'+miss.join('；')+'。按 (31.2) 编者按，若一方提供绿色光芒而另一方没有提供宇宙之爱的能量，未处于绿色光芒的那一方就会能量阻塞，挫折感或欲求随之增加；若阻塞落在「凌驾他人」这个方向上，(31.14) 说那种渴望会持续不减、几乎无法满足。';
+  }
+}
+['condA','condB','condC'].forEach(id=>document.getElementById(id).addEventListener('change',updateCond));
+
+document.querySelectorAll('.fn-card').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('open')));
+
+updateCond();
+
+renderPath();
+</script>
+</body>
+</html>

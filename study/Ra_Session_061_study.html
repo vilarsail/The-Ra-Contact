@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 061 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 061 · 交互式学习模块</h1>
+  <p class="sub">这一集把"身体状态为什么有起伏"讲透：周期性的能量流入与催化剂使用效率共同塑造身体，未被心智与灵性用完的催化剂会交到身体手上；随后展开身体的纪律、感觉平衡练习、投生的目的，以及仪式与额叶如何服务这场窄带通讯。</p>
+  <div class="tagline">8 个主题 · 6 个学习步骤 · 33 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 周期与催化剂</a>
+<a href="#s3">③ 身体的纪律</a>
+<a href="#s4">④ 情绪写进身体</a>
+<a href="#s5">⑤ 投生的目的</a>
+<a href="#s6">⑥ 极性与感觉平衡</a>
+<a href="#s7">⑦ 仪式与额叶</a>
+<a href="#s8">⑧ 收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>走一遍本集的问答脉络，例行问答已折叠收纳 → 第 01 章</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>身体状态为何起伏</b><span>两大因素与能量周期，以及 Ra 为何拒答"挑时间集会" → 第 02 章</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>身体的纪律与情绪的存档</b><span>爱与智慧怎么在身体功能里平衡、情绪如何写进身体 → 第 03-04 章</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>投生的目的</b><span>主观接纳与主观知晓的区别——本集最哲学的一段 → 第 05 章</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>极性、感觉平衡与仪式原理</b><span>平衡练习怎么做、器具对齐与额叶门户 → 第 06-07 章</span></span></label></div>
+<div class="step-item" data-target="#s8"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官</b><span>术语回顾、金句与给读者的实践提醒 → 第 08 章</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ 第 01 章 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：这一集在问"身体为什么拖后腿"</h2></div>
+  <p class="sec-lead">这一集里，器皿的身体状况成了话题本身：Ra 先把身体起伏归结为两大因素，随后借 Jim 对疗愈练习的追问，把"身体的纪律""情绪如何写进身体""感觉怎么平衡"一次讲清，中途借一个私人问题点出投生的目的，最后回到这场通讯的技术细节——器具对齐与额叶的门户。开场与收尾的例行问答收纳在下方折叠区。</p>
+
+  <div class="card">
+    <h3>本集议题一览</h3>
+    <p>发问者带着 Jim 对此前疗愈练习的三问回来（61.6 自述），而悬在小组头顶的两件事在本集继续被直面：器皿的身体能量下降，与仍在进行的通灵攻击（61.4）。全集依次谈了——</p>
+    <p>① 器皿状况与影响身体的两大因素（61.1-61.2）；② 能量的周期性流入：四类节律、门户周期与宇宙模式（61.3）；③ "能否挑最佳时间集会"——Ra 拒答，并限定周期的效力范围（61.4）；④ 小组能否减轻通灵攻击——Ra：能说的已说完（61.5）；⑤ 身体的纪律：自然功能中爱与智慧的平衡（61.6）；⑥ 情绪如何影响身体：三个真实例子（61.7）；⑦ 混淆法则的界限与投生的目的（61.8-61.9）；⑧ 身体极性与感觉平衡练习（61.10-61.11）；⑨ 窄带接触、仪式的原理与额叶的用途（61.12-61.13）。</p>
+    <div class="quote">
+      <p class="en">We may suggest that it is always of some interest to observe the road map, both of the cycles and of the planetary and other cosmic influences, in that one may see certain wide roads or possibilities. However, we remind that this group is an unit.</p>
+      <p class="zh">观察路线图——无论是周期的，还是行星与其他宇宙影响的——总是有些意义，因为你能从中看见某些宽阔的道路或可能性。但 Ra 随即提醒：这个小组是一个整体。</p>
+      <span class="src">—— Session 061 · (61.4)</span>
+    </div>
+    <div class="case"><b>同一间办公室：</b>周一早上两个人同样头昏——一个人照常开工、顺其自然，另一个反复自责"我怎么这么没用"，越想越累。同样的周期低谷，不同的催化剂使用效率，身体最后承担的东西完全不同：这正是 Ra 拆解器皿状况时给出的两个变量（61.2）。</div>
+    <div class="case"><b>三人项目组：</b>产品上线前夜，主程、设计、文案只要有一人状态垮掉，整体节奏立刻变形——Ra 说三人组的"每个能量输入都值得注意"，而且"这个小组是一个整体"（61.4）：周期、攻击、功课，从来不是器皿一个人的事。</div>
+  </div>
+
+  <div class="card">
+    <h3>问答脉络推进器：本集十步对话</h3>
+    <div class="demo-area">
+      <div class="flow-track" id="mapTrack"></div>
+      <div class="flow-detail" id="mapDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="mapPrev">← 上一步</button>
+        <button class="tri-btn" id="mapNext">下一步 →</button>
+      </div>
+    </div>
+  </div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 后勤</span></summary>
+    <div class="body">
+      <p><b>(61.0) 开场致意：</b>Ra 在无限造物主的爱与光中致意，开始通讯。</p>
+      <p><b>(61.1) 器皿状态：</b>生命能量在改善，但身体变貌明显、身体能量有所下降。</p>
+      <p><b>(61.6) 语速调整：</b>Ra 因器皿使用了转移能量而说得比平时简短，请小组在回答不足时继续追问。</p>
+      <p><b>(61.12 尾) 能量提示：</b>转移的能量还够再回答一个较长的问题——Ra 不愿耗尽器皿。</p>
+      <p><b>(61.14) 收尾叮嘱：</b>每个人都做得好、很尽责；请继续在每个层面一丝不苟地维持对齐，这将维持通讯。</p>
+    </div>
+  </details>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 02 章 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>周期与催化剂：身体状态为什么有起伏</h2></div>
+  <p class="sec-lead">发问者想为器皿的身体"做点什么"。Ra 没有给出保健处方，而是给出一张解释框架：身体状态由两类因素共同决定——一类是投生时就定好的能量周期，一类是你们自己使用催化剂的效率。前者是天气，后者是你手里有没有伞。</p>
+
+  <div class="card">
+    <h3>两大因素：天时与人的功课</h3>
+    <div class="q">发问者问：有没有什么特别的方法能改善器皿的身体状况？——他预设总有一套可操作的动作。</div>
+    <div class="quote">
+      <p class="en">The first is the given instreamings which vary from cycle to cycle in predictable manner. In this particular entity the cyclical complexes at this space/time nexus are not favorable for the physical energy levels.</p>
+      <p class="zh">第一个因素是"给定的流入能量"，按可预测的方式逐周期变化；此刻该实体的周期复合体，对身体的能量水平并不有利。</p>
+      <span class="src">—— Session 061 · (61.2)</span>
+    </div>
+    <div class="plain">身体状态 = 周期性流入（投生时给定的"天时"）× 催化剂使用效率（自己的功课），两者叠加。而且 Ra 明说：这套机制对一切已达绿色光芒振动的实体都成立——不只是这位器皿。第二个因素，Ra 称之为"使用催化剂学习编程课程（尤其是爱的课程）的心智效率"；她另有投生前条件带来的额外变貌（61.2）。</div>
+    <div class="case"><b>睡眠手环的曲线：</b>手环记录你的深睡比例与心率变异，把"今天状态差"变成一条有据可查的曲线——现代人早已活在"周期"里。Ra 说的四类周期同样是投生那一刻就"给定"的参数：可预测，但既不是你的错，也不是你的功。</div>
+    <div class="case"><b>面试前夜：</b>两个候选人同样紧张失眠，一个第二天照常发挥，一个整周垮掉——差别不在周期，而在"心智使用催化剂的效率"（61.2）：没有被心智和灵性消化的部分，最终都落到身体上（61.7 会展开这一点）。</div>
+  </div>
+
+  <div class="card">
+    <h3>周期的清单：节律、门户与宇宙模式</h3>
+    <div class="q">"周期性的能量流入"具体指什么？发问者请 Ra 展开。</div>
+    <div class="quote">
+      <p class="en">There are four types of cycles which are those given in the moment of entry into incarnation. There are, in addition, more cosmic and less regularized inpourings which, from time to time, affect a sensitized mind/body/spirit complex.</p>
+      <p class="zh">有四类周期，是进入投生的那一刻被赋予的；此外还有更多宇宙性的、不那么规律化的流入，会不时影响一个敏感化的心/身/灵复合体。</p>
+      <span class="src">—— Session 061 · (61.3)</span>
+    </div>
+    <p>这四类节律"在某种程度上为你们的人群所知"，被称为<b>生物节律（biorhythms）</b>。之外还有一个周期，Ra 称之为<b>行家（adept，有意修习灵性工作的人）或灵性的魔法门户周期</b>，大约十八个昼夜完成一轮。更宏观的宇宙模式同样是投生时刻的函数，与月亮、本星系的诸行星、银河太阳，以及某些情况下来自主要银河能量流节点的流入有关（61.3）。</p>
+    <div class="case"><b>手机里的周期 App：</b>经期追踪、体力-情绪-智力三曲线的生物节律软件——"投生时给定的四类周期"在今天已是随手可查的日常工具。但 App 只描述曲线，不替你消化催化剂：知道"今天是低谷"和"低谷期把功课做完"，是两回事。</div>
+    <div class="case"><b>占星推送：</b>每周运程提醒你"水星逆行，谨慎签约"。有人把它当免责声明，有人当路线图——Ra 允许观察路线图，因为能看见"宽阔的道路或可能性"，但从没说路线图能替你走路。</div>
+  </div>
+
+  <div class="card">
+    <h3>拒答的教导：挑个好时间，行不行？</h3>
+    <div class="q">发问者顺势提议：为器皿绘制周期图表，把集会安排在周期最有利的时点——听起来很合理。</div>
+    <div class="quote">
+      <p class="en">We may say that while these information systems are interesting they are in sway only insofar as the entity or entities involved have not made totally efficient use of catalyst…</p>
+      <p class="zh">这些信息系统虽然有趣，但它们的效力，仅限于相关实体尚未完全有效率地使用催化剂的范围内……</p>
+      <span class="src">—— Session 061 · (61.4)</span>
+    </div>
+    <p>对"挑时间"这个具体请求，Ra 只说"对那个具体的问题，我们没有回应"（61.4）——这是本集第一次拒答。他给出的是更根本的限定：周期的效力只在催化剂未被高效使用时起作用；与其保留着变貌去慢慢消化未用的催化剂，不如练习<b>不加过度关注地接受</b>那些负面或倒退的时期。同时 Ra 如实通报：对器皿的<b>通灵攻击（psychic attack，外部实体对器皿施加的干扰）</b>仍在继续，但目前只在造成身体不适的层面有效（61.4）。</p>
+    <div class="quote">
+      <p class="en">We have given you the information concerning that which aids this particular mind/body/spirit complex. We can speak no further.</p>
+      <p class="zh">关于有助于这个特定心/身/灵复合体的信息，我们已经给出。我们无法进一步说明。</p>
+      <span class="src">—— Session 061 · (61.5)</span>
+    </div>
+    <p>发问者退一步问：那作为一个整体，我们能不能做点什么来减轻攻击？Ra 依旧不给出新方案，只留下一句评估：三人组在此刻的第三密度幻象中，彼此处于非凡的和谐之中（61.5）——"怎么做"的答案，其实一直握在小组自己手里。</p>
+    <div class="case"><b>低谷周的工作法：</b>冲刺连续受挫的一周，队长不做动员加码，而是带着大家整理文档、修补细节——顺势接受"逆行期"，而不是硬顶着逆行加仓。这正是 Ra 说的：不加过度关注地接受负面或倒退的时期（61.4）。</div>
+    <div class="case"><b>家长的边界：</b>孩子考试在即，家长想替他排一张"最优时间表"。有经验的家长明白：表可以给，路得孩子自己走；真正的变量是孩子平时有没有把功课消化掉——催化剂的效率，从来无法外包。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 03 章 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>身体的纪律：在自然功能中平衡爱与智慧</h2></div>
+  <p class="sec-lead">话题转到 Jim 带来的疗愈练习三问。第一问关于身体：所谓"使用身体自然功能时爱与智慧之间的平衡"是什么意思？Ra 的回答出乎意料地生活化——他谈的是触摸、孤独、亲密，以及怎么分辨爱得太多还是管得太死。</p>
+
+  <div class="card">
+    <h3>第一步分拣：哪些功能根本不用"审判"</h3>
+    <div class="q">身体的自然功能，是不是都要接受平衡练习的检视？</div>
+    <div class="quote">
+      <p class="en">The body complex has natural functions. Many of these have to do with the unmanifested self and are normally not subject to the need for balancing.</p>
+      <p class="zh">身体复合体有它的自然功能。其中许多与未显化的自我有关，通常不需要平衡。</p>
+      <span class="src">—— Session 061 · (61.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">There are natural functions which have to do with other-self. Among these are touching, loving, the sexual life, and those times when the company of another is craved to combat the type of loneliness which is the natural function of the body…</p>
+      <p class="zh">另一些自然功能与他人有关：触摸、爱、性生活，以及渴望他人陪伴以对抗"身体的孤独"的时刻……</p>
+      <span class="src">—— Session 061 · (61.6)</span>
+    </div>
+    <div class="plain">分拣标准只有一条：这个功能只关乎你自己（饿了吃、困了睡），还是伸向另一个存有（触摸、爱、亲密、怕孤独）？前者通常无需平衡，后者才是纪律起作用的地方。注意 Ra 的精细：身体渴望陪伴的那种孤独，和心智情绪的孤独、灵性的孤独，是三种不同的东西。</div>
+    <div class="case"><b>深夜的外卖：</b>加班到十一点，点一份宵夜刷着视频吃完就睡——吃与睡属于未显化自我的功能，本身不需要"平衡审判"。但如果你点外卖是因为屋里冷清得难受，那这一口就伸向了"他人"：先分清这是身体的孤独，还是心事没人懂的孤独（61.6）。</div>
+    <div class="case"><b>午饭拼桌：</b>有同事一顿午饭都受不了独处，逢饭必拼桌、散会必结伴。别急着贴"社恐"标签——Ra 会请你检查：这份对陪伴的渴望里，爱的成分过量了吗？爱的是别人，还是害怕独处的自己（61.6 要求先分辨爱的对象）。</div>
+  </div>
+
+  <div class="card">
+    <h3>两个失衡方向：爱过量 ↔ 智慧过量</h3>
+    <div class="q">失衡怎么判断方向？</div>
+    <div class="quote">
+      <p class="en">On the one hand there is an excess of love. It must be determined whether this is love of self or other-self or both. On the other hand there is an over-balance towards wisdom.</p>
+      <p class="zh">一边是爱的过量——必须分辨这爱是对自我、对他人，还是两者皆有；另一边是过度偏向智慧。</p>
+      <span class="src">—— Session 061 · (61.6)</span>
+    </div>
+    <div class="plain">爱的过量不见得高尚——它可能只是爱自己被需要的感觉；智慧的过量也不见得清醒——把身体的亲密功能"理性地省略掉"，同样是失衡。同样要检视的还有"退出"：从对他人陪伴的需求中撤出来，两边都可能过头。</div>
+    <div class="case"><b>把身体管成 KPI 的博主：</b>饮食精确到克、训练按分钟排、社交与亲密关系"影响状态"一律砍掉——智慧过量、爱的部分在萎缩。Ra 的标准是让身体成为"平衡的盟友、可以清晰使用的工具"（61.6），而不是被纪律劫持的机器。</div>
+    <div class="case"><b>围着对方转的恋爱：</b>为了陪恋人推掉所有个人节奏，吃饭睡觉都按对方的日程走——爱的过量。Ra 提醒先做个分辨：这里面有多少是爱对方，多少是爱自己"被需要"的感觉（61.6）。</div>
+  </div>
+
+  <div class="card">
+    <h3>平衡的收益：自我被释放去做进一步的工作</h3>
+    <div class="quote">
+      <p class="en">No matter what the behavior, the important balancing is the understanding of each interaction on this level with other-selves, so that whether the balance may be love/wisdom or wisdom/love, the other-self is seen by the self in a balanced configuration, and the self is, thus, freed for further work.</p>
+      <p class="zh">无论行为是什么，重要的平衡是理解在这个层面上与他人的每一次互动——如此，无论平衡是爱/智慧还是智慧/爱，自我都能以平衡的配置看待他人，自我也因此被释放，去做进一步的工作。</p>
+      <span class="src">—— Session 061 · (61.6)</span>
+    </div>
+    <div class="plain">平衡的检验标准不在"做了什么动作"，而在你看对方的眼光是否恢复平衡——眼光平衡了，能量才腾得出来往更深处走。Ra 还说，每个身体功能都可以在"越来越高的能量复合体"中与他人一起使用：身体的亲密不是障碍，是阶梯。</div>
+    <div class="case"><b>给父母打完电话：</b>每次通完话都憋一肚子火、夜里翻来覆去——互动的理解没做，火气存进了身体。按 61.6 的路径检视：想事事管着父母，是不是爱的过量？彻底不闻不问，是不是智慧的冷感？眼光恢复平衡，睡眠往往先好起来。</div>
+  </div>
+
+  <div class="card">
+    <h3>归类练习：这些功能与孤独，各归哪类？</h3>
+    <div class="q">试着自己分拣一遍——选项来自 Ra 在 61.6 里画出的三类界限。</div>
+    <div id="sorter1"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 04 章 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>情绪如何写进身体：未被使用的催化剂去了哪里</h2></div>
+  <p class="sec-lead">第二问：能否举例说明情绪如何影响身体？Ra 先声明这几乎没法笼统谈——每个实体的编程不同——然后罕见地点评了小组三人各一例。这是全集中最"贴身"的一段，也把上一章的"催化剂效率"落到了实处。</p>
+
+  <div class="card">
+    <h3>机制：催化剂的移交</h3>
+    <div class="q">情绪到底怎么"变成"身体症状？有没有一张通用的对应表？</div>
+    <div class="quote">
+      <p class="en">In each programmed individual the sensitivities are far more active, and, as we have said, that catalyst not used fully by the mind and spirit is given to the body.</p>
+      <p class="zh">在每个被编程的个体中，敏感度活跃得多；而且如我们曾说过的，心智与灵性没有用完的催化剂，会被交给身体。</p>
+      <span class="src">—— Session 061 · (61.7)</span>
+    </div>
+    <div class="plain">身体症状是"情绪的存档"：心智与灵性没消化的催化剂被移交给身体，直到被看见、被处理。但对觉知较少的实体，这种联结"看起来是随机的"——高我会持续供给催化剂，直到某种偏向形成；Ra 开头那句提醒要记牢：每个实体都有自己的编程，几乎无法笼统而谈。</div>
+    <div class="case"><b>查不出毛病的胃：</b>体检报告一切正常，但常年胃胀，医生最后建议"看看有没有压力源"——现代医学的直觉正在靠近 Ra 的机制描述：未被心智与灵性使用的催化剂，会落到身体上（61.7）。当然，这是灵性框架的解读，不替代就医。</div>
+    <div class="case"><b>新手司机的剐蹭：</b>同一种路口剐蹭三次才长记性——对觉知较少的实体，催化剂"看起来随机"地反复出现，直到偏向形成（61.7）。功课没做完，题目就会一直发下来。</div>
+  </div>
+
+  <div class="card">
+    <h3>三个真实例子：器皿、发问者、抄写员</h3>
+    <div class="q">Ra 破例点名了小组三人各自的身体信号——它们各在说什么？</div>
+    <div class="quote">
+      <p class="en">Thus you may see in this entity the numbing of the arms and the hands signifying this entity's failure to surrender to the loss of control over the life.</p>
+      <p class="zh">你们可以看到这个实体（器皿）手臂与双手的麻木，标志着她未能臣服于对生命控制权的丧失。</p>
+      <span class="src">—— Session 061 · (61.7)</span>
+    </div>
+    <div class="quote">
+      <p class="en">In the questioner we may see the desire not to be carrying the load it carries given as physical manifestation of the soreness of those muscles for carrying used.</p>
+      <p class="zh">在发问者身上，可以看到那份"不愿再扛手头重担"的渴望，呈现为承重肌肉的酸痛。</p>
+      <span class="src">—— Session 061 · (61.7)</span>
+    </div>
+    <p>第三例是抄写员：疲惫与情感的麻木，源于没有使用那些本该使他对心智/情绪与灵性层面"重大陌生流入"敏感化的催化剂。Ra 补上一条普遍规律：当麻木从更高、更敏感的复合体上移开，身体变貌会随之消失——三个例子皆然（61.7）。</p>
+    <div class="plain">麻木不是故障，是信号灯：身体在替心智与灵性"持有"没做完的功课。而"完全有效率地使用催化剂"这件事，Ra 说在你们的层面极其罕见（61.7）——所以不必为身体信号羞愧，只需学着读它。</div>
+    <div class="case"><b>"扛太多"的中层：</b>长期扛项目的管理者肩颈僵硬、腰背酸痛，同事笑称"你扛太多了"。Ra 对发问者的解读正是如此：承重肌肉的酸痛，呈现的是"不愿扛"的渴望——而真正要扛的，是一项看似极不方便的投生前责任（61.7）。</div>
+    <div class="case"><b>提不起感觉的倦怠：</b>对新闻、对朋友的消息都"没感觉"了——这种疲惫与麻木，按 Ra 对抄写员的描述，可能源于没有使用那些本该让你对陌生涌入敏感化的催化剂（61.7）；麻木从更高处移开，身体的沉重会跟着松开。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 05 章 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>投生的目的：主观接纳大于主观知晓</h2></div>
+  <p class="sec-lead">发问者追问：你这样点评我们三人的私事，怎么符合第一变貌（混淆法则，即自由意志法则）？Ra 的回答先解开了"凭什么能说"的疑问，又把话题推到本集最哲学的一段——投生到底为了什么。</p>
+
+  <div class="card">
+    <h3>混淆法则的界限：确认，而非泄密</h3>
+    <div class="q">点评器皿、发问者、抄写员的私人功课，会不会侵犯他们的自由意志？</div>
+    <div class="quote">
+      <p class="en">Any other reader may extract the heart of meaning from this discussion without interest as to the examples' sources. If each was not fully aware of these answers we could not speak.</p>
+      <p class="zh">任何其他读者都可以只提取这场讨论意义的核心，而不必关心例子的来源。如果每个当事人不是早已完全知道这些答案，我们根本无法开口。</p>
+      <span class="src">—— Session 061 · (61.8)</span>
+    </div>
+    <div class="quote">
+      <p class="en">It is interesting that in many of your queries you ask for confirmation, rather than information. This is acceptable to us.</p>
+      <p class="zh">有趣的是，在你们的许多提问中，你们寻求的是确认，而不是信息。这对我们来说是可以接受的。</p>
+      <span class="src">—— Session 061 · (61.8)</span>
+    </div>
+    <div class="plain">Ra 的开口条件是：信息早已在当事人自己心里，他只是在确认。这不是"泄露隐私"，而是把镜子举到本人面前——自由意志毫发无损。</div>
+    <div class="case"><b>好的咨询师：</b>从不命令"你该辞职"，只是帮来访者说出他早就隐约知道的事——信息在当事人心里，咨询师只是催化它浮出水面。Ra 说"每个当事人早已知道"，正是混淆法则下的开口前提（61.8）。</div>
+    <div class="case"><b>读书会的两种读者：</b>有人专挑"这说的是不是我"的段落，有人专盯"这说的是谁"的段落——前者提取意义的核心，后者盯着例子的来源。Ra 明说第二种读法也无妨，只是不必（61.8）。</div>
+  </div>
+
+  <div class="card">
+    <h3>发问者的概念与 Ra 的纠偏</h3>
+    <div class="q">发问者顺势提出自己的理解：投生的目的，是在完全无偏、毫无证据的情境里，靠自己的思考对问题与理解达成确信——这个概念对吗？</div>
+    <div class="quote">
+      <p class="en">Your opinion is an eloquent one, although somewhat confused in its connections between the freedom expressed by subjective knowing and the freedom expressed by subjective acceptance. There is a significant distinction between the two.</p>
+      <p class="zh">你的观点很雄辩，但在"主观知晓所表达的自由"与"主观接纳所表达的自由"之间的连接上有些混淆——两者之间有一个重要的区别。</p>
+      <span class="src">—— Session 061 · (61.9)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The subjective acceptance of that which is at the moment and the finding of love within that moment is the greater freedom.</p>
+      <p class="zh">对当下所是的主观接纳，以及在那一刻找到爱，才是更大的自由。</p>
+      <span class="src">—— Session 061 · (61.9)</span>
+    </div>
+    <div class="plain">第三密度给不了"全知的确信"：由于缺乏对宇宙流入的总览，再主观的"知晓"也不是知晓；而无论收集多少信息，第三密度的变貌总会制造异常——所以无证据的主观知晓"在某种程度上是个糟糕的朋友"。更大的自由不是知道得更多，而是接纳当下所是、并在其中找到爱。</div>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">被纠偏的一方</span><h4>主观知晓 subjective knowing</h4><p>想在无证据中"确信地知道"。Ra：连主观维度也谈不上知晓——你缺对影响一切催化剂情境的宇宙流入的概览；而且无论信息攒多少，异常总会出现（61.9）。</p></div>
+      <div class="yuan-card"><span class="y-tag">更大自由的一方</span><h4>主观接纳 subjective acceptance</h4><p>接纳此刻所是，并在其中找到爱。这是第三密度真正拿得到的自由，也是 Ra 对发问者概念的"扩展"方向（61.9）。</p></div>
+    </div>
+    <div class="case"><b>老房子的变量：</b>搬进老房子前想拿到"全部信息"——检测报告、邻里背景、十年规划——最后发现永远有查不到的变量。真正住进这个家的，是搬进去之后能"接纳当下并在其中找到爱"的人（61.9：无证据的主观知晓是个糟糕的朋友）。</div>
+    <div class="case"><b>等待诊断结果的两周：</b>有人狂刷文献，越刷越焦虑——信息再多，异常照样出现；有人在一次散步里忽然与"此刻仍活着的自己"和解。后者更接近 Ra 说的更大自由（61.9）。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 06 章 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>身体极性与感觉平衡：冥想是场地，不是工作本身</h2></div>
+  <p class="sec-lead">第三问是身体极性举例，外加一个被 Ra 直接纠正的预设："平衡练习=什么都不做地静坐"。这两问答把疗愈练习从姿势层面拉回到操作层面。</p>
+
+  <div class="card">
+    <h3>身体里的极性</h3>
+    <div class="q">"身体的极性"能举例吗？</div>
+    <div class="quote">
+      <p class="en">Within the body there are many polarities which relate to the balancing of the energy centers of the various bodies of the unmanifested entity.</p>
+      <p class="zh">在身体之内有许多极性，它们与未显化实体的各个身体的能量中心平衡有关。</p>
+      <span class="src">—— Session 061 · (61.10)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Each entity is, of course, a potential polarized portion of an other-self.</p>
+      <p class="zh">当然，每个实体都是另一个自我的一个潜在被极化部分。</p>
+      <span class="src">—— Session 061 · (61.10)</span>
+    </div>
+    <div class="plain">身体自带一对对"可调的旋钮"，探索它们是为疗愈工作服务的；而且别人的存在本身就是你的镜子——每个他人都是你潜在的被极化部分。Ra 没有给出具体的动作处方，这个留白本身值得注意。</div>
+    <div class="case"><b>瑜伽馆的阴阳课：</b>同一张课表上，"阳课"练力量、发热、收缩，"阴课"练舒展、静止、长停留——身体确实带着紧与松、动与静这类极性；Ra 说探索它们"为疗愈工作是好的"（61.10），但没开任何动作清单。</div>
+    <div class="case"><b>性格相反的搭档：</b>一个爱冒险一个求稳的创业搭档，常常互相看不顺眼——按 Ra 的视角，每个实体都是"另一个自我的潜在被极化部分"（61.10）：对方就是你没走的那一极，照出的是你自己的偏斜。</div>
+  </div>
+
+  <div class="card">
+    <h3>感觉平衡练习：四步缺一不可</h3>
+    <div class="q">发问者的预设：平衡身体所有感觉的练习，应该是某种"不活动"，比如冥想或沉思——对吗？</div>
+    <div class="quote">
+      <p class="en">This is largely incorrect. The balancing requires a meditative state in order for the work to be done.</p>
+      <p class="zh">这在很大程度上是不正确的。平衡工作需要冥想状态才能进行。</p>
+      <span class="src">—— Session 061 · (61.11)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Then whatever is lacking in the balanced sensation is, as in all balancing, allowed to come into the being after the sensation is remembered and recalled in such detail as to overwhelm the senses.</p>
+      <p class="zh">然后，正如所有的平衡一样，在感觉被记住、并回忆到细节压倒感官之后，平衡中所缺失的那部分才被允许进入存有。</p>
+      <span class="src">—— Session 061 · (61.11)</span>
+    </div>
+    <div class="plain">冥想是工作台，不是工作本身：先进入冥想状态，再分析这份感觉在爱与智慧、正面与负面之间偏向哪边，把感觉回忆到细节淹没感官的程度，然后才把缺失的一极放进来。拨动下面的开关，看看缺了哪步会怎样。</div>
+    <div class="cond-row"><div class="name">进入冥想状态<small>工作场地——没有它，工作无法开展</small></div><label class="switch"><input type="checkbox" id="bal1" onchange="updateBalanceSim()"><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">分析失衡倾向<small>审视这份感觉偏向爱还是智慧、正面还是负面</small></div><label class="switch"><input type="checkbox" id="bal2" onchange="updateBalanceSim()"><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">回忆到细节压倒感官<small>把感觉按原样召回——细节不够，缺失的一极进不来</small></div><label class="switch"><input type="checkbox" id="bal3" onchange="updateBalanceSim()"><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">允许缺失的一极进入<small>让失衡中缺少的那一边进入存有</small></div><label class="switch"><input type="checkbox" id="bal4" onchange="updateBalanceSim()"><span class="slider"></span></label></div>
+    <div id="condResult">拨动开关，看看一次完整的感觉平衡练习需要哪些条件（依据 61.11）。</div>
+    <div class="case"><b>只记得"他很过分"：</b>想起一场争吵时只有一句结论——这没到"细节压倒感官"的回忆。Ra 要求的是把当时的语气、光线、自己胸口的感觉全部召回，然后才补进"我当时也在防御"这一缺失的极（61.11）。</div>
+    <div class="case"><b>冥想 App 的边界：</b>引导语带你"观察呼吸、不加评判"——那只是完成了进入冥想状态这一步；按 61.11，接下来的分析失衡与补缺才是平衡工作本身，发呆发得再久也替代不了。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 07 章 ============ -->
+<section class="chapter" id="s7">
+  <div class="sec-head"><span class="num">07</span><h2>仪式与额叶：这场窄带通讯是如何运转的</h2></div>
+  <p class="sec-lead">集会尾声的两个问题把镜头拉回通讯本身：为什么器具要对齐、床单一个小皱褶都影响接收？大脑额叶又是干什么用的？Ra 的回答把"玄学摆设"还原成了可理解的技术细节。</p>
+
+  <div class="card">
+    <h3>窄带接触：高度敏感的代价与好处</h3>
+    <div class="q">为什么器具要相对器皿精确对齐？为什么床单一个小皱褶就会造成接收问题？</div>
+    <div class="quote">
+      <p class="en">This contact is narrow-band. The instrument is highly sensitive.</p>
+      <p class="zh">这个接触是窄带的。这个器皿高度敏感。</p>
+      <span class="src">—— Session 061 · (61.12)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Therefore, the area above the entrance into the physical complex of this instrument must be kept clear to avoid discomfort to the instrument…</p>
+      <p class="zh">因此，这个器皿身体复合体入口上方的区域必须保持畅通，以免器皿不适……</p>
+      <span class="src">—— Session 061 · (61.12)</span>
+    </div>
+    <div class="plain">窄带接触意味着：信号通道极窄，稍有扰动就出杂音——所以进入良好、可用度越来越高，也所以一个小皱褶都算事。出神对身体并非没有代价，器皿重新进入身体时，入口上方必须畅通，免得不适。</div>
+    <div class="case"><b>老收音机的边缘台：</b>调一个频率边缘的远地电台，天线偏一度就全是杂音——窄带接触正是如此。器具对齐相当于把天线调准：不是迷信摆设，是在给一条极窄的信号通道清障（61.12）。</div>
+    <div class="case"><b>ICU 的床头：</b>重症病床的床头从不安装悬垂物、不堆放物品——为的是管路与"再进入"的通路绝对畅通。Ra 要求器皿身体入口上方保持畅通，理由同理：她出神归来、重新进入身体复合体时，那条路必须干净（61.12）。</div>
+  </div>
+
+  <div class="card">
+    <h3>器具与仪式：给器皿的入场券，给小组的发令枪</h3>
+    <div class="q">那些器具（蜡烛、帽子、床单等）到底起什么作用？</div>
+    <div class="quote">
+      <p class="en">The appurtenances give to the instrument sensory input and mental visualization which aid in the trance beginning. The careful alignment of these is important for the energizing group in that it is a reminder to that support group that it is time for a working.</p>
+      <p class="zh">这些器具给予器皿感官输入与心智可视化，帮助出神开始；而它们的仔细对齐，对充能小组很重要——因为它提醒支持小组：是时候进行工作了。</p>
+      <span class="src">—— Session 061 · (61.12)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The ritualistic behaviors are triggers for many energies of the support group. You may have noticed more energy being used in workings as the number has increased due to the long-term, shall we say, effect of such ritualistic actions.</p>
+      <p class="zh">仪式性行为是支持小组许多能量的触发器。你们可能已注意到，随着次数增加，工作中使用的能量也更多了——这是此类仪式行为的长期效果。</p>
+      <span class="src">—— Session 061 · (61.12)</span>
+    </div>
+    <div class="plain">对齐有两重作用：对器皿，是帮助出神开始的感官锚点；对小组，是"该工作了"的触发信号——仪式长期重复，能量随次数增加。但 Ra 补了一句重要的限定：这套安排是为这个特定系统、尤其为这位器皿设计的，帮不了另一个小组（61.12）。</div>
+    <div class="case"><b>乐团开演前调音：</b>双簧管给出标准音，全体各自校准——对齐不是强迫症，而是让整个系统切换进"准备工作"状态的触发器（61.12：提醒支持小组"该工作了"）。</div>
+    <div class="case"><b>茶师的固定顺序：</b>温器、量粉、注水，一步不乱——动作本身不产生茶味，但它把身心拨进"要做事了"的频道。不过这套顺序是为此人此境长出来的，照搬给别人未必有用（61.12：这套安排帮不了另一个小组）。</div>
+  </div>
+
+  <div class="card">
+    <h3>额叶：喜悦的座位，行家的门户</h3>
+    <div class="q">大脑额叶的用途是什么？激活它需要什么条件？</div>
+    <div class="quote">
+      <p class="en">The primary mental/emotive condition of this large area of the so-called brain is joy, or love, in its creative sense.</p>
+      <p class="zh">这个所谓大脑的大区域，其主要的心智/情绪状态是喜悦，或创造意义上的爱。</p>
+      <span class="src">—— Session 061 · (61.13)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This is the area which, working through the trunk and root of mind, makes contact with intelligent energy and, through this gateway, intelligent infinity.</p>
+      <p class="zh">这是行家所触及的区域；它经心智的树干与根运作，与智能能量接触，并经由这个门户，与智能无限接触。</p>
+      <span class="src">—— Session 061 · (61.13)</span>
+    </div>
+    <div class="plain">额叶在第四密度会有多得多的用途（61.13）；它的情绪底色是喜悦与创造性的爱——此前谈过的金字塔相关能量（疗愈、学习、建造、充能）都在这个区域。条件不是知识，而是那种创造之爱先到位。</div>
+    <div class="case"><b>心流写作的两小时：</b>不是靠意志力硬压出字，而是"喜悦/创造意义上的爱"先上线，大块脑区才整体投入——这更接近 Ra 描述的额叶工作条件（61.13），而"逼自己坐满两小时"只是外壳。</div>
+    <div class="case"><b>即兴合奏的"不是我弹"：</b>乐手即兴时常说"音乐在流，不是我在弹"——行家经由心智的树干与根接入智能能量、经此门户接入智能无限（61.13）；日常创作者摸到的，是同一扇门的最浅一格。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 08 章 ============ -->
+<section class="chapter" id="s8">
+  <div class="sec-head"><span class="num">08</span><h2>收官：术语回顾、金句与伏笔</h2></div>
+  <p class="sec-lead">这一集没有惊天动地的宣告，却把"身体"这件最日常的事讲成了修行现场：周期是天气，催化剂效率是伞，身体症状是没做完的功课的存档。先翻一翻本集术语卡，再看 Ra 留下的话。</p>
+
+  <div class="card">
+    <h3>本集术语回顾（点击卡片翻面）</h3>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">催化剂</div><div class="sub">catalyst</div><div class="tap">点击翻面</div></div><div class="back">不是起作用的那一方，而是促成学习发生的中介。本集关键：心智与灵性没用完的催化剂，会被交给身体处理。<em>就像没人签收的快递，最后堆在身体这个前台。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">流入能量</div><div class="sub">instreamings</div><div class="tap">点击翻面</div></div><div class="back">在投生时刻给定、按可预测周期变化的能量注入；另有不规律的宇宙流入，不时影响敏感化的心/身/灵复合体。<em>像出厂时写好的潮汐表——是天气，不是考卷。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">生物节律</div><div class="sub">biorhythms</div><div class="tap">点击翻面</div></div><div class="back">Ra 说投生时给定的四类节律"在某种程度上为你们的人群所知"，即生物节律；之外还有约十八昼夜一轮的行家魔法门户周期。<em>手环上的深睡曲线，是它的现代 cousins。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">通灵攻击</div><div class="sub">psychic attack</div><div class="tap">点击翻面</div></div><div class="back">针对器皿的外部干扰，本集仍在继续，但目前只在造成身体不适的变貌层面有效（61.4）。<em>像总来敲门推销的人——门没锁死，但他暂时只能按门铃。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">窄带接触</div><div class="sub">narrow-band contact</div><div class="tap">点击翻面</div></div><div class="back">只在极窄频段上成立的通讯；器皿高度敏感，进入良好，但也容易被小扰动干扰——床单的皱褶都算。<em>边缘频率的电台：清晰与杂音只差一度天线角。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">行家</div><div class="sub">adept</div><div class="tap">点击翻面</div></div><div class="back">有意修习灵性工作的人；其"魔法门户周期"约十八昼夜一轮，触及的正是额叶那片区域。<em>像拿到了一条私有入口的常客——但入口的钥匙是创造之爱。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">智能能量与智能无限</div><div class="sub">intelligent energy / intelligent infinity</div><div class="tap">点击翻面</div></div><div class="back">额叶区域经心智的树干与根先接触智能能量，再经此门户接触智能无限——金字塔的疗愈、学习、建造、充能皆在此区域运作。<em>智能能量像电网，智能无限是发电站本身。</em></div></div>
+    </div>
+  </div>
+
+  <div class="saying">
+    <p class="en">The subjective acceptance of that which is at the moment and the finding of love within that moment is the greater freedom.</p>
+    <p class="zh">对当下所是的主观接纳，以及在那一刻找到爱，才是更大的自由。</p>
+    <span class="src">—— Session 061 · (61.9)</span>
+  </div>
+
+  <div class="card">
+    <h3>告别语</h3>
+    <div class="quote">
+      <p class="en">I am Ra. I leave you in the love and the light of the One Infinite Creator. Go forth, my friends, rejoicing in the power and the peace of the One Infinite Creator. Adonai.</p>
+      <p class="zh">我是 Ra。我在太一无限造物主的爱与光中离开你们。前进吧，我的朋友们，在太一无限造物主的力量与和平中欢欣鼓舞。Adonai。</p>
+      <span class="src">—— Session 061 · (61.14)</span>
+    </div>
+    <p>告别前的叮嘱落在"对齐"上：小组继续在每个层面保持这份一丝不苟，通讯将得以维持（61.14）。</p>
+  </div>
+
+  <div class="card">
+    <h3>本集留下的伏笔</h3>
+    <p>Ra 明说"完全有效率地使用催化剂在你们的层面极其罕见"（61.7），而器皿的身体正是这条规律的活标本——催化剂与功课的关系，是这一集留给后续讨论的开口；额叶与第四密度的关联（61.13）也在此埋下伏笔。</p>
+    <div class="case"><b>给自己列一张对齐清单：</b>固定座位、固定开场动作、固定的一杯茶——但记住 Ra 的限定：这套安排为此系统与器皿设计，帮不了另一个小组（61.12）。你的清单必须从你自己的生活里长出来，抄来的仪式只是道具。</div>
+    <div class="case"><b>"诸事不顺的一天"：</b>先别急着归因水逆。Ra 给出的次序是：周期只是路线图（61.4）；变量是你使用催化剂的效率（61.2）；试试先接纳这个当下并在其中找到一点爱（61.9），再听一听身体想说什么（61.7）。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 061（<code>split/Ra_Session_061.md</code>）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra061-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+/* ===== 第 01 章 · 问答脉络推进器 ===== */
+const MAP_STEPS=[
+{t:'器皿状况',d:'<span class="qa-q">问：器皿的状况如何？能做点什么改善身体吗？（61.1-61.2）</span><b>答：</b>生命能量在改善，但身体变貌明显、身体能量下降。影响身体的有两大因素——投生时给定的、按周期变化的流入能量，以及使用催化剂学习课程（尤其爱的课程）的心智效率；她另有投生前条件带来的额外变貌。'},
+{t:'能量周期',d:'<span class="qa-q">问：你说的"周期性流入的能量"是什么？（61.3）</span><b>答：</b>四类周期在进入投生那一刻被给定，即你们所称的生物节律；另有不规律的宇宙流入会不时影响敏感化的心/身/灵复合体。还有一个约十八昼夜一轮的"行家魔法门户周期"；宇宙模式与月亮、行星、银河太阳及银河能量流节点有关。'},
+{t:'挑时间集会？',d:'<span class="qa-q">问：能否绘制周期图表，把集会安排在最有利的时点？（61.4）</span><b>答：</b>"对那个具体的问题，我们没有回应"——Ra 拒答。他转而限定：周期只在催化剂未被高效使用时起作用，应练习不加过度关注地接受负面或倒退的时期；并通报通灵攻击仍在，但目前只在身体不适层面有效。'},
+{t:'减轻攻击？',d:'<span class="qa-q">问：作为小组，我们能否做点什么减轻攻击、优化通讯？（61.5）</span><b>答：</b>"有帮助的信息已经给出，我们无法进一步说明。"Ra 只留下一句评估：三人组在此刻的第三密度幻象中，彼此处于非凡的和谐之中。'},
+{t:'身体的纪律',d:'<span class="qa-q">问：（Jim 第一问）身体练习中"使用自然功能时爱与智慧的平衡"指什么？（61.6）</span><b>答：</b>与未显化自我有关的功能通常无需平衡；需要检视的是与他人有关的功能——触摸、爱、性生活、渴望陪伴以对抗身体的孤独。一边是爱的过量（须分辨爱谁），一边是过度偏向智慧；目标让身体成为平衡的盟友与工具。'},
+{t:'情绪写进身体',d:'<span class="qa-q">问：（Jim 第二问）能否举例说明情绪如何影响身体？（61.7）</span><b>答：</b>几乎无法笼统而谈，每个实体有自己的编程；但心智与灵性未用完的催化剂会交给身体。三例：器皿手臂手部麻木=未臣服于失去控制；发问者承重肌酸痛=不愿扛投生前的责任；抄写员情感麻木=未使用使其敏感化的催化剂。'},
+{t:'投生的目的',d:'<span class="qa-q">问：你怎能混淆法则之下说这些？投生的目的是否就是无证据中靠思考达成确信？（61.8-61.9）</span><b>答：</b>每个当事人早已知道这些信息，否则我们不能说话；许多提问求的是确认而非信息。而"确信"一词被纠偏：无证据的主观知晓是个糟糕的朋友，对当下所是的主观接纳并在其中找到爱，才是更大的自由。'},
+{t:'极性与平衡',d:'<span class="qa-q">问：（Jim 第三问及追问）身体极性举例？平衡练习就是静坐吗？（61.10-61.11）</span><b>答：</b>身体内许多极性与各身体的能量中心平衡有关，值得为疗愈探索；每个实体都是另一个自我的潜在被极化部分。平衡练习"在很大程度上不正确"——冥想是场地，工作是分析失衡并把感觉回忆到细节压倒感官，再补上缺失的一极。'},
+{t:'仪式与额叶',d:'<span class="qa-q">问：为何器具须精确对齐、床单一皱都影响接收？额叶有何用途？（61.12-61.13）</span><b>答：</b>接触是窄带的，器皿高度敏感；入口上方须畅通以免再进入时不适。器具帮出神开始，仪式提醒支持小组"该工作了"，且此安排帮不了别的小组。额叶在第四密度有更多用途，其心智情绪底色是喜悦/创造之爱，行家由此接触智能能量与智能无限。'},
+{t:'收束',d:'<span class="qa-q">问：还有什么能让器皿更舒适、改善通讯？（61.14）</span><b>答：</b>器皿有些变貌，但每个人都做得好、很尽责；请继续在每个层面保持这份一丝不苟——这将维持通讯。Ra 在太一无限造物主的爱与光中离开，并叮嘱众人「在太一无限造物主的力量与和平中欢欣鼓舞」。Adonai.'}
+];
+initStepper('mapTrack','mapDetail','mapPrev','mapNext',MAP_STEPS);
+
+/* ===== 第 03 章 · 归类练习 ===== */
+initSorter('sorter1',[
+{a:'加班到十点，饿了点一碗面，吃完就睡',opts:['与未显化自我有关','与他人有关的自然功能','心智/灵性的孤独'],ans:'与未显化自我有关',exp:'吃与睡属于未显化自我的自然功能，通常不需要平衡（61.6）。'},
+{a:'和朋友道别时轻轻拥抱一下',opts:['与未显化自我有关','与他人有关的自然功能','心智/灵性的孤独'],ans:'与他人有关的自然功能',exp:'触摸是 Ra 点名的与他人有关的自然功能，值得在日常生活中检视爱与智慧的平衡（61.6）。'},
+{a:'一个人在家心里发空，刷手机到凌晨两点',opts:['与未显化自我有关','与他人有关的自然功能','心智/灵性的孤独'],ans:'与他人有关的自然功能',exp:'这是渴望陪伴以对抗"身体的孤独"——与他人有关，需要检视；不过要先分清这份孤独究竟是身体的、心智情绪的还是灵性的（61.6）。'},
+{a:'心里积着委屈没人能懂，身边再热闹也缓不过来',opts:['与未显化自我有关','与他人有关的自然功能','心智/灵性的孤独'],ans:'心智/灵性的孤独',exp:'这是心智/情绪或灵性层面的孤独，不属于身体的自然功能范畴——Ra 明确把两种孤独区分开（61.6）。'},
+{a:'把亲密关系从生活里"理性地省略掉"',opts:['与未显化自我有关','与他人有关的自然功能','心智/灵性的孤独'],ans:'与他人有关的自然功能',exp:'性生活被 Ra 点名为与他人有关的自然功能；从这类需求中退出同样要平衡——警惕过度偏向智慧（61.6）。'}
+]);
+
+/* ===== 第 06 章 · 感觉平衡模拟器 ===== */
+function updateBalanceSim(){
+  var b1=document.getElementById('bal1').checked,
+      b2=document.getElementById('bal2').checked,
+      b3=document.getElementById('bal3').checked,
+      b4=document.getElementById('bal4').checked,
+      el=document.getElementById('condResult');
+  if(b1&&b2&&b3&&b4){
+    el.className='';
+    el.textContent='四步齐备：在冥想状态中分析失衡，把感觉回忆到细节压倒感官，缺失的一极被允许进入存有——平衡完成。这正是 Ra 描述的全部工作：冥想是场地，分析与补缺才是工作。(61.11)';
+  }else if(!b1){
+    el.className='fail';
+    el.textContent='缺第一步：没有冥想状态，工作无法开展——Ra 先肯定了这一半，才纠正"只静坐就够了"的后一半。(61.11)';
+  }else if(!b2){
+    el.className='fail';
+    el.textContent='缺第二步：还没分析失衡倾向——先看清这份感觉在爱与智慧、正面与负面之间偏向哪边，再动手。(61.11)';
+  }else if(!b3){
+    el.className='fail';
+    el.textContent='缺第三步：感觉没被回忆到细节压倒感官的程度——只记得"他很过分"这样的结论是不够的。(61.11)';
+  }else{
+    el.className='fail';
+    el.textContent='只差最后一步：缺失的一极还没被允许进入存有——把它放进来，平衡才算完成。(61.11)';
+  }
+}
+
+/* ===== 第 08 章 · 术语卡翻面 ===== */
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+renderPath();
+</script>
+</body>
+</html>

@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 022 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 022 · 交互式学习模块</h1>
+  <p class="sub">这一集给第二个主周期收尾：三十四万五千个化身实体里只有约一百五十个可收割，而这批人选择留下；随后 Ra 交代亚特兰蒂斯的呼唤如何被回应、又如何被扭曲，并以一句校准收束——只有一条法则，那就是一的法则。</p>
+  <div class="tagline">6 个主题 · 6 个学习步骤 · 21 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 器皿的两问</a>
+<a href="#s3">③ 生命期骤降</a>
+<a href="#s4">④ 收成与关切</a>
+<a href="#s5">⑤ 亚特兰蒂斯的教训</a>
+<a href="#s6">⑥ 只有一条法则</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>先看这一集在收哪个尾、开了哪个头，例行问答可跳过</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>器皿的两问</b><span>焚香气味与集会后的健康：接触在无意识层如何融合</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>生命期为何骤降</b><span>从七百年到不足百年：责任法则、好战与荣誉/责任之道</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>三十四万五千里的 150</b><span>极小的收成、留下的那一群，以及联邦的关切与等待</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>亚特兰蒂斯的教训</b><span>两次直接接触、两个成立条件，以及 Ra 自己的那笔账</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官：只有一条法则</b><span>那句校准、金句本集，以及伏笔指向的第三个主周期</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：这一集在问什么</h2></div>
+  <p class="sec-lead">本集是一段历史叙事的收尾。发问者在 (22.3) 说明了自己的计划：先把第二个主周期的结束问清楚，然后才谈第三个也是最后一个主周期。所以他这一集问的全是「盘点」类问题——生命期、人口、收成；而最后绕回亚特兰蒂斯，是为了弄清一件更贴身的事：联邦当年为什么回应、又为什么错。开头还有两个属于器皿的私人问题，Ra 借它们讲清了接触的机制。</p>
+  <div class="card">
+    <h3>问答脉络：从器皿的两问走到亚特兰蒂斯</h3>
+    <p>七个问答群，前半是盘点数字，后半是交代立场。点击节点看每一段在做什么。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="qaTrack"></div>
+      <div class="flow-detail" id="qaDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="qaPrev">← 上一步</button> <button class="tri-btn" id="qaNext">下一步 →</button></div>
+    </div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 私人问题 · 后勤</span></summary>
+  <div class="body">
+    <p><b>(22.1) 焚香气味：</b>器皿在一天中不同时间、不同地点闻到焚香。Ra 说这是无意识层传来的象征性信号，机制见第 02 章。</p>
+    <p><b>(22.2) 集会之后更健康：</b>器皿随着时间推移感觉越来越好。Ra 说这是该实体自由意志的功能，并提到它开始接受自我设定的限制，说明见第 02 章。</p>
+    <p><b>(22.29) 器皿照料：</b>器皿状况良好；工作圈中若有某个（或某些）实体不完全有意识，维持清晰连接会稍微不那么容易；圈中实体的能量有助于增强这次连接的生命力。</p>
+    <p><b>(22.0)/(22.29) 开场与收尾：</b>以「在无限造物主的爱与光中」致意开场，以「向前去吧，在太一造物主的大能与和平中欢欣鼓舞」作结（Adonai）。</p>
+  </div></details>
+  <div class="case"><b>开会先清掉托付的事：</b>同事托你在例会上带两个小问题，你照做——先问完，再进入正题。本集开头就是这样：发问者先把器皿的两个私人问题「问掉」，然后才转向历史叙事的主线。</div>
+  <div class="case"><b>复盘会上的分段收口：</b>项目复盘时主持人说：「我先把上一阶段的遗留问题结掉，再讲最后一个阶段。」这正是发问者 (22.3) 的原话结构——先澄清第二个主周期的结束，再谈第三个也是最后一个主周期。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>器皿的两问：接触在无意识层融合，祈祷为何更有效</h2></div>
+  <p class="sec-lead">两个问题表面是私事——为什么闻到焚香、为什么集会之后更健康。Ra 却把它们讲成了两件普遍的事：出神通讯的双方正在无意识层慢慢长到一起；以及同一句祈祷，进入心智的层级不同，效力就不同。</p>
+  <div class="card">
+    <h3>气味是符号：双方正在「相融」</h3>
+    <div class="q">器皿想知道，为什么她在一天中不同时间、不同地点会闻到焚香的气味？</div>
+    <div class="quote">
+      <p class="en">This instrument has spent a lifetime in dedication to service.</p>
+      <p class="zh">这个器皿一生都在致力于服务。</p>
+      <span class="src">—— Session 022 · (22.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Each time, as you would put it, that we perform this working our social-memory-complex-vibrational distortion meshes more firmly with this instrument's unconscious distortions towards service.</p>
+      <p class="zh">每一次——用你们的说法——当我们进行这项工作时，我们的社会记忆复合体振动变貌就更牢固地与这个器皿朝向服务的无意识变貌相咬合。</p>
+      <span class="src">—— Session 022 · (22.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">there are signals sent from the unconscious in a symbolic manner.</p>
+      <p class="zh">会有信号以象征的方式从无意识中发出。</p>
+      <span class="src">—— Session 022 · (22.1)</span>
+    </div>
+    <div class="plain">Ra 与器皿不是两个隔开的个体在传话：每次工作都让双方的振动变貌咬合得更紧，而气味只是这层无意识变化溢出到意识层面的一个符号。</div>
+    <div class="analogy"><b>像老搭档的默契：</b>合作三年之后，你还没说完对方已经把手上的工具递过来了。这种默契不是签合同签出来的，而是每次共事都在加深的耦合——Ra 说的是同一件事的无意识版本。</div>
+    <div class="case"><b>配对演出的乐手：</b>一支长期同台的钢琴与小提琴组合，指挥换了、曲目换了，但两人之间的呼吸节奏越来越像同一个人。他们本人说不清这种变化从哪一刻开始——因为它发生在练习之外的地方。本集 Ra 说这种融合发生在「心智向下穿越至意识根源」的层面，双方都不必有意识地觉察。</div>
+  </div>
+  <div class="card">
+    <h3>同一句祈祷，为什么在出神中更管用</h3>
+    <div class="q">第二个问题：为什么她在这些集会之后感觉更健康，而且随着时间推移越来越好？</div>
+    <div class="quote">
+      <p class="en">This is a function of the free will of the entity.</p>
+      <p class="zh">这是该实体自由意志的一项功能。</p>
+      <span class="src">—— Session 022 · (22.2)</span>
+    </div>
+    <div class="quote">
+      <p class="en">which then goes directly into the unconscious level, thus more critically affecting the communication from the spiritual complex.</p>
+      <p class="zh">它随后直接进入无意识层面，从而更关键地影响着来自灵性复合体的通讯。</p>
+      <span class="src">—— Session 022 · (22.2)</span>
+    </div>
+    <div class="quote">
+      <p class="en">this entity has begun, due to this working, to accept certain limitations which it placed upon itself in order to set the stage for services such as it now performs.</p>
+      <p class="zh">由于这项工作，这个实体已开始接受它为自己设定的某些限制——那些限制本是它为「搭起如今这类服务的舞台」而设下的。</p>
+      <span class="src">—— Session 022 · (22.2)</span>
+    </div>
+    <div class="plain">关键不在祈祷的内容，而在它进入了哪一层：在清醒状态下它停在意识层，出神状态下它直达无意识层，所以对通讯的影响更关键；而接受自己当初设下的限制，又反过来帮身体关于疼痛的变貌重新对齐。</div>
+    <div class="analogy"><b>像提需求：</b>把需求写在便签上交给前台，和直接写进配置文件，是两种效力。同一个诉求，到达的层级不同，结果就不同。</div>
+    <div class="case"><b>上台前的固定默念：</b>很多人演讲前会默念同一句话。在紧绷、防备的状态下它只是安慰；但如果你是在彻底放松、放下戒备之后默念，它会真的改变你的临场状态。Ra 说的差别就是这一层——Ra 也强调了「自由意志」：这件事只能由该实体自己意愿，别人代劳无效。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>生命期为何从七百年跌到不足百年：责任法则与好战</h2></div>
+  <p class="sec-lead">发问者先要一个数字：第二个主周期末的平均生命期。Ra 说「平均值会误导」，然后给出原因——不是被惩罚，而是「学到的功课没有活着做出来」的后果。这一章还包含一条重要限定：这种缩短只在个体层面生效，不支配行星或社会复合体。</p>
+  <div class="card">
+    <h3>先把数字说准：平均值会误导</h3>
+    <div class="q">第二个主周期结束时，平均生命期是多少年？</div>
+    <div class="quote">
+      <p class="en">By the end of the second major cycle the life span was as you know it, with certain variations among geographically isolated peoples more in harmony with intelligent energy and less bellicose.</p>
+      <p class="zh">到第二个主周期结束时，生命期已与你们所知的相近，只有些变化出现在地理上孤立的族群身上——他们与智能能量更和谐，也更好战倾向更少。</p>
+      <span class="src">—— Session 022 · (22.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The average is perhaps misleading. To be precise, many spent approximately thirty-five to forty of your years in one incarnation, with the possibility not considered abnormal of a life span approaching one hundred of your years.</p>
+      <p class="zh">平均值或许会误导。确切地说，许多人在一次化身中度过大约三十五到四十个你们的年岁，而接近一百年岁的生命期也被视为正常。</p>
+      <span class="src">—— Session 022 · (22.4)</span>
+    </div>
+    <div class="plain">「平均生命期」这个词本身就有问题：多数人只活三十五到四十岁，但接近百岁也不算异常——真正要用分布去看，而不是一个平均数字。</div>
+    <div class="analogy"><b>像看平均工资：</b>一个平均数既描述不了高薪者，也描述不了多数人；同一家公司里 35 岁退休的人和 90 岁退休的人可以并存，平均值只会把两者抹平。</div>
+  </div>
+  <div class="card">
+    <h3>骤降的因果链</h3>
+    <p>发问者猜「是因为缺乏服务他人」，Ra 回答「部分正确」，然后给出了一条更完整的链。</p>
+    <div class="quote">
+      <p class="en">This is, in part, correct. By the end of the second cycle, the Law of Responsibility had begun to be effectuated by the increasing ability of entities to grasp those lessons which there are to be learned in this density.</p>
+      <p class="zh">这在部分上是正确的。到第二个周期结束时，责任法则已开始产生效力——因为实体们越来越有能力领会这个密度里那些待学的功课。</p>
+      <span class="src">—— Session 022 · (22.5)</span>
+    </div>
+    <div class="quote">
+      <p class="en">the concept of barter having given way in many cases to the concept of money; also, the concept of ownership having won ascendancy over the concept of non-ownership on an individual or group basis.</p>
+      <p class="zh">物物交换的概念在许多情况下已让位于金钱的概念；同样，所有权的概念已在个人或群体的尺度上压过非所有权的概念。</p>
+      <span class="src">—— Session 022 · (22.5)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Without demonstrating the fruits of such learn/teaching the life span became greatly reduced, for the ways of honor/duty were not being accepted.</p>
+      <p class="zh">没有展现出这种学习/教导的果实，生命期便大大缩短，因为荣誉/责任之道不被接受。</p>
+      <span class="src">—— Session 022 · (22.5)</span>
+    </div>
+    <div class="demo-area">
+      <div class="flow-track" id="lifeTrack"></div>
+      <div class="flow-detail" id="lifeDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="lifePrev">← 上一步</button><button class="tri-btn" id="lifeNext">下一步 →</button></div>
+    </div>
+    <div class="plain">缩短不是惩罚：课程被理解了，却没有在实践中活出来，果实就长不出来——荣誉/责任之道不被接受，寿命就跟着掉下来。</div>
+    <div class="case"><b>买了年卡却从不练习：</b>你把健身课的原理听得明明白白，年卡也交了，但一年只去两次。身体不会因为你「知道该怎么练」而变好。Ra 说生命期同理：学习/教导的果实要在实践里长出来，理解本身不算数。</div>
+    <div class="case"><b>小区公共空间变成收费停车场：</b>早年邻里互相借工具、轮流看孩子（物物交换、非所有权）；后来公共空地被划成车位、装道闸、按月收费（金钱与所有权）。同一个院子，人与人的关系被重新定义了。Ra 说的「物物交换让位于金钱、所有权压过非所有权」，就是这种转变在个人与群体两个尺度上的发生过程。</div>
+  </div>
+  <div class="card">
+    <h3>缩短是帮助还是阻碍？两者都对</h3>
+    <div class="q">生命期缩短，是让实体在两次化身之间更有时间回顾错误，还是拖累了他？</div>
+    <div class="quote">
+      <p class="en">The shortening of the life span is a distortion of the Law of One which suggests that an entity not receive more experience in more intensity than it may bear. This is only in effect upon an individual level and does not hold sway over planetary or social complexes.</p>
+      <p class="zh">生命期的缩短是一的法则的一种变貌，它提示：一个实体不应领受超过它所能承载的更多、更强烈的经验。这一点只在个体层面生效，并不支配行星或社会复合体。</p>
+      <span class="src">—— Session 022 · (22.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Thus the shortened life span is due to the necessity for removing an entity from the intensity of experience which ensues when wisdom and love are, having been rejected, reflected back into the consciousness of the Creator without being accepted as part of the self, this then causing the entity to have the need for healing and for much evaluation of the incarnation.</p>
+      <p class="zh">因此，生命期之所以缩短，是出于一种必要：把实体从某种经验的强度中移出来——当智慧与爱被拒绝、未被接纳为自我的一部分而反射回造物主的意识时，就会产生那种强度，进而使该实体需要疗愈，也需要对这次化身做大量评估。</p>
+      <span class="src">—— Session 022 · (22.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">a much longer incarnation in your space/time continuum is very helpful for continuing this intensive work until conclusions have been reached through the catalytic process.</p>
+      <p class="zh">在你们的空间/时间连续体里，一个长得多的化身，非常有助于把这份密集的工作一直做下去，直到通过催化过程得出结论。</p>
+      <span class="src">—— Session 022 · (22.6)</span>
+    </div>
+    <div class="plain">缩短同时是保护与损失：它不让实体承受超过承受力的强度，代价却是功课被截断、只能留到下一次化身。</div>
+    <div class="analogy"><b>像考试中途被请出考场：</b>不是判你作弊，而是你已经无法继续承受这场考试；但在那之前没做完的题，只能等下一场再答。</div>
+    <div class="case"><b>被医生强制停工：</b>连续加班三个月后，医生让你停工休养——理由不是「你做错了什么」，而是你的身心已经受不了那个强度。代价是手上的项目只能中断，有些结论要等下次再谈。Ra 说的是同一层道理，只是尺度换成了一整个化身。</div>
+  </div>
+  <div class="card">
+    <h3>例外：接近九百岁的孤立群体</h3>
+    <div class="q">你说过第二周期末有一个可收割的南美群体，他们的平均生命期有多长？</div>
+    <div class="quote">
+      <p class="en">This isolated group had achieved life spans stretching upwards towards the nine-hundred-year [900-year] life span appropriate to this density.</p>
+      <p class="zh">这个孤立的群体已让生命期向上延伸到接近九百岁——那本是适合这个密度的生命期。</p>
+      <span class="src">—— Session 022 · (22.7)</span>
+    </div>
+    <div class="quote">
+      <p class="en">It is well to remember that at that nexus in space/time great isolation was possible.</p>
+      <p class="zh">最好记得：在那个空间/时间节点上，极大的隔离是可能的。</p>
+      <span class="src">—— Session 022 · (22.8)</span>
+    </div>
+    <div class="plain">行星层面的缩短并不笼罩所有人。地理上的极度隔离，使这一群体得以保住接近这个密度本来面目的生命期——这也印证了上一张卡里的限定：行星影响管不到个体层面。</div>
+    <div class="case"><b>公路修通前后的长寿村：</b>在盘山公路修通、超市开进村口之前，某地老人的作息与饮食几十年不变；修通之后，年轻一代的慢病曲线迅速向城市看齐。Ra 说的「那时极大的隔离是可能的」，在今天的对应物就是这样一条路。</div>
+  </div>
+  <div class="card">
+    <h3>术语卡：这一章的关键词</h3>
+    <p>点击卡片翻看解释。这四个词在本集反复出现，也贯穿全书。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">变貌</div><div class="sub">distortion</div><span class="tap">点击展开</span></div><div class="back">对统一性的任何偏离状态，本身不含贬义。本集有两处关键用法：生命期的缩短是「一的法则的变貌」；而所谓其他法则也只是变貌。<em>比喻：白光过棱镜分成七色——七色都是真的，但都不是白光本身。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">责任法则</div><div class="sub">Law of Responsibility</div><span class="tap">点击展开</span></div><div class="back">本集首次作为「已经开始生效」的因素出现：实体越来越有能力领会这个密度要学的功课时，责任就随之生效——知道了，就要为所知负责。<em>案例：考到驾照之后，你对路上行人的责任就不再和从前一样。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">荣誉 / 责任</div><div class="sub">honor / duty</div><span class="tap">点击展开</span></div><div class="back">Ra 用来指一种「照当行之理去做」的生活取向。本集说生命期大大缩短，正是因为荣誉/责任之道不被接受——不是被禁止，而是没人愿意走。<em>比喻：公司有整套安全规程，却没人照做——规程没被废，只是没被接受。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">学习 / 教导</div><div class="sub">learn / teaching</div><span class="tap">点击展开</span></div><div class="back">Ra 把学习与教导当成同一件事：学到的东西必须在实践里展现出来，才算长出果实。<em>案例：你真的掌握了一项技能，标志是你做得出来，而不是背得出步骤。</em></div></div>
+    </div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>三十四万五千里的 150：收成、留下的人与联邦的关切</h2></div>
+  <p class="sec-lead">这一章是本集的数字与人事：第二周期结束时地球上约有三十四万五千个化身实体，其中可收割的只有约一百五十个。发问者把这一百五十人的去向一路问到底，然后问出一个更重的问题——联邦看到这样的收成，做了什么？答案是：他们「变得关切」，然后什么都没做。</p>
+  <div class="card">
+    <h3>两个数字：345,000 与 150</h3>
+    <div class="q">那时地球上大约总共有多少人（任何时刻以物理形态化身的人数）？其中多少可收割？</div>
+    <div class="quote">
+      <p class="en">I am assuming that you intend to query regarding the number of incarnate mind/body/spirit complexes at the end of the second major cycle, this number being approximately three four five, oh oh oh, three hundred forty-five thousand [345,000] entities.</p>
+      <p class="zh">我假定你想问的是第二个主周期结束时化身的心/身/灵复合体的数量，这个数字大约是三四五、零零零——三十四万五千个实体。</p>
+      <span class="src">—— Session 022 · (22.9)</span>
+    </div>
+    <div class="quote">
+      <p class="en">There were approximately one hundred fifty [150] entities harvestable.</p>
+      <p class="zh">大约有一百五十个实体是可收割的。</p>
+      <span class="src">—— Session 022 · (22.10)</span>
+    </div>
+    <div class="plain">三十四万五千分之 150——Ra 用极为平淡的语气给出这两个数字，连数字都是一个字一个字念出来的；回收率不到千分之零点五。</div>
+    <div class="analogy"><b>像看录取榜：</b>一个三千人的单位只放两个名额，你立刻明白：这不是「谁比较聪明」的问题，而是标准很高、且要看长期积累。</div>
+    <div class="case"><b>街角活下来的那家旧书店：</b>一条街上先后开过几十家书店，最后留下来的通常不是最会算账的那家，而是每天准点开门、几十年不投机的那家。Ra 说可收割的不是最会算计的，而是把爱与理解真正活出来的人——这类「成绩」无法临时冲刺。</div>
+  </div>
+  <div class="card">
+    <h3>那一百五十人选择留下</h3>
+    <div class="q">下一个周期开始时，这一百五十个可收割的实体，就是留下来在地球上工作的人吗？</div>
+    <div class="quote">
+      <p class="en">These entities were visited by the Confederation and became desirous of remaining in order to aid the planetary consciousness.</p>
+      <p class="zh">这些实体受到了星际联邦的拜访，并生出了留下来的渴望，为的是帮助这个行星意识。</p>
+      <span class="src">—— Session 022 · (22.11)</span>
+    </div>
+    <div class="quote">
+      <p class="en">A light being appeared bearing that which may be called a shield of light. It spoke of the oneness and infinity of all creation and of those things which await those ready for harvest.</p>
+      <p class="zh">一个光之存有出现了，携带着可被称为光之盾的东西。它讲述了所有造物的合一与无限，也讲述了那些等待着准备好被收割之人的事物。</p>
+      <span class="src">—— Session 022 · (22.12)</span>
+    </div>
+    <div class="quote">
+      <p class="en">It then allowed a telepathic linkage to progressively show those who were interested the plight of third density when seen as a planetary complex.</p>
+      <p class="zh">然后它允许了一种心电感应连接，逐步向那些感兴趣的人展示：当第三密度被看作一个行星复合体时，它处在怎样的困境中。</p>
+      <span class="src">—— Session 022 · (22.12)</span>
+    </div>
+    <div class="plain">联邦没有劝他们留下：只是把「合一与无限」和「第三密度作为一个行星复合体的困境」摆在他们眼前，留下成了他们自己生出的愿望。</div>
+    <div class="case"><b>看过现场再决定报名：</b>招募援外医生的人从不承诺待遇，只把灾区的现场给你看一段。看过之后签字的人，留下来是因为自己看见了，而不是被说服了——Ra 描述的拜访正是这种「只给看见，不给劝说」的做法。</div>
+  </div>
+  <div class="card">
+    <h3>留下的人是谁：子八度与三个名字</h3>
+    <div class="q">这些实体都留下来了吗？他们当中有我们历史里认识的名字吗？</div>
+    <div class="quote">
+      <p class="en">As a group they stayed. There were those peripherally associated with this culture which did not stay. However, they were not able to be harvested either and so, beginning at the very highest, shall we say, of the sub-octaves of third density, repeated this density.</p>
+      <p class="zh">作为一个群体，他们留下来了。也有一些与该文化只是边缘相关的人没有留下；然而他们同样无法被收割，于是——我们姑且说——从第三密度子八度的最高层级开始，重做了这个密度。</p>
+      <span class="src">—— Session 022 · (22.13)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Many of those who have been of a loving nature are not wanderers but those of this particular origin of second cycle.</p>
+      <p class="zh">许多「具有爱之本性」的人并非流浪者，而是来自这第二个周期的特定来源。</p>
+      <span class="src">—— Session 022 · (22.13)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The one known as sound vibration complex, Saint Augustine, is of such a nature. The one known as Saint Teresa of such a nature. The one known as Saint Francis of Assisi of such nature.</p>
+      <p class="zh">被称为声音振动复合体「圣奥古斯丁」的那位，就是这种性质；被称为「圣德蕾莎」的那位也是；被称为「阿西西的圣方济各」的那位也是。</p>
+      <span class="src">—— Session 022 · (22.15)</span>
+    </div>
+    <div class="plain">「有爱之本性」不是流浪者的专利——许多这样的人其实是第二周期留下来、在第三密度子八度最高层级重做的原住民；Ra 点了三个修道背景的名字作为实例。</div>
+    <div class="analogy"><b>像同年级的 A/B 班：</b>课程内容一样，只是起点不同。没达标的人不是换到别的年级，而是在同一密度里从更高的层级再走一遍。</div>
+    <div class="case"><b>社区里那位总在帮忙的老人：</b>小区里有人几十年如一日帮忙看孩子、代收快递，你可能一直以为他是新搬来的热心人。按 Ra 的说法，这类「有爱之本性」的人往往不是外来的，而是本地留下来的——身份与来源并不是同一件事。</div>
+  </div>
+  <div class="card">
+    <h3>「我们变得关切」——然后只等呼唤</h3>
+    <div class="q">周期在两万五千年前结束时，联邦对收割的缺乏有什么反应？是否立即采取了行动？</div>
+    <div class="quote">
+      <p class="en">We became concerned.</p>
+      <p class="zh">我们变得关切。</p>
+      <span class="src">—— Session 022 · (22.16)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The Council of Saturn acted only in allowing the entry into third density of other mind/body/spirit complexes of third density, not wanderers, but those who sought further third-density experience. This was done randomly so that free will would not be violated, for there was not yet a call.</p>
+      <p class="zh">土星议会只做了一件事：允许其他第三密度的心/身/灵复合体进入第三密度——不是流浪者，而是那些寻求更多第三密度体验的实体。这件事是随机进行的，好让自由意志不被侵犯，因为那时还没有呼唤。</p>
+      <span class="src">—— Session 022 · (22.17)</span>
+    </div>
+    <div class="plain">Ra 不掩饰关切，但关切不等于行动：唯一被允许的动作是「随机」引入想来第三密度体验的实体——随机正是为了让自由意志不被侵犯，因为还没有呼唤。</div>
+    <div class="analogy"><b>像没有编制的招聘：</b>在没有具体岗位需求时，HR 只能从池子里随机抽人补位，不能按「谁能解决问题」定向挑人——定向挑选就等于替岗位做决定了。</div>
+    <div class="timeline">
+      <div class="tl-item"><div class="t">25,000 年前 · 第二主周期结束</div><div class="d">地球上约三十四万五千个化身实体，可收割者约一百五十个。发问者问联邦的反应，Ra 只答一句：「我们变得关切。」</div></div>
+      <div class="tl-item"><div class="t">周期末 · 光之存有的拜访</div><div class="d">一个携光之盾的光之存有出现，讲述合一与无限、爱在实践中之美，并以心电感应展示第三密度作为行星复合体时的困境。这一百五十人因此渴望留下。</div></div>
+      <div class="tl-item"><div class="t">周期之后 · 土星议会</div><div class="d">仅允许其他第三密度的心/身/灵复合体（不是流浪者，而是想继续第三密度体验者）随机进入。随机是为了不侵犯自由意志——因为那时还没有呼唤。</div></div>
+      <div class="tl-item"><div class="t">呼唤出现 · 亚特兰蒂斯</div><div class="d">呼唤来自亚特兰蒂斯人，是为了理解、带着帮助其他自我的变貌。此时亚特兰蒂斯尚未技术化，联邦成员只出现在已达到某种哲学理解层次的人面前。</div></div>
+      <div class="tl-item"><div class="t">回应方式 · 通过管道</div><div class="d">联邦所采取的行动，正是本集此刻正在发生的事：通过管道把信息印入。后来的困难说明，这次回应里既有帮助，也含着一个天真的前提。</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>呼唤来自亚特兰蒂斯</h3>
+    <div class="q">谁（或哪个群体）发出了这个呼唤，联邦又做了什么？</div>
+    <div class="quote">
+      <p class="en">The calling was that of Atlanteans. This calling was for what you would call understanding with the distortion towards helping other-selves. The action taken is that which you take part in at this time: the impression of information through channels, as you would call them.</p>
+      <p class="zh">呼唤来自亚特兰蒂斯人。这呼唤所求的是你们所谓的理解，带着朝向帮助其他自我的变貌。所采取的行动，正是你们此刻参与其中的这件事：通过管道——如你们所称——把信息印入。</p>
+      <span class="src">—— Session 022 · (22.19)</span>
+    </div>
+    <div class="plain">呼唤的动机不是「求救」，而是「想理解」；联邦的回应也不是替他们解决问题，只是把信息印入管道——就是本集正在发生的这件事。</div>
+    <div class="case"><b>只发文档、不替你动手：</b>一家工具公司要等到收到足够多具体而真实的需求来信，才会开一条产品线；而开出来的形式往往只是一份文档与一批示例。这个「给信息、不给结果」的分寸，正是 Ra 说的回应方式——信息进来了，功课还得自己做。</div>
+  </div>
+  <div class="card">
+    <h3>术语卡：这一章的四个词</h3>
+    <p>点击卡片翻看解释。这一章的名词密度最高，先把直觉建立起来。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">收割</div><div class="sub">harvest</div><span class="tap">点击展开</span></div><div class="back">一个密度的学业完成时，把那些在爱与理解上达标、可以进入下一密度的实体「收上来」。本集的数字是三十四万五千分之 150。<em>比喻：不是排名，而是门槛——过线的人走过去，没过的人留级。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">流浪者</div><div class="sub">wanderer</div><span class="tap">点击展开</span></div><div class="back">为了服务而从更高密度自愿降入第三密度的实体。本集有一个重要澄清：许多「有爱之本性」的人并非流浪者，而是第二周期就留下来的人。<em>案例：不是所有外派来的同事都是志愿者，有些是本地招募的老员工。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">社会记忆复合体</div><div class="sub">social memory complex</div><span class="tap">点击展开</span></div><div class="back">一群实体在意识上整合为一个整体，共享记忆与振动特征。本集说 Ra 的「社会记忆复合体振动变貌」在每次工作时与器皿咬合得更紧。<em>比喻：一支乐队练到不用看人也能合拍，那已经不只是四个人。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">子八度音程</div><div class="sub">sub-octave</div><span class="tap">点击展开</span></div><div class="back">Ra 用来描述同一密度内部的层级结构。本集说未能收割的边缘成员「从第三密度子八度的最高层级开始」重做这个密度——不换密度，只换起点。<em>比喻：同年级的 A 班与 B 班：内容相同，起跑线不同。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">土星议会</div><div class="sub">Council of Saturn</div><span class="tap">点击展开</span></div><div class="back">本集出现的决策机构。在「还没有呼唤」的情况下，它只允许其他第三密度实体随机进入，以此保证自由意志不被侵犯。<em>比喻：一个只按流程办事的董事会——关键不在它多善意，而在它不越界。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">平方法则</div><div class="sub">Law of Squares</div><span class="tap">点击展开</span></div><div class="back">指一群人的呼唤不是简单相加，而以其「平方」克服不愿寻求者的整合阻力。注意本集末尾 Ra 的校准：它也是变貌，不是另一条法则。<em>比喻：一群人的声音叠加后量级变化——足够一致的集体意图会盖过其余人的冷漠。</em></div></div>
+    </div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>亚特兰蒂斯的教训：天真的成员与两个成立条件</h2></div>
+  <p class="sec-lead">这是本集的落点。呼唤被回应之后，联邦除了通过管道传信息，还做了直接接触——而发问者复述的画面被 Ra 判为「正确，但有一个例外」。更重的是接下来那句：Ra 把自己算进了当年的天真成员里，并说他们至今仍在补偿。</p>
+  <div class="card">
+    <h3>起初不是技术：技术是被请求出来的</h3>
+    <div class="q">亚特兰蒂斯的技术进步是因为这个呼唤吗？他们是否也拿到了技术信息，才成长为高度技术化的社会？</div>
+    <div class="quote">
+      <p class="en">Not at first. At about the same time as we first appeared in the skies over Egypt and continuing thereafter, other entities of the Confederation appeared unto Atlanteans who had reached a level of philosophical understanding, shall we misuse this word, which was consonant with communication to encourage and inspire studies in the mystery of unity.</p>
+      <p class="zh">起初并非如此。大约在我们首次出现在埃及上空的同时并在此后持续，星际联邦的其他实体出现在那些已达成某种哲学理解层次的亚特兰蒂斯人面前——「哲学理解」这个词我们姑且误用一下——这种理解与通讯相称，用来鼓励和启发对合一奥秘的研究。</p>
+      <span class="src">—— Session 022 · (22.21)</span>
+    </div>
+    <div class="quote">
+      <p class="en">However, requests being made for healing and other understandings, information was passed having to do with crystals and the building of pyramids as well as temples, as you would call them, which were associated with training.</p>
+      <p class="zh">然而，由于出现了对疗愈及其他理解的请求，有关水晶、以及金字塔和你们所谓与训练相关的庙宇之建造的信息，就被传递了。</p>
+      <span class="src">—— Session 022 · (22.21)</span>
+    </div>
+    <div class="plain">起初给的是「合一奥秘」层面的启发；技术是后来被「请求」出来的——先是疗愈与其他理解，然后才轮到水晶与金字塔/庙宇。</div>
+    <div class="analogy"><b>像开源项目的漂移：</b>项目起初只教「这个思路为什么成立」；用户不断提需求，于是维护者开始提供现成脚本、模板，最后项目变成了工具箱，而最初那点「为什么」已经没人问了。</div>
+    <div class="case"><b>健身课从原理滑向补剂清单：</b>你本来只想知道「怎么练才不容易受伤」，练了三个月后开始要一份「快速见效的补剂清单」。信息从原理滑向捷径，往往不是给的人主动，而是被问的人一步步给的——Ra 说的正是这个顺序。</div>
+  </div>
+  <div class="card">
+    <h3>与埃及的不同：学习之庙宇，而非神坛</h3>
+    <div class="q">这种训练与对埃及人进行的入门训练是同一类型吗？庙宇里是否有我们所谓的祭司？</div>
+    <div class="quote">
+      <p class="en">Therefore the temples were temples of learning rather than the attempt being made to totally separate and put upon a pedestal the healers.</p>
+      <p class="zh">因此那些庙宇是学习之庙宇，而不是试图把疗愈者完全隔离出来、供上神坛的做法。</p>
+      <span class="src">—— Session 022 · (22.22)</span>
+    </div>
+    <div class="quote">
+      <p class="en">You would not call them priests in the sense of celibacy, of obedience, and of poverty. They were priests in the sense of those devoted to learning.</p>
+      <p class="zh">你们不会在独身、服从与贫穷的意义上称他们为祭司。他们是「献身于学习」意义上的祭司。</p>
+      <span class="src">—— Session 022 · (22.23)</span>
+    </div>
+    <div class="quote">
+      <p class="en">There were visitations from time to time but none of importance in the, shall we say, historical passage of events in your space/time continuum.</p>
+      <p class="zh">偶尔会有拜访，但在你们空间/时间连续体——我们姑且说——事件的历史进程中，没有一次是重要的。</p>
+      <span class="src">—— Session 022 · (22.24)</span>
+    </div>
+    <div class="plain">亚特兰蒂斯的社会复合体更精妙、更少矛盾与野蛮，所以那里的庙宇是「学习之庙宇」，没有把疗愈者供上神坛；Ra 也顺带说明：传信息的主要方式仍是管道，直接拜访次数不多，且都不足以改变历史进程。</div>
+    <div class="analogy"><b>两种技术分享会：</b>一种由架构师单向布道，散场后大家围着拍照；另一种是圆桌研讨，谁都可以上台讲自己踩过的坑。Ra 说亚特兰蒂斯更接近后者，埃及更接近前者。</div>
+    <div class="case"><b>医院里的两种带教：</b>有的科室把主任医生的判断当成不可质疑的结论，新人只能照抄；有的科室每周开一次「本周谁的判断被推翻了」讨论会。前者培养的是崇拜，后者培养的是判断力——Ra 用「把疗愈者供上神坛」与「学习之庙宇」区分了这两种环境。</div>
+  </div>
+  <div class="card">
+    <h3>困难从哪里来：学习与权力合流</h3>
+    <div class="q">那困难是怎么出现的？这些拜访又需要什么条件才能发生？</div>
+    <div class="quote">
+      <p class="en">The difficulties became apparent as those trained in this learning began to attempt to use crystal powers for those things other than healing, as they were involved not only with learning but became involved with what you would call the governmental structure.</p>
+      <p class="zh">当那些在这套学习中受训的人开始试图把水晶力量用于疗愈之外的事物时，困难就变得明显了——因为他们不只参与学习，还卷入了你们所谓的政府结构。</p>
+      <span class="src">—— Session 022 · (22.23)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The conditions were two: the calling of a group of people whose square overcame the integrated resistance of those unwilling to search or learn; the second requirement, the relative naïveté of those members of the Confederation who felt that direct transfer of information would necessarily be as helpful for Atlanteans as it had been for the Confederation entity.</p>
+      <p class="zh">条件有两个：其一，一群人的呼唤，其平方克服了那些不愿寻求或学习者所构成的整合阻力；其二，联邦那些成员的相对天真——他们觉得，直接传递信息对亚特兰蒂斯人必然如同对联邦实体自己一样有帮助。</p>
+      <span class="src">—— Session 022 · (22.25)</span>
+    </div>
+    <div class="plain">困难出现在「学习」与「权力」合流的时候——受训者开始把水晶力量用于疗愈之外，并卷入政府结构。而这样的拜访要发生，需要两个条件同时成立：足够的呼唤，与联邦成员的相对天真。</div>
+    <div class="demo-area" style="text-align:left">
+      <div class="cond-row"><div class="name">条件一：一群人的呼唤<small>呼唤的「平方」克服了不愿寻求或学习者的整合阻力</small></div><label class="switch"><input type="checkbox" id="cond1" checked><span class="slider"></span></label></div>
+      <div class="cond-row"><div class="name">条件二：联邦成员的相对天真<small>认为直接传递信息对亚特兰蒂斯人必然同样有帮助</small></div><label class="switch"><input type="checkbox" id="cond2" checked><span class="slider"></span></label></div>
+      <div class="cond-row"><div class="name">条件三：可与之沟通的理解层次<small>受拜访者已达到某种哲学理解层次</small></div><label class="switch"><input type="checkbox" id="cond3" checked><span class="slider"></span></label></div>
+      <div id="condResult"></div>
+    </div>
+    <div class="case"><b>内部工具被接去做考核：</b>一个原本用来帮同事排查问题的脚本，被管理层拿去做成绩监控。写脚本的人没变，工具也没变，用途变了——Ra 说的「水晶力量被用于疗愈之外」，在今天的对应物就是这样。</div>
+    <div class="case"><b>实验室技术被采购到别的用途：</b>一项为治病研发的成像技术，几年后出现在完全不同性质的采购清单上。研究者当初只想着救人的那个场景——这正是 Ra 说的「天真」：以为信息本身会带来同样的结果。</div>
+  </div>
+  <div class="card">
+    <h3>「我们是那个天真的成员」</h3>
+    <div class="q">你是说，这些天真的联邦实体过去也经历过同样的事，所以他们为亚特兰蒂斯做同样的事？</div>
+    <div class="quote">
+      <p class="en">This is correct. We remind you that we are one of the naïve members of that Confederation and are still attempting to recoup the damage for which we feel responsibility.</p>
+      <p class="zh">这是正确的。我们提醒你：我们是那个星际联邦中天真的成员之一，而且仍在试图弥补那些我们认为自己负有责任的损害。</p>
+      <span class="src">—— Session 022 · (22.26)</span>
+    </div>
+    <div class="quote">
+      <p class="en">It is our duty as well as honor to continue with your peoples, therefore, until all traces of the distortions of our teach/learnings have been embraced by their opposite distortions and balance achieved.</p>
+      <p class="zh">因此，继续与你们的人民同行——直到我们教导/学习所留下的所有变貌痕迹都被它们相反的变貌拥抱、达成平衡——这既是我们的职责，也是我们的荣誉。</p>
+      <span class="src">—— Session 022 · (22.26)</span>
+    </div>
+    <div class="plain">Ra 把自己算进「天真成员」里，并说继续与地球人同行、直到自己教导所留下的扭曲痕迹被相反的扭曲拥抱而达成平衡，既是职责也是荣誉——他们在这里，是在还一笔自己认下的账。</div>
+    <div class="case"><b>那位教错了动作的老教练：</b>你照着一位老教练教的动作练了两年，练出了伤。他后来知道了，没有消失，而是每年都来问一次你的恢复情况，还托人给你找康复师。Ra 说的「仍在试图弥补」和「职责也是荣誉」，就是这种立场。</div>
+    <div class="case"><b>认真收尾的开源作者：</b>某个被广泛使用的库因为早期设计的疏忽，给很多下游项目留下了麻烦。作者本可以弃坑，但他一直在改，直到那些历史遗留问题被下游彻底消化为止。Ra 用几乎同样的逻辑，描述自己与人类的关系。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>收官：只有一条法则，以及被请求出来的疗愈</h2></div>
+  <p class="sec-lead">发问者把亚特兰蒂斯的整幅图景复述了一遍，请 Ra 校准。Ra 说「正确，但有一个例外」——而那个例外，是本集最重要的用词纠正：所谓其他法则，都只是这条唯一法则的变貌。收尾之前，Ra 又用亚特兰蒂斯自己的寿命，印证了一遍这一集的主线。</p>
+  <div class="card">
+    <h3>那句校准：只有一个法则</h3>
+    <div class="q">发问者复述：足够多的人朝一的法则走、呼唤被听到、联邦既用管道也直接接触、结果被扭曲——对吗？</div>
+    <div class="quote">
+      <p class="en">This is correct with one exception. There is only one law. That is the Law of One.</p>
+      <p class="zh">这是正确的，只有一个例外：只有一条法则。那就是一的法则。</p>
+      <span class="src">—— Session 022 · (22.27)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Other so-called laws are distortions of this law, some of them primal and most important for progress to be understood.</p>
+      <p class="zh">其他所谓的法则都是这条法则的变貌——其中一些是原初的，对理解进展极为重要。</p>
+      <span class="src">—— Session 022 · (22.27)</span>
+    </div>
+    <div class="quote">
+      <p class="en">There is no multiplicity to the Law of One.</p>
+      <p class="zh">一的法则没有多重性。</p>
+      <span class="src">—— Session 022 · (22.27)</span>
+    </div>
+    <div class="plain">结论对，用词要改：爱之法则、责任法则、平方法则，都是这条唯一法则的变貌。变貌可以极其重要，但不能被当成另一条并列的法则。</div>
+    <div class="analogy"><b>像白光过棱镜：</b>分出来的七色都是真的，但没有一条「红色法则」可以与白光并列——它们只是白光在不同条件下的样子。</div>
+    <div class="case"><b>别把价值观拆成十条互相打架的口号：</b>一家公司如果只有一份价值观，其余都是执行细则，大家的方向就一致；一旦把「客户第一」拆成十条各自成文的口号，员工就会挑对自己有利的那条来引用。Ra 特意纠正这个用词，正是怕读者把变貌当成互相独立的法则来用。</div>
+  </div>
+  <div class="saying">
+    <p class="en">There is only one law. That is the Law of One.</p>
+    <p class="zh">只有一条法则。那就是一的法则。</p>
+    <span class="src">—— Session 022 · (22.27)</span>
+  </div>
+  <div class="card">
+    <h3>回到亚特兰蒂斯：疗愈是「被请求」出来的</h3>
+    <div class="q">亚特兰蒂斯人口的平均生命期是多少？</div>
+    <div class="quote">
+      <p class="en">The average life span, as we have said, is misleading. The Atlanteans were, in the early part of their cultural experience, used to life spans from seventy [70] to one hundred forty [140] years, this being, of course, approximate.</p>
+      <p class="zh">正如我们已说过，平均生命期会误导。亚特兰蒂斯人在其文化经验的早期，习惯的是七十到一百四十岁的生命期——这当然是大致的数字。</p>
+      <span class="src">—— Session 022 · (22.28)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Due to increasing desire for power, the lifetime decreased rapidly in the later stages of this civilization, and thus the healing and rejuvenating information was requested.</p>
+      <p class="zh">由于对权力的渴望日益增长，在这个文明的后期阶段，生命期迅速下降；因此，疗愈与回春的信息才被请求。</p>
+      <span class="src">—— Session 022 · (22.28)</span>
+    </div>
+    <div class="plain">早期 70–140 年，后期因权力欲而迅速下降——而「疗愈与回春」的信息，就是在这个下滑过程中被请求出来的。请求本身，正是失衡已经发生的信号。</div>
+    <div class="analogy"><b>像小区突然装净水器：</b>如果水一直很好，没人会去装净水器；一栋楼集体装净水器，通常意味着水质问题已经先出现了。</div>
+    <div class="case"><b>公司开始采购按摩椅的那一年：</b>创业早期大家作息规律、身体都在线；等到连着几个月通宵大战，行政忽然开始买按摩椅、订体检套餐。这些福利出现的时间点，往往正是问题出现的时间点——Ra 说「疗愈与回春的信息被请求了」，是同一层诊断信号。这也把本集接回了第 03 章：生命期从来不是独立变化的，它跟着一个社会的取向一起动。</div>
+  </div>
+  <div class="card">
+    <h3>归类练习：服务他人，还是服务自我？</h3>
+    <p>(22.5) 说：实体们发现了许多更微妙的方式去展示服务他人或服务自我，后者带着操纵他人的变貌。判断下面每个场景偏向哪一边。</p>
+    <div id="sorterArea"></div>
+  </div>
+  <div class="card">
+    <h3>收尾与伏笔</h3>
+    <div class="q">有没有什么办法能让器皿更舒适，或者我们能为她做些什么？</div>
+    <div class="quote">
+      <p class="en">It is somewhat less easy to maintain clear contact during a time when some or one of the entities in the circle of working is or are not fully conscious.</p>
+      <p class="zh">当工作圈中某个或某些实体并非完全有意识时，要维持清晰的连接会稍微不那么容易。</p>
+      <span class="src">—— Session 022 · (22.29)</span>
+    </div>
+    <div class="quote">
+      <p class="en">We request that entities in the circle be aware that their energy is helpful for increasing the vitality of this contact.</p>
+      <p class="zh">我们请求圈中的实体们意识到：他们的能量有助于增强这次连接的生命力。</p>
+      <span class="src">—— Session 022 · (22.29)</span>
+    </div>
+    <div class="plain">器皿状况良好；真正的变量在工作圈——圈里若有人不完全有意识，清晰连接较难维持，而圈中人的能量本身就在为这次连接的活力添力。Ra 随后道谢，并以 Adonai 作结。</div>
+    <div class="case"><b>会议中的走神：</b>一个四人决策会，其中两人一边开会一边刷手机——会照样开完，流程也没出错，但结论的质量和大家的落地意愿都会下降。Ra 说的是更精微的版本：工作圈里一个人的意识状态，会直接影响连接的清晰度。</div>
+    <div class="plain">读过本集，可以带着两个问题往下走：<b>第一个</b>是发问者自己留下的——(22.3) 说清第二个主周期之后，就要谈第三个也是最后一个主周期；<b>第二个</b>是 (22.26) 那句「直到所有痕迹都被相反的变貌拥抱」：联邦与地球的这笔账，会怎么结？</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+<p>基于 The Ra Contact Session 022（split/Ra_Session_022.md）英文原文制作 · 交互式学习模块</p>
+<p>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文</p>
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra022-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+  {t:'(22.1) 焚香气味',d:'<span class="qa-q">问：为什么器皿在一天中不同时间、不同地点会闻到焚香？</span><b>答：</b>每次工作进行时，我们的社会记忆复合体振动变貌就与该器皿朝向服务的无意识变貌咬合得更紧；气味是这层无意识变化溢出到意识层面的象征性信号。'},
+  {t:'(22.2) 集会之后更健康',d:'<span class="qa-q">问：为什么她在这些集会之后感觉更健康？</span><b>答：</b>这是该实体自由意志的功能：同一句祈祷在出神状态下直接进入无意识层，因而更关键地影响通讯；接受它自我设定的限制，也帮助身体关于疼痛的变貌重新对齐。'},
+  {t:'(22.3)–(22.6) 第二周期末的生命期',d:'<span class="qa-q">问：第二个主周期结束时的平均生命期是多少？骤降是否因为缺乏服务他人？</span><b>答：</b>平均值会误导——多数人一次化身三十五到四十岁，接近百岁也不算异常；骤降「部分」是因为责任法则已开始生效、荣誉/责任之道不被接受；这种缩短只在个体层面生效。'},
+  {t:'(22.7)–(22.10) 345,000 里的 150',d:'<span class="qa-q">问：那时地球上有多少人？多少可收割？</span><b>答：</b>约三十四万五千个化身实体，其中约一百五十个可收割；地理上孤立的南美群体寿命接近九百岁，因为那时的隔离还足够彻底。'},
+  {t:'(22.11)–(22.15) 一百五十人留下',d:'<span class="qa-q">问：这些实体留下来工作了吗？历史上有他们的名字吗？</span><b>答：</b>他们受联邦拜访后渴望留下帮助行星意识；未达标的边缘成员从第三密度子八度的最高层级重做这个密度；Ra 点了圣奥古斯丁、圣德蕾莎、阿西西的圣方济各。'},
+  {t:'(22.16)–(22.20) 关切与呼唤',d:'<span class="qa-q">问：联邦对收割的缺乏有什么反应？呼唤来自谁？</span><b>答：</b>「我们变得关切」——但只允许其他第三密度实体随机进入，因为那时还没有呼唤；呼唤来自亚特兰蒂斯人，回应方式是通过管道把信息印入。'},
+  {t:'(22.21)–(22.29) 亚特兰蒂斯与一条法则',d:'<span class="qa-q">问：亚特兰蒂斯的技术是呼唤带来的吗？</span><b>答：</b>起初给的是合一奥秘的启发，技术是后来被请求出来的；困难起于水晶力量被用于疗愈之外、学习与政府结构合流。Ra 最后校准：只有一条法则，其余都是它的变貌。'}
+]);
+
+initStepper('lifeTrack','lifeDetail','lifePrev','lifeNext',[
+  {t:'① 责任法则生效',d:'<span class="qa-q">问：生命期从七百年掉到不足百年，是因为服务他人不足加剧了吗？</span><b>答：部分是。</b>到第二个周期结束时，责任法则已开始通过实体们越来越有能力领会这个密度里那些待学课程而产生效力——知道了，就要为所知负责。'},
+  {t:'② 好战换了形式',d:'<b>答（续）：</b>实体们发现了许多表现好战本性的方式——不再只是部落或你们所谓的国家，还在个人关系里、彼此之间：物物交换在许多情况下让位于金钱，所有权压过了非所有权。'},
+  {t:'③ 每一课都可被拒绝',d:'<b>答（续）：</b>每个实体都被提供了更微妙的选择——服务他人，或服务自我（带着操纵他人的变貌）。分享、给予、在自由感恩中接受，每一课都可以在实践中被拒绝。'},
+  {t:'④ 生命期大大缩短',d:'<b>答（续）：</b>没有展现出这种学习/教导的果实，生命期便大大缩短——因为荣誉/责任之道不被接受。'},
+  {t:'⑤ 尺度的限定',d:'<b>答（续）：</b>这种缩短只在个体层面生效，不支配行星或社会复合体；它的用意是不让一个实体领受超过其承受能力的强度。所以地理上极度隔离的群体，可以保住接近九百岁的生命期。'}
+]);
+
+document.querySelectorAll('.fn-card').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('open')));
+
+function updateCond(){
+  const a=document.getElementById('cond1').checked;
+  const b=document.getElementById('cond2').checked;
+  const c=document.getElementById('cond3').checked;
+  const el=document.getElementById('condResult');
+  let html='',fail=false;
+  if(!a){
+    fail=true;
+    html='<b>没有呼唤，就不会有下一步。</b>Ra 说得很清楚：那时「还没有呼唤」，所以土星议会只能随机引入其他第三密度实体——即使刚刚经历一场几乎落空的收割，定向出手依然不被允许。自由意志比同情更强。';
+  }else if(!c){
+    fail=true;
+    html='<b>缺了可沟通的理解层次，呼唤与回应之间就没有接口。</b>联邦成员只出现在那些「已达到某种哲学理解层次」的人面前；理解层次不够时，呼唤就落不到地上。';
+  }else if(!b){
+    fail=true;
+    html='<b>缺了「天真」，这次直接接触可能根本不会发生。</b>Ra 把「相对天真」列为条件之一，等于承认：这场干预的前提本身就是个不成熟的前提——以为直接把信息交出去，对方就会得到和自己一样的结果。';
+  }else{
+    html='<b>三个条件齐备，拜访发生了——而它的成立本身就带着裂缝。</b>呼唤被听到，光之存有出现，信息被传递；同时「天真的成员」这个条件也在场，因此日后水晶力量被用于疗愈之外、学习与政府结构合流，几乎是注定要发生的。';
+  }
+  el.className=fail?'fail':'';
+  el.innerHTML=html;
+}
+['cond1','cond2','cond3'].forEach(function(id){document.getElementById(id).addEventListener('change',updateCond);});
+updateCond();
+
+initSorter('sorterArea',[
+  {a:'你和邻居互换技能：你帮他修电脑，他帮你带孩子，不谈钱',opts:['服务他人','服务自我'],ans:'服务他人',exp:'对应 Ra 说的「物物交换」那一面——在自由感恩中给予与接受，不把关系换算成计价单位。'},
+  {a:'社群把公用的老水井围起来、按次收费',opts:['服务他人','服务自我'],ans:'服务自我',exp:'对应 Ra 说的「所有权的概念压过非所有权的概念」——在个人或群体尺度上，把共有的东西变成专属的。'},
+  {a:'你在群里只发布对自己有利的「内幕」，让别人越来越依赖你的判断',opts:['服务他人','服务自我'],ans:'服务自我',exp:'对应 Ra 说的「服务自我，带着操纵他人的变貌」——给信息的目的不是让人更自主，而是让人更依附。'},
+  {a:'朋友深夜情绪低落，你陪他把话说完，不替他决定该怎么做',opts:['服务他人','服务自我'],ans:'服务他人',exp:'分享、给予、在自由感恩中接受——给的是一起在场，而不是答案。'},
+  {a:'公司把集体研发的成果登记在一个人名下，因为他职级最高',opts:['服务他人','服务自我'],ans:'服务自我',exp:'所有权压过非所有权在组织尺度上的例子：被登记的是个人，被隐去的是关系。'}
+]);
+
+renderPath();
+</script>
+</body>
+</html>

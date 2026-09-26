@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css">
+<title>坠入密度 · 滚动星旅</title>
+<style>
+:root{
+  --amb:#f5efe2;          /* 当前场景氛围色，由 JS 实时插值 */
+  --ink:#efe9dd;
+  --ink-dim:rgba(239,233,221,.55);
+  --serif:"LXGW WenKai","霞鹜文楷","LXGW WenKai SC","Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:#070a12;color:var(--ink);font-family:var(--serif);
+  line-height:2;overflow-x:hidden;
+}
+canvas#sky{position:fixed;inset:0;width:100vw;height:100vh;z-index:0}
+
+/* ===== 声音开关 / 进度轨道 ===== */
+#rail{
+  position:fixed;right:26px;top:50%;transform:translateY(-50%);z-index:8;
+  display:flex;flex-direction:column;gap:13px;align-items:flex-end;
+}
+#rail .r{display:flex;align-items:center;gap:10px;cursor:pointer}
+#rail .r i{
+  width:5px;height:5px;border-radius:50%;flex-shrink:0;
+  background:rgba(255,255,255,.16);transition:all .4s;
+}
+#rail .r.cur i{background:var(--amb);box-shadow:0 0 9px var(--amb);transform:scale(1.7)}
+#rail .lbl{
+  font-size:.72rem;letter-spacing:.12em;color:var(--ink);white-space:nowrap;
+  padding:3px 12px;border-radius:999px;background:rgba(7,10,18,.78);
+  border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(4px);
+  opacity:0;transform:translateX(10px);transition:all .35s ease;pointer-events:none;
+}
+#rail:hover .lbl{opacity:1;transform:none}
+#rail .r.cur .lbl{border-color:var(--amb);color:var(--amb)}
+
+main{position:relative;z-index:1}
+
+/* ===== 时刻场景（全屏居中） ===== */
+.scene{min-height:118vh;display:flex;align-items:center;justify-content:center;padding:14vh 22px}
+.stage{max-width:620px;text-align:center;opacity:0;transform:translateY(34px);filter:blur(6px);transition:opacity 1.6s ease,transform 1.6s ease,filter 1.6s ease}
+.scene.on .stage,.station.on .stage{opacity:1;transform:none;filter:blur(0)}
+.kicker{
+  font-size:.8rem;letter-spacing:.55em;text-indent:.55em;color:var(--amb);
+  margin-bottom:30px;opacity:.85;
+}
+.kicker::after{
+  content:"";display:block;width:34px;height:1px;margin:16px auto 0;
+  background:var(--amb);opacity:.5;
+}
+.narr{font-size:1.18rem;color:var(--ink);margin-bottom:38px;text-align:center}
+.en{
+  font-family:Georgia,"Times New Roman",serif;font-style:italic;
+  font-size:.98rem;line-height:1.9;color:var(--amb);opacity:.92;margin-bottom:16px;
+}
+.zh{font-size:.95rem;color:var(--ink-dim);margin-bottom:10px}
+.ref{font-size:.74rem;letter-spacing:.2em;color:rgba(239,233,221,.34)}
+
+/* ===== 站点（左钉住 · 右细节流） ===== */
+.station{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);align-items:stretch}
+.pin{
+  position:sticky;top:0;height:100vh;
+  display:flex;align-items:center;justify-content:center;padding:0 3vw;
+}
+.pin .stage{max-width:520px}
+.detail{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:10vh 5vw 10vh 0;
+}
+.frag{
+  min-height:60vh;display:flex;flex-direction:column;justify-content:center;
+  max-width:440px;
+  opacity:0;transform:translateY(30px);
+  transition:opacity 1.3s ease,transform 1.3s ease;
+}
+.frag.on{opacity:1;transform:none}
+.f-k{
+  font-size:.78rem;letter-spacing:.4em;color:var(--amb);opacity:.85;margin-bottom:18px;
+}
+.f-en{
+  font-family:Georgia,"Times New Roman",serif;font-style:italic;
+  font-size:.92rem;line-height:1.9;color:var(--amb);opacity:.9;
+  border-left:2px solid rgba(255,255,255,.18);padding-left:16px;margin-bottom:14px;
+}
+.f-zh{font-size:.93rem;color:var(--ink-dim);margin-bottom:8px}
+.f-ref{font-size:.72rem;letter-spacing:.2em;color:rgba(239,233,221,.32)}
+
+/* 开场 */
+#s0 .narr{font-size:1.5rem;letter-spacing:.1em;line-height:2.3}
+.hint{
+  margin-top:60px;font-size:.8rem;letter-spacing:.4em;text-indent:.4em;
+  color:var(--ink-dim);animation:drift 2.6s ease-in-out infinite;
+}
+@keyframes drift{0%,100%{transform:translateY(0);opacity:.45}50%{transform:translateY(9px);opacity:.95}}
+
+/* 棱镜 */
+.prism{position:relative;height:230px;margin:8px auto 42px;width:340px;max-width:86vw}
+.beam{
+  position:absolute;left:0;top:50%;width:150px;height:3px;transform:translateY(-50%);
+  background:linear-gradient(90deg,rgba(255,255,255,0),#fff);border-radius:2px;
+  filter:drop-shadow(0 0 7px rgba(255,255,255,.8));
+}
+.tri{
+  position:absolute;left:150px;top:50%;transform:translateY(-50%);
+  width:0;height:0;border-top:52px solid transparent;border-bottom:52px solid transparent;
+  border-left:86px solid rgba(255,255,255,.13);
+}
+.ray{
+  position:absolute;left:236px;top:50%;height:2px;width:150px;border-radius:2px;
+  transform-origin:0 50%;transform:rotate(0) scaleX(.06);opacity:0;
+  transition:transform 2.2s cubic-bezier(.2,.7,.2,1) var(--d,0s),opacity 2.2s ease var(--d,0s);
+}
+.scene.on .ray{transform:rotate(var(--a)) scaleX(1);opacity:.85}
+
+/* 面纱 */
+.veiled{transition:filter 3.4s ease,opacity 3.4s ease}
+#s5 .stage .veiled{filter:blur(14px);opacity:.12}
+#s5.on .stage .veiled{filter:blur(0);opacity:1}
+
+/* 选择 */
+.paths{display:flex;gap:26px;justify-content:center;margin-top:46px;flex-wrap:wrap}
+.path{
+  width:210px;padding:30px 22px 26px;border-radius:16px;cursor:pointer;
+  border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.02);
+  transition:all .7s ease;
+}
+.path h3{font-size:1.05rem;letter-spacing:.3em;text-indent:.3em;margin-bottom:12px}
+.path p{font-size:.86rem;color:var(--ink-dim);line-height:1.9}
+.path.pos h3{color:#58b98a}.path.pos.lit{border-color:rgba(88,185,138,.55);background:rgba(88,185,138,.06);box-shadow:0 0 44px rgba(88,185,138,.12)}
+.path.neg h3{color:#c9703a}.path.neg.lit{border-color:rgba(201,112,58,.55);background:rgba(201,112,58,.06);box-shadow:0 0 44px rgba(201,112,58,.12)}
+.paths.p-pos .path:not(.pos),.paths.p-neg .path:not(.neg){opacity:.28;transform:scale(.96)}
+.paths.p-pos .path.pos,.paths.p-neg .path.neg{transform:scale(1.04)}
+
+/* 终章 */
+#sLast .en{font-size:1.06rem;line-height:2.2}
+#sLast .zh{font-size:1rem}
+.again{
+  margin-top:56px;font-family:var(--serif);font-size:.85rem;letter-spacing:.35em;text-indent:.35em;
+  color:var(--ink-dim);background:none;border:1px solid rgba(255,255,255,.14);
+  border-radius:999px;padding:11px 30px;cursor:pointer;transition:all .4s;
+}
+.again:hover{color:var(--ink);border-color:var(--amb)}
+
+footer{
+  position:relative;z-index:1;text-align:center;padding:40px 20px 56px;
+  font-size:.76rem;color:rgba(239,233,221,.3);letter-spacing:.08em;line-height:2.2;
+}
+@media (max-width:900px){
+  .station{display:block}
+  .pin{position:static;height:auto;padding:12vh 22px 2vh}
+  .pin .stage{margin:0 auto}
+  .detail{padding:0 22px 6vh;align-items:center}
+  .frag{min-height:auto;margin-bottom:7vh}
+}
+@media (max-width:640px){
+  .narr{font-size:1.05rem}
+  #s0 .narr{font-size:1.2rem}
+  #rail{display:none}
+}
+</style>
+</head>
+<body>
+
+<canvas id="sky"></canvas>
+<div id="rail"></div>
+
+<main>
+
+<!-- 0 太一原初思想 -->
+<section class="scene" id="s0" data-c="#f5efe2">
+  <div class="stage">
+    <p class="narr">一切尚未开始，<br>也早已结束。<br>这里只有一个念头。</p>
+    <p class="en">"All things, all of life, all of the creation is part of One Original Thought."</p>
+    <p class="zh">万物、所有生命、整个造物——都是太一原初思想的一部分。</p>
+    <p class="ref">—— SESSION 001 · (1.0)</p>
+    <p class="hint">向下滚动 · 坠入这个思想 ▾</p>
+  </div>
+</section>
+
+<!-- 1 棱镜 -->
+<section class="scene" id="s1" data-c="#ffffff">
+  <div class="stage">
+    <p class="kicker">棱镜</p>
+    <div class="prism">
+      <div class="beam"></div><div class="tri"></div>
+      <div class="ray" style="--a:-46deg;--d:.1s;background:linear-gradient(90deg,#c94b3a,transparent)"></div>
+      <div class="ray" style="--a:-31deg;--d:.25s;background:linear-gradient(90deg,#d97b3f,transparent)"></div>
+      <div class="ray" style="--a:-15deg;--d:.4s;background:linear-gradient(90deg,#d9b23f,transparent)"></div>
+      <div class="ray" style="--a:0deg;--d:.55s;background:linear-gradient(90deg,#58b98a,transparent)"></div>
+      <div class="ray" style="--a:15deg;--d:.7s;background:linear-gradient(90deg,#4f8fd9,transparent)"></div>
+      <div class="ray" style="--a:31deg;--d:.85s;background:linear-gradient(90deg,#7a6fd9,transparent)"></div>
+      <div class="ray" style="--a:46deg;--d:1s;background:linear-gradient(90deg,#a86fd9,transparent)"></div>
+    </div>
+    <p class="narr">思想太亮了，亮得无法成为任何东西。<br>于是它穿过一面棱镜。</p>
+    <p class="en">"You have seen the prism which shows all colors stemming from the sunlight."</p>
+    <p class="zh">你们见过棱镜——所有颜色自阳光涌出。这是统一性的一个简单例子。</p>
+    <p class="ref">—— SESSION 001 · (1.7)</p>
+  </div>
+</section>
+
+<!-- 1b 密度这个词 -->
+<section class="station" id="s1b" data-c="#d8cdb8">
+  <div class="pin"><div class="stage">
+    <p class="kicker">密度</p>
+    <p class="narr">棱镜分出的七色，<br>是意识要走的七级台阶。<br>Ra 不把它们叫楼层，<br>叫密度——<br>因为浓的或稀的，<br>是光本身的质地。</p>
+    <p class="en">"To the limits of our knowledge, which are narrow, the ways of the octave are without time; that is, there are seven densities in each creation infinitely."</p>
+    <p class="zh">就我们所知的狭窄限度而言，八度音程的道路没有时间——也就是说，每一个造物之中，永远有七个密度。</p>
+    <p class="ref">—— SESSION 078 · (78.15)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">无穷的细分</p>
+      <p class="f-en">"Within each density there are seven sub-densities. … Within each sub-density, seven sub-sub-densities, and so on infinitely."</p>
+      <p class="f-zh">每个密度之内有七个子密度；每个子密度之内又有七个子子密度——如此无限细分下去。</p>
+      <p class="f-ref">—— SESSION 016 · (16.51)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">你身上全部都有</p>
+      <p class="f-en">"…each entity contains within it all of the densities and sub-densities of the octave so that in each entity, no matter whither its choices lead it, its great internal blueprint is one with all others."</p>
+      <p class="f-zh">每个实体之内都包含着整个八度的所有密度与子密度——所以无论选择把它带向哪里，它那伟大的内在蓝图，都与一切存有是同一个。</p>
+      <p class="f-ref">—— SESSION 071 · (71.12)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 2 第一密度 -->
+<section class="station" id="s2" data-c="#c94b3a">
+  <div class="pin"><div class="stage">
+    <p class="kicker">第一密度 · 红</p>
+    <p class="narr">最深的红。<br>火与风是两位老师，<br>它们教岩石和海洋一件事：<br>你在。</p>
+    <p class="en">"This begins with first density which is the density of consciousness, the mineral and water life upon the planet learning from fire and wind the awareness of being."</p>
+    <p class="zh">第一密度是觉知的密度：行星上的矿物与水之生命，向火与风学习「存在」的觉知。</p>
+    <p class="ref">—— SESSION 013 · (13.16)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">两亿年的一堂课</p>
+      <p class="f-en">"Upon the entry into the constructed space/time your first density spanned a bridge of space/time and time/space of, perhaps, two billion of your years."</p>
+      <p class="f-zh">进入被构筑的空间/时间之后，第一密度跨过的时间之桥，大约有两亿个你们的年。</p>
+      <p class="f-ref">—— SESSION 076 · (76.13)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">红色的地基</p>
+      <p class="f-en">"Thus, in first density the red ray is the foundation for all that is to come."</p>
+      <p class="f-zh">在第一密度，红色光芒是接下来一切事物的地基。</p>
+      <p class="f-ref">—— SESSION 040 · (40.3)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 3 第二密度 -->
+<section class="station" id="s3" data-c="#d97b3f">
+  <div class="pin"><div class="stage">
+    <p class="kicker">第二密度 · 橙</p>
+    <p class="narr">橙色的躁动。<br>草朝向太阳，兽睁开眼睛。<br>还不会照镜子，<br>但已经在向上长。</p>
+    <p class="en">"This movement is the characteristic of second density, the striving towards light and growth. … The second density strives towards the third density, which is the density of self-consciousness, or self-awareness."</p>
+    <p class="zh">这种移动是第二密度的特征：朝向光与生长的努力。第二密度努力走向第三密度——自我意识、自我觉知的密度。</p>
+    <p class="ref">—— SESSION 013 · (13.18 / 13.21)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">Ra 的定义</p>
+      <p class="f-en">"The second density is the density of the higher plant life and animal life which exists without the upward drive towards the infinite."</p>
+      <p class="f-zh">第二密度是高等植物与动物生命的密度——它们还没有向上趋向无限的驱动。</p>
+      <p class="f-ref">—— SESSION 009 · (9.14)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">为下一步打地基</p>
+      <p class="f-en">"The second density is one in which the groundwork is being laid for third-density work."</p>
+      <p class="f-zh">第二密度是一个正在为第三密度的工作打下地基的密度。</p>
+      <p class="f-ref">—— SESSION 030 · (30.10)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">毕业</p>
+      <p class="f-en">"There were some second-density entities which made the graduation into third density with no outside stimulus but only the efficient use of experience."</p>
+      <p class="f-zh">也有一些第二密度实体，不需要任何外部催化，仅凭对经验的善用，就完成了升入第三密度的毕业。</p>
+      <p class="f-ref">—— SESSION 019 · (19.5)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">宠物</p>
+      <p class="f-en">"Perhaps the most common occurrence of second-density graduation during third-density cycle is the so-called pet: the animal which is exposed to the individualizing influences of the bond between animal and third-density entity."</p>
+      <p class="f-zh">第三密度周期里最常见的第二密度毕业，也许就是所谓的宠物：那只动物，在它与第三密度实体的联结中被个体化的力量所触碰。</p>
+      <p class="f-ref">—— SESSION 020 · (20.3)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 4 第三密度 -->
+<section class="station" id="s4" data-c="#d9b23f">
+  <div class="pin"><div class="stage">
+    <p class="kicker">第三密度 · 黄 · 你在这里</p>
+    <p class="narr">黄色的火焰。<br>这是你此刻所在的地方——<br>唯一必须在镜中认出自己、<br>然后做出选择的密度。</p>
+    <p class="en">"However, in third density the statue is forged in the fire. … The third density is a choice."</p>
+    <p class="zh">然而在第三密度，雕像是在火中锻造的。第三密度是一次选择。</p>
+    <p class="ref">—— SESSION 077 · (77.15) / SESSION 076 · (76.15)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">七万五千年</p>
+      <p class="f-en">"At the end of 75,000 years, the planet progresses itself."</p>
+      <p class="f-zh">七万五千年的尽头，行星会推动它自己向前。</p>
+      <p class="f-ref">—— SESSION 009 · (9.4)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">大多数人会怎样</p>
+      <p class="f-en">"Thus it, though unknown, would most probably have been a mixed harvest—a few moving to fourth density, a few moving towards fourth density in service to self, the great majority repeating third density."</p>
+      <p class="f-zh">那大概率会是一场混合的收割：少数进入第四密度，少数走向服务自我的第四密度，而绝大多数，重复第三密度。</p>
+      <p class="f-ref">—— SESSION 011 · (11.3)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">不设时限</p>
+      <p class="f-en">"…no guarantee can be made of the number of cycles it will take an entity to learn the lessons of consciousness of self which are the prerequisite for transition to third density."</p>
+      <p class="f-zh">没有任何保证：一个实体要花多少个周期，才能学会「自我的意识」——那是进入第三密度的先修课。</p>
+      <p class="f-ref">—— SESSION 009 · (9.16)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">一直有人帮忙</p>
+      <p class="f-en">"All of these visits for the last 75,000 years were for the purpose of giving to the people of Earth an understanding of the Law of One, and this way allow them to progress upward through the fourth, fifth, sixth densities."</p>
+      <p class="f-zh">七万五千年来所有的造访，目的只有一个：让地球的人们理解一的法则，从而得以向上穿过第四、第五、第六密度。</p>
+      <p class="f-ref">—— SESSION 014 · (14.8)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 5 面纱 -->
+<section class="scene" id="s5" data-c="#8d8577">
+  <div class="stage">
+    <p class="kicker">面纱</p>
+    <p class="narr veiled">于是，在你与自己之间，<br>垂下一层面纱。<br>你忘了你是谁，忘了你从哪里来——<br>只有这样，选择才第一次有了重量。</p>
+    <p class="en">"The veiling process made the polarity far more effective."</p>
+    <p class="zh">遮蔽的过程，使极性远为有效。</p>
+    <p class="ref">—— SESSION 093 · (93.5)</p>
+  </div>
+</section>
+
+<!-- 6 选择 -->
+<section class="station" id="s6" data-c="#cbb98a">
+  <div class="pin"><div class="stage">
+    <p class="kicker">两种走法</p>
+    <p class="narr">面纱之下，每个人都在走一条路。<br>没有裁判，只有走向。<br>（把光标放上去看看）</p>
+    <div class="paths" id="paths">
+      <div class="path pos"><h3>服务他人</h3><p>把光递出去，<br>在别人身上认出自己。</p></div>
+      <div class="path neg"><h3>服务自我</h3><p>把一切收进来，<br>在自己身上忘记别人。</p></div>
+    </div>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">门槛</p>
+      <p class="f-en">"To attain fifty-one percent dedication to the welfare of other-selves is as difficult as attaining a grade of five percent dedication to other-selves. The, shall we say, sinkhole of indifference is between those two."</p>
+      <p class="f-zh">达到对他人福祉百分之五十一的奉献，与达到百分之五一样困难——因为在这两者之间，横着那个可谓「冷漠的陷坑」。</p>
+      <p class="f-ref">—— SESSION 017 · (17.33)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">没有学历要求</p>
+      <p class="f-en">"People of this planet, following any religion or no religion at all, or having no intellectual knowledge of the Law of One or of anything at all, can still be harvested into the fourth density if they are of that vibration."</p>
+      <p class="f-zh">这个行星上的人们，无论信奉哪种宗教、毫无宗教，或对一的法则乃至任何事物都一无所知——只要他们在那振动之中，依然可以被收割进第四密度。</p>
+      <p class="f-ref">—— SESSION 017 · (17.15)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 7 收割 -->
+<section class="station" id="s7" data-c="#8f6fd9">
+  <div class="pin"><div class="stage">
+    <p class="kicker">收割 · 紫罗兰</p>
+    <p class="narr">走到这一程的尽头，<br>果实自己知道熟没熟。<br>没有考场，只有一道紫罗兰的光，<br>替你称重。</p>
+    <p class="en">"Thus the harvest is automatic in that those harvested will respond according to that which is unchangeable during harvest. That is the violet-ray emanation."</p>
+    <p class="zh">收割是自动的：被收割者将依收割期间不可改变之物来回应——那便是紫罗兰光芒的放射。</p>
+    <p class="ref">—— SESSION 051 · (51.1)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">三层守望者</p>
+      <p class="f-en">"There are those of three levels watching over harvest."</p>
+      <p class="f-zh">有三个层次的存有，守望收割。</p>
+      <p class="f-ref">—— SESSION 051 · (51.1)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">因为能看见光</p>
+      <p class="f-en">"The beings are harvested because they can see and enjoy the light/love of the appropriate density."</p>
+      <p class="f-zh">存有们被收割，是因为他们能够看见并享受那相称密度中的光/爱。</p>
+      <p class="f-ref">—— SESSION 007 · (7.17)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">Ra 不关心剧本</p>
+      <p class="f-en">"The changes are very, very trivial. We do not concern ourselves with the conditions which bring about harvest."</p>
+      <p class="f-zh">这些变化非常、非常琐碎。我们不关心那些带来收割的状况。</p>
+      <p class="f-ref">—— SESSION 001 · (1.9)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 8 第四密度 -->
+<section class="station" id="s8" data-c="#58b98a">
+  <div class="pin"><div class="stage">
+    <p class="kicker">第四密度 · 绿 · 爱</p>
+    <p class="narr">绿色的密度。<br>在这里，爱不再是心里的一个词，<br>而是呼吸的空气——<br>慈悲多到近乎危险。</p>
+    <p class="en">"The impulse to protect the loved other-self is one which persists through the fourth density, a density abounding in compassion."</p>
+    <p class="zh">保护所爱之他人的冲动贯穿第四密度——那是一个满溢慈悲的密度。</p>
+    <p class="ref">—— SESSION 033 · (33.11)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">Ra 的命名</p>
+      <p class="f-en">"Fourth, the cycle of love or understanding."</p>
+      <p class="f-zh">第四，爱与理解的循环。</p>
+      <p class="f-ref">—— SESSION 016 · (16.21)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">一片振动光谱</p>
+      <p class="f-en">"The fourth density is a vibrational spectrum."</p>
+      <p class="f-zh">第四密度是一片振动的光谱。</p>
+      <p class="f-ref">—— SESSION 017 · (17.1)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">为什么看不见</p>
+      <p class="f-en">"The fourth density is, by choice, not visible to third density."</p>
+      <p class="f-zh">第四密度出于选择，对第三密度不可见。</p>
+      <p class="f-ref">—— SESSION 012 · (12.17)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">隐与现</p>
+      <p class="f-en">"However, their true vibrational nature is without third-density vibrational characteristics, and therefore they are able to materialize and dematerialize when necessary."</p>
+      <p class="f-zh">不过，他们真正的振动本性不带第三密度的振动特征——因此在必要时，他们可以显形，也可以隐去。</p>
+      <p class="f-ref">—— SESSION 012 · (12.21)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 9 第五密度 -->
+<section class="station" id="s9" data-c="#4f8fd9">
+  <div class="pin"><div class="stage">
+    <p class="kicker">第五密度 · 蓝 · 光</p>
+    <p class="narr">蓝色的密度。<br>爱在这里结晶成智慧，<br>而光，被握在手里书写。</p>
+    <p class="en">"The fifth density is the density of light, or wisdom. … In fifth density light is as visible a tool as your pencil’s writing."</p>
+    <p class="zh">第五密度是光或智慧的密度。在那里，光是一件像你的笔迹一样可见的工具。</p>
+    <p class="ref">—— SESSION 025 · (25.11) / SESSION 067 · (67.14)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">Ra 的命名</p>
+      <p class="f-en">"Fifth, the cycle of light or wisdom."</p>
+      <p class="f-zh">第五，光或智慧的循环。</p>
+      <p class="f-ref">—— SESSION 016 · (16.21)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">由收割组成</p>
+      <p class="f-en">"A fifth-density social memory complex would be comprised of mind/body/spirit complexes harvested from fourth density."</p>
+      <p class="f-zh">一个第五密度的社会记忆复合体，由从第四密度收割而来的心/身/灵复合体组成。</p>
+      <p class="f-ref">—— SESSION 007 · (7.16)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">一锅浓汤</p>
+      <p class="f-en">"In fifth density it is comfort, for those of like mind gather together to share in this broth, thus becoming one in light and wisdom while joining hearts and hands in physical activity."</p>
+      <p class="f-zh">在第五密度是舒适：同频者聚拢在一起分享这锅浓汤，在光与智慧中合为一体，同时在实体活动中心手相连。</p>
+      <p class="f-ref">—— SESSION 043 · (43.23)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">自带动能</p>
+      <p class="f-en">"When fifth density has been obtained the process takes upon itself a momentum based upon the characteristics of wisdom when applied to circumstance."</p>
+      <p class="f-zh">到达第五密度之后，进程开始自带动能——那是智慧应用于处境时特有的性质。</p>
+      <p class="f-ref">—— SESSION 077 · (77.24)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 10 第六密度 -->
+<section class="station" id="s10" data-c="#7a6fd9">
+  <div class="pin"><div class="stage">
+    <p class="kicker">第六密度 · 靛 · 合一</p>
+    <p class="narr">靛蓝。<br>曾经分开的两条路，<br>在这里必须互相接入——</p>
+    <p class="en">"In sixth density, the density of unity, the positive and negative paths must needs take in each other, for all now must be seen as love/light and light/love."</p>
+    <p class="zh">在第六密度——统一的密度——正面与负面的路径必须彼此容纳，因为如今一切都必须被看作爱/光、光/爱。</p>
+    <p class="ref">—— SESSION 078 · (78.25)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">Ra 的命名</p>
+      <p class="f-en">"Sixth, the cycle of light/love, love/light, or unity."</p>
+      <p class="f-zh">第六，光/爱、爱/光或统一的循环。</p>
+      <p class="f-ref">—— SESSION 016 · (16.21)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">Ra 自己的家</p>
+      <p class="f-en">"We are not those of the Love [density] or of the Light [density]."</p>
+      <p class="f-zh">我们不是爱之密度的存有，也不是光之密度的存有。——说话的这个 Ra，就住在这统一的一层。</p>
+      <p class="f-ref">—— SESSION 001 · (1.1)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">你的高我</p>
+      <p class="f-en">"It is specifically correct that your higher self is you in mid-sixth density and, in your way of measuring what you know of as time, your higher self is your self in your future."</p>
+      <p class="f-zh">完全正确：你的高我，就是处于第六密度中段的你——用你们衡量时间的方式来说，高我是走在未来里的你自己。</p>
+      <p class="f-ref">—— SESSION 070 · (70.9)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">平衡的完成</p>
+      <p class="f-en">"This especially applies to those entering into and proceeding through sixth density wherein the balance between compassion and wisdom is perfected."</p>
+      <p class="f-zh">这尤其适用于进入并穿越第六密度的存有——慈悲与智慧之间的平衡，在此臻于完美。</p>
+      <p class="f-ref">—— SESSION 052 · (52.9)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">最多流浪者的来处</p>
+      <p class="f-en">"The largest number of wanderers, as you call them, are of the sixth density."</p>
+      <p class="f-zh">你们称为流浪者的那些存有，最大数量来自第六密度。</p>
+      <p class="f-ref">—— SESSION 012 · (12.28)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">住在太阳里</p>
+      <p class="f-en">"Thus by the sixth density the sun may be visited and inhabited by those dwelling in time/space, and may even be partially created from moment to moment by the processes of sixth-density entities in their evolution."</p>
+      <p class="f-zh">到了第六密度，太阳可以被居于时间/空间的存有拜访与栖居，甚至在他们进化的过程中，被一刻接一刻地部分创造出来。</p>
+      <p class="f-ref">—— SESSION 041 · (41.4)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 11 第七密度 -->
+<section class="station" id="s11" data-c="#a86fd9">
+  <div class="pin"><div class="stage">
+    <p class="kicker">第七密度 · 紫 · 门</p>
+    <p class="narr">紫色的门。<br>不再有需要学习的功课，<br>只有一次转身——<br>背对时间，面向永远。</p>
+    <p class="en">"The seventh density is a density of completion and the turning towards timelessness, or foreverness."</p>
+    <p class="zh">第七密度是完成的密度，是转向无时间性——或说永恒——的密度。</p>
+    <p class="ref">—— SESSION 041 · (41.16)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">Ra 的命名</p>
+      <p class="f-en">"Seventh, the gateway cycle."</p>
+      <p class="f-zh">第七，门户的循环。</p>
+      <p class="f-ref">—— SESSION 016 · (16.21)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">一张通行证</p>
+      <p class="f-en">"The activation, while in yellow ray, of violet-ray intelligent infinity is a passport to the next octave of experience."</p>
+      <p class="f-zh">身处黄光芒之时激活紫罗兰光芒的智能无限——那是一张通往下一个八度体验的通行证。</p>
+      <p class="f-ref">—— SESSION 048 · (48.10)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">穿过黑洞之后</p>
+      <p class="f-en">"Therefore, the concept of moving through the black hole of the ultimate spiritual gravity well and coming immediately into the next octave misses the sub-concept, or corollary, of the portion of this process which is timeless."</p>
+      <p class="f-zh">认为穿过终极灵性重力井的黑洞、便立刻进入下一个八度——这个概念漏掉了该过程中属于「无时间」的那一层含义。</p>
+      <p class="f-ref">—— SESSION 040 · (40.1)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 12 八度 -->
+<section class="scene" id="sLast" data-c="#f5efe2">
+  <div class="stage">
+    <p class="kicker">第八密度 · 下一个八度</p>
+    <p class="narr">光走完一整圈，<br>回到那个念头。</p>
+    <p class="en">"However, it is well to perceive that the eighth density functions also as the beginning density, or first density—in its latter stages—of the next octave of densities."</p>
+    <p class="zh">第八密度同时也作为下一个密度八度的开端而起作用。</p>
+    <p class="ref">—— SESSION 028 · (28.15)</p>
+    <p class="en">"You are every thing, every being, every emotion, every event, every situation. You are unity. You are infinity. You are love/light, light/love. You are. This is the Law of One."</p>
+    <p class="zh">你是每一个事物、每一个存有、每一种情绪、每一个事件、每一个情境。你是统一。你是无限。你是爱/光，光/爱。你「是」。这就是一的法则。</p>
+    <p class="ref">—— SESSION 001 · (1.7)</p>
+    <button class="again" id="again">回到那一个念头</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+坠入密度 · 滚动星旅 · 内容取自《一的法则》十余次集会的密度讨论<br>
+引文为英文原文逐字摘录；中文为本页面自拟 · 仅作沉浸学习实验
+</footer>
+
+<script>
+/* ===== 星空画布 ===== */
+const cv=document.getElementById('sky'),cx=cv.getContext('2d');
+let W,H,stars=[];
+function size(){W=cv.width=innerWidth*devicePixelRatio;H=cv.height=innerHeight*devicePixelRatio;}
+size();addEventListener('resize',size);
+for(let i=0;i<230;i++)stars.push({x:Math.random(),y:Math.random(),z:.25+Math.random()*.75,p:Math.random()*6.28,s:Math.random()});
+
+/* ===== 氛围色插值 ===== */
+function hex2rgb(h){h=h.replace('#','');if(h.length===3)h=h.split('').map(c=>c+c).join('');return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
+const scenes=[...document.querySelectorAll('.scene,.station')].map(s=>({el:s,c:hex2rgb(s.dataset.c)}));
+let amb=[245,239,226];
+function lerp(a,b,t){return a+(b-a)*t}
+function rgb2css(c,a){return `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${a})`}
+
+/* ===== 渲染循环 ===== */
+let t=0;
+function frame(){
+  t+=.016;
+  const sy=scrollY,wh=innerHeight;
+  let target=scenes[0].c;
+  for(const s of scenes){
+    const r=s.el.getBoundingClientRect();
+    if(r.top<wh*.55&&r.bottom>wh*.45){target=s.c;break}
+  }
+  for(let i=0;i<3;i++)amb[i]=lerp(amb[i],target[i],.045);
+  const ac=amb;
+  document.documentElement.style.setProperty('--amb',rgb2css(ac,1));
+
+  cx.clearRect(0,0,W,H);
+  const g=cx.createRadialGradient(W/2,H*.86,0,W/2,H*.86,H*.75);
+  g.addColorStop(0,rgb2css(ac,.10));g.addColorStop(1,'rgba(0,0,0,0)');
+  cx.fillStyle=g;cx.fillRect(0,0,W,H);
+  const dark=1-Math.min(1,(Math.hypot(ac[0]-245,ac[1]-239))/200);
+  for(const st of stars){
+    const px=st.x*W,py=((st.y - sy*.00004*st.z)%1+1)%1*H;
+    const tw=.5+.5*Math.sin(t*1.3+st.p);
+    cx.globalAlpha=(0.12+0.5*tw*st.z)*(0.35+0.65*dark);
+    cx.fillStyle=rgb2css(ac,1);
+    const r=st.s*1.4*st.z*devicePixelRatio;
+    cx.beginPath();cx.arc(px,py,r,0,6.28);cx.fill();
+  }
+  const oy=H*.62+Math.sin(t*.8)*10*devicePixelRatio;
+  const og=cx.createRadialGradient(W/2,oy,0,W/2,oy,26*devicePixelRatio);
+  og.addColorStop(0,rgb2css(ac,.9));og.addColorStop(.35,rgb2css(ac,.25));og.addColorStop(1,'rgba(0,0,0,0)');
+  cx.globalAlpha=1;cx.fillStyle=og;
+  cx.beginPath();cx.arc(W/2,oy,26*devicePixelRatio,0,6.28);cx.fill();
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+/* ===== 场景显影 ===== */
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>e.target.classList.toggle('on',e.isIntersecting));
+},{threshold:.01});
+document.querySelectorAll('.scene,.station').forEach(s=>io.observe(s));
+
+/* 细节片段：进入视口即显影 */
+const ioFrag=new IntersectionObserver(es=>{
+  es.forEach(e=>e.target.classList.toggle('on',e.intersectionRatio>.15));
+},{threshold:[0,.35,.6]});
+document.querySelectorAll('.frag').forEach(f=>ioFrag.observe(f));
+
+/* ===== 进度轨道 ===== */
+const rail=document.getElementById('rail');
+scenes.forEach((s,i)=>{
+  const row=document.createElement('div');row.className='r';
+  const lbl=document.createElement('span');lbl.className='lbl';
+  const k=s.el.querySelector('.kicker');
+  lbl.textContent=k?k.textContent.trim():(i===0?'开始':'终章');
+  const d=document.createElement('i');
+  row.appendChild(lbl);row.appendChild(d);
+  row.onclick=()=>s.el.scrollIntoView({behavior:'smooth'});
+  rail.appendChild(row);
+});
+setInterval(()=>{
+  const wh=innerHeight;
+  scenes.forEach((s,i)=>{
+    const r=s.el.getBoundingClientRect();
+    rail.children[i].classList.toggle('cur',r.top<wh*.55&&r.bottom>wh*.45);
+  });
+},200);
+
+/* ===== 选择互动 ===== */
+const paths=document.getElementById('paths');
+document.querySelectorAll('.path').forEach(p=>{
+  p.addEventListener('mouseenter',()=>paths.classList.add('p-'+(p.classList.contains('pos')?'pos':'neg')));
+  p.addEventListener('mouseleave',()=>paths.classList.remove('p-pos','p-neg'));
+  p.addEventListener('click',()=>{
+    paths.classList.remove('p-pos','p-neg');
+    paths.classList.add('p-'+(p.classList.contains('pos')?'pos':'neg'));
+  });
+});
+
+
+/* ===== 回到开头 ===== */
+document.getElementById('again').onclick=()=>scrollTo({top:0,behavior:'smooth'});
+</script>
+</body>
+</html>

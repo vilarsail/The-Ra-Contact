@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 050 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 050 · 交互式学习模块</h1>
+  <p class="sub">本集从"体验是被吸来的"讲起：投生前就设定好的课程与协议、遗忘为何是牌局成立的前提、行家靠静默与单一思想接入智能无限——最后把冥想中头部各处的能量感一一归位。</p>
+  <div class="tagline">7 个主题 · 6 个学习步骤 · 23 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本集地图</a>
+<a href="#s2">② 南极与吸引</a>
+<a href="#s3">③ 投生前编程</a>
+<a href="#s4">④ 遗忘的牌局</a>
+<a href="#s5">⑤ 行家的内在工作</a>
+<a href="#s6">⑥ 头部能量与金字塔</a>
+<a href="#s7">⑦ 收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>先走一遍问答链：从"南极吸引"到"头部能量归位"，本集到底在追问什么</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>南极与吸引</b><span>搞清体验为什么是"被吸来的"，以及红光根中心为何总是最先反应</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>投生前编程</b><span>课程是谁、在何时、按什么原则设定的；负面存有又怎么"分享爱"</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>遗忘的牌局</b><span>为什么极化必须发生在投生里——遗忘不是缺陷，是计分规则</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>行家的内在工作</b><span>静默 → 单一思想 → 接入智能无限；再看第 6 章头部能量感怎么读</span></span></label></div>
+<div class="step-item" data-target="#s7"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官</b><span>把五步游戏带回今天的生活，看本集留下了哪些线头</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ 第 1 章：本章地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：这一集在回答什么</h2></div>
+  <p class="sec-lead">上一集收在一个说法上——"体验是经南极被吸引到实体的"。本集发问者就从"请给个定义"开始，沿着这条线一路追问：体验怎么被吸引、吸引的条件是谁在投生前设定的、为什么必须带着遗忘投生才能极化、不出外部行动如何在意识中极化，最后落到冥想时头部各处的能量感。全篇是一条越挖越深的单一追问线。</p>
+
+  <div class="card">
+    <h3>本集的五个议题</h3>
+    <p>① 南极与吸引：体验为何是"被吸来"的（50.2-50.3）　② 投生前编程：课程与协议如何设定，负面存有如何"分享爱"（50.4-50.6）　③ 遗忘的牌局：为何极化必须在投生中完成（50.7）　④ 行家的内在工作：静默、单一思想与智能无限（50.8-50.9）　⑤ 头部能量与金字塔：一次拒答、一次归位（50.10-50.13）</p>
+  </div>
+
+  <div class="card">
+    <h3>问答脉络推进器</h3>
+    <p class="hint" style="font-size:.88rem;color:var(--ink-soft)">点击节点或用按钮，走一遍本集的问答链。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="flowTrack"></div>
+      <div class="flow-detail" id="flowDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="flowPrev">← 上一问</button>
+        <button class="tri-btn" id="flowNext">下一问 →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>先记住本集的地基</h3>
+    <div class="q">"吸引"是随口的修辞，还是确切的机制？后面的所有讨论都压在这两个字上。</div>
+    <div class="quote">
+      <p class="en">The south, or negative, pole is one which attracts. It pulls unto itself those things magnetized to it. So with the mind/body/spirit complex the in-flow of experience is of the south pole influx.</p>
+      <p class="zh">南极了，或者说负极，是吸引之极——它把被磁化到它的事物拉向自身。对心/身/灵复合体而言，体验的流入就是南极的流入。</p>
+      <span class="src">—— Session 050 · (50.2)</span>
+    </div>
+    <div class="plain">体验不是随机砸到你头上的，它像被磁铁吸来的铁屑——而接收端（你的觉知与能量中心）从一开始就参与决定吸来什么。</div>
+    <div class="case"><b>通勤刷到坏消息：</b>早高峰的地铁上，一条"行业裁员"的推送让你胃部一紧——体验先落在身体最底层（饭碗、生存），之后才轮到"那我该怎么办"。这正是本集说的"南极流入"：体验先被吸到最根部。</div>
+    <div class="case"><b>打开本页的你：</b>如果带着"遭遇都是随机发生的"这个预设来读，本集会一路把它松开——Ra 的说法是：体验更像被你自己的设定吸来的。这个反转，就是整集的地形图。</div>
+  </div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 后勤</span></summary>
+  <div class="body">
+    <p><b>(50.1) 器皿状态：</b>Ra 只答"如前所述"，与此前评估一致。</p>
+    <p><b>(50.14) 器皿舒适度：</b>Ra 肯定团队尽责、排列仔细，唯一叮嘱是把器皿的颈部小心放在支撑物上。</p>
+  </div></details>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 2 章：南极与吸引 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>南极与吸引：体验从哪里进来</h2></div>
+  <p class="sec-lead">发问者要的是"定义"，Ra 给的却是三层：吸引的性质是什么、哪一处是它唯一的物理定位、以及本能被平衡之后会发生什么。关键在于分清："南极"是个方便的说法，别把它当成解剖位置。</p>
+
+  <div class="card">
+    <h3>唯一的物理定位：红光根中心</h3>
+    <div class="q">体验流入身体时，最先落在哪？Ra 把"南极"安放在哪个具体位置？</div>
+    <div class="quote">
+      <p class="en">The only specific part of this correctness is that the red-ray, or foundation energy center, being the lowest, or root, energy center of the physical vehicle, will have the first opportunity to react to any experience.</p>
+      <p class="zh">这一正确说法里唯一精确的部分是：红光——基础能量中心，作为物理载具最低的、根部的中心——对任何体验拥有最先作出反应的机会。</p>
+      <span class="src">—— Session 050 · (50.2)</span>
+    </div>
+    <p>Ra 说这机会就是<b>生存</b>：它是回应的根本可能性，是心与身基本功能的共同特征。这本能最强——而一旦它被平衡，"许多东西便向寻求者敞开"：南极不再阻塞体验数据，更高的中心才能用上被吸来的体验。</p>
+    <div class="plain">体验流入的第一站永远是红光根中心（生存层）；"南极"只是这第一站的形象说法，不是解剖位置。</div>
+    <div class="analogy"><b>一栋楼的大堂：</b>把心/身/灵想成一栋楼——任何访客（体验）都得先到大堂（红光）登记，不会空降进顶楼书房（靛光、紫光）。大堂只有在不"拦人"时，访客才能上楼。</div>
+    <div class="case"><b>深夜加班回家：</b>进门听见孩子哭闹，第一反应是烦躁上火——生存层先接管了（"今天不能再出事"）；静了几分钟才看见孩子是怕黑。同一段体验，平衡后的红光不再拦着，更高的中心才用上了它。</div>
+    <div class="case"><b>体检报告异常那天：</b>前半小时满脑子只有"会不会出大事"（本能最强），晚上才列得出"该问医生的三个问题"——这正是"本能一旦平衡，许多东西向寻求者敞开"的日常版。</div>
+  </div>
+
+  <div class="card">
+    <h3>为什么偏偏用"吸引"这个词</h3>
+    <div class="q">发问者抓住一个细节：为什么 Ra 说体验"被拉向、被吸引"到实体，而不是"发生"在实体身上？</div>
+    <div class="quote">
+      <p class="en">We say this due to our understanding that this is the nature of the phenomenon of experiential catalyst and its entry into the mind/body/spirit complex's awareness.</p>
+      <p class="zh">我们这样说，是基于我们的理解：这正是体验催化剂现象及其进入心/身/灵复合体觉知的方式之本质。</p>
+      <span class="src">—— Session 050 · (50.3)</span>
+    </div>
+    <div class="plain">用词不是随口：催化剂是"流入"的，不是"砸中"的——接收端从一开始就在场。</div>
+    <div class="case"><b>同一条加班通知：</b>群里同一条"周末加班"的消息，一人读出"被针对"，一人读出"该谈调薪了"。消息本身中立，"吸来什么"取决于接收端早已磁化好的那一面。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 3 章：投生前编程 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>投生前编程：谁设定了你的课程</h2></div>
+  <p class="sec-lead">讲完"被吸引"，下一个自然的问题是：吸引的条件是谁、在什么时候设定的？Ra 先做了一件程序上的事——扫描器皿意识、征得许可——再拿器皿自己的经历举例，然后把它推广到一切知晓进化过程的实体。</p>
+
+  <div class="card">
+    <h3>投生前定下的两件事、两类协议</h3>
+    <div class="q">一个实体是怎么"设定条件"、让特定催化剂极有可能到来的？</div>
+    <div class="quote">
+      <p class="en">This entity chose, before incarnation, the means whereby catalyst had great probability of being obtained.</p>
+      <p class="zh">这个实体在投生之前，就选定了让催化剂极有可能被获得的方式。</p>
+      <span class="src">—— Session 050 · (50.5)</span>
+    </div>
+    <p>以器皿为例：投生前定下两个主题——渴望<b>表达爱与光而不期待任何回报</b>；并编程去做灵性工作、以同伴情谊自我安慰。接着是两类协议：先与"所谓的父母和兄弟姐妹"立约，提供"付出存有光辉而不图回报"的情境；再与若干实体立约，提供工作与同志情谊的机会。至于生活水平、法律框架中的关系、投生期的社会氛围，只是社会文化的"可能性/概率漩涡"——背景板，不是课程本身；这次投生被安排在收割时期。</p>
+    <div class="case"><b>书中的例子：</b>Ra 征得同意后公开了器皿的"课程表"：两个主题（不图回报地给出光辉、与同伴一起做工）各有对应的协议方（原生家庭、工作伙伴）。Ra 说明这可外推到一切知晓进化的实体——课程围绕关系设置，事件只是让关系得以发生的场地。</div>
+    <div class="case"><b>搬去新城市的人：</b>提前订好房子、查好通勤、了解当地规矩——这些"给定条件"落定后，真正塑造他的却是新同事、新邻居、新朋友。Ra 的框架正是如此：事件层是背景条件，课程却与其他自我有关。</div>
+  </div>
+
+  <div class="card">
+    <h3>课程表的统一公式</h3>
+    <div class="q">千千万万人的"课程"各不相同，有没有一条通用的编写规则？</div>
+    <div class="quote">
+      <p class="en">No matter what the lessons programmed, they have to do with other-selves, not with events. They have to do with giving, not receiving; for the lessons of love are of this nature both for positive and negative.</p>
+      <p class="zh">无论编程了什么课程，它们都与其他自我有关，而非与事件有关；都与给予有关，而非接收——因为爱的课程对正面与负面都是这种性质。</p>
+      <span class="src">—— Session 050 · (50.5)</span>
+    </div>
+    <div class="plain">课程表上只有一门课：其他自我。事件只是教室。</div>
+    <p>Ra 还补了一条兜底：对那些暂时理解不了进化机制、课程更"随机"的实体，有永不停止警惕、期待服务的存有在守护——<b>没有任何实体得不到帮助</b>，或凭对造物合一的自知，或凭守护者防止其与合一永久分离。</p>
+    <div class="case"><b>深夜的一通电话：</b>一时走投无路的人，接到老友的来电，只是听他说话到天亮。Ra 所说的守护在更大的尺度上运作，但道理相通：没有哪段"随机"的课程，是没有任何护栏的。</div>
+  </div>
+
+  <div class="card">
+    <h3>负面存有怎么"分享爱"</h3>
+    <div class="q">上面说负面可收割者也在"分享自我之爱"——分享爱不是应该让负面极化耗尽吗？</div>
+    <p>Ra 先划了一条线：不能以已知存有为例（那会构成侵犯），只能泛泛而谈。然后给出一个对称的起点：<b>负面存有同样感到自己找到了赋予存在意义的力量</b>——与正面极化的感受一模一样。差别在给出的东西。</p>
+    <div class="quote">
+      <p class="en">This negative entity will strive to offer these understandings to other-selves, most usually by the process of forming the elite, the disciples, and teaching the need and rightness of the enslavement of other-selves for their own good.</p>
+      <p class="zh">这个负面实体会努力把这些理解提供给其他自我，最通常的方式是形成精英与门徒，并教导"为了其他自我自身的好处"而奴役他们的必要性与正确性。</p>
+      <span class="src">—— Session 050 · (50.6)</span>
+    </div>
+    <div class="plain">正负两边都说自己在"给"：一边给出去的是光，一边给出去的是锁链——并把锁链说成为你好。</div>
+    <div class="case"><b>"大师"的课堂话术：</b>某课程导师对学员说："你们离开我就什么都学不成。"学员被一步步构造成"依赖自我、需要自我的指引与智慧"的人——这正是 Ra 描述的负面分享方式：形成精英与门徒，把奴役教导为必要与正确。</div>
+    <div class="case"><b>以爱为名的控制：</b>亲戚替晚辈安排一切、不许其有自己的决定，理由永远是"为你好"。把对方构想为离不开自己的依赖者——形态与 Ra 所述如出一辙，只是尺度小些。</div>
+  </div>
+
+  <div class="card">
+    <h3>归类练习：这算哪种"给予"？</h3>
+    <p class="hint" style="font-size:.88rem;color:var(--ink-soft)">用 Ra 在本集给的标尺，判断下面的场景更接近正面还是负面的"分享"。</p>
+    <div id="sorterArea"></div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 4 章：遗忘的牌局 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>遗忘的牌局：为何极化必须在投生中完成</h2></div>
+  <p class="sec-lead">最难缠的一问来了：既然在投生之间，实体"知道自己想做什么"，为什么非得投生、把有意识的记忆抹掉，再来"照所希望的方式行动"？Ra 的回答是一副扑克牌。</p>
+
+  <div class="card">
+    <h3>看得见所有牌的人，赢不了任何东西</h3>
+    <div class="q">为什么不能在灵界里完成极化，非要进到物理世界来？</div>
+    <div class="quote">
+      <p class="en">Let us give the example of the man who sees all the poker hands. He then knows the game. It is but child's play to gamble, for it is no risk.</p>
+      <p class="zh">让我们以一个看得见所有扑克手牌的人为例。他于是知道了这局牌。赌博对他只是儿戏，因为毫无风险。</p>
+      <span class="src">—— Session 050 · (50.7)</span>
+    </div>
+    <p>Ra 接着指向一个更高的场景：在时间/空间里、在真实颜色的绿色密度中，所有人的牌都摊在明处——思想、感受、困扰全都可以被看见，没有欺骗，也没有欺骗的欲望。和谐中能完成许多事，<b>但心/身/灵从这种互动里几乎得不到极化</b>。</p>
+    <div class="plain">全知=无风险=无成长。极化需要"看不见对方的牌还敢出"的那一下。</div>
+    <div class="analogy"><b>开卷考：</b>答案全摆着的选择题，永远练不出考场上的定力——选择之所以有重量，是因为不知道另一边是什么。</div>
+    <div class="case"><b>合唱团排练：</b>乐谱全摊开、指挥看得见每个人，演出和谐无碍；但没有人因此学会"在看不见彼此时依然选择配合"。牌面全开的世界高效而和谐，却几乎不给极化留位置。</div>
+  </div>
+
+  <div class="card">
+    <h3>把比喻放大：一生的牌局</h3>
+    <div class="q">那我们这一生，在这副牌里到底处在什么位置？</div>
+    <div class="quote">
+      <p class="en">Let us re-examine this metaphor and multiply it into the longest poker game you can imagine: a lifetime. The cards are love, dislike, limitation, unhappiness, pleasure, etc.</p>
+      <p class="zh">让我们重新审视这个比喻，把它放大成你能想象的最长的扑克牌局：一生。牌是爱、厌恶、限制、不快、快乐等等。</p>
+      <span class="src">—— Session 050 · (50.7)</span>
+    </div>
+    <p>牌被发下、再发下、不断重发。这一生你只能<b>开始</b>——Ra 特意强调"开始"——认识自己的牌：开始找到内在的爱，开始平衡快乐与限制。而读其他自我之牌的唯一线索，是<b>看他们的眼睛</b>；你记不住自己的牌、他们的牌，甚至记不住游戏规则。</p>
+    <div class="case"><b>视频里的那一眼：</b>对方说"我没事"的那一秒，眼神闪了一下。Ra 说，读其他自我之牌的唯一线索就是看眼睛——屏幕再清晰，替你"看牌"的也只有那一眼。</div>
+    <div class="case"><b>三十年的婚姻：</b>年轻时抓到"热烈"，中年摸到"限制"与"不快"，老年摸到"陪伴"——牌一局一局重发，没有一把定胜负；Ra 说这一生你能做的只是"开始"认识自己手里的牌。</div>
+  </div>
+
+  <div class="card">
+    <h3>唯一的赢法：把牌输掉</h3>
+    <div class="q">一副看不见彼此、记不住规则的牌局，怎么可能"赢"？</div>
+    <div class="quote">
+      <p class="en">This game can only be won by those who lose their cards in the melting influence of love; can only be won by those who lay their pleasures, their limitations, their all upon the table face up and say inwardly: "All, all of you players, each other-self, whatever your hand, I love you."</p>
+      <p class="zh">这局牌只能被那些在爱的融化中把牌输掉的人赢——只能被那些把快乐、限制、一切面朝上摊在桌上、并在内心说"所有玩家，每一个其他自我，无论你们手里是什么，我爱你们"的人赢。</p>
+      <span class="src">—— Session 050 · (50.7)</span>
+    </div>
+    <div class="plain">遗忘不是系统故障，是计分规则：没有盲牌，"我依然爱你"就只是一句陈述，不再是一个选择。</div>
+    <div class="case"><b>家庭调解现场：</b>愿意先把最难堪的部分摊开的一方，往往让全场松下来。Ra 说的是同一件事：把"快乐、限制、一切"面朝上放上桌，这不是输——这是这局牌唯一的赢法。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 5 章：行家的内在工作 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>行家的内在工作：静默、单一思想与智能无限</h2></div>
+  <p class="sec-lead">镜头转向更进阶的人物：行家（adept）。发问者的问题很技术：不出外部行动，只靠"在脑中保持视觉图像"，怎么能完成极化？Ra 的答案先是两个钥匙，然后是一次连接。</p>
+
+  <div class="card">
+    <h3>两把钥匙</h3>
+    <div class="q">不出外部行动，"在意识中"极化是怎么发生的？</div>
+    <p>Ra 先抬高了门槛：行家是将<b>越过绿光</b>（绿光标志进入可收割性）的存在——他不只是接入智能能量来备收割，而是同时接入智能能量与智能无限，为的是转化行星的可收割性与意识。随后才给出方法：</p>
+    <div class="quote">
+      <p class="en">The means of this working lie within. The key is first, silence, and secondly, singleness of thought.</p>
+      <p class="zh">这工作的手段在内里。钥匙第一是静默，第二是思想的单一性。</p>
+      <span class="src">—— Session 050 · (50.8)</span>
+    </div>
+    <p>标志也很具体：若一个视觉化能对内眼<b>稳定保持数分钟</b>（按你们计量时间的方式），它就标志着行家思想单一性的增长。</p>
+    <div class="plain">先安静，再把一个念头稳稳"端住"几分钟——两个动作就是全部钥匙；之后用它抬升整体还是喂养自我，是正负两条路的分岔。</div>
+    <div class="case"><b>乐团调音：</b>演出前先全场安静（静默），双簧管给出标准音 A（单一思想），各声部据此校准——先清场、再一个音，然后合奏才有意义。Ra 给的次第一模一样。</div>
+    <div class="case"><b>马拉松的后半程：</b>真正难的不是配速，而是三十公里处把"保持节奏"这一个念头稳稳守住而不散。守住几分钟，训练就换了一个层级——"稳定保持"本身就是信号。</div>
+  </div>
+
+  <div class="card">
+    <h3>同一把剑的两种去向</h3>
+    <div class="q">这个"思想的单一性"，接下来被用来做什么？</div>
+    <div class="quote">
+      <p class="en">This singleness of thought, then, can be used by the positive adept to work in group ritual visualizations for the raising of positive energy, by negative adepts for the increase in personal power.</p>
+      <p class="zh">这种思想的单一性，随后可以被正面行家用于集体仪式视觉化以提升正面能量，被负面行家用于增强个人力量。</p>
+      <span class="src">—— Session 050 · (50.8)</span>
+    </div>
+    <div class="plain">能力是中性的，方向在极化里——同一份定力，可以抬升整体，也可以加固自我。</div>
+    <div class="case"><b>同门两个徒弟：</b>一家武馆的两个徒弟学到同一套呼吸法：一个带起社区晨练场，把方法免费教给街坊；一个拿去开"驭人术"私教课。功夫相同，去向相反——正如正负行家同用一份"单一思想"。</div>
+  </div>
+
+  <div class="card">
+    <h3>触到源头时发生什么</h3>
+    <div class="q">能稳住图像之后，"影响行星意识"具体指什么？</div>
+    <p>Ra 说，正面行家<b>从内在触及智能无限</b>时，发生的是最强的连接：整个心/身/灵复合体（微宇宙）与宏观宇宙接通。这连接让时间/空间中的绿光真实颜色得以在你们的时间/空间显化——</p>
+    <div class="quote">
+      <p class="en">In green ray, thoughts are beings. In your illusion this is normally not so.</p>
+      <p class="zh">在绿色光芒中，思想即是存有。在你们的幻象里，通常并非如此。</p>
+      <span class="src">—— Session 050 · (50.9)</span>
+    </div>
+    <p>行家于是成为爱与光的活管道，把光辉直接导入行星的<b>能量节点网络</b>；而仪式总是以赞美与感恩把能量接地、释放给行星整体作结。</p>
+    <div class="plain">在我们这里"想"只是想；在绿光真实颜色里，想即是存有——行家的工作，是让那个世界的规则临时在人间显形，并以感恩收尾。</div>
+  </div>
+
+  <div class="card">
+    <h3>术语卡：读懂这一章的六个词</h3>
+    <p class="hint" style="font-size:.88rem;color:var(--ink-soft)">点击卡片翻面。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">行家</div><div class="sub">adept</div><div class="tap">点击翻面 →</div></div><div class="back">已越过绿光（进入可收割性）的修炼者。本集的关键区分：他不只是接入智能能量作收割准备，而是同时接入智能能量与智能无限，目的是转化行星的可收割性与意识。<em>比喻：别人还在备考，他已经站在命题组门口。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">智能能量</div><div class="sub">intelligent energy</div><div class="tap">点击翻面 →</div></div><div class="back">造物以能量与规律运作的一面；本集中它是收割准备阶段的接入对象。未越过绿光门槛时，能调用的止于此。<em>白话：电网里的电——能点亮灯，但不是发电厂本身。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">智能无限</div><div class="sub">intelligent infinity</div><div class="tap">点击翻面 →</div></div><div class="back">更根本的源头。正面行家"从内在"触及它时，发生的是整个复合体（微宇宙）与宏观宇宙的连接——Ra 称这是最强的连接。<em>白话：不是用电，是直接接进发电厂。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">思想的单一性</div><div class="sub">singleness of thought</div><div class="tap">点击翻面 →</div></div><div class="back">钥匙的第二环。标志很具体：一个视觉化能对内眼稳定保持数分钟。正负行家都用它，用途在极化中分岔。<em>白话：把一个念头稳稳端住、不洒出来的定力。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">静默</div><div class="sub">silence</div><div class="tap">点击翻面 →</div></div><div class="back">钥匙的第一环。"这工作的手段在内里"——没有内在清场，单一思想无从谈起。<em>白话：先关掉背景音乐，才听得清单音。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">时间/空间</div><div class="sub">time/space</div><div class="tap">点击翻面 →</div></div><div class="back">与我们所在的"空间/时间"相对的另一半。Ra 在牌局比喻中说：在那里（真实颜色绿密度）所有人的牌摊开、无欺骗；行家接入时，那里的绿光真实颜色得以在此显化。<em>白话：舞台后台——幕布这边的规则在那里不生效。</em></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>条件模拟器：行家何时能"从内在触及智能无限"？</h3>
+    <p class="hint" style="font-size:.88rem;color:var(--ink-soft)">拨动开关，看三个条件如何决定结果。</p>
+    <div class="cond-row"><div class="name">先做到静默<small>内在清场——钥匙的第一环</small></div><label class="switch"><input type="checkbox" id="swSilence"><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">单一思想<small>视觉化能对内眼稳定保持数分钟</small></div><label class="switch"><input type="checkbox" id="swSingle"><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">极化已越过绿光门槛<small>决定接入的层级：备收割，还是转化行星</small></div><label class="switch"><input type="checkbox" id="swGreen"><span class="slider"></span></label></div>
+    <div id="condResult"></div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 6 章：头部能量与金字塔 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>头部能量与金字塔：一次拒答，一次归位</h2></div>
+  <p class="sec-lead">本集结尾的发问有点"跑偏"：金属弯曲、金字塔帽、左右脑——Ra 用一个「No」和两次"请更具体地提问"把方向拨回来，然后把真正能回答的部分讲透：你在冥想中感到的，到底是什么。</p>
+
+  <div class="card">
+    <h3>先是一次拒答</h3>
+    <div class="q">有小组头戴金字塔形金属丝，密集冥想几天后能隔空弯金属——这过程有价值吗？</div>
+    <div class="quote">
+      <p class="en">No. Please ask one more full query at this working.</p>
+      <p class="zh">不。请在这次工作里再问一个完整的问题。</p>
+      <span class="src">—— Session 050 · (50.10)</span>
+    </div>
+    <p>Ra 拒绝评点这个具体人群，随即把提问权交还发问者。随后的追问（左右脑能量场与金字塔）得到的回应也类似：Ra 自称"同样对这个回答方向感到困惑"，只给两条——金字塔是<b>聚焦能量流入的形状之一</b>，供能觉察这些流入的实体使用；而物理大脑的形状并不是聚焦流入的形状。说完请发问者"更具体地问"。</p>
+    <div class="plain">拒答本身就是教导：不评点具体人群，是自由意志法则的边界；能给的只有普适的那一小块。</div>
+    <div class="case"><b>记者问医生：</b>"隔壁床那位病人怎么样了？"医生只答"无可奉告；你可以问我医学问题"——不是隐瞒，是边界。Ra 的「No」加"请再问一个完整的问题"，正是这个结构：拒评个案，敞开原理。</div>
+  </div>
+
+  <div class="card">
+    <h3>头部各处的能量感，怎么读</h3>
+    <div class="q">我们每个人冥想时都在头部不同位置感到能量——那是什么？不同位置又意味着什么？</div>
+    <p>Ra 的第一条建议是：研究这些体验时，<b>把金字塔忘掉</b>。然后给归位原则——</p>
+    <div class="quote">
+      <p class="en">The instreamings of energy are felt by the energy centers which need, and are prepared for, activation. Thus those who feel the stimulation at violet-ray level are getting just that. Those feeling it within the forehead between the brows are experiencing indigo ray and so forth.</p>
+      <p class="zh">能量的流入被那些需要、并且准备好被激活的能量中心所感知。因此，在紫罗兰光芒层次感到刺激的人得到的就是紫光；在前额双眉之间感到它的人，正在体验靛蓝光芒，以此类推。</p>
+      <span class="src">—— Session 050 · (50.12)</span>
+    </div>
+    <div class="table-wrap"><table class="nine">
+      <tr><th>感受</th><th>英文</th><th>通俗理解</th></tr>
+      <tr><td>头顶（紫罗兰层次）的刺激</td><td>violet ray</td><td>从造物主到造物主的灵性给予与获取</td></tr>
+      <tr><td>眉心之间的感觉</td><td>indigo ray</td><td>通向疗愈、魔法工作、祈祷专注、存有光辉的"伟大门户"</td></tr>
+      <tr><td>刺麻感与视觉图像</td><td>blockage</td><td>被激活的中心有阻塞；电性身体把能量摊开，效果弥散</td></tr>
+      <tr><td>无论如何都无感</td><td>defense</td><td>连潜意识都拒绝改变——防御与武装把流入挡在门外</td></tr>
+    </table></div>
+    <div class="plain">感受位置不说明"你更高级"，只说明哪个中心"需要且准备好"被激活。</div>
+    <div class="case"><b>同一节课，三种反馈：</b>冥想课下课后，一人说眉心发胀，一人说头顶发热，第三人说只觉得腿麻——不是老师给的能量不同，是三个人各自"需要且准备好被激活"的中心不同。</div>
+    <div class="case"><b>水压不足的喷头：</b>水柱变成漫洒一片——刺麻感与乱飞的画面就是"漫洒"：能量到了，但该中心有阻塞，被电性身体摊薄了，效果弥散。</div>
+    <div class="case"><b>冥想多年无感的人：</b>多半不是"没天赋"。Ra 说，连潜意识层面都不愿经历改变的人，会凭"对变化的防御与武装"把流入挡得干干净净；而并非真诚请求、又没受过灵性防御训练的人，反而可能误感到它。</div>
+  </div>
+
+  <div class="card">
+    <h3>两种感觉同时来，正常吗</h3>
+    <div class="q">发问者当场报告：我现在同时感到两种——这正常吗？</div>
+    <div class="quote">
+      <p class="en">The most normal for the adept is the following: the indigo stimulation, activating that great gateway into healing, magical work, prayerful attention, and the radiance of being; and the stimulation of the violet ray which is the spiritual giving and taking from and to Creator, from Creator to Creator.</p>
+      <p class="zh">对行家来说，最正常的是：靛蓝光芒的刺激——激活那扇通向疗愈、魔法工作、祈祷专注与存有光辉的伟大门户；加上紫罗兰光芒的刺激——那是从造物主到造物主、从造物主到造物主的灵性给予与获取。</p>
+      <span class="src">—— Session 050 · (50.13)</span>
+    </div>
+    <p>Ra 随即补了一句短评："这是一种可取的配置。"</p>
+    <div class="plain">靛光加紫光同时来，不但正常，还是理想状态：门户打开，给予与获取同时流动。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 7 章：收官 ============ -->
+<section class="chapter" id="s7">
+  <div class="sec-head"><span class="num">07</span><h2>收官：把牌局带回今天</h2></div>
+  <p class="sec-lead">本集没有一句独立的"大宣告"，但有一段把整集收拢的话——遗忘的牌局、五步游戏、以及那句摊牌时的内心独白。</p>
+
+  <div class="saying">
+    <p class="en">This is the game: to know, to accept, to forgive, to balance, and to open the self in love. This cannot be done without the forgetting, for it would carry no weight in the life of the mind/body/spirit beingness totality.</p>
+    <p class="zh">这就是那场游戏：去知晓、去接纳、去原谅、去平衡、在爱中敞开自我。没有遗忘，这一切便无法完成——否则它在心/身/灵存有总体的生命中，不具分量。</p>
+    <span class="src">—— Session 050 · (50.7)</span>
+  </div>
+
+  <div class="card">
+    <h3>那句话的原文</h3>
+    <div class="quote">
+      <p class="en">All, all of you players, each other-self, whatever your hand, I love you.</p>
+      <p class="zh">所有玩家，每一个其他自我，无论你们手里的牌是什么，我爱你们。</p>
+      <span class="src">—— Session 050 · (50.7)</span>
+    </div>
+    <div class="case"><b>今晚就能试的一局：</b>睡前复盘白天那场冲突，按牌局五步走一遍——先承认自己手里的牌（我哪里想赢、怕输），再接纳、原谅、平衡，最后把"无论对方什么牌我都爱你"默一遍。Ra 给的五步，是可以当天试跑的。</div>
+    <div class="case"><b>三分钟的微缩版：</b>先安静下来（静默），再只守住一个念头或画面（单一思想的微缩版），结束时说一句感谢——正合本集"静默 → 单一思想 → 以赞美感恩收尾"的次第，只是规模缩到日常尺寸。</div>
+  </div>
+
+  <div class="card">
+    <h3>本集留下的线头</h3>
+    <p>① 金属弯曲小组只换来一个「No」：Ra 不评点具体人群，这条线在本集没有下文。<br>② 行家如何具体操作"集体仪式视觉化"，本集只给出钥匙（静默、单一思想）与用途，未展开细节。<br>③ 金字塔被降格为"聚焦流入的形状之一"——发问者被两次邀请"问得更具体"，方向留待他自己重新校准。</p>
+    <div class="plain">读后续集会时，留意这些线头何时被重新拾起。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 050（`split/Ra_Session_050.md`）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra050-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本集定制交互 ===== */
+
+/* ① 问答脉络推进器（第 1 章） */
+initStepper('flowTrack','flowDetail','flowPrev','flowNext',[
+  {t:'南极吸引',d:'<span class="qa-q">问：(50.2) 上一集说"体验经南极被吸引"，请定义一下？</span><b>答：</b>南（负）极是吸引之极，把被磁化到它的事物拉向自身；心/身/灵复合体的体验流入就是南极流入——而红光根部中心总是最先对体验作出反应。'},
+  {t:'为何说"被吸来"',d:'<span class="qa-q">问：(50.3) 为什么说体验是被拉向实体的？</span><b>答：</b>这正是体验催化剂现象及其进入复合体觉知的本质——催化剂是"流入"的，接收端从一开始就在场。'},
+  {t:'投生前编程',d:'<span class="qa-q">问：(50.4-50.5) 能举例说明实体如何设定吸引特定催化剂的条件吗？</span><b>答：</b>Ra 先扫描器皿意识取得许可，再以器皿为例：投生前选定课题，与父母手足、与若干实体分别立约；事件层只是社会文化的可能性/概率漩涡，课程全关于其他自我、关于给予。'},
+  {t:'负面的"分享爱"',d:'<span class="qa-q">问：(50.6) 负面极化如何分享自我之爱？</span><b>答：</b>Ra 拒用已知存有为例，泛泛而谈：负面存有同样自认找到了赋予存在意义的力量，靠形成精英与门徒，教导"为你好"的奴役，把他人构造成依赖自我。'},
+  {t:'遗忘的牌局',d:'<span class="qa-q">问：(50.7) 为何必须在投生中、带着遗忘才能极化？</span><b>答：</b>看得见所有手牌就无风险亦无兴趣；一生是最长的牌局，只能靠在爱的融化中输掉自己的牌来赢——遗忘让选择有分量。'},
+  {t:'行家内在工作',d:'<span class="qa-q">问：(50.8-50.9) 不出外部行动，如何在意识中极化？</span><b>答：</b>钥匙第一静默、第二思想的单一性；从内在触及智能无限，微宇宙接通宏观宇宙，行家成为爱与光的活管道，把光辉导入行星能量节点网络，以赞美感恩收尾。'},
+  {t:'头部能量归位',d:'<span class="qa-q">问：(50.10-50.13) 金属弯曲、金字塔、头部各处的能量感是什么？</span><b>答：</b>Ra 以「No」拒绝评点具体人群；金字塔只是聚焦流入的形状之一；能量被"需要且准备好被激活"的中心感知——靛光加紫光同现，是可取的配置。'}
+]);
+
+/* ② 术语卡翻转（第 5 章） */
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+/* ③ 归类练习：这算哪种"给予"（第 3 章） */
+initSorter('sorterArea',[
+  {a:'救援队把水和毯子递给灾区的人，不问对方是谁，也不求回报。',opts:['正面','负面'],ans:'正面',exp:'给予而不接收；课程关于其他自我，而非事件。'},
+  {a:'导师宣称"只有我懂规则，离开我你不可能进步"，要求学员绝对服从。',opts:['正面','负面'],ans:'负面',exp:'把他人构想为依赖自我、需要自我的指引与智慧，并把这说成为他们好。'},
+  {a:'同事主动背下项目失误的责任，好让犯错的新人留下来继续成长。',opts:['正面','负面'],ans:'正面',exp:'给出的是担当与空间，不索取依附。'},
+  {a:'领袖把追随者编成"内圈精英"，教导外人需要被管束、被驯化。',opts:['正面','负面'],ans:'负面',exp:'形成精英与门徒、教导奴役的必要与正确——Ra 对负面"分享自我之爱"的描述。'},
+  {a:'深夜值班的医生多留半小时，只为陪家属把话说完。',opts:['正面','负面'],ans:'正面',exp:'付出存有的光辉而不期待回报。'}
+]);
+
+/* ④ 条件模拟器：行家何时能从内在触及智能无限（第 5 章） */
+function updateAdeptSim(){
+  var s=document.getElementById('swSilence').checked;
+  var t=document.getElementById('swSingle').checked;
+  var g=document.getElementById('swGreen').checked;
+  var r=document.getElementById('condResult');
+  if(s&&t&&g){
+    r.className='';
+    r.innerHTML='<b>条件齐备：</b>从内在触及智能无限——整个心/身/灵复合体（微宇宙）与宏观宇宙接通；时间/空间中的绿光真实颜色得以在此显化，行家成为爱与光的活管道，把光辉直接导入行星能量节点网络，最后以赞美与感恩把能量接地、释放给行星整体。';
+  }else if(!s&&!t&&!g){
+    r.className='fail';
+    r.innerHTML='<b>尚未开始：</b>三把钥匙都没拧。钥匙第一是静默，第二是思想的单一性；而接入的层级取决于极化——未过绿光门槛时，行的只是"备收割"的智能能量。';
+  }else if(!s){
+    r.className='fail';
+    r.innerHTML='<b>缺第一环：</b>没有静默，单一思想无从谈起——内在还在嘈杂时，任何视觉化都只是想象练习。';
+  }else if(!t){
+    r.className='fail';
+    r.innerHTML='<b>缺第二环：</b>视觉化还不能对内眼稳定保持数分钟，说明思想的单一性尚未长成——此时谈不上"接入"，只是练习。';
+  }else{
+    r.className='fail';
+    r.innerHTML='<b>缺门槛：</b>静默与单一思想已备，但极化未过绿光门槛——此时接入的只是智能能量（收割准备），还不是智能能量与智能无限的同时接入。';
+  }
+}
+['swSilence','swSingle','swGreen'].forEach(function(id){
+  document.getElementById(id).addEventListener('change',updateAdeptSim);
+});
+updateAdeptSim();
+
+renderPath();
+</script>
+</body>
+</html>

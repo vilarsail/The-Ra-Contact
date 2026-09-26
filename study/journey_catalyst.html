@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css">
+<title>催化剂 · 滚动星旅</title>
+<style>
+:root{
+  --amb:#f5efe2;          /* 当前场景氛围色，由 JS 实时插值 */
+  --ink:#efe9dd;
+  --ink-dim:rgba(239,233,221,.55);
+  --serif:"LXGW WenKai","霞鹜文楷","LXGW WenKai SC","Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:#070a12;color:var(--ink);font-family:var(--serif);
+  line-height:2;overflow-x:hidden;
+}
+canvas#sky{position:fixed;inset:0;width:100vw;height:100vh;z-index:0}
+
+/* ===== 进度轨道 ===== */
+#rail{
+  position:fixed;right:26px;top:50%;transform:translateY(-50%);z-index:8;
+  display:flex;flex-direction:column;gap:13px;align-items:flex-end;
+}
+#rail .r{display:flex;align-items:center;gap:10px;cursor:pointer}
+#rail .r i{
+  width:5px;height:5px;border-radius:50%;flex-shrink:0;
+  background:rgba(255,255,255,.16);transition:all .4s;
+}
+#rail .r.cur i{background:var(--amb);box-shadow:0 0 9px var(--amb);transform:scale(1.7)}
+#rail .lbl{
+  font-size:.72rem;letter-spacing:.12em;color:var(--ink);white-space:nowrap;
+  padding:3px 12px;border-radius:999px;background:rgba(7,10,18,.78);
+  border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(4px);
+  opacity:0;transform:translateX(10px);transition:all .35s ease;pointer-events:none;
+}
+#rail:hover .lbl{opacity:1;transform:none}
+#rail .r.cur .lbl{border-color:var(--amb);color:var(--amb)}
+
+main{position:relative;z-index:1}
+
+/* ===== 时刻场景（全屏居中） ===== */
+.scene{min-height:118vh;display:flex;align-items:center;justify-content:center;padding:14vh 22px}
+.stage{max-width:620px;text-align:center;opacity:0;transform:translateY(34px);filter:blur(6px);transition:opacity 1.6s ease,transform 1.6s ease,filter 1.6s ease}
+.scene.on .stage,.station.on .stage{opacity:1;transform:none;filter:blur(0)}
+.kicker{
+  font-size:.8rem;letter-spacing:.55em;text-indent:.55em;color:var(--amb);
+  margin-bottom:30px;opacity:.85;
+}
+.kicker::after{
+  content:"";display:block;width:34px;height:1px;margin:16px auto 0;
+  background:var(--amb);opacity:.5;
+}
+.narr{font-size:1.18rem;color:var(--ink);margin-bottom:38px;text-align:center}
+.en{
+  font-family:Georgia,"Times New Roman",serif;font-style:italic;
+  font-size:.98rem;line-height:1.9;color:var(--amb);opacity:.92;margin-bottom:16px;
+}
+.zh{font-size:.95rem;color:var(--ink-dim);margin-bottom:10px}
+.ref{font-size:.74rem;letter-spacing:.2em;color:rgba(239,233,221,.34)}
+
+/* ===== 站点（左钉住 · 右细节流） ===== */
+.station{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);align-items:stretch}
+.pin{
+  position:sticky;top:0;height:100vh;
+  display:flex;align-items:center;justify-content:center;padding:0 3vw;
+}
+.pin .stage{max-width:520px}
+.detail{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:10vh 5vw 10vh 0;
+}
+.frag{
+  min-height:60vh;display:flex;flex-direction:column;justify-content:center;
+  max-width:440px;
+  opacity:0;transform:translateY(30px);
+  transition:opacity 1.3s ease,transform 1.3s ease;
+}
+.frag.on{opacity:1;transform:none}
+.f-k{
+  font-size:.78rem;letter-spacing:.4em;color:var(--amb);opacity:.85;margin-bottom:18px;
+}
+.f-en{
+  font-family:Georgia,"Times New Roman",serif;font-style:italic;
+  font-size:.92rem;line-height:1.9;color:var(--amb);opacity:.9;
+  border-left:2px solid rgba(255,255,255,.18);padding-left:16px;margin-bottom:14px;
+}
+.f-zh{font-size:.93rem;color:var(--ink-dim);margin-bottom:8px}
+.f-ref{font-size:.72rem;letter-spacing:.2em;color:rgba(239,233,221,.32)}
+
+/* 开场 */
+#s0 .narr{font-size:1.5rem;letter-spacing:.1em;line-height:2.3}
+.hint{
+  margin-top:60px;font-size:.8rem;letter-spacing:.4em;text-indent:.4em;
+  color:var(--ink-dim);animation:drift 2.6s ease-in-out infinite;
+}
+@keyframes drift{0%,100%{transform:translateY(0);opacity:.45}50%{transform:translateY(9px);opacity:.95}}
+
+/* 可选演示区（如棱镜 / 时间线 / 对比路径） */
+.demo{margin:8px auto 42px}
+.timeline{position:relative;max-width:460px;margin:0 auto 42px;text-align:left;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:rgba(255,255,255,.14)}
+.tl-item{position:relative;padding:2px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:11px;height:11px;border-radius:50%;
+  background:#070a12;border:3px solid var(--amb)}
+.tl-item .t{font-weight:700;color:var(--amb);letter-spacing:.1em}
+.tl-item .d{font-size:.9rem;color:var(--ink-dim)}
+.paths{display:flex;gap:26px;justify-content:center;margin-top:46px;flex-wrap:wrap}
+.path{
+  width:210px;padding:30px 22px 26px;border-radius:16px;cursor:pointer;
+  border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.02);
+  transition:all .7s ease;
+}
+.path h3{font-size:1.05rem;letter-spacing:.3em;text-indent:.3em;margin-bottom:12px}
+.path p{font-size:.86rem;color:var(--ink-dim);line-height:1.9}
+.paths.p-a .path:not(.a),.paths.p-b .path:not(.b){opacity:.28;transform:scale(.96)}
+.paths.p-a .path.a,.paths.p-b .path.b{transform:scale(1.04)}
+
+/* 终章 */
+#sLast .en{font-size:1.06rem;line-height:2.2}
+#sLast .zh{font-size:1rem}
+.again{
+  margin-top:56px;font-family:var(--serif);font-size:.85rem;letter-spacing:.35em;text-indent:.35em;
+  color:var(--ink-dim);background:none;border:1px solid rgba(255,255,255,.14);
+  border-radius:999px;padding:11px 30px;cursor:pointer;transition:all .4s;
+}
+.again:hover{color:var(--ink);border-color:var(--amb)}
+
+footer{
+  position:relative;z-index:1;text-align:center;padding:40px 20px 56px;
+  font-size:.76rem;color:rgba(239,233,221,.3);letter-spacing:.08em;line-height:2.2;
+}
+@media (max-width:900px){
+  .station{display:block}
+  .pin{position:static;height:auto;padding:12vh 22px 2vh}
+  .pin .stage{margin:0 auto}
+  .detail{padding:0 22px 6vh;align-items:center}
+  .frag{min-height:auto;margin-bottom:7vh}
+}
+@media (max-width:640px){
+  .narr{font-size:1.05rem}
+  #s0 .narr{font-size:1.2rem}
+  #rail{display:none}
+}
+
+/* ===== 本章定制：催化剂穿面纱 ===== */
+.flux{position:relative;height:210px;width:360px;max-width:88vw}
+.flux .beam{
+  position:absolute;left:0;top:50%;width:150px;height:3px;border-radius:2px;
+  transform:translateY(-50%) scaleX(0);transform-origin:0 50%;
+  background:linear-gradient(90deg,rgba(255,255,255,0),#fff);
+  filter:drop-shadow(0 0 7px rgba(255,255,255,.8));
+  transition:transform 1.4s cubic-bezier(.2,.7,.2,1) .1s;
+}
+.scene.on .flux .beam{transform:translateY(-50%) scaleX(1)}
+.flux .vline{position:absolute;left:158px;top:20%;bottom:20%;width:0;border-left:2px dashed rgba(255,255,255,.3)}
+.flux .ray{
+  position:absolute;left:166px;top:50%;height:2px;width:168px;border-radius:2px;
+  transform-origin:0 50%;transform:rotate(0) scaleX(.06);opacity:0;
+  transition:transform 2.2s cubic-bezier(.2,.7,.2,1) 1.4s,opacity 2.2s ease 1.4s;
+}
+.scene.on .flux .ray{transform:rotate(var(--a)) scaleX(1);opacity:.85}
+.flux .lbl{position:absolute;font-size:.68rem;letter-spacing:.3em;color:var(--ink-dim)}
+.flux .lbl.a{left:2px;top:calc(50% - 40px)}
+.flux .lbl.b{left:210px;top:calc(50% + 42px)}
+.flux .lbl.c{left:180px;top:calc(20% - 30px)}
+
+/* ===== 本章定制：两把钥匙 ===== */
+.path.a h3{color:#58b98a}
+.path.b h3{color:#c9703a}
+.paths.p-a .path.a,.paths.p-b .path.b{
+  border-color:rgba(255,255,255,.35);background:rgba(255,255,255,.05);
+  box-shadow:0 0 44px rgba(255,255,255,.08);
+}
+</style>
+</head>
+<body>
+
+<canvas id="sky"></canvas>
+<div id="rail"></div>
+
+<main>
+
+<!-- 0 开场 -->
+<section class="scene" id="s0" data-c="#f5efe2">
+  <div class="stage">
+    <p class="narr">每一天，都有东西砸向你：<br>一次争吵，一场病，一个不回消息的人。<br>你以为那是生活的心血来潮——<br>其实是有人提前放好的教材。</p>
+    <p class="en">"All that assaults your senses is catalyst. … In fact all that is unprocessed that has come before the notice of a mind/body/spirit complex is catalyst."</p>
+    <p class="zh">击打你感官的一切，都是催化剂……事实上，一切来到心/身/灵复合体注意之前、尚未被处理的东西，都是催化剂。</p>
+    <p class="ref">—— SESSION 093 · (93.11)</p>
+    <p class="hint">向下滚动 · 看看谁在递教材 ▾</p>
+  </div>
+</section>
+
+<!-- 1 命名 -->
+<section class="scene" id="s1" data-c="#ffffff">
+  <div class="stage">
+    <p class="kicker">命名</p>
+    <div class="demo flux">
+      <span class="lbl a">catalyst</span>
+      <div class="beam"></div>
+      <div class="vline"></div>
+      <span class="lbl c">veil</span>
+      <div class="ray" style="--a:-19deg;background:linear-gradient(90deg,#58b98a,transparent)"></div>
+      <div class="ray" style="--a:19deg;background:linear-gradient(90deg,#c9703a,transparent)"></div>
+      <span class="lbl b">experience</span>
+    </div>
+    <p class="narr">它不是惩罚，也不是运气。<br>它是投入静水的一颗石子：<br>一切扑面而来、尚未被你处理过的东西，<br>都叫催化剂。</p>
+    <p class="en">"All that you perceive seems to be consciously perceived. This is not the correct supposition. All that you perceive is perceived as catalyst unconsciously."</p>
+    <p class="zh">你以为一切都是被你有意识地感知的。这个假设并不成立：你所感知的一切，都是作为催化剂被无意识地感知的。</p>
+    <p class="ref">—— SESSION 093 · (93.11)</p>
+  </div>
+</section>
+
+<!-- 2 唯一的源头 -->
+<section class="station" id="s2" data-c="#d9b23f">
+  <div class="pin"><div class="stage">
+    <p class="kicker">第一站 · 唯一的源头</p>
+    <p class="narr">追问到底，<br>出题的人只有一个。<br>昆虫、天气、难缠的人，<br>都只是站在高我肩上的信使。</p>
+    <p class="en">"The nature of catalyst is such that there is only one source, for the catalyst and experience are further attempts at specificity in dealing with the architecture of the unconscious mind of the self."</p>
+    <p class="zh">催化剂的本质是这样的：它只有一个源头——因为催化剂与经验，是在处理自我无意识心智的架构时更进一步的具体化尝试。</p>
+    <p class="ref">—— SESSION 101 · (101.4)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">站在谁的肩上</p>
+      <p class="f-en">"Therefore, in an incarnational experience the self as Creator, especially the higher self, is the base from which catalyst stands to offer its service to the mind, body, or spirit."</p>
+      <p class="f-zh">在一次投生经历中，作为造物主的自我——尤其是高我——是催化剂所站立的基础，由此向心智、身体或灵性提供服务。</p>
+      <p class="f-ref">—— SESSION 101 · (101.4)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">一直出题到你转向</p>
+      <p class="f-en">"Of the less aware entities we may say that the connection will often seem random as the higher self continues producing catalyst until a bias occurs."</p>
+      <p class="f-zh">对觉知较少的实体，这种联系常常看似随机——因为高我会不断产生催化剂，直到一个偏向出现。</p>
+      <p class="f-ref">—— SESSION 061 · (61.7)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">骨架与血肉</p>
+      <p class="f-en">"Thus the sub-Logos can offer only a basic skeleton, shall we say, of catalyst."</p>
+      <p class="f-zh">子理则（你们太阳这位造物设计师）只能提供催化剂的基本骨架；血肉，要靠你自己长出来。</p>
+      <p class="f-ref">—— SESSION 054 · (54.17)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">自己为自己制造</p>
+      <p class="f-en">"The more advanced the entity, the more tenuous the connection between the sub-Logos and the perceived catalyst until, finally, all catalyst is chosen, generated, and manufactured by the self, for the self."</p>
+      <p class="f-zh">实体越进阶，与子理则的联系就越稀薄——直到最终，一切催化剂都由自我为自我来选择、产生和制造。</p>
+      <p class="f-ref">—— SESSION 054 · (54.17)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">完全掌握的人不多</p>
+      <p class="f-en">"We find your query indeterminate but can respond that the number of those which have mastered outer catalyst completely is quite small."</p>
+      <p class="f-zh">Ra 的回答留有余地，但给出一条底线：完全掌握了外部催化剂的实体，数量相当少。</p>
+      <p class="f-ref">—— SESSION 054 · (54.18)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 3 三条来路 -->
+<section class="station" id="s3" data-c="#8d99a6">
+  <div class="pin"><div class="stage">
+    <p class="kicker">第二站 · 三条来路</p>
+    <p class="narr">同一盆冷水，<br>可能来自天气，<br>可能来自你睡前的高我，<br>也可能来自一个想「帮」你的对立者。</p>
+    <p class="en">"We seem to accentuate or to produce catalyst to increase the desired polarization, whether the mechanism be random, through what we call the higher self, or through the services of an oppositely polarized entity acting upon us with catalyst."</p>
+    <p class="zh">似乎有三种机制为我们送来催化剂：随机的；经由我们所谓高我的；以及经由一个极性相反的实体、以催化剂作用于我们的服务。</p>
+    <p class="ref">—— SESSION 101 · (101.3)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">无懈可击的观察</p>
+      <p class="f-en">"We find your observations unexceptional and, in the large, correct."</p>
+      <p class="f-zh">对上面那个「三种来路」的猜想，Ra 的回应只有一句：你的观察无可挑剔，并且大体正确。</p>
+      <p class="f-ref">—— SESSION 101 · (101.4)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">幕后的编排</p>
+      <p class="f-en">"This does not mean that all is predestined, but rather that there are invisible guidelines shaping events which will function according to this programming."</p>
+      <p class="f-zh">投生前你选好了课程总量。这不是宿命，而是有无形的导轨在塑造事件，让它们按这个编程运行。</p>
+      <p class="f-ref">—— SESSION 033 · (33.6)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">错过再补一课</p>
+      <p class="f-en">"Thus if one opportunity is missed, another will appear until the, shall we say, student of the life experience grasps that a lesson is being offered and undertakes to learn it."</p>
+      <p class="f-zh">一个机会错过了，另一个就会出现——直到这位生命体验的学生醒悟过来：有门课正在被提供，并着手去学。</p>
+      <p class="f-ref">—— SESSION 033 · (33.6)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">新来者的雨</p>
+      <p class="f-en">"The amount of randomness of potential catalyst is proportional to the newness of the mind/body/spirit complex to third density."</p>
+      <p class="f-zh">潜在催化剂的随机程度，与这个心/身/灵复合体对第三密度的「新近程度」成正比——越新，雨越乱。</p>
+      <p class="f-ref">—— SESSION 092 · (92.11)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">地壳也在出题</p>
+      <p class="f-en">"The second portion is this: the results of the random catalyst of what you call the earth changes are also random."</p>
+      <p class="f-zh">你们所谓的地球变迁也是一种随机催化剂，而它的结果，同样是随机的。</p>
+      <p class="f-ref">—— SESSION 033 · (33.12)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">魔鬼的真实身份</p>
+      <p class="f-en">"The Devil archetype represents the illusion of the material world and the appearance of evil but is more accurately the provider of catalyst for the growth of each entity within the third-density illusion."</p>
+      <p class="f-zh">塔罗里那张「魔鬼」牌：看起来是恶，但更准确地说，是第三密度幻象中为每个实体的成长提供催化剂的人。</p>
+      <p class="f-ref">—— SESSION 067 · (67.28)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 4 愤怒降临 -->
+<section class="scene" id="s4" data-c="#c94b3a">
+  <div class="stage">
+    <p class="kicker">愤怒</p>
+    <p class="narr">然后有一天，<br>一团没有方向的红能量<br>从胸口服底涌上来。<br>它是谁送来的并不重要——<br>重要的是，你可以拿它做两件事。</p>
+    <p class="en">"The other-self which is the object of anger is thus transformed into an object of acceptance, understanding, and accommodation, all being reintegrated using the great energy which anger began."</p>
+    <p class="zh">愤怒所指的那个他者自我，由此转化为接纳、理解与包容的对象——一切都被重新整合，用的正是愤怒所启动的那股伟大能量。</p>
+    <p class="ref">—— SESSION 046 · (46.9)</p>
+  </div>
+</section>
+
+<!-- 5 两把钥匙 -->
+<section class="station" id="s5" data-c="#a63a2e">
+  <div class="pin"><div class="stage">
+    <p class="kicker">第三站 · 两把钥匙</p>
+    <p class="narr">同一团怒火，<br>有人拿它去接纳，<br>有人拿它去控制。<br>没拿的人，身体替他拿。<br>（把光标放上去看看）</p>
+    <div class="paths" id="paths">
+      <div class="path a"><h3>接纳</h3><p>让怒火被看见、<br>被理解、被拥抱，<br>能量重新归你使用。</p></div>
+      <div class="path b"><h3>控制</h3><p>把怒火炼成手段，<br>去支配引发它的人，<br>能量从此向外倾泻。</p></div>
+    </div>
+    <p class="en">"Control is the key to negatively polarized use of catalyst. Acceptance is the key to positively polarized use of catalyst. Between these polarities lies the potential for this random and undirected energy creating a bodily complex analog of what you call the cancerous growth of tissue."</p>
+    <p class="zh">控制是负面极化使用催化剂的钥匙，接纳是正面极化的钥匙。在两把钥匙之间，横着一种可能：这股随机而无定向的能量，在身体复合体里造出你们所称癌变组织增生的类似物。</p>
+    <p class="ref">—— SESSION 046 · (46.9)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">祝福那团火</p>
+      <p class="f-en">"This entity, if using this catalyst mentally, blesses and loves this anger in itself."</p>
+      <p class="f-zh">在心智中使用这催化剂的正面实体，会祝福它、爱它——爱自己之内的愤怒本身。</p>
+      <p class="f-ref">—— SESSION 046 · (46.9)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">先对着自己</p>
+      <p class="f-en">"The first acceptance or control, depending upon polarity, is of the self."</p>
+      <p class="f-zh">无论哪种极性，第一份接纳或控制，都是针对自己的。</p>
+      <p class="f-ref">—— SESSION 046 · (46.10)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">每一次相遇</p>
+      <p class="f-en">"We could speak infinitely, or we could simply state that any interaction betwixt self and other-self has whatever potential for catalyst that there exists in the potential difference between self and other-self, this moderated and undergirded by the constant fact of the Creator as self and as other-self."</p>
+      <p class="f-zh">若要列举关系这个催化剂的机制，可以说到无限——或者一句话：自我与他人的每次互动，都带着两人之间「电位差」所容纳的全部催化潜能。</p>
+      <p class="f-ref">—— SESSION 033 · (33.17)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">在心智里用完它</p>
+      <p class="f-en">"Thus the entity which uses the experience of anger to polarize consciously, positively or negatively, does not experience the bodily catalyst but rather uses the catalyst in mental configuration."</p>
+      <p class="f-zh">有意识地用愤怒去极化的实体——无论正负——不会体验到身体层面的催化剂，而是在心智配置中把它用完。</p>
+      <p class="f-ref">—— SESSION 046 · (46.7)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">负面者的用法</p>
+      <p class="f-en">"The negatively oriented mind/body/spirit complex will use this anger in a similarly conscious fashion, refusing to accept the undirected, or random, energy of anger and instead, through will and faith, funneling this energy into a practical means of venting the negative aspect of this emotion so as to obtain control over other-self or otherwise control the situation causing anger."</p>
+      <p class="f-zh">负面导向者同样有意识地使用愤怒：拒绝接纳这股无定向的能量，而以意志与信心把它导入实际的手段，宣泄情绪的负面面向，从而获得对他人或局面的控制。</p>
+      <p class="f-ref">—— SESSION 046 · (46.9)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 6 身体收下 -->
+<section class="station" id="s6" data-c="#8a6a4f">
+  <div class="pin"><div class="stage">
+    <p class="kicker">第四站 · 未用之物</p>
+    <p class="narr">催化剂不肯消失。<br>心智绕开它，灵性搁置它，<br>它就换个门牌——<br>交到身体手里。</p>
+    <p class="en">"In each programmed individual the sensitivities are far more active, and, as we have said, that catalyst not used fully by the mind and spirit is given to the body."</p>
+    <p class="zh">在每个被编程的个体里，敏感度都活跃得多；而那些未被心智与灵性充分使用的催化剂，会被交给身体。</p>
+    <p class="ref">—— SESSION 061 · (61.7)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">麻木从手臂开始</p>
+      <p class="f-en">"Thus you may see in this entity the numbing of the arms and the hands signifying this entity's failure to surrender to the loss of control over the life."</p>
+      <p class="f-zh">手臂与双手的麻木，标志着这个实体不愿臣服于对生命控制权的丧失——这场戏在身体里继续上演。</p>
+      <p class="f-ref">—— SESSION 061 · (61.7)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">内心的灼烧</p>
+      <p class="f-en">"If an entity is not in harmony with its circumstances it feels a burning within."</p>
+      <p class="f-zh">与处境不和谐的实体，会感到内在的灼烧——温度还没升高，升起的只是脾气与眼泪。</p>
+      <p class="f-ref">—— SESSION 060 · (60.20)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">从脾气到肿瘤</p>
+      <p class="f-en">"if an entity persists for a long period of your space/time in feeling this emotive heat and disharmony, the entire body complex will begin to resonate to this disharmony, and the disharmony will then show up as the cancer or other degenerative distortions from what you call health."</p>
+      <p class="f-zh">若这股情绪之热持续了很久，整个身体复合体会开始与这种不和谐共振——然后，它显现为癌症，或别的从你们所称的健康中退化出来的变貌。</p>
+      <p class="f-ref">—— SESSION 060 · (60.20)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">思想变成事物</p>
+      <p class="f-en">"It is this influence which has begun to cause thoughts to become things. As an example, you may observe the thoughts of anger becoming those cells of the physical bodily complex going out of control to become what you call the cancer."</p>
+      <p class="f-zh">愤怒的思想，正在变成那些失控增殖、被你们称为癌症的身体细胞——思想开始变成事物。</p>
+      <p class="f-ref">—— SESSION 040 · (40.9)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">走偏的催化剂</p>
+      <p class="f-en">"Very often the catalyst for emotional pain, whether it be the death of the physical complex of one other-self which is loved or some other seeming loss, will simply result in the opposite: in a bitterness, an impatience, a souring. This is catalyst which has gone awry."</p>
+      <p class="f-zh">情感之痛的催化剂——所爱之人的离世，或某种看似的失去——常常只结出相反的果实：苦涩、不耐、酸楚。这是走偏了的催化剂。</p>
+      <p class="f-ref">—— SESSION 034 · (34.6)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 7 镜子 -->
+<section class="station" id="s7" data-c="#7a4a3a">
+  <div class="pin"><div class="stage">
+    <p class="kicker">第五站 · 镜子</p>
+    <p class="narr">癌不是敌人，<br>是一面迟到的镜子：<br>它照出你一直绕开的那门课，<br>并且把课时无限延长。</p>
+    <p class="en">"The catalyst, and all catalyst, is designed to offer experience. This experience in your density may be loved and accepted, or it may be controlled. These are the two paths."</p>
+    <p class="zh">催化剂——一切催化剂——被设计出来是为了提供经验。在你们的密度里，这份经验可以被爱与接纳，也可以被控制。只有这两条路。</p>
+    <p class="ref">—— SESSION 046 · (46.16)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">自我疗愈的门</p>
+      <p class="f-en">"These illnesses such as cancer are correspondingly very amenable to self-healing once the mechanism of the destructive influence has been grasped by the individual."</p>
+      <p class="f-zh">一旦个体掌握了那破坏性影响的机制，诸如癌症的疾病，就相应地非常容易自我疗愈。</p>
+      <p class="f-ref">—— SESSION 040 · (40.12)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">无人认领的课时</p>
+      <p class="f-en">"In many cases catalyst is not used."</p>
+      <p class="f-zh">许多时候，催化剂并未被使用——课时挂在那里，无人认领。</p>
+      <p class="f-ref">—— SESSION 046 · (46.15)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">不缺时间</p>
+      <p class="f-en">"There is no lack of space/time in which this catalyst may work."</p>
+      <p class="f-zh">让这催化剂起作用的空间/时间，从不短缺。</p>
+      <p class="f-ref">—— SESSION 046 · (46.16)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">无意识的机制</p>
+      <p class="f-en">"catalyst is unconscious and does not work with intelligence but rather is part of the, shall we say, mechanism of learn/teaching set up by the sub-Logos before the beginning of your space/time."</p>
+      <p class="f-zh">催化剂是无意识的，并不带智能地运作——它是子理则在你们空间/时间开始之前就立好的学/教机制的一部分。</p>
+      <p class="f-ref">—— SESSION 046 · (46.14)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">额头上的大板子</p>
+      <p class="f-en">"Such an entity is quite desirous of using the catalyst and has determined, to its own satisfaction, that what you may call the large board needs to be applied to the forehead in order to obtain the attention of the self."</p>
+      <p class="f-zh">有的实体极度渴望使用催化剂，于是自行决定：得拿所谓「大板子」往自己额头上拍，才能引起自我的注意。</p>
+      <p class="f-ref">—— SESSION 083 · (83.27)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 8 转化链 -->
+<section class="scene" id="s8" data-c="#b0763c">
+  <div class="stage">
+    <p class="kicker">转化</p>
+    <p class="narr">于是，一切开始流动：<br>刺痛是催化剂，<br>穿过面纱成为经验，<br>被心智领会，被灵性吸收——<br>在原型里，它的下一站<br>叫转化。</p>
+    <p class="en">"It is so that catalyst yields experience. However, through free will and the faculty of imperfect memory, catalyst is most often only partially used, and the experience thus correspondingly skewed."</p>
+    <p class="zh">催化剂确实产生经验。然而经由自由意志与不完美的记忆官能，催化剂大多只被部分使用，经验也就相应地偏斜了。</p>
+    <p class="ref">—— SESSION 092 · (92.14)</p>
+  </div>
+</section>
+
+<!-- 9 用法 -->
+<section class="station" id="s9" data-c="#58b98a">
+  <div class="pin"><div class="stage">
+    <p class="kicker">第六站 · 用法</p>
+    <p class="narr">没有人给你打分，<br>但每一份催化剂<br>都有它的有效期：<br>被领会一次，就少一次。</p>
+    <p class="en">"The end result is that the catalyst is no longer needed. Thus this density is no longer needed."</p>
+    <p class="zh">最终的结果是：催化剂不再被需要。于是，这个密度也不再被需要。</p>
+    <p class="ref">—— SESSION 042 · (42.2)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">让体验说出来</p>
+      <p class="f-en">"It is far, far better to allow the experience to express itself in order that the entity may then make fuller use of this catalyst."</p>
+      <p class="f-zh">让体验自己表达出来，远、远好过把它压回去——如此你才能更充分地使用这份催化剂。</p>
+      <p class="f-ref">—— SESSION 042 · (42.10)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">透明的连续体</p>
+      <p class="f-en">"The entity which has worked long enough with the catalyst to be able to feel the catalyst but not find it necessary to express reactions is not yet balanced but suffers no depolarization due to the transparency of its experiential continuum."</p>
+      <p class="f-zh">能感到催化剂、却不觉得必须做出反应的实体，尚未平衡，但因其体验连续体的透明，也不致去极化。</p>
+      <p class="f-ref">—— SESSION 042 · (42.9)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">被领会为止</p>
+      <p class="f-en">"Patience is requested and suggested, for the catalyst is intense upon your plane, and its use must be appreciated over a period of consistent learn/teaching."</p>
+      <p class="f-zh">请保持耐心：你们层面上的催化剂是强烈的，它的用途必须在一段持续的学习/教导中被慢慢领会。</p>
+      <p class="f-ref">—— SESSION 042 · (42.9)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">被看见也算数</p>
+      <p class="f-en">"However, if there is seen in the being a response, even if it is simply observed, the entity is still using the catalyst for learn/teaching."</p>
+      <p class="f-zh">哪怕只是在存有中看到一个回应——仅仅被观察到——你也仍在用这份催化剂进行学习/教导。</p>
+      <p class="f-ref">—— SESSION 042 · (42.2)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">极其罕见</p>
+      <p class="f-en">"We would note at this time that the totally efficient use of catalyst upon your plane is extremely rare."</p>
+      <p class="f-zh">我们此刻要指出：在你们的层面上，完全有效率地使用催化剂，极其罕见。</p>
+      <p class="f-ref">—— SESSION 061 · (61.7)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">无师自通的毕业</p>
+      <p class="f-en">"There were some second-density entities which made the graduation into third density with no outside stimulus but only the efficient use of experience."</p>
+      <p class="f-zh">曾有一些第二密度实体，不需要任何外部刺激，仅凭对经验的善用，就毕业进入了第三密度。</p>
+      <p class="f-ref">—— SESSION 019 · (19.5)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 10 欣赏 -->
+<section class="scene" id="s10" data-c="#4fa8a0">
+  <div class="stage">
+    <p class="kicker">欣赏</p>
+    <p class="narr">最后一站没有名字。<br>只是某一天，<br>你接住了一次刺痛，<br>没有躲，也没有摔碎，<br>在那一刻里找到了爱——<br>催化剂在你手里，变成了自由。</p>
+    <p class="en">"The subjective acceptance of that which is at the moment and the finding of love within that moment is the greater freedom."</p>
+    <p class="zh">对当下所是的主观接纳，以及在那一刻之中找到爱——那才是更大的自由。</p>
+    <p class="ref">—— SESSION 061 · (61.9)</p>
+  </div>
+</section>
+
+<!-- 11 终章 -->
+<section class="scene" id="sLast" data-c="#f5efe2">
+  <div class="stage">
+    <p class="kicker">带走一句话</p>
+    <p class="narr">生活会继续投递。<br>下一份教材到达时，<br>记得签收人是你自己。</p>
+    <p class="en">"Thus it is desirable that a mind/body/spirit complex be aware of and hearken to the voice of its experiential catalyst, gleaning from it that which it incarnated to glean."</p>
+    <p class="zh">因此，一个心/身/灵复合体最好觉察并倾听它经验性催化剂的声音——从其中拾取它投生所要拾取的东西。</p>
+    <p class="ref">—— SESSION 054 · (54.24)</p>
+    <button class="again" id="again">回到第一颗石子</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+催化剂 · 滚动星旅 · 内容取自《一的法则》十余次集会的催化剂讨论<br>
+引文为英文原文逐字摘录；中文为本页面自拟 · 仅作沉浸学习实验
+</footer>
+
+<script>
+/* ===== 星空画布（固定，勿改） ===== */
+const cv=document.getElementById('sky'),cx=cv.getContext('2d');
+let W,H,stars=[];
+function size(){W=cv.width=innerWidth*devicePixelRatio;H=cv.height=innerHeight*devicePixelRatio;}
+size();addEventListener('resize',size);
+for(let i=0;i<230;i++)stars.push({x:Math.random(),y:Math.random(),z:.25+Math.random()*.75,p:Math.random()*6.28,s:Math.random()});
+
+/* ===== 氛围色插值（固定，勿改） ===== */
+function hex2rgb(h){h=h.replace('#','');if(h.length===3)h=h.split('').map(c=>c+c).join('');return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
+const scenes=[...document.querySelectorAll('.scene,.station')].map(s=>({el:s,c:hex2rgb(s.dataset.c)}));
+let amb=[245,239,226];
+function lerp(a,b,t){return a+(b-a)*t}
+function rgb2css(c,a){return `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${a})`}
+
+/* ===== 渲染循环（固定，勿改） ===== */
+let t=0;
+function frame(){
+  t+=.016;
+  const sy=scrollY,wh=innerHeight;
+  let target=scenes[0].c;
+  for(const s of scenes){
+    const r=s.el.getBoundingClientRect();
+    if(r.top<wh*.55&&r.bottom>wh*.45){target=s.c;break}
+  }
+  for(let i=0;i<3;i++)amb[i]=lerp(amb[i],target[i],.045);
+  const ac=amb;
+  document.documentElement.style.setProperty('--amb',rgb2css(ac,1));
+
+  cx.clearRect(0,0,W,H);
+  const g=cx.createRadialGradient(W/2,H*.86,0,W/2,H*.86,H*.75);
+  g.addColorStop(0,rgb2css(ac,.10));g.addColorStop(1,'rgba(0,0,0,0)');
+  cx.fillStyle=g;cx.fillRect(0,0,W,H);
+  const dark=1-Math.min(1,(Math.hypot(ac[0]-245,ac[1]-239))/200);
+  for(const st of stars){
+    const px=st.x*W,py=((st.y - sy*.00004*st.z)%1+1)%1*H;
+    const tw=.5+.5*Math.sin(t*1.3+st.p);
+    cx.globalAlpha=(0.12+0.5*tw*st.z)*(0.35+0.65*dark);
+    cx.fillStyle=rgb2css(ac,1);
+    const r=st.s*1.4*st.z*devicePixelRatio;
+    cx.beginPath();cx.arc(px,py,r,0,6.28);cx.fill();
+  }
+  const oy=H*.62+Math.sin(t*.8)*10*devicePixelRatio;
+  const og=cx.createRadialGradient(W/2,oy,0,W/2,oy,26*devicePixelRatio);
+  og.addColorStop(0,rgb2css(ac,.9));og.addColorStop(.35,rgb2css(ac,.25));og.addColorStop(1,'rgba(0,0,0,0)');
+  cx.globalAlpha=1;cx.fillStyle=og;
+  cx.beginPath();cx.arc(W/2,oy,26*devicePixelRatio,0,6.28);cx.fill();
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+/* ===== 场景显影（固定，勿改） ===== */
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>e.target.classList.toggle('on',e.isIntersecting));
+},{threshold:.01});
+document.querySelectorAll('.scene,.station').forEach(s=>io.observe(s));
+
+/* 细节片段显影（固定，勿改） */
+const ioFrag=new IntersectionObserver(es=>{
+  es.forEach(e=>e.target.classList.toggle('on',e.intersectionRatio>.15));
+},{threshold:[0,.35,.6]});
+document.querySelectorAll('.frag').forEach(f=>ioFrag.observe(f));
+
+/* ===== 进度轨道（固定，勿改） ===== */
+const rail=document.getElementById('rail');
+scenes.forEach((s,i)=>{
+  const row=document.createElement('div');row.className='r';
+  const lbl=document.createElement('span');lbl.className='lbl';
+  const k=s.el.querySelector('.kicker');
+  lbl.textContent=k?k.textContent.trim():(i===0?'开始':'终章');
+  const d=document.createElement('i');
+  row.appendChild(lbl);row.appendChild(d);
+  row.onclick=()=>s.el.scrollIntoView({behavior:'smooth'});
+  rail.appendChild(row);
+});
+setInterval(()=>{
+  const wh=innerHeight;
+  scenes.forEach((s,i)=>{
+    const r=s.el.getBoundingClientRect();
+    rail.children[i].classList.toggle('cur',r.top<wh*.55&&r.bottom>wh*.45);
+  });
+},200);
+
+/* ===== 本章定制交互：两把钥匙 ===== */
+const paths=document.getElementById('paths');
+document.querySelectorAll('#paths .path').forEach(p=>{
+  const k=p.classList.contains('a')?'a':'b';
+  p.addEventListener('mouseenter',()=>paths.classList.add('p-'+k));
+  p.addEventListener('mouseleave',()=>paths.classList.remove('p-a','p-b'));
+  p.addEventListener('click',()=>{
+    paths.classList.remove('p-a','p-b');
+    paths.classList.add('p-'+k);
+  });
+});
+
+/* ===== 回到开头 ===== */
+document.getElementById('again').onclick=()=>scrollTo({top:0,behavior:'smooth'});
+</script>
+</body>
+</html>

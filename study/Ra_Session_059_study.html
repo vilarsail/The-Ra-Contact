@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 059 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 059 · 交互式学习模块</h1>
+  <p class="sub">这一集先安置两桩「人的问题」（Jim 的怒气、四十亿人口的来处），随后用整场问答把金字塔形状如何给光「整形」讲透——从底部铲入的普拉那，到四道螺旋的层层加工，最后落到你该把金字塔朝哪儿摆。</p>
+  <div class="tagline">6 个主题 · 6 个学习步骤 · 28 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本集地图</a>
+<a href="#s2">② 流浪者与四十亿人</a>
+<a href="#s3">③ 四道螺旋的地理</a>
+<a href="#s4">④ 光的加工链</a>
+<a href="#s5">⑤ 附加功能与真空</a>
+<a href="#s6">⑥ 安放与收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>先拿到这场对话的「课程表」：哪些是例行问答、哪些是正课，对话按什么顺序推进</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>追问「谁在这里、潜力为了什么」</b><span>从 Jim 的自我剖析谈到流浪者的投生功课，再到四十亿人的三个来源</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>认识四道螺旋的位置与用途</b><span>底部的铲斗半螺旋、学习疗愈的第一螺旋、建造的第二螺旋、辐射充能的第三螺旋</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>走一遍光的加工链</b><span>连贯性、压缩、跨维度转化、充能——散乱之光如何变得「适用于工作」</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>分清附加功能与危险</b><span>共振室考验、外壳小漩涡、逆转衰老的「普拉那真空」——以及 Ra 说的「不重要」</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>学会安放取舍，读金句收官</b><span>磁北还是北偏东 20°：数量与质量的选择；行星轴伏笔与临别叮嘱</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ 第 1 章 · 本集地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：一堂「带图纸的课」怎么上</h2></div>
+  <p class="sec-lead">这一集的特别之处：它是少见的「带图纸的一课」。发问者拿着剖面图与量角器，逐层追问金字塔形状如何对光「整形」；中间穿插一封「会员来信」（Jim 的自我剖析）与一份「会员名册」（四十亿人的来处）。从 (59.23) 一句「之前你说过底边应对齐磁北」可以看出，金字塔这条线是从前几场延续下来的——先看清本集的课程表，后面五章才不会迷路。</p>
+
+  <div class="card">
+    <h3>本集议题清单：六个站点</h3>
+    <div class="q">这一集到底按什么顺序推进？哪几问是例行公事，哪几问才是正课？</div>
+    <p>开场先安置两桩小事务（器皿疲惫的原因、换个坐位是否更有保护），随后 Ra 借 Jim 的个人提问谈开：一个流浪者投生前该问自己「潜力是为了什么」。接着话题转向「此刻地球上的四十多亿人从哪来」——三个来源、一串数字。后半场是正课：金字塔形状如何把散乱之光整形为可用于学习、疗愈与建造的光（四道螺旋 + 加工链），外加共振室考验与「普拉那真空」两个特殊位置。收尾落在自家院里那座金字塔的朝向取舍上，Ra 主动止问、临别叮嘱。</p>
+    <div class="quote">
+      <p class="en">I greet you in the love and in the light of the One Infinite Creator. We communicate now.</p>
+      <p class="zh">我在太一无限造物主的爱与光中向你们致意。我们现在开始通讯。</p>
+      <span class="src">—— Session 059 · (59.0)</span>
+    </div>
+    <div class="plain">本集 = 两桩例行事务 + 一段流浪者的自我功课 + 一份人口名册 + 整堂「金字塔如何给光整形」的物理课。</div>
+    <div class="case"><b>读书会开场：</b>主理人把本集比作一份带图纸的说明书——前十分钟处理会员来信（Jim 的怒气）与会员名册（四十亿人来处），剩下整场都在对照金字塔剖面图讲课。先拿到课程表，听讲就不迷路。</div>
+    <div class="case"><b>背景音：</b>小林在通勤地铁上读到 Ra 说「我们担心这将是最后一个问题，因为这个实体正迅速增加其朝向身体复合体疼痛的变貌」，才意识到：每一条回答都是在一位疼痛中的器皿身上完成的——这份背景音贯穿整集，也是 Ra 后半场主动止问的原因。</div>
+  </div>
+
+  <div class="card">
+    <h3>问答脉络推进器：跟着对话走一遍</h3>
+    <p>点击节点，或用前进 / 后退按钮，看这场对话如何一步步展开。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="mapTrack"></div>
+      <div class="flow-detail" id="mapDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="mapPrev">← 上一问</button>
+        <button class="tri-btn" id="mapNext">下一问 →</button>
+      </div>
+    </div>
+  </div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 后勤</span></summary>
+    <div class="body">
+      <p><b>(59.0) 开场致意：</b>Ra 在太一无限造物主的爱与光中致意，宣布开始通讯。</p>
+      <p><b>(59.1) 器皿状态：</b>状况如前所述；至于「她为什么这么累」，Ra 以自由意志为由拒绝讨论。</p>
+      <p><b>(59.2) 后勤问答：</b>Jim 换到床另一侧就座会不会更有保护——Ra 的回答是一个字：不。</p>
+      <p><b>(59.3) 人物细节：</b>Jim 的提问来自个人经历（一生对犯错的愤怒、猎户集团的触发）；Ra 只回答其中普遍性的教导部分，见第二章。</p>
+    </div>
+  </details>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 2 章 · 流浪者与四十亿人 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>流浪者与四十亿人：谁在这里、潜力为了什么</h2></div>
+  <p class="sec-lead">例行事务之后，发问者先递上一封「会员来信」：Jim 自我剖析，认为自己一生对犯错的愤怒被猎户集团点燃。Ra 没有顺着「猎户」往下谈，而是把镜头拉回更根本的问题——一个流浪者为什么在这里；随后顺势回答另一个宏观问题：此刻地球上四十多亿人从哪来。</p>
+
+  <div class="card">
+    <h3>潜力为了什么：比「为什么愤怒」更根本的一问</h3>
+    <div class="q">Jim 觉得自己已经看穿了一生对犯错的愤怒——掌握新事物的能力一直都在，但「完成地球使命」的渴望被猎户集团点成了失控的怒火。Ra 能评论这个观察吗？</div>
+    <p>Ra 没有去评猎户，只给出不侵犯自由意志的部分：既然这个实体自知是流浪者（wanderer，自愿从更高密度投生下来的服务者），就该把问题从「谁点燃了我的怒气」换成「我投生前为自己做了什么决定」。它知道自己有巨大的潜力——但潜力是为了什么？这才是投生前的问题。Ra 进而点出第六密度的功课：统一智慧与悲悯；这个实体智慧丰沛，要补的是悲悯——而在更有意识的存有身上，缺乏悲悯恰恰表现为对自己不够慈悲。说完这句，Ra 明确表示：这是在不侵犯的前提下能给出的全部。</p>
+    <div class="quote">
+      <p class="en">The work of sixth density is to unify wisdom and compassion. This entity abounds in wisdom. The compassion it is desirous of balancing has, as its antithesis, lack of compassion. In the more conscious being this expresses or manifests itself as lack of compassion for self.</p>
+      <p class="zh">第六密度的工作是统一智慧与悲悯。这个实体智慧丰沛。它渴望平衡的悲悯，其对立面正是缺乏悲悯——而在更有意识的存有身上，这表现为对自我缺乏悲悯。</p>
+      <span class="src">—— Session 059 · (59.3)</span>
+    </div>
+    <div class="plain">先别急着给愤怒找外因：Ra 把问题改写成「潜力是为了什么」，并指认这份功课是补上对自己的悲悯。</div>
+    <div class="case"><b>摔鼠标的工程师：</b>方案被否后，大厂工程师整晚复盘自己的「低级失误」，骂自己废物——他却从不这样骂组里任何人。Ra 的诊断正对着这种情况：越有意识的存有，缺乏悲悯越先表现为对自己缺乏悲悯。</div>
+    <div class="case"><b>只写「不能辜负期望」的状元：</b>高考状元填志愿时只写下一句话——不能辜负所有人的期望。十年后他升到总监，却越成功越空虚。「有巨大潜力」从来不是答案；Ra 说，投生前的问题是：潜力是为了什么。</div>
+  </div>
+
+  <div class="card">
+    <h3>四十亿人来处：三个来源与一张满员的名册</h3>
+    <div class="q">第二个大周期结束时地球上只有几十万人，如今投生的超过四十亿——他们是当时已在地球层面而未投生，还是这 25,000 年里从别处来的？</div>
+    <p>Ra 给出三个基本来源：最主要的是马尔德克（Maldek，一颗曾因居民自毁而困住其灵魂的行星）的灵魂，在他们能再次承接第三密度后，逐渐从自我施加的形态限制中解脱、转入地球；其二是来自其他第三密度入口的新入门者（neophyte），振动模式与地球的体验联结相匹配，于是经由投生过程渗入；其三是过去约两百年间大量来访的流浪者。Ra 还补了一笔宏观注脚：由于收割（harvest，周期终点按极性「升学」的过程）提供的机会，所有可能的投生机会在此时都被占用了。</p>
+    <div class="quote">
+      <p class="en">There were three basic divisions of origin of these entities. … all possible opportunities for incarnation are being taken at this time due to your harvesting process and the opportunities which this offers.</p>
+      <p class="zh">这些实体的起源有三个基本分类。……由于你们的收割过程及其提供的机会，所有可能的投生机会在此时都被利用了。</p>
+      <span class="src">—— Session 059 · (59.4)</span>
+    </div>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">流浪者</div><div class="sub">wanderer</div><div class="tap">点击展开</div></div><div class="back">从更进化的密度自愿投生到较低密度、以服务为主题的实体。本集里 Jim 被视为流浪者，而过去约两百年地球迎来了大量流浪者。<em>像主动申请去艰苦地区支援的志愿者：资格与经验都在，环境却要重头适应。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">马尔德克</div><div class="sub">Maldek</div><div class="tap">点击展开</div></div><div class="back">一颗行星的名字，其居民曾自毁家园、灵魂受困于自我施加的形态限制；在能够再次承接第三密度后，陆续转入地球。本集说这批灵魂超过二十亿。<em>一所整体搬迁的学校：学生还是那些学生，只是分批转入新校区。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">收割</div><div class="sub">harvest</div><div class="tap">点击展开</div></div><div class="back">主要周期（约 25,000 年）或八度音程终点处的「升学考试」：实体依其极性进入下一个密度的体验。本集说正因为收割临近，所有可能的投生机会都被占用了。<em>毕业季的考场：座无虚席，没有人愿意错过这一茬。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">新入门者</div><div class="sub">neophyte</div><div class="tap">点击展开</div></div><div class="back">来自其他第三密度入口的实体，其振动模式与地球的体验联结相匹配，于是经由投生过程渗入这个球体。<em>转学生：成绩单（振动模式）对得上，才收得进来。</em></div></div>
+    </div>
+    <div class="case"><b>并校招生：</b>一所学校新学期并入三类学生——隔壁停办学校整批转来的老生、学区新招的插班生、短期交换的访问生。对应马尔德克灵魂、振动匹配的新入门者、流浪者：三条「入学生」渠道并行不悖。</div>
+    <div class="case"><b>满员的考场：</b>考研报名通道开放当天，考位全部报满——收割临近的行星正是如此：Ra 说，每一个可用的投生机会在此时都被用上了。</div>
+  </div>
+
+  <div class="card">
+    <h3>名册上的数字：转移是渐进的</h3>
+    <div class="q">能否给个约数——这最后一个 75,000 年周期开始时，总共多少心/身/灵复合体被「转移」到地球？</div>
+    <p>Ra 先纠正了「一次性到货」的预设：转移是渐进的。数字分三笔：逾二十亿灵魂来自马尔德克、已成功完成过渡；约十九亿灵魂来自造物的许多部分、在不同时间进入这个体验；其余是在这个球体上经历过前两个周期的实体，或在某个时点前来的流浪者——有的流浪者已在此数千年，有的才刚到。</p>
+    <div class="quote">
+      <p class="en">The transfer, as you call it, has been gradual. Over two billion souls are those of Maldek which have successfully made the transition. … Approximately 1.9 billion souls have, from many portions of the creation, entered into this experience at various times.</p>
+      <p class="zh">如你们所称的转移是渐进的。逾二十亿灵魂是来自马尔德克的、已成功完成过渡的那些。……约十九亿灵魂来自造物的许多部分，在不同时间进入这一体验。</p>
+      <span class="src">—— Session 059 · (59.5)</span>
+    </div>
+    <div class="plain">四十几亿人不是同一批来的：二十多亿来自马尔德克，约十九亿来自造物各处，其余是老住民与流浪者——而且全部是陆续抵达。</div>
+    <div class="case"><b>分批安置：</b>老城区拆迁不是一天搬完——居民分批迁入新小区，前后好几年。二十多亿马尔德克灵魂的「过渡」正是这样一笔渐进完成的账，而不是周期开场的一次性大迁徙。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 3 章 · 四道螺旋的地理 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>四道螺旋的地理：光从哪里进、往哪里去</h2></div>
+  <p class="sec-lead">正课开始。发问者带着「三股螺旋」的框架来核对，Ra 第一步就纠正了他的前提——在三道螺旋之前，金字塔底部还有一道「铲入」的基础半螺旋。此后对话像看地图一样，把每一道螺旋的起点、终点与用途逐一确认。</p>
+
+  <div class="card">
+    <h3>先纠错：底部还有一道「铲斗」半螺旋</h3>
+    <div class="q">第一道螺旋是不是从王后室下方开始、终止于王后室？</div>
+    <p>Ra 直说：不正确。向上螺旋之光的第一个概念如同铲斗（scoop）——光能被金字塔形状的吸引力经由底部或基底铲入，所以第一个配置是半螺旋。发问者追问这像不像浴缸放水时的漩涡，Ra 肯定了类比，只指出关键差别：浴缸漩涡的成因是引力，金字塔漩涡的成因是形状所产生的电磁场对向上螺旋之光的吸引。</p>
+    <div class="quote">
+      <p class="en">The first notion of upward spiraling light is as that of the scoop, the light energy being scooped in through the attraction of the pyramid shape through the bottom or base. Thus the first configuration is a semi-spiral.</p>
+      <p class="zh">向上螺旋之光的第一个概念如同铲斗——光能经金字塔形状的吸引力、由底部或基底被铲入。因此第一个配置是半螺旋。</p>
+      <span class="src">—— Session 059 · (59.6)</span>
+    </div>
+    <div class="plain">金字塔不制造光，它先「进料」：底部的半螺旋把环境中的光能铲进来，作为后续一切用途的原料。</div>
+    <div class="case"><b>磁铁扫回形针：</b>把散落一桌的回形针用磁铁一扫而拢——磁铁没有造出新的回形针，只是把已有的拢成一股。金字塔形状以吸引力把光能「铲」进来，正是这种「只整不造」的动作。</div>
+    <div class="case"><b>浴缸漩涡：</b>发问者自己举的例子——拔掉浴缸塞子时水面上形成的漩涡。Ra 肯定形似，但把成因分清：那边靠引力，这边靠形状感生的电磁场去吸引光。类比只借形状，不借成因。</div>
+  </div>
+
+  <div class="card">
+    <h3>第一螺旋：学习与疗愈的通道</h3>
+    <div class="q">用于学习和疗愈的那道螺旋，相对王后室从哪里开始、到哪里结束？</div>
+    <div class="quote">
+      <p class="en">The spiral which is used for study and healing begins at, or slightly below, the Queen’s Chamber position, depending upon your earth and cosmic rhythms. It moves through the King’s Chamber position in a sharply delineated form and ends at the point whereby the top approximate third of the pyramid may be seen to be intensifying the energy.</p>
+      <p class="zh">用于学习和疗愈的螺旋起于王后室位置或略低（取决于地球与宇宙节律），以清晰界定的形式穿过王者之室位置，止于金字塔顶部约三分之一处能量可见增强的点。</p>
+      <span class="src">—— Session 059 · (59.8)</span>
+    </div>
+    <div class="plain">记住一句话：学习与疗愈用的光，覆盖从王后室到顶部三分之一的那一段。</div>
+    <div class="case"><b>长廊灯带：</b>把大楼一层长廊的灯带想成这道螺旋：入口（王后室）亮起、中段（王者之室）最规整、尽头（顶部三分之一）开始汇聚加亮——要办「学习与疗愈」的事，就站在这条灯带下面。</div>
+    <div class="case"><b>录音棚站位：</b>歌手录人声要把话筒对准、站在指定距离，位置错了收进来的就是房间混响。金字塔里同理：站在哪一段，决定你接收到的是哪一道螺旋。</div>
+  </div>
+
+  <div class="card">
+    <h3>第二、第三螺旋：建造的强化与顶部的辐射</h3>
+    <div class="q">第二螺旋从第一螺旋末端一路到顶点？第三螺旋从顶部辐射而出？</div>
+    <p>Ra 说前者「部分正确」：大螺旋确实被吸入顶点的漩涡，但其中光谱红端（更强性质）的那部分光会被再次螺旋，造成能量的巨大强化与聚焦——那才是「用于建造」的可用能量。第三道完整螺旋则确实从顶部辐射而出。Ra 同时提醒：别忘了那道基础半螺旋——它为可能受后续三道向上螺旋影响的一切供给普拉那（prana，光所携带的生命能量原料）。</p>
+    <div class="quote">
+      <p class="en">The large spiral is drawn into the vortex of the apex of the pyramid. However, some light energy—which is of the more intense nature of the red, shall we say, end of the spectrum—is spiraled once again, causing an enormous strengthening and focusing of energy which is then of use for building.</p>
+      <p class="zh">大螺旋被吸入金字塔顶点的漩涡。然而，一些光能量——可以说是光谱中红端更强性质的部分——被再次螺旋，引起能量的巨大强化与聚焦，随后用于建造。</p>
+      <span class="src">—— Session 059 · (59.9)</span>
+    </div>
+    <div class="plain">三道螺旋是同一股能量的三次「再加工」：一次定向（学习疗愈）、一次再强化（建造）、一次自顶部向外辐射（充能）——而原料全部来自底部那道半螺旋。</div>
+    <div class="case"><b>总进料口：</b>汽车生产线再精密，也得先有进料口把钢材送进来——Ra 特意叮嘱要把基础半螺旋「算进去」：顶部的一切用途，都靠最底部那道进料供养。</div>
+    <div class="case"><b>合股绳的加捻：</b>一股大绳已成，制绳匠再从其中挑出最强韧的几缕单独加捻，做成承重的细索。第二螺旋正是「从大螺旋里挑出红端光再螺旋一次」，把能量强化聚焦到能用于建造。</div>
+  </div>
+
+  <div class="card">
+    <h3>四道螺旋对照表</h3>
+    <div class="table-wrap">
+    <table class="nine">
+      <thead><tr><th>螺旋</th><th>英文原词</th><th>位置与用途</th></tr></thead>
+      <tbody>
+        <tr><td>基础半螺旋（零号）</td><td>the scoop / semi-spiral</td><td>光被金字塔形状从底部或基底铲入；为后续三道螺旋影响的一切供给普拉那</td></tr>
+        <tr><td>第一螺旋</td><td>the first spiral</td><td>起于或略低于王后室，清晰界定地穿过王者之室，止于顶部约三分之一处——用于学习与疗愈</td></tr>
+        <tr><td>第二螺旋</td><td>the second spiral</td><td>大螺旋被吸入顶点漩涡；红端光再螺旋一次，能量被巨大强化聚焦——用于建造</td></tr>
+        <tr><td>第三螺旋</td><td>the third spiral</td><td>自顶部辐射的完整螺旋——为置于其上的物体充能</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>归类练习：这句话说的是哪道螺旋？</h3>
+    <p>凭位置与用途对号入座，选错也会显示正确答案与出处。</p>
+    <div id="sortArea"></div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 4 章 · 光的加工链 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>光的加工链：散乱之光如何变得「适用于工作」</h2></div>
+  <p class="sec-lead">知道了四道螺旋「在哪」，接下来追问「发生了什么」。这一段是全集最核心的义理：光被铲入后获得方向上的连贯性——「向上螺旋之光」说的不是几何方向，而是朝向爱与光之源头伸展；随后是压缩、跨维度转化与充能，环环相扣，像一条加工流水线。</p>
+
+  <div class="card">
+    <h3>第一步：从「未受规整」到「有方向」</h3>
+    <div class="q">光从零号位置进入第一螺旋时发生了什么变化，让它变得可用于疗愈和学习？</div>
+    <div class="quote">
+      <p class="en">The prana scooped in by the pyramid shape gains coherence of energetic direction. The term “upward spiraling light” is an indication not of your up and down concept, but an indication of the concept of that which reaches towards the source of love and light.</p>
+      <p class="zh">被金字塔形状铲入的普拉那获得了能量方向的连贯性。「向上螺旋之光」一词指的不是你们概念里的上与下，而是指朝向爱与光之源头伸展的那个概念。</p>
+      <span class="src">—— Session 059 · (59.11)</span>
+    </div>
+    <p>Ra 顺着发问者的假设确认了一幅图景：光在幻象中从空间所有点以 360° 立体角向外辐射，而金字塔的铲形为这辐射造出连贯性——一个聚焦机制（Ra 的评语是「完全正确」）。关键的加工动作随之而来：光被导入零号位置后到达转折点，这起到压缩的作用，极大地倍增了光的连贯与组织。Ra 还给了一个防误读的澄清：所有光都是向上螺旋的，只是方向未受规整、不适用于工作。</p>
+    <div class="plain">金字塔做的是「整形」而非「造光」：把四面八方散乱的光拢出方向、压出组织，光才从原料变成工具。</div>
+    <div class="case"><b>散场广场：</b>演唱会散场时人流朝四面八方乱走；广播一响、口令一排，同样的人立刻变成有方向的队伍。「获得连贯性」不是换人，是给已有的光（人）排出方向。</div>
+    <div class="case"><b>摄影棚聚光：</b>裸灯泡的光向四方发散，装进标准罩与柔光箱后，同样亮度的光变成可控光束——灯没换，罩子换了。金字塔对光做的正是这个「换罩子」的动作。</div>
+  </div>
+
+  <div class="card">
+    <h3>二号位置：跨过维度边界的一次转化</h3>
+    <div class="q">连贯与组织在第二螺旋起点是否再翻一倍？是加倍效应还是递增效应？</div>
+    <p>Ra 坦承这很难用地球语言讨论：没有加倍效应，而是跨过维度边界的转化——光从为使用者服务的空间/时间–时间/空间配置，变成所谓跨维度的时间/空间–空间/时间配置。外在表现是螺旋能量的扩散与减弱，但在二号位置上，许多工作可以在维度之间完成。至于吉萨金字塔二号位置没有设室的问题，Ra 的回答带着一道门槛：这个位置只对有能力充当聚焦螺旋「导体」的实体有用，不会拿来训练第三密度实体。</p>
+    <div class="quote">
+      <p class="en">There is no doubling effect but a transformation across boundaries of dimension so that light, which was working for those using it in space/time–time/space configuration, becomes light working in what you might consider an inter-dimensional time/space–space/time configuration. This causes an apparent diffusion and weakness of the spiraling energy. However, in position two, as you have called it, much work may be done inter-dimensionally.</p>
+      <p class="zh">没有加倍效应，而是跨过维度边界的转化：原本在空间/时间–时间/空间配置中为使用者工作的光，变成了在跨维度的时间/空间–空间/时间配置中工作的光。这带来螺旋能量表面的扩散与减弱。然而在你们所称的二号位置，许多工作可以在维度之间完成。</p>
+      <span class="src">—— Session 059 · (59.14)</span>
+    </div>
+    <div class="plain">二号位置不是「更强的同一件事」，而是「换了一种工作模式」：能量看起来变弱，却能做维度之间的工作——门槛也高到第三密度不必尝试。</div>
+    <div class="case"><b>跨过水面的潜水员：</b>自由潜水员穿过水面那一刻，呼吸、阻力、声音全换了规则——二号位置上光跨过维度边界，看似「扩散变弱」，其实是换了一套能做维度间工作的介质规则。</div>
+    <div class="case"><b>只接大场子的同传：</b>资深同声传译只接顶尖谈判，不会去入门班代课——二号位置只对能充当聚焦螺旋「导体」的实体有用；Ra 明说，人们不会希望拿它去训练第三密度实体。</div>
+  </div>
+
+  <div class="card">
+    <h3>三号螺旋：「充能」意味着什么</h3>
+    <div class="q">你说从顶部辐射的第三螺旋用于充能——「充能」到底是什么意思？</div>
+    <div class="quote">
+      <p class="en">The third spiral is extremely full of the positive effects of directed prana, and that which is placed over such a shape will receive shocks energizing the electromagnetic fields. This can be most stimulating in third-density applications of mental and bodily configurations. However, if allowed to be in place over-long such shocks may traumatize the entity.</p>
+      <p class="zh">第三螺旋极度充满定向普拉那的正面效应，放置在这种形状上方的物体会接收到为电磁场充能的冲击。这对第三密度的心理与身体配置最具刺激性。然而，若放置过久，这种冲击可能创伤实体。</p>
+      <span class="src">—— Session 059 · (59.16)</span>
+    </div>
+    <div class="plain">顶部的光是高浓度的「定向普拉那」：能充能，也能过载——刺激性与创伤之间，只隔一个「放太久」。</div>
+    <div class="case"><b>按摩椅开一整晚：</b>把按摩椅调到最大档睡上一整夜，第二天肌肉反而又酸又肿——冲击本身是好的，「过久」才是伤害。Ra 对第三螺旋的提醒正是这条安全边界。</div>
+  </div>
+
+  <div class="card">
+    <h3>加工链推演：光在金字塔里的四道工序</h3>
+    <p>从铲入到充能，按顺序走一遍这条流水线。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="chainTrack"></div>
+      <div class="flow-detail" id="chainDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="chainPrev">← 上一道</button>
+        <button class="tri-btn" id="chainNext">下一道 →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>本节术语卡：点开看白话定义</h3>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">普拉那</div><div class="sub">prana</div><div class="tap">点击展开</div></div><div class="back">Ra 用以指称「光」的生命能量原料。本集的关键在于：它获得方向上的连贯性之后，才「适用于工作」。<em>面粉是原料，揉出方向与筋度的面团才好干活。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">向上螺旋之光</div><div class="sub">upward spiraling light</div><div class="tap">点击展开</div></div><div class="back">不是几何意义上的「向上」，而是指朝向爱与光之源头伸展的一切光。因此所有光都是向上螺旋的，只是方向未受规整。<em>罗盘的磁针平时乱晃，靠近磁场才指向一致——「向上」是那只磁场的手。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">零号位置</div><div class="sub">zero position</div><div class="tap">点击展开</div></div><div class="back">发问者的命名——基础的半螺旋；光在这里到达转折点被压缩，连贯与组织性极大地倍增。<em>水坝的进水口与闸门：原料从这里变得有序、可调度。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">空间/时间–时间/空间</div><div class="sub">space/time–time/space</div><div class="tap">点击展开</div></div><div class="back">Ra 描述光之工作「配置」的术语。二号位置上，光从一种配置跨入跨维度的另一种配置——表现为扩散减弱，却能做维度间的工作。<em>潜水员跨过水面：介质变了，能做的事也变了。</em></div></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 5 章 · 附加功能与真空 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>附加功能：面对自我的考验与逆转衰老的真空</h2></div>
+  <p class="sec-lead">螺旋之外，金字塔还有几个用途有限的「特殊位置」。Ra 介绍它们时的态度很值得留意：考验自我的共振室「强大且相当危险」；逆转衰老的位置确实存在，但他补一句「这些特性并不重要」——什么是重点，Ra 自己排了序。</p>
+
+  <div class="card">
+    <h3>共振室：一场强大且危险的心理测试</h3>
+    <div class="q">除了螺旋，金字塔形状还有别的效果吗？</div>
+    <div class="quote">
+      <p class="en">The use of the resonating chamber position is one which challenges the ability of an adept to face the self. This is one type of mental test which may be used. It is powerful and quite dangerous.</p>
+      <p class="zh">共振室位置的用途之一，是考验行家面对自我的能力。这是一种可以使用的心理测试——强大，且相当危险。</p>
+      <span class="src">—— Session 059 · (59.17)</span>
+    </div>
+    <p>Ra 列了几种附加效果，但先强调用途有限。排头的是共振室位置：它考验的是行家（adept，有修为的实修者）面对自我的能力——不是设备性能测试，而是一场心理测试。</p>
+    <div class="plain">金字塔不是游乐场：它的某些位置是考官，专考「你敢不敢直视自己」，而且这科挂科的代价不小。</div>
+    <div class="case"><b>全黑静室：</b>某高管训练营把学员单独关进全黑静室一小时，不许带手机——有人坐立难安，有人当场落泪。共振室位置考验的正是同一件事：当外界刺激归零，你如何面对自己。</div>
+  </div>
+
+  <div class="card">
+    <h3>外壳小漩涡与「不重要的特性」</h3>
+    <div class="q">金字塔的墙体与房间里，还藏着什么手艺活？</div>
+    <div class="quote">
+      <p class="en">The outer shell of the pyramid shape contains small vortices of light energy which, in the hands of capable crystallized beings, are useful for various subtle workings upon the healing of invisible bodies affecting the physical body.</p>
+      <p class="zh">金字塔形状的外壳包含光能的小漩涡，在有能力的结晶化存有手中，可用于对影响物理身体的无形身体进行各种精微的疗愈工作。</p>
+      <span class="src">—— Session 059 · (59.17)</span>
+    </div>
+    <p>外壳里藏着光能的小漩涡，但要「有能力的结晶化存有」才用得动——那是给高段位疗愈者的精微工具。至于另外一些位置——可以让人获得完美睡眠、逆转衰老——Ra 给出几何坐标（王后室上下各 5 到 10°、伸入实体约四分之一）之后补了一句：这些特性并不重要。答案照给，重要性却要由求道者自己掂量。</p>
+    <div class="plain">同一座金字塔里，有给人用的工具，也有给人考的考场；而「能让你年轻」这种卖点，Ra 直接标为「不重要」。</div>
+    <div class="case"><b>追问坐标的人：</b>有人翻出「睡在金字塔里能变年轻」的传闻，一路追问具体位置——Ra 答得一丝不苟，却在答完时按住结论：这些特性并不重要。好奇得到回答，方向也得到提醒。</div>
+  </div>
+
+  <div class="card">
+    <h3>普拉那真空：衰老为什么会在这里「暂停」</h3>
+    <div class="q">为什么待在那个位置就能逆转衰老？</div>
+    <div class="quote">
+      <p class="en">Aging is a function of the effects of various electromagnetic fields upon the electromagnetic fields of the mind/body/spirit complex. In this position there is no input or disturbance of the fields, nor is any activity within the electromagnetic field complex of the mind/body/spirit complex allowed full sway. The vacuum sucks any such disturbance away. Thus the entity feels nothing and is suspended.</p>
+      <p class="zh">衰老是各种电磁场作用于心/身/灵复合体之电磁场的功能。在这个位置，没有场的输入或干扰，复合体电磁场复合体中的任何活动也不被允许充分发挥。真空把任何这类扰动吸走。于是实体感觉不到任何东西，处于悬浮。</p>
+      <span class="src">—— Session 059 · (59.20)</span>
+    </div>
+    <p>Ra 把衰老定义成一种「场与场」的关系：外部电磁场的持续作用，就是衰老的来源。双泪滴卵形区是光被铲入螺旋后再度扩张的位置——一个「普拉那真空」（prana vacuum）：没有输入、没有干扰，真空把扰动吸走，实体悬浮，衰老失去输入而悬停。拨动下面的开关，看这些条件如何缺一不可。</p>
+    <div id="condSim">
+      <div class="cond-row"><div class="name">待在双泪滴卵形区<small>王后室上下 5–10°、每个面伸入实体约四分之一处</small></div><label class="switch"><input type="checkbox" id="c1" checked><span class="slider"></span></label></div>
+      <div class="cond-row"><div class="name">场域无输入、无干扰<small>没有电磁场从外部进入这个位置</small></div><label class="switch"><input type="checkbox" id="c2" checked><span class="slider"></span></label></div>
+      <div class="cond-row"><div class="name">内部活动不被允许充分展开<small>心/身/灵复合体的电磁场活动也静止下来</small></div><label class="switch"><input type="checkbox" id="c3" checked><span class="slider"></span></label></div>
+    </div>
+    <div id="condResult"></div>
+    <div class="case"><b>漂浮舱：</b>城市漂浮舱把人浮在浓盐水里，隔光隔音，外界刺激近乎归零——出来的人常形容「脑子安静得不像自己」。普拉那真空是同一件事的极致版：连场的扰动都被吸走。</div>
+    <div class="case"><b>塞进弱电箱的路由器：</b>一台路由器常年挤在信号干扰最重的弱电箱里，发热、老化、频繁掉线——挪到干净位置立刻稳定。Ra 笔下的衰老正是这样一场「环境场的持续干扰」，真空位置则干脆切断了干扰源。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 6 章 · 安放与收官 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>安放与收官：数量与质量的选择</h2></div>
+  <p class="sec-lead">理论讲完，话题落回院子里那座 Jim 亲手建的金字塔：建得算不算合格、该朝哪边。Ra 的回答没有替你选边，只有一道摆在面前的选择题——外加一句关于行星轴重整的「有迹象、不说死」，和一段让小组安心的临别叮嘱。</p>
+
+  <div class="card">
+    <h3>朝向之争：磁北，还是北偏东 20°</h3>
+    <div class="q">Jim 院子里那座金字塔运作正常吗？之前 Ra 说过要对齐磁北，这次又说 20°——到底哪个更好？</div>
+    <p>先给验收结论：它建在良好的公差范围内，虽不完美；但要发挥最大功效，对齐应当「如同这个安放之处」——即北偏东 20°。至于两种对齐孰优，Ra 说这由你们自行决定：此时对这个球体而言，磁北是正确的对齐；但发问者问的偏偏是那座被特定实体使用的结构，这些实体的能量漩涡与「真色绿」取向更为契合——那便是北偏东 20°。磁北效果更强、可更清晰地感到；来自那个虽遥远却即将成为首要方向的能量虽弱、却更有帮助。选择权在你们手里。</p>
+    <div class="quote">
+      <p class="en">This is at your discretion. The proper alignment for you of this sphere at this time is magnetic north. However, in your query you asked specifically about a structure which has been used by specific entities whose energy vortices are more consonant with the, shall we say, true-color green orientation. This would be the 20° east of north.</p>
+      <p class="zh">这由你们自行决定。此时对这个球体而言，正确的对齐是磁北。然而，你的问题特别问到了一座被特定实体使用的结构，这些实体的能量漩涡与——可以说——真色绿的取向更为契合。那就是北偏东 20°。</p>
+      <span class="src">—— Session 059 · (59.23)</span>
+    </div>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">数量 · 宽带</span><h4>磁北对齐</h4><p><b>效果更强、更可清晰感到。</b>Ra 称之为数量，宽带冥想辅助——适合想要「手感明显」的使用者，也是此时对这个球体而言正确的对齐。</p></div>
+      <div class="yuan-card"><span class="y-tag">质量 · 窄带</span><h4>北偏东 20°（真色绿取向）</h4><p><b>能量虽弱、却更有帮助。</b>Ra 称之为质量，窄带辅助——契合「真色绿」取向使用者的能量漩涡，也是那座院子金字塔应有的朝向。</p></div>
+      <div class="yuan-card"><span class="y-tag">自由意志</span><h4>选择权在你们</h4><p><b>Ra 明说「这由你们自行决定」，拒绝替你选边。</b>两种取向各有优势，每一次对齐的取舍，本身就是功课的一部分。</p></div>
+    </div>
+    <div class="case"><b>拉杆天线：</b>老式收音机转动拉杆天线，转到某一刻杂音忽然退去、人声清晰——对齐就是这种事。Ra 说磁北方向的效果更强、可以被更清晰地感到。</div>
+    <div class="case"><b>WiFi 双频：</b>家里路由器 2.4GHz 覆盖广、穿墙强，5GHz 更快却范围小——选磁北还是北偏东 20°，Ra 给出的正是「数量与质量、宽带与窄带」这道选择题。</div>
+  </div>
+
+  <div class="card">
+    <h3>伏笔与告别：有迹象，不说死</h3>
+    <div class="q">当行星轴重整时，它们会对齐到北偏东 20° 以符合绿色振动吗？</div>
+    <p>Ra 没有打包票：有各种迹象表明这将会发生，但「我们不能谈论确定性」——较粗糙、较不稠密的物质将被拉入与更稠密、更轻的能量一致的状态，正是那些能量赋予理则（Logos，一个星系的经验蓝图设计者）穿越体验领域的进程。同时，器皿的疼痛正在迅速增加，Ra 主动宣布这是最后一个问题；面对小组「我们能做什么」的追问，他的回答是：一切都好，眼下的困难并非源于缺乏尽责或奉献。</p>
+    <div class="quote">
+      <p class="en">We fear this shall be the last question as this entity rapidly increases its distortion towards what you call pain of the body complex. … There is every indication that this will occur. We cannot speak of certainties but are aware that the grosser, or less dense, materials will be pulled into conformation with the denser and lighter energies which give your Logos its proceedings through the realms of experience.</p>
+      <p class="zh">我们担心这将是最后一个问题，因为这个实体正迅速增加其朝向你们所称身体复合体之疼痛的变貌。……有各种迹象表明这将会发生。我们不能谈论确定性，但意识到较粗糙、较不稠密的物质将被拉入与更稠密、更轻之能量一致的状态——那些能量赋予你们的理则穿越体验领域的进程。</p>
+      <span class="src">—— Session 059 · (59.24)</span>
+    </div>
+    <div class="quote">
+      <p class="en">All is well. We are aware that you experience difficulties at this time, but they are not due to your lack of conscientiousness or dedication. … Go forth, then, rejoicing in the power and the peace of the One Infinite Creator.</p>
+      <p class="zh">一切都好。我们意识到你们此时正经历困难，但它们并非由于你们缺乏尽责或奉献。……那么，向前去吧，在太一无限造物主的大能与和平中欢庆。</p>
+      <span class="src">—— Session 059 · (59.25)</span>
+    </div>
+    <div class="plain">Ra 的收尾方式本身就是教导：能给的答案照给但不越界为「确定」，器皿的疼痛先于议程，最后一句永远是让人安心的。</div>
+    <div class="case"><b>降水概率：</b>气象台说明天「降水概率很高」，却不承诺百分之百——Ra 对行星轴重整的回应正是这个句式：有各种迹象，但确定性不在可谈论之列。</div>
+    <div class="case"><b>复盘会上的一句话：</b>项目最难的一周过去，负责人在复盘会上只说了一句「这不是你们不够尽责或奉献」，紧绷的团队松了一口气——Ra 收尾时对小组说的正是这句话。</div>
+  </div>
+
+  <div class="saying">
+    <p class="en">The term “upward spiraling light” is an indication not of your up and down concept, but an indication of the concept of that which reaches towards the source of love and light.</p>
+    <p class="zh">「向上螺旋之光」指的并非你们概念里的上与下，而是指朝向爱与光之源头伸展的那个概念。</p>
+    <span class="src">—— Session 059 · (59.11)</span>
+  </div>
+
+  <div class="card">
+    <h3>收官清单：读完本页你该带走的三句话</h3>
+    <p><b>① 金字塔不造光，只整形：</b>底部半螺旋负责铲入，三道向上螺旋负责定向、强化与辐射——原料不变，秩序变了。<br><b>② 加工链环环相扣：</b>零号压缩倍增连贯，二号跨维度换工作模式，三号充能但过久即伤——每一道工序有每一道的用途与门槛。<br><b>③ 重要性 Ra 自己排了序：</b>逆转衰老「不重要」，面对自我的测试强大且危险，朝向是数量与质量的选择——真正要紧的从来是功课，不是参数。</p>
+    <div class="case"><b>合上电脑之后：</b>有人读完去查自家冥想角的朝向，发现自己在「信号明显」与「能量更对」之间犹豫——这正是 Ra 留给每个读者的练习题：选择权在你们。</div>
+    <div class="case"><b>下一集的伏笔：</b>行星轴将重整为绿色振动取向、器皿的疼痛、以及「即将成为首要的方向」——本集埋下的线索，都会在之后的集会里继续展开；金字塔这条线到此告一段落。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 059（`split/Ra_Session_059.md`）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra059-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+/* 术语卡翻转 */
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+/* 第 1 章：问答脉络推进器 */
+initStepper('mapTrack','mapDetail','mapPrev','mapNext',[
+  {t:'开场致意',d:'<span class="qa-q">问：无——Ra 主动开启通讯。</span><b>答：</b>Ra 在太一无限造物主的爱与光中致意，宣布开始通讯。这一天是 1981 年 6 月 25 日，一场「带图纸的课」即将开始。'},
+  {t:'器皿与坐位',d:'<span class="qa-q">问：器皿为何如此疲惫？换个坐位会不会更有保护？</span><b>答：</b>状况如前所述；至于疲惫的原因，Ra 以自由意志为由拒绝讨论。换坐位——回答是一个字：不。'},
+  {t:'Jim 的怒气',d:'<span class="qa-q">问：Jim 自我剖析「犯错的愤怒」被猎户集团点燃，Ra 能评论吗？</span><b>答：</b>Ra 只给出不侵犯自由意志的部分：把问题换成投生前的决定——「潜力是为了什么」；第六密度的功课是统一智慧与悲悯，而这个实体缺的是对自己的悲悯。'},
+  {t:'四十亿人来处',d:'<span class="qa-q">问：第二个大周期末只有几十万人，如今四十多亿从哪来？</span><b>答：</b>三个来源：马尔德克灵魂（最主要）、振动匹配的其他第三密度新入门者、近约两百年大量来访的流浪者；因收割临近，投生机会已全部被占用。'},
+  {t:'四道螺旋地理',d:'<span class="qa-q">问：三股光螺旋各自从哪开始、到哪结束？</span><b>答：</b>先纠正前提：底部还有一道「铲入」的基础半螺旋；此后才是学习疗愈的第一螺旋（王后室→顶部三分之一）、强化建造的第二螺旋（吸入顶点、红端再螺旋）、自顶部辐射的第三螺旋。'},
+  {t:'光的加工链',d:'<span class="qa-q">问：光从零号位置进入第一螺旋时发生了什么？</span><b>答：</b>普拉那获得能量方向的连贯性——「向上」指朝向爱与光之源头；零号处压缩倍增连贯与组织；二号处跨维度转化（看似减弱、能做维度间工作）；三号处充能，过久则创伤。'},
+  {t:'附加功能',d:'<span class="qa-q">问：金字塔还有别的效果吗？</span><b>答：</b>共振室考验行家面对自我的能力（强大且相当危险）；外壳小漩涡供结晶化存有做精微疗愈；王后室附近的「普拉那真空」可悬浮、逆转衰老——但 Ra 说这些特性并不重要。'},
+  {t:'安放取舍',d:'<span class="qa-q">问：院子里的金字塔该朝哪边？</span><b>答：</b>磁北效果更强更可感（数量/宽带），北偏东 20° 契合真色绿取向（质量/窄带）——「选择权在你们」。'},
+  {t:'止问与告别',d:'<span class="qa-q">问：还有最后一个问题——行星轴会重整为绿色取向吗？</span><b>答：</b>因器皿疼痛迅速增加，Ra 宣布这是最后一个问题；有各种迹象会如此，但不能谈论确定性。临别叮嘱：眼下的困难并非源于缺乏尽责或奉献。'}
+]);
+
+/* 第 3 章：四道螺旋归类练习 */
+initSorter('sortArea',[
+  {a:'光能被金字塔形状的吸引力从底部或基底「铲」进来——像一个巨大的进料口',opts:['零号半螺旋','一号·学习疗愈','二号·跨维度','三号·充能'],ans:'零号半螺旋',exp:'(59.6) 第一个概念如同铲斗，是半螺旋；它为后续三道螺旋影响的一切供给普拉那。'},
+  {a:'起于或略低于王后室，以清晰界定的形式穿过王者之室，止于顶部约三分之一处',opts:['零号半螺旋','一号·学习疗愈','二号·跨维度','三号·充能'],ans:'一号·学习疗愈',exp:'(59.8) 这道螺旋用于学习和疗愈，起点终点都可画在图上。'},
+  {a:'大螺旋被吸入顶点漩涡，而光谱红端的光再次螺旋、能量被巨大强化聚焦——用于建造',opts:['零号半螺旋','一号·学习疗愈','二号·跨维度','三号·充能'],ans:'二号·跨维度',exp:'(59.9) 第二螺旋的关键动作：红端光「再螺旋一次」，强化聚焦以供建造。'},
+  {a:'从金字塔顶部辐射而出，是一个完整的螺旋',opts:['零号半螺旋','一号·学习疗愈','二号·跨维度','三号·充能'],ans:'三号·充能',exp:'(59.10) 第三完整螺旋自顶部辐射；充满定向普拉那的正面效应（59.16）。'},
+  {a:'光被导入零号位置后到达转折点，像被压缩一样，连贯性与组织性极大地倍增',opts:['零号半螺旋','一号·学习疗愈','二号·跨维度','三号·充能'],ans:'零号半螺旋',exp:'(59.13) 转折点即压缩点：这是光从「进料」变成「可用」的关键一步。'}
+]);
+
+/* 第 4 章：加工链推演 */
+initStepper('chainTrack','chainDetail','chainPrev','chainNext',[
+  {t:'① 铲入（零号）',d:'<b>进料：</b>金字塔形状的吸引力把光能从底部或基底铲进来——浴缸漩涡般的半螺旋。这是后续一切工作的原料。'},
+  {t:'② 转折压缩',d:'<b>压缩：</b>光在零号位置到达转折点，压缩极大地倍增其连贯与组织——散乱之光从此有了方向。'},
+  {t:'③ 一号·学习与疗愈',d:'<b>定向供能：</b>获得方向连贯性的光以清晰界定的形式穿过王者之室位置，覆盖到顶部约三分之一——学习与疗愈在这里进行。'},
+  {t:'④ 二号·跨维度',d:'<b>换模式：</b>光跨过维度边界，从空间/时间–时间/空间配置转为跨维度配置；表现为扩散减弱，却能做大量维度间工作。门槛：只对能充当「导体」的实体有用。'},
+  {t:'⑤ 三号·充能',d:'<b>输出：</b>完整螺旋自顶部辐射，定向普拉那的冲击为电磁场充能，对第三密度的身心最具刺激性——但放置过久，冲击可能创伤实体。'}
+]);
+
+/* 第 5 章：条件模拟器 */
+function condSim(){
+  var on1=document.getElementById('c1').checked,
+      on2=document.getElementById('c2').checked,
+      on3=document.getElementById('c3').checked,
+      r=document.getElementById('condResult');
+  if(on1&&on2&&on3){
+    r.className='';
+    r.innerHTML='三个条件齐备：真空把一切场扰动吸走——实体感觉不到任何东西，处于悬浮状态；衰老失去输入的场，过程就此悬停。';
+  }else if(!on1){
+    r.className='fail';
+    r.innerHTML='位置不对：只有双泪滴卵形区（王后室上下 5–10°、伸入实体约四分之一）才具备「真空」的几何条件——光在那里被铲入螺旋后再度扩张。换个别的地方，真空效应无从谈起。';
+  }else if(!on2){
+    r.className='fail';
+    r.innerHTML='位置对了，但只要有外部电磁场的输入或干扰进来，真空就吸不干净，悬浮态立刻被打破——衰老的「输入」又接上了。';
+  }else{
+    r.className='fail';
+    r.innerHTML='外部安静了，可心/身/灵复合体内部的活动一旦充分展开，场复合体仍在运转，实体依然有感觉、并未悬浮——内部这一关同样要过。';
+  }
+}
+document.querySelectorAll('#condSim input').forEach(el=>el.addEventListener('change',condSim));
+condSim();
+
+renderPath();
+</script>
+</body>
+</html>

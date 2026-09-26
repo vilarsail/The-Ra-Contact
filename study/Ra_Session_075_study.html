@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 075 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 075 · 交互式学习模块</h1>
+  <p class="sub">这一集在器皿住院前举行：Ra 先给出一组术前叮嘱——净化、观想与爱；随后拆解一次罕见的心灵问候如何借「殉道之声」的裂缝进入；下半场转向行家（adept）的功课——越来越如其所是地生活，以及魔法人格的穿上与脱下。</p>
+  <div class="tagline">「8 个主题 · 6 个学习步骤 · 27 组案例」</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 住院前的准备</a>
+<a href="#s3">③ 火之练习与接纳</a>
+<a href="#s4">④ 裂缝的解剖</a>
+<a href="#s5">⑤ 行家</a>
+<a href="#s6">⑥ 共鸣之声与天线</a>
+<a href="#s7">⑦ 魔法人格</a>
+<a href="#s8">⑧ 收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>用问答脉络推进器看清这场「术前集会」问了什么、怎么推进，例行问答收进折叠区。</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>住院前的准备</b><span>净化仪式、观想补位、爱是最大的保护，以及祈祷与冥想那条容易被忽略的分界线。</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>裂缝的解剖</b><span>本集主线：巴赫《B小调弥撒》的「Benedictus」段落为何成为缺口——殉道之声、两派人、四个缺一不可的成分。</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>行家：越来越如其所是</b><span>成为行家的门槛、从功能到存在的转向，以及流浪者为何反而更容易受挫。</span></span></label></div>
+<div class="step-item" data-target="#s7"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>魔法人格：穿上与脱下</b><span>行家的核心工具——召唤高我、架一座桥，以及为什么脱下与穿上同样重要。</span></span></label></div>
+<div class="step-item" data-target="#s8"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官：继续走现在的路</b><span>Ra 为何不谈论未来、对小组的确认，以及那句收尾的祝福。</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ S1 本章地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：一场「术前」举行的集会</h2></div>
+  <p class="sec-lead">上一集的尾巴挂着一件事：器皿即将住院。本集因此分成两段——前半场是住院前的实用叮嘱：净化仪式、观想补位、爱与触觉保护；后半场回到行家的功课：先拆解一次发生在巴赫《B小调弥撒》「Benedictus」段落的心灵问候——殉道之声如何打开「裂缝」、四个成分如何缺一不可——再讲共鸣之声、头发天线与魔法人格的穿上与脱下。先走一遍问答脉络，再看细节。</p>
+  <div class="card">
+    <h3>本集问答脉络（点节点查看一问一答）</h3>
+    <div class="flow-track" id="flowTrack1"></div>
+    <div class="flow-detail" id="flowDetail1"></div>
+    <div class="flow-ctrl"><button class="tri-btn" id="flowPrev1">上一问</button> <button class="tri-btn" id="flowNext1">下一问</button></div>
+  </div>
+  <div class="card">
+    <h3>开场：为什么赶在住院前集会</h3>
+    <div class="q">发问者特意把集会安排在器皿住院之前——他想知道，在这场考验来临前，Ra 会给出怎样的准备；器皿自己也攒了几个切身的问题。</div>
+    <div class="quote">
+      <p class="en">I greet you in the love and in the light of the One Infinite Creator. We communicate now.</p>
+      <p class="zh">我在太一无限造物主的爱与光中向你们致意。我们现在开始通讯。</p>
+      <span class="src">—— Session 075 · (75.0)</span>
+    </div>
+    <div class="plain">照例的致意之后，整场集会围绕「准备」展开：为身体准备病房与手术室，为心智准备接纳，为行家之路准备工具。</div>
+    <div class="case"><b>手术前的谈话：</b>外科医生在术前谈话里把风险、流程、康复安排一次讲清，家属才能安心签字——本集的开场正是这样一场谈话：Ra 先评估器皿状态（生命能因对未来的忧虑略有减少），再逐条给出住院前的准备清单。</div>
+    <div class="case"><b>先看医院导览图：</b>第一次去大型医院的人会先站在楼层导览图前看清整体动线——本章地图就是本页的导览图：主线两站是「裂缝」与「行家」，两端是术前叮嘱与收尾祝福。先看清全貌，再进各站细读。</div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 收尾叮嘱</span></summary>
+  <div class="body">
+    <p><b>(75.1) 器皿状态：</b>如前所述；由于对「未来」的心智/情感变貌，生命能的储备略有减少。</p>
+    <p><b>(75.40–75.41) 收尾叮嘱：</b>器皿开始显示出疼痛快速增加的变貌，Ra 主动留出简短询问时间；最后称小组尽责、校准良好，以 Adonai 收束。（本集某两问之间有一次 48 秒的停顿。）</p>
+  </div></details>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ S2 住院前的准备 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>住院前的准备：净化、观想与爱</h2></div>
+  <p class="sec-lead">住院在即。发问者问：器皿或小组能做些什么，让这段经历好过一些？Ra 的回答分两路——一路针对这个实体的心智/情感状态（并注明只适用于它或类似变貌的实体），一路针对地点本身；最后落在一句总纲上：没有比爱更伟大的保护。</p>
+  <div class="card">
+    <h3>熟悉的仪式与净化地点</h3>
+    <div class="q">发问者逐项确认：在她将住的病房里执行小五芒星驱逐仪式（Banishing Ritual of the Lesser Pentagram，一组以声与动作划定神圣空间的仪式）是否有价值？手术室那么难进入，还有帮助吗？</div>
+    <div class="quote">
+      <p class="en">The power of visualization may aid in your support where you cannot intrude in your physical form.</p>
+      <p class="zh">在你们无法以物理形式进入之处，观想的力量可以辅助你们的支持。</p>
+      <span class="src">—— Session 075 · (75.4)</span>
+    </div>
+    <div class="plain">净化总是有帮助，但并非必需——人到不了的地方，观想可以补位：在别处执行仪式的同时观想手术室，就是一种正确方法；更有经验者甚至能出体前往，而这个小组用观想法就很好。</div>
+    <div class="case"><b>出差带熟悉的枕头：</b>常年出差的人行李箱里总有一只家里用惯的枕头，一到酒店就能入睡——熟悉之物自带的「振动」让人安定。Ra 说的正是这个道理：器皿最熟悉的仪式振动随时有益，日落时分尤佳。</div>
+    <div class="case"><b>视频里的病床边：</b>亲友出差在外赶不到病房，便约好时间打开视频「陪」在床边——人无法以物理形式到场，存在感却真切抵达。这正是 Ra 对观想的描述：不能亲身侵入之处，观想可以辅助支持。</div>
+  </div>
+  <div class="card">
+    <h3>爱是最大的保护</h3>
+    <div class="q">除了仪式与净化，还有什么在护着她？Ra 把答案落在一种无论是否表达出来都有效的力量上。</div>
+    <div class="quote">
+      <p class="en">will be of aid whether this is expressed or unmanifest, as there is no protection greater than love.</p>
+      <p class="zh">无论表达出来还是未显现，都会有所帮助——因为没有比爱更伟大的保护。</p>
+      <span class="src">—— Session 075 · (75.2)</span>
+    </div>
+    <div class="plain">仪式净化空间，爱守护人——而且这份爱不必说出口才生效。</div>
+    <div class="case"><b>没说出口的牵挂：</b>父亲住院，儿子嘴上不擅长说关心，只是每天默默把水杯灌满、把毯子掖好——牵挂从未宣之于口，却始终在场。对应 Ra 的话：朝向爱的变貌无论显现与否都有助益。</div>
+  </div>
+  <div class="card">
+    <h3>独处与触碰的分界</h3>
+    <div class="q">器皿想知道：在医院里没有人握住她的手，独自冥想是否安全？</div>
+    <div class="quote">
+      <p class="en">We might suggest that the instrument may pray with safety but only meditate with another entity’s tactile protection.</p>
+      <p class="zh">我们可以建议：这个器皿可以安全地祈祷，但只有在另一实体的触觉保护下才能冥想。</p>
+      <span class="src">—— Session 075 · (75.8)</span>
+    </div>
+    <div class="plain">独自祷告可以，深度冥想需要另一实体的触觉保护——「一只握住的手」就是防线。</div>
+    <div class="case"><b>产房里的那只手：</b>产床上，陪产的人做的事其实很简单——让产妇一直握着他的手。疼每次涌上来，那只手的触感就在告诉她「有人与你同在」。对需要深入意识状态的器皿来说，触觉保护正是同一角色。</div>
+  </div>
+  <div class="card">
+    <h3>背部的三个因素与温水</h3>
+    <div class="q">器皿追问身体：背部状况可能影响手术，能做些什么改善？Ra 扫描后给出结构化的诊断。</div>
+    <div class="plain">三个促成变貌——两个已诊断、一个未诊断——而器皿不愿接受足以止痛的化学物质；唯一同时针对全部三个、且尚未被使用的方式：就座时用温和的力量反复把温水推向整个身体，练习期后每日进行。</div>
+    <div class="case"><b>康复科的热水浴槽：</b>康复科里，治疗师让腰背不适的病人坐在温水槽中，用水流一遍遍冲刷整个背部——温水兼做放松、循环与按摩。这正是 Ra 描述的那种方式：以温和力量反复推向整个物理复合体。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ S3 火之练习与接纳 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>火之练习与「接纳」的功课：完全疗愈还缺哪块拼图</h2></div>
+  <p class="sec-lead">集会开始前，小组刚为器皿做过「火之练习」（exercise of fire，小组为支持器皿而进行的疗愈练习）。发问者想知道它做得对不对、够不够——Ra 先给肯定，再泼一盆温和的冷水：就算练习完全达成，手术也不会因此变得不必要，因为还缺一块拼图，名字叫「接纳」。</p>
+  <div class="card">
+    <h3>轻微的帮助与整部乐谱</h3>
+    <div class="q">发问者连问两层：火之练习对器皿有帮助吗？做得正确吗？</div>
+    <div class="quote">
+      <p class="en">The baton is well visualized. The conductor will learn to hear the entire score of the great music of its art.</p>
+      <p class="zh">指挥棒被很好地观想了。这位指挥者将学会听到其艺术之伟大音乐的全部乐谱。</p>
+      <span class="src">—— Session 075 · (75.11)</span>
+    </div>
+    <div class="plain">姿势已经对了，功力还需积累——帮助会随实践者学习/教导其疗愈艺术而扩大；此外，来自众人的支持也把生命能导向舒适，让这位敏感的器皿受益。</div>
+    <div class="case"><b>新手指挥的第一场排练：</b>音乐学院的学生第一次执棒，握棒的手势无懈可击——但要「听见」整部总谱里每件乐器的呼吸，还需要千百场排练。火之练习此刻正处于这个阶段：观想做对了，整个艺术的「乐谱」还在前方。</div>
+  </div>
+  <div class="card">
+    <h3>完全实现≠手术不必要</h3>
+    <div class="q">发问者顺势假设：若练习今天就能完全达成，器皿的变貌将得到完全疗愈、手术不再必要——对吗？Ra 直答：不。还缺什么？器皿的接纳。</div>
+    <div class="quote">
+      <p class="en">This is correct, the case with this instrument being delicate, since it must totally accept much which the limitations it now experiences cause to occur involuntarily. This is a pre-incarnative choice.</p>
+      <p class="zh">这是正确的——这个器皿的情况是微妙的，因为它必须完全接纳许多因它如今经历的限定而非自愿地发生的事。这是一个投生前的选择。</p>
+      <span class="src">—— Session 075 · (75.13)</span>
+    </div>
+    <div class="plain">疗愈练习能做的有边界；剩下那一半在器皿自己手里——完全接纳身体限定下非自愿发生的一切，而这份接纳是投生前就做出的选择。</div>
+    <div class="case"><b>慢性病患者的和解：</b>一位慢性病患者前几年一直跟身体较劲，把每次发作都当成敌人；后来他学着说「今天就是做不到」，日程随之调整，人反而松了下来。接纳不是放弃治疗——对应 Ra 的提醒：有些事无法靠外力消除，只能被完整地接纳。</div>
+  </div>
+  <div class="card">
+    <h3>不能谈论未来</h3>
+    <div class="q">集末补问：火之练习对器皿来说是最好的吗？还有没有更好的？Ra 的回答藏着一个重要的原则性限定。</div>
+    <div class="quote">
+      <p class="en">We cannot speak of the future as we may then affect it, but there is a great probability/possibility if you follow the path which you now tread that more efficacious methods for the entire group will be established.</p>
+      <p class="zh">我们不能谈论未来，因为那样我们可能会影响它；但有一个很大的概率/可能性：如果你们遵循现在走的路，将为整个小组建立更有效的方法。</p>
+      <span class="src">—— Session 075 · (75.40)</span>
+    </div>
+    <div class="plain">Ra 不剧透、不打包票——说出未来就可能改变未来；只确认一件事：照现在的路走下去，方法会越来越有效。</div>
+    <div class="case"><b>不立军令状的项目经理：</b>项目启动会上，经理拒绝承诺「三个月内必成」，只说「按现在的节奏推进，我们每个迭代都会更快」——不是没信心，而是承诺本身会扭曲团队的每一步选择。Ra 的保留与此同理：宣告未来，就是在干预未来。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ S4 裂缝的解剖 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>裂缝的解剖：殉道之声如何引来猎户的问候</h2></div>
+  <p class="sec-lead">本集的核心问答。器皿两次在巴赫《B小调弥撒》的「Benedictus」段落经历疑似心灵攻击。Ra 说这不是次要的询问——先剥离次要因素，再讲一个横跨两千年的故事：一声呼喊如何成为裂缝（chink，防护上被撬开的缺口），以及四个成分如何缺一不可。用下面的开关模拟：拆掉任何一个，问候都进不来。</p>
+  <div class="card">
+    <h3>两千年前的转向：爱与智慧的分岔</h3>
+    <div class="q">裂缝最初是怎么来的？Ra 把镜头拉回耶路撒冷：Jehoshua（即耶稣）决定回城过圣日的那一刻，他的工作方式变了。</div>
+    <div class="quote">
+      <p class="en">it turned from work mixing love and wisdom and embraced martyrdom, which is the work of love without wisdom.</p>
+      <p class="zh">它从混合爱与智慧的工作转向了拥抱殉道——那是不带智慧的爱之工作。</p>
+      <span class="src">—— Session 075 · (75.14)</span>
+    </div>
+    <div class="plain">「Hosanna」与「Benedictus」正是他进入殉道之地时那声呼喊的书面总结（教会的普遍接受则是一个错误的陈述）；对器皿而言，裂缝就是这个情形在空间/时间中的回响，加上「Hosanna」作为转向殉道之预兆的位置。</div>
+    <div class="timeline">
+      <div class="tl-item"><div class="t">转向殉道</div><div class="d">Jehoshua 决定返回耶路撒冷过圣日——从混合爱与智慧的工作，转向没有智慧的爱。</div></div>
+      <div class="tl-item"><div class="t">一声呼喊</div><div class="d">进城时的呼喊后来被写成「Hosanna」与「Benedictus」；迎接的有两派人：少数人盼望一位地上君王（骑驴的姿态表明并非如此，他也不愿与罗马人或撒都该人争斗），多数人则被拉比与长老指示去嘲弄这个「似乎是自己人、却带走人民」的实体。</div></div>
+      <div class="tl-item"><div class="t">回响至今</div><div class="d">这个微妙的情形穿过空间/时间一路回响；对器皿来说，它就是裂缝所在——连同「Hosanna」作为转向殉道之预兆的位置。</div></div>
+      <div class="tl-item"><div class="t">演唱弥撒</div><div class="d">器皿对耶稣的教导与榜样有强烈奉献，演唱巴赫《B小调弥撒》这首高难度的奉献之声，并有意识地认同弥撒的每一个部分。</div></div>
+      <div class="tl-item"><div class="t">裂缝打开</div><div class="d">「Sanctus」段落耗尽体力；「Hosanna」期间的高度专注挡住了问候；到由一人独唱的「Benedictus」，器皿放松专注——立即对更充分的问候开放。</div></div>
+    </div>
+    <div class="case"><b>摘下耳机的瞬间：</b>在嘈杂的车厢里，戴上耳机专心工作的人什么也听不见；一到站摘下耳机，所有噪音一齐涌进来。器皿在「Sanctus」「Hosanna」中如同戴着专注的耳机——到独唱的「Benedictus」放松下来，问候乘虚而入。</div>
+    <div class="case"><b>老歌里的旧伤：</b>多年不曾想起的一段旧事，被电台里一首偶然放起的老歌瞬间唤醒——某些词句与某段经历绑定，隔着几十年依然带电。对应 Ra 说的「回响」：那组特定词语的形而上学性质，让两千年前的一幕在歌声里重新在线。</div>
+  </div>
+  <div class="card">
+    <h3>四个成分，缺一不可</h3>
+    <div class="q">发问者归纳：有殉道倾向的实体，经由自由意志向猎户集团的「帮助」开放——对吗？Ra 说只在器皿的特殊位置上成立，并否认了与 Jehoshua 的直接联结；真正罕见的是四个成分恰好凑齐。</div>
+    <div class="quote">
+      <p class="en">As you can see, it is not an ordinary occurrence and would not have happened had any ingredient been left out: exhaustion, bias in belief complexes, attention from an Orion entity, and the metaphysical nature of that particular set of words.</p>
+      <p class="zh">如你所见，这不是寻常事件——若缺少任何成分，它都不会发生：疲惫、信仰复合体中的偏见、来自一个猎户实体的注意，以及那组特定词语的形而上学性质。</p>
+      <span class="src">—— Session 075 · (75.17)</span>
+    </div>
+    <div class="plain">攻击不是一个原因造成的，而是四个条件同时在线：疲惫（唱「Sanctus」耗尽体力）、偏见（信仰复合体的倾向）、猎户的注意（极其罕见）、词语的形而上学性质（殉道之声本身）。缺任何一项，裂缝都合不上也开不了。</div>
+    <div class="case"><b>四把钥匙同时转动：</b>银行金库的锁要求四把钥匙同时转动才会开启——少任何一把，门纹丝不动。Ra 给出的裂缝模型正是这样：四个成分各自都不足以打开缺口，凑齐才构成一次罕见的事件。</div>
+  </div>
+  <div class="card">
+    <h3>动手试：拆掉一个成分会怎样？</h3>
+    <p class="sec-lead" style="margin-bottom:8px">Ra 列出的四个成分都拨到「开」，裂缝才会打开。试着关掉其中一个看看。</p>
+    <div class="cond-row"><div class="name">疲惫<small>「Sanctus」段落的体力消耗令任何实体疲惫</small></div><label class="switch"><input type="checkbox" id="chinkExhaustion" checked onchange="updateChink()"><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">信仰复合体中的偏见<small>对耶稣教导与榜样的强烈奉献与认同</small></div><label class="switch"><input type="checkbox" id="chinkBias" checked onchange="updateChink()"><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">猎户实体的注意<small>一个光之存有盯上了这个实体——极其罕见</small></div><label class="switch"><input type="checkbox" id="chinkOrion" checked onchange="updateChink()"><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">词语的形而上学性质<small>「Hosanna」「Benedictus」与殉道场景的回响</small></div><label class="switch"><input type="checkbox" id="chinkWords" checked onchange="updateChink()"><span class="slider"></span></label></div>
+    <div id="condResult">四个成分齐备：裂缝打开——到独唱的「Benedictus」，专注一放松，问候便乘虚而入。</div>
+  </div>
+  <div class="card">
+    <h3>目标、密度与一次误会</h3>
+    <div class="q">猎户实体想做什么？它是哪个密度的？发问者中途还闹了一场误会——他以为 Ra 在谈唱诗团里的另一个人。</div>
+    <div class="quote">
+      <p class="en">This instrument is being greeted by a fifth-density entity which has lost some polarity due to its lack of dictatorship over the disposition of the instrument’s mind/body/spirit or its yellow-ray activated physical complex.</p>
+      <p class="zh">这个器皿正被一个第五密度实体问候；由于它缺乏对器皿心/身/灵复合体或其黄色光芒激活的物理复合体之处置的独裁权，它失去了一些极性。</p>
+      <span class="src">—— Session 075 · (75.19)</span>
+    </div>
+    <div class="plain">目标是移除器皿；来者是第五密度实体——而且因为它没能得逞，反而损失了极性。至于误会：Ra 澄清，从头到尾谈论的都只是器皿本人，不是唱诗团里的任何其他人。</div>
+    <div class="case"><b>失手的棋手：</b>高手设局压制对手，对手却始终没按他预期的路走——缠斗数回合后，高手反而折损了先手。对应 Ra 的描述：这个实体「缺乏独裁权」而失去了一些极性——负面存有的每一次失手，都要自付代价。</div>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">裂缝</div><div class="sub">chink</div><div class="tap">点击翻面</div></div><div class="back">防护墙上被撬开的缺口：未平衡的变貌（如殉道倾向）加上特定的词语与情境，会让一个实体对外来影响暂时开放。<em>像墙上那道只有蚁群才找得到的细缝。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">猎户集团</div><div class="sub">Orion group / Orion entity</div><div class="tap">点击翻面</div></div><div class="back">负面极性的势力，会寻找并利用实体的裂缝施加影响；本集把「注意」列为四个成分之一。<em>像专门盯着监控盲区的窃贼。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">殉道</div><div class="sub">martyrdom</div><div class="tap">点击翻面</div></div><div class="back">Ra 称之为「没有智慧的爱之工作」：本身完美、曾作为灯塔照亮许多人，但殉道意味着在殉道者的密度里，提供爱与光的机会就此终结。<em>像把自己全部点燃去照亮一晚——光很亮，烛芯烧尽了。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">黄色光芒激活的物理复合体</div><div class="sub">yellow-ray activated physical complex</div><div class="tap">点击翻面</div></div><div class="back">我们在第三密度穿着的这具身体——由黄色光芒能量中心激活。猎户实体想支配的就是它，却未能得逞。<em>像对方想接管你的账号，却始终拿不到权限。</em></div></div>
+    </div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ S5 行家 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>行家：越来越如其所是地生活</h2></div>
+  <p class="sec-lead">误会澄清后，发问者为措辞带来的混乱致歉，随即请 Ra 展开上一集的一句话——「真正的行家越来越如其所是地生活」。Ra 借这道题给出了本集最核心的教导：每个实体都是造物主；行家的门槛、从功能到存在的转向，以及流浪者为何反而更容易受挫。</p>
+  <div class="card">
+    <h3>成为行家的门槛</h3>
+    <div class="q">「行家（adept，已把基础能量中心调平衡、能做内在工作的寻求者）」是怎样炼成的？Ra 从每个实体的共同起点讲起。</div>
+    <div class="quote">
+      <p class="en">The seeker becomes the adept when it has balanced, with minimal adequacy, the energy centers red, orange, yellow, and blue, with the addition of the green for the positive, thus moving into indigo work.</p>
+      <p class="zh">当寻求者以最低限度的充分性平衡了红、橙、黄、蓝能量中心——正面路径再加上绿色——它便成为行家，从而进入靛蓝的工作。</p>
+      <span class="src">—— Session 075 · (75.23)</span>
+    </div>
+    <div class="plain">门槛不是天赋而是平衡：基础能量中心调平衡后，行家开始减少与「功能」有关的初步外层工作，转入与「存在」有关的内层工作——越有意识地结晶化，越显现出它自时间之前就一直所是的：太一无限造物主。</div>
+    <div class="case"><b>上岗前的资质培训：</b>新员工要先修完安全、合规、流程这些基础课才有资格做「真正的业务」——平衡红、橙、黄、蓝就是行家的基础课；此后工作重心从「把事做对」转向「成为什么样的人」，正对应从功能到存在的转向。</div>
+  </div>
+  <div class="card">
+    <h3>流浪者与注意力</h3>
+    <div class="q">发问者以为：从第五、第六密度来的流浪者（wanderer，自愿投生到第三密度助人收割的存有）本该带着较高的行家程度回来。Ra 说这个问法不够聚焦，然后给了一个出人意料的比喻。</div>
+    <div class="quote">
+      <p class="en">One may be a fine catcher of your game sphere, but if the eye is not turned as this sphere is tossed, then perchance it will pass the entity by.</p>
+      <p class="zh">一个人可以是你这种球类游戏的好接球手，但如果球被抛出时眼睛没有转向它，那么球或许就会从实体身旁飞过。</p>
+      <span class="src">—— Session 075 · (75.24)</span>
+    </div>
+    <div class="plain">差别不在库存而在注意力：许多可称行家的流浪者在今生根本没做有意识的工作——能力还在，眼睛没转向球，球就错过；而即便穿透了遗忘过程，黄色光芒激活的身体也不如绿色或蓝色光芒激活的身体那样响应，挫折与困惑不可避免。</div>
+    <div class="case"><b>东张西望的天才少年：</b>运动天赋出众的少年比赛时东张西望，球飞到眼前才回神——教练叹气：你的天赋一点没少，少的只是注意力。对应 Ra 的比喻：行家程度不会消失，但不看向球，球就不会被接住。</div>
+    <div class="case"><b>换了装备的老将：</b>退役多年的老骑手重新上马，身法记忆都在，可惜旧日的马与今日的坐骑手感完全不同——他知道自己该怎么做，身体却跟不上。流浪者的困境正在于此：即便记忆穿透遗忘，黄色光芒的「化学装置」也不如绿色或蓝色的身体听使唤。</div>
+  </div>
+  <div class="card">
+    <h3>给住院的一条建议与疗愈之门</h3>
+    <div class="q">发问者回到住院这个现实问题：还有什么建议？Ra 只给一条；随后在工具问答的间隙，把「谁都能疗愈吗」这扇门也打开了。</div>
+    <div class="quote">
+      <p class="en">Any entity may, at any time, instantaneously clear and balance its energy centers. Thus in many cases those normally quite blocked, weakened, and distorted may, through love and strength of will, become healers momentarily.</p>
+      <p class="zh">任何实体都可以在任何时刻瞬间清理并平衡其能量中心。因此在许多情形里，那些通常相当阻塞、虚弱、变貌的实体，可以经由爱与意志的力量，暂时成为疗愈者。</p>
+      <span class="src">—— Session 075 · (75.35)</span>
+    </div>
+    <div class="plain">建议只有一条：意识到自我为造物主，并以对作为造物主之自我的谦卑之爱互相支持；疗愈则分两档——瞬间调平可让任何人暂时成为疗愈者，而「天生」的疗愈者必须在人格的修炼中训练自我。</div>
+    <div class="case"><b>争吵中的急刹车：</b>争吵正要失控的那一刻，一方深吸一口气、松开攥紧的拳头，声音也随之放缓——短短几秒完成了一次能量中心的调平。对应 Ra 的话：任何实体、任何时刻都可以瞬间清理并平衡能量中心；差别只在「一时」与「训练有素」。</div>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">行家</div><div class="sub">adept</div><div class="tap">点击翻面</div></div><div class="back">以最低充分性平衡红、橙、黄、蓝（正面另加绿色）能量中心的寻求者；此后从外层的「功能」工作转入内层的「存在」工作。<em>像修完基础课后开始做真正的业务。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">能量中心（光芒）</div><div class="sub">energy center (ray)</div><div class="tap">点击翻面</div></div><div class="back">按颜色分层的能量节点：红、橙、黄、绿、蓝、靛……本集把它们当作行家的「基础课表」——逐一平衡才谈得上靛蓝工作。<em>像乐器的各根弦：逐弦调准，才能合奏。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">靛蓝工作</div><div class="sub">indigo work</div><div class="tap">点击翻面</div></div><div class="back">平衡基础中心之后进入的更深一层工作；靛蓝与高我及内在层面相接，是行家内层功课的入口。<em>像进门前先换的那双鞋——穿上了才走得进里屋。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">流浪者</div><div class="sub">wanderer</div><div class="tap">点击翻面</div></div><div class="back">自愿从更高密度投生到第三密度的存有。本集要点：他们的行家程度不会自动在线——这是注意力的问题，且受黄色光芒身体的限制。<em>像带着旧地图回到老街的旅人：记忆还在，路面已经变了。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">遗忘过程</div><div class="sub">forgetting process</div><div class="tap">点击翻面</div></div><div class="back">投生时被设下的遮蔽：把来源与更高密度的记忆盖住。本集提到，即便它被穿透，身体层面的限制依然存在。<em>像蒙眼训练：摘下眼罩，手脚依旧要先适应场地。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">生命能</div><div class="sub">vital energy</div><div class="tap">点击翻面</div></div><div class="back">器皿可被通讯使用而不受损所需的储备。本集它因对未来的忧虑而略有减少；众人的支持会把它导向舒适。<em>像手机电量：忧虑是后台偷电的程序，支持是充电宝。</em></div></div>
+    </div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ S6 共鸣之声与天线 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>行家的工具箱：共鸣之声、头发天线</h2></div>
+  <p class="sec-lead">发问者接着追问行家的两件「外设」：希伯来语与梵语的声音振动复合体为何强大？头发为什么是天线？Ra 先讲共鸣——但立刻修正发问者的方向：不是行家与创造更合一，而是创造越来越被包含在实践者之内；对「音符叫什么名字」，Ra 干脆拒绝回答。</p>
+  <div class="card">
+    <h3>共鸣：创造开始歌唱</h3>
+    <div class="q">这些与创造在数学上相关联的声音，若被精确振动，会对行家有什么用？</div>
+    <div class="quote">
+      <p class="en">You may consider the concept of sympathetic resonance. When certain sounds are correctly vibrated, the creation sings.</p>
+      <p class="zh">你可以考虑共鸣（sympathetic resonance）的概念。当某些声音被正确地振动，创造物便歌唱。</p>
+      <span class="src">—— Session 075 · (75.27)</span>
+    </div>
+    <div class="quote">
+      <p class="en">It would, perhaps, be more accurate to state that in this circumstance the creation becomes more and more contained within the practitioner.</p>
+      <p class="zh">也许更准确的说法是：在这种情形中，创造物变得越来越被包含在实践者之内。</p>
+      <span class="src">—— Session 075 · (75.29)</span>
+    </div>
+    <div class="plain">机制是共鸣——像音叉让同频的琴弦跟着响；方向则要修正：不是人向创造「对齐过去」，而是创造「收进来」——被包含在实践者之内。细节上，有些情形只吟唱元音即可，梵语组合里和声间隔的选择也具共鸣性质。</div>
+    <div class="case"><b>调音师的音叉：</b>调音师敲响 440Hz 的标准音叉，按到同音的琴弦隔着空气跟着嗡嗡作响——不接触也能共振。Ra 描述的正是这种关系：声音以比例与创造相关联，正确振动时，创造物歌唱。</div>
+  </div>
+  <div class="card">
+    <h3>名称不可给：实证与敏锐</h3>
+    <div class="q">发问者试着要一份「标准答案」：请告诉我这些音符的音乐名称。Ra 的拒绝干脆利落——这正是自由意志法则的又一次显形。</div>
+    <div class="plain">「我们不能。」名称必须由寻求者以实证观察去寻找与确定；随着寻求继续，持续以行家之道工作所带来的敏锐感知力会叠加在实证数据之上。答案不在别人手里，在自己逐渐长出的感知里。</div>
+    <div class="case"><b>讨要标准答案的学生：</b>实验课上，学生问老师「把参考数值直接给我吧」，老师说「我不能给——你得自己测出来；测多了，手感自然会来」。Ra 的拒答与此同构：给出答案会短路成长，实证加敏锐才是完整的过程。</div>
+  </div>
+  <div class="card">
+    <h3>头发天线</h3>
+    <div class="q">较早的集会里 Ra 说过头发是天线——它到底怎么运作？</div>
+    <div class="quote">
+      <p class="en">the hair, as it has significant length, becomes as a type of electrical battery which stays charged and tuned and is then able to aid contact, even when there are small anomalies in the contact.</p>
+      <p class="zh">头发当它具有显著长度时，就成为一种保持充电与调谐的电池，随后能够辅助接触——即使接触中存在小的异常。</p>
+      <span class="src">—— Session 075 · (75.33)</span>
+    </div>
+    <div class="plain">这是形而上学效应，用物理测量难以处理；长度没有上限，下限大约四到四英寸半——取决于接触的强度与器皿的性质。</div>
+    <div class="case"><b>充满电的移动电源：</b>一块提前充满电、校准好输出参数的移动电源，随时能为设备补电，电压不稳时还能稳住一程。头发之于接触正是如此：足够长度的「蓄电与调谐」，让偶发的小异常不至于断线。</div>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">共鸣</div><div class="sub">sympathetic resonance</div><div class="tap">点击翻面</div></div><div class="back">同频相振：正确振动的声音让创造「跟着响」；本集还强调方向——是创造被包含进实践者，而非人向外追合一。<em>像音叉一响，同频的琴弦自鸣。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">声音振动复合体</div><div class="sub">sound vibratory complex</div><div class="tap">点击翻面</div></div><div class="back">Ra 对「词语/语言」的称呼：声音作为振动的载体。希伯来语与梵语因与创造的数学比例关联而格外有力。<em>像频率刻度上某些恰好对准通道的频点。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">吟唱的元音</div><div class="sub">intoned vowel</div><div class="tap">点击翻面</div></div><div class="back">被拉长吟唱的元音声——其「色彩」目前无法精确测量，Ra 说它等同于基本物质粒子的旋转类型；某些情形下仅它就有作用。<em>像单独一根标准音叉：无需和弦即可共鸣。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">和声间隔</div><div class="sub">harmonic intervals</div><div class="tap">点击翻面</div></div><div class="back">音与音之间的距离关系。梵语组合中，间隔的选择也带共鸣性质——不只是单音，音与音的关系本身在起作用。<em>像和弦：不止一个音对，音与音之间的距离也要对。</em></div></div>
+    </div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ S7 魔法人格 ============ -->
+<section class="chapter" id="s7">
+  <div class="sec-head"><span class="num">07</span><h2>魔法人格：穿上高我，然后记得脱下</h2></div>
+  <p class="sec-lead">本集压轴的工具是魔法人格（magical personality，行家在工作期间召唤高我所「穿上」的身份）。Ra 先纠正「三方面人格」的误解，再讲召唤机制与那条最核心的叮嘱：工作结束，要刻意脱下。用推进器走一遍一次完整工作的流程。</p>
+  <div class="card">
+    <h3>三方面的用意：不是「三」，是「一」</h3>
+    <div class="q">发问者确认：魔法人格的三个方面是力量、爱与智慧——而且只有这三个主要方面吗？Ra 的回答把这组「三分」还原成「一」。</div>
+    <div class="quote">
+      <p class="en">It is by no means a personality of three aspects. It is a being of unity, being of sixth density, and equivalent to what you call your higher self and, at the same time, is a personality enormously rich in variety of experience and subtlety of emotion.</p>
+      <p class="zh">它绝不是一个具有三方面的人格。它是一个合一的存在——第六密度的存在，等同于你们所称的高我；同时，它在体验的多样性与情感的微妙性上又是极其丰富的人格。</p>
+      <span class="src">—— Session 075 · (75.32)</span>
+    </div>
+    <div class="plain">「力量、爱、智慧」是给新手的三根护栏：留意每个方面、不滥用行业的工具——在爱与智慧的中心保持平衡，为了服务而寻求力量。</div>
+    <div class="case"><b>三块警示牌的工位：</b>车间给新手的工位旁立三块牌子：勿超速、勿分心、按规程——牌子是为防滥用而立；等成了老师傅，规程早已内化成「一」种手感。三方面之名正是这样的护栏，而非人格本身有三个零件。</div>
+  </div>
+  <div class="card">
+    <h3>召唤机制：架一座桥</h3>
+    <div class="q">召唤魔法人格的仪式，究竟如何帮助心/身/灵复合体整体？</div>
+    <div class="quote">
+      <p class="en">When the magical personality is properly and efficaciously invoked, the self has invoked its higher self. Thus a bridge betwixt space/time and time/space is made, and the sixth-density magical personality experiences directly the third-density catalyst for the duration of the working.</p>
+      <p class="zh">当魔法人格被正确而有效地召唤时，自我已经召唤了它的高我（higher self）。于是在空间/时间与时间/空间之间架起一座桥，第六密度的魔法人格在工作的持续期间直接体验第三密度的催化剂。</p>
+      <span class="src">—— Session 075 · (75.36)</span>
+    </div>
+    <div class="plain">召唤的本质：自我唤起高我，两侧架桥；工作期间，第六密度的「你」直接体验第三密度的催化剂。随后是全段最关键的叮嘱——</div>
+    <div class="quote">
+      <p class="en">It is most central to deliberately take off the magical personality after the working in order that the higher self resume its appropriate configuration as analog to the space/time mind/body/spirit.</p>
+      <p class="zh">最为核心的是：在工作之后刻意脱下魔法人格，以便高我恢复其作为空间/时间心/身/灵之类比的适当配置。</p>
+      <span class="src">—— Session 075 · (75.36)</span>
+    </div>
+    <div class="case"><b>手术室的无菌流程：</b>外科医生术前刷手、穿手术衣进入无菌区；手术结束同样一丝不苟地脱下、出区——穿上与脱下是同一条规程的两半。Ra 说穿上要「一丝不苟」（无论以心智还是手势），脱下更是「最为核心」：人戏不分，桥就塌了。</div>
+    <div class="case"><b>卸了妆才是下班：</b>话剧演员在台上进入角色，谢幕后认真卸妆——有人图省事带着戏妆回家，久了便难分戏里戏外。对应脱下魔法人格的必要性：那身份只在「工作期间」生效。</div>
+  </div>
+  <div class="card">
+    <h3>一次工作的完整流程（点节点查看）</h3>
+    <div class="flow-track" id="flowTrack2"></div>
+    <div class="flow-detail" id="flowDetail2"></div>
+    <div class="flow-ctrl"><button class="tri-btn" id="flowPrev2">上一步</button> <button class="tri-btn" id="flowNext2">下一步</button></div>
+    <div class="plain" style="margin-top:14px">渐进而非跃变：召唤没有明确的「量子变化」时刻——随新手越来越行家，以小程度/百分比完成；练习次第上，交替冥想力量→爱→智慧并循环是适当的技术，而本小组还有额外帮助：各实体以接近原型的方式显现其中一种品质，观想可以个性化，小组内生出许多爱与支持。</div>
+    <div class="case"><b>循序渐进的杠铃：</b>健身新手不能第一天就上大重量——从轻负荷逐级递增，肌纤维在一次次微超量中生长。对应 Ra 的回答：魔法人格的召唤是百分比式的渐进，没有一道「从此成了」的龙门。</div>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">魔法人格</div><div class="sub">magical personality</div><div class="tap">点击翻面</div></div><div class="back">行家在工作期间经由仪式「穿上」的身份——本质是召唤自己的高我；工作结束须刻意脱下，让高我恢复其类比配置。<em>像手术衣：进无菌区穿上，出无菌区脱下。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">高我</div><div class="sub">higher self</div><div class="tap">点击翻面</div></div><div class="back">第六密度的合一存在，极其丰富而微妙；被召唤时与自我架桥，在工作期间直接体验第三密度的催化剂。<em>像在工作的那个时段里，未来的你走进来与你并肩。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">空间/时间</div><div class="sub">space/time</div><div class="tap">点击翻面</div></div><div class="back">我们熟悉的物质侧：位置可测、时间单向流逝；身体与催化剂都在这一侧。<em>像只能一帧一帧往前放的电影。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">时间/空间</div><div class="sub">time/space</div><div class="tap">点击翻面</div></div><div class="back">与空间/时间互补的「内侧」：高我所处的层面。召唤魔法人格，就是在两侧之间架桥。<em>像屏幕里外的两面——桥一搭，两边就通上电。</em></div></div>
+    </div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ S8 收官 ============ -->
+<section class="chapter" id="s8">
+  <div class="sec-head"><span class="num">08</span><h2>收官：继续走现在的路</h2></div>
+  <p class="sec-lead">疼痛开始增加，Ra 主动留出简短询问的时间。发问者问出最后一问：还能做些什么让器皿更舒适、让接触更好？Ra 的收尾短而暖——两句话把责任与肯定各归其位，然后以惯常的祝福离开。</p>
+  <div class="card">
+    <h3>最后的确认</h3>
+    <div class="q">「有什么我们可以做的吗？」——这个问题几乎每集都会问，本集的答案简短到只有两句。</div>
+    <div class="quote">
+      <p class="en">You are conscientious. The alignments are well.</p>
+      <p class="zh">你们是尽责的。校准是良好的。</p>
+      <span class="src">—— Session 075 · (75.41)</span>
+    </div>
+    <div class="plain">没有新的待办清单——该做的都已做到位。Ra 的收尾不是布置作业，而是确认：过程本身已经被看见。</div>
+    <div class="case"><b>营地的夜间点名：</b>登山队扎营后，领队检查了帐篷、绳索与每个人的状态，最后只说了一句「今晚的准备无可挑剔」——不再追加任何指令。被肯定的不只是结果，更是整个准备过程。</div>
+  </div>
+  <div class="card">
+    <h3>本集的回应方式（点选项作答）</h3>
+    <p class="sec-lead" style="margin-bottom:8px">这一集里 Ra 有肯定、有否定、有拒答、也有对前提的纠正。判断下面每个回应属于哪一类。</p>
+    <div id="sortArea1"></div>
+  </div>
+  <div class="saying">
+    <p class="en">Go forth, therefore, rejoicing in the power and peace of the One Infinite Creator.</p>
+    <p class="zh">因此，前行吧，在太一无限造物主的力量与平安中欢欣。</p>
+    <span class="src">—— Session 075 · (75.41)</span>
+  </div>
+  <div class="card">
+    <h3>离别赠言里的回望</h3>
+    <div class="q">离开前，Ra 把这一集整个放进了一句告别里——既是一集的结束，也是对住院前的器皿与小组成员的一句话。</div>
+    <div class="quote">
+      <p class="en">I leave you, my friends, in the love and the light of the One Infinite Creator.</p>
+      <p class="zh">我离开你们，我的朋友们，在太一无限造物主的爱与光中。</p>
+      <span class="src">—— Session 075 · (75.41)</span>
+    </div>
+    <div class="plain">从开场的「我在爱与光中致意」到离别的「我在爱与光中离开」，本集首尾相扣：术前叮嘱是爱的具体化，行家功课是光的进阶——剩下的路，Ra 只说「继续走现在的路」。</div>
+    <div class="case"><b>散场时的场刊：</b>演出结束时观众手里多了一份场刊，上面印的不是剧透，而是这一场每个段落的导览——本页正是一场集会的场刊：曲目是「裂缝」与「行家」，散场词是那句祝福。愿读者合上页面时，也已把住院前的叮嘱与行家的次第带在身上。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 075（<code>split/Ra_Session_075.md</code>）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra075-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本集定制交互 ===== */
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+initStepper('flowTrack1','flowDetail1','flowPrev1','flowNext1',[
+ {t:'器皿状态',d:'<span class="qa-q">问：器皿现在的状态如何？</span><b>答：</b>如前所述——由于对「未来」的心智/情感变貌，生命能的储备略有减少。集会特意安排在住院之前。(75.1)'},
+ {t:'住院前的帮助',d:'<span class="qa-q">问：住院前我们能做些什么来帮助她？</span><b>答：</b>两路回答：针对这个实体的心智/情感状态（仅适用于它或类似变貌的实体），与针对地点的普遍改善——她最熟悉的仪式振动随时有益、日落尤佳；病房与手术室都可以执行驱逐仪式。(75.2–75.4)'},
+ {t:'观想与出体',d:'<span class="qa-q">问：手术室进不去，怎么办？</span><b>答：</b>净化并非必需——观想三人在手术室执行仪式是正确方法之一；更有经验者可离开物理身体、以另一身体进入房间执行，但本小组用观想法即可。(75.4–75.7)'},
+ {t:'独处与触碰',d:'<span class="qa-q">问：她能在医院里无人握手而独自冥想吗？</span><b>答：</b>可以安全地祈祷，但冥想只在另一实体的触觉保护下进行；背部则靠每日温水——三个促成变貌唯一同时对应的方式。(75.8–75.9)'},
+ {t:'火之练习与接纳',d:'<span class="qa-q">问：火之练习做得对吗？完全达成就能免于手术吗？</span><b>答：</b>指挥棒观想良好，但「乐谱」还需学会；即便完全达成也不能免除手术——还缺器皿对限制的完全接纳，那是投生前的选择。(75.10–75.13)'},
+ {t:'Benedictus 的问候',d:'<span class="qa-q">问：为何两次在「Benedictus」段落经历疑似心灵攻击？</span><b>答：</b>殉道之声的裂缝：Jehoshua 转向殉道（没有智慧的爱）的一声呼喊回响至今；疲惫、偏见、猎户的注意、词语的形而上学性质——四成分缺一不可；独唱段放松专注的一刻，问候涌入。目标是移除器皿的第五密度实体。(75.14–75.22)'},
+ {t:'行家与流浪者',d:'<span class="qa-q">问：「真正的行家越来越如其所是地生活」怎么理解？</span><b>答：</b>每个实体都是造物主；平衡红橙黄蓝（正面加绿）后进入靛蓝工作，从功能转向存在；流浪者的行家程度不会自动在线——是注意力的问题，且受黄色光芒身体的限制。(75.23–75.25)'},
+ {t:'收束',d:'<b>答：</b>共鸣之声、头发天线、魔法人格的穿上与脱下一次讲完；最后 Ra 不谈论未来（说了可能影响它），只确认：照现在的路走，更有效的方法有很大概率会建立——你们尽责，校准良好。(75.26–75.41)'}
+]);
+
+initStepper('flowTrack2','flowDetail2','flowPrev2','flowNext2',[
+ {t:'前提 · 平衡',d:'行家的门槛：以最低充分性平衡红、橙、黄、蓝能量中心（正面另加绿色），由此进入靛蓝的工作。(75.23)'},
+ {t:'穿上 · 信号',d:'以手势或心智信号召唤魔法人格——本质是自我唤起高我；「穿上」要一丝不苟地完成。(75.37)'},
+ {t:'架桥',d:'空间/时间与时间/空间之间架起一座桥；第六密度的魔法人格在工作持续期间直接体验第三密度的催化剂。(75.36)'},
+ {t:'工作',d:'在桥上架起的状态中进行工作；召唤的有效程度以小百分比渐进，随新手越来越行家而加深。(75.38)'},
+ {t:'脱下 · 信号',d:'最为核心的一步：工作结束后刻意脱下魔法人格——同样以心智或手势一丝不苟地完成。(75.36–75.37)'},
+ {t:'复位',d:'高我恢复其作为空间/时间心/身/灵之类比的适当配置——桥收起，两侧各归其位。(75.36)'}
+]);
+
+function updateChink(){
+  const c={};
+  c.exh=document.getElementById('chinkExhaustion').checked;
+  c.bias=document.getElementById('chinkBias').checked;
+  c.ori=document.getElementById('chinkOrion').checked;
+  c.wrd=document.getElementById('chinkWords').checked;
+  const names={exh:'疲惫',bias:'信仰复合体中的偏见',ori:'猎户实体的注意',wrd:'词语的形而上学性质'};
+  const miss=Object.keys(c).filter(k=>!c[k]).map(k=>names[k]);
+  const box=document.getElementById('condResult');
+  if(miss.length===0){
+    box.className='';
+    box.innerHTML='四个成分齐备，裂缝打开——到独唱的「Benedictus」，专注一放松，问候便乘虚而入。Ra 强调：这不是寻常事件，缺任何成分都不会发生。(75.14–75.17)';
+  }else{
+    box.className='fail';
+    box.innerHTML='裂缝关闭——缺少：<b>'+miss.join('、')+'</b>。Ra 的原话：若缺少任何成分，它都不会发生。攻击不是单一原因，而是四个条件同时在线。';
+  }
+}
+updateChink();
+
+initSorter('sortArea1',[
+ {a:'「在她住的病房里执行小五芒星驱逐仪式有价值吗？」——Ra 答：This is correct.',opts:['直接肯定','直接否定','拒答保留','纠正前提'],ans:'直接肯定',exp:'(75.3) 病房执行驱逐仪式获 Ra 直接确认。'},
+ {a:'「若练习今天完全达成，手术就不必要了」——Ra 答：No.',opts:['直接肯定','直接否定','拒答保留','纠正前提'],ans:'直接否定',exp:'(75.12) 单音节的「不」——还缺器皿的完全接纳。'},
+ {a:'「请告诉我这些音符的音乐名称」——Ra 答：We may not.',opts:['直接肯定','直接否定','拒答保留','纠正前提'],ans:'拒答保留',exp:'(75.30) 名称不可给——须由寻求者以实证观察寻找，体现自由意志法则。'},
+ {a:'「这是基督时代留下的更物理/形而上学的联结吗？」——Ra 答两句话：首先，后者假设是错误的。',opts:['直接肯定','直接否定','拒答保留','纠正前提'],ans:'纠正前提',exp:'(75.17) Ra 先否认与 Jehoshua 的联结，再讲真正罕见的独特情况。'},
+ {a:'「流浪者应该已有较高的行家程度、走一条不同的回归之路」——Ra 答：你的询问不够精确，我们将一般性地讨论。',opts:['直接肯定','直接否定','拒答保留','纠正前提'],ans:'纠正前提',exp:'(75.24) Ra 指出聚焦不足，再用接球手的比喻重讲：差别在注意力。'}
+]);
+
+renderPath();
+</script>
+</body>
+</html>
+
+
+

@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 094 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 094 · 交互式学习模块</h1>
+  <p class="sub">这一集前半复盘「攻击与疲倦」——器皿的疼痛来自三重旧伤，而负面实体只能择时下手，真正的解药是化身前设计的信仰与意志之铠甲；后半回到原型课程，借第四张牌「心智的经验」，讲清催化剂如何穿过面纱变成自我加速的极化经验。</p>
+  <div class="tagline">8 个主题 · 6 个学习步骤 · 25 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 疼痛与攻击</a>
+<a href="#s3">③ 疲倦与自我怀疑</a>
+<a href="#s4">④ 面纱与身体催化剂</a>
+<a href="#s5">⑤ 催化剂→经验</a>
+<a href="#s6">⑥ 经验的原型</a>
+<a href="#s7">⑦ 牌面细节</a>
+<a href="#s8">⑧ 收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>先过一遍本集位置、问答脉络推进器与例行问答折叠区（第 1 章）</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>搞清疼痛与攻击</b><span>三重旧伤、黄光载具的缺席与负面实体的择时策略（第 2 章）</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>分辨两种疲倦</b><span>灵性的疲倦、信仰意志的铠甲与「判断可能无效」（第 3 章）</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>弄懂面纱遮蔽了什么</b><span>物理限制不是面纱；当身体成为催化剂（第 4 章）</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>修好那张机制图</b><span>催化剂→经验的导航、再极化与自我加速，配术语卡（第 5 章）</span></span></label></div>
+<div class="step-item" data-target="#s8"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>精读第四张牌并收官</b><span>抓取、守卫的大猫与十字腿的代价（第 6-7 章），最后看金句与伏笔（第 8 章）</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ 01 本章地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：一次事故复盘，一堂原型精读课</h2></div>
+  <p class="sec-lead">上一集收在一句耐人寻味的话——「对最看似清晰的观察，很多东西都被遮蔽」。本集从两件「人事」开场：器皿在集会中剧痛的来源与对策、小组的疲倦与器皿的自我怀疑；随后 Ra 展开那句话，引出本集正课——催化剂如何穿过面纱变成经验，并逐区细读第四张牌「心智的经验」。</p>
+
+  <div class="card">
+    <h3>本集议题一览</h3>
+    <p>① 器皿集会疼痛的三重来源与可做的小事（94.2-94.6）；② 发问者的疲倦与器皿的自我怀疑——信仰意志的铠甲、判断的无效（94.7-94.9）；③ 面纱遮蔽了什么：身体作为催化剂（94.10）；④ 发问者手绘「催化剂→经验」模型，Ra 三次修正（94.11-94.13, 94.22）；⑤ 第四张牌的姿态、挑战与细节：抓取、大猫、十字腿、裙子（94.14-94.30）。</p>
+  </div>
+
+  <div class="card">
+    <h3>问答脉络推进器</h3>
+    <p class="q">点一遍下面的节点，看这一集的对话如何从「疼」走到「牌」。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="flow094a"></div>
+      <div class="flow-detail" id="flow094aDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="flow094aPrev">← 上一问</button>
+        <button class="tri-btn" id="flow094aNext">下一问 →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="quote">
+      <p class="en">We thank this group that we may speak through it, but the future is mazed. We cannot know whether our geste may, after one final working, be complete.</p>
+      <p class="zh">我们感谢这个小组让我们得以借它说话，但未来如迷宫。我们无法知道，我们的功业是否会在最后一次工作之后就完成。</p>
+      <span class="src">—— Session 094 · (94.9)</span>
+    </div>
+    <div class="plain">通讯仍在继续，但没有人——连 Ra 也不能——把它当作理所当然；本集的一切叮嘱与教导，都发生在这种「不确定」的背景里。</div>
+  </div>
+
+  <div class="case"><b>被干扰的广播站：</b>一家社区广播站每晚八点准时播音，有人只在播音时段开干扰器——因为对方想扼杀的正是播音本身。这对应本集开头：负面实体不打扰器皿的日常生活，只在服务他人的集会时段制造疼痛（94.2、94.6）。</div>
+  <div class="case"><b>工厂的分拣线：</b>原料（催化剂）进厂后要过一条分拣线（面纱），由质检规则（深层心智的偏见）决定它们进哪个仓库（经验）——这正是本集中段发问者试图画出的模型，也是 Ra 逐处修整的地方（94.11-94.13）。</div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 后勤</span></summary>
+  <div class="body">
+    <p><b>(94.1) 器皿状态：</b>身体能量亏缺略有增加，不属实质性，其余与上次询问时相同。</p>
+    <p><b>(94.4) 被子与保暖：</b>因器皿缺乏辐射性的物理能量，Ra 建议用较重的覆盖物，而非发问者设想的极轻白盖布。</p>
+    <p><b>(94.5) 没听懂的词：</b>发问者请 Ra 确认陈述中一个没听清的词（即「外科医生 chirurgeons」一处），Ra 答不知，需待转录核对。</p>
+    <p><b>(94.17) 听错的词：</b>Ra 复述刚说的词是「脚（foot）」，并说明疼痛发作时说话偶有不稳，请发问者遇传输困难随时追问。</p>
+    <p><b>(94.29) 停顿与能量：</b>提问间隙 Ra 指出转移的能量迅速下降，只提供再问一个完整问题的机会。</p>
+  </div></details>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 02 疼痛与攻击 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>集会疼痛：三重旧伤与负面实体的择时策略</h2></div>
+  <p class="sec-lead">器皿在集会期间与刚结束后会陷入剧痛。发问者先问「是谁干的」，再问「能不能补救」。Ra 的回答把个人旧伤、集会机制与负面实体的攻击策略串成一条线：能做的很少，但原因讲得很透。</p>
+
+  <div class="card">
+    <h3>疼痛的三重来源与「几乎无可作为」</h3>
+    <div class="q">发问者的第一反应是找人：是不是那个第五密度负面朋友让器皿这么疼？有没有我们还没做的事，能把疼痛降下来？</div>
+    <div class="quote">
+      <p class="en">However, during the working the instrument is not with its yellow-ray chemical vehicle, and thusly the many small movements which could most effectively aid in the decrease of these distortions is not possible.</p>
+      <p class="zh">可集会进行时，器皿并不带着它的黄光化学载具（yellow-ray chemical vehicle，即肉身）——那些最能有效缓解这些变貌的细微动作，因此全都做不了。</p>
+      <span class="src">—— Session 094 · (94.3)</span>
+    </div>
+    <div class="plain">疼痛不是新伤，而是三重旧伤的复合体：外科后遗（左腕）、系统性红斑狼疮（双前臂肌肉）、胸廓出口的神经损伤；集会中肉身缺席，连缓解都难，所以「几乎没有什么可做的」。</div>
+    <div class="case"><b>打上石膏的颈椎：</b>一位文案整日伏案，白天会下意识地转脖子、换姿势，酸痛总能被小动作化解；一旦被打上固定装置不许动，同样的酸痛就被放大——器皿清醒时能响应「疼痛的警钟」、以许多细微方式调整身体，集会中却不在黄光载具里，Ra 须检视心智配置才能做哪怕最粗略的操纵，因为它并不擅长使用黄光载具。</div>
+    <div class="case"><b>露营的支架与手套：</b>登山露营时，有人用支架把被子稍微撑起、免得压麻手臂，再戴上手套补回失去的温度——正对应 Ra 给出的小办法：把覆盖物从身体上稍微架起，并以保暖材料护住手部；又因为器皿缺乏辐射性的物理能量，Ra 还建议改用较重的被子（94.4）。</div>
+  </div>
+
+  <div class="card">
+    <h3>负面实体为什么只在集会时下手</h3>
+    <div class="q">发问者提出假设：负面实体并非全天候施袭，而是只在器皿尝试服务他人（service-to-others，以他者福祉为方向的服务）的工作时制造变貌，想以此扼杀这项工作——这个理解对吗？</div>
+    <div class="quote">
+      <p class="en">The entity of which you speak has found its puissance less than adequate to mount a continuous assault upon this instrument’s physical vehicle and has, shall we say, chosen the more effective of the space/time nexi of this instrument’s experience for its service.</p>
+      <p class="zh">你所说的那个实体已发觉自己的力量不足以对这个器皿的物理载具发动持续进攻，于是——容我们说——挑中了这个器皿经验里更有效的时空节点来下手。</p>
+      <span class="src">—— Session 094 · (94.6)</span>
+    </div>
+    <div class="plain">方向对了一半：它确实盯上了这项工作，但原因不是「精准的心理战」，而是它的力量不足以持续进攻，只能挑性价比最高的时机。</div>
+    <div class="case"><b>只在窗口期动手的黑客：</b>一家公司的服务器平时太平无事，却总在每月对账的窗口被攻击——不是攻击者忽然起意，而是它的算力有限，专挑防御最薄弱、收益最大的时刻出手。这正对应 Ra 的修正：持续进攻超出其力量（puissance），于是它「选择更有效的时空节点」。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 03 疲倦与自我怀疑 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>疲倦与自我怀疑：铠甲、谦卑信使与判断的无效</h2></div>
+  <p class="sec-lead">问完器皿，发问者也坦承自己极度疲倦；器皿则递来一个更深的自我怀疑——「我的人类自我幼稚不理性，会不会弄丢通讯」。Ra 借这两问，给出本集前半最温暖的一段教导。</p>
+
+  <div class="card">
+    <h3>两种疲倦</h3>
+    <div class="q">发问者问：为什么我最近几次感到极度疲倦？是身体撑不住了吗？（Ra 先指出这在先前材料中已涵盖。）</div>
+    <div class="quote">
+      <p class="en">The contact which you now experience costs a certain amount of the energy which each of the group brought into manifestation in the present incarnation.</p>
+      <p class="zh">你们此刻经历的通讯，消耗着小组每个人在这一世带入显化的一定能量。</p>
+      <span class="src">—— Session 094 · (94.7)</span>
+    </div>
+    <div class="plain">通讯确实消耗能量，但支持小组感到的多半是「灵性的疲倦」——它与体力亏缺难以区分，只有亲自实验一下，才会发现体力其实如常。</div>
+    <div class="case"><b>义工队的「心累」：</b>公益团队连轴服务一周后人人喊累，可体检一切正常、周末照样爬山——那种累与器皿承担的物理能量亏缺不同，正如 Ra 所说，各自做个实验就能分辨。</div>
+    <div class="case"><b>进火场前的隔热服：</b>消防员冲进火场前要穿上隔热服——器皿承担通讯的主要代价，却被化身前的设计「披上」信仰与意志的光明铠甲，其自觉程度远超常人无需大量训练与启蒙所能企及。</div>
+  </div>
+
+  <div class="card">
+    <h3>「我的人类自我是个孩子」</h3>
+    <div class="q">器皿度假时发现许多不自知的部分，怀疑自己一直靠出生带来的灵性天赋顺流，从没花时间认识那个「幼稚、不理性」的人类自我——是这样吗？</div>
+    <div class="quote">
+      <p class="en">any seeker discovering in itself this complex of mental and mental/emotional distortions shall ponder the possible non-efficacy of judgment.</p>
+      <p class="zh">任何在自己身上发现这团心智与心智/情感变貌（distortion，对统一性的偏离状态）的寻求者，都应当思考：判断也许是无效的。</p>
+      <span class="src">—— Session 094 · (94.9)</span>
+    </div>
+    <div class="plain">每位寻求者几乎必然带着不成熟不理性的部分，但同样几乎都已完成大量功课；只盯着没做完的、看不见做完的，这种判断本身可能无效。</div>
+    <div class="case"><b>年终总结的清单：</b>年底复盘时，有人盯着「还有五项没做」，完全看不见「已交付二十项」——Ra 点破器皿正「以偏见之眼看待自己的心/身/灵复合体（mind/body/spirit complex，人这个存在的三重统一结构）」，只见待完成、不见已完成。</div>
+  </div>
+
+  <div class="card">
+    <h3>谦卑的信使与迷宫般的未来</h3>
+    <div class="q">器皿进一步担心：若修不好这些「人类变貌」，我要为失去通讯负责吗？（她同时记得 Ra 说过，对任何结果过度执着并不明智。）</div>
+    <div class="quote">
+      <p class="en">We are humble messengers. How can any thought be taken by an instrument as to the will of the Creator?</p>
+      <p class="zh">我们是谦卑的信使。一个器皿，怎么可能去揣测造物主的意志呢？</p>
+      <span class="src">—— Session 094 · (94.9)</span>
+    </div>
+    <div class="plain">通讯从不依赖训练或学科，而依赖奉献的纯净与小组彼此的和谐接纳；器皿是谦卑的信使，无从揣测造物主的意志——Ra 甚至反问：器皿怎能以为自己会在服务中停止？</div>
+    <div class="case"><b>没上过声乐课的领唱：</b>一个从没上过一节声乐课的人被合唱团选为领唱，不是因为技巧清单，而是因为每次排练都全然投入、与全团合拍——正对应 Ra 的说明：这个器皿不曾受训、不曾修习任何学科来接触 Ra，能通讯靠的是奉献之纯净与小组的和谐接纳。</div>
+    <p class="q">另注意 Ra 的分寸感：它先声明这一问贴近侵犯自由意志的可能，但可在混淆法则（Law of Confusion，即自由意志法则）的边界内作答——这份克制本身就是教导。</p>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 04 面纱与身体催化剂 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>面纱遮蔽了什么：当身体成为催化剂</h2></div>
+  <p class="sec-lead">承接上一集结尾那句「最看似清晰的观察，也被大量遮蔽」，发问者追问：被遮蔽的到底是什么？Ra 的答案出乎意料地具体——被劫持的常常不是信号，而是注意力本身。</p>
+
+  <div class="card">
+    <h3>物理限制不是面纱</h3>
+    <div class="q">发问者猜测：「遮蔽」指的是光谱等物理感知之外的东西都被挡住了，但他直觉还有更多被遮。</div>
+    <div class="quote">
+      <p class="en">Your physical limits are as they are.</p>
+      <p class="zh">你们的物理限制，本来就是这样。</p>
+      <span class="src">—— Session 094 · (94.10)</span>
+    </div>
+    <div class="plain">Ra 否认「物理装置受限是面纱（veil，隔开意识与被遗忘之了解的屏障）过程的一部分」——物理限制照旧；真正的遮蔽发生在无意识的偏见层面。</div>
+    <div class="case"><b>近视眼镜与蒙住的镜片：</b>近视者看不清路牌是光学问题，不是「被遮蔽」；故意蒙住一半镜片才是遮蔽——Ra 划开的正是这条线：物理限制本就如此，遮蔽在别处。</div>
+  </div>
+
+  <div class="card">
+    <h3>当身体成为催化剂</h3>
+    <div class="q">那「更多被遮蔽的」是什么？Ra 用一个例子作答：一次平常的交谈，为何会整个落空？</div>
+    <div class="quote">
+      <p class="en">Thusly an entire exchange of information may be meaningless because the actual catalyst is of the body.</p>
+      <p class="zh">如此一来，整场信息交换可能毫无意义，因为真正的催化剂（catalyst，促成反应而自身不进入产物的东西）是身体的。</p>
+      <span class="src">—— Session 094 · (94.10)</span>
+    </div>
+    <div class="plain">言语内容可以完全落空：意识几乎全被身体层面的「登记」占用——这是受无意识控制的，不是有意识的决定。</div>
+    <div class="case"><b>记不住内容的相亲：</b>相亲桌上对方讲了职业、爱好、计划，散场后他却一概想不起来，只记得「感觉不错」——整场信息交换可能毫无意义，因为意识被身体层面的注意占满，正如 Ra 举例中红光（red ray，与身体性唤起相连的最低光芒）被激活的男女双方。</div>
+    <div class="case"><b>满脑子坐姿的面试者：</b>面试时有人满脑子想「手往哪放、坐姿得体吗」，面试官的问题没一句听全——意识被身体层面的信号占满，语言层面的催化剂根本没被处理；这正是「无意识控制、非有意决定」的日常版本。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+<!-- ============ 05 催化剂→经验 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>从催化剂到经验：一张手绘图的三次修正</h2></div>
+  <p class="sec-lead">发问者拿出一张手绘图：催化剂之箭以直角穿过面纱之线，沉入左、右道途两个「仓库」，合称「经验」。Ra 用几次修正，把这张图修成完整的机制图——先补「导航」，再补「再极化」，最后纠正一个措辞。</p>
+
+  <div class="card">
+    <h3>模型的两次修正</h3>
+    <div class="q">发问者问：催化剂穿过面纱、分左右仓库沉积为「经验」——这个粗略类比成立吗？</div>
+    <div class="quote">
+      <p class="en">The deeper biases of a mind/body/spirit complex pilot the catalyst around the many isles of positivity and negativity as expressed in the archipelago of the deeper mind.</p>
+      <p class="zh">心/身/灵复合体更深处的偏见，为催化剂领航，绕行深层心智（deeper mind，意识水面之下的心智区域）这座群岛中表达的正面与负面的诸多岛屿。</p>
+      <span class="src">—— Session 094 · (94.11)</span>
+    </div>
+    <div class="plain">模型少了两个环节：深层心智的偏见先为催化剂「导航」；意识心智收到部分极化的催化剂后，还能「进一步极化」。</div>
+    <div class="case"><b>同一场雨：</b>暴雨打乱了两对婚礼的外景——一对把它看作「促成了一场更亲密的室内仪式」，另一对把它看作「老天跟我作对」。同一场雨（催化剂）先被各自的深层偏见导航，落进不同的仓库（经验）。</div>
+    <div class="case"><b>复盘时的第二次极化：</b>改期之后，新人还要自己「解读」这件事：有人从此相信「准备再周全也没用」，有人学会「永远留出备案」——意识心智对深层心智给出的初步答案再加工一次，正是 Ra 指出发问者漏掉的那一步。</div>
+  </div>
+
+  <div class="card">
+    <h3>自我加速的机制</h3>
+    <div class="q">发问者顺势推论：经验会反过来改变面纱的「渗透性」，让所选道途的催化剂越来越容易被接受——那这岂不是一个自我加速的机制？</div>
+    <div class="quote">
+      <p class="en">As the entity increases in experience it shall, more and more, choose positive interpretations of catalyst if it is upon the service-to-others path, and negative interpretations of catalyst if its experience has been along the service-to-self path.</p>
+      <p class="zh">随着经验增长，走在服务他人道途上的实体，会越来越多地选择对催化剂的正面诠释；而经验沿服务自我（service-to-self）道途展开的实体，则会越来越多地选择负面诠释。</p>
+      <span class="src">—— Session 094 · (94.12)</span>
+    </div>
+    <div class="quote">
+      <p class="en">There is no variable permeability involved in the concepts we have just discussed.</p>
+      <p class="zh">在我们刚讨论的概念里，并不存在什么「可变渗透性」。</p>
+      <span class="src">—— Session 094 · (94.13)</span>
+    </div>
+    <div class="plain">结论对、措辞不对：面纱没有变得「更透气」，而是实体随经验增长，越来越按所选道途去诠释催化剂——机制由逻各斯（Logos，创造本星系的伟大原理）设计为自我加速，但「可变渗透性」这个概念并不存在。</div>
+    <div class="case"><b>排名制上线下：</b>同事一句「帮我搭把手」，在没有竞争考核的团队里只是请求；装上排名制后，同一句话被解读成「抢我资源」——诠释随环境与积累不断偏向一侧，正如 Ra 所说：走哪条道途，就越来越多地选出哪种诠释。</div>
+  </div>
+
+  <div class="card">
+    <h3>面纱之前，没有催化剂</h3>
+    <div class="q">发问者回望面纱之前的时代：那时「催化剂」还不成其为催化剂——没有制造极性的加载过程，实体所见只是太一造物主的经验，而非其他心/身/灵复合体的功能？</div>
+    <div class="quote">
+      <p class="en">The concepts discussed seem without significant distortion.</p>
+      <p class="zh">所讨论的这些概念，似乎没有显著的变貌。</p>
+      <span class="src">—— Session 094 · (94.22)</span>
+    </div>
+    <div class="plain">Ra 确认这组推论：面纱上线后，同一件事件才从「造物主的经验」变成「需要选择的极化材料」。</div>
+    <div class="analogy"><b>没有考卷的课堂：</b>同一道题，在没人打分时只是「一起思考的练习」；排名一公布，同一道题变成「决定名次的关卡」。考核机制上线，同样的经历才开始制造立场——如同面纱之后，事件才成为催化剂。</div>
+  </div>
+
+  <div class="card">
+    <h3>术语卡（点击翻面）</h3>
+    <p class="q">这一段的术语密度高，先把六张卡过一遍再继续。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">催化剂</div><div class="sub">catalyst</div><span class="tap">点击翻面</span></div><div class="back">促成反应而自身不进入产物的中介；面纱之后，一切事件都先以催化剂的形式撞上心智。<em>比喻：酵母——面包换了模样，酵母自己不在成品里。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">面纱</div><div class="sub">veil of forgetting</div><span class="tap">点击翻面</span></div><div class="back">把意识与深层心智隔开的遗忘屏障；它让经验从「旁观」变成「需要选择」。<em>比喻：磨砂玻璃——看得见有东西过来，看不清是什么，只能自己判断。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">深层心智</div><div class="sub">deeper mind</div><span class="tap">点击翻面</span></div><div class="back">意识水面之下的心智区域，其偏见先于你为催化剂选好航道。<em>比喻：群岛间的洋流——船看似自己走，其实被水流领着绕岛。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">心智的经验</div><div class="sub">Experience of the Mind</div><span class="tap">点击翻面</span></div><div class="back">第四原型（archetype，预置的心智模型）；催化剂被过滤、极化后「入库」的存货。<em>本集关键词：它不是伸手去够，而是抓住被给予的。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">右手道途／左手道途</div><div class="sub">right-hand path / left-hand path</div><span class="tap">点击翻面</span></div><div class="back">把催化剂诠释为服务他人／服务自我的两条极化（polarization）方向。<em>同一句话，落在两个不同的仓库里。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">原型心智</div><div class="sub">archetypical mind</div><span class="tap">点击翻面</span></div><div class="back">逻各斯为第三密度心智演化预置的蓝图库，牌组就是它的平面图。<em>比喻：建筑总图纸——每张牌是其中一个房间的设计图。</em></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>流程推演：催化剂如何变成经验</h3>
+    <p class="q">把修正后的完整机制走一遍——每点一步，看催化剂往前挪一站。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="flow094b"></div>
+      <div class="flow-detail" id="flow094bDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="flow094bPrev">← 上一步</button>
+        <button class="tri-btn" id="flow094bNext">下一步 →</button>
+      </div>
+    </div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 06 经验的原型 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>经验的原型为何必要：不替学生学，且要「抓住」</h2></div>
+  <p class="sec-lead">图修好了，问题也更根本了：既然已有催化剂的原型，为什么还需要一张「经验」的牌？Ra 不直接给答案，而是教学生怎么「看」这张牌——先拒答，再纠姿态，最后确认力量的位置。</p>
+
+  <div class="card">
+    <h3>不能替学生学</h3>
+    <div class="q">发问者问：有催化剂原型就够了，再为经验造一个模型，岂不反而有违自由意志的第一变貌？</div>
+    <div class="quote">
+      <p class="en">We cannot learn/teach for the student.</p>
+      <p class="zh">我们无法替学生学习/教导。</p>
+      <span class="src">—— Session 094 · (94.14)</span>
+    </div>
+    <div class="plain">Ra 拒绝替学生推演，只留一条思路：留意各原型对男与女的吸引力——为什么催化剂是女性形象、经验是男性形象。</div>
+    <div class="case"><b>不代笔的导师：</b>学生问论文为什么必须有「讨论」一章，导师只说「先想想绪论和结论各自的分工」，把推演留给学生——Ra 同样「不能替学生学习/教导」，只提示一条可能多产的考虑方向。</div>
+  </div>
+
+  <div class="card">
+    <h3>抓住，而不是伸手</h3>
+    <div class="q">发问者读牌：男性身体朝前＝经验会伸向催化剂；脸朝左＝负面催化剂更显眼。这个读法哪里要修？</div>
+    <div class="quote">
+      <p class="en">The archetype of Experience of the Mind reaches not, O student, but with firm authority grasps what it is given.</p>
+      <p class="zh">哦，学生，心智的经验的原型并不伸出去触及，而是以坚定的权威抓住那被给予它的。</p>
+      <span class="src">—— Session 094 · (94.15)</span>
+    </div>
+    <div class="plain">一处要纠正：经验对催化剂的姿态不是「伸手等碰触」，而是果断抓住；「负面更显眼」的观察则被 Ra 认可为敏锐。</div>
+    <div class="case"><b>接飞盘的两种人：</b>新手接飞盘是伸出手「等它碰到」，老手是移动、锁定、一把抓住——经验对催化剂的姿态正是后者：抓住被给予的一切。</div>
+    <div class="case"><b>刷屏的坏消息：</b>团队群里，服务器告警、客户投诉总是最显眼，正面进展常常无声——注意力被左手催化剂抓住是经验的本相；把催化剂酿成「魔法的、正面的经验」是巨大的挑战，负面经验里的魔法在第三密度（density，意识进化的层级）来得慢得多。</div>
+  </div>
+
+  <div class="card">
+    <h3>力量恒在右道途</h3>
+    <div class="q">发问者注意到牌右缘的魔法形状，猜它标记「灵性经验＝右手道途」——Ra 确认了，并补上经验的一层底色。</div>
+    <div class="quote">
+      <p class="en">Meanwhile, the power, the magic, is available upon the right-hand path.</p>
+      <p class="zh">与此同时，力量、魔法，在右手道途上是可得的。</p>
+      <span class="src">—— Session 094 · (94.20)</span>
+    </div>
+    <div class="quote">
+      <p class="en">It is a great challenge to take catalyst and devise the magical, positive experience.</p>
+      <p class="zh">接过催化剂，并把它酿成魔法的、正面的经验，是一场巨大的挑战。</p>
+      <span class="src">—— Session 094 · (94.20)</span>
+    </div>
+    <div class="plain">注意力会不断被各种经验抓住，负面的看似充裕；但力量与魔法恒在右道途可得——两件事同时为真。</div>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">注意力被抓住</span><h4>左手催化剂</h4><p>身体与情绪层面的冲击显眼而密集，构成日常经验的主色调；<b>负面的（或被诠释为负面的）看似充裕</b>。</p></div>
+      <div class="yuan-card"><span class="y-tag">魔法所在</span><h4>右手道途的力量</h4><p>力量与魔法恒在右手道途可得；<b>把催化剂酿成魔法的正面经验</b>，是第三密度的巨大挑战。</p></div>
+      <div class="yuan-card"><span class="y-tag">姿态辨析</span><h4>触及 ≠ 抓取</h4><p>经验的原型<b>不是伸出手等它碰到</b>，而是以坚定的权威抓住被给予的一切——这是本集纠正的关键读法。</p></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>两牌协同的猜想</h3>
+    <div class="q">发问者再进一步：第三、第四原型是否就是为了「以最有效的方式创造极性」而协同工作？</div>
+    <div class="quote">
+      <p class="en">This cannot be said to be incorrect. We suggest contemplation of this thought complex.</p>
+      <p class="zh">这不能说不正确。我们建议对这个思想复合体加以沉思。</p>
+      <span class="src">—— Session 094 · (94.21)</span>
+    </div>
+    <div class="plain">Ra 不给结论，只留下一句「建议沉思」——答案仍是学生的功课。</div>
+    <div class="case"><b>炉火与铁砧：</b>锻造一把刀，炉火负责把铁烧软（催化剂），铁砧上的锤打负责定型（经验）——没有锤打，炉火只是热度；没有炉火，锤打无事可做。两道工序共同把铁「逼成」刀形，恰如两个原型协同高效地制造极性。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 07 牌面细节 ============ -->
+<section class="chapter" id="s7">
+  <div class="sec-head"><span class="num">07</span><h2>牌面细节研读：大猫、十字腿与黑袋</h2></div>
+  <p class="sec-lead">剩下的是牌面的「部件清单」：方块、大猫、脚、鸟、十字腿、圆圈与裙子。这一章的看点不只是每个符号的含义，还有 Ra 面对误读时的回应方式——不判对错，而是把功课还给学生。</p>
+
+  <div class="card">
+    <h3>大猫守卫什么</h3>
+    <div class="q">发问者猜：坐在更暗的方块上、牌里还有只猫——是否表示随经验增长，幻象的第二密度本质被理解、正负被分离？</div>
+    <div class="quote">
+      <p class="en">We direct the attention to the cultural meaning of the great cat which guards.</p>
+      <p class="zh">我们把注意力引向那守卫着的大猫的文化意义。</p>
+      <span class="src">—— Session 094 · (94.16)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The polarities are, indeed, present; the separation nonexistent except through the sifting which is the result of cumulative experience.</p>
+      <p class="zh">极性确实在场；分离并不存在——除非经由累积经验产生的筛选。</p>
+      <span class="src">—— Session 094 · (94.16)</span>
+    </div>
+    <div class="plain">此解与原意显著不同：Ra 只反问——大猫守卫什么？以何旗帜照亮显化的黑暗？极性在，分离不存在，除非经由累积经验的筛选。</div>
+    <div class="case"><b>讲解员的反问：</b>博物馆讲解员面对游客对石狮子的离奇解读，不判对错，只问一句「你觉得守门的石狮子在看什么？」——Ra 的留白与此同构：把诠释的功课还给学生。</div>
+  </div>
+
+  <div class="card">
+    <h3>十字腿：显化的代价</h3>
+    <div class="q">发问者猜交叉的腿与安萨塔十字（crux ansata，带圆环的十字形）的十字同义——这次猜对了。</div>
+    <div class="quote">
+      <p class="en">There is no experience which is not purchased by effort of some kind—no act of service to self or others which does not bear a price to the entity manifesting, commensurate with its purity.</p>
+      <p class="zh">没有任何经验不是以某种努力购得的——没有任何服务自我或他人的行为，不给显化的实体带来与其纯净度相称的代价。</p>
+      <span class="src">—— Session 094 · (94.26)</span>
+    </div>
+    <div class="plain">由活生生肢体构成的十字，表示显化中心/身/灵复合体的本质：每种经验都有价格，价格与行为的纯净度相称。</div>
+    <div class="case"><b>健身房的账单：</b>没有一次增肌不是靠肌纤维的微小撕裂与随后的修复换来的；练什么、怎么练，决定长成什么样子——「每种努力都有代价，且与纯净度相称」在身体层面一目了然。</div>
+    <div class="case"><b>腰间的黑袋：</b>发问者把腰带左侧的黑袋读作「左道途中聚敛物质财富」——Ra 坦言这并非原意，却评价这个诠释「相当可接受」。原型阅读允许读者带入自己的联想，只要它站得住（94.29）。</div>
+  </div>
+
+  <div class="card">
+    <h3>鸟、圆圈与悬而未答的部分</h3>
+    <div class="q">第三张牌的鸟如今内化在实体中心——这个观察被确认；但鸟到底意味着什么？发问者两次猜测都被否定。</div>
+    <div class="quote">
+      <p class="en">This perception is correct, O student, but what shall the student find the bird to signify?</p>
+      <p class="zh">这个感知是正确的，哦，学生——但学生将发现那只鸟意味着什么？</p>
+      <span class="src">—— Session 094 · (94.24)</span>
+    </div>
+    <div class="plain">鸟已被确认内化为经验的中心部分，它身在圆圈内——那是安萨塔十字圆环部分的特殊形式；但「鸟意味着什么」，Ra 用反问交还给学生。</div>
+    <div class="case"><b>留白的标题：</b>语文老师讲完课文，偏偏把标题里的喻体留白，让学生下周带着答案回来——鸟的意义、乳白色的腿、裙子的形状，都是 Ra 留到后面的作业。</div>
+  </div>
+
+  <div class="card">
+    <h3>牌面元素归类练习</h3>
+    <p class="q">五个元素，五张标签——想想每个符号在牌里「负责」什么，再点选答案。</p>
+    <div id="sort094"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 08 收官 ============ -->
+<section class="chapter" id="s8">
+  <div class="sec-head"><span class="num">08</span><h2>收官：留给下一课的形状与「一切安好」</h2></div>
+  <p class="sec-lead">牌读完了，Ra 顺手接住最后两件事：发问者对「男性牌」的引申陈述，以及那个一直没问出口的关切——我们还能做什么？答案落在「一切安好」上。</p>
+
+  <div class="card">
+    <h3>留给下一课的形状</h3>
+    <div class="q">发问者最后陈述：这张牌是男性的，是否表示随经验增长，心智越来越成为「驱动者」，更倾向于指导整个心/身/灵复合体？</div>
+    <div class="quote">
+      <p class="en">Such habiliment is not natural.[113] The shape is significant and is so along the lines of your query.</p>
+      <p class="zh">这样的服饰并不自然。[113] 这个形状是有意义的，并且正沿着你问题的方向。</p>
+      <span class="src">—— Session 094 · (94.30)</span>
+    </div>
+    <div class="plain">Ra 不否认引申义，而是把球踢回：再去想想那件「不自然」的裙装——它的形状确有意义。裙子成为本集留下的最大伏笔。</div>
+    <div class="case"><b>黑板上的引理：</b>数学老师下课前在黑板上写下一行没证明的引理，说「下次课从它开始」——裙子的形状，就是 Ra 的那行板书。</div>
+  </div>
+
+  <div class="card">
+    <h3>一切安好</h3>
+    <div class="q">发问者问：我们能做什么让器皿更舒服、改善通讯？</div>
+    <div class="quote">
+      <p class="en">Although you may be less than pleased with the accoutrements, may we say that all was as carefully prepared as each was able. More than that none can do.</p>
+      <p class="zh">虽然你们对这些装备可能不太满意，但容我们说：一切都已按各人力所能及的方式精心准备。没有人能做得更多了。</p>
+      <span class="src">—— Session 094 · (94.30)</span>
+    </div>
+    <div class="plain">照料已经到位；新问题是器皿被第五密度朋友「赠予」了朝向极度寒冷的变貌之礼，请加意保暖。能做的都做了，Ra 由此致谢每个人的仔细校准，并宣告一切都好。</div>
+    <div class="case"><b>谢幕后的检查：</b>演出散场，观众看不到的角落里，舞台监督仍逐项检查防滑条与绳索——「虽不讨喜，但都已按各人力所能及精心准备」，这句话对后台工作者与对支持小组同样成立。</div>
+  </div>
+
+  <div class="saying">
+    <p class="en">All things in manifestation may be seen in one way or another to be offering themselves in order that transformations may take place upon the level appropriate to the action.</p>
+    <p class="zh">一切进入显化的事物，都在以各自的方式把自己交出去，好让转化在与其行动相称的层面上发生。</p>
+    <span class="src">—— Session 094 · (94.26)</span>
+  </div>
+
+  <div class="card">
+    <div class="quote">
+      <p class="en">We leave you, my friends, in the love and in the light of the One Glorious Infinite Creator. Go forth, then, rejoicing in the power and in the peace of the One.</p>
+      <p class="zh">朋友们，我们在太一荣耀无限造物主的爱与光里离开你们；那么向前去吧，在太一的力量与平安中欢欣。</p>
+      <span class="src">—— Session 094 · (94.30)</span>
+    </div>
+    <div class="plain">下一集的作业已布置：裙子的形状、鸟的意义、大猫守卫的答案——都等着发问者带回。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 094（split/Ra_Session_094.md）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra094-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+initStepper('flow094a','flow094aDetail','flow094aPrev','flow094aNext',[
+  {t:'疼痛从哪来',d:'<span class="qa-q">问：器皿在集会期间与刚结束后的剧痛，是不是我们的第五密度朋友造成的？</span><b>答：</b>是。(94.2)'},
+  {t:'能否缓解',d:'<span class="qa-q">问：有没有我们还没做的事，能减少这种疼痛？</span><b>答：</b>因预先存在的变貌复合体，几乎无可作为——来源三重：左腕的外科后遗、系统性红斑狼疮、自胸廓出口的神经损伤。可做的小事：用框架把被子稍微架起，再保暖手部。(94.3-94.4)'},
+  {t:'攻击的规律',d:'<span class="qa-q">问：负面实体只在服务他人的工作时施袭，想以此扼杀工作——对吗？</span><b>答：</b>部分正确：它的力量不足以持续进攻，于是选择这个器皿经验中更有效的时空节点下手。(94.6)'},
+  {t:'小组为何疲惫',d:'<span class="qa-q">问：发问者最近几次为何极度疲倦？</span><b>答：</b>通讯消耗小组每个人此生带来的能量；主要落在器皿身上，但它由化身前的设计配备了信仰与意志的铠甲。支持小组感到的是灵性的疲倦——动手实验一下，会发现体力如常。(94.7)'},
+  {t:'器皿的自我怀疑',d:'<span class="qa-q">问：器皿自省「靠天赋顺流，人类自我幼稚不理性」，怕处理不好会弄丢通讯？</span><b>答：</b>每位寻求者几乎必然有不成熟不理性的一面，但也已完成大量功课；只看见待完成、看不见已完成，应当思考判断可能无效。通讯靠的是奉献之纯净与小组的和谐接纳。(94.8-94.9)'},
+  {t:'面纱遮蔽了什么',d:'<span class="qa-q">问：上集说「最清晰的观察也被遮蔽」，指的是物理感知受限吗？</span><b>答：</b>不是——物理限制本就如此；被遮的是无意识层面：身体的催化剂可以劫持整场交流。(94.10)'},
+  {t:'催化剂→经验',d:'<span class="qa-q">问：催化剂之箭穿过面纱，沉入左右道途两个仓库——这个模型对吗？</span><b>答：</b>部分正确：深层心智的偏见先行导航，且意识心智还能「进一步极化」；随经验增长，诠释越来越贴合所选道途。(94.11-94.13)'},
+  {t:'第四张牌细读',d:'<span class="qa-q">问：牌面各元素——姿态、方块、猫、脚、鸟、十字腿、裙子——各是什么意思？</span><b>答：</b>经验「不是触及，而是抓住」；大猫守卫着什么留作反问；十字腿＝显化的代价；鸟的意义与裙子形状悬而未答。(94.14-94.30)'},
+  {t:'收束',d:'<b>收尾：</b>能量渐弱，Ra 请小组加意照料已被「赠予」寒冷之礼的器皿，感谢每个人的精心校准——「一切都好」。(94.30)'}
+]);
+
+initStepper('flow094b','flow094bDetail','flow094bPrev','flow094bNext',[
+  {t:'① 催化剂到来',d:'<b>事件先以催化剂的形式撞上心智</b>——发问者图中的那支箭，此刻还没带上极性。'},
+  {t:'② 深层心智导航',d:'<b>更深的偏见先行领航</b>：像群岛间的洋流，引导催化剂绕过深层心智中表达的正面与负面诸岛。(94.11)'},
+  {t:'③ 穿过面纱',d:'<b>催化剂被过滤、获得初步极性</b>，落进左右道途两个「仓库」——发问者的模型到这里为止，是部分正确的。'},
+  {t:'④ 意识心智再极化',d:'<b>模型漏掉的一步</b>：意识心智感知到来自深层心智的部分极化催化剂之后，还有「进一步的极化」可得。(94.11)'},
+  {t:'⑤ 诠释自我加速',d:'<b>随经验增长</b>，服务他人者越来越多选正面诠释，服务自我者越来越多选负面诠释——机制自我加速。(94.12)'},
+  {t:'⑥ 措辞澄清',d:'<b>但面纱本身没有变</b>：「可变渗透性」的概念并不存在；加速发生在诠释里，不在面纱的渗透上。(94.13)'}
+]);
+
+initSorter('sort094',[
+  {a:'坐下的形象所依托的方块座',opts:['守卫','代价与努力','物质幻象','聚敛财富','右道途的力量'],ans:'物质幻象',exp:'经验落实在物质幻象的方块上，色调比第三张牌更暗。(94.16)'},
+  {a:'坐像中的大猫',opts:['守卫','代价与努力','物质幻象','聚敛财富','右道途的力量'],ans:'守卫',exp:'Ra 请学生思考大猫「守卫」的文化意义：它守卫什么？以何旗帜照亮黑暗？(94.16)'},
+  {a:'由活生生的肢体交叉而成的十字腿',opts:['守卫','代价与努力','物质幻象','聚敛财富','右道途的力量'],ans:'代价与努力',exp:'没有经验不通过努力购得；服务自我或他人的行为都带着与纯净度相称的代价。(94.26)'},
+  {a:'腰带左侧悬挂的黑袋',opts:['守卫','代价与努力','物质幻象','聚敛财富','右道途的力量'],ans:'聚敛财富',exp:'并非 Ra 原意，但被 Ra 评为「相当可接受」的读者诠释。(94.29)'},
+  {a:'牌右缘的魔法形状',opts:['守卫','代价与努力','物质幻象','聚敛财富','右道途的力量'],ans:'右道途的力量',exp:'注意力被左手催化剂抓住的同时，力量与魔法在右手道途上可得。(94.20)'}
+]);
+
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+renderPath();
+</script>
+</body>
+</html>

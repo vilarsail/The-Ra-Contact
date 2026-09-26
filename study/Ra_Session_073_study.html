@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 073 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 073 · 交互式学习模块</h1>
+  <p class="sub">发问者带着「中柱练习」的困惑回来：行家唤起光之力量时，观想到底该向上还是向下？Ra 借这道题展开一场关于魔法工作的完整教学——召唤的次第、两种光的分别、三把钥匙，以及自由意志这条不可逾越的红线，最后落到火的疗愈与能量转移的完整家族。</p>
+  <div class="tagline">「8 个主题 · 6 个学习步骤 · 24 组案例」</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 光与暗的召唤</a>
+<a href="#s3">③ 魔法工作五步</a>
+<a href="#s4">④ 两种光与靛蓝门</a>
+<a href="#s5">⑤ 三钥与红线</a>
+<a href="#s6">⑥ 火的疗愈</a>
+<a href="#s7">⑦ 能量转移家族</a>
+<a href="#s8">⑧ 收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>用问答脉络推进器看清这场对话问了什么、怎么推进，例行问答收进折叠区。</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>理解召唤的对称法则</b><span>光之力量与黑暗力量各听各的号：谁在等电话，谁被惊动。</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>走一遍魔法工作五步</b><span>中柱练习之辩的答案：魔法人格、生命十字、紫罗兰总闸，再用条件模拟器自查。</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>抓住自由意志红线</b><span>三把钥匙、传福音者的堵塞、耶稣的两个告诫与悖论的消融。</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>看懂火的疗愈</b><span>绿色光芒的座位、双螺旋通道，以及病人那边「接受与否」的极化效应。</span></span></label></div>
+<div class="step-item" data-target="#s8"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官：金句与归类练习</b><span>行家的一天、五种能量转移（顺带第 4 章的靛蓝之门与第 7 章的转移家族）、三钥回收与收尾祝福。</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ S1 本章地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：一场关于「行家如何做魔法工作」的教学</h2></div>
+  <p class="sec-lead">上一集留下的中柱练习悬案，在本集开场就被摆上桌：发问者认为这个练习的观想方向错了，并猜测正确的做法——Ra 先答一个「不」，再借解释错处的机会，把魔法工作的完整次第讲了一遍：召唤的对称法则、两个站点、紫罗兰总闸、靛蓝之门、三把钥匙，以及自由意志这条红线。随后一切落到实用处：火的疗愈如何发生、病人那边发生了什么、能量转移有哪几族。先走一遍问答脉络，再看细节。</p>
+  <div class="card">
+    <h3>开场：仪式是通用基础设施</h3>
+    <div class="q">发问者照例先确认器皿状况，并追问：我们做的驱逐仪式，对这次通讯有帮助吗？</div>
+    <div class="quote">
+      <p class="en">I greet you in the love and in the light of the One Infinite Creator. We communicate now.</p>
+      <p class="zh">我在太一无限造物主的爱与光中向你们致意；现在，我们开始通讯。</p>
+      <span class="src">—— Session 073 · (73.0)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The ritual described has gained with each working in making efficacious the purity of contact needed, not only for the Ra contact, but for any working of the adept.</p>
+      <p class="zh">所描述的仪式随着每次工作不断增强，使所需的接触纯净度更加有效——不仅对 Ra 接触如此，对行家的任何工作皆是。</p>
+      <span class="src">—— Session 073 · (73.2)</span>
+    </div>
+    <div class="plain">驱逐仪式不是本次通讯的专用工具，而是行家的通用基础设施：它积累的纯净度，能用于任何魔法工作——这句话为全场的「行家工作」主题定下了调子。</div>
+    <div class="case"><b>开演前的调音：</b>音乐会开始前，乐手逐件调音、工程师逐条试线——(73.1–73.2) 正是这套流程：确认器皿状态（生命能更接近正常），并检验仪式的纯净度是否在增长。这些准备不属于某一首曲子，而属于整个演出季。</div>
+    <div class="case"><b>地图的用法：</b>第一次去大型医院看病，先看楼层索引再找科室，比挨个敲门高效得多。本页就是这张索引图：先用下面的推进器看清十组问答怎么推进，例行事务收进折叠区，再按兴趣挑章细读。</div>
+  </div>
+  <div class="card">
+    <h3>本集问答脉络（点节点查看一问一答）</h3>
+    <div class="flow-track" id="flowTrack1"></div>
+    <div class="flow-detail" id="flowDetail1"></div>
+    <div class="flow-ctrl"><button class="tri-btn" id="flowPrev1">上一问</button> <button class="tri-btn" id="flowNext1">下一问</button></div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 收尾叮嘱</span></summary>
+  <div class="body">
+    <p><b>(73.1) 器皿状态：</b>如前所述，唯独生命能水平更接近这个实体的正常水平。</p>
+    <p><b>(73.23) 收尾叮嘱：</b>每集旋转 10° 的蜡烛绝不可让它烧熔淌蜡，否则会失衡附属物的保护性对齐；建议把支撑颈部的垫子弄得更舒适——这个困难已经缩短了许多次工作；至于哪些内容出版，小组自行决定。</p>
+  </div></details>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ S2 光与暗的召唤 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>光与暗的召唤：谁在等电话，谁被惊动</h2></div>
+  <p class="sec-lead">致谢之后，发问者抛出本集第一个理论问题：既然一心服务他人的自由意志能唤起大量光之力量，服务自我极性是否也完全如此？Ra 说「不正确，但微妙地如此」——随后两人共同把一个对称公式打磨了出来。</p>
+  <div class="card">
+    <h3>负面召唤会惊动谁</h3>
+    <div class="q">发问者预设「唤起力量」的机制对正负两极完全一致，想知道这个假设对不对。</div>
+    <div class="quote">
+      <p class="en">In invocation and evocation of what may be termed negative entities or qualities, the expression alerts the positively oriented equivalent. However, those upon the service-to-others path wait to be called and can only send love.</p>
+      <p class="zh">召唤或唤起可称为负面的实体或品质时，这种表达会惊动正面导向的等效者。然而，走在服务他人路径上的那些存在，等待被召唤，且只能发送爱。</p>
+      <span class="src">—— Session 073 · (73.3)</span>
+    </div>
+    <div class="plain">两侧机制并不镜像：负面召唤一出口，惊动的反而是正面等效者；而正面存在从不主动上门——它们等电话，而且接通后递出的只有爱与光。</div>
+    <div class="case"><b>深夜热线：</b>正面存在像一部只进不出的求助热线：你拨号（召唤），它才接听，而且带来的只有帮助——没有人会被强行塞进一通正面来电。反倒是负面呼唤一出口，可能惊动的正是正面的力量。</div>
+  </div>
+  <div class="card">
+    <h3>对称的公式：系数是意志的强度与纯度</h3>
+    <div class="q">发问者退一步重述：这种力量的唤起完全出于自由意志，随着渴望、意志与渴望纯度增加而增加——这部分对两侧是否相同？</div>
+    <div class="quote">
+      <p class="en">Those who are upon the service-to-others path may call upon the light strength in direct proportion to the strength and purity of their will to serve. … Those upon the service-to-self path may call upon the dark strength in direct proportion to the strength and purity of their will to serve.</p>
+      <p class="zh">走在服务他人路径上的，可以按其服务意志的强度与纯度成正比地召唤光之力量。……走在服务自我路径上的，可以按其服务意志的强度与纯度成正比地召唤黑暗力量。</p>
+      <span class="src">—— Session 073 · (73.4)</span>
+    </div>
+    <div class="plain">为免混淆，Ra 直接重述了发问者的正确假设：公式两侧完全对称，变量相同（意志的强度与纯粹度），只有召唤对象不同——光，或暗。</div>
+    <div class="case"><b>信号强度决定通话质量：</b>两支登山队同时呼救，一支对讲机电量充足、频道干净，另一支只剩杂音——被听见、被回应的程度，取决于信号的强度与纯净。召唤光之力量或黑暗力量，比例系数正是「服务意志的强度与纯粹度」。</div>
+    <div class="case"><b>对称的账本：</b>两家机构机制相同、方向相反：一家每做一分服务就多一分可调用的资源，另一家也一样——只是账本记在另一侧。发问者以为唤起力量是正面路径的专利，Ra 指出对称得一丝不苟。</div>
+  </div>
+  <div class="card">
+    <h3>两侧对照（点卡片没有翻面，直接读）</h3>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">光之力量</span><h4>服务他人路径</h4><p><b>等待被召唤，只能发送爱</b>；可召唤的光之力量，与其服务意志的强度与纯度成正比。</p></div>
+      <div class="yuan-card"><span class="y-tag">黑暗力量</span><h4>服务自我路径</h4><p>同样<b>按其服务意志的强度与纯度成正比</b>召唤——召唤到的是黑暗力量。</p></div>
+      <div class="yuan-card"><span class="y-tag">副作用</span><h4>负面召唤的代价</h4><p>召唤/唤起负面实体或品质时，<b>惊动正面导向的等效者</b>——出手的可能恰恰是对家。</p></div>
+      <div class="yuan-card"><span class="y-tag">共同点</span><h4>完全是自由意志的运作</h4><p>渴望、意志与渴望纯度增加，唤起随之增加——这一部分<b>对正负两势完全相同</b>。(73.4)</p></div>
+    </div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ S3 魔法工作五步 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>魔法工作五步：为什么「从脚进光」是错的</h2></div>
+  <p class="sec-lead">发问者自陈今天会先猜测、让 Ra 纠错，然后亮出自己的推理：既然造物主从脚进入、螺旋光向上，行家唤起光时就该观想从脚进入、先激活红色中心再逐级向上——Ra 只答了一个「不」。错在哪？答案把话题从「观想方向」抬到「魔法工作的整个次第」。</p>
+  <div class="card">
+    <h3>混淆了两个概念</h3>
+    <div class="q">发问者把「上行螺旋光的自然路径」与「行家魔法工作的观想」当成同一件事，以为后者该模仿前者。</div>
+    <div class="quote">
+      <p class="en">All magical workings are based upon evocation and/or invocation. The first invocation of any magical working is that invocation of the magical personality, as you are familiar with this term.</p>
+      <p class="zh">一切魔法工作都基于唤起与/或召唤。任何魔法工作的第一个召唤，就是对魔法人格的召唤——你们熟悉这个术语。</p>
+      <span class="src">—— Session 073 · (73.7)</span>
+    </div>
+    <div class="plain">Ra 指出他混淆了两个概念：一是上行螺旋光在微观宇宙心/身/灵中发展光的「伟大方式」（自然运行）；二是魔法工作的具体站点（人为的次第）。行家工作前已尽力使各能量中心顺畅平衡——观想的起点不在脚，而在「先召唤魔法人格」。</div>
+    <div class="case"><b>面试前的自我准备：</b>面试官不会问一个毫无准备的人高阶问题——Ra 同样假定：行家在做魔法工作之前，已尽力让各能量中心顺畅、平衡地运作。工作不是补课的场合，而是已备好者的施展。</div>
+    <div class="case"><b>手术室的「更衣」：</b>外科医生进手术室先洗手、穿衣、戴手套——这套动作远不止卫生：白大褂上身的那一刻，他从「下班后的普通人」切换成「主刀医生」。这正是第一个召唤：以「穿上某物」的动作召唤魔法人格；没有法衣或护符的人，披挂的手势同样合适。</div>
+  </div>
+  <div class="card">
+    <h3>两个站点与一个总闸</h3>
+    <div class="q">发问者的观想方案被否定后，真正想问的是：那正确的次第是什么？</div>
+    <div class="quote">
+      <p class="en">The second station is the evocation of the great cross of life. This is an extension of the magical personality to become the Creator.</p>
+      <p class="zh">第二站是唤起伟大的生命十字。这是把魔法人格延伸，以成为造物主。</p>
+      <span class="src">—— Session 073 · (73.7)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Again, all invocations and evocations are drawn through the violet energy center. This may then be continued towards whatever energy centers are desired to be used.</p>
+      <p class="zh">再者，一切召唤与唤起都经由紫罗兰能量中心汲取。此后可以继续流向任何希望使用的能量中心。</p>
+      <span class="src">—— Session 073 · (73.7)</span>
+    </div>
+    <div class="plain">次第是：先「穿上」魔法人格（第一站），再唤起生命十字、与造物主认同（第二站）；而无论用哪个中心，一切召唤与唤起都从紫罗兰中心汲取——先过总闸，再谈分流。</div>
+    <div class="case"><b>总闸与分闸：</b>老旧大楼先拉总闸再分到各楼层：一切召唤与唤起都从紫罗兰中心汲取，再流向你想用的任何一个能量中心——顺序错了，楼下各层都不会来电。</div>
+  </div>
+  <div class="card">
+    <h3>五步推演：一次魔法工作如何成立（点节点查看）</h3>
+    <div class="flow-track" id="flowTrack2"></div>
+    <div class="flow-detail" id="flowDetail2"></div>
+    <div class="flow-ctrl"><button class="tri-btn" id="flowPrev2">上一步</button> <button class="tri-btn" id="flowNext2">下一步</button></div>
+  </div>
+  <div class="card">
+    <h3>条件模拟器：这次工作立得住吗？</h3>
+    <p class="sec-lead" style="margin-bottom:8px">拨动开关，看哪些条件缺失会让工作受阻——条件全部来自 Ra 在 (73.7)、(73.11)、(73.12) 给出的要求。</p>
+    <div class="cond-row"><div class="name">能量中心已平衡<small>行家被假定在工作前已尽力使各中心顺畅平衡地运作 (73.7)</small></div><label class="switch"><input type="checkbox" id="condBalance" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">已召唤魔法人格<small>任何魔法工作的第一个召唤——以「穿上某物」的动作 (73.7)</small></div><label class="switch"><input type="checkbox" id="condPersona" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">经由紫罗兰中心<small>一切召唤与唤起都由此汲取，再流向所需中心 (73.7)</small></div><label class="switch"><input type="checkbox" id="condViolet" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">三钥具足<small>在魔法人格中，渴望、意志、极性是关键 (73.11)</small></div><label class="switch"><input type="checkbox" id="condPolarity" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">未越过自由意志<small>试图在缩减自由意志下工作，会堵塞工作的魔法性质 (73.12)</small></div><label class="switch"><input type="checkbox" id="condFreewill" checked><span class="slider"></span></label></div>
+    <div id="magicCondResult"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ S4 两种光与靛蓝门 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>两种光与靛蓝之门：自动的心跳，有意识的召唤</h2></div>
+  <p class="sec-lead">次第讲清后，发问者回到那条分界线：从脚进入的螺旋光，与从头顶召唤的光，到底差在哪？Ra 用一个神经系统的类比回答，随后顺势展开观想的真正起点（靛蓝之门），以及每次工作最深层的收益——结晶化。</p>
+  <div class="card">
+    <h3>两种光的分别</h3>
+    <div class="q">发问者想分清两条「光路」：从脚进入的螺旋光与经头顶召唤的光，各自是什么性质？</div>
+    <div class="quote">
+      <p class="en">The action of the upward spiraling light drawn by the will to meet the inner light of the One Infinite Creator may be likened to the beating of the heart… The calling of the adept may be likened to those nerve and muscle actions over which the mind/body/spirit complex has conscious control.</p>
+      <p class="zh">由意志牵引、去与太一无限造物主内在之光相遇的上行螺旋光，可以比作心跳……行家的召唤，则可以比作心/身/灵复合体有意识控制的那些神经与肌肉动作。</p>
+      <span class="src">—— Session 073 · (73.8)</span>
+    </div>
+    <div class="plain">一套是自主运行（像心跳与副交感神经系统），一套是有意识控制（像抬手走路）；发问者随后确认：两条光路相遇之处，正是衡量该心/身/灵复合体发展程度的标尺 (73.9)。</div>
+    <div class="case"><b>心跳与抬手：</b>心跳和呼吸不归你管，却一刻不停；抬手、走路则随叫随到。上行螺旋光像前者，行家的召唤像后者——两者的相遇处，就是你「活得多认真」的刻度。</div>
+  </div>
+  <div class="card">
+    <h3>观想的起点：靛蓝是门户</h3>
+    <div class="q">发问者推测：召唤的观想必得看光的用途——疗愈、通讯，或对造物与造物主的普遍觉知，各有各的观想？</div>
+    <div class="quote">
+      <p class="en">Each visualization, regardless of the point of the working, begins with some work within the indigo ray. … This is well, for it is the gateway. From this beginning, light may be invoked for communication or for healing.</p>
+      <p class="zh">每个观想，无论工作的要点为何，都从靛蓝光芒内的某些工作开始。……这是好的，因为它是门户。从这个起点，光可以被召唤用于通讯或疗愈。</p>
+      <span class="src">—— Session 073 · (73.10)</span>
+    </div>
+    <div class="plain">用途可以不同（通讯、疗愈、普遍觉知），但入口只有一个：先在靛蓝光芒内做工——发问者小组的仪式完全在靛蓝光芒内运作，Ra 称这是好事；而他们为 Ra 工作所设的仪式，第一个焦点正是造物主。</div>
+    <div class="case"><b>进馆先过大门：</b>去图书馆无论要借书、自习还是听讲座，都得先穿过同一扇大门。观想也一样：目的各异，入口唯一——靛蓝之门。</div>
+  </div>
+  <div class="card">
+    <h3>结晶化：魔法师越来越成为它所寻求的</h3>
+    <div class="q">既然两条光路的交合这么重要，那交合之后发生了什么——工作就完成了吗？</div>
+    <div class="quote">
+      <p class="en">There is some crystallization of the energy centers used during each working so that the magician becomes, more and more, that which it seeks.</p>
+      <p class="zh">每次工作中所用到的能量中心会发生某种结晶化，使得魔法师越来越成为它所寻求的那个。</p>
+      <span class="src">—— Session 073 · (73.10)</span>
+    </div>
+    <div class="plain">交合仍只是准备。真正的收益有两层：所用能量中心逐次结晶化，行家越来越成为它所寻求的；更深一层，被唤起为魔法人格的时间/空间心/身/灵对应体，只有在第三密度空间/时间的催化经验里才能快速获益——行家由此向造物的更大部分（心/身/灵全体）提供催化剂，大大帮助了造物主。</div>
+    <div class="case"><b>替未来的自己攒经验：</b>一位上班族白天上班、晚上进修——课堂上的收获最终流回职业本体。魔法人格的获益正是这种结构：第三密度的催化经验，是这个时间/空间的对应体唯一的快车道；行家每做一次工作，等于替「更大的自己」攒下催化剂。</div>
+    <div class="case"><b>练琴即塑琴者：</b>每次登台既是表演也是练习——曲目在打磨，弹琴的人也在被曲目塑造。「魔法师越来越成为它所寻求的」说的正是这个双向过程：工作在用光，光也在重新捏塑工作者。</div>
+  </div>
+  <div class="card">
+    <h3>本集术语卡（点卡片翻面）</h3>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">魔法人格</div><div class="sub">magical personality</div><div class="tap">点击翻面</div></div><div class="back">被行家以「穿上某物」的动作召唤进来的人格：时间/空间中的心/身/灵对应体，工作时「上位」的那个你；渴望、意志、极性是它的三把钥匙。<em>像上班时披上的白大褂：还是你，但切换成了工作态的那个你。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">召唤与唤起</div><div class="sub">invocation &amp; evocation</div><div class="tap">点击翻面</div></div><div class="back">一切魔法工作的两大基础动作：召唤是把某个存在或力量请进来，唤起是把它在眼前展开；两者都经由紫罗兰能量中心汲取。<em>召唤像拨通电话，唤起像把对方请进客厅。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">生命十字</div><div class="sub">great cross of life</div><div class="tap">点击翻面</div></div><div class="back">魔法工作的第二站：把魔法人格延伸、扩展至成为造物主本身的观想。<em>像把自己「放大」到与整个坐标系重合——十字的横竖就是生命的经纬。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">靛蓝之门</div><div class="sub">indigo ray / gateway</div><div class="tap">点击翻面</div></div><div class="back">一切观想的起点：无论工作目的为何，都先在靛蓝光芒内做工，光再由此被召唤去用于通讯或疗愈。<em>图书馆的大门——办什么事都得先从它进来。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">结晶化</div><div class="sub">crystallization</div><div class="tap">点击翻面</div></div><div class="back">能量中心的理想状态：不是烧得更旺（那是过度激活），而是变得纯净、规律、可用——每次工作都让用到的中心更结晶。<em>毛玻璃磨成透镜：透光，且能把光聚成束。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">上行螺旋光</div><div class="sub">upward spiraling light</div><div class="tap">点击翻面</div></div><div class="back">由意志牵引、去与造物主内在之光相遇的能量流；运行如心跳，不归意识指挥。<em>身体的自主神经系统：不由你下令，却一直为你工作。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">火的练习</div><div class="sub">exercise of fire</div><div class="tap">点击翻面</div></div><div class="back">疗愈式的物理能量转移：魔法人格就座于绿色光芒中心，身体能量经双螺旋被扫入通道后倾泻；转移微妙，每次独一无二。<em>给低电量的人递上的充电宝——接不接、接多少，由对方决定。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">能量转移</div><div class="sub">energy transfer</div><div class="tap">点击翻面</div></div><div class="back">两个或更多心/身/灵复合体之间可发生的能量往来：物理、性、心智、灵性诸多种类；数量无限，因为每个复合体都是独特的。<em>人与人之间一切「给予—接受」的通名。</em></div></div>
+    </div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ S5 三钥与红线 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>三把钥匙与红线：什么让魔法工作失效</h2></div>
+  <p class="sec-lead">确认「渴望与意志是关键」之后，Ra 补上第三把钥匙——极性。发问者立刻想到一个现实样本：满腔热忱的传福音者为何常常效力不足？Ra 的诊断把整章推向本集的道德重心：自由意志不可缩减。随后借耶稣的疗愈示范这条红线怎么走，最后消解「魔法是否侵犯自由意志」的悖论。</p>
+  <div class="card">
+    <h3>三把钥匙与传福音者的堵塞</h3>
+    <div class="q">发问者推测：许多传福音者渴望与意志都极大、可能极性也大，问题只在于缺乏信息或觉知，所以工作效力不足？</div>
+    <div class="quote">
+      <p class="en">Those entities of which you speak are attempting to generate positive changes in consciousness while abridging free will. This causes the blockage of the magical nature of the working except in those cases wherein an entity freely desires to accept the working of the evangelist, as you have called it.</p>
+      <p class="zh">你所说的那些实体，正试图在缩减自由意志的同时制造意识上的正面改变。这会堵塞工作的魔法性质——除非在实体自由渴望接受这位所谓传福音者工作的情况下。</p>
+      <span class="src">—— Session 073 · (73.12)</span>
+    </div>
+    <div class="plain">Ra 说他「部分正确」：缺的不是信息，而是自由意志这道闸门——在服务他人的工作里，自由意志必须被视为至高无上；越线者堵住的不是别人的耳朵，而是自己工作的魔法性质。另外记住三钥：在魔法人格中，渴望、意志与极性是关键 (73.11)。</div>
+    <div class="case"><b>热情的越界：</b>小区里有人挨家敲门「你必须接受这份救恩」，渴望与意志都大得惊人，却把别人的意愿踩在了脚下——按 Ra 的诊断，堵塞由此发生：不是听众拒听，而是工作本身失灵。</div>
+    <div class="case"><b>自愿走进来的人：</b>同一场布道，有人是自己被吸引、主动接受的那位——在「实体自由渴望接受」的例外条款下，工作没有堵塞。界限不在讲的人说了什么，而在听的人是否自由。</div>
+  </div>
+  <div class="card">
+    <h3>耶稣的范例：两个告诫</h3>
+    <div class="q">发问者请 Ra 谈谈拿撒勒的耶稣在这类通讯与疗愈上的导向——一个把自由意志走到极致的样本。</div>
+    <div class="quote">
+      <p class="en">It offered itself as teacher to those mind/body/spirit complexes which gathered to hear, and even then spoke as through a veil so as to leave room for those not wishing to hear.</p>
+      <p class="zh">它将自己作为老师，提供给那些聚集前来聆听的心/身/灵复合体；即便如此，它也仿佛透过面纱说话，为不愿聆听的人留出空间。</p>
+      <span class="src">—— Session 073 · (73.13)</span>
+    </div>
+    <div class="plain">被请求疗愈时它常常照做，但总以两个告诫收尾：其一，被疗愈者是因自己的信心得愈——即经由紫罗兰光芒允许并接受变化、进入智能能量之门的能力；其二，总是说「不要告诉任何人」。这是试图最大化自由意志、同时忠于正面纯净度的工作。</div>
+    <div class="timeline">
+      <div class="tl-item"><div class="t">提供自己为师</div><div class="d">对聚集聆听者教导——且仿佛透过面纱说话，给不愿听的人留出空间。</div></div>
+      <div class="tl-item"><div class="t">被请求时疗愈</div><div class="d">常常照做——注意：是应请求，不是主动炫耀力量。</div></div>
+      <div class="tl-item"><div class="t">告诫一 · 因信心得愈</div><div class="d">痊愈归功于被疗愈者自己的信心：经由紫罗兰光芒允许并接受变化，进入智能能量之门。</div></div>
+      <div class="tl-item"><div class="t">告诫二 · Tell no one</div><div class="d">总是说「不要告诉任何人」——把奇迹从广告位上摘下来。</div></div>
+      <div class="tl-item"><div class="t">定性</div><div class="d">Ra：这些工作试图最大化自由意志的品质，同时忠于工作的正面纯净度。(73.13)</div></div>
+    </div>
+    <div class="case"><b>口碑传播的克制：</b>被治好的人想发朋友圈替医者宣传，医者却说「别宣传」——「不要告诉任何人」保全了每个围观者「不信」的权利：见证者可以自由解读，而不是被既定叙事押着走。</div>
+  </div>
+  <div class="card">
+    <h3>悖论的消解与十二门徒</h3>
+    <div class="q">发问者提出一个所有疗愈者立刻会撞上的悖论：另一人目睹了这场「魔法」工作，算不算被部分缩减了自由意志？顺带一问：耶稣收十二门徒是为了什么？</div>
+    <div class="quote">
+      <p class="en">To us there are no paradoxes. The workings which seem magical and, therefore, seem to infringe upon free will do not, in themselves, do so, for the distortions of perception are as many as the witnesses, and each witness sees what it desires to see.</p>
+      <p class="zh">对我们而言没有悖论。那些看似魔法、因而看似侵犯自由意志的工作，其本身并不如此——因为感知的变貌与见证者一样多，每个见证者看见它所渴望看见的。</p>
+      <span class="src">—— Session 073 · (73.14)</span>
+    </div>
+    <div class="plain">侵犯只有一个触发条件：工作的实体把事件的「作者」归于自己或自己的技能；声明「没有工作来自它、只是经由它」则没有侵犯——发问者一度听反，Ra 特意澄清 (73.14–73.15)。至于门徒：没有学习/教导者，教导/学习何为？被吸引者被无条件接受、不问结果 (73.16)。</div>
+    <div class="case"><b>「不是我做的」：</b>一位疗愈师坚持对来访者说：不是我治好了你，我只是通道。按 Ra 的标准，这没有侵犯自由意志；侵犯只发生在把功劳归给自己技能的那一刻。</div>
+    <div class="case"><b>同一场魔术，一百种目击：</b>舞台魔术散场，有人惊叹、有人找机关、有人坚称是剪辑——每个见证者看见它所渴望看见的。感知的变貌与见证者一样多，所以「看似魔法」本身不构成侵犯：对 Ra 而言，这里根本没有悖论。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ S6 火的疗愈 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>火的练习：疗愈如何经由绿色光芒发生</h2></div>
+  <p class="sec-lead">理论落地时刻：发问者确认火的练习用的正是那股光，Ra 补出完整机制——魔法人格就座于绿色光芒中心，身体能量经双螺旋扫入通道；随后讲清病人那边的极化效应，以及面对「真诚却未愈者」时该换什么问题。</p>
+  <div class="card">
+    <h3>绿色光芒的座位与双螺旋</h3>
+    <div class="q">发问者确认：火的练习里，疗愈者用的就是先前说的那股进入头顶的光吗？</div>
+    <div class="quote">
+      <p class="en">When the magical personality has been seated in the green-ray energy center for healing work, the energy then may be seen to be the crystalline center through which body energy is channeled.</p>
+      <p class="zh">当魔法人格已就座于绿色光芒能量中心以进行疗愈工作时，这能量便可被视为那个结晶中心——身体能量由此被引导。</p>
+      <span class="src">—— Session 073 · (73.17)</span>
+    </div>
+    <div class="plain">确认无误，但要补一笔：这种疗愈同时用两股能量——行家的能量与上行螺旋光。绿光芒中心越来越明亮时（是结晶化，不是过度激活），身体能量先转小螺旋、再转大圆，被扫入一条通道后倾泻而出。</div>
+    <div class="timeline">
+      <div class="tl-item"><div class="t">就座</div><div class="d">魔法人格坐进绿色光芒中心——疗愈工作里身体能量流经的结晶中心。(73.17)</div></div>
+      <div class="tl-item"><div class="t">小螺旋</div><div class="d">身体能量从绿中心顺时针出发：右肩→头部→右肘→太阳神经丛→左手。(73.17)</div></div>
+      <div class="tl-item"><div class="t">大圆</div><div class="d">扫入通道后再顺时针转大圈：从左→双脚→右手→头顶→左手，如此循环。(73.17)</div></div>
+      <div class="tl-item"><div class="t">倾泻</div><div class="d">被结晶化、规律化、管道化的身体能量抵达绿中心，倾泻出投生行家的综合能量，向请求者提供疗愈。(73.17)</div></div>
+      <div class="tl-item"><div class="t">同理</div><div class="d">有实体透过管道（channel）疗愈时，基本情形相同。(73.17)</div></div>
+    </div>
+    <div class="analogy"><b>毛玻璃与透镜：</b>过度激活像把灯丝烧得更亮，结晶化却像把毛玻璃磨成透镜——同样亮，后者能把光聚成束。Ra 特意强调「明亮不意味着过度激活，而是结晶化」。</div>
+  </div>
+  <div class="card">
+    <h3>病人那边发生了什么</h3>
+    <div class="q">发问者追问机制的对端：这种光的转移，会如何影响要被疗愈的病人？</div>
+    <div class="quote">
+      <p class="en">The effect is that of polarization. The entity may or may not accept any percentage of this polarized life-energy which is being offered.</p>
+      <p class="zh">其效果是极化。这个实体可以接受、也可以不接受被提供的这份极化生命能的任何百分比。</p>
+      <span class="src">—— Session 073 · (73.18)</span>
+    </div>
+    <div class="plain">疗愈不是强加的修复：效果是极化，接受与否、接受多少都归病人；按手让能量引导更具体、接受机会也更具体。这种工作不求国王密室效应，而是为能量低者提供积聚能量的机会——许多称为疾病的变貌可借此得到帮助。</div>
+    <div class="case"><b>递出的充电宝：</b>疗愈者像给低电量的人递上一只充电宝：对方可以接也可以不接，接口对准程度（按手）决定「充电效率」。决定权始终在用电的人手里。</div>
+    <div class="case"><b>台灯与日光浴：</b>国王密室（King's Chamber）是整屋日光浴级别的强效配置；火的练习更像给能量不足的人开一盏补光灯——目标不是奇效，而是把能量一点点攒起来。</div>
+  </div>
+  <div class="card">
+    <h3>疗愈总图与未愈之人</h3>
+    <div class="q">发问者交出一张总图请 Ra 纠错：能量中心阻塞挡住了维持七个身体之一的上行螺旋光，遂成疾病；疗愈者引导光，病人若有接受的心智配置，光便进入并重新配置变貌。</div>
+    <div class="quote">
+      <p class="en">you may consider pre-incarnative choices; and your more helpful aid to such an entity may be the suggestion that it meditate upon the affirmative uses of whatever limitations it might experience.</p>
+      <p class="zh">你可以考虑投生前的选择；而你对这样一个实体更有帮助的援助，也许是建议它冥想自身所经验之任何限制的肯定性用途。</p>
+      <span class="src">—— Session 073 · (73.19)</span>
+    </div>
+    <div class="plain">Ra 评价：错误很小，但此时不做大量精炼——因为还有初步材料会出现。要点有三：疗愈形式多样，许多只用行家能量，火的练习才额外引导身体能量；真诚却未愈者，要考虑投生前的选择；靛蓝光芒的工作在这类情况下往往有帮助。</div>
+    <div class="case"><b>真诚却未愈的人：</b>一位真心求助的人仍然没有被疗愈。Ra 的建议不是加大剂量，而是换一个问题：考虑投生前的选择，并建议他冥想自身限制的肯定性用途——就像有人天生不能跑跳，却因此在游泳里找到自己的赛道。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ S7 能量转移家族 ============ -->
+<section class="chapter" id="s7">
+  <div class="sec-head"><span class="num">07</span><h2>行家的一天与能量转移的家族</h2></div>
+  <p class="sec-lead">本集压轴是一场总收束：行家该以什么状态生活？人与人之间的「能量转移」到底有多少种？Ra 先把修行从「每天的固定时段」扩展成「每一刻」，再把能量转移的完整家族——物理、性、心智、灵性——一次讲全。</p>
+  <div class="card">
+    <h3>行家没有下班时间</h3>
+    <div class="q">发问者提出：服务他人路径最重要的，是借冥想、仪式与对造物/造物主的欣赏，发展出一种只能称为「振动增加、与万有合一」的心态——对吗？</div>
+    <div class="quote">
+      <p class="en">We shall not correct this statement but shall expand upon it by suggesting that to those qualities you may add the living day by day, and moment by moment, for the true adept lives more and more as it is.</p>
+      <p class="zh">我们不会纠正这个陈述，而是扩展它：在那些品质之外，再加上日复一日、时时刻刻地生活——因为真正的行家越来越如其本然地生活。</p>
+      <span class="src">—— Session 073 · (73.20)</span>
+    </div>
+    <div class="plain">冥想、仪式与欣赏都对，但还不够：修行不是每天的固定时段，而是每一刻的活法——行家的「工作状态」与「生活状态」逐渐合为一体。</div>
+    <div class="case"><b>恢复也是训练：</b>职业运动员的一天里，睡觉、吃饭、散步都在训练系统之内——不是每天练两小时、其余照旧。真正的行家同理：日复一日、时时刻刻，把生活本身活成工作。</div>
+  </div>
+  <div class="card">
+    <h3>能量转移的家族</h3>
+    <div class="q">发问者问：两个或更多心/身/灵复合体之间可能的能量转移，数量很大还是很少？请再定义「能量转移」。</div>
+    <div class="quote">
+      <p class="en">The second energy transfer of which we would speak is the sexual energy transfer. This takes place upon a non-magical level by all those entities which vibrate green ray active.</p>
+      <p class="zh">我们要讲的第二种能量转移是性能量转移。它在所有绿色光芒活跃的实体之间，于非魔法的层面发生。</p>
+      <span class="src">—— Session 073 · (73.22)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The spiritual energy transfers are at the heart of all energy transfers, as a knowledge of self and other-self as Creator is paramount, and this is spiritual work.</p>
+      <p class="zh">灵性能量转移处于一切能量转移的核心，因为知道自我与其他自我皆是造物主至关重要——而这是灵性工作。</p>
+      <span class="src">—— Session 073 · (73.22)</span>
+    </div>
+    <div class="plain">数量是无限的——因为每个心/身/灵复合体都是独特的 (73.21)。每种转移都以「自我作为造物主」的某种感觉或魔法人格的召唤开始，可以有意也可以无意；物理的有火的练习（微妙、每次独一无二），性的可精炼至高等性魔法（双方都奉献则加倍），心智的有师徒与倾听者—说话者，而灵性是核心。</div>
+    <div class="table-wrap">
+    <table class="nine">
+      <tr><th>类型</th><th>英文</th><th>通俗理解</th></tr>
+      <tr><td>火的练习</td><td>exercise of fire</td><td>微妙的物理能量转移，不深涉身体复合体的组合；每次在给出与接受上都独一无二——这正是转移阵列无限的原因</td></tr>
+      <tr><td>性能量转移</td><td>sexual energy transfer</td><td>绿光芒活跃者在非魔法层面即会发生；双方都奉献于服务太一无限造物主则加倍，量取决于所创造并释放的极化性能量；再往上精炼通往高等性魔法</td></tr>
+      <tr><td>心智 · 师徒</td><td>teacher and pupil</td><td>最常见的心智能量转移：量取决于教师服务渴望的纯度与信息质量、学生学习渴望的纯度与接收知识的心智振动品质</td></tr>
+      <tr><td>心智 · 倾听与诉说</td><td>listener and speaker</td><td>说话者陷于痛苦、悲伤等心智变貌时，倾听者与说话者之间的转移变体</td></tr>
+      <tr><td>灵性转移</td><td>spiritual energy transfer</td><td>一切转移的核心：知道自我与其他自我皆是造物主——本日所谈行家主题的种种都属此类</td></tr>
+    </table>
+    </div>
+    <div class="case"><b>两个人的船：</b>当伴侣双方都把自己的性能量奉献于服务太一无限造物主，转移加倍——像两人同划一条船：方向一致时，速度不只是相加。</div>
+    <div class="case"><b>好老师遇上刷题机器：</b>一位倾囊相授的老师遇到只求标准答案的学生，传递照样打折——师徒转移的量，由教师的纯度与学生的接收品质共同决定，缺一头都不行。</div>
+    <div class="case"><b>深夜的倾听：</b>朋友凌晨两点打电话倾诉痛苦，你什么建议也没给，只是听着——倾听者与说话者之间的心智能量转移：说话者的变貌不同，转移的形态也随之不同。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ S8 收官 ============ -->
+<section class="chapter" id="s8">
+  <div class="sec-head"><span class="num">08</span><h2>收官：三钥回收、归类练习与伏笔</h2></div>
+  <p class="sec-lead">本集没有戏剧性的结尾，却留了两样东西：一张可以带走的钥匙串（渴望、意志、极性），和一个未画完的疗愈总图——Ra 明说「还有初步材料无疑会出现」。</p>
+  <div class="card">
+    <h3>把钥匙串收进口袋</h3>
+    <div class="q">读到这里，把本集最核心的三件套再收一次——Ra 在发问者的「渴望与意志」之上补了什么？</div>
+    <div class="quote">
+      <p class="en">In the magical personality desire, will, and polarity are the keys.</p>
+      <p class="zh">在魔法人格中，渴望、意志与极性是关键。</p>
+      <span class="src">—— Session 073 · (73.11)</span>
+    </div>
+    <div class="plain">渴望、意志、极性——三把钥匙插进魔法人格的锁孔；而自由意志是唯一不可折的钥匙坯：一旦试图在缩减自由意志下工作，锁孔当场堵死。</div>
+    <div class="case"><b>合上屏幕复述：</b>读完本页后合上屏幕，试着凭记忆说出「魔法工作五步」与「三把钥匙」；说不出来的那一段，就回到对应章节再看一遍——下面的归类练习正好用来检验。</div>
+    <div class="case"><b>未完的地图：</b>Ra 在 (73.19) 特意说明，此时不对疗愈总图做大量精炼，「因为还有初步材料无疑会出现」——这张地图会在后续集会里继续补全，读后面几集时记得带着本页的问题回去对照。</div>
+  </div>
+  <div class="saying">
+    <p class="en">I am Ra. I leave you glorying in the love and in the light of the One Infinite Creator. Go forth, then, rejoicing in the power and in the peace of the One Infinite Creator.</p>
+    <p class="zh">我是 Ra。我在太一无限造物主的爱与光中荣耀地离开你们。那么，前行吧，在太一无限造物主的大能与平安中欢欣。</p>
+    <span class="src">—— Session 073 · (73.23)</span>
+  </div>
+  <div class="card">
+    <h3>归类练习：这是哪一类能量转移？（点选项作答）</h3>
+    <p class="sec-lead" style="margin-bottom:8px">本集把能量转移讲成了完整家族。判断下面每个场景属于哪一类。</p>
+    <div id="sortArea1"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 073（<code>split/Ra_Session_073.md</code>）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra073-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+/* ===== 本集定制交互 ===== */
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+initStepper('flowTrack1','flowDetail1','flowPrev1','flowNext1',[
+ {t:'开场致意',d:'<span class="qa-q">(73.0) 集会开始。</span><b>答：</b>Ra 在太一无限造物主的爱与光中致意：我们现在开始通讯。'},
+ {t:'器皿与仪式',d:'<span class="qa-q">问：器皿状况如何？驱逐仪式有帮助吗？</span><b>答：</b>如前所述，唯独生命能更接近正常水平；驱逐仪式每次工作都在增强接触所需的纯净度——这份收益属于行家的任何工作。(73.1–73.2)'},
+ {t:'光与暗的召唤',d:'<span class="qa-q">问：服务自我极性是否也能同样唤起力量？</span><b>答：</b>微妙地不成立：召唤负面时惊动的是正面等效者；服务他人者等待被召唤、只能发送爱。随后 Ra 确认对称公式：两条路径都按服务意志的强度与纯度成正比召唤。(73.3–73.4)'},
+ {t:'中柱练习之辩',d:'<span class="qa-q">问：观想该从脚向上激活各中心吗？</span><b>答：</b>不。魔法工作有两个站点：先以「穿上某物」的动作召唤魔法人格，再唤起生命十字；一切召唤与唤起都经由紫罗兰中心汲取。(73.5–73.7)'},
+ {t:'两种光',d:'<span class="qa-q">问：从脚进入的螺旋光与头顶召唤的光有何区别？</span><b>答：</b>上行螺旋光像心跳——自主运行；行家的召唤像有意识控制的动作；两光相遇处是发展程度的标尺。观想一律从靛蓝之门开始；结晶化让魔法师越来越成为它所寻求的。(73.8–73.10)'},
+ {t:'三钥与红线',d:'<span class="qa-q">问：传福音者渴望与意志俱大，为何效力不足？</span><b>答：</b>魔法人格的三钥是渴望、意志、极性；试图在缩减自由意志下工作会堵塞工作的魔法性质——传福音者正是越过了这条线。(73.11–73.12)'},
+ {t:'耶稣的范例',d:'<span class="qa-q">问：拿撒勒的耶稣以什么导向做这类通讯与疗愈？</span><b>答：</b>透过面纱说话，给不愿听者留出空间；疗愈总以两个告诫收尾——因信心得愈、「不要告诉任何人」。看似魔法的工作本身并不侵犯自由意志：每个见证者看见它所渴望看见的。(73.13–73.16)'},
+ {t:'火的疗愈',d:'<span class="qa-q">问：这种光如何影响病人？</span><b>答：</b>魔法人格就座于绿色光芒中心，身体能量经双螺旋扫入通道后倾泻；效果是极化，接受与否由病人决定。真诚却未愈者，可考虑投生前的选择。(73.17–73.19)'},
+ {t:'能量转移家族',d:'<span class="qa-q">问：能量转移有多少种？</span><b>答：</b>无限，因为每个复合体都独特：火的练习、性能量转移、心智（师徒、倾听与诉说）、灵性——灵性是核心。行家的功课是日复一日、时时刻刻地生活。(73.20–73.22)'},
+ {t:'收尾',d:'<b>答：</b>叮嘱蜡烛不可淌蜡、颈垫要更舒适；出版与否由你们自行决定。Adonai。(73.23)'}
+]);
+
+initStepper('flowTrack2','flowDetail2','flowPrev2','flowNext2',[
+ {t:'预备',d:'行家被假定在魔法工作之前，已尽力使各能量中心顺畅且平衡地运作——工作不是补课的场合。(73.7)'},
+ {t:'第一召唤：魔法人格',d:'一切魔法工作基于唤起与/或召唤；第一个召唤是魔法人格——以「穿上某物」的动作完成；没有服饰或护符时，披挂的手势即可。(73.7)'},
+ {t:'第二站：生命十字',d:'唤起伟大的生命十字——把魔法人格延伸，以成为造物主。(73.7)'},
+ {t:'总闸：紫罗兰中心',d:'一切召唤与唤起都经由紫罗兰能量中心汲取——先过总闸，再谈分流。(73.7)'},
+ {t:'分流到所需中心',d:'由此可继续流向任何希望使用的能量中心——观想从靛蓝之门开始，光再被召唤用于通讯或疗愈。(73.7、73.10)'},
+ {t:'三钥点火',d:'在魔法人格中，渴望、意志与极性是关键——三钥具足，工作才立得起来。(73.11)'}
+]);
+
+function updateMagicCond(){
+  const conds=[
+    ['condBalance','能量中心未平衡——行家须在工作前尽力使各中心顺畅、平衡地运作 (73.7)'],
+    ['condPersona','魔法人格未被召唤——任何魔法工作的第一个召唤 (73.7)'],
+    ['condViolet','未经紫罗兰中心——一切召唤与唤起都由此汲取 (73.7)'],
+    ['condPolarity','三钥不具足——渴望、意志、极性是魔法人格的关键 (73.11)'],
+    ['condFreewill','自由意志被缩减——这会堵塞工作的魔法性质 (73.12)']
+  ];
+  const miss=conds.filter(c=>!document.getElementById(c[0]).checked).map(c=>c[1]);
+  const box=document.getElementById('magicCondResult');
+  if(miss.length===0){
+    box.classList.remove('fail');
+    box.innerHTML='工作成立：能量中心平衡就绪，魔法人格已被召唤，一切经由紫罗兰中心汲取，三钥点火，且没有越过任何人的自由意志——行家工作的门槛，至此全部踏过。';
+  }else{
+    box.classList.add('fail');
+    box.innerHTML='工作受阻，还缺：<b>'+miss.join('；')+'</b>。';
+  }
+}
+['condBalance','condPersona','condViolet','condPolarity','condFreewill'].forEach(id=>document.getElementById(id).addEventListener('change',updateMagicCond));
+updateMagicCond();
+
+initSorter('sortArea1',[
+ {a:'疗愈者为请求者按手，细微地转移身体能量，每次在给出与接受上都独一无二。',opts:['火的练习','性能量转移','师徒传递','倾听与诉说','灵性转移'],ans:'火的练习',exp:'属于物理能量转移，但不深涉身体复合体的组合——转移微妙且每次独一无二 (73.22)。'},
+ {a:'两位绿光芒活跃的伴侣之间的非魔法层面转移；双方都奉献于服务则加倍。',opts:['火的练习','性能量转移','师徒传递','倾听与诉说','灵性转移'],ans:'性能量转移',exp:'绿光芒活跃者在非魔法层面即会发生；双方都奉献于服务太一无限造物主时转移加倍 (73.22)。'},
+ {a:'传递多少取决于教师的纯度与信息质量、学生的学习渴望与心智振动品质。',opts:['火的练习','性能量转移','师徒传递','倾听与诉说','灵性转移'],ans:'师徒传递',exp:'最常见的心智能量转移——老师与学生之间 (73.22)。'},
+ {a:'凌晨两点，说话者陷在痛苦与悲伤里，你安静地听着。',opts:['火的练习','性能量转移','师徒传递','倾听与诉说','灵性转移'],ans:'倾听与诉说',exp:'心智能量转移的另一形态：倾听者与说话者之间，说话者的变貌使转移形态随之不同 (73.22)。'},
+ {a:'知道自我与其他自我皆是造物主——这是一切转移的核心工作。',opts:['火的练习','性能量转移','师徒传递','倾听与诉说','灵性转移'],ans:'灵性转移',exp:'灵性能量转移处于一切能量转移的核心 (73.22)。'}
+]);
+
+renderPath();
+
+renderPath();
+</script>
+</body>
+</html>

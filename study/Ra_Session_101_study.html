@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 101 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 101 · 交互式学习模块</h1>
+  <p class="sub">这一集篇幅很短，Ra 却借一场虫咬引发的肿胀，讲清了智慧的两面与催化剂的底层机制：通道很多，源头只有一个——作为造物主的自我；末了叮嘱支持器皿的人：在真理中寻找爱。</p>
+  <div class="tagline">5 个主题 · 5 个学习步骤 · 14 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 蛇与智慧的两面</a>
+<a href="#s3">③ 催化剂的唯一源头</a>
+<a href="#s4">④ 盐、水与扫帚</a>
+<a href="#s5">⑤ 收官：在真理中寻找爱</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>十个问答怎么走：先过一遍脉络推进器，例行内容收进折叠区</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>蛇与智慧的两面</b><span>Jim 的肿胀为何发生：把智慧用于分离，会被反咬</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>催化剂的唯一源头</b><span>随机、高我、负面朋友——通道很多，源头只有一个</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>盐、水与扫帚</b><span>为什么参数再好的住所也省不掉基本清洁</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>收官：在真理中寻找爱</b><span>责任法则、如实反映的镜子，与本集金句</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ 01 本章地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：一场围绕「身边催化剂」的短集会</h2></div>
+  <p class="sec-lead">这一集只有十个问答块：开头与结尾是器皿状态的例行照料，中间的篇幅大多给了小组身边的人与物——Jim 的一场肿胀、发问者自己上周的病、一套即将搬入的住所、一位被众人捧着的器皿。真正的教导核心只有一条：催化剂只有一个源头。先把整场对话的脉络走一遍。</p>
+
+  <div class="card">
+    <h3>本集讲什么：议题清单</h3>
+    <p><b>一场由个案带出的教导。</b>Jim 的身体肿胀是本集的引子：Ra 借「蛇象征智慧」讲出本集最重的一句话——把智慧用于分离，会被智慧的暗面反咬。随后发问者把催化剂的机制做了一次总陈述并获得认可，Ra 进而澄清：催化剂的「通道」可以有很多条，源头却只有一个。之后两件事收尾：新住所的清洁规程，以及给支持器皿者的一句叮嘱——在真理中寻找爱。本集反复出现的术语：<b>器皿（instrument，通灵时把身体借作管道的人）</b>、<b>催化剂（catalyst，促成成长的事件——它不教任何东西，只把功课送到门口）</b>、<b>高我（higher self，投生体验中「作为造物主的自我」，站在时间/空间之外的那部分你）</b>。</p>
+    <div class="quote">
+      <p class="en">I greet you in the love and in the light of the One Infinite Creator. We communicate now.</p>
+      <p class="zh">Ra 在太一无限造物主的爱与光中致意，宣告通讯开始。</p>
+      <span class="src">—— Session 101 · (101.0)</span>
+    </div>
+    <div class="case"><b>二手房清场：</b>你搬进一套二手房，哪怕前住客口碑很好，多数人也会先开窗通风、全屋打扫、换掉旧锁再入住——「先把上一任的气氛请出去」。这正是本集后半段 Ra 给新住处开出的规程（盐、水、扫帚）在生活里的原型（对应 101.6-101.7）。</div>
+    <div class="case"><b>会议前十分钟：</b>小组开录前，大家没有急着进入「高深问题」，而是先问一句「你今天状态怎么样」——本集第一个与最后一个问答都属于这类照料：能量够不够、身体撑不撑得住。灵性对话从来发生在对具体的人的具体照料之上。</div>
+  </div>
+
+  <div class="card">
+    <h3>问答脉络推进器</h3>
+    <p>本集十个问答块，按对话推进顺序压缩为八站。点击节点，或用按钮逐步前进。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="flow101"></div>
+      <div class="flow-detail" id="detail101"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="prev101">上一步</button>
+        <button class="tri-btn" id="next101">下一步</button>
+      </div>
+    </div>
+  </div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 收尾能量</span></summary>
+  <div class="body">
+    <p><b>(101.1) 器皿状态：</b>所有能量水平因物理疼痛与近期心智/情感催化剂而有所降低，但 Ra 评估近期很可能改善。</p>
+    <p><b>(101.9) 收尾：</b>器皿已用尽被转移的能量、正消耗生命储备在说话；Ra 建议尽量完全使用转移的性能量、不要动用储备，并感谢支持小组的认真负责。</p>
+  </div></details>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 02 蛇与智慧的两面 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>蛇与智慧的两面：Jim 的肿胀为何发生</h2></div>
+  <p class="sec-lead">Jim 身体肿胀、需要医治——这本是个健康问题，Ra 却先从一条蛇讲起。因为在 Ra 看来，这场病不是一个意外，而是一次「工作（working）」：它有形而上的来路，也有身体上的落点，两边要分开看、一起治。</p>
+
+  <div class="card">
+    <h3>核心概念：智慧为什么会长毒牙</h3>
+    <div class="q">发问者问的是：Jim 的肿胀是什么造成的、能做什么来治愈？他大概在等一个「病因＋药方」式的回答，Ra 却先递来一个象征。</div>
+    <div class="quote">
+      <p class="en">For the answer to this query we must begin with the consideration of the serpent, signifying wisdom.</p>
+      <p class="zh">要回答这个问题，必须从蛇谈起——蛇象征智慧。</p>
+      <span class="src">—— Session 101 · (101.2)</span>
+    </div>
+    <p>蛇这个符号的好处，是一眼就能看出智慧者的<b>两副面孔</b>：正面智慧饰于额头，指向靛蓝光芒（indigo-ray，与智慧、整合相关的能量中心）的工作；负面智慧则是毒牙里的毒——Ra 用它指那些<b>有效地把自我与其他自我分开</b>的表达。</p>
+    <div class="quote">
+      <p class="en">To use that which a mind/body/spirit complex has gained of wisdom for the uses of separation is to invite the fatal bite of that wisdom’s darker side.</p>
+      <p class="zh">把一个心/身/灵复合体（mind/body/spirit complex，人存在的三层统一结构）已获得的智慧拿去行分离之用，就是邀请那智慧的暗面回过头来咬你致命的一口。</p>
+      <span class="src">—— Session 101 · (101.2)</span>
+    </div>
+    <p class="plain">智慧本身不分正负：拿它去照亮彼此，就是靛蓝光芒；拿它去拆开彼此，就是毒牙——而这一口终将落回到用毒的人身上。</p>
+    <div class="analogy"><b>两把钥匙：</b>同一串系统管理员权限，可以用来深夜修复故障、让全公司正常运转，也可以用来离职前搬走客户名单。知识没有变，变的是用它「连接」还是「分离」——Ra 说的正是这个分岔口。</div>
+    <div class="case"><b>离职谈判：</b>一位工程师掌握了系统的全部后门，在谈离职补偿时暗示「不给够，我就让数据出事」——他把自己积累的智慧变成了分离与要挟的武器。随后是官司、行业拉黑、长期的自我消耗：这正是「邀请智慧暗面的致命一咬」在现代职场里的样子。</div>
+    <div class="case"><b>复盘会上：</b>资深成员用专业知识当众把新人的方案拆得体无完肤，赢了辩论、输了关系——毒液未必出自恶意，凡是「有效地把人分开」的表达都算。同一个瞬间换一种用法：把明白用于照亮而非压服，就是额头上那副正面智慧的面孔。</div>
+  </div>
+
+  <div class="card">
+    <h3>这场「工作」的来路与去处</h3>
+    <div class="q">那这场病具体是怎么回事？Ra 给出三层答案：表面的咬痕、形而上的背景、身体上的运作路径——然后才开出处方。</div>
+    <p><b>表面与深层：</b>表面看，只是一次木蜘蛛（wood spider）叮咬；但 Ra 提示，若做足够的病理溯源检验，有可能显示为棉口蛇（cottonmouth）的咬伤——哪种「成立」并不重要，重要的是两者都指向同一个象征：蛇。</p>
+    <p><b>形而上背景：</b>Jim 内心有一种朝向负面智慧的倾向——但 Ra 特意说明，这个倾向<b>已经在减弱</b>；正是这个背景「激活」了那次叮咬，使它成为一场有效的「工作」。</p>
+    <p><b>身体落点：</b>工作发生在黄色光芒（yellow-ray，物理身体在形而上层面的对应层）身体的淋巴系统；脾脏、肾上腺、肾脏承压渐增，肝脏有出问题的可能，支气管系统也开始受累。</p>
+    <p><b>处方分四路：</b>药物（请 Stuart 用较强的化学手段唤醒组胺反射、消水肿）、形而上援助（继续请 Bob 聚焦该实体与黄色光芒身体的连接）、补钾（香蕉）、以及最特别的一条——把「傲慢（contumely，轻蔑他人的傲慢）的肿胀」与眼前处境联系起来看。</p>
+    <div class="case"><b>水肿门诊：</b>医生开利尿剂消水肿，护士叮嘱补钾，心理咨询师处理长期压力——同一个病人、同一个疗程，三路人马各管一层，谁也不替代谁。Ra 的四路处方正是这种格局：化学手段、形而上援助、营养补给、内在功课并行不悖。</div>
+    <div class="quote">
+      <p class="en">Each entity has its ways of viewing and learning from the illusion, and each processes catalyst using unique circuitry. Thus all need not be the same to be equal in will and faith.</p>
+      <p class="zh">每个实体都有自己的方式观看幻象并从中学习，各自用独一无二的电路处理催化剂。因此，所有实体不必相同，也能在意志与信心上平等。</p>
+      <span class="src">—— Session 101 · (101.2)</span>
+    </div>
+    <p>这句叮嘱回应了一个具体张力：Jim 在冥想上需要旁人不必同样遵守的额外纪律。Ra 的态度是——不必人人一样，各按各的电路来。</p>
+    <div class="case"><b>健身房里：</b>同一个训练目标，有人要加组间拉伸才不受伤，有人偏要大重量少次数才练得动——教练不会要求所有人做同一张课表，只看各自的进步。处理催化剂也一样：电路人人不同，意志与信心却可以同样足。</div>
+  </div>
+
+  <div class="card">
+    <h3>归类练习：四路处方各管哪一层</h3>
+    <p>Ra 的处方横跨三个层面。试着把下面的处理手段归到正确的层——点错了会显示正确答案与原因。</p>
+    <div id="sorterArea"></div>
+  </div>
+
+  <details class="dict"><summary>身体层面的细节（可跳过）<span class="hint">症状 · 病程</span></summary>
+  <div class="body">
+    <p><b>咬伤来源：</b>表面是木蜘蛛（一种蛛形纲动物）的叮咬；若充分检验病理起源，在可能性/或然率范围内可能显示为棉口蛇的咬伤。</p>
+    <p><b>受累系统：</b>「工作」发生在黄色光芒物理身体的淋巴系统；脾脏、肾上腺（supra-renal glands）、肾脏复合体压力渐增，肝脏有出问题的可能，淋巴困难已开始压迫支气管系统。Ra 称之为「一次相当有效的工作」。</p>
+  </div></details>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 03 催化剂的唯一源头 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>催化剂的唯一源头：随机、高我与「负面朋友」</h2></div>
+  <p class="sec-lead">顺着叮咬这个个案，发问者把整个机制做了一次总陈述：催化剂到底从哪儿来？随机事件、高我、还是敌对实体？Ra 先认可框架，再给出一个更深一层的澄清——通道很多，源头只有一个。</p>
+
+  <div class="card">
+    <h3>核心概念：一个源头，多条通道</h3>
+    <div class="q">发问者陈述他的世界观：造物主正借极化（polarization，在服务他人与服务自我之间选边）认识它自己；一旦方向选定，催化剂就会来强化它——而催化剂可来自三条通道：随机事件、高我的安排、或相反极化实体的「服务」。三者殊途同归。Ra 认可吗？</div>
+    <div class="quote">
+      <p class="en">We find your observations unexceptional and, in the large, correct. … The nature of catalyst is such that there is only one source, for the catalyst and experience are further attempts at specificity in dealing with the architecture of the unconscious mind of the self.</p>
+      <p class="zh">我们认为你的观察无可挑剔，大体正确。……催化剂的本质决定了它只有一个源头：催化剂与体验，是在处理自我无意识心智的架构时更进一步的特定化尝试。</p>
+      <span class="src">—— Session 101 · (101.3-101.4)</span>
+    </div>
+    <p class="plain">说「随机」是站在游戏关卡里往回看的说法；站在关卡设计者那边看，每一份催化剂都出自同一个「作为造物主的自我」——尤其经由高我这座桥送达。</p>
+    <div class="analogy"><b>快递与发货方：</b>同一件包裹，今天走航空、明天走陆运，路线不同、经手人不同——但发货方只有一个。发问者问的「哪条通道」是物流问题；Ra 回答的「一个源头」是发货方问题，两层说法并不矛盾。</div>
+  </div>
+
+  <div class="card">
+    <h3>本案的通道：第五密度负面朋友</h3>
+    <div class="q">那么这次叮咬走的是哪条通道？</div>
+    <div class="quote">
+      <p class="en">In the sense which we feel you intend, the source was the fifth-density negative friend which had noted the gradual falling away of the inharmonious patterns of the distortion called anger/frustration in the entity.</p>
+      <p class="zh">就我们所感、你所指的那个意义而言，源头是那位第五密度的负面朋友：它注意到该实体身上被称为愤怒/挫败的变貌（distortion，对统一性的偏离）之不和谐模式正逐渐消退。</p>
+      <span class="src">—— Session 101 · (101.4)</span>
+    </div>
+    <p>Ra 的回答里有两处值得停下来的细节。其一，是<b>时机</b>：负面朋友挑的不是 Jim 最糟的时候，而是他正在好转的时候——愤怒/挫败的模式正在消退，说明功课快结业了，正是「加考一题」的窗口。其二，是<b>容易</b>：昆虫「轻易」被引动去攻击，长期过敏的物理载具也「轻易」被引入淋巴失效的机制——通道两端的门本来就虚掩着。</p>
+    <div class="case"><b>赛前陪练：</b>拳手状态回升、眼看要出成绩，陪练突然把对抗强度调到最狠——陪练的动机里没有善意，但这一顿痛打客观上替他检验了新练的防守。负面朋友的处境与此类似：它按自己的极性行事，「服务」只是这场相遇的副产品。</div>
+    <div class="case"><b>感冒的上班族：</b>项目冲刺刚过、人刚松下来就病倒——你很难说清这是「倒霉」还是身体与心照不宣的合谋。Ra 会说：通道是谁不重要，重要的是这份催化剂在处理你无意识心智的哪一处架构。</div>
+  </div>
+
+  <div class="card">
+    <h3>本集术语卡</h3>
+    <p>本集围绕个案出现的一组关键术语。点击卡片翻面看解释与比喻。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">催化剂</div><div class="sub">catalyst</div><span class="tap">点击翻面</span></div><div class="back">促成成长的事件本身：它不教任何东西，只把功课送到门口。本集中，一次叮咬被「激活」为整个小组要处理的功课。<em>像健身房里加上的配重片——压上来时沉重，长出来的力量是你的。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">高我</div><div class="sub">higher self</div><span class="tap">点击翻面</span></div><div class="back">投生体验中「作为造物主的自我」：站在时间/空间之外的那部分你。Ra 说它是催化剂向心智、身体或灵性提供服务的「基底」——一切包裹的发货方。<em>像放映厅后排的导演：银幕上的角色以为剧情是偶遇，完整剧本却一直在他手里。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">负面朋友</div><div class="sub">fifth-density negative friend</div><span class="tap">点击翻面</span></div><div class="back">第五密度的负面极性实体，以施加催化剂的方式「服务」正面极性的追求者。它按自己的极性行事，并不打算帮你，却客观上构成了你的加练。<em>像球场上最凶的那位陪练：对抗是真的，你的成长也是真的。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">黄色光芒身体</div><div class="sub">yellow-ray body</div><span class="tap">点击翻面</span></div><div class="back">物理身体在形而上层面的对应层。本集的「工作」就发生在它的淋巴系统里——身体症状是下游，能量层的运作是上游。<em>像房子与图纸：吃药修的是房子，形而上援助改的是图纸。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">蜂群心智</div><div class="sub">hive mentality</div><span class="tap">点击翻面</span></div><div class="back">第二密度群体生物（如蜂群）的心智：作为一个整体，可以被一个强大的形而上冲动影响。这是 Ra 愿意确认的「不容置疑的真理」。<em>像整支舰队只听一个舵令——舵令一动，全体转向。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">责任法则</div><div class="sub">Law of Responsibility</div><span class="tap">点击翻面</span></div><div class="back">接近光的荣耀随之而来的法则：负责克制傲慢、不和谐，以及一切内在未解决时会为失衡「工作」开路的东西。<em>像拿着强光手电走夜路的人——光越亮，越要看好自己的脚下。</em></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>延伸一问：发问者自己的病与蜂群</h3>
+    <div class="q">发问者突然想到一桩自己的事：他上周生了一场病，而附近恰有大量蜜蜂。他猜，那是高我的行动——为的是让他别搬去蜂群密集的地方。Ra 怎么接？</div>
+    <p>Ra 划了一条清晰的线：<b>不评论发问者的身体变貌</b>——那是他自己要处理的功课——只确认一条普遍真理：</p>
+    <div class="quote">
+      <p class="en">…a hive mentality as a whole can be influenced by one strong metaphysical impulse.</p>
+      <p class="zh">……蜂群心智作为一个整体，可以被一个强大的形而上冲动所影响。</p>
+      <span class="src">—— Session 101 · (101.5)</span>
+    </div>
+    <p class="plain">虫群的攻与不攻，确有形而上的开关；但 Ra 不替任何个体下诊断——「你的病是不是高我安排的」这个问题，被温和地留给了发问者自己。</p>
+    <div class="case"><b>搬家前夜：</b>定好搬进新公寓的第二天，孩子在新学校发烧、家里水管又漏——你盯着天花板想：这是巧合还是「宇宙在暗示」？Ra 对这类问题的回应方式值得学：普遍规律可以讲，个人剧本不代读。</div>
+    <div class="case"><b>蜂农的常识：</b>养蜂人都知道，蜂群的集体行为可以被一个微小的信号点燃——一缕气味、一次震动，整群就换一种状态。Ra 说的正是这种「整体可被单点推动」的结构，只是他把推动力放到了形而上层面。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 04 盐、水与扫帚 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>盐、水与扫帚：为什么好房子也要清洁</h2></div>
+  <p class="sec-lead">小组即将搬入亚特兰大 Oakdale Road 的新址。发问者想确认：这处住所的「思想形式参数」是否好到可以免掉清洁？Ra 的回答只有一个词——「不」。接下来的两问一答，给出了一套完整的搬入规程。</p>
+
+  <div class="card">
+    <h3>先回答「不」：任何住所都要基本清洁</h3>
+    <div class="q">发问者预设了两种可能：房子「天生干净」就不用清洁，有残留才要。Ra 拒绝了这个二分法。</div>
+    <div class="quote">
+      <p class="en">Are the thought-form parameters and other general parameters of the Oakdale Road address in Atlanta such that no cleansing would be necessary, if Ra has this information?…No.</p>
+      <p class="zh">亚特兰大 Oakdale Road 地址的思想形式参数与其他一般参数，是否好到无需清洁？……不。</p>
+      <span class="src">—— Session 101 · (101.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">We note that any residence, whether previously benign (as is the one of which you speak) or previously of malignant character, needs the basic cleansing of the salt, water, and broom.</p>
+      <p class="zh">我们注意到：任何住所——无论之前是良性的（如你所说的这处），还是之前带有恶性特征——都需要盐、水与扫帚的基本清洁。</p>
+      <span class="src">—— Session 101 · (101.7)</span>
+    </div>
+    <p class="plain">清洁的对象不是「脏房子」，而是「搬入」这件事本身：不管上一任留下了什么，新住者都要以同样的动作接管这个空间——差别只在流程的繁简。</p>
+    <div class="case"><b>新办公室第一天：</b>行政接手新楼层，哪怕上一家公司文明体面，也会全屋消毒、重设门禁、贴上新的团队守则——动作的意义不在除污，而在声明「从今天起，这里按我们的规矩运转」。</div>
+    <div class="case"><b>两套房子的对比：</b>一套前任屋主其乐融融，一套发生过激烈争吵——按 Ra 的标准，两者要做的基本清洁一模一样；区别只是前者可以分两段从容进行。</div>
+  </div>
+
+  <div class="card">
+    <h3>这套房子的规程：分两段，盐作封印</h3>
+    <div class="q">具体怎么做？Ra 给出的是一个可以照着执行的流程——甚至细致到「谁可以被放行」。</div>
+    <div class="demo-area">
+      <div class="flow-track" id="flowClean"></div>
+      <div class="flow-detail" id="detailClean"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="prevClean">上一步</button>
+        <button class="tri-btn" id="nextClean">下一步</button>
+      </div>
+    </div>
+    <div class="quote">
+      <p class="en">Let no person pass without permission being asked of the salt.</p>
+      <p class="zh">未经向盐请求许可，不要让任何人通过。</p>
+      <span class="src">—— Session 101 · (101.7)</span>
+    </div>
+    <p>盐被请求「作为封印，却放行像你们这样的温和灵魂」——而且要对这种物质说话、逐一命名需要通过的实体。封印不是封闭，而是一份点名通过的名单。</p>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 05 收官 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>收官：责任法则与「在真理中寻找爱」</h2></div>
+  <p class="sec-lead">本集最后一问把镜头转向一位不在场的人：Greta Woodrew，同样为肿胀所苦。Ra 借这个问题留下的，是一段对「支持者」的普遍教导——它恰好与本集开头的蛇与毒牙遥遥相对：让「工作」开路的，从来是内在未解决的东西。</p>
+
+  <div class="card">
+    <h3>接近光的人，要管好内在的肿胀</h3>
+    <div class="q">发问者想为 Greta Woodrew 寻求缓解肿胀的信息。Ra 没有给医疗建议，而是指出她处境里真正的课题。</div>
+    <div class="quote">
+      <p class="en">We may only suggest that the honor of propinquity to light carries with it the Law of Responsibility.</p>
+      <p class="zh">我们只能建议：接近光的荣耀，随附着责任法则（Law of Responsibility，越靠近光，越要负责不让内在失衡为祸）。</p>
+      <span class="src">—— Session 101 · (101.8)</span>
+    </div>
+    <p>责任的内容，是<b>克制傲慢、不和谐，以及一切内在未解决时会为「工作」开路的东西</b>——这与 Jim 的肿胀是同一个道理的两面：内在未解决的东西，正是让这类「工作」得以发生的那扇门。</p>
+    <div class="quote">
+      <p class="en">The entity which is given constant and unremitting approval by those surrounding it suffers from the loss of the mirroring effect of those which reflect truthfully rather than unquestioningly.</p>
+      <p class="zh">被周围人给予持续且不间断之认可的实体，会因失去那些如实反映、而非不加分辨地附和之人所提供的镜子效应而受苦。</p>
+      <span class="src">—— Session 101 · (101.8)</span>
+    </div>
+    <p class="plain">追捧会让人失明：支持者的职责不是评判、也不是仰慕，而是做一面如实反映的镜子——这面镜子，被仰望的人恰恰最缺。</p>
+    <div class="case"><b>被夸大的明星员工：</b>一位骨干被全组夸了一年，方案里的窟窿没人敢点破，直到项目翻车他自己才发现——不是同事变坏了，而是持续的认可淹没了分别心，镜子效应消失了。Ra 说的正是这个组织病的形而上版本。</div>
+    <div class="case"><b>登台前的好友：</b>好友演出前问你「讲得怎么样」，你明明听到三处硬伤，却只回了句「太棒了」。本集给的分寸是：不重新拾起审判，但要让真话有位置——爱与诚实不是二选一。</div>
+  </div>
+
+  <div class="card">
+    <h3>收官金句</h3>
+    <div class="quote">
+      <p class="en">…support, be harmonious, share in love, joy, and thanksgiving, but find love within truth, for each instrument benefits from this support more than from the total admiration which overcomes discrimination.</p>
+      <p class="zh">……去支持、保持和谐、分享爱、喜悦与感恩，但在真理中寻找爱——因为每个器皿从这种支持中获益，多于从压倒分辨力的全然仰慕中获益。</p>
+      <span class="src">—— Session 101 · (101.8)</span>
+    </div>
+    <p><b>本集带走的三句话：</b>其一，智慧有两副面孔，拿它分离就会被反咬；其二，催化剂的通道很多、源头只有一个——作为造物主的自我；其三，支持一个人，就做他如实的那面镜子。</p>
+    <div class="saying">
+      <p class="en">I leave this group glorying in the love and in the light of the One Infinite Creator. Go forth rejoicing, therefore, in the power and in the peace of the Creator.</p>
+      <p class="zh">我在太一无限造物主的爱与光中荣耀地离开这个小组。因此，在造物主的大能与和平中欢欣地前行吧。</p>
+      <span class="src">—— Session 101 · (101.9) · Adonai</span>
+    </div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 101（`split/Ra_Session_101.md`）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra101-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+/* ===== 本集定制交互 ===== */
+document.querySelectorAll('.fn-card').forEach(function(c){c.onclick=function(){c.classList.toggle('open');};});
+
+/* 问答脉络推进器（本章地图） */
+initStepper('flow101','detail101','prev101','next101',[
+ {t:'开场',d:'<span class="qa-q">(101.0-101.1) 例行开场</span><b>答：</b>Ra 在爱与光中致意；器皿各能量水平因物理疼痛与近期心智/情感催化剂有所降低，但近期很可能改善。'},
+ {t:'Jim 的肿胀',d:'<span class="qa-q">问：Jim 身上的肿胀是什么造成的、怎么治？</span><b>答：</b>Ra 从「蛇象征智慧」讲起：把智慧用于分离，就是邀请智慧暗面的致命咬噬；这次「工作」发生在黄色光芒身体的淋巴系统，移除它有四个部分。(101.2)'},
+ {t:'催化剂三途径',d:'<span class="qa-q">问：催化剂是否可来自随机、高我、或相反极化实体的服务，且效果相同？</span><b>答：</b>「你的观察无可挑剔，大体正确。」(101.3)'},
+ {t:'哪条通道',d:'<span class="qa-q">问：这次叮咬具体走的是哪条途径？</span><b>答：</b>催化剂的本质决定只有一个源头——作为造物主的自我，尤其是高我；就发问者所指的意义而言，本案的通道是一位第五密度负面朋友：它注意到愤怒/挫败的模式正在消退，便轻易引动了昆虫。(101.4)'},
+ {t:'蜂群之问',d:'<span class="qa-q">问：我上周的病是不是高我让我别住到蜂群附近？</span><b>答：</b>Ra 不评论他的身体，只讲一条确定的真理：蜂群心智作为整体可被一个强大的形而上冲动影响。(101.5)'},
+ {t:'住所清洁',d:'<span class="qa-q">问：新住处参数够好、不用清洁了吗？</span><b>答：</b>「不。」任何住所——无论之前良性还是恶性——都需要盐、水、扫帚的基本清洁。(101.6-101.7)'},
+ {t:'Greta 的处境',d:'<span class="qa-q">问：怎么帮 Greta Woodrew 缓解肿胀？</span><b>答：</b>接近光的荣耀带着责任法则；被持续认可的实体需要那面如实反映的镜子——支持，但在真理中寻找爱。(101.8)'},
+ {t:'收尾',d:'<span class="qa-q">(101.9) 例行收尾</span><b>答：</b>转移能量已用尽、器皿正动用生命储备；Ra 建议尽量完全依靠转移的性能量，并感谢支持小组的认真。'}
+]);
+
+/* 清洁规程推进器 */
+initStepper('flowClean','detailClean','prevClean','nextClean',[
+ {t:'先做再说',d:'<b>任何住所都要清洁。</b>Ra 把话先说定：不管这套房子之前是良性还是恶性，盐、水、扫帚的基本清洁都省不掉。(101.7)'},
+ {t:'分两段',d:'<b>良性住所可分两段。</b>第一段清洁时只从一个开口进出；其余开口全部封好，之后换过来处理剩下的那一处。'},
+ {t:'盐作封印',d:'<b>盐放在未封闭的开口。</b>请求这种物质充当封印，同时放行像你们这样的温和灵魂——封的是来路不明者，不是一切。'},
+ {t:'点名放行',d:'<b>对盐说话、逐一命名。</b>需要通过的每个实体都要向盐请求许可；未经请求，任何人都不得通过。'}
+]);
+
+/* 归类练习：四路处方各管哪一层 */
+initSorter('sorterArea',[
+ {a:'请 Stuart 用较强的化学手段唤醒组胺反射、帮助消除水肿',opts:['身体措施','形而上支持','内在功课'],ans:'身体措施',exp:'Ra 说的是「强效的化学手段」——直接作用于黄色光芒物理身体的药物手段。'},
+ {a:'请 Bob 聚焦援助该实体与黄色光芒身体的形而上连接',opts:['身体措施','形而上支持','内在功课'],ans:'形而上支持',exp:'这是 Ra 建议继续的第二个部分：请求一位帮助者聚焦形而上层面的连接。'},
+ {a:'注意身体对钾的需要，吃香蕉',opts:['身体措施','形而上支持','内在功课'],ans:'身体措施',exp:'补钾是纯物理层面的配合——载具缺什么就补什么。'},
+ {a:'把「傲慢的肿胀」与眼前的处境联系起来看',opts:['身体措施','形而上支持','内在功课'],ans:'内在功课',exp:'这是对着心智与态度下的功夫：内在未解决的东西才会为「工作」开路。'},
+ {a:'和谐小组的支持，以及冥想',opts:['身体措施','形而上支持','内在功课'],ans:'形而上支持',exp:'Ra 说「一如既往，和谐小组的支持是一种帮助，冥想也是」——同时提醒这位实体在冥想上需要额外的纪律。'}
+]);
+
+renderPath();
+</script>
+</body>
+</html>

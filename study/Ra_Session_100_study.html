@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 100 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 100 · 交互式学习模块</h1>
+  <p class="sub">这一集为心智组塔罗收尾：第六号牌的拉力与第七号牌的帷幕，合起来回答一个问题——心智的转化怎样才算真的发生。</p>
+  <div class="tagline">6 个主题 · 6 个学习步骤 · 24 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本集地图</a>
+<a href="#s2">② 第六号牌·拉力</a>
+<a href="#s3">③ 第七号牌·帷幕</a>
+<a href="#s4">④ 极性与援助</a>
+<a href="#s5">⑤ 符号读法</a>
+<a href="#s6">⑥ 收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>两条线怎么交织：照料器皿的例行问答，与第六、七号牌的塔罗研读</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>第六号牌：拉力与转化</b><span>谁在指路、谁在转身，以及为什么摇摆不等于转化</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>第七号牌：帷幕与环境</b><span>大道为什么不是第七步，帷幕为什么既掀开又仍在</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>极性与有限视野</b><span>正面为什么有更多援助，负面又为什么更依赖帷幕</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>符号读法与归类练习</b><span>王冠、狮身人面像、剑与权杖：哪些释放、哪些深读、哪个留给学生</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官：金句与伏笔</b><span>一句带走的话，和留给下一集的两个尾巴</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ 第 1 章 · 本集地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本集地图：照料器皿与塔罗收尾的两条线</h2></div>
+  <p class="sec-lead">第 100 集是塔罗「大道」系列的一次紧凑续讲。发问者带着两条线进场：一条是对器皿的照料与一次受人之托的短暂提问（收进下方折叠区），一条是心智组第六、七号牌的研读——后者才是本集的主菜。先用推进器把整集问答链走一遍，再进各章细读。</p>
+
+  <div class="card">
+    <h3>本集在全书中的位置</h3>
+    <p>发问者开场就借用了上一集的成果——他自己复述了「视野的局限是所有变貌的源头」这一说法来推演新问题（100.9）；又在研读第六号牌时预告「我们可能会在下一场集会回到这张牌，研究了 Ra 的评论之后再做更多观察」（100.7）。所以本集是一段<strong>承上启下的走廊</strong>：上一集的结论在这里被拿来推演，下一集的功课在这里被布置。</p>
+    <p>主要议题清单：① 器皿泡漩涡水后头晕 ② 受托问「昴宿星接触」 ③ 第六号牌：交叉手臂的拉力 ④ 第七号牌：帷幕与环境 ⑤ 极性与援助 ⑥ 王冠、狮身人面像、剑与权杖的读法 ⑦ 收尾致谢。</p>
+  </div>
+
+  <div class="card">
+    <h3>问答脉络推进器</h3>
+    <p>从器皿状态到收官致谢，本集的问答链一共八步。点节点或用按钮走一遍，先看清对话怎么展开。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="flowTrack1"></div>
+      <div class="flow-detail" id="flowDetail1"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="flowPrev1">← 上一步</button> <button class="tri-btn" id="flowNext1">下一步 →</button></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>本集基调：把「超越极限」放到两个坐标系里看</h3>
+    <p>开场那组照料问答看似琐碎，Ra 却借它给出了一句很有分量的总纲——同一件事（超越极限），换一个坐标系，评价就不同。</p>
+    <div class="quote">
+      <p class="en">If one considers the metaphysical or time/space aspect of an incarnation, this is a fortunate and efficient use of catalyst as the will is constantly being strengthened. And, further, if the limitations are exceeded in the service of others the polarization is also most efficient.</p>
+      <p class="zh">若从一次投生的形而上、时间/空间面向看，不断超越极限是对催化剂幸运而高效的使用——意志被持续强化；而且，若超越极限是在服务他人中发生的，极化也最高效。</p>
+      <span class="src">—— Session 100 · (100.3)</span>
+    </div>
+    <p>紧接着 Ra 话锋一转：在空间/时间（物理身体）的框架里，仍要掂量殉道的价值。器皿泡漩涡水后的头晕，大部分正是来自她坚持泡过身体极限的时长。</p>
+    <div class="case"><b>志愿者的周末：</b>一位上班族连续三个月把周末排满社区助老服务，自己开始失眠，仍觉得「多做总没错」。从内在成长（时间/空间）看，这份坚持确实在磨砺意志；但就身体这份本钱（空间/时间）看，透支并不自动等于服务——Ra 请器皿先想想殉道的价值，再决定要不要继续泡超出极限的时长（100.3）。</div>
+    <div class="case"><b>朋友圈里的「外星讯息」：</b>某天群里疯传一位自称接触昴宿星实体的通灵者截图，一半内容暖心、一半来源可疑。Ra 面对同类提问的示范是三步：不评判该接触的价值、不确认它是纯正星际联邦接触、只承认记录里有正面材料——最后补一句：一切通讯都属于太一无限造物主在无限变貌中的通讯（100.4）。</div>
+  </div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 后勤 · 受托之问</span></summary>
+  <div class="body">
+    <p><b>(100.1) 器皿状态：</b>与先前所述相同，唯生命能变貌比上次询问时更偏向「力量/弱点」一端。</p>
+    <p><b>(100.2-100.3) 漩涡水头晕：</b>不是水的错——头晕大部分来自器皿坚持浸泡超过物理极限的时长（另有致意助澜）；建议：有氧运动后隔至少三小时（最好五小时）、步行后隔至少四十分钟（最好加倍）再泡。</p>
+    <p><b>(100.4-100.5) 昴宿星接触：</b>受 Stevens 上校之托代问瑞士 Billy Meier 的接触——Ra 不评判、不确认来源纯正、只指出其中有正面材料；因信息只是对上校已有观念的确认，转告许可「自由地给予」。</p>
+    <p><b>(100.12) 45 分钟信号：</b>Ra 重申终止时刻的选择完全属于发问者，直到器皿开始动用生命资源为止；器皿一如既往保持开放。</p>
+  </div></details>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 2 章 · 第六号牌 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>第六号牌：两股拉力之间，转化如何发生</h2></div>
+  <p class="sec-lead">发问者盯着牌面看出了一个新细节：交叉的双臂形成两股拉力——右侧的女性拉左手会把「他」转向右，左侧反之。他猜这正是「纠缠的双臂」的含义：拉力试图把实体转向左手或右手路径。Ra 顺着这个观察，把整张牌的机制讲透了。</p>
+
+  <div class="card">
+    <h3>谁在指路，谁在转身</h3>
+    <div class="q">发问者预设两侧的拉力都在「使劲拽」——Ra 的回答先分清了角色：其实只有一边能动。</div>
+    <div class="quote">
+      <p class="en">Indeed, both the prostituted and the virginal of deep mind invite and await the reaching.</p>
+      <p class="zh">深层心智中的「娼妓」与「处女」都邀请并等待着被触及——两个方向都准备好了回应意识的伸手。</p>
+      <span class="src">—— Session 100 · (100.6)</span>
+    </div>
+    <p>Ra 请学生用「意识（牌中的男性）／潜意识（牌中的女性）」的框架来看这道拉力：两位女性代表深层心智（deep mind，意识水面之下的心智层）的两副面孔，它们各自指向一条路，都在等意识伸手。</p>
+    <div class="quote">
+      <p class="en">In this image of Transformation of Mind, then, each of the females points the way it would go but is not able to move; nor are the two female entities striving to do so. They are at rest.</p>
+      <p class="zh">在这张心智转化的图像中，每位女性都指出它想去的方向，却动不了，也不试图去动——她们静止着。</p>
+      <span class="src">—— Session 100 · (100.6)</span>
+    </div>
+    <div class="plain">潜意识只负责指出方向并等待；真正握住两边、决定往哪边转的，是意识。</div>
+    <div class="case"><b>两份 offer 的人：</b>一位工程师同时拿到两家公司的录用通知，两位猎头各自把自家方向讲得清清楚楚，但都不替他签字——指路的活归她们，转身的动作归握着两份合同的他。牌中静止的女性正是这个位置（100.6）。</div>
+  </div>
+
+  <div class="card">
+    <h3>本集高频词速查（点卡片展开）</h3>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">深层心智</div><div class="sub">deep mind</div><span class="tap">点开</span></div><div class="back">意识水面之下的心智层，牌面上两位「女性」居住的地方；转化的关键动作发生在它身上。<em>像一座地下室的仓库：东西都在，门要由楼上的你来开。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">意识与潜意识</div><div class="sub">conscious / unconscious</div><span class="tap">点开</span></div><div class="back">本集牌面中分别由男性与女性代表：意识是握住两边、会被拉来拉去的那位；潜意识指出方向、静止等待。<em>方向盘在你手里，导航只负责标出路线。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">心智转化</div><div class="sub">Transformation of Mind</div><span class="tap">点开</span></div><div class="back">从被幻象锁住到真正「转身」的过程；不是左右摇摆，而是一次放弃加上一次转身。<em>风扇从左右摇头改成定向吹风——差别不在风力，在转向。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">帷幕</div><div class="sub">veil</div><span class="tap">点开</span></div><div class="back">意识与深层心智之间的帘幕；第七号牌上它被画成「既掀开又仍在」，掀开它是逐步的工作。<em>像晨雾慢慢散开：能见度一点点变好，但没有哪一刻雾「全」散了。</em></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>摇摆不是转化</h3>
+    <div class="q">既然两侧都在拉，是不是两边力气比一比、输的那边认输，就算转化了？Ra 说不——光有拉力，只会摇摆。</div>
+    <div class="quote">
+      <p class="en">The conscious entity holds both and will turn itself one way or the other, or potentially backwards and forwards, rocking first one way, then the other, and not achieving the Transformation.</p>
+      <p class="zh">有意识的实体握住两者，会转向一边或另一边，也可能前后摇摆——先偏向一边，再偏向另一边，而始终未达成转化。</p>
+      <span class="src">—— Session 100 · (100.6)</span>
+    </div>
+    <p>发问者猜「转化通过拉力发生」；Ra 确认了拉力的存在，又补上了关键的后半句——拉力本身造不出转身。</p>
+    <div class="plain">心智转化要发生，必须放弃一个支配深层心智使用的原则——Ra 没说那是哪个原则；把它找出来，是留给每个学生的功课。</div>
+    <div class="case"><b>纠结换工作的人：</b>一位做了八年会计的上班族，半年里一会儿投简历、一会儿又跟猎头说再想想——家人劝跳、老同事劝留，各指一个方向；他自己握着两边的绳子左右摇摆，半年过去，人还在原地。这正是 Ra 说的「前后摇摆而未达成转化」：拉力不缺，缺的是转身（100.6）。</div>
+    <div class="case"><b>深夜的智能手机：</b>一个人躺下前对自己说「再刷十分钟」，两小时后还在刷——「想睡的自我」与「想刷的自我」都在指方向，但都替他动不了；只要他心里那个「睡前刷手机是给自己的奖励」式的旧原则还在，转身就不会发生。至于该放弃的是哪个原则，每个人要自己找（100.6）。</div>
+    <div class="case"><b>不替来访者选边的咨询师：</b>一位来访者把两位家人的意见都摆在咨询师面前，希望对方给个结论；咨询师只是帮他把两股力量都看清楚——像牌中静止的女性，指出方向但不移动，转身的动作必须由来访者自己完成（100.6）。</div>
+  </div>
+
+  <div class="card">
+    <h3>条件模拟器：心智的转化何时发生？</h3>
+    <p>Ra 没有点名那个「必须被放弃的原则」，但转化需要什么，本集已给出线索。拨动开关，看看三种条件怎样决定结果。</p>
+    <div class="cond-row"><div class="name">放下摇摆<small>意识握住两边，不再被一侧拖走</small></div><label class="switch"><input type="checkbox" id="mindCond1" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">放弃那个旧原则<small>放弃一个支配深层心智使用的原则（Ra 未说明是哪个）</small></div><label class="switch"><input type="checkbox" id="mindCond2" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">给时间留出空间<small>心智在时间中成熟、移动、被转化，不能催熟</small></div><label class="switch"><input type="checkbox" id="mindCond3" checked><span class="slider"></span></label></div>
+    <div id="condResult"></div>
+  </div>
+
+  <div class="card">
+    <h3>藏在图里的三角形</h3>
+    <div class="q">牌面还有构图信息可用吗？Ra 特别提醒学生注意一个几何形状。</div>
+    <div class="quote">
+      <p class="en">It is to be noted that the triangular shape formed by the shoulders and crossed elbows of consciousness is a shape to be associated with transformation. Indeed, you may see this shape echoed twice more in the image, each echo having its own riches to add to the impact of this complex of concepts.</p>
+      <p class="zh">应当注意到，由意识的肩膀与交叉双肘形成的三角形，是一个与转化相关的形状；而这个形状在图像中又回响了两次，每次回响都为这组概念复合体增添自己的丰富性。</p>
+      <span class="src">—— Session 100 · (100.6)</span>
+    </div>
+    <div class="analogy"><b>三脚架：</b>摄影师在山坡上架相机，三条腿撑开才稳——三角形是最不易晃动的结构。Ra 提醒学生：牌中肩肘构成的三角形与「转化」相连，且在画面里还有两处回响；读牌不只要看「谁拉着谁」，还要看形状怎么重复、加深主题。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 3 章 · 第七号牌 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>第七号牌：帷幕为什么既掀开又仍在</h2></div>
+  <p class="sec-lead">翻到第七号牌，发问者带来一份「笔记」：他把牌顶掀起的帘幕读成「意识与潜意识之间的帷幕已被移除」，随即困惑——既然移除了，为什么对智能无限的感知仍会变貌？Ra 没有直接核对细节，而是先换了一个读牌的框架。</p>
+
+  <div class="card">
+    <h3>大道 = 环境，不是第七个终点</h3>
+    <div class="q">帷幕不是已经移除了吗？Ra 的回应：先把「大道」这张牌是什么想清楚——它画的不是成就，而是处所。</div>
+    <div class="quote">
+      <p class="en">The Great Way of Mind, Body, or Spirit is intended to limn the milieu within which the work of mind, body, or spirit shall be placed.</p>
+      <p class="zh">心智、身体或灵性的大道，旨在描绘出心智、身体或灵性的工作将被放置于其中的环境。</p>
+      <span class="src">—— Session 100 · (100.7)</span>
+    </div>
+    <p>换句话说：大道牌给出的是心智工作发生在什么「房间」里，而不是第七块奖牌。读错了这一层，后面每个符号都会被读歪。</p>
+    <div class="plain">第七号牌不是「第七个成就」，而是心智工作所在的那个房间。</div>
+    <div class="case"><b>书房与单词：</b>一个人把新书房收拾得一尘不染，台灯、词典一样不缺，却迟迟没开始背单词——房间不替他学习，只决定他在哪里学。Ra 请学生这样读大道牌：它是心智工作的处所，不是完成工作的证明（100.7）。</div>
+    <div class="case"><b>健身房的年卡：</b>办卡那一刻的环境变化是真的，但肌肉的变化要靠之后每一次训练——把「大道」读成环境，就像把年卡读成「练习发生的地方」，而不是「已经练成」的证书（100.7）。</div>
+  </div>
+
+  <div class="card">
+    <h3>帷幕的两重性：既掀开，又仍在</h3>
+    <div class="q">那帷幕到底是被移除了，还是没有？Ra 的回答：两个都对了一半——牌面画的就是这个「中间态」。</div>
+    <div class="quote">
+      <p class="en">Thusly the veil is shown both somewhat lifted and still present, since the work of mind and its transformation involves progressive lifting of the great veil betwixt conscious and deep minds.</p>
+      <p class="zh">因此帷幕被画成既部分掀开又仍然存在，因为心智的工作及其转化，涉及的正是逐步掀起意识与深层心智之间那道大帷幕。</p>
+      <span class="src">—— Session 100 · (100.7)</span>
+    </div>
+    <p>Ra 还补了一个边界：这一尝试的完全成功，严格来说并不属于第三密度的工作，尤其不属于第三密度的心智过程——所以别指望在本密度把帷幕掀完。</p>
+    <div class="plain">掀帷幕是逐步的过程，第三密度做的是「掀」这件事本身，不是「掀完」。</div>
+    <div class="case"><b>写了十年日记的人：</b>逐年翻旧日记，能越来越清楚地看见自己情绪的来路——帷幕被一点点掀起；但「完全看透自己」从未在某一页突然达成。Ra 说的正是这个节奏：完全的成功不属于第三密度的工作（100.7）。</div>
+    <div class="analogy"><b>配眼镜：</b>每次换一副度数更合适的眼镜，世界就清楚一截——但没人指望一次配镜就看见「全部真相」。第三密度的功课是持续更换镜片，这正是帷幕「既掀开又仍在」的样子。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 4 章 · 极性与援助 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>极性与有限视野：正面为何有更多援助</h2></div>
+  <p class="sec-lead">顺着帷幕的左右高度差，发问者做了两个推论：其一，右边掀得更高，说明正面行家更容易穿透帷幕；其二，既然上一集说过「视野的局限是所有变貌之源」，那么左手路径（服务自我）的存在是否依赖帷幕的持续遮掩？Ra 对两问都给了有分寸的肯定。</p>
+
+  <div class="card">
+    <h3>潜在的成功</h3>
+    <div class="q">右边帷幕掀得更高，是不是说选正面极性的行家更容易成功？Ra 先接受，再限定。</div>
+    <div class="quote">
+      <p class="en">This is a true statement if it is realized that the questioner speaks of potential success. Indeed, your third-density experience is distorted or skewed so that the positive orientation has more aid than the so-called negative.</p>
+      <p class="zh">若认识到发问者说的是「潜在的成功」，这是一个真实的陈述。确实，你们的第三密度经验被变貌或倾斜，使得正面导向比所谓的负面导向拥有更多援助。</p>
+      <span class="src">—— Session 100 · (100.8)</span>
+    </div>
+    <div class="plain">第三密度的天平确实向正面倾斜——但援助更多只是「潜在的成功」，不等于已经抵达。</div>
+    <div class="case"><b>表彰栏里的小红花：</b>学校给「主动帮助同学」的行为额外的表彰与辅导资源——环境确实向正面倾斜；但拿到小红花不等于真的养成了帮助的习惯。Ra 强调发问者说的只是「潜在的成功」：援助多了，路还是要自己走（100.8）。</div>
+    <div class="case"><b>导航软件的避堵路线：</b>地图会把更顺畅的路线排到前面，给走对方向的人更多「援助」；但方向盘仍在司机手里——推荐更多，不等于已到达（100.8）。</div>
+  </div>
+
+  <div class="card">
+    <h3>两种极性都站在有限视野上</h3>
+    <div class="q">发问者进一步推演：左手路径是不是靠帷幕「活着」——帷幕散了它就没了？Ra 说：你的推论里有逻辑的线索，但两种极性的依赖方式不同。</div>
+    <div class="quote">
+      <p class="en">The polarities are both dependent upon a limited viewpoint. However, the negative polarity depends more heavily upon the illusory separation betwixt the self and all other mind/body/spirit complexes.</p>
+      <p class="zh">两种极性都依赖于有限的视野。然而，负面极性更严重地依赖于自我与所有其他心/身/灵复合体之间虚幻的分离。</p>
+      <span class="src">—— Session 100 · (100.9)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The positive polarity attempts to see through the illusion to the Creator in each mind/body/spirit complex, but for the greater part is concerned with behaviors and thoughts directed towards other-selves in order to be of service.</p>
+      <p class="zh">正面极性试图穿透幻象，在每一个心/身/灵复合体中看见造物主；但其大部分关注的，是指向其他自我、以便提供服务的行为与思想。</p>
+      <span class="src">—— Session 100 · (100.9)</span>
+    </div>
+    <p>而这份服务态度本身，Ra 说，「充满了你们第三密度幻象的素材」——正面也不在幻象之外，只是它穿透幻象的方向不同。</p>
+    <div class="plain">负面靠「分离」的幻象存活；正面试图穿透幻象，但它的日常功课（服务的行为与思想）本身仍是第三密度的素材。</div>
+    <div class="case"><b>帮邻居搬家的下午：</b>几位志愿者帮独居老人搬家具，心里清楚是「我」在帮「他」——这份帮助真实而可贵，却仍建立在「你我有别」的日常感之上；Ra 说正面极性大部分正是这样：指向其他自我的行为与思想（100.9）。</div>
+    <div class="case"><b>诈骗电话的剧本：</b>话务员把听筒另一端的人只当作「可利用的对象」——整套话术全靠「我与他人是分离的、他人只是工具」这层幻象才能运转；负面极性对分离幻象的依赖最重（100.9）。</div>
+    <div class="case"><b>遮住一半的拼图参照图：</b>玩家蒙住参照图的一半仍能凭记忆与逻辑拼下去——极性这场游戏需要「有限视野」才玩得起来；Ra 确认两种极性都依赖有限的视野，只是负面依赖得更重（100.9）。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 5 章 · 符号读法 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>符号读法：哪些释放、哪些深读、哪个留给学生</h2></div>
+  <p class="sec-lead">第七号牌上还有一整排「装备」：三星王冠、狮身人面像、剑与权杖。发问者逐一猜义，Ra 逐一定调——有的读法要松绑，有的要换框架，有一个问题干脆交还给学生。</p>
+
+  <div class="card">
+    <h3>先立框架：大道不是「七个活动的顶点」</h3>
+    <div class="q">发问者习惯把七张大道牌当成一条升级链来读——Ra 在回答狮身人面像时，先把这个前提纠正了。</div>
+    <div class="quote">
+      <p class="en">Firstly, we ask that the student consider the Great Way not as the culmination of a series of seven activities or functions but as a far more clearly delineated image of the environment within which the mind, body, or spirit shall function.</p>
+      <p class="zh">首先，我们请学生不要把大道视为一系列七个活动或功能的顶点，而将它视为一幅远为清晰描绘出「心智、身体或灵性将在其中运作之环境」的图像。</p>
+      <span class="src">—— Session 100 · (100.11)</span>
+    </div>
+    <div class="plain">大道牌不是通关证书，而是「地图」：它画的是工作发生的环境。框架立对了，符号才不会读歪。</div>
+    <div class="case"><b>拿错请柬的人：</b>他把「公司第七年庆功宴」的请柬当成了「第七年成就证书」，同事提醒：请柬上印的是晚宴地点——框架一换，整张纸的读法就变了。读大道牌同理：先分清它是「环境图」还是「里程碑」（100.11）。</div>
+    <div class="case"><b>导游的纠正：</b>游客指着老城门问「这是哪位将军的纪念碑」，导游说：这不是纪念碑，是当年的城门——同一座建筑，换一个框架，功能与意义全变。大道之于心智工作，正如城门之于进出的人流（100.11）。</div>
+  </div>
+
+  <div class="card">
+    <h3>王冠、剑、权杖：可释放的占星形状</h3>
+    <div class="q">三星王冠表示心智、身体、灵性的掌握与平衡吗？剑与权杖是不是分别代表负面与正面行家的力量？</div>
+    <div class="quote">
+      <p class="en">This device is astrological in origin and the interpretation given somewhat confusing. We deal in this image with the environment of mind. It is perhaps appropriate to release the starry crown from its stricture.</p>
+      <p class="zh">这个装置起源于占星学，所给的解释有些令人困惑。我们在这张图像中处理的是心智的环境。或许把星冠从其束缚中释放出来是适当的。</p>
+      <span class="src">—— Session 100 · (100.10)</span>
+    </div>
+    <p>剑与权杖同样被「释放」：Ra 说这些形状起源于占星学，可以从其束缚中松开。但他并未止步于此——顺着这对符号，他给出了一条真正的教导。</p>
+    <div class="quote">
+      <p class="en">We may note that there is an overriding spiritual environment and protection for the environment of the mind.</p>
+      <p class="zh">我们可以指出：在心智的环境之上，还存在一个超越性的灵性环境与保护。</p>
+      <span class="src">—— Session 100 · (100.13)</span>
+    </div>
+    <div class="quote">
+      <p class="en">We may further note that the negatively polarized adept will attempt to fashion that covenant for its own use, whereas the positively polarized entity may hold forth that which is exemplified by the astrological sword; that is, light and truth.</p>
+      <p class="zh">我们还可以进一步指出：负面极化的行家会试图把那个盟约塑造为自身所用；而正面极化的实体可以高举那由占星学之剑所例示之物——即光与真理。</p>
+      <span class="src">—— Session 100 · (100.13)</span>
+    </div>
+    <div class="plain">符号的「座位」不必硬派；真正可取的读法是：心智的环境之上有灵性的护佑——负面想把这层护佑私用，正面举起的是光与真理。</div>
+    <div class="case"><b>「平安」字牌：</b>朋友送来一块刻着「平安」的木牌，有人硬要数笔画解出吉凶，送牌人笑说：这就是个祝福的物件。Ra 对三星王冠的态度类似：占星起源的装置，硬拗意义反而「令人困惑」，不如松绑（100.10）。</div>
+    <div class="case"><b>水星逆行与丢文件：</b>有人把电脑文件丢失归咎于「水星逆行」——把天文现象硬当成生活事件的原因，正是 Ra 请学生松开的那种「束缚式」解读（100.10）。</div>
+  </div>
+
+  <div class="card">
+    <h3>狮身人面像：时间之力，不是掌握的徽章</h3>
+    <div class="q">牌中的小型实体变成了狮身人面像——是不是表示催化剂已被掌握、心智从「锁在幻象里」变得可以移动了？Ra 两个假设分开判。</div>
+    <div class="quote">
+      <p class="en">The second supposition, that of placing the creatures as the movers of the chariot of mind, has far more virtue. You may connote the concept of time to the image of the sphinx. The mental and mental/emotional complex ripens, and moves, and is transformed in time.</p>
+      <p class="zh">第二个假设——把这些生物视为心智战车的推动者——远更有价值。你可以把时间的概念与狮身人面像的图像联系起来：心智与心智/情感复合体在时间中成熟、移动并被转化。</p>
+      <span class="src">—— Session 100 · (100.11)</span>
+    </div>
+    <div class="plain">「狮身人面像=掌握催化剂」被否定；「狮身人面像=在时间中推动心智之力」被肯定——变化发生在时间里，不能催熟。</div>
+    <div class="case"><b>发面团：</b>揉好的面团要「醒」够时间才发得起来，抢时间只会得到一块死面——心智与心智/情感复合体「在时间中成熟、移动、被转化」，狮身人面像推动的正是这场不能催熟的变化（100.11）。</div>
+    <div class="case"><b>学琴的孩子：</b>老师不夸孩子「你已经掌握乐器了」，只说「你每天练，手会自己记住」——变化发生在时间里，而不是挂在一张「已掌握」的徽章上；这正是 Ra 否定第一种读法的原因（100.11）。</div>
+  </div>
+
+  <div class="card">
+    <h3>Ra 的移交：两件更合适的物品</h3>
+    <div class="q">发问者追问：除了牌上所画，有没有两件更合适的物品让第七号牌的实体握在手中？</div>
+    <div class="quote">
+      <p class="en">We leave this consideration to you, O student, and shall comment upon any observation which you may make.</p>
+      <p class="zh">我们将这个考虑留给你，哦，学生；并会对你可能做出的任何观察予以评论。</p>
+      <span class="src">—— Session 100 · (100.14)</span>
+    </div>
+    <div class="plain">Ra 不代劳——出题的是他，落笔的必须是你；他只承诺当裁判。这类「拒答」本身就是教导：思考的活儿没法外包。</div>
+    <div class="case"><b>不给开头的写作课：</b>学生问「老师，帮我想个作文开头吧」，老师说：「你来写，写什么开头我都点评。」出题权在老师，落笔权在学生——Ra 对「两件物品」的移交正是这个结构（100.14）。</div>
+    <div class="case"><b>不报底牌的猜谜：</b>猜谜主持人拒绝提前公布谜底，只说「你猜什么都算数，我来判」——把下一步动作留给猜的人；Ra 同样只当裁判、不当选手（100.14）。</div>
+  </div>
+
+  <div class="card">
+    <h3>归类练习：这个符号该怎么读？</h3>
+    <p>五个来自本集的判断题，试试你能不能像 Ra 一样给每个符号「定调」。</p>
+    <div id="sortArea1"></div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 6 章 · 收官 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>收官：一句带走，一问未完</h2></div>
+  <p class="sec-lead">45 分钟信号响起后，本集从容收束：终止时间交给发问者，感谢落在小组的和谐上，两件功课留给下一集。收尾的几段话虽短，却把 Ra 的工作方式展示得最完整。</p>
+
+  <div class="saying">
+    <p class="en">In order for the Transformation of Mind to occur, one principle governing the use of the deep mind must be abandoned.</p>
+    <p class="zh">要让心智的转化发生，必须放弃那个支配深层心智使用的原则。</p>
+    <span class="src">—— Session 100 · (100.6)</span>
+  </div>
+
+  <div class="card">
+    <h3>移交与致谢</h3>
+    <div class="quote">
+      <p class="en">The choice of termination time, as you call it, is solely that of the questioner…</p>
+      <p class="zh">终止时刻的选择——如你们所称——完全属于发问者……（直到器皿开始动用其生命资源为止：决定权在发问者，界线在器皿的资源。）</p>
+      <span class="src">—— Session 100 · (100.12)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This is always the greatest boon to improvement of the contact, for it is the harmony of the group which supports this contact.</p>
+      <p class="zh">这始终是改善接触的最大恩赐，因为正是小组的和谐支撑着这个接触。</p>
+      <span class="src">—— Session 100 · (100.15)</span>
+    </div>
+    <div class="case"><b>何时结束深夜长谈：</b>陪朋友聊天到深夜，什么时候该收？看钟表不如看状态——一旦对方开始透支，再谈就是消耗。Ra 把终止时刻完全交给发问者，但划出界线：直到器皿开始动用生命资源为止（100.12）。</div>
+    <div class="case"><b>读书会散场时的道谢：</b>某次读书会结束后大家多留了十分钟互相道谢，下一次讨论的质量明显更好——小组的和谐不只是气氛，它在托住每一次「接触」的质量；Ra 说这正是改善接触的最大恩赐（100.15）。</div>
+  </div>
+
+  <div class="card">
+    <h3>留给下一集的伏笔</h3>
+    <p><b>伏笔一：</b>发问者说会在研究 Ra 本集的评论后，于下一场集会回到第六号牌，做更多观察（100.7）。<br><b>伏笔二：</b>「两件更合适的物品」由学生自己想好再带来，Ra 届时点评（100.14）。<br><b>留给读者的问题：</b>那个「必须被放弃的、支配深层心智使用的原则」究竟是什么——Ra 全程没有明说。这道题从第 100 集起，交到了每一个读者手里。</p>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 100（`split/Ra_Session_100.md`）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra100-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+/* 问答脉络推进器（第 1 章地图） */
+initStepper('flowTrack1','flowDetail1','flowPrev1','flowNext1',[
+ {t:'器皿状态',d:'<span class="qa-q">问：这个器皿今天状态如何？</span><b>答：</b>与先前所述相同，只是生命能（vital energy）比上次询问时更偏向「力量/弱点」一端（100.1）。'},
+ {t:'漩涡水与头晕',d:'<span class="qa-q">问：泡漩涡水后很晕，是水有问题吗？</span><b>答：</b>晕不是水的问题：大部分源头是器皿坚持浸泡超过物理极限的时长，少部分来自致意；Ra 给出间隔建议——有氧运动后至少三小时（最好五小时）、步行后至少四十分钟（最好加倍）再泡（100.2-100.3）。'},
+ {t:'受托之问：昴宿星接触',d:'<span class="qa-q">问：瑞士 Billy Meier 的接触是纯正的星际联邦接触吗？</span><b>答：</b>Ra 不评判形而上接触的价值，也无法确认其为纯正联邦接触，只指出记录中有正面材料——一切通讯都属于太一无限造物主在无限变貌中的通讯（100.4）。'},
+ {t:'第六号牌：交叉手臂',d:'<span class="qa-q">问：交叉的双臂是不是说转化来自两股拉力？</span><b>答：</b>部分对：两侧的女性（深层心智）指出方向却静止等待；握住两者的意识可以左右摇摆而不转化——真正的转化要求放弃一个支配深层心智使用的原则（100.6）。'},
+ {t:'第七号牌：帷幕',d:'<span class="qa-q">问：帷幕不是已经被移除了吗？</span><b>答：</b>换框架读：大道画的是心智工作的「环境」；帷幕既部分掀开又仍在，逐步掀开正是第三密度的工作，完全的成功不属于它（100.7）。'},
+ {t:'正面为何有更多援助',d:'<span class="qa-q">问：右边帷幕掀得更高，是不是正面行家更容易穿透？</span><b>答：</b>就「潜在的成功」而言为真：第三密度经验向正面倾斜，正面导向比负面有更多援助；而两种极性其实都依赖有限的视野（100.8-100.9）。'},
+ {t:'符号读法',d:'<span class="qa-q">问：王冠、狮身人面像、剑与权杖各是什么意思？</span><b>答：</b>王冠与剑、权杖是占星装置，可从束缚中释放；狮身人面像的「掌握」读法被否定，更有价值的是把它读作在时间中推动心智战车之力（100.10-100.13）。'},
+ {t:'收官',d:'<span class="qa-q">问：还有什么能改善接触？</span><b>答：</b>一切都好——正是小组的和谐支撑着这个接触；学生留了两件事给下一集：回到第六号牌，以及自己提出两件更合适的物品（100.14-100.15）。'}
+]);
+
+/* 归类练习（第 5 章）：每个符号该怎么读 */
+initSorter('sortArea1',[
+ {a:'三星王冠——它表示心智、身体、灵性的掌握与平衡吗？',opts:['占星·可释放','原型·有深意','留给学生'],ans:'占星·可释放',exp:'Ra 说它起源于占星学、所给的解释有些令人困惑，宜把星冠从其束缚中释放；这张牌的主题是「心智的环境」（100.10）。'},
+ {a:'帷幕——意识与潜意识之间的那道帘幕',opts:['占星·可释放','原型·有深意','留给学生'],ans:'原型·有深意',exp:'帷幕既部分掀开又仍在：心智的转化正是逐步掀开它的过程，完全掀开不属于第三密度（100.7）。'},
+ {a:'狮身人面像——表示催化剂已被掌握？',opts:['占星·可释放','原型·有深意','留给学生'],ans:'原型·有深意',exp:'「掌握催化剂」的读法被否定；更有价值的是把它们读作推动心智战车之力，并与时间相连——心智在时间中成熟、移动、被转化（100.11）。'},
+ {a:'剑与权杖——分别握在不同手里',opts:['占星·可释放','原型·有深意','留给学生'],ans:'占星·可释放',exp:'形状起源于占星学、可从束缚中释放；但 Ra 借之指出：心智的环境之上另有超越性的灵性环境与保护（100.13）。'},
+ {a:'第七号牌手中「更合适的两件物品」',opts:['占星·可释放','原型·有深意','留给学生'],ans:'留给学生',exp:'Ra 拒绝代劳：把这个考虑留给学生，并承诺对其任何观察予以评论（100.14）。'}
+]);
+
+/* 条件模拟器（第 2 章）：心智的转化何时发生 */
+function updateMindCond(){
+  const c1=document.getElementById('mindCond1').checked;
+  const c2=document.getElementById('mindCond2').checked;
+  const c3=document.getElementById('mindCond3').checked;
+  const box=document.getElementById('condResult');
+  let msg='';
+  if(c1&&c2&&c3){
+    msg='转化发生：意识不再摇摆，那个旧原则被放弃，心智在时间里完成转身——拉力还在，但不再是拉锯。';
+    box.classList.remove('fail');
+  }else{
+    const miss=[];
+    if(!c1)miss.push('意识仍在左右摇摆');
+    if(!c2)miss.push('那个支配深层心智的原则还没被放弃');
+    if(!c3)miss.push('没有给时间留出成熟的空间');
+    if(miss.length>=2){
+      msg='尚未转化：'+miss.join('；')+'——转化暂时不会发生。';
+    }else if(!c1){
+      msg='仍在拉锯：两位女性都指好了方向，但握着两边的意识还在原地摇摆，转身没有发生（100.6）。';
+    }else if(!c2){
+      msg='拉力未松：拉力本身不缺，缺的是「放弃那个原则」的转身动作——这就是摇摆与转化的全部差别（100.6）。';
+    }else{
+      msg='急于求成：心智/情感复合体要在时间中成熟、移动、被转化——跳过时间就跳过了转化（100.11）。';
+    }
+    box.classList.add('fail');
+  }
+  box.textContent=msg;
+}
+['mindCond1','mindCond2','mindCond3'].forEach(id=>{
+  document.getElementById(id).addEventListener('change',updateMindCond);
+});
+updateMindCond();
+
+/* 术语卡翻转（第 2 章） */
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+renderPath();
+</script>
+</body>
+</html>

@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css">
+<title>坠入极性 · 滚动星旅</title>
+<style>
+:root{
+  --amb:#f5efe2;          /* 当前场景氛围色，由 JS 实时插值 */
+  --ink:#efe9dd;
+  --ink-dim:rgba(239,233,221,.55);
+  --serif:"LXGW WenKai","霞鹜文楷","LXGW WenKai SC","Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:#070a12;color:var(--ink);font-family:var(--serif);
+  line-height:2;overflow-x:hidden;
+}
+canvas#sky{position:fixed;inset:0;width:100vw;height:100vh;z-index:0}
+
+/* ===== 进度轨道 ===== */
+#rail{
+  position:fixed;right:26px;top:50%;transform:translateY(-50%);z-index:8;
+  display:flex;flex-direction:column;gap:13px;align-items:flex-end;
+}
+#rail .r{display:flex;align-items:center;gap:10px;cursor:pointer}
+#rail .r i{
+  width:5px;height:5px;border-radius:50%;flex-shrink:0;
+  background:rgba(255,255,255,.16);transition:all .4s;
+}
+#rail .r.cur i{background:var(--amb);box-shadow:0 0 9px var(--amb);transform:scale(1.7)}
+#rail .lbl{
+  font-size:.72rem;letter-spacing:.12em;color:var(--ink);white-space:nowrap;
+  padding:3px 12px;border-radius:999px;background:rgba(7,10,18,.78);
+  border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(4px);
+  opacity:0;transform:translateX(10px);transition:all .35s ease;pointer-events:none;
+}
+#rail:hover .lbl{opacity:1;transform:none}
+#rail .r.cur .lbl{border-color:var(--amb);color:var(--amb)}
+
+main{position:relative;z-index:1}
+
+/* ===== 时刻场景（全屏居中） ===== */
+.scene{min-height:118vh;display:flex;align-items:center;justify-content:center;padding:14vh 22px}
+.stage{max-width:620px;text-align:center;opacity:0;transform:translateY(34px);filter:blur(6px);transition:opacity 1.6s ease,transform 1.6s ease,filter 1.6s ease}
+.scene.on .stage,.station.on .stage{opacity:1;transform:none;filter:blur(0)}
+.kicker{
+  font-size:.8rem;letter-spacing:.55em;text-indent:.55em;color:var(--amb);
+  margin-bottom:30px;opacity:.85;
+}
+.kicker::after{
+  content:"";display:block;width:34px;height:1px;margin:16px auto 0;
+  background:var(--amb);opacity:.5;
+}
+.narr{font-size:1.18rem;color:var(--ink);margin-bottom:38px;text-align:center}
+.en{
+  font-family:Georgia,"Times New Roman",serif;font-style:italic;
+  font-size:.98rem;line-height:1.9;color:var(--amb);opacity:.92;margin-bottom:16px;
+}
+.zh{font-size:.95rem;color:var(--ink-dim);margin-bottom:10px}
+.ref{font-size:.74rem;letter-spacing:.2em;color:rgba(239,233,221,.34)}
+
+/* ===== 站点（左钉住 · 右细节流） ===== */
+.station{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);align-items:stretch}
+.pin{
+  position:sticky;top:0;height:100vh;
+  display:flex;align-items:center;justify-content:center;padding:0 3vw;
+}
+.pin .stage{max-width:520px}
+.detail{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:10vh 5vw 10vh 0;
+}
+.frag{
+  min-height:60vh;display:flex;flex-direction:column;justify-content:center;
+  max-width:440px;
+  opacity:0;transform:translateY(30px);
+  transition:opacity 1.3s ease,transform 1.3s ease;
+}
+.frag.on{opacity:1;transform:none}
+.f-k{
+  font-size:.78rem;letter-spacing:.4em;color:var(--amb);opacity:.85;margin-bottom:18px;
+}
+.f-en{
+  font-family:Georgia,"Times New Roman",serif;font-style:italic;
+  font-size:.92rem;line-height:1.9;color:var(--amb);opacity:.9;
+  border-left:2px solid rgba(255,255,255,.18);padding-left:16px;margin-bottom:14px;
+}
+.f-zh{font-size:.93rem;color:var(--ink-dim);margin-bottom:8px}
+.f-ref{font-size:.72rem;letter-spacing:.2em;color:rgba(239,233,221,.32)}
+
+/* 开场 */
+#s0 .narr{font-size:1.5rem;letter-spacing:.1em;line-height:2.3}
+.hint{
+  margin-top:60px;font-size:.8rem;letter-spacing:.4em;text-indent:.4em;
+  color:var(--ink-dim);animation:drift 2.6s ease-in-out infinite;
+}
+@keyframes drift{0%,100%{transform:translateY(0);opacity:.45}50%{transform:translateY(9px);opacity:.95}}
+
+/* 可选演示区（如棱镜 / 时间线 / 对比路径） */
+.demo{margin:8px auto 42px}
+.timeline{position:relative;max-width:460px;margin:0 auto 42px;text-align:left;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:rgba(255,255,255,.14)}
+.tl-item{position:relative;padding:2px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:11px;height:11px;border-radius:50%;
+  background:#070a12;border:3px solid var(--amb)}
+.tl-item .t{font-weight:700;color:var(--amb);letter-spacing:.1em}
+.tl-item .d{font-size:.9rem;color:var(--ink-dim)}
+.paths{display:flex;gap:26px;justify-content:center;margin-top:46px;flex-wrap:wrap}
+.path{
+  width:210px;padding:30px 22px 26px;border-radius:16px;cursor:pointer;
+  border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.02);
+  transition:all .7s ease;
+}
+.path h3{font-size:1.05rem;letter-spacing:.3em;text-indent:.3em;margin-bottom:12px}
+.path p{font-size:.86rem;color:var(--ink-dim);line-height:1.9}
+.paths.p-a .path:not(.a),.paths.p-b .path:not(.b){opacity:.28;transform:scale(.96)}
+.paths.p-a .path.a,.paths.p-b .path.b{transform:scale(1.04)}
+
+/* 终章 */
+#sLast .en{font-size:1.06rem;line-height:2.2}
+#sLast .zh{font-size:1rem}
+.again{
+  margin-top:56px;font-family:var(--serif);font-size:.85rem;letter-spacing:.35em;text-indent:.35em;
+  color:var(--ink-dim);background:none;border:1px solid rgba(255,255,255,.14);
+  border-radius:999px;padding:11px 30px;cursor:pointer;transition:all .4s;
+}
+.again:hover{color:var(--ink);border-color:var(--amb)}
+
+footer{
+  position:relative;z-index:1;text-align:center;padding:40px 20px 56px;
+  font-size:.76rem;color:rgba(239,233,221,.3);letter-spacing:.08em;line-height:2.2;
+}
+@media (max-width:900px){
+  .station{display:block}
+  .pin{position:static;height:auto;padding:12vh 22px 2vh}
+  .pin .stage{margin:0 auto}
+  .detail{padding:0 22px 6vh;align-items:center}
+  .frag{min-height:auto;margin-bottom:7vh}
+}
+@media (max-width:640px){
+  .narr{font-size:1.05rem}
+  #s0 .narr{font-size:1.2rem}
+  #rail{display:none}
+}
+</style>
+</head>
+<body>
+
+<canvas id="sky"></canvas>
+<div id="rail"></div>
+
+<main>
+
+<!-- 0 只欠电荷 -->
+<section class="scene" id="s0" data-c="#f5efe2">
+  <div class="stage">
+    <p class="narr">线圈已经绕好，<br>势已经蓄满，<br>只欠一次极化。</p>
+    <p class="en">"The coil, as you may understand this term, is wound, is potential, is ready. The thing that is missing without polarizing is the charge."</p>
+    <p class="zh">线圈，如你可能理解的那样，是缠绕好的，是有潜能的，是就绪的。没有极化时，唯一缺席的东西，是电荷。</p>
+    <p class="ref">—— SESSION 020 · (20.10)</p>
+    <p class="hint">向下滚动 · 接上电荷 ▾</p>
+  </div>
+</section>
+
+<!-- 1 选择：造物的轴心 -->
+<section class="station" id="s1" data-c="#d9b23f">
+  <div class="pin"><div class="stage">
+    <p class="kicker">选择 · 造物的轴心</p>
+    <p class="narr">第三密度的全部功课，<br>被理则写进了最后一张牌：<br>不是知识，不是苦行，<br>是一次选择。</p>
+    <p class="en">"The polarization, or choosing, of each mind/body/spirit is necessary for harvestability from third density. The higher densities do their work due to the polarity gained in this choice."</p>
+    <p class="zh">每个心/身/灵复合体的极化或选择，是从第三密度被收割的必要条件。而更高的密度，正是靠这次选择里挣来的极性去做它们的工作。</p>
+    <p class="ref">—— SESSION 077 · (77.16)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">第二十二张牌</p>
+      <p class="f-en">"The last concept complex may best be termed The Choice."</p>
+      <p class="f-zh">理则用三组七张牌铺好心智、身体、灵性的地基之后，最后一个概念复合体，最好被称作——「选择」。</p>
+      <p class="f-ref">—— SESSION 077 · (77.12)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">不知者不在乎</p>
+      <p class="f-en">"Then, as the entities begin to see the Creator, there is a very rapid, as you measure time, procession towards the eighth density. This is due to the fact that one who knows not, cares not."</p>
+      <p class="f-zh">有些理则造过没有自由意志的世界：那里善恶不分，如同一幅单色的画——不知道的人，也不在乎，于是一切都慢得惊人。</p>
+      <p class="f-ref">—— SESSION 077 · (77.17)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">裂缝出现的那一刻</p>
+      <p class="f-en">"The break becomes apparent when the entity perceives other-selves as other-selves and consciously determines to manipulate other-selves for the benefit of the self. This is the beginning of the road of which you speak."</p>
+      <p class="f-zh">裂缝在这样一个瞬间显形：你第一次把别人看成「别人」，并且有意识地决定，为了自己的利益去摆布他们。路，从这里开始分岔。</p>
+      <p class="f-ref">—— SESSION 019 · (19.15)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">大多数人在梦游</p>
+      <p class="f-en">"The majority of third-density beings is far along the chosen path before realization of that path is conscious."</p>
+      <p class="f-zh">大多数第三密度的存有，早在意识到自己选了哪条路之前，就已经在那条路上走了很远。</p>
+      <p class="f-ref">—— SESSION 019 · (19.16)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 2 野餐：两条路 -->
+<section class="scene" id="s2" data-c="#cbb98a">
+  <div class="stage">
+    <p class="kicker">两种野餐</p>
+    <p class="narr">没有裁判，没有加分，<br>只有两种玩法。<br>（把光标放上去看看）</p>
+    <p class="en">"Some love the light. Some love the darkness. It is a matter of the unique and infinitely various Creator choosing and playing among its experiences as a child upon a picnic."</p>
+    <p class="zh">有些存有爱光，有些存有爱黑暗——这是那独特而无限多样的造物主，像个野餐的孩子，在自己的体验中挑选玩法。</p>
+    <p class="ref">—— SESSION 019 · (19.17)</p>
+    <div class="paths" id="paths">
+      <div class="path a"><h3>服务他人</h3><p>把灯举高，照见别人，<br>也就照见了自己。</p></div>
+      <div class="path b"><h3>服务自我</h3><p>把灯转向自己，<br>别人便成了燃料。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 51% 的窄门 -->
+<section class="station" id="s3" data-c="#8a5a24">
+  <div class="pin"><div class="stage">
+    <p class="kicker">51% 的窄门</p>
+    <p class="narr">左边门槛写着：百分之五十一为他人。<br>右边门槛写着：百分之九十五为自己。<br>两道门都高得吓人，<br>而中间那片洼地里，<br>住着几乎所有人。</p>
+    <p class="en">"To attain fifty-one percent dedication to the welfare of other-selves is as difficult as attaining a grade of five percent dedication to other-selves. The, shall we say, sinkhole of indifference is between those two."</p>
+    <p class="zh">达到对他人福祉百分之五十一的奉献，与达到百分之五的奉献一样困难——因为在这两者之间，横着那个可谓「冷漠的陷坑」。</p>
+    <p class="ref">—— SESSION 017 · (17.33)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">九十五分之外</p>
+      <p class="f-en">"The entity who wishes to pursue the path of service to self must attain a grade of five—that is five percent service to others, ninety-five percent service to self. It must approach totality. The negative path is quite difficult to attain harvestability upon and requires great dedication."</p>
+      <p class="f-zh">想走服务自我之路，必须拿到五分——百分之五为他人，百分之九十五为自己，且须趋近全体性。负面路径极难达到可收割，需要巨大的奉献。</p>
+      <p class="f-ref">—— SESSION 017 · (17.32)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">太友善也不行</p>
+      <p class="f-en">"Those entities which do not do their homework, be they ever so amiable, shall not cross."</p>
+      <p class="f-zh">不做功课的实体，无论多么和善可亲，都不得跨越那道门槛。友善，从来不是极性。</p>
+      <p class="f-ref">—— SESSION 082 · (82.29)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">陷坑越坐越深</p>
+      <p class="f-en">"When there is no progress, those conditions which grant progress are gradually lost. This is one of the difficulties of remaining unpolarized. The chances, shall we say, of progress become steadily less."</p>
+      <p class="f-zh">没有进展时，那些给予进展的条件会逐渐流失——这是停留在未极化状态的困难之一。进展的机会，会变得越来越少。</p>
+      <p class="f-ref">—— SESSION 020 · (20.17)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">大多数人的收成</p>
+      <p class="f-en">"Thus it, though unknown, would most probably have been a mixed harvest—a few moving to fourth density, a few moving towards fourth density in service to self, the great majority repeating third density."</p>
+      <p class="f-zh">一次典型的收成大概是这样：少数升入第四密度，少数走向服务自我的第四密度，而绝大多数，留下来重读三年级。</p>
+      <p class="f-ref">—— SESSION 011 · (11.3)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 4 面纱之前：太安全的天堂 -->
+<section class="station" id="s4" data-c="#6e6a5e">
+  <div class="pin"><div class="stage">
+    <p class="kicker">面纱之前 · 太安全的天堂</p>
+    <p class="narr">曾经有一段时间，<br>每个人都连着脐带，<br>安全得无事可做——<br>极性就摆在那里，<br>却无人领取。</p>
+    <p class="en">"There is the possibility of love of other-selves and service to other-selves, but there is the overwhelming awareness of the Creator in the self. The connection with the Creator is that of the umbilical cord. The security is total. Therefore, no love is terribly important; no pain terribly frightening; no effort, therefore, is made to serve for love or to benefit from fear."</p>
+    <p class="zh">爱他人与服务他人的可能性都在，但自我之中造物主的觉知压倒一切。与造物主的连接如同脐带，安全是彻底的。于是没有爱重要到非有不可，没有痛可怕到需要恐惧——也就没有人为了爱去服务，或因恐惧而获益。</p>
+    <p class="ref">—— SESSION 082 · (82.22)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">缺的那味成分</p>
+      <p class="f-en">"All the previous, if you would use this term, experiments, although resulting in many experiences, lacked what was considered the crucial ingredient: that is, polarization."</p>
+      <p class="f-zh">理则们先前做过的一切实验，虽然产出了大量体验，却都缺少那味被视为关键成分的东西：极化。</p>
+      <p class="f-ref">—— SESSION 082 · (82.21)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">直到想赢</p>
+      <p class="f-en">"It is not until there is a reason to wish to excel that most entities will attempt to excel."</p>
+      <p class="f-zh">包食宿的学生不做作业，只顾游戏、吃饭和放假。直到有了想要出类拔萃的理由，大多数实体才会去尝试出类拔萃。</p>
+      <p class="f-ref">—— SESSION 082 · (82.28)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">没有需求的理解</p>
+      <p class="f-en">"This, too, may be seen to have been of concern to Logoi which were aware that, without the need to understand, understanding would forever be left undone."</p>
+      <p class="f-zh">这也是理则们的心病：如果没有理解的需要，理解就永远悬而未成。</p>
+      <p class="f-ref">—— SESSION 082 · (82.24)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 5 面纱落下 -->
+<section class="scene" id="s5" data-c="#62778c">
+  <div class="stage">
+    <p class="kicker">面纱落下</p>
+    <p class="narr">于是，理则们在心智与心智之间<br>垂下一幅帷幕。<br>看不清后果了，<br>选择第一次有了重量。</p>
+    <p class="en">"The veiling process made the polarity far more effective."</p>
+    <p class="zh">遮蔽的过程，使极性远为有效。</p>
+    <p class="ref">—— SESSION 093 · (93.5)</p>
+  </div>
+</section>
+
+<!-- 6 做功：极性的用途 -->
+<section class="station" id="s6" data-c="#4a7186">
+  <div class="pin"><div class="stage">
+    <p class="kicker">做功 · 极性的用途</p>
+    <p class="narr">雷，要在电势差里才打得响。<br>极性不是惩罚，<br>是让意识得以做功的电压。</p>
+    <p class="en">"The purpose of polarity is to develop the potential to do work. This is the great characteristic of those, shall we say, experiments which have evolved since the concept of The Choice was appreciated. Work is done far more efficiently and with greater purity, intensity, and variety by the voluntary searching of mind/body/spirit complexes for the lessons of third and fourth densities."</p>
+    <p class="zh">极性的目的，是发展做功的潜力。这是「选择」的概念被领会以来那些实验的伟大特征：当心/身/灵复合体自愿去寻找第三、第四密度的课程时，功完成得更高效，且带着更大的纯度、强度与多样性。</p>
+    <p class="ref">—— SESSION 078 · (78.24)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">不停歇的雷暴</p>
+      <p class="f-en">"However, the storm-producing conditions are not constant, whereas the polarizing conditions are constant. Given this disclaimer, we may agree with your analogy."</p>
+      <p class="f-zh">用雷雨类比意识的极化是可以的——只是天上的风暴会停，而极化的条件从不停止。</p>
+      <p class="f-ref">—— SESSION 093 · (93.6)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">星系边缘的发现</p>
+      <p class="f-en">"Various Logoi and sub-Logoi had various methods of arriving at the discovery of the efficiency of free will in intensifying the experience of the Creator by the Creator. However, in each case this has been a pattern."</p>
+      <p class="f-zh">各处的理则与子理则走了不同的路，最终都抵达同一个发现：自由意志能强化造物主对自身的体验。服务自我的极性，正是在星系旋臂的外缘被发现的。</p>
+      <p class="f-ref">—— SESSION 081 · (81.30)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">帷幕里藏着选择</p>
+      <p class="f-en">"Implicit in the veiling, or separation of two archetypes, is the concept of choice. The refinements to this concept took many experiences."</p>
+      <p class="f-zh">遮蔽——两个原型彼此分开——这件事本身，就暗含着选择的概念。而把这个概念打磨精细，花去了许多许多体验。</p>
+      <p class="f-ref">—— SESSION 079 · (79.31)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">能力满格，无人想用</p>
+      <p class="f-en">"As you understand, if we may use this misnomer, magic, the magical potential in third and fourth density was then far greater than after the change. However, there was far, far less desire or will to use this potential."</p>
+      <p class="f-zh">面纱之前，第三、第四密度的魔法潜能远比改变之后强大；然而想动用它的欲望与意志，也远远、远远地少。</p>
+      <p class="f-ref">—— SESSION 079 · (79.32)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 7 上行：两种毕业 -->
+<section class="station" id="s7" data-c="#58b98a">
+  <div class="pin"><div class="stage">
+    <p class="kicker">上行 · 两种毕业</p>
+    <p class="narr">两条路都通向上面。<br>可毕业不数百分比，<br>数的是你能不能看懂那支舞。</p>
+    <p class="en">"The positive/negative polarity is a thing which will, at the sixth level, simply become history. Therefore, we speak in an illusory time continuum when we discuss statistics of positive versus negative harvest into fifth."</p>
+    <p class="zh">正/负极性这件事，到了第六层级将径直成为历史。所以当我们谈论进入第五密度的正负收割统计时，说的是幻象时间连续体里的事。</p>
+    <p class="ref">—— SESSION 047 · (47.5)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">缺一种颜色</p>
+      <p class="f-en">"Due to the fact that the primary color, shall we say, or energy blue is missing from the negatively oriented system of power, the green/blue vibratory energies are not seen in the vibratory schedules or patterns of negative fourth and fifth rates of vibration."</p>
+      <p class="f-zh">在负面导向的力系统中，蓝这种原色能量是缺席的——因此负面第四、第五密度的振动图谱里，找不到绿/蓝的振动能量。</p>
+      <p class="f-ref">—— SESSION 047 · (47.3)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">抄近路的人</p>
+      <p class="f-en">"However, the negatively polarized entity will have achieved harvest due to extremely efficient use of red and yellow/orange, moving directly to the gateway indigo bringing through this intelligent energy channel the instreamings of intelligent infinity."</p>
+      <p class="f-zh">负面极化的实体不经过绿与蓝：它极其高效地用红与黄/橙达成收割，直接跳到靛蓝的门户，把智能无限引下来。</p>
+      <p class="f-ref">—— SESSION 047 · (47.4)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">百分之八</p>
+      <p class="f-en">"Thus, though one loses approximately two percent moving from negative to positive during the fourth-density experience, we find approximately eight percent of graduations into fifth density those of the negative."</p>
+      <p class="f-zh">第四密度期间约有百分之二从负面转向正面；而毕业进入第五密度的，大约有百分之八仍是负面。</p>
+      <p class="f-ref">—— SESSION 047 · (47.5)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">去往百分之九十八</p>
+      <p class="f-en">"The percentage of service to others of positively oriented entities will harmoniously approach 98% in intention. The qualifications for fifth density, however, involve understanding."</p>
+      <p class="f-zh">正面导向实体的服务他人比例，在意向上会和谐地趋近百分之九十八。但第五密度的资格，另有要求：理解。</p>
+      <p class="f-ref">—— SESSION 047 · (47.6)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">混乱将至</p>
+      <p class="f-en">"In fifth-density negative approximately 50% at some point gain the necessary discipline to use thought to accomplish travel. As the sixth density approaches, the negative orientation is thrown into confusion and little travel is attempted."</p>
+      <p class="f-zh">第五密度负面约有半数学会用思想完成旅行；可当第六密度临近，负面导向陷入混乱，几乎不再尝试任何旅行。</p>
+      <p class="f-ref">—— SESSION 052 · (52.5)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 8 负面道路的底色 -->
+<section class="scene" id="s8" data-c="#a03c2e">
+  <div class="stage">
+    <p class="kicker">负面道路的底色</p>
+    <p class="narr">这条路只有一个方向：<br>分离。<br>而第一刀，<br>砍向自己。</p>
+    <p class="en">"We remind you that the negative path is one of separation. What is the first separation? The self from the self."</p>
+    <p class="zh">负面路径是分离之路。第一个分离是什么？自我与自我的分离。</p>
+    <p class="ref">—— SESSION 036 · (36.14)</p>
+  </div>
+</section>
+
+<!-- 9 猎户集团 -->
+<section class="station" id="s9" data-c="#7d2f23">
+  <div class="pin"><div class="stage">
+    <p class="kicker">猎户集团 · 一面镜子</p>
+    <p class="narr">猎户集团不是传说里的怪兽，<br>它是一面镜子：<br>把「服务自我」这条路的逻辑，<br>放大到星系尺度，演给你看。</p>
+    <p class="en">"The purpose of the Orion group, as mentioned before, is conquest and enslavement. This is done by finding and establishing an elite and causing others to serve the elite through various devices, such as the laws you mention and others given by this entity."</p>
+    <p class="zh">如前所述，猎户集团的目的就是征服与奴役：找到并扶立一个精英阶层，再通过各种手段——比如你们提到的那些律法——让其他人服务于精英。</p>
+    <p class="ref">—— SESSION 016 · (16.17)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">一层隔离</p>
+      <p class="f-en">"Thus, in order to balance the dimensional variances in vibration, a quarantine was set up; this being a balancing situation whereby the free will of the Orion group is not stopped but given a challenge. Meanwhile, the third-density group is not hindered from free choice."</p>
+      <p class="f-zh">为了平衡振动上的差距，守护者设起一层隔离：猎户的自由意志不被阻止，而是被给予挑战；同时，第三密度的人们的自由选择也不受妨碍。</p>
+      <p class="f-ref">—— SESSION 016 · (16.2)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">啄食顺序</p>
+      <p class="f-en">"You must recall that in negative thinking there is always the pecking order, shall we say, and the power against power in separation."</p>
+      <p class="f-zh">所谓猎户座，其实挤着一堆不同星系的团体——因为在负面思维里永远有啄食顺序，永远有分离中权力对权力的倾轧。</p>
+      <p class="f-ref">—— SESSION 062 · (62.16)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">分账规则</p>
+      <p class="f-en">"To the stronger go the greater shares of polarity."</p>
+      <p class="f-zh">从地球上收成的每一分负面极性，都汇入集团的总账——而力量越强者，分得的极性份额越大。</p>
+      <p class="f-ref">—— SESSION 062 · (62.17)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">精巧得体的操控</p>
+      <p class="f-en">"The early fifth-density negative entity, if oriented towards maintaining cohesion as a social memory complex, may, in its free will, determine that the path to wisdom lies in the manipulation, in exquisite propriety, of all other-selves. It, then, by virtue of its abilities in wisdom, is able to be the leader of fourth-density beings which are upon the road to wisdom by exploring the dimensions of love of self and understanding of self."</p>
+      <p class="f-zh">第五密度的负面实体已经不再撕咬：它认定通往智慧的道路在于以精巧得体的方式操控所有其他自我，并凭这份智慧统领着第四密度的部下。</p>
+      <p class="f-ref">—— SESSION 062 · (62.20)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">挑简单的下手</p>
+      <p class="f-en">"Orion tactics normally are those which choose the simple distortions of mind which indicate less mental and spiritual complex activity."</p>
+      <p class="f-zh">猎户的战术通常是挑那些心智活动较少的简单变貌下手——正面极化的流浪者偶尔遭遇「近距离接触」，正是因此。</p>
+      <p class="f-ref">—— SESSION 053 · (53.11)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">没有保护伞</p>
+      <p class="f-en">"This is correct. You may note some of those of your peoples which, at this space/time nexus, seek places of survival. This is due to the lack of protection when service to self is invoked."</p>
+      <p class="f-zh">负面道路没有任何保护：随机催化剂可以随意打击负面极化的个体。这就是为什么你们的一些族人忙着寻找避难所——召唤服务自我时，伞是收起来的。</p>
+      <p class="f-ref">—— SESSION 095 · (95.26)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 10 第六密度：必须合一 -->
+<section class="station" id="s10" data-c="#7a6fd9">
+  <div class="pin"><div class="stage">
+    <p class="kicker">第六密度 · 必须合一</p>
+    <p class="narr">走到这里，考试结束。<br>曾经背道而驰的两条路，<br>必须彼此收留。</p>
+    <p class="en">"In sixth density, the density of unity, the positive and negative paths must needs take in each other, for all now must be seen as love/light and light/love. This is not difficult for the positive polarity which sends love and light to all other-selves. It is difficult enough for service-to-self polarized entities that, at some point, the negative polarity is abandoned."</p>
+    <p class="zh">在第六密度——合一的密度——正面与负面路径必须彼此容纳，因为如今一切都必须被看作爱/光与光/爱。这对向所有其他自我发送爱与光的正面极性并不困难；而对服务自我的实体则足够困难，以至于在某个时刻，负面极性被放弃了。</p>
+    <p class="ref">—— SESSION 078 · (78.25)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">智慧必须配爱</p>
+      <p class="f-en">"These negatively oriented mind/body/spirit complexes have a difficulty which, to our knowledge, has never been overcome, for after fifth-density graduation wisdom is available but must be matched with an equal amount of love."</p>
+      <p class="f-zh">负面导向的复合体有一个从未被克服的困难：第五密度毕业后，智慧垂手可得，却必须配上等量的爱。</p>
+      <p class="f-ref">—— SESSION 036 · (36.12)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">看见熵增</p>
+      <p class="f-en">"The sixth-density negative entity is extremely wise. It observes the spiritual entropy occurring due to the lack of ability to express the unity of sixth density."</p>
+      <p class="f-zh">第六密度的负面实体极其智慧——它亲眼看着灵性的熵增发生，因为自己无法表达第六密度的合一。</p>
+      <p class="f-ref">—— SESSION 036 · (36.15)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">一次瞬间的调头</p>
+      <p class="f-en">"Thus, loving the Creator, and realizing at some point that the Creator is not only self but other-self as self, this entity consciously chooses an instantaneous energy reorientation so that it may continue its evolution."</p>
+      <p class="f-zh">出于对造物主的爱，并在某个时刻领悟到造物主不仅是自我、也是如同自我的其他自我——它有意识地选择一次瞬间的能量重新定向，好让进化得以继续。</p>
+      <p class="f-ref">—— SESSION 036 · (36.15)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">纵身一跃</p>
+      <p class="f-en">"This love/light is very, very difficult to achieve in unity when following the negative path, and during the earlier part of the sixth density, society complexes of the negative orientation will choose to release the potential and leap into the sixth-density positive."</p>
+      <p class="f-zh">在负面路径上，这种爱/光极难在合一中达成。于是第六密度的早期，负面导向的社会复合体会选择释放潜能，纵身跃入第六密度的正面。</p>
+      <p class="f-ref">—— SESSION 036 · (36.12)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 11 终章 -->
+<section class="scene" id="sLast" data-c="#f5efe2">
+  <div class="stage">
+    <p class="kicker">归途</p>
+    <p class="narr">所以，别怕选错。<br>极化得越深，<br>转身的力量也越大；<br>真正困住人的，<br>是从未选过。</p>
+    <p class="en">"The further an entity has, what you would call, polarized, the more easily this entity may change polarity, for the more power and awareness the entity will have."</p>
+    <p class="zh">一个实体越是极化，就越容易改变极性——因为它将拥有更多的力量与觉知。</p>
+    <p class="ref">—— SESSION 019 · (19.18)</p>
+    <p class="en">"Those truly helpless are those who have not consciously chosen but who repeat patterns without knowledge of the repetition or the meaning of the pattern."</p>
+    <p class="zh">真正无助的，是那些从未有意识地选择、只是在不知不觉中重复着模式的人。</p>
+    <p class="ref">—— SESSION 019 · (19.18)</p>
+    <button class="again" id="again">回到那枚线圈</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+坠入极性 · 滚动星旅 · 内容收网自《一的法则》十余次集会中关于极性与两种道路的讨论<br>
+引文为英文原文逐字摘录；中文为本页面自拟 · 仅作沉浸学习实验
+</footer>
+
+<script>
+/* ===== 星空画布（固定，勿改） ===== */
+const cv=document.getElementById('sky'),cx=cv.getContext('2d');
+let W,H,stars=[];
+function size(){W=cv.width=innerWidth*devicePixelRatio;H=cv.height=innerHeight*devicePixelRatio;}
+size();addEventListener('resize',size);
+for(let i=0;i<230;i++)stars.push({x:Math.random(),y:Math.random(),z:.25+Math.random()*.75,p:Math.random()*6.28,s:Math.random()});
+
+/* ===== 氛围色插值（固定，勿改） ===== */
+function hex2rgb(h){h=h.replace('#','');if(h.length===3)h=h.split('').map(c=>c+c).join('');return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
+const scenes=[...document.querySelectorAll('.scene,.station')].map(s=>({el:s,c:hex2rgb(s.dataset.c)}));
+let amb=[245,239,226];
+function lerp(a,b,t){return a+(b-a)*t}
+function rgb2css(c,a){return `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${a})`}
+
+/* ===== 渲染循环（固定，勿改） ===== */
+let t=0;
+function frame(){
+  t+=.016;
+  const sy=scrollY,wh=innerHeight;
+  let target=scenes[0].c;
+  for(const s of scenes){
+    const r=s.el.getBoundingClientRect();
+    if(r.top<wh*.55&&r.bottom>wh*.45){target=s.c;break}
+  }
+  for(let i=0;i<3;i++)amb[i]=lerp(amb[i],target[i],.045);
+  const ac=amb;
+  document.documentElement.style.setProperty('--amb',rgb2css(ac,1));
+
+  cx.clearRect(0,0,W,H);
+  const g=cx.createRadialGradient(W/2,H*.86,0,W/2,H*.86,H*.75);
+  g.addColorStop(0,rgb2css(ac,.10));g.addColorStop(1,'rgba(0,0,0,0)');
+  cx.fillStyle=g;cx.fillRect(0,0,W,H);
+  const dark=1-Math.min(1,(Math.hypot(ac[0]-245,ac[1]-239))/200);
+  for(const st of stars){
+    const px=st.x*W,py=((st.y - sy*.00004*st.z)%1+1)%1*H;
+    const tw=.5+.5*Math.sin(t*1.3+st.p);
+    cx.globalAlpha=(0.12+0.5*tw*st.z)*(0.35+0.65*dark);
+    cx.fillStyle=rgb2css(ac,1);
+    const r=st.s*1.4*st.z*devicePixelRatio;
+    cx.beginPath();cx.arc(px,py,r,0,6.28);cx.fill();
+  }
+  const oy=H*.62+Math.sin(t*.8)*10*devicePixelRatio;
+  const og=cx.createRadialGradient(W/2,oy,0,W/2,oy,26*devicePixelRatio);
+  og.addColorStop(0,rgb2css(ac,.9));og.addColorStop(.35,rgb2css(ac,.25));og.addColorStop(1,'rgba(0,0,0,0)');
+  cx.globalAlpha=1;cx.fillStyle=og;
+  cx.beginPath();cx.arc(W/2,oy,26*devicePixelRatio,0,6.28);cx.fill();
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+/* ===== 场景显影（固定，勿改） ===== */
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>e.target.classList.toggle('on',e.isIntersecting));
+},{threshold:.01});
+document.querySelectorAll('.scene,.station').forEach(s=>io.observe(s));
+
+/* 细节片段显影（固定，勿改） */
+const ioFrag=new IntersectionObserver(es=>{
+  es.forEach(e=>e.target.classList.toggle('on',e.intersectionRatio>.15));
+},{threshold:[0,.35,.6]});
+document.querySelectorAll('.frag').forEach(f=>ioFrag.observe(f));
+
+/* ===== 进度轨道（固定，勿改） ===== */
+const rail=document.getElementById('rail');
+scenes.forEach((s,i)=>{
+  const row=document.createElement('div');row.className='r';
+  const lbl=document.createElement('span');lbl.className='lbl';
+  const k=s.el.querySelector('.kicker');
+  lbl.textContent=k?k.textContent.trim():(i===0?'开始':'终章');
+  const d=document.createElement('i');
+  row.appendChild(lbl);row.appendChild(d);
+  row.onclick=()=>s.el.scrollIntoView({behavior:'smooth'});
+  rail.appendChild(row);
+});
+setInterval(()=>{
+  const wh=innerHeight;
+  scenes.forEach((s,i)=>{
+    const r=s.el.getBoundingClientRect();
+    rail.children[i].classList.toggle('cur',r.top<wh*.55&&r.bottom>wh*.45);
+  });
+},200);
+
+/* ===== 本章定制交互：两条路的对比 ===== */
+const paths=document.getElementById('paths');
+document.querySelectorAll('.path').forEach(p=>{
+  p.addEventListener('mouseenter',()=>paths.classList.add('p-'+(p.classList.contains('a')?'a':'b')));
+  p.addEventListener('mouseleave',()=>paths.classList.remove('p-a','p-b'));
+  p.addEventListener('click',()=>{
+    paths.classList.remove('p-a','p-b');
+    paths.classList.add('p-'+(p.classList.contains('a')?'a':'b'));
+  });
+});
+
+/* ===== 回到那枚线圈 ===== */
+document.getElementById('again').onclick=()=>scrollTo({top:0,behavior:'smooth'});
+</script>
+</body>
+</html>

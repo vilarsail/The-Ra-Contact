@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 082 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 082 · 交互式学习模块</h1>
+  <p class="sub">这一集把镜头推到本八度音程开始之前：无限智能体验过无法计数的先前八度，银河从「充满」的中心生长出来；没有遗忘面纱的第三密度课程恒常、进度却慢如乌龟——直到理则加上面纱，补上「极化」这块关键成分。</p>
+  <div class="tagline">7 个主题 · 6 个学习步骤 · 30 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 八度之前</a>
+<a href="#s3">③ 银河诞生</a>
+<a href="#s4">④ 无面纱的第三密度</a>
+<a href="#s5">⑤ 面纱实验</a>
+<a href="#s6">⑥ 投生与回顾</a>
+<a href="#s7">⑦ 毕业门槛</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>本集要回到面纱之前，看「没有遗忘的第三密度」长什么样（第 1 章）</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>八度音程之前：无限智能与「充满」</b><span>先前八度、空间的开端、中心的嵌套（第 2 章）</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>银河的诞生与原初思想的稀释</b><span>理则的第一簇恒星，以及越向外越不纯粹的用意（第 3 章）</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>无面纱的第三密度</b><span>课程为何恒常、进度为何慢如乌龟（第 4 章）</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>面纱实验与投生回顾</b><span>极化为何是缺失的关键成分；没有监考却人人交卷的课程（第 5–6 章连读）</span></span></label></div>
+<div class="step-item" data-target="#s7"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官：毕业的门槛与金句</b><span>白光的强度、楼梯与门槛、信心或意志（第 7 章）</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ 第 1 章 · 本章地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：回到面纱之前，看「没有遗忘的第三密度」</h2></div>
+  <p class="sec-lead">这一集是一次时间上的倒带。发问者想把第三密度回放到最初版本——没有遗忘面纱的版本——用它来反衬我们今天的处境。先用下面的问答推进器走一遍全集骨架，再进各章细读。</p>
+
+  <div class="card">
+    <h3>本集在全书中的位置</h3>
+    <p><b>承接：</b>前几集一路在追问造物与八度音程的起源，Ra 在本集也自陈「我们触及了之前的材料」（82.11）——发问者这回把时间再往前推：本八度开始之前有什么？第一代心/身/灵是怎么活的？</p>
+    <p><b>开启：</b>本集收在「信心或意志的能力需要被理解、滋养与发展」（82.29）——这条能力如何在面纱后的世界里长成，本集按下不表，是一个明显未完的线头。</p>
+    <p><b>本集议题清单：</b>① 平衡工作的次序（效率之辨）；② 八度之前：无限智能与「充满」；③ 银河的诞生与原初思想的稀释；④ 无面纱的第三密度；⑤ 面纱实验的动机；⑥ 投生与回顾；⑦ 毕业的门槛。</p>
+    <div class="quote">
+      <p class="en">I greet you, my friends, in the love and in the light of the One Infinite Creator. We communicate now.</p>
+      <p class="zh">我的朋友们，我在太一无限造物主的爱与光中向你们致意。我们现在开始通讯。</p>
+      <span class="src">—— Session 082 · (82.0)</span>
+    </div>
+    <div class="case"><b>回老家看「出厂设置」：</b>想弄明白自己为什么总在压力下先炸毛，有人会回一趟童年的家，看那些写在生活细节里的初始设置。发问者此刻做的正是这件事：把第三密度回放到没有遗忘面纱的最初版本，用「原始成长」来反衬我们今天的处境——他在 (82.12) 里说得明白，为的是以比较更好地理解现在的状况。</div>
+    <div class="case"><b>读老项目的第一个提交：</b>新工程师接手一个跑了十年的系统，不从最新代码读起，而是先看仓库里最早的提交——当初的架构决定是怎么做出来的。本集的宇宙论追问就是这种读法：从本八度的「第一个发生」一路读回无限智能的先前经验。</div>
+  </div>
+
+  <div class="card">
+    <h3>问答脉络推进器：本集对话怎么走</h3>
+    <div class="demo-area">
+      <div class="flow-track" id="qaTrack"></div>
+      <div class="flow-detail" id="qaDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="qaPrev">← 上一问</button>
+        <button class="tri-btn" id="qaNext">下一问 →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>开场的一堂小课：先立拱梁，再谈接纳</h3>
+    <div class="q">一位成员的个人功课推进到一个关口：平衡的焦点从耐心/不耐烦这类外围关怀，一路走到无条件的爱、再到「接纳自我为造物主」。他问：<b>既然终点是核心的接纳，跳过外围、直接做核心功课，不是更有效率吗？</b></div>
+    <div class="quote">
+      <p class="en">However, the architrave must be in place before the structure is builded.</p>
+      <p class="zh">然而，拱梁必须先就位，结构才能建起。</p>
+      <span class="src">—— Session 082 · (82.3)</span>
+    </div>
+    <p>Ra 先给「效率」这个词做了勘误：它有误导性。要更充分地完成核心的自我接纳，必须先认识这个实体正在接纳的那些变貌（distortion，对太一性的偏离）——审视每个思想与行动，找出各种反应的精确基础；这个过程本身，才通向核心的接纳任务。跳过它去「直接接纳」，接的是一份没有清点的家底。</p>
+    <div class="plain">想一步到位地接纳自己，得先知道自己接纳的到底是什么——认识变貌是接纳的地基。</div>
+    <div class="case"><b>先查承重墙，再谈装修：</b>搬进老房子的人若跳过结构检查、直接挑窗帘刷墙，装得再好看也悬在半空。Ra 的次序相同：先审视每个思想与行动里反应的精确基础，核心的接纳才有处安放——拱梁必须先就位（82.3）。</div>
+    <div class="case"><b>「直接背答案」的复习法：</b>学生发现大题总考「谈谈你对本科目的理解」，便想跳过概念直接背范文——看似高效，落笔就露馅。Ra 对「效率」的提醒正在这里：不了解自己正在接纳的那些变貌，「接纳自我」只是一句背下来的答案（82.3）。</div>
+  </div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 后勤</span></summary>
+  <div class="body">
+    <p><b>(82.1) 器皿状态：</b>「如前所述」——维持已知的状况。</p>
+    <p><b>(82.2) 照料建议：</b>Ra 提出「直立脊椎旋转水流」的可能性/或然性，或可缓解器皿背部区域的持续疼痛，进而略增物理能量。</p>
+    <p><b>(82.3) 个人问题（不公开）：</b>即上方正文中那堂「拱梁」小课的来历。</p>
+    <p><b>(82.30) 收尾：</b>所有参数都得到满足；Ra 叮嘱在爱与感恩中保持团结，并感谢小组对器具的尽责。</p>
+  </div></details>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 2 章 · 八度之前 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>八度音程之前：无限智能体验过什么，「空间」是什么</h2></div>
+  <p class="sec-lead">倒带的第一站：本八度音程开始之前。发问者连设了几个思想实验，Ra 每一次都先肯定「基本概念说得不错」，再动手修措辞——这一章几乎全是由措辞的修正堆出来的宇宙论。</p>
+
+  <div class="card">
+    <h3>第一处修正：是「体验了」先前八度，不是「创造了」</h3>
+    <div class="q">发问者假设：就在本八度开始之前，智能无限已经<b>创造并体验</b>了先前的八度。Ra 认可假设本身，但对这句话动了一个字的手术。</div>
+    <div class="quote">
+      <p class="en">However, the phrase would more informatively read, infinite intelligence had experienced previous octaves.</p>
+      <p class="zh">然而，更具信息性的表述是：无限智能已经体验了先前的八度。</p>
+      <span class="src">—— Session 082 · (82.4)</span>
+    </div>
+    <p>追问「那到底有过多少个八度」，Ra 的回答干脆得可爱：据我们所知，我们处于一个无限的造物中——没有计数这回事（82.5）。</p>
+    <div class="plain">先前的八度不是被「造出来」的存货，而是被「活出来」的经验；数量在无限里没有意义。</div>
+    <div class="case"><b>「他创造了三十年」还是「经历了三十年」：</b>给老员工写介绍，说他「创造了三十年的职业生涯」总觉得别扭，说他「经历了三十年」才贴切——重心回到了经历者身上。Ra 的措辞修正同理：不说智能无限「创造并体验」，而说无限智能「已经体验」先前八度，重心从造物挪到体验本身（82.4）。</div>
+    <div class="case"><b>数不清的夜空：</b>让孩子数「有史以来一共过了多少个夜晚」，他很快就会放弃——夜不是能被数完的东西。Ra 对「先前有几个八度」的回答同款：我们处于无限的造物中，没有计数（82.5）。</div>
+  </div>
+
+  <div class="card">
+    <h3>第二处修正：不是「虚空」，是「充满」</h3>
+    <div class="q">发问者想象：八度开始时，无数星系（如银河系）的种子<b>同时</b>从「空间的虚空」中出现，并螺旋式生长。Ra 指出这里埋着两个混淆。</div>
+    <div class="quote">
+      <p class="en">However, in your modes of perception you would perhaps more properly view the seeding of the creation as that of growth from the center or core outward.</p>
+      <p class="zh">然而，在你们的感知模式里，你们或许更宜把造物的播种看作从中心或核心向外的生长。</p>
+      <span class="src">—— Session 082 · (82.6)</span>
+    </div>
+    <p>混淆一：真正的同时性里确实一切皆同时，但落在我们的感知方式上，更适合把它读成「从中心向外生长」的次序。混淆二：那个被叫作「虚空」的东西——Ra 提议换词，用<b>「充满」（plenum，满而非空的状态）</b>来替代；它是满载的，满的是太一无限造物主的荣耀与大能（82.6、82.10）。</p>
+    <div class="plain">「空无一物的空间」是我们的感知标签；那状态其实满得不能再满——Ra 连词都不肯将就。</div>
+    <div class="case"><b>被叫错的「空仓库」：</b>朋友形容「宇宙诞生之前什么都没有」，另一人纠正他：那不是倒空的仓库，更像是蓄满水的池子——只是水还没决定往哪儿流。Ra 的用词手术正切在这里：把「虚空」换成「充满」（82.6），而它「满载荣耀与大能」的一面在 (82.10) 才补全。</div>
+    <div class="case"><b>同心圆的展馆：</b>博物馆的主展厅设在正中央，两侧展厅一间套一间向外展开，每一层自己又是一个小型的「中央＋外围」。Ra 说的中心嵌套正是这种结构——无限有中心，造物、星系、恒星系统、行星系统、意识各有中心，一切生长都从中心向外（82.7）。</div>
+  </div>
+
+  <div class="card">
+    <h3>第三处修正：望远镜里的图景「过于笼统」</h3>
+    <div class="q">发问者又试了一次：若当时架起望远镜，会不会看到许多星系的中心同时亮起第一点光，再以大致相同的速率螺旋扩散？</div>
+    <div class="quote">
+      <p class="en">There is a center to infinity. From this center all spreads. Therefore, there are centers to the creation, to the galaxies, to star systems, to planetary systems, and to consciousness.</p>
+      <p class="zh">无限有一个中心，一切从这个中心铺开。因此，造物有中心，星系有中心，恒星系统、行星系统、意识也各有中心。</p>
+      <span class="src">—— Session 082 · (82.7)</span>
+    </div>
+    <div class="plain">「每样东西同时从自己的中心长大」不是一幅全景图，而是把「中心向外生长」这条通则说了一遍——Ra 评它「在概念上过于笼统」。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 3 章 · 银河的诞生 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>银河的诞生：第一簇恒星与原初思想的层层展开</h2></div>
+  <p class="sec-lead">镜头推进银河系内部：第一个出现的可见物是什么？为什么离星系中心越近的东西越「纯」？Ra 借这些问题，把本八度的出生证明摊开在桌上。</p>
+
+  <div class="card">
+    <h3>理则的第一个显化：一簇中心系统</h3>
+    <div class="q">只看银河系：它开始时，我们今天用仪器能找到的<b>第一个发生</b>，是不是出现了一颗类似太阳的恒星？Ra 的回答把「第一颗恒星」提前了一级——先有的不是恒星，而是产生恒星的那个东西。</div>
+    <div class="quote">
+      <p class="en">In the case of the galactic systems the first manifestation of the Logos is a cluster of central systems which generate the outward swirling energies producing, in their turn, further energy centers for the Logos, or what you would call stars.</p>
+      <p class="zh">在星系系统的情况中，理则（Logos，星系尺度的造物之心）的第一个显化是一簇中心系统，它产生向外旋转的能量，这些能量又依次为理则生出更多能量中心——也就是你们所谓的恒星。</p>
+      <span class="src">—— Session 082 · (82.8)</span>
+    </div>
+    <p> Ra 补上一条有趣的梯度：越接近理则显化之开端的恒星，越多地参与<b>太一原初思想</b>（One Original Thought，本八度的「创世第一念」）——这就是发问者敏锐捕捉到的那个「径向向外的梯度」（82.9）。</p>
+    <div class="plain">恒星不是第一批居民，而是「中心系统星团」的后续产物；纯度随半径递减，这是设计，不是损耗。</div>
+    <div class="case"><b>台风先有眼，再有旋臂：</b>气象图上成熟的台风，总是先有一个清晰的核心，云带再从核心一圈圈向外甩出。Ra 对银河诞生的描述同构：理则先显化一簇中心系统，由它生出的向外旋转能量，再「甩」出一个个新的能量中心——恒星（82.8）。</div>
+    <div class="case"><b>老街总店与外地分店：</b>老字号的总店开在发源的老街上，味道最接近祖师爷的手笔；越往外开的分店，越多本地化的改良。Ra 说恒星也一样：越接近理则显化之开端的，越多参与太一原初思想——向外的梯度由此而来（82.9）。</div>
+  </div>
+
+  <div class="card">
+    <h3>为什么有梯度：原初思想是收割，造物是体验</h3>
+    <div class="q">这个「越向外越不纯粹」的安排，用意何在？Ra 给出了本集最核心的一段宇宙论：原初思想是造物主对自身全部先前经验的收割；它决定认识自己时，把自己生成到「充满」之中——每一次认识的生成，都生出拥有自由意志、能选择认识自身之法的知。</div>
+    <div class="quote">
+      <p class="en">The One Original Thought is the harvest of all previous, if you would use this term, experience of the Creator by the Creator. … The Creator does not properly create as much as It experiences Itself.</p>
+      <p class="zh">太一原初思想是造物主经由造物主自身、全部先前经验——若你愿用这个词——的收割。……造物主并非恰当地创造，它更多的是体验它自己。</p>
+      <span class="src">—— Session 082 · (82.10)</span>
+    </div>
+    <div class="plain">一步步向外，各部分参与原初思想之力越来越不纯粹——但这是为了「精炼太一原初思想」：稀释是手段，精炼是目的。</div>
+    <div class="case"><b>家训的第四代：</b>开创者留下一句家训，第二三代各自用自己的日子把它活「淡」了字面的力度，却也唯有这样，才真正检验出这句话到底意味着什么。Ra 说各部分参与原初思想之力越来越不纯粹，「这是为了精炼太一原初思想」——稀释不是损失，是检验（82.10）。</div>
+  </div>
+
+  <div class="card">
+    <h3>从先前八度到面纱实验：一条时间线</h3>
+    <p>把本集前半的宇宙论按顺序摆开，就是本八度的出生证明：</p>
+    <div class="timeline">
+      <div class="tl-item"><div class="t">先前八度的收割</div><div class="d">以心智、身体、灵性显化的「爱的造物主」——Ra 说这种形式或许可以被视为<b>第一次意识分裂</b>（82.11）。</div></div>
+      <div class="tl-item"><div class="t">理则的第一个显化</div><div class="d">一簇中心系统，产生向外旋转的能量（82.8）。</div></div>
+      <div class="tl-item"><div class="t">恒星与行星</div><div class="d">中心星团生出一个个新的能量中心；早期行星在第一密度固化、第二密度出现生命、第三密度从第二密度中走出——Ra 称这在假设上正确（82.8、82.13）。</div></div>
+      <div class="tl-item"><div class="t">第一代心/身/灵</div><div class="d">不复杂、体验单一；没有第三密度遗忘，没有面纱（82.12）。</div></div>
+      <div class="tl-item"><div class="t">面纱实验</div><div class="d">理则为补上「极化」这块关键成分，把遗忘引入第三密度（82.21）。</div></div>
+    </div>
+    <div class="quote">
+      <p class="en">The harvest of the previous octave was the Creator of Love manifested in mind, body, and spirit.</p>
+      <p class="zh">前一个八度的收割，是以心智、身体和灵性显化的爱的造物主。</p>
+      <span class="src">—— Session 082 · (82.11)</span>
+    </div>
+    <div class="case"><b>接力交出来的不是奖杯：</b>一届学生毕业，交给下一届的不是一柜子奖杯，而是「我们是怎么学会学习的」——一个能自己长大的方法。前一个八度交出来的收割，Ra 的描述正是如此：爱的造物主，显化在心智、身体与灵性里，本八度从这个形式重新出发（82.11）。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 4 章 · 无面纱的第三密度 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>无面纱的第三密度：课程恒常，进度却慢如乌龟</h2></div>
+  <p class="sec-lead">这是本集的重头戏：第一代心/身/灵在没有遗忘面纱的第三密度里，到底过着怎样的生活？Ra 先请发问者把问题理顺，再一层层给出答案——一个技术先进却「提不起劲」的世界。</p>
+
+  <div class="card">
+    <h3>概括地说：造物先于意识，理则是那颗心脏</h3>
+    <div class="q">发问者想一口气追溯第一代心/身/灵从开端到现在的全部经历——Ra 直说这问题比他的基本思路更混乱，<b>让我们概括地说</b>：大量的造物在没有（我们所知的）意识概念的情况下显化；而造物本身是统一的意识形式，理则是那颗伟大的心脏。</div>
+    <div class="quote">
+      <p class="en">A very great deal of creation was manifested without the use of the concepts involved in consciousness, as you know it. … The first beings of mind, body, and spirit were not complex. … There was no third-density forgetting. There was no veil.</p>
+      <p class="zh">非常大量的造物，是在不使用你们所知的意识概念的情况下显化的。……最初的心智、身体与灵性存有并不复杂。……没有第三密度的遗忘。没有面纱。</p>
+      <span class="src">—— Session 082 · (82.12)</span>
+    </div>
+    <p>密度框架的用途也随之交代：它被用来创造条件，让<b>自我意识的子理则</b>（sub-Logoi，理则之下的次级造物者）得以存在。至于课程本身——第三密度的课程由这个密度体验到的振动频率的本质、以及跃迁第四密度的量子跳跃所预先注定：换句话说，<b>课程内容由「三年级」这个年级本身决定</b>。发问者把剧本细化到「某颗早期行星在第一密度固化、第二密度出现生命、第三密度从第二密度走出」，Ra 认可这是假设上的正确，但随即划出知识的边界：说到自己未曾有意识参与的具体事件，无法担保毫无变貌——「我们如此假设」（82.13–82.14）。</p>
+    <div class="plain">没有面纱的第一代存有并不复杂，体验是单一的；但第三密度的课程与今天一模一样——恒常的不是处境，是课程。</div>
+    <div class="case"><b>转学不换课本：</b>学生从城东的学校转到城西，数学还是从那几条公式学起——课程由年级决定，不由教室决定。Ra 说第三密度的课程由振动频率的本质与跃迁第四密度的量子跳跃预先注定：无论有没有面纱，要学的都是同一门（82.12、82.17）。</div>
+    <div class="case"><b>口述家史的限度：</b>家中最年长的长辈能讲清太爷爷如何白手起家，却讲不了太爷爷某天早餐吃了什么——没亲历的细节只能推测。Ra 的诚实同款：说到自己未曾有意识参与的具体事件，无法担保毫无变貌，「我们如此假设」（82.14）。</div>
+  </div>
+
+  <div class="card">
+    <h3>没有遗忘，为何还要投生</h3>
+    <div class="q">发问者卡在一个直觉上：既然没有遗忘，投生时知道的就是不投生也知道的东西，那<b>物理投生还有什么用处</b>？Ra 先请求用「间接的方式」作答。</div>
+    <div class="quote">
+      <p class="en">The purpose of incarnation in third density is to learn the Ways of Love. … The nature of third density is constant. Its ways are to be learned the same now and ever.</p>
+      <p class="zh">第三密度投生的目的，是学习爱之道。……第三密度的本质是恒常的。其道途如今与永远皆相同，需被学习。</p>
+      <span class="src">—— Session 082 · (82.15, 82.17)</span>
+    </div>
+    <p>Ra 点破发问者真正在追的问题：「你们是否以为，心/身/灵（没有复合体的版本）来面对第三密度时，机制会有所不同？」答案是否定的——无论实体以何种形式面对课程，<b>课程与机制都相同</b>；造物主将从它自身学习，而每个实体最重要的学习，涉及与其他自我的互动（82.17）。</p>
+    <div class="plain">投生的用处不在「知道得多」，而在「以一个物理的、身处众多其他自我之中的形式，去学习爱」。</div>
+    <div class="case"><b>不因换教室而缩水的课程：</b>发问者猜「没有复合体的心/身/灵」面对第三密度时机制也许不一样——Ra 婉转地关掉了这条岔路：无论形式如何，课程与机制都相同；最重要的学习从来涉及与其他自我的互动（82.17）。</div>
+  </div>
+
+  <div class="card">
+    <h3>那时的世界：技术先进，却缺一味「劲头」</h3>
+    <div class="q">这样的条件之下，第三密度长出了怎样的社会？Ra 给出的评价里有一个精确的比喻：课程的习得之慢，「如龟之对猎豹」。</div>
+    <div class="quote">
+      <p class="en">It is our perception that such conditions created the situation of a most pallid experiential nexus in which lessons were garnered with the relative speed of the turtle to the cheetah. … There were many highly technologically advanced societies which grew due to the ease of producing any desired result when one dwells within what might be seen to be a state of constant potential inspiration.</p>
+      <p class="zh">依我们的感知，这样的状况造出了一种极苍白的体验连接点，在其中课程被习得的速度，如龟之对猎豹。……有许多技术高度先进的社会成长起来，因为当一个人住在可被视为「持续潜在灵感」的状态中时，产出任何期望的结果都轻而易举。</p>
+      <span class="src">—— Session 082 · (82.18, 82.19)</span>
+    </div>
+    <p>这些社会并不原始：它们可以有复杂的技术，也演化出了穿梭行星之间的太空旅行（82.20）。但哪怕最精致的社会结构，也缺一样东西——<b>意志</b>，或用一个更通俗的词：<b>热情、生命活力</b>（élan vital）。</p>
+    <div class="plain">万事不费力的世界，技术可以攀到很高，却长不出「非做不可」的劲头——这正是慢如乌龟的原因。</div>
+    <div class="case"><b>资源无限的团队：</b>某团队预算无上限、要人有人，产出从不费力，却始终没有破釜沉舟的狠劲，项目个个温吞落地。技术先进社会的写照正是如此：住在「持续潜在灵感状态」里造什么都容易，缺的是意志、热情、生命活力（82.19）。</div>
+    <div class="case"><b>别以为他们落后：</b>有人想象「没有考验的文明」必然贫弱——Ra 给出的清单恰好相反：那时的社会可以有高度先进的技术，也演化出了跨行星的太空旅行（82.20）。缺的从来不是技术，是那口「非做不可」的气。</div>
+  </div>
+
+  <div class="card">
+    <h3>本集术语卡：点一下翻面</h3>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">太一原初思想</div><div class="sub">One Original Thought</div><div class="tap">点按翻面 →</div></div><div class="back">本八度音程的「创世第一念」：造物主对自身全部先前经验的收割（82.10）。越靠近星系中心诞生的恒星，越多参与它；它被逐步展开，是为了被「精炼」。<em>像创始人把上一段创业的全部领悟写成的第一份章程。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">充满</div><div class="sub">plenum</div><div class="tap">点按翻面 →</div></div><div class="back">Ra 用来替换「虚空」的词：造物展开之前的那个「空间」不是空的，而是满的——满的是太一无限造物主的荣耀与大能，只是对你们的感知显化为空间（82.6、82.10）。<em>不是倒空的房间，而是蓄满水的池子。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">理则</div><div class="sub">Logos</div><div class="tap">点按翻面 →</div></div><div class="back">星系尺度上的「造物之心」：造物本身是统一的意识形式，理则是那颗伟大的心脏（82.12）。它的第一个显化是一簇中心系统，恒星是它后续的能量中心（82.8）。<em>星系的总设计师，兼跳动的心脏。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">子理则</div><div class="sub">sub-Logoi</div><div class="tap">点按翻面 →</div></div><div class="back">理则之下的次级造物者。Ra 说密度框架的用途，正是创造让「自我意识的子理则」得以存在的条件（82.12）——自我的觉察，是它们「成立」的门槛。<em>集团总部之下、各自要独立经营的分公司。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">遗忘面纱</div><div class="sub">veil of forgetting</div><div class="tap">点按翻面 →</div></div><div class="back">第三密度加装的「不知道」：让实体不记得自己是谁、来这里做什么——于是理解有了需要、选择有了分量。第一代存有面前还没有这层纱（82.12），它由理则实验引入（82.21）。<em>戴上不透光的护目镜再进考场。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">生命活力</div><div class="sub">élan vital / gusto</div><div class="tap">点按翻面 →</div></div><div class="back">Ra 给「意志」找的通俗说法：面纱前最先进的社会缺的就是这味东西——万事不费力，便没有「非做不可」的劲头（82.19）。<em>家境优渥者常常缺的那一口不服气。</em></div></div>
+    </div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 5 章 · 面纱实验 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>面纱实验：为了「极化」，理则加上了遗忘</h2></div>
+  <p class="sec-lead">发问者顺着「慢如乌龟」追下去：既然体验已经很丰富，理则为什么还要做一个新实验？Ra 给出的答案只有一句话的骨架——此前的一切都缺关键成分——却花了好几个回合才把它讲透。</p>
+
+  <div class="card">
+    <h3>缺失的关键成分：极化</h3>
+    <div class="q">发问者的推断：即便曾有伟大的进化体验，进化的理则在某刻仍认为该做一个「产生更大体验」的实验。Ra 确认，并补上理由。</div>
+    <div class="quote">
+      <p class="en">All the previous, if you would use this term, experiments, although resulting in many experiences, lacked what was considered the crucial ingredient: that is, polarization.</p>
+      <p class="zh">所有先前的——若你愿用这个词——实验，虽然产出了许多体验，却缺少那被视为关键的成分：也就是极化（polarization，在服务他人与服务自我之间的定向累积）。</p>
+      <span class="src">—— Session 082 · (82.21)</span>
+    </div>
+    <p>后果很具体：体验极化实体的倾向太弱了，弱到实体们把第三密度循环<b>习惯性地重复了一遍又一遍</b>。理则的愿望由此而来：让极化的潜能「更可及」。</p>
+    <div class="plain">毕业需要极化，而极化在一个毫无阻力的世界里几乎无从发生——面纱实验就是冲着这个缺口去的。</div>
+    <div class="case"><b>原地打转的优等生：</b>课文全懂、作业全对，考试却总停在中游——不是不聪明，是从未真正押上过什么。面纱前的实体同理：体验产出了许多，极化却几乎为零，于是第三密度循环被习惯性地重复了一遍又一遍（82.21）。</div>
+    <div class="case"><b>永远「再等等」的搬家计划：</b>行李其实早就收拾好了，可房租有人垫、饭菜有人做，搬出去这件事永远排在「下个月」。Ra 点出的关键成分正在此：极化的潜能必须被变得「更可及」——一个从不需要选择的世界，也制造不出有分量的选择（82.21）。</div>
+  </div>
+
+  <div class="card">
+    <h3>为什么明知该服务他人，却做不到</h3>
+    <div class="q">发问者追问当时的心智配置：他们知道极化的必要吗？为什么唯一的极性也达不成？Ra 请他看一种「神圣快乐」的实体——随后给出本集最著名的意象之一。</div>
+    <div class="quote">
+      <p class="en">The connection with the Creator is that of the umbilical cord. The security is total. Therefore, no love is terribly important; no pain terribly frightening; no effort, therefore, is made to serve for love or to benefit from fear.</p>
+      <p class="zh">与造物主的连接像一根脐带。安全是彻底的。于是没有什么爱重要到值得奋力去给，也没有什么痛可怕到需要从中获益——因此，无人为爱而服务，也无人自恐惧受益。</p>
+      <span class="src">—— Session 082 · (82.22)</span>
+    </div>
+    <p>爱其他自我与服务其他自我的可能性当然存在，但被另一种觉知盖过：<b>对自我中造物主的压倒性觉知</b>。脐带连着，安全彻底，改变的冲动便无处生根。发问者立刻找到一个现成的类比——出生在极端财富与安全中的人；Ra 在比喻的严格范围内予以肯定（82.23）。</p>
+    <div class="plain">不是不知道，是不缺——彻底的安全感本身，就是动力的绝缘层。</div>
+    <div class="case"><b>与父母同住的成年人：</b>房租有人付、快递有人收，「安全是彻底的」；不是他不善良，而是生活里没有任何一件事重要到「非我出手不可」。Ra 的诊断精确对应：对自我中造物主的觉知压倒一切，连接如脐带——努力的动机无处生根（82.22）。</div>
+    <div class="case"><b>含着金汤匙的继承者：</b>家族企业早已为他安排好位置，试错成本为零、失败有人兜底；他并不坏，只是从未遇过「非我不可」的时刻。发问者的这个类比得到 Ra 首肯：在比喻的严格范围内，很有洞察力（82.23）。</div>
+  </div>
+
+  <div class="card">
+    <h3>归类练习：这是面纱前的状态，还是面纱后的世界？</h3>
+    <p>读完两章的对照，试试给下面的处境定位——答案都藏在 Ra 的描述里。</p>
+    <div id="sorterArea"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 6 章 · 投生与回顾 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>投生与回顾：没有监考官，人人交卷</h2></div>
+  <p class="sec-lead">发问者继续下钻：面纱之前，投生之间发生了什么？死亡的那一刻有什么不同？这一章的答案推翻了一个直觉——回顾不是被人审计，而是一门课程自己的器官。</p>
+
+  <div class="card">
+    <h3>面纱前的「疗愈与回顾」存在吗</h3>
+    <div class="q">我们今天在投生之间有「疗愈与投生回顾」这样的活动——面纱之前有类似的东西吗？</div>
+    <div class="quote">
+      <p class="en">The inchoate structure of this process was always in place, but where there has been no harm there need be no healing.</p>
+      <p class="zh">这个过程的雏形结构一直都在，但既然没有伤害，就无需疗愈。</p>
+      <span class="src">—— Session 082 · (82.24)</span>
+    </div>
+    <p>Ra 补了一句意味深长的话：这也是诸理则所挂心的事——他们意识到，<b>没有理解的需要，理解将永远无法完成</b>。Ra 还为措辞致歉：你们的语言缺少表达这个概念的词（82.24）。</p>
+    <div class="plain">结构的雏形一直在，只是无伤可疗、无需理解——机制齐备，动机缺席。</div>
+    <div class="case"><b>没坏就不修：</b>车开去年检，师傅绕了一圈摊手：「没坏修什么？」——维修的整套流程都在，只是没有伤害就无从启动。Ra 说面纱前的疗愈正是如此：结构的雏形一直在，但没有伤害，就无需疗愈（82.24）。</div>
+  </div>
+
+  <div class="card">
+    <h3>死亡那一刻：没有审计的课程，课课有测试</h3>
+    <div class="q">发问者坦白他没想通的地方：意识既然不间断，死亡时除了换一身黄色光芒的身体，心智上有什么不同？<b>他看不出「回顾」存在的必要。</b></div>
+    <div class="quote">
+      <p class="en">No portion of the Creator audits the course, to use your experiential terms. … This is so that the portion of the Creator may assimilate the experiences in yellow-ray, physical third density, may evaluate the biases gained, and may then choose, either by means of automatically provided aid, or by the self, the conditions of the next incarnation.</p>
+      <p class="zh">用你们的体验术语说，造物主没有任何部分会去「审计」这门课程。……这是为了让造物主的这一部分得以消化黄色光芒、物理第三密度中的体验，评估所获得的偏向，然后——或借助自动提供的帮助，或由自己——选择下一次投生的条件。</p>
+      <span class="src">—— Session 082 · (82.25)</span>
+    </div>
+    <p>接着是一串干净的确认链：面纱前，回顾中的实体<b>确知</b>自己要做的是为毕业而充分极化（82.26）；发问者猜这觉知进入投生状态时会减弱——Ra 回以本集最短的否定之一：<b>这明显不正确</b>（82.27）。</p>
+    <div class="plain">回顾不是外在考官的审计，而是课程自身的器官：消化体验、评估偏向、亲手挑下一程。</div>
+    <div class="case"><b>没人查作业，但考试照考：</b>成年人的健身没人盯着，可年底的体检单会如期而至——把这一年的偏向如实摆上桌。Ra 说每个投生都以一次「测试」结束：这是造物主认识自身过程中不可缺的一部分，不是谁的罚单（82.25）。</div>
+  </div>
+
+  <div class="card">
+    <h3>明知该极化，为何依然提不起劲</h3>
+    <div class="q">发问者终于逼近核心：既然觉知丝毫无损，「财富般的处境」又贯穿投生内外的整个谱系——实体们就是<b>提不起那份欲望</b>。这个理解对了吗？</div>
+    <div class="quote">
+      <p class="en">The entity is fed, clothed, and protected regardless of whether or not the schoolwork is accomplished. Therefore, the entity does not do the homework but rather enjoys playtime, mealtime, and vacation. It is not until there is a reason to wish to excel that most entities will attempt to excel.</p>
+      <p class="zh">无论功课是否完成，这个学生都被喂养、穿衣、保护。于是他不做家庭作业，而是享受游戏时光、用餐时间和假期。直到有一个希望出类拔萃的理由，多数实体才会尝试出类拔萃。</p>
+      <span class="src">—— Session 082 · (82.28)</span>
+    </div>
+    <p>Ra 先肯定：「你开始理解这个情况了。」然后把学校教育的比喻继续下去——只是把学生想象成低年级的孩子：被喂饱、被穿衣、被保护，作业自然让位给玩耍。<b>问题从来不是认知，是理由。</b></p>
+    <div class="plain">知道该做什么，和有一个「想要做到」的理由，是两回事——面纱前的世界缺的是后者。</div>
+    <div class="case"><b>八月的暑假作业：</b>吃穿有人管、作业没人查的孩子，整个八月都在玩——直到他真的想要那座「三好学生」奖杯，才第一次主动坐回书桌。Ra 的学生比喻正是如此：直到有一个希望出类拔萃的理由，多数实体才会尝试出类拔萃（82.28）。</div>
+    <div class="case"><b>什么都包的「温室岗位」：</b>一份活儿可干可不干的工作，工资照发、三餐有人管——多数人待得舒坦，离开的往往是「想成为别的什么」的人。安全本身不生产动力，「想要」才生产（82.28）。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 7 章 · 毕业门槛 ============ -->
+<section class="chapter" id="s7">
+  <div class="sec-head"><span class="num">07</span><h2>收官：毕业的门槛——白光的强度与信心/意志</h2></div>
+  <p class="sec-lead">最后一个完整问题把整集收拢：毕业的标准在面纱前后是同一把尺子吗？Ra 用「楼梯与门槛」的图像作答，把「信心或意志」郑重地放到台面上——然后准点收工。</p>
+
+  <div class="card">
+    <h3>50% 的标准面纱前也适用吗</h3>
+    <div class="q">发问者引用很早一次集会里说过的百分比标准，问：面纱之前，衡量可收割性的<b>也是同样的极化百分比</b>吗？Ra 先声明这是本次工作的最后一个完整问题，再坦言这问题不容易回答。</div>
+    <div class="quote">
+      <p class="en">The necessity for graduation to fourth density is an ability to use, welcome, and enjoy a certain intensity of the white light of the One Infinite Creator.</p>
+      <p class="zh">毕业到第四密度的必要条件，是一种使用、欢迎并享受太一无限造物主之白光某种强度的能力。</p>
+      <span class="src">—— Session 082 · (82.29)</span>
+    </div>
+    <p>不容易回答的原因有二：其一，在面纱过程之前，「服务自我」的概念根本不占主导；其二，百分比只是我们此刻的空间/时间连接点上的量尺——把能力换算成服务比例，是我们这个位置的便利，不是毕业的实体。</p>
+    <div class="plain">毕业考的是「能否迎向某种强度的白光」，百分比只是我们这个时空里够得着的那把尺。</div>
+    <div class="case"><b>爬坡不数里程：</b>骑手爬长坡时不问「骑了几公里」，只问「能不能咬住这个踏频」——决定到不到顶的是强度，不是里程数。Ra 把毕业的必要条件同样落在强度上：能否使用、欢迎并享受某种强度的白光；百分比只是我们这个时空里的换算（82.29）。</div>
+  </div>
+
+  <div class="card">
+    <h3>楼梯与门槛：面纱前的衡量</h3>
+    <div class="q">那么面纱前怎么衡量？Ra 给出一幅具体的图像：一个实体拾级而上，每级台阶都浸着某种光质——停在<b>哪一级</b>，就是哪一级的光。</div>
+    <div class="quote">
+      <p class="en">Between the two stairs lies the threshold. To cross that threshold is difficult. There is resistance at the edge, shall we say, of each density. … The faculty of faith or will needs to be understood, nourished, and developed in order to have an entity which seeks past the boundary of third density. Those entities which do not do their homework, be they ever so amiable, shall not cross.</p>
+      <p class="zh">在两级台阶之间是门槛。跨越那道门槛是困难的。在——容我们说——每个密度的边缘，都存在阻力。……信心或意志的能力需要被理解、滋养并发展，才会有一个寻求越过第三密度边界的实体。那些不做功课的实体，无论多么和善，都不会跨越。</p>
+      <span class="src">—— Session 082 · (82.29)</span>
+    </div>
+    <p>Ra 点明：这正是面纱过程被引入之前，诸理则（Logoi）所面对的处境——和善而无功课的实体大量滞留在第三密度之光的那一级台阶上。</p>
+    <div class="plain">门槛真实存在，阻力真实存在；跨过去的凭据不是性格可爱，而是被滋养过的信心或意志。</div>
+    <div class="case"><b>线路末端的难点段：</b>攀岩馆里最磨人的一段总在离顶三米处——指力、耐心、还想登顶的那口气，缺一样就挂在半空。Ra 的楼梯图像正是如此：两级台阶之间是门槛，每个密度的边缘都有阻力；跨过去的，是信心或意志被理解、滋养、发展过的实体（82.29）。</div>
+    <div class="case"><b>人缘好但没交作业：</b>班里最受欢迎的学生，作业一页没写，期末照样要补考——老师不会因为「人好」放行。Ra 说得毫不含糊：不做功课的实体，无论多么和善，不会跨越（82.29）。</div>
+  </div>
+
+  <div class="card">
+    <h3>条件模拟器：能否跨过第三密度的门槛</h3>
+    <div class="q">把 Ra 点出的要素逐条拨动，看看这扇门槛靠什么跨过去、又在哪一格卡住。</div>
+    <div class="cond-row"><div class="name">功课有积累<small>学习爱之道的体验已经做过</small></div><label class="switch"><input type="checkbox" id="simA" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">信心或意志已被滋养<small>这能力被理解、滋养并发展起来</small></div><label class="switch"><input type="checkbox" id="simB" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">敢于迎向白光的强度<small>使用、欢迎并享受那强度</small></div><label class="switch"><input type="checkbox" id="simC" checked><span class="slider"></span></label></div>
+    <div id="condResult">先拨一拨上面的开关。</div>
+  </div>
+
+  <div class="saying">
+    <p class="en">This, too, may be seen to have been of concern to Logoi which were aware that, without the need to understand, understanding would forever be left undone.</p>
+    <p class="zh">这也被视为诸理则所挂心的事——他们明白，若没有理解的需要，理解将永远无法完成。</p>
+    <span class="src">—— Session 082 · (82.24)</span>
+  </div>
+
+  <div class="card">
+    <h3>伏笔与叮嘱</h3>
+    <div class="quote">
+      <p class="en">All parameters are being met. Remain united in love and thanksgiving.</p>
+      <p class="zh">所有参数都得到满足。在爱与感恩中保持团结。</p>
+      <span class="src">—— Session 082 · (82.30)</span>
+    </div>
+    <ul>
+      <li><b>未完的线头：</b>「信心或意志的能力需要被理解、滋养与发展」亮在结尾——这条能力如何在面纱后的世界里长成，本集未及展开（82.29）。</li>
+      <li><b>器皿照料：</b>直立脊椎旋转水流或可缓解背部疼痛、略增物理能量（82.2）。</li>
+      <li><b>收尾：</b>Ra 感谢小组对器具的尽责，以惯常的祝福与 Adonai 作结（82.30）。</li>
+    </ul>
+    <div class="case"><b>散会前的最后一句：</b>线上会议收尾时，主持人最后说的往往不是议题，而是「大家保重，下周见」。Ra 的收束同款温度：所有参数都得到满足，叮嘱小组在爱与感恩中保持团结，并感谢他们对器具的尽责（82.30）。</div>
+    <div class="case"><b>说明书写着「未完待续」：</b>游戏里点亮了一项天赋，说明写着效果、却还没到它的升级关卡。本集把「信心或意志需要被理解、滋养、发展」亮在结尾，这条线如何长成则按下不表——线头留给了后面。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 082（`split/Ra_Session_082.md`）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra082-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本集定制交互 ===== */
+const byId082=function(id){return document.getElementById(id)};
+
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+  {t:'开场与器皿',d:'<span class="qa-q">开场（82.0–82.2）</span><b>答：</b>照例致意后，Ra 说器皿状况<b>如前所述</b>；对能否增加物理能量，Ra 提出「直立脊椎旋转水流」的可能性/或然性——或可缓解背部持续疼痛，进而略增物理能量。'},
+  {t:'平衡的次序',d:'<span class="qa-q">问：平衡焦点已一路推进到「接纳自我为造物主」，直接做核心功课不是更有效率吗？（82.3）</span><b>答：</b>「效率」有误导性——必须先认识自我正在接纳的那些变貌，审视每个思想与行动中反应的精确基础，这个过程才通向核心的接纳：<b>拱梁必须先就位，结构才能建起</b>。'},
+  {t:'本八度之前',d:'<span class="qa-q">问：本八度开始前，智能无限已创造并体验过先前的八度吗？（82.4–82.5）</span><b>答：</b>假设正确，但更具信息性的说法是「无限智能<b>已经体验了</b>先前八度」；至于数量——我们处于无限的造物中，没有计数这回事。'},
+  {t:'空间如何开始',d:'<span class="qa-q">问：无数星系的种子同时从「虚空」中出现并螺旋生长？（82.6–82.7）</span><b>答：</b>两个混淆：真正的同时性没错，但在我们的感知里更宜看作<b>从中心向外生长</b>；「虚空」应换成「<b>充满</b>」（plenum）。无限有中心，造物、星系、恒星系统、行星系统、意识各有中心——发问者的望远镜图景因此过于笼统。'},
+  {t:'第一颗恒星与原初思想',d:'<span class="qa-q">问：银河系第一个可见的发生是什么？（82.8–82.11）</span><b>答：</b>理则的第一个显化是一簇<b>中心系统</b>，向外旋转的能量再生出恒星；越接近开端的恒星越多参与<b>太一原初思想</b>——它是造物主全部先前经验的收割，而「造物主并非恰当地创造，它更多的是体验它自己」。第一次意识分裂＝以心智、身体、灵性显化的爱的造物主。'},
+  {t:'无面纱的第三密度',d:'<span class="qa-q">问：第一代心/身/灵如何经历密度？没有遗忘为何还要投生？（82.12–82.17）</span><b>答：</b>他们<b>并不复杂</b>、体验单一，没有第三密度遗忘、没有面纱；课程由振动频率与量子跳跃预先注定。投生的目的是<b>学习爱之道</b>——无论以何种形式面对，课程与机制都相同。'},
+  {t:'那时的社会',d:'<span class="qa-q">问：那样的社会与体验是什么样？（82.18–82.20）</span><b>答：</b>极苍白的体验连接点，课程习得之慢<b>如龟之对猎豹</b>；社会可以技术高度先进、也会太空旅行，缺的是意志——用通俗词说，热情、生命活力。'},
+  {t:'面纱实验',d:'<span class="qa-q">问：理则为什么还要做一个新实验？（82.21–82.23）</span><b>答：</b>此前所有实验都缺关键成分——<b>极化</b>；神圣快乐、与造物主以脐带相连、安全彻底的实体提不起改变的劲头。发问者的类比获 Ra 首肯：如同生在极端财富与安全中的人。'},
+  {t:'投生、回顾与门槛',d:'<span class="qa-q">问：投生之间有什么？毕业到底靠什么？（82.24–82.30）</span><b>答：</b>没有伤害就无需疗愈；造物主没有任何部分「审计」课程，但课课以一次测试结束。毕业的必要条件是<b>使用、欢迎并享受某种强度的白光</b>——信心或意志需要被理解、滋养与发展；不做功课的实体，再和善也不会跨越。随后 Ra 宣告参数俱足，在爱与感恩中收束。'}
+]);
+
+initSorter('sorterArea',[
+  {a:'「想要什么就有什么，连失败的资格都没有。」',opts:['面纱前','面纱后'],ans:'面纱前',exp:'彻底的安全如同脐带——没有什么爱重要到值得奋力去给，没有什么痛可怕到需要从中获益（82.22）。'},
+  {a:'「项目失败后复盘到深夜，痛过之后才知道自己真正要什么。」',opts:['面纱前','面纱后'],ans:'面纱后',exp:'有了理解的需要，理解才会被完成——这正是遗忘面纱带来的功课（82.24）。'},
+  {a:'「资源要什么有什么，产出毫不费力，却始终没有破釜沉舟的狠劲。」',opts:['面纱前','面纱后'],ans:'面纱前',exp:'住在「持续潜在灵感状态」里造什么都容易，缺的正是意志、热情、生命活力（82.19）。'},
+  {a:'「不知道答案，只好在一次次试错里赌上自己的选择。」',opts:['面纱前','面纱后'],ans:'面纱后',exp:'遗忘使极化的潜能变得可及——选择从此有了分量（82.21）。'},
+  {a:'「明确知道自己该为毕业而极化，却怎么也提不起劲。」',opts:['面纱前','面纱后'],ans:'面纱前',exp:'面纱前的实体在回顾与投生中都保有这份觉知（82.26–82.27）——缺的不是认知，是「想要」的理由（82.28）。'}
+]);
+
+function updateGate082(){
+  const a=byId082('simA').checked,b=byId082('simB').checked,c=byId082('simC').checked;
+  const miss=[];
+  if(!a)miss.push('功课未做：学习爱之道的体验没有积累——不做功课的实体，无论多么和善，也不会跨越（82.29）。');
+  if(!b)miss.push('信心或意志尚未被理解、滋养并发展——没有这能力，便难有一个寻求越过第三密度边界的实体（82.29）。');
+  if(!c)miss.push('不敢迎向白光的强度——毕业的必要条件是使用、欢迎并享受太一无限造物主某种强度的白光（82.29）。');
+  const el=byId082('condResult');
+  if(miss.length===0){el.classList.remove('fail');el.innerHTML='<b>三级台阶连起来了：</b>功课有积累、信心或意志已被滋养、又敢于迎向光的强度——按本集的图像，门槛是可以跨过去的；阻力仍在每个密度的边缘，跨过去凭的正是这三样。';}
+  else if(miss.length===3){el.classList.add('fail');el.innerHTML='<b>三样全缺：</b>这正是面纱前无数实体的处境——安全彻底、体验丰富，台阶却始终停在第三密度之光的那一级；于是第三密度循环被习惯性地重复了一遍又一遍（82.21）。';}
+  else{el.classList.add('fail');el.innerHTML='<b>还差 '+miss.length+' 步：</b>'+miss.join('');}
+}
+['simA','simB','simC'].forEach(function(id){byId082(id).addEventListener('change',updateGate082);});
+updateGate082();
+
+document.querySelectorAll('.fn-card').forEach(function(c){c.onclick=function(){c.classList.toggle('open');};});
+
+renderPath();
+</script>
+</body>
+</html>

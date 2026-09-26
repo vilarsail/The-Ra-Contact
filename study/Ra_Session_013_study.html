@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 013 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 013 · 交互式学习模块</h1>
+  <p class="sub">这一集把镜头拉到最远端：从「造物中第一个已知的事物是无限」一路讲到地球当前的收割处境——中间是自由意志如何生出无限维度、每个个体化部分如何成为共同造物主，以及密度阶梯与那道上行的螺旋。</p>
+  <div class="tagline">7 个主题 · 6 个学习步骤 · 18 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 署名与信使</a>
+<a href="#s3">③ 造物的开端</a>
+<a href="#s4">④ 众多性的来历</a>
+<a href="#s5">⑤ 银河与行星</a>
+<a href="#s6">⑥ 密度阶梯与收割</a>
+<a href="#s7">⑦ 收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>这一集换了轨道：从书名署名一路问到造物的开端，例行问答可跳过</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>署名与信使</b><span>Ra 为什么只肯当「信使」，而不肯当作者</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>造物的开端与众多性</b><span>从「无限变得觉察」到自由意志如何生出无限的维度</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>从银河到行星</b><span>光为何是物质的基石、共同造物主如何造出自己的自然法则</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>密度阶梯与收割</b><span>第一到第四密度的次第，以及地球当前的处境</span></span></label></div>
+<div class="step-item" data-target="#s7"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官：金句与伏笔</b><span>本集停在哪里，以及读下去时可以带着的问题</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：从书名问到造物的开端</h2></div>
+  <p class="sec-lead">这一集发生过一次「换轨」。开场先处理一本书的署名，随后发问者把镜头一拉到最远端——造物中第一个已知的事物是什么；此后整整一集都在讲宇宙与密度的发生过程，直到 Ra 宣布这将是最后一个完整问题。Ra 也在一开始就划定了自己的位置：书怎么编排是发问者的事，他只在教导范围内说话。</p>
+  <div class="card">
+    <h3>本集的位置与议题清单</h3>
+    <p>此前几集在打磨基础概念：变貌、催化剂、疗愈的运作、心智与身体的修炼次第。这一集开始搭一条完整的时间轴——从「无限」一直到地球此刻的处境；这条轴此后会被反复引用，是理解密度与收割的地基。本集的主要议题：</p>
+    <p><b>① 书名与署名</b>：谁算作者，谁只是信使。</p>
+    <p><b>② 造物的开端</b>：无限 → 无限变得觉察 → 聚焦为「理则/爱」→ 智能无限。</p>
+    <p><b>③ 众多性的来历</b>：自由意志、随机的创造力、全息式的模式，以及「有限」这第一个悖论。</p>
+    <p><b>④ 银河与行星</b>：光作为物质的基石、个体化的部分成为共同造物主、从大到小的次序与螺旋能量。</p>
+    <p><b>⑤ 密度阶梯与收割</b>：第一到第四密度如何接续，以及地球为什么这场收割会困难。</p>
+  </div>
+  <div class="card">
+    <h3>问答脉络：一次连续追问</h3>
+    <p>本集的问答是一条不断往「更早」和「更小」推进的链：从署名开始，一路倒推到造物的第一个事物，再顺着造物过程走到地球。点击节点看每一段在做什么。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="qaTrack"></div>
+      <div class="flow-detail" id="qaDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="qaPrev">← 上一步</button> <button class="tri-btn" id="qaNext">下一步 →</button></div>
+    </div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 集会安排 · 后勤</span></summary>
+  <div class="body">
+    <p><b>(13.0)/(13.27) 开场与收尾：</b>以「我在无限造物主的爱与光中向你们致意」开场，以「在太一造物主的大能与和平中欢欣鼓舞」作结（Adonai）。</p>
+    <p><b>(13.1) 发问者的致歉：</b>他为之前「愚蠢的问题」道歉，说自己把这份工作看作成为一的法则的谦卑信使的荣誉与特权。</p>
+    <p><b>(13.24) 这次集会偏短：</b>Ra 直接回答原因——这个器皿的生命能量有些低。</p>
+    <p><b>(13.25) 当天是否再开一场：</b>稍后举行是可以的，条件是全程监控这个器皿，并在取用的材料变低时停止使用它；Ra 说「我们不希望耗尽这个器皿」。</p>
+    <p><b>(13.26) 器皿照料：</b>一切都好，每一位都非常尽责，继续如此；Ra 顺带问是否还有其他简短的问题。</p>
+    <p><b>(13.27) 后勤：</b>Tom Flaherty 当晚在场并会在晚间集会中帮忙，Ra 答「这是正确的」，随即作别。</p>
+  </div></details>
+  <div class="case"><b>一条消息问两件事：</b>你给领导发「报销单麻烦签一下，另外我周五想调休」，对方回你一句「分开问」——本集开场正是如此：发问者一口气问了书名与署名，Ra 请他「将每个需要达成一致的领域作为单独的询问陈述」。在 Ra 的沟通方式里，一次只问一件事不是形式主义，它让每个回答都能精确。</div>
+  <div class="case"><b>跳着看的纪录片：</b>你点开一部讲宇宙的纪录片，直接从「星系如何形成」那一集看起，越看越糊涂，只好倒回去补「宇宙最初」那一集——(13.9) 的发问者就是这样的观众：他还没听完「能量模式」，就跳到银河系与行星系统，Ra 提醒他那是一次「思想的巨大飞跃」。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>署名与信使：Ra 为什么不肯当作者</h2></div>
+  <p class="sec-lead">发问者要把这段资料做成书，于是先请 Ra 确认三件事：内容从造物开端讲起、书名叫《一的法则》、作者署 Ra。Ra 的回答顺序本身就带着信息：打包式的询问被退回；编排的判断交还发问者；书名可以；而「作者」这一栏，被折了回去。</p>
+  <div class="card">
+    <h3>第一步：把询问拆开</h3>
+    <div class="q">我想确认几件事：这本书从造物开端讲起、书名叫《一的法则》、作者署 Ra——可以吗？</div>
+    <div class="quote">
+      <p class="en">Your query is unclear. Would you please state as separate queries each area of agreement?</p>
+      <p class="zh">你的询问不清晰。请你将每一个需要达成一致的领域，作为单独的询问陈述，好吗？</p>
+      <span class="src">—— Session 013 · (13.1)</span>
+    </div>
+    <div class="plain">需要确认的每一件事都要单独成为一问——不是挑剔，而是这样回答才谈得上精确。</div>
+  </div>
+  <div class="card">
+    <h3>编排权：完全是你的辨别/理解/决定</h3>
+    <div class="q">我想从造物的开端开始，尽可能追溯到最远，然后跟着人类的发展一路讲到今天。这样安排可以吗？</div>
+    <div class="quote">
+      <p class="en">This is completely your discernment/understanding/ decision.</p>
+      <p class="zh">这完全是你的辨别/理解/决定。</p>
+      <span class="src">—— Session 013 · (13.2)</span>
+    </div>
+    <div class="plain">书写什么、怎么编排，Ra 不介入——他把判断完整地交回给发问者，这不是客套。</div>
+    <div class="analogy"><b>像请顾问评审方案：</b>顾问会告诉你这个架构行不行、哪里有漏洞，但不会替你决定章节顺序、版式和书名。编排的取舍属于作者，不属于通道。</div>
+  </div>
+  <div class="card">
+    <h3>书名可以，署名要加一句限定</h3>
+    <div class="q">书名叫《一的法则》，作者署 Ra，这样可以吗？</div>
+    <div class="quote">
+      <p class="en">The title of the book is acceptable. The authorship by vibratory sound complex Ra is, in our distortion of understanding, incomplete. We are messengers.</p>
+      <p class="zh">书名是可以接受的。以「Ra」这个声音振动复合体作为作者，在我们理解的变貌中是不完整的。我们是信使。</p>
+      <span class="src">—— Session 013 · (13.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">I can only request that if your discernment/understanding suggests the use of this vibratory sound complex, Ra, the phrase "An humble messenger of the Law of One" be appended.</p>
+      <p class="zh">我只能请求：如果你的辨别/理解建议使用「Ra」这个声音振动复合体，请把「一的法则的一位谦卑信使」这个短语附加上去。</p>
+      <span class="src">—— Session 013 · (13.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">a great honor and privilege to be also humble messengers of the Law of One</p>
+      <p class="zh">（发问者自己先说的）作为一的法则的谦卑信使，这也是一项巨大的荣誉与特权。</p>
+      <span class="src">—— Session 013 · (13.1)</span>
+    </div>
+    <div class="plain">「信使」这个词本来是发问者说的；Ra 把它接过来，又放回署名里当限定语——位置可以给，权威不能给。</div>
+    <div class="analogy"><b>像唱片封面的署名：</b>上面会写「作曲：某某」，不会写「小提琴：某某（作曲）」。乐器让音乐得以发出，但音乐不属于乐器。</div>
+  </div>
+  <div class="case"><b>帮同事改 PPT 的署名：</b>同事问要不要在封面写上你的名字，你答「可以，但要注明这是我协助整理」——(13.4) 里 Ra 的请求与此同构：可以用「Ra」这个名字，但要附上「一的法则的一位谦卑信使」。</div>
+  <div class="case"><b>写报告时坚持标「转引自」：</b>你引用一份网络资料，坚持写成「转引自某某」而不是含混的「据某某研究」；来源位置写得含糊，读者对权威的归属就会判断错。Ra 拒绝「作者」这个位置，理由同类：署名决定了读者把权威放在哪里。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>造物的开端：无限、觉察与理则</h2></div>
+  <p class="sec-lead">署名处理完，发问者问出本集真正的大问题：造物中最先存在的是什么？Ra 的答案是三步——先是无限，然后无限变得觉察，然后觉察导致无限聚焦为无限能量。造物主不是「另一个存在」，而是这个聚焦本身。</p>
+  <div class="card">
+    <h3>第一个已知的事物是无限</h3>
+    <div class="q">你能告诉我造物中最早、第一个已知的事物是什么吗？</div>
+    <div class="quote">
+      <p class="en">The first known thing in the creation is infinity. The infinity is creation.</p>
+      <p class="zh">造物中第一个已知的事物是无限。无限就是造物。</p>
+      <span class="src">—— Session 013 · (13.5)</span>
+    </div>
+    <div class="plain">不是「先有无限，再有造物」——Ra 说无限本身就是造物，两者不是两件事。</div>
+    <div class="analogy"><b>像一张没有边框的地图：</b>地图和被画的那个地方重合在一起，你找不到「图之外」的地方可站。</div>
+  </div>
+  <div class="card">
+    <h3>下一步不是「造」，而是「觉察」</h3>
+    <div class="q">那么从这无限中必定产生了我们体验为造物的事物——下一步或下一个演化是什么？</div>
+    <div class="quote">
+      <p class="en">Infinity became aware. This was the next step.</p>
+      <p class="zh">无限变得觉察。这就是下一步。</p>
+      <span class="src">—— Session 013 · (13.6)</span>
+    </div>
+    <div class="plain">造物史的第二步是一个认识论事件：没有任何东西被制造出来，是无限开始知道自己。</div>
+    <div class="case"><b>调试时先让它「打印」状态：</b>程序再复杂，你不加一行输出就不知道它在干什么；你加了那一行，程序本身没变，但它开始报告自己。(13.6) 的「无限变得觉察」就像给存在本身加上了这一行输出。</div>
+  </div>
+  <div class="card">
+    <h3>觉察聚焦成「理则」与「智能无限」</h3>
+    <div class="q">在这之后，发生了什么？</div>
+    <div class="quote">
+      <p class="en">Awareness led to the focus of infinity into infinite energy. You have called this by various vibrational sound complexes, the most common to your ears being “Logos” or “Love.”</p>
+      <p class="zh">觉察导致无限聚焦为无限能量。你们用各种声音振动复合体来称呼它，在你们听来最常见的是「理则」或「爱」。</p>
+      <span class="src">—— Session 013 · (13.7)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The Creator is the focusing of infinity as an aware or conscious principle called by us, as closely as we can create understanding/learning in your language, intelligent infinity.</p>
+      <p class="zh">造物主是无限聚焦为一个觉察或有意识的原则；用我们尽可能贴近你们的语言所能创造的理解/学习来说，它被称为智能无限。</p>
+      <span class="src">—— Session 013 · (13.7)</span>
+    </div>
+    <div class="plain">造物主不是一位站在远处的设计者，而是「无限」聚焦成有意识这一点本身——Ra 称之为智能无限。</div>
+    <div class="analogy"><b>像放大镜聚太阳光：</b>光的总量没有变多，聚焦到一点之后它就能点燃纸张。聚焦这个动作，就是 Ra 说的「理则/爱」。</div>
+    <div class="case"><b>把注意力聚到一块肌肉：</b>深蹲时整条腿都在用力，教练让你把注意力集中到臀肌，动作这才做得出来——力量总量没变，聚焦让它变得可用。这正是 (13.7) 那句「觉察导致无限聚焦为无限能量」在日常里的样子。</div>
+  </div>
+  <div class="card">
+    <h3>造物开端：四步与一个转向</h3>
+    <p>把 (13.5)–(13.8) 连起来看是一条链。点击节点逐步推进；注意最后一步已经跨进下一章。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="originTrack"></div>
+      <div class="flow-detail" id="originDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="originPrev">← 上一步</button> <button class="tri-btn" id="originNext">下一步 →</button></div>
+    </div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>众多性从哪里来：自由意志、全息与「有限」</h2></div>
+  <p class="sec-lead">发问者继续往下推：那么下一步呢？Ra 把「多样性」的成因指了出来——不是造物主做了很多种安排，而是自由意志这个原初变貌。这一段里还有两个容易被忽略但要紧的点：「步骤」是叙述的产物，以及一切悖论的第一个是「有限」。</p>
+  <div class="card">
+    <h3>下一步：对造物原则的无限反应</h3>
+    <div class="q">你能说明下一步吗？</div>
+    <div class="quote">
+      <p class="en">The next step is an infinite reaction to the Creative Principle following the Law of One in one of its primal distortions, freedom of will. Thus many, many dimensions, infinite in number, are possible.</p>
+      <p class="zh">下一步是对造物原则的无限反应，它遵循一的法则在其原初变貌之一——自由意志——中的运作。因此，许多、许多维度，在数量上是无限的，都是可能的。</p>
+      <span class="src">—— Session 013 · (13.8)</span>
+    </div>
+    <div class="plain">维度之多不是被安排出来的，而是「可以选择」这件事的必然结果。</div>
+    <div class="analogy"><b>像只有七个音却唱不完的歌：</b>音高是有限的，但自由选择让乐句没有尽头——多样性来自「可以选」，不来自「被写好」。</div>
+  </div>
+  <div class="card">
+    <h3>全息式的模式：往哪个方向看都是整个造物</h3>
+    <div class="q">（承前）这些能量之后怎么走？</div>
+    <div class="quote">
+      <p class="en">The energy moves from the intelligent infinity due, first, to the outpouring of randomized creative force, this then creating patterns which, in holographic style, appear as the entire creation no matter which direction or energy is explored.</p>
+      <p class="zh">能量从智能无限中流出，首先是因为随机化创造力的倾泻；这随后创造出各种模式，它们以全息的方式，无论探索哪个方向或哪种能量，都显现为整个造物。</p>
+      <span class="src">—— Session 013 · (13.8)</span>
+    </div>
+    <div class="quote">
+      <p class="en">These patterns of energy begin then to regularize their own local, shall we say, rhythms and fields of energy, thus creating dimensions and universes.</p>
+      <p class="zh">这些能量模式随后开始规律化它们自身局部的——容我们说——节律与能量场，从而创造出维度与宇宙。</p>
+      <span class="src">—— Session 013 · (13.8)</span>
+    </div>
+    <div class="plain">局部之所以能成为「一个宇宙」，是因为模式把自己的节律稳定下来；而无论看向哪里，都会看到完整的花纹。</div>
+    <div class="analogy"><b>像全息底片：</b>把它打碎，每一小片打上去仍然能映出整幅图像——不是碎片拼成整体，而是每片里都有整体。</div>
+  </div>
+  <div class="card">
+    <h3>「步骤」是叙述的产物，Ra 不责备跳跃</h3>
+    <div class="q">我是不是问早了？跳过了你正在描述的过程。要补回来吗？还有，这些步骤真的是一步接一步吗？</div>
+    <div class="quote">
+      <p class="en">I attempted to bridge the gap. However, you may question me in any manner you deem appropriate.</p>
+      <p class="zh">我试图弥合这个差距。然而，你可以以任何你认为合适的方式向我提问。</p>
+      <span class="src">—— Session 013 · (13.10)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The steps, as you call them, are, at the point of question, simultaneous and infinite.</p>
+      <p class="zh">这些步骤——如你们所称的——在所询问的那个节点上是同时且无限的。</p>
+      <span class="src">—— Session 013 · (13.11)</span>
+    </div>
+    <div class="plain">顺序属于讲述，不属于被讲述的过程；Ra 既补上了发问者跳过的那一段，也把提问方式的选择权交还给他。</div>
+    <div class="analogy"><b>像给电影写梗概：</b>你只能一句一句往下写，但电影里的事件并不是按你写字的顺序发生的。</div>
+  </div>
+  <div class="card">
+    <h3>第一个悖论：有限</h3>
+    <div class="q">智能无限到底是怎么从自身个体化的？</div>
+    <div class="quote">
+      <p class="en">The intelligent infinity discerned a concept. This concept was discerned due to freedom of will of awareness. This concept was finity. This was the first and primal paradox or distortion of the Law of One.</p>
+      <p class="zh">智能无限辨识出一个概念。这个概念是因为觉察的自由意志而被辨识的。这个概念是「有限」。这是第一个、也是原初的悖论或一的法则的变貌。</p>
+      <span class="src">—— Session 013 · (13.12)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Thus the one intelligent infinity invested itself in an exploration of many-ness. Due to the infinite possibilities of intelligent infinity, there is no ending to many-ness. The exploration, thus, is free to continue infinitely in an eternal present.</p>
+      <p class="zh">于是那唯一的智能无限投身于对「众多性」的探索。由于智能无限的无限可能性，众多性没有终点；因此这场探索在一个永恒的当下中自由地无限延续。</p>
+      <span class="src">—— Session 013 · (13.12)</span>
+    </div>
+    <div class="plain">无限要探索自己，必须先辨识出「有限」——这是一切悖论的第一个，也是众多性的起点。</div>
+    <div class="case"><b>没办法一笔画完无限长的线：</b>你只能画出一段线段。要让「无限」变得可以被探索，得先有「这一段」——(13.12) 说「有限」就是智能无限辨识出的第一个概念。</div>
+  </div>
+  <div class="case"><b>无限下拉的信息流：</b>短视频 App 不预设你该看什么，只给你一片「可以选」的海洋；你每一次停留与划走，让下一屏变得具体。(13.8) 说众多性来自自由意志这个原初变貌，而不是来自一份预先写好的节目单。</div>
+  <div class="case"><b>朋友讲当年的故事：</b>你问朋友「你和他当年是怎么在一起的」，他只能一年一年往下讲；可那些事其实是同时挤在他生活里的。(13.11) 说的就是这件事：这些「步骤」在所问的节点上是同时且无限的，只是叙述必须先有先后。</div>
+  <div class="case"><b>把高清照片打印成邮票大小：</b>缩到极小再凑近看，画面里仍然能认出整幅构图——这就是「全息」：无论从哪个方向或哪种能量去探索，显现出来的都是整个造物 (13.8)。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>从银河到行星：光、共同造物主与螺旋能量</h2></div>
+  <p class="sec-lead">「众多性」讲完，发问者问具体的：银河系和行星系统是怎么形成的？Ra 先提醒这是一次跳跃——上一问里物理宇宙还没诞生；随后给出关键材料：光不是比喻，它是物质的构建基石；而每个个体化的部分都会成为一个共同造物主，连自然法则都是它自己引导出来的。</p>
+  <div class="card">
+    <h3>光：物质的构建基石</h3>
+    <div class="q">你能告诉我银河系和这个行星系统是如何形成的吗？</div>
+    <div class="quote">
+      <p class="en">You must imagine a great leap of thought in this query, for at the last query the physical, as you call it, universes were not yet born.</p>
+      <p class="zh">在这个询问中，你必须想象一次思想的巨大飞跃——因为在上一问里，你们所称的物理宇宙尚未诞生。</p>
+      <span class="src">—— Session 013 · (13.9)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The concept of Light is instrumental in grasping this great leap of thought, as this vibrational distortion of infinity is the building block of that which is known as matter…</p>
+      <p class="zh">「光」这个概念是把握这次思想飞跃的关键：这个无限的振动变貌，就是被称为物质之物的构建基石……</p>
+      <span class="src">—— Session 013 · (13.9)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This Light of Love was made to have in its occurrences of being certain characteristics, among them the infinite whole paradoxically described by the straight line, as you would call it.</p>
+      <p class="zh">这「爱之光」在其存在中被赋予某些特性，其中之一便是那个被你们所称的「直线」悖论式地描述着的无限整体。</p>
+      <span class="src">—— Session 013 · (13.9)</span>
+    </div>
+    <div class="plain">光在 Ra 这里是字面意义上的建材，而且它带着一个悖论式的特性（无限整体由直线描述）——正是这个悖论决定了星系与行星全都呈透镜状。</div>
+    <div class="analogy"><b>像乐高：</b>所有形状都从同一种小方块搭出来。区别在于，这里的方块本身就是「爱之光」。</div>
+  </div>
+  <div class="card">
+    <h3>个体化：每个部分都成为共同造物主</h3>
+    <div class="q">我们所在的银河系，是由无限智能创造的，还是由个体化无限智能的一部分创造的？</div>
+    <div class="quote">
+      <p class="en">The galaxy, and all other things of material of which you are aware, are products of individualized portions of intelligent infinity.</p>
+      <p class="zh">银河系，以及你所觉知的其余一切物质事物，都是智能无限的个体化部分的产物。</p>
+      <span class="src">—— Session 013 · (13.13)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Using intelligent infinity, each portion created an universe, and—allowing the rhythms of free choice to flow, playing with the infinite spectrum of possibilities—each individualized portion channeled the love/light into what you might call intelligent energy, thus creating the so-called natural laws of any particular universe.</p>
+      <p class="zh">运用智能无限，每个部分创造了一个宇宙；并且——允许自由选择的节律流动，玩味着无限的可能性光谱——每个个体化的部分把「爱/光」引导成你们或许会称为智能能量的东西，从而创造出任何特定宇宙的所谓自然法则。</p>
+      <span class="src">—— Session 013 · (13.13)</span>
+    </div>
+    <div class="plain">自然法则不是先于宇宙存在的规矩，而是每个个体化部分自己引导出来的——所以每个宇宙、每个太阳系都有一套只属于自己的法则。</div>
+    <div class="case"><b>同一套模板开三个项目：</b>公司给三个新项目组同一套规范与预算，半年后三个组各自的「家规」都不一样了——对应 (13.13)：每个个体化部分运用智能无限，把爱/光引导成智能能量，于是造出属于自己那个宇宙的自然法则。</div>
+  </div>
+  <div class="card">
+    <h3>再一层包含：一切始于神秘，也终于神秘</h3>
+    <div class="quote">
+      <p class="en">It shall be understood that any portion, no matter how small, of any density or illusory pattern contains, as in an holographic picture, the One Creator which is infinity. Thus all begins and ends in mystery.</p>
+      <p class="zh">应当理解：任何部分，无论多么微小，在任何密度或幻象模式中，都如同一幅全息图像那样，包含着作为无限的太一造物主。因此，一切始于神秘，也终于神秘。</p>
+      <span class="src">—— Session 013 · (13.13)</span>
+    </div>
+    <div class="plain">Ra 在整集最形而上处没有继续往下推，而是停在「神秘」二字上——这本身是一个值得注意的态度。</div>
+    <div class="analogy"><b>像细胞里带着整份遗传信息：</b>一小块组织也能长成完整个体——部分里写着整体。</div>
+  </div>
+  <div class="card">
+    <h3>次序：从大到小，一路是螺旋</h3>
+    <div class="q">那么，我们所在的这个行星系统是如何演化的——是一次造好的，还是先有太阳？</div>
+    <div class="quote">
+      <p class="en">The process is from the larger, in your illusion, to the smaller.</p>
+      <p class="zh">这个过程，在你们的幻象中，是从较大走向较小。</p>
+      <span class="src">—— Session 013 · (13.15)</span>
+    </div>
+    <div class="quote">
+      <p class="en">However, the progression is from the galaxy spiraling energy, to the solar spiraling energy, to the planetary spiraling energy, to the experiential circumstances of spiraling energy which begin the first density of awareness, or consciousness, of planetary entities.</p>
+      <p class="zh">然而，进程是：从银河的螺旋能量，到太阳的螺旋能量，到行星的螺旋能量，再到螺旋能量的体验性环境——这些环境开始了行星实体们第一密度的觉察或意识。</p>
+      <span class="src">—— Session 013 · (13.15)</span>
+    </div>
+    <div class="timeline">
+      <div class="tl-item"><div class="t">银河系 · 螺旋能量</div><div class="d">个体化了银河系的共同造物主创造能量模式，这些模式又聚焦为众多对智能无限进一步有所觉察的焦点。</div></div>
+      <div class="tl-item"><div class="t">太阳系 · 螺旋能量</div><div class="d">你们居住的太阳系有其自身的模式、节律与自然法则，这些对它自身是独一无二的。</div></div>
+      <div class="tl-item"><div class="t">行星 · 螺旋能量</div><div class="d">螺旋能量继续下行到行星这一层，塑造出行星的模式与节律。</div></div>
+      <div class="tl-item"><div class="t">第一密度 · 体验环境</div><div class="d">螺旋能量的体验性环境开始了行星实体们第一密度的觉察或意识：一切始于混沌，能量无导向而随机。</div></div>
+    </div>
+    <div class="case"><b>从全球视图放大到街道：</b>你打开地图 App，先看到大陆轮廓，再放大到城市，最后才看到自家楼下那条街——(13.15) 说造物的次序是「从大到小」：银河 → 太阳 → 行星 → 第一密度。</div>
+  </div>
+  <div class="card">
+    <h3>术语卡：这一集的关键词</h3>
+    <p>点击卡片翻看解释。这八个词在本集里密集出现，也贯穿全书。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">智能无限</div><div class="sub">Intelligent Infinity</div><span class="tap">点击展开</span></div><div class="back">「无限」聚焦为一个觉察或有意识的原则之后的状态，在 Ra 体系里与太一无限造物主相通。本集中它是能量流出的源头，也是每一个个体化部分所运用的东西。<em>比喻：它既是海，也是取水的能力——(13.13) 说个体化部分「运用智能无限」造出宇宙。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">理则</div><div class="sub">Logos</div><span class="tap">点击展开</span></div><div class="back">(13.7) 说觉察导致无限聚焦为无限能量，你们对它的称呼中最常见的是「理则」或「爱」；(13.16) 又出现「于是理则移动」，指这个造物原则在行星环境中继续起作用的动作。<em>比喻：像一段持续运行的主指令，而不是一位坐在远方的设计者。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">变貌</div><div class="sub">distortion</div><span class="tap">点击展开</span></div><div class="back">对统一性的任何偏离状态，本身不含贬义。本集用它来描述「有限」——第一个、也是原初的悖论或一的法则的变貌。<em>比喻：同一束白光透过棱镜分成七色，颜色不是错，只是分开了。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">自由意志</div><div class="sub">freedom of will</div><span class="tap">点击展开</span></div><div class="back">一的法则的原初变貌之一。(13.8) 说下一步是「对造物原则的无限反应」，它遵循自由意志，因此维度在数量上是无限的；这也是本集「众多性」的唯一成因。<em>案例：同一副琴键，因为可以自由选择，乐句才没有尽头。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">共同造物主</div><div class="sub">co-Creator</div><span class="tap">点击展开</span></div><div class="back">智能无限的个体化部分。每个部分运用智能无限造出自己的宇宙，把爱/光引导为智能能量，从而创造出那个宇宙的「自然法则」——法则不是被给定的，是被引导出来的。<em>案例：拿到同一套原料与预算的新团队，各自长出不同的工作流程，那流程就是它的「自然法则」。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">全息</div><div class="sub">holographic</div><span class="tap">点击展开</span></div><div class="back">(13.8) 说造物的模式「以全息的方式」呈现：无论朝哪个方向或哪种能量探索，都会显现为整个造物；(13.13) 再说一次——任何再小的部分都含有作为无限的太一造物主。<em>比喻：全息底片的一角，打上去仍能映出整幅图。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">螺旋能量</div><div class="sub">spiraling energy</div><span class="tap">点击展开</span></div><div class="back">你们所谓「光」的特征运动方式。本集中它既是银河、太阳、行星的塑造者，也给了存在性一个不可避免的向上向量。(13.17) 说它「以直线螺旋移动」。<em>比喻：拧螺丝的手感——转着往上，而不是原地绕圈。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">心/身/灵复合体</div><div class="sub">mind/body/spirit complex</div><span class="tap">点击展开</span></div><div class="back">第三密度存有的标准称谓。(13.21) 说较高等的第二密度形态被第三密度存有赋予身份，成为自我觉察的心/身复合体，进而成为心/身/灵复合体，进入第三密度。<em>比喻：同一栋房子的三个系统——分开讲，住的是一个人。</em></div></div>
+    </div>
+  </div>
+  <div class="case"><b>苔藓积出的那一层薄土：</b>老墙根下的苔藓长了几十年，慢慢垫出一层薄土，风带来种子，后来竟长出了草——(13.16) 说第一密度的矿物与水之生命「从火与风中学习存在的觉察」，然后存在性才朝第二密度的生长迈进。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>密度阶梯与收割：从矿物与水到第四密度</h2></div>
+  <p class="sec-lead">最后一大段是本集的收口：密度的阶梯。第一密度是觉察，第二密度是生长与移动，第三密度是自我觉察；而地球在存在性上是第三密度，却已经处在第四密度的空间/时间里——Ra 说，这正造成一场有些困难的收割。他也在这里宣布：这是最后一个完整的问题。</p>
+  <div class="card">
+    <h3>第一密度：从混沌中浮出的觉察焦点</h3>
+    <div class="q">你能告诉我关于行星实体的这第一密度吗？</div>
+    <div class="quote">
+      <p class="en">Each step recapitulates intelligent infinity in its discovery of awareness. In a planetary environment, all begins in what you would call chaos, energy undirected and random in its infinity. Slowly, in your terms of understanding, there forms a focus of self-awareness. Thus the Logos moves.</p>
+      <p class="zh">每一步都在其发现觉察的过程中重演智能无限。在一个行星环境里，一切始于你们所谓的混沌——能量在其无限中无导向而随机。缓慢地，按你们理解的说法，一个自我觉察的焦点形成了。于是理则移动。</p>
+      <span class="src">—— Session 013 · (13.16)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This begins with first density which is the density of consciousness, the mineral and water life upon the planet learning from fire and wind the awareness of being. This is the first density.</p>
+      <p class="zh">这始于第一密度，也就是意识的密度：行星上的矿物与水之生命，从火与风那里学习「存在」的觉察。这就是第一密度。</p>
+      <span class="src">—— Session 013 · (13.16)</span>
+    </div>
+    <div class="plain">第一密度是「觉察」的密度，主角是矿物与水，老师是火与风——还没有「生长」这一课。</div>
+  </div>
+  <div class="card">
+    <h3>向上的向量：为什么会有「进化」这件事</h3>
+    <div class="q">那么第一密度会进展到更大的觉察吗？</div>
+    <div class="quote">
+      <p class="en">The spiraling energy, which is the characteristic of what you call light, moves in straight-line spiral, thus giving spirals an inevitable vector upwards to a more comprehensive beingness with regards to intelligent infinity.</p>
+      <p class="zh">螺旋能量——也就是你们所谓「光」的特征——以直线螺旋移动，从而给螺旋一个不可避免的向上向量，朝向就智能无限而言更全面的存在性。</p>
+      <span class="src">—— Session 013 · (13.17)</span>
+    </div>
+    <div class="plain">密度的推进不靠偶然，而靠螺旋自带的方向：不是随机漂移，是被螺旋带向上。</div>
+    <div class="analogy"><b>像登山道的之字形：</b>你以为在来回绕，其实每一步都在提高海拔——绕行是走法，向上是结果。</div>
+  </div>
+  <div class="card">
+    <h3>第二密度：会动、会朝光生长</h3>
+    <div class="q">你说的「生长」是什么意思？「朝向光努力」又指什么？</div>
+    <div class="quote">
+      <p class="en">Picture, if you will, the difference between first-vibrational mineral or water life and the lower second-density beings which begin to move about within and upon its being. This movement is the characteristic of second density, the striving towards light and growth.</p>
+      <p class="zh">请你想像第一振动性的矿物或水之生命，与较低等的第二密度存有之间的区别——后者开始在它之内与之上移动。这种移动是第二密度的特征，即朝向光与生长的努力。</p>
+      <span class="src">—— Session 013 · (13.18)</span>
+    </div>
+    <div class="quote">
+      <p class="en">A very simplistic example of second-density growth striving towards light is that of the leaf striving towards the source of light.</p>
+      <p class="zh">关于第二密度朝向光的生长努力，一个非常简化的例子就是叶子朝光源努力。</p>
+      <span class="src">—— Session 013 · (13.19)</span>
+    </div>
+    <div class="plain">第二密度的标志是「移动」：有方向、会生长，而不再是消解或随机变化。</div>
+    <div class="analogy"><b>阳台上的绿萝：</b>它没有大脑，却会把藤蔓一寸寸转向有光的窗——一个方向已经存在了。</div>
+  </div>
+  <div class="card">
+    <h3>第三密度：自我觉察，而其余密度只是选择不可见</h3>
+    <div class="q">第一密度与第二密度有物理上的差别吗？第二密度又如何进展到第三密度？</div>
+    <div class="quote">
+      <p class="en">All of the octave of your densities would be clearly visible were not the fourth through the seventh freely choosing not to be visible.</p>
+      <p class="zh">你们密度的整个八度音程都会清晰可见——若非第四到第七密度自由选择不可见的话。</p>
+      <span class="src">—— Session 013 · (13.20)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The second density strives towards the third density, which is the density of self-consciousness, or self-awareness.</p>
+      <p class="zh">第二密度努力朝向第三密度，也就是自我意识或自我觉察的密度。</p>
+      <span class="src">—— Session 013 · (13.21)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The striving takes place through the higher second-density forms who are invested by third-density beings with an identity to the extent that they become self-aware mind/body complexes, thus becoming mind/body/spirit complexes and entering third density, the first density of consciousness of spirit.</p>
+      <p class="zh">这种努力通过较高等的第二密度形态发生——它们被第三密度存有赋予了一个身份，达到成为自我觉察的心/身复合体的程度，从而成为心/身/灵复合体，进入第三密度，即灵性意识的第一密度。</p>
+      <span class="src">—— Session 013 · (13.21)</span>
+    </div>
+    <div class="plain">第三密度的门槛是「被赋予身份」：从只是活着，变成能把自己当作对象来看。第四到第七密度并非不存在，只是自由选择不可见。</div>
+    <div class="case"><b>宠物认得出自己的名字：</b>你养了几年的狗开始从你的语气里分辨你是不是要出门——(13.21) 说的正是这条通道：较高等的第二密度形态被第三密度存有赋予身份，因而走向自我觉察。门是从这一侧被推开的。</div>
+  </div>
+  <div class="card">
+    <h3>地球与收割：困难在哪里</h3>
+    <div class="q">我们星球地球此时的密度层级是什么？一个第三密度的行星如何成为第四密度的？</div>
+    <div class="quote">
+      <p class="en">The sphere upon which you dwell is third density in its beingness of mind/body/spirit complexes. It is now in a space/time continuum, fourth density. This is causing a somewhat difficult harvest.</p>
+      <p class="zh">你们所居住的球体，在其心/身/灵复合体的存在性上是第三密度；它现在处在一个空间/时间的连续体里——第四密度。这正造成一场有些困难的收割。</p>
+      <span class="src">—— Session 013 · (13.22)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The fourth density is, as we have said, as regularized in its approach as the striking of a clock upon the hour.</p>
+      <p class="zh">第四密度，如我们曾说过的，在它来临这件事上，如同钟表整点报时一样规律。</p>
+      <span class="src">—— Session 013 · (13.23)</span>
+    </div>
+    <div class="quote">
+      <p class="en">However, the thought-forms of your people during this transition period are such that the mind/body/spirit complexes of both individual and societies are scattered throughout the spectrum instead of becoming able to grasp the needle, shall we say, and point the compass in one direction.</p>
+      <p class="zh">然而，在这个过渡时期，你们人群的思想形态使得个体与社会两者的心/身/灵复合体都散落在整个光谱里，而不是能够——容我们说——抓住指针，让指南针指向同一个方向。</p>
+      <span class="src">—— Session 013 · (13.23)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Thus, the entry into the vibration of love, sometimes called by your people the vibration of understanding, is not effective with the present societal complex. Thus, the harvest shall be such that many will repeat the third-density cycle. The energies of your wanderers, your teachers, and your adepts at this time are all bent upon increasing the harvest. However, there are few to harvest.</p>
+      <p class="zh">因此，进入「爱的振动」——有时被你们人群称为「理解的振动」——对于当前的社会复合体来说并不有效。所以，收割将是这样的：许多人会重复第三密度的周期。你们的流浪者、你们的老师与 adept 们此时的能量，全都致力于增加收割。然而，可收割者寥寥无几。</p>
+      <span class="src">—— Session 013 · (13.23)</span>
+    </div>
+    <div class="plain">行星这一层的条件已经具备而且准时；卡住的是人群的方向——当指针指不到同一个方向，爱的振动就落不进来。</div>
+    <div class="analogy"><b>像全班要一起合唱：</b>教室、乐谱、铃声都齐了（行星与时机），但每个人各唱各的调，合唱就成立不了——Ra 说的是社会这一层，不是某一个人的成败。</div>
+    <p style="font-size:.9rem;color:var(--ink-soft)">Ra 在回答这一问之前先说了一句：「This will be the last full question.」（这将是最后一个完整的问题。）</p>
+  </div>
+  <div class="card">
+    <h3>密度阶梯一览</h3>
+    <div class="timeline">
+      <div class="tl-item"><div class="t">第一密度 · 觉察的密度</div><div class="d">一切始于混沌，能量无导向而随机；缓慢形成一个自我觉察的焦点。矿物与水之生命从火与风中学习「存在」的觉察。</div></div>
+      <div class="tl-item"><div class="t">第二密度 · 生长与移动</div><div class="d">螺旋能量给了存在性一个向上的向量，从此有「生长」而不是消解或随机变化；标志是移动——朝光、朝生长。</div></div>
+      <div class="tl-item"><div class="t">第三密度 · 自我觉察</div><div class="d">较高等的第二密度形态被第三密度存有赋予身份，成为自我觉察的心/身复合体，进而成为心/身/灵复合体——这就是灵性意识的第一密度。</div></div>
+      <div class="tl-item"><div class="t">第四密度 · 爱与理解</div><div class="d">它的来临像钟表整点报时一样规律；地球已处在第四密度的空间/时间中，但人群的思想形态散在光谱各处，抓不住指针。</div></div>
+      <div class="tl-item"><div class="t">收割 · 去向</div><div class="d">进入爱的振动对当前的社会复合体并不生效，因此许多人将重复第三密度周期；流浪者、老师与 adept 们的能量全都在致力于增加收割，然而可收割者寥寥无几。</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>归类练习：这属于哪个密度？</h3>
+    <p>用本集的语言判断下面每件事更贴近哪个密度的描述。</p>
+    <div id="sorterArea"></div>
+  </div>
+  <div class="card">
+    <h3>条件模拟器：进入第四密度，还缺什么？</h3>
+    <p>Ra 把「进入爱的振动不生效」明确归因于一件事：人群的思想形态散在光谱各处，而不是抓住指针、指向同一个方向。把这句话拆成开关来拨一拨，看他究竟在说什么、没说什么。</p>
+    <div class="cond-row"><div class="name">行星螺旋进入第四密度的空间/时间<small>环境条件 · Ra 说它像钟表报时一样规律地到来</small></div><label class="switch"><input type="checkbox" id="condEnv" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">人群的思想形态指向同一个方向<small>Ra 说当下是「散落在整个光谱里」，抓不住指针</small></div><label class="switch"><input type="checkbox" id="condDir"><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">社会复合体进入「爱的振动」<small>又称「理解的振动」· Ra 的判语是：对当前社会复合体并不有效</small></div><label class="switch"><input type="checkbox" id="condLove"><span class="slider"></span></label></div>
+    <div id="condResult"></div>
+  </div>
+  <div class="case"><b>公司搬迁 vs 团队状态：</b>新办公楼已经交付、工位已排好（行星条件已备，且不由员工决定），但团队还在各自为战、目标各指一方——所以「换个环境就好了」并不会自动成立。这正是 (13.23) 的区分：环境到了，方向没到。</div>
+  <div class="case"><b>毕业生填志愿：</b>报名系统已经按新学制开放（时机准时到来），但每个学生的志愿横跨十几个方向，谁也凑不成一个共同的去向——Ra 说「进入爱的振动对当前的社会复合体并不有效」，说的就是这种整体性的散开。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s7">
+  <div class="sec-head"><span class="num">07</span><h2>收官：这一集停在哪里</h2></div>
+  <p class="sec-lead">本集的长度明显比前几次短，原因 Ra 说得很直接：器皿的生命能量有些低。于是在一个判断（可收割者寥寥）之后，Ra 收住了——不再展开第四密度之后的事，转而进入器皿照料与后勤，然后以爱与光作别。</p>
+  <div class="saying">
+    <p class="en">It shall be understood that any portion, no matter how small, of any density or illusory pattern contains, as in an holographic picture, the One Creator which is infinity. Thus all begins and ends in mystery.</p>
+    <p class="zh">应当理解：任何部分，无论多么微小，在任何密度或幻象模式中，都如同一幅全息图像那样，包含着作为无限的太一造物主。因此，一切始于神秘，也终于神秘。</p>
+    <span class="src">—— Session 013 · (13.13)</span>
+  </div>
+  <div class="card">
+    <h3>收尾与伏笔</h3>
+    <p>本集用一条连续追问，把「从造物开端到第四密度收割」这条主线一次铺开，然后在 (13.23) 明确收口：这是最后一个完整的问题，此后只答简短询问。收尾的方式也值得留意——Ra 没有把话讲圆，而是停在一个判断上：许多人将重复第三密度周期，可收割者寥寥。</p>
+    <div class="quote">
+      <p class="en">It is well. Each is most conscientious. Continue in the same. Is there any other short query?</p>
+      <p class="zh">一切都好。每一位都非常尽责。继续如此。还有任何其他简短的问题吗？</p>
+      <span class="src">—— Session 013 · (13.26)</span>
+    </div>
+    <div class="quote">
+      <p class="en">I am Ra. I leave you in the love and the light of the One Infinite Creator. Go forth, therefore, rejoicing in the power and the peace of the One Creator. Adonai.</p>
+      <p class="zh">我是 Ra。我在太一无限造物主的爱与光中离开你们。那么，向前去吧，在太一造物主的大能与和平中欢欣鼓舞。Adonai。</p>
+      <span class="src">—— Session 013 · (13.27)</span>
+    </div>
+    <div class="plain">带着这几个问题读下去：第四到第七密度为什么「自由选择不可见」？在「可收割者寥寥」这个判断之后，这条从无限铺到地球的线，下一步会讲到哪里？</div>
+  </div>
+  <div class="case"><b>教练叫停加练：</b>长跑训练结束，教练说「今天不加练了，你的状态已经偏低」——(13.24)–(13.25) 里 Ra 对器皿的处理完全一样：生命能量有些低；可以稍后再开一场，但要全程监控、材料变低就立刻停手，因为「我们不希望耗尽这个器皿」。</div>
+  <div class="case"><b>收工前把工具归位：</b>再大的项目，收尾也还是那几件事：灯关掉、门锁好、器材归位。本集讲了那么长的一段宇宙史，最后四问全是器皿照料与今晚谁在场帮忙——收尾的动作本身也是这套资料的一部分。</div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+<p>基于 The Ra Contact Session 013（split/Ra_Session_013.md）英文原文制作 · 交互式学习模块</p>
+<p>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文</p>
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra013-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+  {t:'(13.1–13.4) 书名与署名',d:'<span class="qa-q">问：这本书叫《一的法则》、作者署 Ra，可以吗？</span><b>答：</b>你的询问不清晰，请拆成单独的问题。拆开之后——内容编排「完全是你的辨别/理解/决定」；书名可以接受；作者一栏在 Ra 的理解中「不完整」，因为「我们是信使」，若要用「Ra」这个名字，请附上「一的法则的一位谦卑信使」。'},
+  {t:'(13.5–13.7) 造物的开端',d:'<span class="qa-q">问：造物中最早、第一个已知的事物是什么？</span><b>答：</b>无限；无限就是造物。接着是：无限变得觉察；觉察导致无限聚焦为无限能量——你们称之为「理则」或「爱」；造物主就是这个聚焦而成的觉察原则，即智能无限。'},
+  {t:'(13.8) 下一步与众多性',d:'<span class="qa-q">问：下一步是什么？</span><b>答：</b>对造物原则的无限反应，遵循一的法则的原初变貌之一——自由意志；因此维度在数量上是无限的。能量因随机化创造力的倾泻而流出，造出全息式的模式，模式再规律化自己的局部节律，于是有了维度与宇宙。'},
+  {t:'(13.9–13.11) 发问者跳级',d:'<span class="qa-q">问：那银河系和这个行星系统是怎么形成的？</span><b>答：</b>Ra 先提醒这是一次「思想的巨大飞跃」——上一问里物理宇宙尚未诞生；并说自己「试图弥合这个差距」，又说明这些步骤在所问的节点上是同时且无限的。'},
+  {t:'(13.12–13.15) 个体化与共同造物主',d:'<span class="qa-q">问：智能无限如何从自身个体化？</span><b>答：</b>它辨识出「有限」这个概念——第一个、也是原初的悖论，于是投身于众多性的探索。银河系与一切物质都是个体化部分的产物；每个部分造出自己的宇宙、成为共同造物主，进程从大到小：银河 → 太阳 → 行星 → 第一密度。'},
+  {t:'(13.16–13.23) 密度阶梯与收割',d:'<span class="qa-q">问：第一密度是什么？地球现在处于哪个密度？</span><b>答：</b>第一密度是觉察的密度，矿物与水之生命从火与风学习「存在」；此后是生长（第二）、自我觉察（第三）。地球在存在性上是第三密度，已处在第四密度的空间/时间中，而这正造成一场有些困难的收割——人群的思想形态散在光谱各处，指不到同一个方向，可收割者寥寥。Ra 随即宣布这是最后一个完整的问题。'},
+  {t:'(13.24–13.27) 收尾',d:'<span class="qa-q">问：这次集会为什么偏短？</span><b>答：</b>这个器皿的生命能量有些低。可以稍后再开一场，但要监控它、材料变低就停，因为「我们不希望耗尽这个器皿」；随后确认一切都好、Tom Flaherty 会在晚间集会帮忙，然后以爱与光作别。'}
+]);
+
+initStepper('originTrack','originDetail','originPrev','originNext',[
+  {t:'① 无限',d:'<b>造物中第一个已知的事物是无限。</b>不是先有无限再有造物——Ra 说「无限就是造物」。(13.5)'},
+  {t:'② 无限变得觉察',d:'<b>下一步不是「造」，而是「觉察」。</b>没有任何东西被制造出来，是无限开始知道自己。(13.6)'},
+  {t:'③ 聚焦为无限能量',d:'<b>觉察导致无限聚焦为无限能量。</b>你们用各种声音振动复合体称呼它，在你们听来最常见的是「理则」或「爱」。(13.7)'},
+  {t:'④ 造物主 = 智能无限',d:'<b>造物主是无限聚焦为一个觉察或有意识的原则。</b>Ra 尽可能贴近地用你们的语言称之为智能无限——它不是一位站在远处的设计者。(13.7)'},
+  {t:'⑤ 转向众多性',d:'<b>再下一步是对造物原则的无限反应，遵循自由意志</b>——于是维度在数量上无限，众多性没有终点，这场探索在永恒的当下中无限延续。(13.8、13.12)'}
+]);
+
+document.querySelectorAll('.fn-card').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('open')));
+
+initSorter('sorterArea',[
+  {a:'阳台那盆绿萝把藤蔓一寸寸转向有光的窗',opts:['第一密度','第二密度','第三密度'],ans:'第二密度',exp:'Ra 用叶子朝光源努力作为第二密度「朝向光与生长」的最简例子——有方向、会生长，这是第二密度的特征。'},
+  {a:'河床里的卵石被水流磨了许多年，越磨越圆，可它始终还是那块石头',opts:['第一密度','第二密度','第三密度'],ans:'第一密度',exp:'第一密度是矿物与水之生命，从火与风那里学习「存在」的觉察；此时只有消解与随机变化，还没有「生长」这一课。'},
+  {a:'凌晨三点醒着，第一次问自己「我为什么会在这里」',opts:['第一密度','第二密度','第三密度'],ans:'第三密度',exp:'自我觉察是第三密度的标志，Ra 称它为「灵性意识的第一密度」——能把自己当作对象来看。'},
+  {a:'窗玻璃上的霜每天结出不同的花纹，日出后消解，第二天又重新结',opts:['第一密度','第二密度','第三密度'],ans:'第一密度',exp:'第一维度的存在性只有消解与随机变化；朝向「生长」的努力要到第二密度才出现。'},
+  {a:'老墙根下的苔藓长了几十年，慢慢垫出一层薄土',opts:['第一密度','第二密度','第三密度'],ans:'第二密度',exp:'苔藓在石面上积累薄土，是「朝向光与生长的努力」——Ra 说生长是第二密度的课程。'}
+]);
+
+function updateCond(){
+  const env=document.getElementById('condEnv').checked;
+  const dir=document.getElementById('condDir').checked;
+  const love=document.getElementById('condLove').checked;
+  const box=document.getElementById('condResult');
+  let html='',fail=false;
+  if(!env){
+    fail=true;
+    html='<b>这一条不是人可以拨动的开关。</b>Ra 说第四密度的来临「如同钟表整点报时一样规律」，你们太阳系的空间/时间已使这个行星球体螺旋进入一个不同振动配置的空间/时间——它已经具备。所以本集里「困难」的原因不在行星这一层。';
+  }else if(dir&&love){
+    html='<b>当这两条都成立时，Ra 所指出的那个缺口就不存在了。</b>他把「进入爱的振动不生效」明确归因于思想形态散落在光谱各处、指不到同一个方向；方向一旦合一，这个归因便不再成立。注意：Ra 并未据此承诺什么，他只说明了当下为何困难。';
+  }else if(dir&&!love){
+    html='<b>方向有了，但「爱的振动」还没有被整体接住。</b>Ra 的原话是：进入爱的振动「对于当前的社会复合体来说并不有效」——这句判语的对象是社会复合体整体，而不是个别已经开始极化的个人。';
+  }else if(!dir&&love){
+    html='<b>「爱的振动」与「散开的方向」并存时，社会这一层接不住它。</b>Ra 说人群的思想形态使个体与社会的复合体都散落在整个光谱里，而不是抓住指针——所以他的下一句才是：这场收割将是很困难的。';
+  }else{
+    fail=true;
+    html='<b>这正是本集描述的现状。</b>行星层面的条件已备，但人群的思想形态散落在整个光谱里、指不到同一个方向。Ra 的结论是：进入爱的振动对当前社会复合体并不生效，因此许多人将重复第三密度周期。他同时补了一句：你们的流浪者、老师与 adept 们的能量全都致力于增加收割，「然而，可收割者寥寥无几」。';
+  }
+  box.className=fail?'fail':'';
+  box.innerHTML=html;
+}
+['condEnv','condDir','condLove'].forEach(function(id){
+  document.getElementById(id).addEventListener('change',updateCond);
+});
+updateCond();
+
+renderPath();
+</script>
+</body>
+</html>

@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 032 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 032 · 交互式学习模块</h1>
+  <p class="sub">这一集先由一个具体事故拆出「负面影响如何进入一个人、又该怎么防住」，随后把性极性的讨论推完：从橙色、黄色一路讲到紫色，并说明为什么只有第四、五、六密度还存在这种能量转移。</p>
+  <div class="tagline">6 个主题 · 6 个学习步骤 · 18 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 开口与保护</a>
+<a href="#s3">③ 橙与黄：力量的两级</a>
+<a href="#s4">④ 由绿到紫：给予的转向</a>
+<a href="#s5">⑤ 第三密度之外</a>
+<a href="#s6">⑥ 收官：金句与伏笔</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>这一集有两条线：一次事故引出的保护问题，加上半条光芒谱</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>开口与保护</b><span>「开口」是怎么凑齐条件的，以及 Ra 为何说「没有错误」</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>橙与黄：力量的两级</b><span>个体身上的权力与群体之间的权力，以及负面极性的转移</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>由绿到紫：给予的转向</b><span>七道光芒在性互动中的位置：从接收到给予，到圣礼与底色</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>第三密度之外</b><span>为什么只有第四、五、六密度有转移，流浪者又带着什么取向</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官与伏笔</b><span>收尾的那句告诫、本集金句，以及留给后面集会的门槛</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：一次事故引出的普遍问题，加半条光芒谱</h2></div>
+  <p class="sec-lead">上一集（2 月 17 日）Ra 已经开始谈性极性如何作为进化的催化剂，讲到红色光芒。这一集有两条线：开头用 Jim 提的一个具体问题——器皿因服用一种化学物质而受了损伤，她自己并不知道正在打开什么口子——把话题拉到「负面影响怎么进入一个人，又该怎么防住」；然后回到性极性，从橙色光芒一路问到紫色光芒，并延伸到更高的密度。</p>
+  <div class="card">
+    <h3>问答脉络：九步走完这一集</h3>
+    <p>本集的问与答分三段：一次事故引发的普遍教导、一次编号纠错、一段光芒谱。点节点看每一段在做什么。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="qaTrack"></div>
+      <div class="flow-detail" id="qaDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="qaPrev">← 上一步</button> <button class="tri-btn" id="qaNext">下一步 →</button></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>本集议题清单</h3>
+    <div class="quote">
+      <p class="en">I am Ra. I greet you in the love and the light of the One Infinite Creator. We communicate now.</p>
+      <p class="zh">我是 Ra。我在太一无限造物主的爱与光中向你们致意。我们现在开始通讯。</p>
+      <span class="src">—— Session 032 · (32.0)</span>
+    </div>
+    <p>例行开场之后，本集有五件事：①（32.1）一个具体事故：器皿服用了一种化学物质，以及由它引出的「如何保护自己免受扭曲性影响」；②（32.2）橙色与黄色光芒的区别，以及负面极性的性能量转移；③（32.3）–（32.4）一次编号纠错：前次的「第三道光芒」应为绿色／第四道光芒；④（32.5）–（32.7）蓝色、靛蓝色、紫色三道光；⑤（32.8）–（32.14）更高的密度、流浪者的取向、颜色的边界，以及绿色光芒的脆弱与靛蓝色的门槛。</p>
+    <div class="plain">这一集没有一句话是孤立的：前半段讲「怎么不被影响」，后半段讲「性能量转移在七道光芒上如何分级」，而两者的交汇点是同一件事——你在哪一层振动，就只在那层拿到能量。</div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 后勤 · 收尾照料</span></summary>
+  <div class="body">
+    <p><b>(32.0) 开场：</b>Ra 以「在太一无限造物主的爱与光中致意」开场，宣布本次通讯开始。</p>
+    <p><b>(32.1) 提问来源：</b>这个问题由 Jim 提出、由发问者读出，内容是关于器皿此前服用一种化学物质后的恢复状况与自我保护。</p>
+    <p><b>(32.15) 收尾前的询问：</b>Ra 主动问，结束之前是否还有简短的问题。</p>
+    <p><b>(32.16) 收尾照料：</b>Ra 说「一切都好」，并提醒不仅要照看器皿，每个人都要留意维持器皿与通讯水平不枯竭所必需的生命能量；随后以 Adonai 作结。</p>
+  </div></details>
+  <div class="case"><b>先处理手上的烫伤，再教你以后怎么防：</b>你去急诊，医生先包扎了你今天烫伤的手（具体事件），然后才花时间讲厨房里该怎么摆锅（普遍方法）。本集就是这个顺序：32.1 从器皿的一次具体受伤谈到普遍的保护方法，32.2 起才回到原本的性能量转移议题。</div>
+  <div class="case"><b>例会上的一个小问题带出一段大讨论：</b>周会上有人只问「这周排班怎么定」，结果讨论变成了「我们团队的边界在哪里」。发问者问的是某个人的身体事故，Ra 却回答了所有正面道途上的人都用得着的保护原则——一次具体提问换来一段普遍教导，这是 Ra 资料里常见的展开方式。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>开口与保护：一次化学物质事故教给我们的全部防护</h2></div>
+  <p class="sec-lead">发问者替 Jim 读出一个相当具体的问题：器皿服用了一种化学物质，身体至今仍在恢复；她自己并不知道这造成了什么。问题有三层——我们三个人怎样才能更早觉察自己的言行会不会造成这类开口？在集会中问某些领域时会不会无意间造成它？有没有什么仪式或冥想可以用来保护自己？Ra 的回答是本集最实用的部分。</p>
+  <div class="card">
+    <h3>回答之前先划界：Ra 受「混淆之路」限制</h3>
+    <div class="q">器皿吃下一种化学物质后身体受损，而她并不知道自己正在打开什么。我们怎样才能更觉察这类开口？有没有可用的仪式或冥想？</div>
+    <div class="quote">
+      <p class="en">Although we are in sympathy with the great desire to be of service exemplified by this question, our answer is limited by the distortion of the Way of Confusion. We shall say some general things which may be of service in this area.</p>
+      <p class="zh">尽管我们同情这个问题所体现的服务渴望，我们的回答仍受限于混淆之路的变貌。我们只会谈一些在这个领域或许有用的一般性事情。</p>
+      <span class="src">—— Session 032 · (32.1)</span>
+    </div>
+    <div class="plain">Ra 不给处方、不指定仪式：它先声明自己受混淆之路限制，只谈一般原则。</div>
+    <div class="analogy"><b>像医生面对「我该不该辞职」：</b>他能陪你梳理睡眠、压力与决策之间的关系，但不能替你做那个决定。不给具体处方，本身就是对你选择权的保护。</div>
+    <p>这里出现一个全书反复出现的术语：<b>混淆之路（Way of Confusion）</b>——在本集语境下，指 Ra 不替人做决定的限制，即任何会剥夺他人自由选择的答案都不给。它解释了为什么后面 Ra 说「保护非常简单」却始终没有给出一套操作流程。</p>
+  </div>
+  <div class="card">
+    <h3>那件事的机制：可识别的物质，加上没有被觉察的偏移</h3>
+    <div class="q">那这次到底发生了什么？是有人做错了吗？</div>
+    <div class="quote">
+      <p class="en">There are no mistakes, including the action of this instrument.</p>
+      <p class="zh">没有错误——包括这个器皿的行动。</p>
+      <span class="src">—— Session 032 · (32.1)</span>
+    </div>
+    <p>Ra 把这件事拆成两层。机制层：造成身体复合体朝低生命能量扭曲的，是一种「可识别的物质」，而 Ra 特意指出它<b>不是天然物质</b>；同时，那个心/身/灵复合体也没有足够觉察到自己正朝身体虚弱的方向偏移。基准线在另一个方向——Ra 说「日常存在的自然方式」（在其中，实体没有因摄入强力化学物质而造成的变貌）可以被视为<b>始终具有恰当的性质</b>。评断层：既然基准线是「自然的日常」，那么这次事件不是一桩需要归罪的错误，Ra 直接把它取消。</p>
+    <div class="plain">一次受伤的配方是两样东西：外来的、非天然的强力物质，加上一份自己没察觉到的偏移；而「谁错了」这个问题，Ra 从根上取消了。</div>
+    <div class="analogy"><b>像靠代餐和能量饮料顶连续几周的加班：</b>没有任何一个单独动作叫「犯错」，但身体的节奏被一点点推离原位，直到某个晚上心悸失眠，你才发现自己早就在偏移。</div>
+    <div class="case"><b>连吃感冒药赶上线：</b>一位同事感冒后连吃几天含麻黄碱的复方感冒药，又靠咖啡熬到凌晨赶项目上线，一周后开始心悸、失眠、白天发虚。他说不出自己「做错了什么」——这正是 (32.1) 描述的形态：一种可识别、非天然的物质把身体复合体推向低生命能量，而当事人并未觉察自己朝虚弱的方向偏移。</div>
+    <div class="case"><b>事故复盘先问流程，不先定责：</b>线上事故复盘会上，负责人没有先问「是谁改坏的」，而是问「这次我们绕过了哪一步日常流程」。对应 Ra 的处理：把「谁错了」取消，把注意力放回「日常存在的自然方式始终具有恰当的性质」这条基准线上。</div>
+  </div>
+  <div class="card">
+    <h3>保护的全部方法：四句短句，就是全部</h3>
+    <div class="q">那我们要怎么做才能保护自己免受扭曲性的影响？</div>
+    <div class="quote">
+      <p class="en">Thus we see protection being very simple. Give thanksgiving for each moment. See the self and the other-self as Creator. Open the heart. Always know the light and praise it. This is all the protection necessary.</p>
+      <p class="zh">因此我们看到，保护非常简单。为每一刻献上感恩。把自我与其他自我视为造物主。敞开你的心。始终知晓光，并赞美它。这就是全部必要的保护。</p>
+      <span class="src">—— Session 032 · (32.1)</span>
+    </div>
+    <p>Ra 先把器皿的示范摆出来：请想想那次事件里，负面影响有多大机会进入她；而她在独处时思考造物主，在与另一个自我的往来中持续赞美并感谢造物主给她正在经历的体验。结果是——她放射给另一个自我的能量，反而成了一种催化剂，开启了并强化了对方以更正面的极化状态运作的能力。所以保护不是「堵住开口」，而是让开口那一边没有东西可拿。</p>
+    <div class="plain">保护 = 一组日常取向：为每一刻感恩、把自我与他人视为造物主、敞开你的心、始终知晓并赞美光。Ra 说，这就是全部。</div>
+    <div class="analogy"><b>像免疫系统：</b>它不靠临时消毒一次，而靠每天吃、睡、动的那一整套日常；一旦它在，就不容易被感染——而你也无法在接触病毒的那一刻才决定要不要有它。</div>
+    <div class="case"><b>在病房里坐着的那几周：</b>朋友确诊后，你没带任何安慰话术，只是每次都到场，并替他留意那些细小的好转（今天能下床了、今天能吃饭了），还当面说出感谢。几个月后他说：是你们让我觉得自己还撑得住。器皿示范的是同一件事——她独处时想造物主、与人相处时不断赞美与感恩，于是她放射出的能量成了对方正面极化的催化剂。</div>
+  </div>
+  <div class="card">
+    <h3>动手看：一次「开口」是怎么凑齐条件的</h3>
+    <p>把 Ra 拆出的两条机制，加上他所说的保护取向，放成三个开关。拨动看看结果——最后一项尤其值得注意：Ra 说器皿在保护上其实示范得非常好。</p>
+    <div class="demo-area" style="text-align:left">
+      <div class="cond-row"><div class="name">摄入可识别的强力化学物质<small>Ra 特意指出：它不是天然物质</small></div>
+        <label class="switch"><input type="checkbox" id="cond1"><span class="slider"></span></label></div>
+      <div class="cond-row"><div class="name">心/身/灵未觉察朝身体虚弱的变貌<small>低生命能量在无人知晓处累积</small></div>
+        <label class="switch"><input type="checkbox" id="cond2"><span class="slider"></span></label></div>
+      <div class="cond-row"><div class="name">日常中失去感恩与赞美光的取向<small>Ra 所说的「全部必要的保护」的反面</small></div>
+        <label class="switch"><input type="checkbox" id="cond3"><span class="slider"></span></label></div>
+    </div>
+    <div id="condResult"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>橙色与黄色：同一种力量，两种规模</h2></div>
+  <p class="sec-lead">话题回到前天那份资料：性极性如何作为进化中的催化剂。发问者打算从红色光芒一路问到紫色光芒，这一集先补上橙色与黄色的差别。Ra 的回答很利落——差别不在强度，而在规模的单位是个体还是群体；随后它把这套区分用在负面道途的性互动上。</p>
+  <div class="card">
+    <h3>橙色是个体，黄色是群体</h3>
+    <div class="q">橙色光芒与黄色光芒的激活有什么区别？</div>
+    <p>Ra 说，<b>橙色光芒（orange ray）</b>是心/身/灵在「个体基础」上表达其力量的那种影响力或振动模式——「对个体的支配权力」就是橙色光芒；它在这一层把其他自我当成非实体、奴隶或财产，从而不给对方任何地位。而<b>黄色光芒（yellow ray）</b>是一道聚焦且非常强大的光芒，它涉及的是实体与群体、社会、或大量心/身/灵复合体的关系。</p>
+    <div class="quote">
+      <p class="en">This orange—we correct ourselves—this yellow-ray vibration is at the heart of bellicose actions in which one group of entities feel the necessity and right of dominating other groups of entities and bending their wills to the wills of the masters.</p>
+      <p class="zh">这个橙色——我们更正自己——这道黄色光芒的振动，正是好战行动的核心：在其中，一群实体感到自己有必要、也有权利去支配另一群实体，并把后者的意志折向主人的意志。</p>
+      <span class="src">—— Session 032 · (32.2)</span>
+    </div>
+    <div class="plain">橙色的权力是一对一（支配某个人），黄色的权力是一群压一群（支配某个群体）；Ra 说好战行动的核心正在黄色的振动里。</div>
+    <div class="analogy"><b>职场里的两种霸道：</b>一种是把某个下属当工具使唤、随时使唤随时丢（橙色）；一种是以「团队纪律」「企业文化」的名义，要求所有人都把自己那套当成大家的意志（黄色）。规模不同，逻辑一样——把自己的意志当成别人的意志。</div>
+    <p>再用一组对比卡把它们摆在一起，注意第三张卡：负面道途并不是另一道光芒，而是把前两道组合起来用。</p>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">单位 = 个体</span><h4>橙色光芒 orange ray</h4><p>心/身/灵在个体层面表达力量。表现是<b>对个体的支配权力</b>：把其他自我视为非实体、奴隶或财产，不给对方任何地位。</p></div>
+      <div class="yuan-card"><span class="y-tag">单位 = 群体</span><h4>黄色光芒 yellow ray</h4><p>聚焦而强大，处理实体与<b>群体、社会、大量心/身/灵复合体</b>的关系。好战行动的核心：一群实体认为自己有权支配另一群。</p></div>
+      <div class="yuan-card"><span class="y-tag">组合用法</span><h4>负面道途 negative path</h4><p>把黄与橙<b>组合</b>起来、专注地使用。Ra 说这种专注的使用同样能带来与智能无限的接触——这是负向极化的技术。</p></div>
+    </div>
+    <div class="case"><b>用考核分压人：</b>主管在季度会上把方案讲完，补一句「有意见的可以看看上季度的考核分」——个体对个体，用权力替对方做决定，这是橙色光芒在今天的常见样子。</div>
+    <div class="case"><b>两个部门争主导：</b>两个部门为一个项目的归属吵了三周，最后不是比谁的方案好，而是比谁在组织规则上更有话语权、能逼对方让出主导权——这正是 (32.2) 所说的黄色光芒振动：群体对群体，把对方的意志折向自己的意志。</div>
+  </div>
+  <div class="card">
+    <h3>负面极性的转移：黄与橙的组合，与被阻塞的饥渴</h3>
+    <div class="q">那么负面道途在这方面是怎么运作的？</div>
+    <p>Ra 说，负面道途「如你们所称呼的」，在其极化模式中使用的正是黄色光芒与橙色光芒的组合；而这些光芒以专注的方式被使用时，也会带来与智能无限的接触。接着它给出一个关键描述：如果一个人的主要振动模式是黄色或橙色，那么性互动的通常性质是<b>先阻塞，然后因为阻塞而出现无法满足的饥渴</b>。当两个自我都在这个区域振动，极化的可能性就出现了。</p>
+    <div class="quote">
+      <p class="en">one entity experiencing the pleasure of humiliation and slavery, or bondage, the other experiencing the pleasure of mastery and control over another entity</p>
+      <p class="zh">一个实体体验着羞辱与奴役（或束缚）的快感，另一个实体体验着支配、以及控制另一个实体的快感。</p>
+      <span class="src">—— Session 032 · (32.2)</span>
+    </div>
+    <div class="plain">负面极性的性能量转移不是「做坏事」，而是把性互动当作支配／被支配的极化工具使用；Ra 说这种转移同样真实发生，只是方向朝另一端。</div>
+    <div class="analogy"><b>像一段靠贬低维持的关系：</b>一方要让对方变小，才能确认自己够大；另一方在被压小的过程里获得一种奇异的安心。两个人都在其中得到强烈感受——但整段关系的方向是在往「支配」那一端极化。</div>
+    <div class="case"><b>反复回到被贬低的关系里：</b>一位来访者三度离开又三度回到那段被控制、被贬低的关系，理由是「只有在他面前我才不用装强」。按 (32.2) 的说法，这里的快感是分居两端的：羞辱与束缚在一端，支配与控制在一端——这就是负面极性的性能量转移，而不是爱。</div>
+  </div>
+  <div class="card">
+    <h3>编号纠错：这个通讯的一个持续弱点</h3>
+    <div class="q">2 月 17 日那段资料里说的是「第三道光芒」，那道光芒到底是什么颜色？</div>
+    <p>Ra 回答：那段资料里所说的光芒，正确地应该是绿色光芒或第四道光芒。发问者追问是不是该把「第三」改成「第四」，Ra 确认，并把这件事变成一个请求。</p>
+    <div class="quote">
+      <p class="en">Please continue to scan for errors having to do with numberings, as you call them, as this concept is foreign to us and we must translate, if you will, when using numbers.</p>
+      <p class="zh">请继续为你们所谓的编号扫描错误，因为对我们来说这是个陌生的概念，我们在使用数字时必须——容我们说——进行翻译。</p>
+      <span class="src">—— Session 032 · (32.4)</span>
+    </div>
+    <p>Ra 接着说，由于双方方式的差异，这是这个通讯的一个持续弱点，并感谢发问者的协助。把这句话放在整集里看很有意思：Ra 一边给出光芒谱这样的精密结构，一边坦白自己在「数字」上会出错——这本身就是通讯性质的说明，而不是一处需要掩饰的瑕疵。</p>
+    <div class="plain">数字对 Ra 是需要翻译的概念；发问者的校对不是挑错，而是这个通讯赖以运转的一部分。</div>
+    <div class="case"><b>校对本部门周报：</b>同事把「第三季度」写成「第三阶段」，你没有直接替他改，而是把两处标出来请他确认——发问者对 Ra 做的就是这件事。既然通讯本身架在「需要翻译」的缝隙上，那么主动回读、逐处核对就是参与者该做的事。</div>
+  </div>
+  <div class="card">
+    <h3>术语卡：本集前段的六个关键词</h3>
+    <p>点击卡片翻看解释。这几个词在本集反复出现，先建立准确的直觉。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">橙色光芒</div><div class="sub">orange ray</div><span class="tap">点击展开</span></div><div class="back">心/身/灵在「个体层面」表达力量的那道振动。Ra 说得直白：对个体的支配权力就是橙色光芒。<em>案例：把某个下属当工具使唤，而不是对一群人下令。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">黄色光芒</div><div class="sub">yellow ray</div><span class="tap">点击展开</span></div><div class="back">聚焦而强大的一道光芒，处理的是实体与群体、社会、大量心/身/灵复合体的关系。好战行动的核心就在这道振动里。<em>案例：以「团队纪律」「企业文化」的名义要求所有人服从。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">负面道途</div><div class="sub">negative path</div><span class="tap">点击展开</span></div><div class="back">Ra 所说的负向极化路线。它把黄色与橙色光芒组合起来、专注地使用；这种专注同样能带来与智能无限的接触。<em>案例：把支配与被支配的关系当作唯一的能量来源。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">性能量转移</div><div class="sub">sexual energy transfer</div><span class="tap">点击展开</span></div><div class="back">两个自我在同一道光芒的层面上共同振动时，能量在彼此之间流动。Ra 强调它不只发生在正面极化的关系里：负面极性的转移同样真实发生，只是方向不同。<em>比喻：同一根导线，可以接在两种不同的电源上。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">智能无限</div><div class="sub">intelligent infinity</div><span class="tap">点击展开</span></div><div class="back">Ra 体系里与「太一无限造物主」相通的无限智能，是一切存在的源头与基质。本集说：负面道途若专注使用黄与橙，也能带来与它的接触——路线不同，触及的东西同一个。<em>比喻：两条路都通向山顶，但其中一条路上没有风景。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">变貌</div><div class="sub">distortion</div><span class="tap">点击展开</span></div><div class="back">对统一性的任何偏离状态，本身不含褒贬。本集里 Ra 说自己「受混淆之路的变貌限制」，也把「害怕被占有」这类情绪称为会让绿色光芒失活的变貌。<em>比喻：白光照进棱镜分成七色——颜色不是错，只是分开了。</em></div></div>
+    </div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>由绿到紫：从接收到给予，直到造物主对造物主</h2></div>
+  <p class="sec-lead">发问者说他相信绿色光芒暂时已经谈够了，于是跳过它，直接问蓝色。但 Ra 的回答反而把绿色说成了整条谱系的分水岭：在绿色之前是接收，从绿色起可以向外转成给予；而往上每一道光，都是「给予」的不同质地。</p>
+  <div class="card">
+    <h3>先看整条谱：七道光芒在性互动中的位置</h3>
+    <p>本集把七道光走了一遍，其中绿色到紫色是重点。点节点逐层看，注意每一层「给出去的是什么东西」。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="raysTrack"></div>
+      <div class="flow-detail" id="raysDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="raysPrev">← 上一步</button> <button class="tri-btn" id="raysNext">下一步 →</button></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>绿色是转折点，蓝色是第一个「给予」</h3>
+    <div class="q">绿色与蓝色之间的区别是什么？重点放在蓝色光芒上。</div>
+    <div class="quote">
+      <p class="en">The green ray may then be turned outward, the entity then giving rather than receiving. The first giving beyond green ray is the giving of acceptance, or freedom, thus allowing the recipient of blue-ray energy transfer the opportunity for a feeling of being accepted, thus freeing that other-self to express itself to the giver of this ray.</p>
+      <p class="zh">绿色光芒于是可以向外转，实体于是给予而非接收。超越绿色光芒的第一个给予，是给予接纳、或自由，从而让蓝色光芒能量转移的接收者有机会感到自己被接纳，由此解放那个其他自我，使它能向这道光芒的给予者表达自己。</p>
+      <span class="src">—— Session 032 · (32.5)</span>
+    </div>
+    <div class="plain">绿色是性互动的伟大转折点：在此之前是接收，从绿色起可以向外转成给予；而超越绿色的第一个给予，是给予「接纳」或「自由」。</div>
+    <div class="analogy"><b>像教孩子骑车：</b>你没法替他骑，但你可以先给他「被扶着也不会摔」的确定感（接纳）；有了这个，他才敢自己踩出去。蓝色光芒给的就是这份确定感。</div>
+    <div class="case"><b>妈妈那句「你现在的样子我也接受」：</b>儿子失业第三个月不敢出门，妈妈没有催他振作，只说「你现在的样子我也接受」。他后来才说，是这句话让他第一次敢讲出自己真正想做的事——蓝色光芒的给予正是这个机制：让对方感到被接纳，从而被解放、敢于表达自己。</div>
+  </div>
+  <div class="card">
+    <h3>门槛在绿色：一个人先到，另一个可以被带着走</h3>
+    <div class="q">那是不是必须两个人的进步程度一样，才能共享更高的光芒？</div>
+    <p>Ra 说不是。一旦两个心/身/灵在交配中达成了绿色光芒的能量转移，更往上的光芒就可以共享，而<b>不需要两个实体同等进步</b>。因此，一个蓝色光芒或靛蓝色光芒振动、且其余光芒振动清晰的人，可以把那份能量分享给仍停在绿色光芒的那位其他自我，成为对方持续学习／教导的催化剂。但反过来也成立得很硬：在另一个自我达到绿色光芒之前，这种通过各道光芒的能量转移根本不可能发生。</p>
+    <div class="plain">绿色是这道门槛：先到的人可以带着另一方向上走，但对方得先真的到达绿色——在此之前，共享无从谈起。</div>
+    <div class="case"><b>健身房里的搭子：</b>你练了两年，他刚起步，你们一起练时他进步明显快过独自练——但前提是他已经练进了门，能完成基础动作，否则你练什么他都跟不上。按 (32.5) 的说法就是：先到绿色的人能带动另一方，但对方必须先到达绿色。</div>
+  </div>
+  <div class="card">
+    <h3>靛蓝与紫色：圣礼的开始，与恒常的底色</h3>
+    <div class="q">靛蓝色光芒与蓝色能量转移有什么区别？紫色光芒又与其他光芒有什么区别？</div>
+    <div class="quote">
+      <p class="en">The indigo ray is the ray of, shall we say, awareness of the Creator as self; thus one whose indigo-ray vibrations have been activated can offer the energy transfer of Creator to Creator.</p>
+      <p class="zh">靛蓝色光芒是——容我们说——把造物主觉知为自我的那道光芒；因此，一个靛蓝色光芒振动已被激活的人，可以奉献造物主对造物主的能量转移。</p>
+      <span class="src">—— Session 032 · (32.6)</span>
+    </div>
+    <p>Ra 接着说，这正是你们所谓的双性生殖行为之圣礼性质的开始；它独特之处在于，在向其他自我的奉献中承载着全有性、完整性与合一性。要注意这里的转折：蓝色的给予是「我给你自由」，靛蓝的给予已经不再是「我」给「你」——而是造物主向造物主奉献。</p>
+    <div class="quote">
+      <p class="en">However, the violet ray, being the sum and substance of the mind/body/spirit complex, surrounds and informs any action by a mind/body/spirit complex.</p>
+      <p class="zh">然而，紫色光芒作为心/身/灵复合体的总和与实质，包围并贯穿着一个心/身/灵复合体的任何行动。</p>
+      <span class="src">—— Session 032 · (32.7)</span>
+    </div>
+    <p>至于紫色光芒，Ra 说它正如红色光芒一样，在性体验中是恒常的；其他自我对它的体验可能被扭曲、被完全忽略、或根本没有领会。但作为心/身/灵复合体的总和与实质，它包围并贯穿着这个复合体的任何行动。</p>
+    <div class="plain">靛蓝是「我给出的其实是造物主给造物主」；紫色不是光谱上的某一层，而是整个人在每一刻的底色。</div>
+    <div class="case"><b>婚礼上那句誓言：</b>交换戒指时，很多新人说的并不是「我会对你好」，而是某种比两个人更大的东西（无论顺境逆境、直到死亡）。按 (32.6) 的说法，这是靛蓝色光芒承载「全有性、完整性、合一性」的圣礼性质，在世俗仪式里留下的回声。</div>
+  </div>
+  <div class="card">
+    <h3>术语卡：绿、蓝、靛、紫</h3>
+    <p>这四道光在本集是主线，点击卡片看它们各自给出去的是什么。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">绿色光芒</div><div class="sub">green ray</div><span class="tap">点击展开</span></div><div class="back">性互动的转折点：从「接收」转为「给予」。两个心/身/灵在交配中达成绿色的能量转移后，更高的光芒才谈得上共享。<em>比喻：从「索取安全感」迈到「给出安全感」的那一步。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">蓝色光芒</div><div class="sub">blue ray</div><span class="tap">点击展开</span></div><div class="back">超越绿色的第一个给予：给予接纳、或自由。Ra 说它的效果是让接收者感到被接纳，从而被解放、敢于表达自己。<em>案例：对失意的家人说「你现在的样子我也接受」。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">靛蓝色光芒</div><div class="sub">indigo ray</div><span class="tap">点击展开</span></div><div class="back">把造物主觉知为自我的那道光芒。靛蓝振动被激活的人能奉献「造物主对造物主」的转移；Ra 说这是双性生殖行为之圣礼性质的开始，而开启它需要相当的纪律与练习。<em>比喻：不再是「我给你」，而是「透过我，给出的是更大的那个」。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">紫色光芒</div><div class="sub">violet ray</div><span class="tap">点击展开</span></div><div class="back">正如红色光芒，它在性体验中是恒常的。其他自我可能扭曲它、忽略它、甚至根本没领会它；但作为心/身/灵复合体的总和与实质，它包围并贯穿任何行动。<em>比喻：不是画面里的某一层颜色，而是整幅画的底调。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">造物主对造物主</div><div class="sub">Creator to Creator</div><span class="tap">点击展开</span></div><div class="back">靛蓝色光芒层上能量转移的性质：给予的双方不是「我」和「你」两个小我，而是造物主向造物主的奉献——Ra 说这份奉献承载着全有性、完整性与合一性。<em>案例：婚礼誓言里那句比「我会对你好」更大的话。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">圣礼性质</div><div class="sub">sacramental nature</div><span class="tap">点击展开</span></div><div class="back">Ra 用来描述靛蓝色光芒层性互动的词：它之所以是「圣礼」，在于它把全有、完整、合一都放进对另一个自我的奉献里——不是仪式赋予它神圣，而是这道光芒本身如此。<em>对比：身体层面的性只是这道光芒的载体之一。</em></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>归类练习：这更像哪一道光芒在起作用？</h3>
+    <p>用本集的说法判断下面每个场景的主导光芒。答错没关系，点完会给出 Ra 对应的那句话的思路。</p>
+    <div id="sorterArea"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>第三密度之外：更高密度的转移、流浪者的取向与颜色的阶梯</h2></div>
+  <p class="sec-lead">走完七道光，发问者往上问了一个很自然的问题：这些能量转移在第四、五、六、七密度还存在吗？Ra 的回答是一个明确的否定，随后带出流浪者、完全融合性质，以及一组本来就对智性心智很吃力的材料——颜色究竟是什么。</p>
+  <div class="card">
+    <h3>只有第四、五、六密度还有这种转移</h3>
+    <div class="q">这种性质的能量转移在第四、第五、第六和第七密度都发生吗？我是指所有光芒的。</div>
+    <div class="quote">
+      <p class="en">we must answer your query in the negative. Energy transfers only take place in fourth, fifth, and sixth densities.</p>
+      <p class="zh">我们必须给你否定的回答。能量转移只发生在第四、第五与第六密度。</p>
+      <span class="src">—— Session 032 · (32.8)</span>
+    </div>
+    <p>Ra 的理由是：这些光芒在下一个密度、再下一个密度里含义已经如此不同，所以问题本身得先被否定。在四、五、六密度中，转移依然具有你们所谓的极化性质；但由于这些密度有能力看见个体之间的和谐，那里的实体会选择彼此和谐的伴侣，从而让能量持续转移，并繁衍各自密度所使用的身体复合体。至于第七密度，Ra 说没有这种特定的能量交换，因为已经不需要回收身体复合体了。</p>
+    <div class="plain">第三密度是「边极化边找」，更高密度是「先看见和谐再选择」；第七密度则连身体复合体的回收都不需要，交换因此没有位置。</div>
+    <div class="case"><b>跨时区团队挑搭档：</b>远程项目组排班时，主管不随机配对，而是把表达节奏相合的人编在一起——因为他们一天要来回几十条消息，磨合成本必须低。更高密度择偶用的是同一个逻辑：先看见和谐，再选择，于是能量可以持续流动。</div>
+  </div>
+  <div class="card">
+    <h3>「完全融合性质」是什么</h3>
+    <div class="q">你能扩展一下「完全融合性质」是什么意思吗？</div>
+    <div class="quote">
+      <p class="en">Thus sexual fusion may be seen, with or without what you may call sexual intercourse, to be the complete melding of the mind, the body, and the spirit in what feels to be a constant orgasm, shall we say, of joy and delight each in the other’s beingness.</p>
+      <p class="zh">因此，性融合可以被视为——无论是否伴随你们所谓的性交——心智、身体与灵性的完全交融，在其中，彼此都感到一种持续的、容我们说，极乐的高潮，各自欣喜于对方的存在。</p>
+      <span class="src">—— Session 032 · (32.10)</span>
+    </div>
+    <p>Ra 先把前提摆出来：整个造物都属于太一造物主，因此把性活动只划给身体复合体是一种人为的划分——心智、身体、灵性都同样被视为性的，它们都是实体极性的一部分。在这个前提下，「性融合」可以没有性交。</p>
+    <div class="plain">融合的关键不是身体动作，而是心智、身体与灵性同时并入对方的存在；性交只是可能的载体之一。</div>
+    <div class="analogy"><b>像两个人聊到忘了时间：</b>让你记住的不是某句话，而是那两个小时里「边界变薄」的感觉；结束之后你像是被重新充满。</div>
+    <div class="case"><b>三个月没见的老友：</b>两个人坐在阳台上一整晚，没做什么特别的事，散场时都说「像充了电」。按 (32.10) 的说法，这种没有性交的融合也算性融合——因为融合发生在心智、身体与灵性的完全交融上，而不是身体的活动上。</div>
+  </div>
+  <div class="card">
+    <h3>三类流浪者带着各自密度的取向来到地球</h3>
+    <p>这里需要一个定义：<b>流浪者（wanderer）</b>指来自更高密度、自愿投生到第三密度来的实体；<b>密度（density）</b>是 Ra 描述意识与振动层级的单位，从第一到第八依次上升，人类的当下是第三密度。发问者问的是：他们以流浪者身份进入这个密度的物质身体后，会发现哪些极化在影响他们？</p>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">第四密度</span><h4>被爱吸引，也容易误判</h4><p>数量不多。倾向于选择那些看起来<b>充满爱、或需要爱</b>的实体；因为用悲悯之心看其他自我，出现判断错误的可能性／概率很大。</p></div>
+      <div class="yuan-card"><span class="y-tag">第五密度</span><h4>不受刺激牵引，见需要就奉献</h4><p>不太受其他自我各种光芒的刺激影响，以自己的方式在看见需要时奉献自己。不太可能进入你们所谓的<b>婚姻</b>，也极可能对生育与抚养孩子感到厌恶——因为他们觉察到行星的振动与光之密度的和谐振动并不相称。</p></div>
+      <div class="yuan-card"><span class="y-tag">第六密度</span><h4>寻找完全融合</h4><p>繁衍方式可以类比为<b>融合</b>，因此在很大程度上会避开身体复合体的双性生殖编程，转而寻找能与自己进行完全融合性质转移的人——只要这在第三密度的显化里可能。</p></div>
+    </div>
+    <p>发问者接着问：那么高密度的流浪者在第三密度投生，是否会遇到相当大的问题？Ra 说，这种「问题」的可能性／概率相当大，但不一定就是个问题——它取决于每个处于这种情境、这种振动相对性配置的心/身/灵复合体的独特取向。这是 Ra 常见的一种收尾方式：不给出统一答案，把判定交回每个实体自己。</p>
+    <div class="plain">流浪者的困难不在于能力不足，而在于取向不匹配——他们带着另一层密度的和谐标准，落到一个振动并不相称的行星上。</div>
+    <div class="case"><b>从成熟体系调来的外派专家：</b>公司从总部调来一位资深工程师支援本地团队。他不参与本地的人情往来与站队，看到谁的方案卡住就出手，也从没打算在这里安家生子。三个月后他离开，同事的评价是「像被扶了一把，但留不住他的人」。这就是 Ra 描述的第五密度流浪者的样子：不受各种光芒带来的人际刺激牵引，见需要就奉献，对「在这里扎根」没有兴趣。</div>
+  </div>
+  <div class="card">
+    <h3>颜色的阶梯，与绿色光芒的脆弱</h3>
+    <p>发问者想弄清楚这些颜色「如何作为意识中不同表达的功能而起源」——他自己也说这题很难问、几乎找不到词。Ra 说这个问题足够清楚，但这类材料对智性心智本来就不容易掌握：振动的本质可以被看作「数学上狭窄的阶梯」，这些阶梯有边界，而每个边界之内存在振动或颜色的<b>无限渐变</b>；当你接近一个边界时，必须做出努力才能跨越它。这些颜色只是表达「你们密度的边界划分」的一种简化方式；Ra 还补了一句：另有一个时间／空间的类比，可以把它看成颜色本身在一个变形面向中的样子。</p>
+    <div class="quote">
+      <p class="en">Fear of possession, desire for possession, fear of being possessed, desire to be possessed: these are the distortions which will cause the deactivation of green-ray energy transfer.</p>
+      <p class="zh">害怕占有、渴望占有、害怕被占有、渴望被占有：正是这些变貌会导致绿色光芒能量转移的失活。</p>
+      <span class="src">—— Session 032 · (32.14)</span>
+    </div>
+    <p>发问者接下来想问的是：一个主要以绿色光芒激活的人，会不会在绿色两侧大幅或小幅变动？Ra 先把「已涵盖」和「新料」分开。已涵盖的是：绿色光芒的激活始终容易受到占有欲的黄色或橙色光芒影响（主要是黄色，但常常进入橙色）；害怕占有、渴望占有、害怕被占有、渴望被占有，这些变貌会让绿色的能量转移失活。新料是：绿色一旦达成，进入蓝色的能力是<b>即刻的</b>，只等个人的努力；而靛蓝色光芒只有在相当的纪律与练习之后才会开启，这些练习主要关乎接纳自我——不只是接纳那个已极化、已平衡的自己，还要接纳自己是造物主、是一个具有无限价值的实体。</p>
+    <div class="plain">绿色是易碎的：占有欲一动它就断电；蓝色是绿色达成后的默认选项，只等你迈步；靛蓝则必须靠纪律与练习，把「我是造物主」这件事真的接纳下来。</div>
+    <div class="analogy"><b>像钢琴上的十二个键：</b>C 与 C# 之间其实有无数个音高，但谱子只给你十二个格子。颜色就是这套格子——它不是振动的全部，只是划分边界的一种简化写法。</div>
+    <div class="case"><b>开始查手机的那阵子：</b>阿哲要求伴侣报备行程、翻看聊天记录，理由都是「关心」。他没意识到自己做的正是把黄色光芒的占有欲放进这段关系里——按 (32.14) 的说法，这会让绿色光芒的能量转移失活。半年后两人都说，彼此不再觉得「被允许」敞开。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>收官：一句告诫、一句金句、几处伏笔</h2></div>
+  <p class="sec-lead">Ra 主动问是否还有简短的问题。发问者说任何问题都会太长，只问了最实际的一句：有没有什么能让器皿更舒适、或让通讯更好。回答很短，但把整集的重量压回到「生命能量」上。</p>
+  <div class="card">
+    <h3>收尾仍是一句告诫：留意生命能量</h3>
+    <div class="q">有没有什么我们可以做的，让器皿更舒适、或让通讯更好？</div>
+    <div class="quote">
+      <p class="en">We caution not only this instrument but each to look well to the vital energies necessary for non-depletion of the instrument and the contact level.</p>
+      <p class="zh">我们不仅提醒这个器皿，也提醒每一位：好好留意那维持器皿与通讯水平不枯竭所必需的生命能量。</p>
+      <span class="src">—— Session 032 · (32.16)</span>
+    </div>
+    <div class="plain">没有特别的安排要做——Ra 说「一切都好」，然后把整集的关切收在一处：别让生命能量消耗到影响器皿与通讯。</div>
+    <div class="case"><b>平台期的处理顺序：</b>练了半年力量，成绩停住。教练没让你再加量，而是先查「哪一项每天在悄悄漏掉」——睡眠、蛋白质、恢复日。Ra 收尾的告诫也是这个方向：真正的变量往往不在训练本身，而在支撑它的那份能量。</div>
+  </div>
+  <div class="saying">
+    <p class="en">Give thanksgiving for each moment. See the self and the other-self as Creator. Open the heart. Always know the light and praise it. This is all the protection necessary.</p>
+    <p class="zh">为每一刻献上感恩。把自我与其他自我视为造物主。敞开你的心。始终知晓光，并赞美它。这就是全部必要的保护。</p>
+    <span class="src">—— Session 032 · (32.1)</span>
+  </div>
+  <div class="card">
+    <h3>本集留下的位置</h3>
+    <p>这一集像是把两件事同时推进：一边用一次事故讲清了防护的原理，一边把性极性的光芒谱从橙黄一路补到紫，并翻过了第三密度的边界。</p>
+    <p><b>① 编号仍然要留意。</b>「第三道光芒」被更正为绿色／第四道光芒，Ra 还把「数字需要翻译」称为这个通讯的持续弱点——读后面的集会时，凡遇到数字与序数都值得回看一次。</p>
+    <p><b>② 光芒在更高密度含义不同。</b>Ra 用否定回答处理了这个问题，并说明第七密度已不需要回收身体复合体。这个接口显然会继续被追问。</p>
+    <p><b>③「不一定是问题」。</b>关于高密度流浪者是否必然遇到困难，Ra 只说可能性／概率相当大，然后把判定交回每个实体的独特取向——这是 Ra 处理自由意志问题的典型姿态：说明条件，不给结论。</p>
+    <p><b>④ 靛蓝色光芒的门槛只开了一条缝。</b>本集最后的新料是：进入蓝色只等个人努力，而靛蓝要靠相当的纪律与练习、核心是接纳自我为造物主。这条线索在本集没有展开。</p>
+    <div class="quote">
+      <p class="en">Go forth, then, rejoicing in the power and the peace of the One Infinite Creator. Adonai.</p>
+      <p class="zh">那么前行吧，在太一无限造物主的力量与平安中欢欣。Adonai。</p>
+      <span class="src">—— Session 032 · (32.16)</span>
+    </div>
+    <div class="plain">读下一集时可以带着这三个问题：橘色与黄色的组合还会怎么被追问？靛蓝色光芒的「纪律与练习」具体是什么？以及流浪者在第三密度的取向冲突，会不会再被展开。</div>
+  </div>
+  <div class="case"><b>读书会不总结结论，只留一个问题：</b>散场前主持人不说「今天我们学到了什么」，而是留一个问题给下次。本集也是这样收的：Ra 先问「还有简短的问题吗」，再以 Adonai 结束，把「靛蓝色光芒怎么开」这道门槛留给后面的集会。</div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+<p>基于 The Ra Contact Session 032（split/Ra_Session_032.md）英文原文制作 · 交互式学习模块</p>
+<p>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文</p>
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra032-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+  {t:'(32.0) 开场',d:'<b>致意与开场。</b>Ra 以「在太一无限造物主的爱与光中致意」开场，宣布本次通讯开始。'},
+  {t:'(32.1) Jim 的问题',d:'<span class="qa-q">问：器皿服用一种化学物质后身体受损，她自己并不知道正在打开什么口子。我们三个人怎样才能更觉察这类开口？提问某些领域时会不会无意中造成它？有没有可用的仪式或冥想？</span><b>答：</b>Ra 先说自己的回答受混淆之路的变貌限制，只谈一般性的事。'},
+  {t:'(32.1) 机制与保护',d:'<b>答（续）：</b>造成损伤的是一种可识别的、非天然的物质，而那个心/身/灵也没有觉察自己朝虚弱方向的变貌——日常存在的自然方式始终具有恰当的性质，因此「没有错误，包括这个器皿的行动」。保护则非常简单：为每一刻感恩、把自我与其他自我视为造物主、敞开心、始终知晓光并赞美它。这就是全部必要的保护。'},
+  {t:'(32.2) 橙与黄',d:'<span class="qa-q">问：橙色光芒与黄色光芒的激活有什么区别？</span><b>答：</b>橙色是心/身/灵在个体基础上表达力量，对个体的支配权力；黄色聚焦而强大，涉及实体与群体、社会的关系，是好战行动的核心。'},
+  {t:'(32.2) 负面极性的转移',d:'<b>答（续）：</b>负面道途组合使用黄色与橙色，专注使用同样能接触智能无限。主要振动在黄或橙时，性互动的通常性质是先阻塞、再因阻塞而无法满足的饥渴；两个自我都在此振动时，一端体验羞辱与奴役的快感，另一端体验支配与控制的快感——这就是负面极性的性能量转移。'},
+  {t:'(32.3)–(32.4) 编号纠错',d:'<span class="qa-q">问：2 月 17 日资料里的「第三道光芒」是什么颜色？</span><b>答：</b>正确地说应是绿色光芒或第四道光芒；发问者应把「第三」改成「第四」。Ra 请他们继续扫描编号错误——数字对我们是个陌生的概念，使用时必须翻译，这是这个通讯的持续弱点。'},
+  {t:'(32.5)–(32.7) 蓝、靛蓝、紫',d:'<b>答（续）：</b>绿色是性的伟大转折点，光芒可以在那里向外转成给予；超越绿色的第一个给予是给予接纳或自由，使对方感到被接纳、从而得以表达自己。靛蓝色是把造物主觉知为自我的光芒，可奉献造物主对造物主的转移，这是双性生殖行为之圣礼性质的开始。紫色如同红色，在性体验中恒常，是心/身/灵的总和与实质，包围并贯穿任何行动。'},
+  {t:'(32.8)–(32.11) 更高的密度',d:'<span class="qa-q">问：这种能量转移在第四、五、六、七密度都发生吗？流浪者带着各自的取向来投生，会遇到什么问题？</span><b>答：</b>否定——转移只在第四、五、六密度发生，那里仍有极性；第七密度不需要回收身体复合体。四密度流浪者容易被爱与需要爱吸引而误判，五密度不太受各种光芒刺激、见需要就奉献却不进入婚姻生育，六密度寻找完全融合性质的转移。至于困难，可能性／概率相当大，但不一定是个问题，取决于每个实体的独特取向。'},
+  {t:'(32.12)–(32.14) 颜色的边界与绿的脆弱',d:'<b>答（续）：</b>振动是数学上狭窄的阶梯，阶梯有边界、边界内有无穷渐变，接近边界时必须努力才能跨越；颜色只是表达你们密度边界划分的简化方式。绿色光芒始终容易被占有欲的黄／橙光芒影响而失活；绿色一旦达成，进入蓝色是即刻的、只等个人努力，而靛蓝色只有通过相当的纪律与练习才会开启——核心是接纳自己是造物主、是具有无限价值的实体。'},
+  {t:'(32.15)–(32.16) 收官',d:'<span class="qa-q">问：有什么能让器皿更舒适、或让通讯更好？</span><b>答：</b>一切都好；我们不仅提醒这个器皿，也提醒每一位留意维持器皿与通讯水平不枯竭所必需的生命能量。并以「在力量与平安中欢欣前行，Adonai」作结。'}
+]);
+
+initStepper('raysTrack','raysDetail','raysPrev','raysNext',[
+  {t:'红色光芒',d:'<b>本集的常量之一。</b>(32.7) 把紫色与红色并举：紫色正如红色一样，在性体验中是恒常的。红色这一层本集没有展开，只留下「它是常量」这个位置。'},
+  {t:'橙色光芒',d:'<b>个体层面的力量。</b>心/身/灵在个体基础上表达其力量；对个体的支配权力就是橙色光芒，它把其他自我视为非实体、奴隶或财产，不给对方任何地位。'},
+  {t:'黄色光芒',d:'<b>群体层面的力量。</b>聚焦且非常强大，涉及实体与群体、社会、大量心/身/灵复合体的关系；好战行动的核心——一群实体认为自己有必要也有权利支配另一群。负面道途把黄与橙组合起来专注使用。'},
+  {t:'绿色光芒',d:'<b>伟大的转折点。</b>绿色可以向外转，实体从接收转为给予；一旦两个心/身/灵在交配中达成绿色的能量转移，更高的光芒便可共享，不需要双方同等进步。但另一个自我若尚未到达绿色，通过各道光芒的转移就不可能。'},
+  {t:'蓝色光芒',d:'<b>超越绿色的第一个给予：给予接纳、或自由。</b>它让蓝色光芒能量转移的接收者感到自己被接纳，从而被解放，能向这道光芒的给予者表达自己。绿色一旦达成，进入蓝色的能力是即刻的，只等个人的努力。'},
+  {t:'靛蓝色光芒',d:'<b>造物主对造物主。</b>靛蓝是把造物主觉知为自我的光芒；振动被激活的人可奉献造物主对造物主的能量转移，这是双性生殖行为之圣礼性质的开始，在奉献中承载全有性、完整性与合一性。它只有通过相当的纪律与练习才会开启，练习主要关乎接纳自我——包括接纳自己是造物主、是具有无限价值的实体。'},
+  {t:'紫色光芒',d:'<b>恒常的底色。</b>正如红色光芒，它在性体验中是恒常的；其他自我对它的体验可能被扭曲、被完全忽略、或根本未被领会。但作为心/身/灵复合体的总和与实质，它包围并贯穿着这个复合体的任何行动。'}
+]);
+
+document.querySelectorAll('.fn-card').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('open')));
+
+initSorter('sorterArea',[
+  {a:'主管把自己的方案讲完，补一句「有意见的可以看看上季度的考核分」',opts:['橙色','黄色','绿色','蓝色','紫色'],ans:'橙色',exp:'橙色光芒是心/身/灵在个体基础上表达力量——对个体的支配权力。'},
+  {a:'两个部门不比方案好坏，而比谁在组织规则上更有话语权、能逼对方让出主导权',opts:['橙色','黄色','绿色','蓝色','紫色'],ans:'黄色',exp:'黄色光芒处理实体与群体、社会的关系，是好战行动的核心：一群实体认为自己有权支配另一群。'},
+  {a:'伴侣在你失意时说「你现在的样子我也接受」，你因此第一次敢讲出最难堪的部分',opts:['橙色','黄色','绿色','蓝色','紫色'],ans:'蓝色',exp:'超越绿色的第一个给予是给予接纳或自由，使对方感到被接纳、由此被解放而能够表达自己。'},
+  {a:'两个人相处时谁都不图回报，散场后彼此都觉得更有力量',opts:['橙色','黄色','绿色','蓝色','紫色'],ans:'绿色',exp:'绿色是性的转折点，从接收转为给予；两个自我在此达成相互强化的能量转移。'},
+  {a:'一段关系里有一种说不清、却始终在场的整体氛围笼罩着一切',opts:['橙色','黄色','绿色','蓝色','紫色'],ans:'紫色',exp:'紫色是心/身/灵复合体的总和与实质，包围并贯穿着这个复合体的任何行动。'},
+  {a:'吵架时把对方说成「根本不是人」「就是一群东西」',opts:['橙色','黄色','绿色','蓝色','紫色'],ans:'橙色',exp:'把其他自我视为非实体、奴隶或财产，不给对方任何地位——这正是橙色光芒的样态。'}
+]);
+
+const condText={
+  1:{on:'物质这一层：这是一次「可识别的物质」造成的——Ra 特意指出它不是天然物质。',
+     off:'物质这一层：没有强力化学物质介入，身体复合体不必额外处理它带来的变貌。'},
+  2:{on:'觉察这一层：心/身/灵没有足够觉察自己朝身体虚弱的变貌。Ra 把这条与物质并列，说明「知不知道自己在往哪偏」本身就是变量。',
+     off:'觉察这一层：对自身朝虚弱方向的变貌有觉察，低生命能量就不会在无人知晓处累积。'},
+  3:{on:'取向这一层：独处时没有转向造物主，也不为每一刻献上感恩与赞美——这正好是 Ra 所说「全部必要的保护」的反面。',
+     off:'取向这一层：独处时思考造物主，与人相处时持续赞美并感谢——Ra 说这个器皿正是这样做的，于是她放射给另一个自我的能量反而成了对方正面极化的催化剂。'}
+};
+function updateCond(){
+  const ids=[1,2,3];
+  const st=ids.map(i=>document.getElementById('cond'+i).checked);
+  const n=st.filter(Boolean).length;
+  const box=document.getElementById('condResult');
+  let head;
+  if(n===3){
+    head='三条都开着：外来的物质、没有被觉察的偏移、取向上的失守同时在场——这是一次「开口」的完整配方。Ra 对它的评语不是责备，而是一句：<b>没有错误，包括这个器皿的行动。</b>但请看下一行的第三条：Ra 说这个器皿在保护上恰恰示范得非常好——开口形成，不等于失守。';
+  }else if(n===0){
+    head='三条都关着：Ra 所说的「日常存在的自然方式」没有被绕过，他称这种状态<b>始终具有恰当的性质</b>。这不是说你不会再遇到负面影响的试探，而是它没有一个现成的着力点。';
+  }else{
+    head='还差 '+(3-n)+' 条。下面逐条看它们各自管什么——Ra 把「物质」与「觉察」并列，却把答案落在第三条上。';
+  }
+  const lines=ids.map(i=>'<p style="margin-top:10px">'+(st[i-1]?'● ':'○ ')+condText[i][st[i-1]?'on':'off']+'</p>').join('');
+  box.className=(n===3?'fail':'');
+  box.innerHTML=head+lines;
+}
+[1,2,3].forEach(i=>document.getElementById('cond'+i).addEventListener('change',updateCond));
+updateCond();
+
+renderPath();
+</script>
+</body>
+</html>

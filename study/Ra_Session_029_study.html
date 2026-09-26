@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 029 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 029 · 交互式学习模块</h1>
+  <p class="sub">这一集从「太阳是不是子理则」问起，一路向下走到时间、光子、元素与引力，最后停在水晶与一扇只有平衡者才能进的门前。</p>
+  <div class="tagline">6 个主题 · 6 个学习步骤 · 25 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 理则的层级</a>
+<a href="#s3">③ 时间与光的起源</a>
+<a href="#s4">④ 引力是灵性事件</a>
+<a href="#s5">⑤ 水晶与自由意志</a>
+<a href="#s6">⑥ 收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>这一集从哪里接上、往哪里去，例行问答可跳过</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>理则的层级</b><span>银河理则、太阳子理则，以及「你也是子子理则」</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>时间与光的起源</b><span>一份计划如何在爱中凝聚，光子与密度如何出现</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>引力是灵性事件</b><span>为什么 Ra 说引力不是向内的机械运动</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>水晶与自由意志</b><span>使用水晶的条件，以及 Ra 为何拒答具体用法</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官</b><span>银河的两条不同去向、金句，以及下一集的伏笔</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：从「太阳是什么」问到「造物如何收束」</h2></div>
+  <p class="sec-lead">前一天（上一集）Ra 提到第一密度的行星最初处于无时间状态，本集就从这个线索接着往下问。整集是一条连贯的下降路线：先问清造物的层级（理则—子理则—子子理则），再问时间怎么开始、光怎么形成元素、引力究竟是什么，然后转到水晶，最后停在一个被 Ra 主动收住的问句上——思想的进化与通往智能无限的寻求之道，被留给了下一次。</p>
+  <div class="card">
+    <h3>问答脉络：八步走完整集</h3>
+    <p>发问者这一集几乎全程在「提出模型 → 请 Ra 校准」，Ra 则用「正确 / 不正确 / 基本上正确」逐条回应。点击节点看每一步在谈什么。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="qaTrack"></div>
+      <div class="flow-detail" id="qaDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="qaPrev">← 上一步</button> <button class="tri-btn" id="qaNext">下一步 →</button></div>
+    </div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">开场 · 重述 · 器皿状态 · 后勤</span></summary>
+  <div class="body">
+    <p><b>(29.0) 开场：</b>Ra 以「在无限造物主的爱与光中向你们致意」开场，宣布本次通讯开始。</p>
+    <p><b>(29.3) 请重述：</b>发问者 (29.3) 的句子绕成一团，Ra 只回了两个字面的请求——「请重述」。发问者随即在 (29.4) 换成「大约两千五百亿颗恒星是不是同一个子理则」的清楚问法。这一小段是实录里的常态：Ra 不做猜测性补全。</p>
+    <p><b>(29.32) 收束宣告：</b>Ra 在回答前先声明「这将是本次集会最后一个完整的问题」，接着给出（部分）回答，并反问「这满足你问题的要求了吗？」</p>
+    <p><b>(29.33) 器皿的私人询问：</b>器皿不想做物理疗愈，问能否只阅读那份私人疗愈材料而不减损正面极性；Ra 说可以阅读，但「火之练习」绝不可练（教导部分见第六章）。Ra 同时说明：这三类问题只能简短回答，因为要保存器皿这三个月的生命能量。</p>
+    <p><b>(29.34) 舒适度与收尾：</b>发问者问还能做什么让器皿更舒适；Ra 答「你们是尽责的，该实体已校准良好」，随后以致意与 Adonai 结束。</p>
+  </div></details>
+  <div class="case"><b>报修前的确认对话：</b>宽带师傅上门，你没有直接说「网络坏了」，而是先说「我理解是路由器到光猫这一段的问题，对吗？」他说「方向对，但不是路由器」——本集发问者用的正是这套方式：把自己的模型摆出来，让内行逐条确认或否定，而不是索要一个从零开始的答案。</div>
+  <div class="case"><b>说不清楚时，重来一遍：</b>你在电话里跟客服解释了半天，对方说「麻烦您重述一下」。这不是刁难，而是不愿凭猜测替你补上含糊的部分——(29.3) 里 Ra 的「请重述」是同一个动作，它保证了后面所有答案都对着一个明确的问题。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>理则的层级：太阳是「子理则」，而你是「子子理则」</h2></div>
+  <p class="sec-lead">发问者先追问造物的层级结构：我们的太阳是子理则，还是子理则的物理显化？银河里那两千五百亿颗恒星，是各自一位子理则，还是同属一位？再往下，还有没有「子子理则」？Ra 用几次「这是正确的」「这是不正确的」，勾勒出一个层层自相似、并且一直延伸到观察极限的结构。</p>
+  <div class="card">
+    <h3>纠正的落点：子理则不是从零造出太阳系</h3>
+    <div class="q">我们的太阳（这个行星系统）是一个子理则，对吗？那么是这位子理则在其所有密度中创造了这个行星系统，对吗？</div>
+    <div class="quote">
+      <p class="en">This is incorrect. The sub-Logos of your solar entity differentiated some experiential components within the patterns of intelligent energy set in motion by the Logos, which created the basic conditions and vibratory rates consistent throughout your, what you have called, major galaxy.</p>
+      <p class="zh">这是不正确的。你们太阳这个实体的子理则，是在「理则」所启动的智能能量模式之内分化出了一些体验性的组成部分；而基础条件与振动频率是由那位理则设定、并贯穿你们所谓的银河系的。</p>
+      <span class="src">—— Session 029 · (29.2)</span>
+    </div>
+    <div class="plain">太阳确实是子理则，但它不是从零造出一个太阳系；它是在银河理则已经定好的「基础条件与振动频率」里，分化出一些属于自己的体验性组件。</div>
+    <div class="analogy"><b>加盟店与总部配方：</b>加盟店可以决定自己店里的菜单细节、装潢风格、营业时间，但面粉规格、招牌字体、出品标准是总部定的。太阳这家「店」能做出自己的差异，改不了总部那份底料配方。</div>
+  </div>
+  <div class="card">
+    <h3>同一个理则之下的两千五百亿颗恒星</h3>
+    <div class="q">银河里大约有两千五百亿颗恒星，它们都属于同一个子理则吗？</div>
+    <div class="quote">
+      <p class="en">They are all part of the same Logos. Your solar system, as you would call it, is a manifestation, somewhat and slightly different, due to the presence of a sub-Logos.</p>
+      <p class="zh">它们都属于同一个理则。你们所谓的太阳系，是一种略有不同的显化——这点差异来自一位子理则的存在。</p>
+      <span class="src">—— Session 029 · (29.4)</span>
+    </div>
+    <div class="plain">恒星不是各自一位子理则；整个银河共享同一位理则。我们的太阳系之所以「略有不同」，正因为有「子理则」这一层参与了进来。</div>
+    <div class="case"><b>城市电网与小区变压器：</b>一座城市的电网是同一个系统（理则），但每个小区都有自己的变压器（子理则）。你家里的电压「略有不同」，不是因为在另建一套电网，而是因为经过了这台变压器——正是 (29.4) 说的那层差异。</div>
+  </div>
+  <div class="card">
+    <h3>再往下一层：你就是子子理则</h3>
+    <div class="q">在我们的行星系统里，有没有比太阳更「下」一层的子子理则？如果没有，那存在的每一个实体算不算？</div>
+    <div class="quote">
+      <p class="en">One example is your mind/body/spirit complex.</p>
+      <p class="zh">一个例子就是你们的心/身/灵复合体。</p>
+      <span class="src">—— Session 029 · (29.7)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This is correct down to the limits of any observation, for the entire creation is alive.</p>
+      <p class="zh">在任何观察所能达到的极限之内，这都是正确的——因为整个造物都是活的。</p>
+      <span class="src">—— Session 029 · (29.8)</span>
+    </div>
+    <div class="plain">层级不停止于天体：每一个存在的实体都是某种子理则或子子理则，一直延伸到观察的极限为止——因为整个造物是活的，没有一层是纯粹的「死物」。</div>
+    <div class="analogy"><b>同一套基因层层复制：</b>一个人的身体由器官组成，器官由细胞组成，细胞里又有完整的基因组——每一层都带着整体的一份「蓝图」，也都自己做决定。Ra 的说法比这更彻底：连矿物层级也算在这个「活的」序列里。</div>
+    <div class="case"><b>公司里的三层授权：</b>集团定战略（理则），区域公司定打法（子理则），门店里的店员自己决定怎么招呼客人（子子理则）。每个层级都有真实可用的自由空间，但都带着同一套价值观——这就是 Ra 所说的自相似结构在日常组织里的样子。</div>
+  </div>
+  <div class="card">
+    <h3>行星什么时候才配叫「理则」</h3>
+    <div class="q">那我们行走其上的这颗行星，也是某种形式的子子理则吗？</div>
+    <div class="quote">
+      <p class="en">A planetary entity is so named only as Logos if it is working in harmonic fashion with entities, or mind/body complexes, upon its surface or within its electromagnetic field.</p>
+      <p class="zh">一个行星实体，只有当它与自己表面之上或电磁场之内的实体、或心/身复合体以和谐的方式一同运作时，才被命名为理则。</p>
+      <span class="src">—— Session 029 · (29.9)</span>
+    </div>
+    <div class="plain">「理则」不是按体积封的称号，而是按关系：行星只有在与它上面的生命和谐互动、彼此牵动时，才进入这个称谓；否则它只是承载物。</div>
+    <div class="case"><b>一间教室什么时候才「活着」：</b>空教室只是房子；只有当老师和学生一起上课、一起把气氛带起来，窗台上那盆绿植都跟着被照料的时候，它才像一个能动的主体。Ra 用「和谐运作」作为标准，衡量的是同一件事。</div>
+  </div>
+  <div class="card">
+    <h3>术语卡：本集的关键词</h3>
+    <p>点击卡片翻看解释。这几个词在本集反复出现，先在这里建立准确的直觉。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">理则</div><div class="sub">Logos</div><span class="tap">点击展开</span></div><div class="back">造物中「有意识地设计与规划」的那一层，也是爱与光的聚焦点。本集中银河理则设定了贯穿整个星系的基础条件与振动频率。<em>比喻：一份定到面粉规格的总部标准，而不是一家具体的店。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">子理则</div><div class="sub">sub-Logos</div><span class="tap">点击展开</span></div><div class="back">在上级理则设定的框架内作出自己那份分化的理则，本集的主角就是我们的太阳。<em>案例：总部标准之下的加盟店，可以有自己的菜单细节，改不了底料配方。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">心/身/灵复合体</div><div class="sub">mind/body/spirit complex</div><span class="tap">点击展开</span></div><div class="back">Ra 对人类这类存在的标准称谓：心智、身体、灵性三者互相交织，构成一个统一而不分割的整体。本集中它被举为「子子理则」的例子。<em>案例：同一栋房子的三个系统，分开讲，住的是同一个人。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">智能能量</div><div class="sub">intelligent energy</div><span class="tap">点击展开</span></div><div class="back">已经被带入显化、可以实际运作的那部分无限智能。本集说太阳的子理则就是在理则所启动的「智能能量模式」之内作分化。<em>比喻：电网里已经在流动的电，而不是发电厂的原理。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">变貌</div><div class="sub">distortion</div><span class="tap">点击展开</span></div><div class="back">对统一性的任何偏离，本身不含贬义——被聚焦、被倾斜、被分化，都算变貌。本集说行星球体是因为与实体互动才「带上变貌」。<em>比喻：同一束白光透进棱镜分成七色，颜色不是错，只是被分开了。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">存在性</div><div class="sub">beingness</div><span class="tap">点击展开</span></div><div class="back">与「行动、作为」相对的那个面向：只是存在、只是是其所是。本集说直至行星层面的实体，都是通过自由意志、经由存在性的行动而拥有智能无限的力量。<em>案例：父母坐在床边什么都不说，那种「在」本身就有作用。</em></div></div>
+    </div>
+  </div>
+  <div class="case"><b>自己带饭却仍受食堂规则约束：</b>你可以决定今天带什么菜（子理则的分化空间），但食堂几点开门、有没有微波炉是园区定的（银河理则的基础条件）。搞清哪一层归谁定，才不会为一个改不了的条件反复纠结。</div>
+  <div class="case"><b>路由器与运营商：</b>家里网络慢，你以为该换路由器，师傅却说「你这段没问题，是上游机房的事」。分清「自己这一层能改的」和「上一层已经定死的」，是 (29.2) 那次纠正的日常版本。</div>
+  <div class="case"><b>被认真对待的旧椅子：</b>奶奶用了四十年的一把藤椅，家里人从不随手扔，坏了就修、抹了油再晒。用 Ra 的标准看，这把椅子一直处在「与实体和谐运作」的关系里——它承载了几代人的身体与记忆，因此早已不是一件家具而已。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>时间与光的起源：一份计划如何在爱中凝聚</h2></div>
+  <p class="sec-lead">理则的层级问清楚后，发问者把话题推向「起点」：第一密度的行星最初处于无时间状态，那我们感知为时间的效应到底是怎么来的？Ra 的回答不是一段宇宙史年表，而是一个条件式描述——时间是一份计划落地过程中才出现的东西。接着发问者一路追到光子、旋转、化学元素与各密度的物质。</p>
+  <div class="card">
+    <h3>时间不是背景板，而是计划落地的产物</h3>
+    <div class="q">你说第一密度的行星最初处于无时间状态。那我们感知为时间的效应，是如何产生的？</div>
+    <div class="quote">
+      <p class="en">The process by which space/time comes into continuum form is a function of the careful building, shall we say, of an entire, or whole, plan of vibratory rates, densities, and potentials.</p>
+      <p class="zh">空间/时间形成连续体形式的过程，取决于——容我们说——一份完整的、整体性的计划被精心地搭建起来；这计划包含振动频率、密度与潜能。</p>
+      <span class="src">—— Session 029 · (29.11)</span>
+    </div>
+    <div class="quote">
+      <p class="en">When this plan has coalesced in the thought complexes of Love, then the physical manifestations begin to appear; this first manifestation stage being awareness or consciousness.</p>
+      <p class="zh">当这份计划在「爱」的思想复合体之中凝聚成形，物理性的显化便开始出现；而这第一个显化阶段，就是觉知或意识。</p>
+      <span class="src">—— Session 029 · (29.11)</span>
+    </div>
+    <div class="quote">
+      <p class="en">space/time then begins to unroll its scroll of livingness.</p>
+      <p class="zh">空间/时间随即开始展开它那卷「活生生」的卷轴。</p>
+      <span class="src">—— Session 029 · (29.11)</span>
+    </div>
+    <div class="plain">时间不是一开始就在那里的舞台背景：先有一份含振动频率、密度与潜能的完整计划，计划在爱中凝聚，物理显化才开始出现——而第一个出现的，是觉知。</div>
+    <div class="analogy"><b>电影放映：</b>剧本、分镜、每秒格数都定好（计划）之后，光才开始把画面投到银幕上。「时间」是放映机开始走片之后才有的东西，不是银幕自带的属性。</div>
+  </div>
+  <div class="card">
+    <h3>从爱到振动，从振动到元素</h3>
+    <div class="q">爱在空间/时间中创造振动以形成光子——对吗？而爱的持续应用造出这些振动的旋转，这些量子化的增量旋转表现为各密度的物质——对吗？</div>
+    <div class="quote">
+      <p class="en">This is essentially correct.</p>
+      <p class="zh">这基本上是正确的。</p>
+      <span class="src">—— Session 029 · (29.12) / (29.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The Logos creates all densities. Your question was unclear. However, we shall state the Logos does create both the space/time densities and the accompanying time/space densities.</p>
+      <p class="zh">理则创造了所有的密度。你的问题不够清晰。不过我们可以这样陈述：理则既创造空间/时间的各密度，也创造与之伴随的时间/空间的各密度。</p>
+      <span class="src">—— Session 029 · (29.13)</span>
+    </div>
+    <div class="plain">「爱造振动 → 振动成光子 → 旋转的量子化增量成为各密度的物质」这条链基本成立；Ra 只补了一处更正：理则创造的是所有密度，物理的这一侧与非物理的那一侧都包含在内。</div>
+    <div class="analogy"><b>同一份图纸的两种车间：</b>同一个设计文件，可以在实体的车间里做成实物，也可以在虚拟车间里做成模型。Ra 说理则「同时」造出这两种密度——不是先做实物再补做模型。</div>
+  </div>
+  <div class="card">
+    <h3>条件模拟器：空间/时间要具备什么才开始</h3>
+    <p>Ra 把时间的开端描述成三个前后相接的条件。拨动开关，看缺掉哪一步会怎样。</p>
+    <div class="cond-row"><span class="name">① 一份完整的计划<small>振动频率、密度与潜能的整体规划被精心搭建</small></span><label class="switch"><input type="checkbox" id="cond1"><span class="slider"></span></label></div>
+    <div class="cond-row"><span class="name">② 在「爱」中凝聚<small>计划在爱的思想复合体里凝聚成形</small></span><label class="switch"><input type="checkbox" id="cond2"><span class="slider"></span></label></div>
+    <div class="cond-row"><span class="name">③ 抵达存在之点<small>凝聚达到活生生的、存在性的那个起始之点</small></span><label class="switch"><input type="checkbox" id="cond3"><span class="slider"></span></label></div>
+    <div id="condResult"></div>
+  </div>
+  <div class="case"><b>项目排期表与开工那天：</b>一份盖了章的实施计划（①）先要经过立项评审才真正被「认下来」（②），然后才轮到第一天开工、日历开始一格一格往前走（③）。项目日历不是公司自带的，是计划被认下来之后才开始的——这正是 Ra 讲时间的方式。</div>
+  <div class="case"><b>先把菜谱写清再动火：</b>妈妈教做红烧肉，先让你把火候、时间、糖量都写清楚（计划），再让你在灶前真正开始动作。她说「菜谱不定，锅里的时间就没意义」——日常厨房版的空间/时间起点。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>引力是灵性事件：朝向造物主的光之线的寻求</h2></div>
+  <p class="sec-lead">元素之后，发问者顺势给出一个机械模型：既然振动在旋转，粒子就有了一个「向内的运动」，方向与空间/时间的演进相反，于是表现为引力。Ra 直接判为不正确，然后给出本集最出人意料的一个定义——引力是「朝向内在光/爱的挤压」，是灵性事件。随后的追问把话题一路带到金星、黑洞与地球进入第四密度。</p>
+  <div class="card">
+    <h3>纠正：引力不是「向内的收缩」</h3>
+    <div class="q">因为振动的旋转，粒子有一种逆向于空间/时间演进的内向运动，这就是我们所说的引力——对吗？</div>
+    <div class="quote">
+      <p class="en">This is incorrect.</p>
+      <p class="zh">这是不正确的。</p>
+      <span class="src">—— Session 029 · (29.15)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This that you speak of as gravity may be seen as the pressing towards the inner light/love, the seeking towards the spiral line of light which progresses towards the Creator.</p>
+      <p class="zh">你们所说为引力的这件事，可以被看作朝「内在的光/爱」的挤压，是朝那条螺旋式前进、趋向造物主的光之线的寻求。</p>
+      <span class="src">—— Session 029 · (29.16)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This is a manifestation of a spiritual event or condition of livingness.</p>
+      <p class="zh">它是一件灵性事件、或一种「活生生」状态的显化。</p>
+      <span class="src">—— Session 029 · (29.16)</span>
+    </div>
+    <div class="plain">引力不是几何上的「往里收缩」，而是「向内寻找光/爱」这个动作本身；Ra 把它定性为灵性事件，而不是机械效应。</div>
+    <div class="analogy"><b>枝叶朝光生长：</b>你没法用「枝条被往里拉」解释向光性——那是朝向光源的寻求。Ra 把引力归入同一类：不是被推、被拉，而是寻求。</div>
+  </div>
+  <div class="card">
+    <h3>物理能算「多少」，算不出「朝向谁」</h3>
+    <div class="q">月球上的引力比地球小，这背后有可解释的形而上原理吗？金星表面的引力比地球大还是小？</div>
+    <div class="quote">
+      <p class="en">The metaphysical and physical are inseparable.</p>
+      <p class="zh">形而上与物理是不可分割的。</p>
+      <span class="src">—— Session 029 · (29.17)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The gravity, shall we say, the attractive force which we also describe as the pressing outward force towards the Creator, is greater spiritually upon the entity you call Venus due to the greater degree of success, shall we say, at seeking the Creator.</p>
+      <p class="zh">容我们说，引力——那种我们同时也描述为「朝造物主向外的挤压力」的吸引力——在你们称为金星的实体上，灵性上更大，因为它在寻求造物主上取得了更大的成功。</p>
+      <span class="src">—— Session 029 · (29.18)</span>
+    </div>
+    <div class="plain">Ra 承认物理公式能算出大多数物体的引力（质量等因素），但它只算了「多少」，没算「朝向谁」；金星在这套体系里灵性引力更大，不是因为它更重，而是因为它更成功地寻求了造物主。</div>
+    <div class="analogy"><b>同一个「吸水」动作的两种说法：</b>从地面看，树根是被土壤的水「拉过去」；从树的角度看，是它在朝水「寻求」。Ra 在同一句话里把引力同时称为「向内的挤压」与「向外的挤压」——方向取决于你站在造物的哪一端看。</div>
+    <div class="case"><b>体重秤上的数字与你的动机：</b>减重 App 能精确记录你今天的体重（物理侧的量），却完全测不到你为什么要减、想变成什么样的人（朝向那一侧）。Ra 说这两侧「不可分割」，指的就是任何一头单独拿出来都不完整。</div>
+  </div>
+  <div class="card">
+    <h3>时间轴：引力累积到最后会发生什么</h3>
+    <p>Ra 用一个极长的过程说明「灵性引力」为何重要：它指向整个造物的收束。</p>
+    <div class="timeline">
+      <div class="tl-item"><div class="t">① 灵性引力质量不断累积</div><div class="d">无限之中的整个造物，各自朝造物主寻求，灵性引力随之增长。</div></div>
+      <div class="tl-item"><div class="t">② 达到足够的性质</div><div class="d">当这个质量达到了足够充分的性质，整个造物开始「无限地凝聚」。</div></div>
+      <div class="tl-item"><div class="t">③ 光寻源，旧造物结束</div><div class="d">光寻求并找到它的源头，于是造物被结束，同时一个新的造物开始。</div></div>
+      <div class="tl-item"><div class="t">④ Ra 的比喻：黑洞</div><div class="d">零点处质量无限大、光被吸收因而无从看见——Ra 用你们所称的黑洞来类比这个状态。</div></div>
+      <div class="tl-item"><div class="t">⑤ 第三密度的黑洞</div><div class="d">在第三密度中显现的黑洞，正是这种灵性/形而上状态的物理复合体显化。</div></div>
+    </div>
+    <div class="case"><b>把一年的照片做成相册：</b>手机里存了一整年的照片（累积），到年底你终于按下「整理成相册并清理存储空间」——旧的那一团变成一份完整的东西收束起来，同时新的一年相册开始。Ra 描述的造物收束与重启，就是这种「信息攒到足够多之后必须合成一次」的结构。</div>
+    <div class="case"><b>关系里的「终于说开了」：</b>两个人之间积累的默契与未说出口的话，攒到某一天终于一次说清——那之后旧模式结束、新的相处方式开始。Ra 用「光找到源头」描述同一件事：不是能量消失，而是找到了它一直朝向的那一端。</div>
+  </div>
+  <div class="card">
+    <h3>那地球进入第四密度呢？</h3>
+    <div class="q">当地球完全进入第四密度，会有更大的引力吗？这是否会让重力加速度超过现在测到的每秒平方 32.2 英尺？</div>
+    <div class="quote">
+      <p class="en">There will be a greater spiritual gravity thus causing a denser illusion.</p>
+      <p class="zh">将会有更大的灵性引力，从而产生一个更稠密的幻象。</p>
+      <span class="src">—— Session 029 · (29.20)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Your entities do not have the instrumentation to measure spiritual gravity but only to observe a few of its extreme manifestations.</p>
+      <p class="zh">你们的实体没有测量灵性引力的仪器，只能观察它少数几种极端的表现。</p>
+      <span class="src">—— Session 029 · (29.21)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The increase measurable by existing instrumentation would, and will be, statistical in nature only and not significant.</p>
+      <p class="zh">以现有仪器可测量到的增加，在性质上只会是统计性的，且并不显著。</p>
+      <span class="src">—— Session 029 · (29.22)</span>
+    </div>
+    <div class="plain">会有更大的灵性引力，幻象随之更稠密；但以现有仪器可测到的变化只是统计性的、不显著——因为我们没有测量灵性引力的仪器，只能看到它少数极端表现。</div>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">发问者的模型</span><h4>旋转 → 内向运动</h4><p>由振动的旋转推出一个逆向的向内运动，把它认作引力。<b>把引力当机械几何现象。</b></p></div>
+      <div class="yuan-card"><span class="y-tag">Ra 的纠正</span><h4>朝光/爱的寻求</h4><p>引力是朝内在光/爱的挤压、转向造物主的光之线的寻求，<b>是灵性事件、存在状态的显化</b>。</p></div>
+      <div class="yuan-card"><span class="y-tag">两个侧面</span><h4>不可分割</h4><p>物理那套算法仍然有效（质量等），但形而上与物理<b>不可分割</b>——Ra 认为有必要指出同样重要的另一侧。</p></div>
+      <div class="yuan-card"><span class="y-tag">观测边界</span><h4>只能看极端表现</h4><p>没有测量灵性引力的仪器；能测到的变化只是<b>统计性且不显著</b>。认识边界本身也是答案的一部分。</p></div>
+    </div>
+  </div>
+  <div class="case"><b>只盯心率带的人：</b>跑步的人若只看心率带上的数字，会以为「配速」就是全部；教练却问「你今天为什么跑」。Ra 对引力做的是同一件事：承认公式能算数字，但坚持指出还有「朝向」这一侧——而那一侧不可分割。</div>
+  <div class="case"><b>公司只统计考勤：</b>管理层能精确算出打卡时长（统计性的增加），却测量不到一个团队是否真的在朝同一个方向努力。可测的那部分「统计性且不显著」，重要的那部分没有仪器——这正是 (29.22) 的日常版本。</div>
+  <div class="case"><b>搬家打包的那一天：</b>住了五年的家，东西一件件攒着（灵性引力质量累积）；到最后一天全部装箱，屋子空了，然后新房子的生活开始。旧住处不是消失了，是被「收起来」了——Ra 描述的凝聚与新的造物，就是这样的结构。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>水晶与自由意志：只有当使用它的人也结晶了</h2></div>
+  <p class="sec-lead">发问者从原子由光的振动旋转凝聚成晶格说起，猜想可以透过晶体结构把智能能量带进物理幻象。Ra 说这「只有在该晶体被相应结晶化的心/身/灵复合体充能时」才对。接下来是一串逐步收紧的追问：有没有统一的纯净度门槛？谁能读取紫罗兰色光芒？水晶到底怎么用？——而最后一个问题，Ra 拒绝了。</p>
+  <div class="card">
+    <h3>晶体不通电，是「匹配的人」让它通电</h3>
+    <div class="q">既然精确的晶体结构由智能能量形成，那么透过它就能汲取智能能量、把它带进物理幻象——对吗？</div>
+    <div class="quote">
+      <p class="en">This is correct only insofar as the crystalline physical structure is charged by a correspondingly crystallized, or regularized, or balanced, mind/body/spirit complex.</p>
+      <p class="zh">只有当这个晶体物理结构被一个与之相应、已经结晶化、规律化或平衡的心/身/灵复合体充能时，这一点才是正确的。</p>
+      <span class="src">—— Session 029 · (29.23)</span>
+    </div>
+    <div class="plain">晶体本身不通电；只有当使用它的人自己也达到相应的「结晶化 / 规律化 / 平衡」，它才成为通道。条件在使用者这一端，不在石头那一端。</div>
+    <div class="analogy"><b>适配器与电压：</b>晶体像一个接口，能不能通，取决于你这一端的电压是否匹配。接口再精致，这一端不稳，电就是过不去。</div>
+  </div>
+  <div class="card">
+    <h3>门槛是固定的，卡关的地方却人人不同</h3>
+    <div class="q">那么消除变貌一定存在一个最低门槛，对吗？这个门槛是统一的，还是每个实体都不一样？</div>
+    <div class="quote">
+      <p class="en">This is correct only if it is understood, shall we say, that each mind/body/spirit complex has an unique such point.</p>
+      <p class="zh">只有在理解到——容我们说——每一个心/身/灵复合体都有这样一个独特的点时，这一点才是正确的。</p>
+      <span class="src">—— Session 029 · (29.25)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The necessity is for the mind/body/spirit complex to be of a certain balance, this balance thus enabling it to reach a set level of lack of distortion.</p>
+      <p class="zh">必要的是：心/身/灵复合体达到某种平衡，而这种平衡使它能够达到一个已被设定的「缺乏变貌」的水平。</p>
+      <span class="src">—— Session 029 · (29.27)</span>
+    </div>
+    <div class="quote">
+      <p class="en">No two mind/body/spirit crystallized natures are the same. The distortion requirements, vibrationally speaking, are set.</p>
+      <p class="zh">没有两个心/身/灵的结晶化本质是相同的。而变貌方面的要求，从振动上说，是固定的。</p>
+      <span class="src">—— Session 029 · (29.27)</span>
+    </div>
+    <div class="plain">要求本身是固定的（振动上的门槛已经设定好），但每个实体卡关的具体难点各不相同——因为那是各自体验提炼而成的紫罗兰色光芒存在性。所以不能横向比较谁更「纯净」。</div>
+    <div class="analogy"><b>同样的及格线，不同的错题本：</b>考试分数线对所有人一样（要求是固定的），但每个人丢分的地方都不一样。拿同桌的错题本当自己该练什么的标准，只会练错地方。</div>
+    <div class="case"><b>两位厨师考同一张证：</b>厨师证的标准全国统一，但有人挂在意面的火候上，有人挂在刀工上。考官不会说「你比他纯净度低」，只会说「你的难点在这里」——(29.27) 讲的就是这件事。</div>
+  </div>
+  <div class="card">
+    <h3>门是怎么「生起」的</h3>
+    <div class="q">如果一个实体已经满足了紫罗兰色光芒的资格，他应该怎么使用水晶？</div>
+    <div class="quote">
+      <p class="en">The gateway to intelligent infinity is born of, shall we say, the sympathetic vibration, in balanced state, accompanying the will to serve, the will to seek.</p>
+      <p class="zh">通往智能无限的门，生于——容我们说——在平衡状态中的共鸣振动，并伴随着服务的意志与寻求的意志。</p>
+      <span class="src">—— Session 029 · (29.29)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The use of the crystal in physical manifestation is that use wherein the entity of crystalline nature charges the regularized physical crystal with this seeking, thus enabling it to vibrate harmonically, and also become the catalyst, or gateway, whereby intelligent infinity may thus become intelligent energy, this crystal serving as an analog of the violet ray of mind/body/spirit in relatively undistorted form.</p>
+      <p class="zh">水晶在物理显化中的用法是这样的：具有结晶本质的实体以这份寻求来充能那块已被规律化的物理晶体，使它得以和谐振动，并成为催化剂或门户——智能无限由此得以成为智能能量；这块水晶，充当着心/身/灵在相对未变貌形式下的紫罗兰色光芒的类似物。</p>
+      <span class="src">—— Session 029 · (29.30)</span>
+    </div>
+    <div class="quote">
+      <p class="en">It is possible for one of fifth density or above to do this.</p>
+      <p class="zh">第五密度或以上的实体可以做到这件事。</p>
+      <span class="src">—— Session 029 · (29.28)</span>
+    </div>
+    <div class="plain">门不是被技巧「打开」的，而是生起的：平衡状态中的共鸣振动，加上服务的意志与寻求的意志。水晶的角色只是充当紫罗兰色光芒的类似物，让智能无限经由它成为智能能量。</div>
+    <div class="analogy"><b>共振音叉：</b>你敲响一支音叉，旁边那支频率相同的会自己响起来——不是被撞，而是「共鸣」。Ra 说门生于「共鸣振动」，用的正是这种机制。</div>
+  </div>
+  <div class="card">
+    <h3>Ra 的拒答：界线在这里叫自由意志</h3>
+    <div class="q">你能不能指导我们水晶的具体用途？</div>
+    <div class="quote">
+      <p class="en">It is possible. There are, we consider, things which are not efficacious to tell you due to possible infringement upon your free will.</p>
+      <p class="zh">这是可能的。不过我们认为，有些事不宜告诉你们，因为它可能侵犯你们的自由意志。</p>
+      <span class="src">—— Session 029 · (29.31)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Entities of the Confederation have erred in this in the past. The uses of the crystal, as you know, include the uses for healing, for power, and even for the development of life-forms. We feel that it is unwise to offer instruction at this time as your peoples have shown a tendency to use peaceful sources of power for disharmonious reasons.</p>
+      <p class="zh">星际联邦的实体过去在这件事上犯过错误。如你们所知，水晶的用途包括疗愈、力量，甚至发展生命形态。我们认为此时提供指导是不明智的，因为你们的人民已经显示出一种倾向：把和平的力量来源用于不和谐的目的。</p>
+      <span class="src">—— Session 029 · (29.31)</span>
+    </div>
+    <div class="plain">不是「不知道」，而是「说了会造成侵犯」：联邦过去在这件事上犯过错；而且地球人已经显示出把和平的来源用于不和谐目的的倾向，所以此刻给指导是不明智的。拒答本身就是教导。</div>
+    <div class="analogy"><b>不教孩子保险箱密码：</b>知识本身没有问题，但在孩子还没有判断力的阶段给出去，很可能被用在伤人的方向上。把这一步留到他自己能承担后果的时候，是保护，不是隐瞒。</div>
+    <div class="case"><b>健身教练不肯给的「捷径」：</b>学员问有没有三周见效的药，教练说「有，但我不告诉你」。这不是藏私，而是他知道这个人的作息还没稳，给了只会伤到关节——Ra 对水晶具体用法的态度与此同型。</div>
+  </div>
+  <div class="card">
+    <h3>归类练习：这些做法满足条件吗？</h3>
+    <p>依据本集 Ra 给出的条件（使用者的平衡、寻求与服务的意志、晶体需被充能），判断下面每种情况。</p>
+    <div id="sorterArea"></div>
+  </div>
+  <div class="card">
+    <h3>术语卡：水晶这一章的四个词</h3>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">紫罗兰色光芒</div><div class="sub">violet ray</div><span class="tap">点击展开</span></div><div class="back">心/身/灵复合体整体振动状态的「总述」，每个实体的体验提炼最终都汇聚于此。本集说每个实体的独特难点，总体而言就是它的紫罗兰色光芒存在性。<em>比喻：一整套指纹，而不是其中一根手指。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">结晶化 / 规律化</div><div class="sub">crystallized / regularized</div><span class="tap">点击展开</span></div><div class="back">不是指身体，而是指内在状态变得规律、有序、可共鸣。本集要求：物理晶体必须被一个同样结晶化或平衡的心/身/灵复合体充能。<em>案例：两支音叉频率一致才会共振。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">智能无限之门</div><div class="sub">gateway to intelligent infinity</div><span class="tap">点击展开</span></div><div class="back">无限智能得以进入显化、成为可运作的智能能量的那个通道。本集说这道门「生于」平衡中的共鸣振动与服务、寻求的意志。<em>比喻：门不是被撬开的，是被共振「生出来」的。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">自由意志</div><div class="sub">free will</div><span class="tap">点击展开</span></div><div class="back">Ra 反复以它为拒答的理由：某些知识一旦给出，就会替对方做出本该由他自己做的选择，从而构成「侵犯」。本集称联邦过去在这件事上犯过错。<em>案例：给人答案，有时等于拿走了他自己摸索的机会。</em></div></div>
+    </div>
+  </div>
+  <div class="case"><b>带徒弟的老师傅：</b>学徒问「这个手感怎么调」，师傅说「你先自己试三个月」。理由和 Ra 一样：手感只能从自己的练习里长出来，讲出来的是别人的手；而讲得太早，学徒会照着模仿，反而走不出来。</div>
+  <div class="case"><b>每天静坐十分钟的人：</b>一位作息稳定、情绪有起伏但能看得住的人，把每天静坐后的那份「愿意服务」的意愿集中在一小块水晶上——按本集的条件，这正是 Ra 描述的用法：不是水晶在起作用，而是他的寻求在充能。</div>
+  <div class="case"><b>急着「速通」的人：</b>有人在焦虑失眠的时期买回一堆水晶，期望一周内开悟、顺便改善财源。按 (29.27)，此时的难点恰恰是「平衡」——而急躁本身正说明平衡还没到，晶体在这时是过不了电的。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>收官：银河的两条去向与下一次的伏笔</h2></div>
+  <p class="sec-lead">最后那个「完整的问题」是关于行星发展快慢的：银河里为什么有的行星迅速进入更高密度，有的却慢得多？Ra 的回答把视野拉到整座星系——大部分凝聚物质并不参与我们所说的演进，只是作为理则的一部分在灵性上居住。回答之后，Ra 处理了器皿的私人询问，随即收尾。</p>
+  <div class="card">
+    <h3>银河理则的两条去向</h3>
+    <div class="q">银河里有这么多行星，意识的进展快慢差异很大，能说说这种发展吗？</div>
+    <div class="quote">
+      <p class="en">The particular Logos of your major galaxy has used a large portion of Its coalesced material to reflect the beingness of the Creator. In this way there is much of your galactic system which does not have the progression of which you speak but dwells spiritually as a portion of the Logos.</p>
+      <p class="zh">你们这个大银河的特定理则，把自身凝聚物质的一大部分用于反映造物主的存在性。如此，你们的银河系统中有很大一部分并不具有你所说的那种演进，而是在灵性上作为理则的一部分「居住」着。</p>
+      <span class="src">—— Session 029 · (29.32)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Of those entities upon which consciousness dwells there is, as you surmise, a variety of time/space periods during which the higher densities of experience are attained by consciousness.</p>
+      <p class="zh">而在那些有意识「居住」其上的实体之中，正如你所推测的，存在种种不同的时间/空间周期，意识在这些周期里达成更高密度的体验。</p>
+      <span class="src">—— Session 029 · (29.32)</span>
+    </div>
+    <div class="plain">银河理则把大部分凝聚物质用来「反映造物主的存在性」——所以星系中有很大一部分并不参与演进，而是作为理则的一部分在灵性上居住着；真正有意识居住其上、朝向更高密度前进的那部分，快慢各不相同。</div>
+    <div class="analogy"><b>一整片森林：</b>不是每棵树都在长高结果：有些区域本身就是林子的一部分，承担的是「构成这片林子」的角色；而真正在生长结果的那些，快慢也各不相同。Ra 用的词是「居住」而不是「停滞」——它们以另一种方式属于理则。</div>
+    <div class="case"><b>团队里两种人：</b>一个项目组里，有人在快速迭代冲目标（演进），有人稳定地把环境维护好、把气氛托住、让别人的迭代成为可能（Ra 说的「居住」）。两种都在组里，只是角色不同——把第二种当成「没在成长」是一种误读。</div>
+  </div>
+  <div class="card">
+    <h3>器皿的询问：可做的与绝不可做的</h3>
+    <div class="q">器皿不想做物理疗愈，只想阅读那份私人疗愈材料，这样会让她的正面极性减少吗？</div>
+    <div class="quote">
+      <p class="en">This entity has a[n] experiential history of healing on levels other than the so-called physical. Thus it is acceptable that this material be read. However, the exercise of fire shall never be practiced by this instrument, as it is used in the stronger form for the physical healing.</p>
+      <p class="zh">这个实体有着在所谓物理层面之外的其他层面进行疗愈的体验性历史。因此，阅读这份材料是可以接受的。然而，这个器皿绝不可练习「火之练习」，因为它的更强形式是用于物理疗愈的。</p>
+      <span class="src">—— Session 029 · (29.33)</span>
+    </div>
+    <div class="quote">
+      <p class="en">We shall speak shortly due to the fact that we are attempting to conserve this instrument's vital energies during the three-month period of which we have spoken.</p>
+      <p class="zh">我们将简短作答，因为我们正试图在先前谈到的这三个月期间，保存这个器皿的生命能量。</p>
+      <span class="src">—— Session 029 · (29.33)</span>
+    </div>
+    <div class="plain">读材料可以——她本来就在非物理层面有疗愈的体验性历史；但「火之练习」绝不可做，因为它在更强形式下属于物理疗愈，而器皿已表明不走这条路。Ra 还特意说明为什么这一集答得短：要为这三个月保存器皿的生命能量。</div>
+    <div class="case"><b>医嘱里的「这两项可以做，那项不要碰」：</b>康复期的病人问能不能自己加练，医生说「散步和拉伸可以，深蹲不要」。界线不是按事情好坏划的，而是按这个人的负荷与既有倾向划的——Ra 对器皿的处理正是这样。</div>
+  </div>
+  <div class="saying">
+    <p class="en">This is correct down to the limits of any observation, for the entire creation is alive.</p>
+    <p class="zh">在任何观察所能达到的极限之内，这都是正确的——因为整个造物都是活的。</p>
+    <span class="src">—— Session 029 · (29.8)</span>
+  </div>
+  <div class="card">
+    <h3>这一集留下的位置与伏笔</h3>
+    <p>本集是一次「向下走」的集会：从理则层级（(29.1)–(29.9)）、极性从何开始（(29.10)），走到时间与光（(29.11)–(29.14)）、引力（(29.15)–(29.22)），再落到水晶与自由意志（(29.23)–(29.31)）。而发问者在 (29.32) 自己给出了下一个方向：思想的进化，以及它通往智能无限的寻求之道——Ra 只声明这是本次最后一个完整问题，给出部分回答后随即反问他是否满足。</p>
+    <div class="plain">下次集会可以带着这条线读下去：意识的进化与极性，会怎样在同一套「理则—子理则」结构里展开。</div>
+    <div class="quote">
+      <p class="en">You are conscientious. The entity is well aligned.</p>
+      <p class="zh">你们是尽责的。该实体已校准良好。</p>
+      <span class="src">—— Session 029 · (29.34)</span>
+    </div>
+    <div class="case"><b>开会到点就散：</b>议题还没谈完，主持人说「今天到这里」。本集发问者也做了同样的收束动作——他明确说「我不想让器皿过度疲劳」，宁可把问题留到明天。一个持续进行的长期工作，节奏本身也是内容的一部分。</div>
+    <div class="case"><b>写完清单先不急着做：</b>晚上你把明天要做的事列成清单，然后就合上本子去睡了。本集结尾正是这个动作：发问者说「我会研究它，可能明天会有一些问题」——把已经拿到的答案先放一放，是长期项目里的常态，也是 Ra 所说的「保存能量」。</div>
+    <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+<p>基于 The Ra Contact Session 029（split/Ra_Session_029.md）英文原文制作 · 交互式学习模块</p>
+<p>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文</p>
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra029-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+  {t:'(29.1)–(29.2) 太阳是子理则吗',d:'<span class="qa-q">问：我们的太阳是一个子理则，还是子理则的物理显化？它是否在其所有密度中创造了这个行星系统？</span><b>答：</b>是子理则；但「创造整个行星系统」不正确——它是在理则启动的智能能量模式之内分化出一些体验性组件，而基础条件与振动频率是那位理则设定的、贯穿整个银河。'},
+  {t:'(29.3)–(29.5) 它属于哪一层',d:'<span class="qa-q">问：银河里约两千五百亿颗恒星，都是同一个子理则的一部分吗？</span><b>答：</b>它们都属于同一个理则；我们的太阳系是「略有不同」的显化，差异正来自子理则的存在。太阳是银河主理则的子理则。'},
+  {t:'(29.6)–(29.9) 还有更下一层吗',d:'<span class="qa-q">问：行星系统里有没有比太阳更下一层的子子理则？那我们脚下的行星算不算？</span><b>答：</b>有，一个例子就是心/身/灵复合体；任何观察极限之内，每个实体都是某种子理则或子子理则，因为整个造物都是活的。而行星只有与它上面的实体和谐运作时，才被命名为理则。'},
+  {t:'(29.10) 子理则有极性吗',d:'<span class="qa-q">问：像太阳这样的子理则，有没有我们所说的正面或负面极性？</span><b>答：</b>按你们的用法，没有。直至行星层面的实体，都是通过自由意志、经由存在性的行动而拥有智能无限的力量；只有当行星球体开始与心/身复合体和谐互动时，它才因这些思想复合体而带上变貌。太一无限造物主的造物不具备你们所说的极性。'},
+  {t:'(29.11)–(29.14) 时间与光',d:'<span class="qa-q">问：第一密度的行星本处于无时间状态，那我们感知为时间的效应如何产生？爱创造振动形成光子、旋转表现为物质吗？</span><b>答：</b>空间/时间形成连续体，取决于一份完整的振动频率、密度与潜能计划被精心搭建；当它在爱的思想复合体中凝聚，物理显化便出现，第一个阶段是觉知；空间/时间随即展开它的卷轴。光子与旋转之链「基本上正确」，但理则创造的是所有密度——空间/时间与伴随的时间/空间都在内。'},
+  {t:'(29.15)–(29.22) 引力是什么',d:'<span class="qa-q">问：旋转带来的内向运动就是我们说的引力吗？月球、金星、地球进入第四密度各自怎样？</span><b>答：</b>不正确。引力是朝内在光/爱的挤压、朝向造物主的光之线的寻求，是灵性事件的显化；形而上与物理不可分割。金星灵性引力更大（寻求更成功）；当整个造物达到足够的灵性引力质量，它将凝聚、光寻得源头，旧造物结束、新造物开始——如你们所称的黑洞。地球进入第四密度会有更大灵性引力、幻象更稠密，但仪器可测的变化只是统计性且不显著。'},
+  {t:'(29.23)–(29.31) 水晶与拒答',d:'<span class="qa-q">问：能否透过晶体结构汲取智能能量？能否指导我们水晶的具体用途？</span><b>答：</b>只有当晶体被相应结晶化、规律化或平衡的心/身/灵复合体充能时才可以；每个实体的难点独特、要求固定；门生于平衡中的共鸣振动与服务、寻求的意志；第五密度或以上能读取紫罗兰色光芒。至于具体用法：可能，但因可能侵犯你们的自由意志而不宜告知——联邦过去在此犯过错，且你们的人民有把和平力量用于不和谐目的的倾向。'},
+  {t:'(29.32)–(29.34) 收官',d:'<span class="qa-q">问：银河中行星的意识与极性发展快慢差异如何？器皿能否阅读私人疗愈材料？</span><b>答：</b>银河理则用大部分凝聚物质反映造物主的存在性，星系中很大一部分不参与演进、只是作为理则的一部分在灵性上居住；有意识居住其中的，达到更高密度的周期各异。器皿可阅读该材料，但绝不可练火之练习。Ra 简短作答以保存器皿这三个月的生命能量，最后以「你们是尽责的，该实体已校准良好」收尾。'}
+]);
+
+function updateCond(){
+  const a=document.getElementById('cond1').checked,
+        b=document.getElementById('cond2').checked,
+        c=document.getElementById('cond3').checked,
+        box=document.getElementById('condResult');
+  if(a&&b&&c){
+    box.className='';
+    box.innerHTML='<b>三条件齐备：</b>物理显化开始出现，而它的第一个显化阶段就是觉知或意识；空间/时间随即展开它那卷「活生生」的卷轴。';
+  }else if(!a){
+    box.className='fail';
+    box.innerHTML='<b>缺① 完整的计划：</b>没有一份关于振动频率、密度与潜能的整体规划，就没有可凝聚之物——Ra 说空间/时间的连续体形式，正是这份「精心搭建」的产物。';
+  }else if(!b){
+    box.className='fail';
+    box.innerHTML='<b>缺② 在爱中凝聚：</b>计划还只是一份蓝图。Ra 说物理显化要等这份计划「在爱的思想复合体中凝聚」之后才开始出现。';
+  }else{
+    box.className='fail';
+    box.innerHTML='<b>缺③ 抵达存在之点：</b>计划已在爱中凝聚，但还没抵达那个活生生、存在性的起始之点——空间/时间尚未开始展开它的卷轴。';
+  }
+}
+['cond1','cond2','cond3'].forEach(id=>document.getElementById(id).addEventListener('change',updateCond));
+updateCond();
+
+initSorter('sorterArea',[
+  {a:'一位作息平稳、情绪有起伏但看得住的人，每天静坐后把「愿意服务他人」的意愿集中在一块水晶上',opts:['满足','不满足'],ans:'满足',exp:'这正是 Ra 描述的用法：门生于平衡状态中的共鸣振动，并伴随服务意志与寻求意志。'},
+  {a:'一个长期失眠、焦躁的人买回水晶，期望一周内开悟并顺便改善收入',opts:['满足','不满足'],ans:'不满足',exp:'Ra 要求心/身/灵复合体达到某种平衡；急躁与失衡本身就说明条件未备。'},
+  {a:'一位疗愈者自己正陷在情绪失衡里，仍想借水晶为病人做物理疗愈',opts:['满足','不满足'],ans:'不满足',exp:'晶体必须先被相应结晶化或平衡的心/身/灵复合体充能，条件在使用者这一端。'},
+  {a:'有人把一块水晶摆在书桌上当装饰，从未以任何寻求的意志去使用它',opts:['满足','不满足'],ans:'不满足',exp:'未被寻求充能的晶体只是物理结构，不会成为通往智能无限的门户。'},
+  {a:'一位已相当平衡、以服务他人为愿的实体，把寻求集中于一块规律化的水晶',opts:['满足','不满足'],ans:'满足',exp:'这就是 (29.30) 说的用法：以寻求充能，使它和谐振动并成为门户与催化剂。'},
+  {a:'一位第五密度或以上的实体读取某人的紫罗兰色光芒，判断他是否适合用水晶',opts:['满足','不满足'],ans:'满足',exp:'Ra 说第五密度或以上的实体可以做到这件事，尽管这并不等于要为人类提供具体用法指导。'}
+]);
+
+document.querySelectorAll('.fn-card').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('open')));
+
+renderPath();
+</script>
+</body>
+</html>

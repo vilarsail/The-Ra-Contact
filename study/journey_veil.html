@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css">
+<title>遗忘面纱 · 滚动星旅</title>
+<style>
+:root{
+  --amb:#f5efe2;          /* 当前场景氛围色，由 JS 实时插值 */
+  --ink:#efe9dd;
+  --ink-dim:rgba(239,233,221,.55);
+  --serif:"LXGW WenKai","霞鹜文楷","LXGW WenKai SC","Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:#070a12;color:var(--ink);font-family:var(--serif);
+  line-height:2;overflow-x:hidden;
+}
+canvas#sky{position:fixed;inset:0;width:100vw;height:100vh;z-index:0}
+
+/* ===== 进度轨道 ===== */
+#rail{
+  position:fixed;right:26px;top:50%;transform:translateY(-50%);z-index:8;
+  display:flex;flex-direction:column;gap:13px;align-items:flex-end;
+}
+#rail .r{display:flex;align-items:center;gap:10px;cursor:pointer}
+#rail .r i{
+  width:5px;height:5px;border-radius:50%;flex-shrink:0;
+  background:rgba(255,255,255,.16);transition:all .4s;
+}
+#rail .r.cur i{background:var(--amb);box-shadow:0 0 9px var(--amb);transform:scale(1.7)}
+#rail .lbl{
+  font-size:.72rem;letter-spacing:.12em;color:var(--ink);white-space:nowrap;
+  padding:3px 12px;border-radius:999px;background:rgba(7,10,18,.78);
+  border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(4px);
+  opacity:0;transform:translateX(10px);transition:all .35s ease;pointer-events:none;
+}
+#rail:hover .lbl{opacity:1;transform:none}
+#rail .r.cur .lbl{border-color:var(--amb);color:var(--amb)}
+
+main{position:relative;z-index:1}
+
+/* ===== 时刻场景（全屏居中） ===== */
+.scene{min-height:118vh;display:flex;align-items:center;justify-content:center;padding:14vh 22px}
+.stage{max-width:620px;text-align:center;opacity:0;transform:translateY(34px);filter:blur(6px);transition:opacity 1.6s ease,transform 1.6s ease,filter 1.6s ease}
+.scene.on .stage,.station.on .stage{opacity:1;transform:none;filter:blur(0)}
+.kicker{
+  font-size:.8rem;letter-spacing:.55em;text-indent:.55em;color:var(--amb);
+  margin-bottom:30px;opacity:.85;
+}
+.kicker::after{
+  content:"";display:block;width:34px;height:1px;margin:16px auto 0;
+  background:var(--amb);opacity:.5;
+}
+.narr{font-size:1.18rem;color:var(--ink);margin-bottom:38px;text-align:center}
+.en{
+  font-family:Georgia,"Times New Roman",serif;font-style:italic;
+  font-size:.98rem;line-height:1.9;color:var(--amb);opacity:.92;margin-bottom:16px;
+}
+.zh{font-size:.95rem;color:var(--ink-dim);margin-bottom:10px}
+.ref{font-size:.74rem;letter-spacing:.2em;color:rgba(239,233,221,.34)}
+
+/* ===== 站点（左钉住 · 右细节流） ===== */
+.station{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);align-items:stretch}
+.pin{
+  position:sticky;top:0;height:100vh;
+  display:flex;align-items:center;justify-content:center;padding:0 3vw;
+}
+.pin .stage{max-width:520px}
+.detail{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:10vh 5vw 10vh 0;
+}
+.frag{
+  min-height:60vh;display:flex;flex-direction:column;justify-content:center;
+  max-width:440px;
+  opacity:0;transform:translateY(30px);
+  transition:opacity 1.3s ease,transform 1.3s ease;
+}
+.frag.on{opacity:1;transform:none}
+.f-k{
+  font-size:.78rem;letter-spacing:.4em;color:var(--amb);opacity:.85;margin-bottom:18px;
+}
+.f-en{
+  font-family:Georgia,"Times New Roman",serif;font-style:italic;
+  font-size:.92rem;line-height:1.9;color:var(--amb);opacity:.9;
+  border-left:2px solid rgba(255,255,255,.18);padding-left:16px;margin-bottom:14px;
+}
+.f-zh{font-size:.93rem;color:var(--ink-dim);margin-bottom:8px}
+.f-ref{font-size:.72rem;letter-spacing:.2em;color:rgba(239,233,221,.32)}
+
+/* 开场 */
+#s0 .narr{font-size:1.5rem;letter-spacing:.1em;line-height:2.3}
+.hint{
+  margin-top:60px;font-size:.8rem;letter-spacing:.4em;text-indent:.4em;
+  color:var(--ink-dim);animation:drift 2.6s ease-in-out infinite;
+}
+@keyframes drift{0%,100%{transform:translateY(0);opacity:.45}50%{transform:translateY(9px);opacity:.95}}
+
+/* 帷幕落下（模糊显影） */
+.veiled{transition:filter 3.4s ease,opacity 3.4s ease}
+#s4 .stage .veiled{filter:blur(14px);opacity:.12}
+#s4.on .stage .veiled{filter:blur(0);opacity:1}
+
+/* 终章 */
+#sLast .en{font-size:1.06rem;line-height:2.2}
+#sLast .zh{font-size:1rem}
+.again{
+  margin-top:56px;font-family:var(--serif);font-size:.85rem;letter-spacing:.35em;text-indent:.35em;
+  color:var(--ink-dim);background:none;border:1px solid rgba(255,255,255,.14);
+  border-radius:999px;padding:11px 30px;cursor:pointer;transition:all .4s;
+}
+.again:hover{color:var(--ink);border-color:var(--amb)}
+
+footer{
+  position:relative;z-index:1;text-align:center;padding:40px 20px 56px;
+  font-size:.76rem;color:rgba(239,233,221,.3);letter-spacing:.08em;line-height:2.2;
+}
+@media (max-width:900px){
+  .station{display:block}
+  .pin{position:static;height:auto;padding:12vh 22px 2vh}
+  .pin .stage{margin:0 auto}
+  .detail{padding:0 22px 6vh;align-items:center}
+  .frag{min-height:auto;margin-bottom:7vh}
+}
+@media (max-width:640px){
+  .narr{font-size:1.05rem}
+  #s0 .narr{font-size:1.2rem}
+  #rail{display:none}
+}
+</style>
+</head>
+<body>
+
+<canvas id="sky"></canvas>
+<div id="rail"></div>
+
+<main>
+
+<!-- 0 开场 · 没有面纱的世界 -->
+<section class="scene" id="s0" data-c="#f5efe2">
+  <div class="stage">
+    <p class="narr">先想象一个世界：<br>没有人忘记任何事。<br>你记得自己从光中来，<br>记得每个人都是你。</p>
+    <p class="en">“There was no third-density forgetting. There was no veil.”</p>
+    <p class="zh">没有第三密度的遗忘。没有面纱。——在这个八度音程之初，世界曾经是这样。</p>
+    <p class="ref">—— SESSION 082 · (82.12)</p>
+    <p class="hint">向下滚动 · 走到面纱落下之前 ▾</p>
+  </div>
+</section>
+
+<!-- 1 面纱之前 -->
+<section class="station" id="s1" data-c="#ddd5c2">
+  <div class="pin"><div class="stage">
+    <p class="kicker">面纱之前 · 苍白乐园</p>
+    <p class="narr">那时的人们不怀疑，<br>也就不怎么惊奇。<br>一切都看得见，<br>于是什么都轻轻掠过。</p>
+    <p class="en">“Perhaps the most critical difference of the veiling, before and after, was that before the mind, body, and spirit were veiled, entities were aware that each energy transfer—and, indeed, very nearly all that proceeds from any intercourse, social or sexual, between two entities—has its character and substance in time/space rather than space/time.”</p>
+    <p class="zh">面纱之前最关键的一点是：人人都知道，一切交往——社会的或性的——其实质都在形而上的时间/空间里，而不在这个物质的空间/时间中。</p>
+    <p class="ref">—— SESSION 084 · (84.17)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">落不进心湖的石子</p>
+      <p class="f-en">“Before the veiling process the impact of actions taken by mind/body/spirits upon their consciousnesses was not palpable to a significant enough degree to allow the expression of this polarity to be significantly useful.”</p>
+      <p class="f-zh">面纱之前，行为对意识造成的冲击，淡到不足以让极性派上用场——事情发生了，却像石子落不进心湖。</p>
+      <p class="f-ref">—— SESSION 093 · (93.5)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">神圣的快乐</p>
+      <p class="f-en">“Consider, if you will, the tendency of those who are divinely happy, as you call this distortion, to have little urge to alter, or better, their condition.”</p>
+      <p class="f-zh">想想那些「神圣快乐」的存在：既然一切都好，还有什么要改变的呢？快乐，恰恰是进化的钝角。</p>
+      <p class="f-ref">—— SESSION 082 · (82.22)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">乌龟与猎豹</p>
+      <p class="f-en">“It is our perception that such conditions created the situation of a most pallid experiential nexus in which lessons were garnered with the relative speed of the turtle to the cheetah.”</p>
+      <p class="f-zh">Ra 的评语：那样的状况造出一种极度苍白的体验结点，课程被习得的速度——乌龟之于猎豹。</p>
+      <p class="f-ref">—— SESSION 082 · (82.18)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">无人为奴的世界</p>
+      <p class="f-en">“However, the societies before veiling did not depend, in any case, upon the intentional enslavement of some for the benefit of others, this not being seen to be a possibility when all are seen as one.”</p>
+      <p class="f-zh">面纱之前的社会从不蓄意奴役一些人去造福另一些人——当所有人都被看作一体时，这件事根本无法想象。</p>
+      <p class="f-ref">—— SESSION 083 · (83.10)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">不做功课的学年</p>
+      <p class="f-en">“The entity is fed, clothed, and protected regardless of whether or not the schoolwork is accomplished. Therefore, the entity does not do the homework but rather enjoys playtime, mealtime, and vacation.”</p>
+      <p class="f-zh">一个被喂养、穿衣、保护着的童年：既然功课做不做都有饭吃，谁去做功课呢？大家只顾游戏与假期。</p>
+      <p class="f-ref">—— SESSION 082 · (82.28)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 2 理则的发明 -->
+<section class="scene" id="s2" data-c="#b9b09c">
+  <div class="stage">
+    <p class="kicker">理则的发明</p>
+    <p class="narr">宇宙的心灵——理则（Logos）——<br>盯着这场太安逸的乐园，<br>动了念头：<br>快乐的草原上，长不出极性的庄稼。</p>
+    <p class="en">“All the previous, if you would use this term, experiments, although resulting in many experiences, lacked what was considered the crucial ingredient: that is, polarization.”</p>
+    <p class="zh">所有先前的实验，尽管产生了许多体验，却缺乏一个被视为关键性的成分：那就是极化。</p>
+    <p class="ref">—— SESSION 082 · (82.21)</p>
+  </div>
+</section>
+
+<!-- 3 造物实验室 -->
+<section class="station" id="s3" data-c="#8f8a79">
+  <div class="pin"><div class="stage">
+    <p class="kicker">造物实验室</p>
+    <p class="narr">于是，一场巨大的实验开始了。<br>不是一次，而是无数次——<br>宇宙亲手把自己的某一部分<br>遮住，然后观察。</p>
+    <p class="en">“The result of these experiments has been a more vivid, varied, and intense experience of Creator by Creator.”</p>
+    <p class="zh">这些实验的结果，是造物主对造物主的一次更加鲜明、多样而强烈的体验。</p>
+    <p class="ref">—— SESSION 079 · (79.27)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">帷幕里藏着选择</p>
+      <p class="f-en">“Implicit in the veiling, or separation of two archetypes, is the concept of choice.”</p>
+      <p class="f-zh">遮蔽——或说两个原型的分离——之中，本身就藏着「选择」这个概念。</p>
+      <p class="f-ref">—— SESSION 079 · (79.31)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">失败的试验品</p>
+      <p class="f-en">“A large number of these experiments resulted in nonviable body complexes, or those only marginally viable. For instance, it is not a survival-oriented mechanism for the nerve receptors to blank out, unconsciously, any distortions towards pain.”</p>
+      <p class="f-zh">大量实验造出了无法存活的、或勉强存活的身体——比如让神经在疼痛时自动失明，就绝非生存导向的设计。</p>
+      <p class="f-ref">—— SESSION 083 · (83.22)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">先学会说话</p>
+      <p class="f-en">“It has been our supposition … that our Logos was interested in, shall we say, further intensifying the veiling process by offering to the third-density form the near complete probability for the development of speech taking complete precedence over concept communication or telepathy.”</p>
+      <p class="f-zh">我们的理则让言语几乎必然压倒心电感应——彼此说不透，也是加厚面纱的一环。</p>
+      <p class="f-ref">—— SESSION 090 · (90.12)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">握住工具的手</p>
+      <p class="f-en">“We also have the supposition that the so-called opposable thumb was looked upon as an excellent means of intensifying the veiling process so that, rather than rediscovering the powers of the mind, the third-density entity would, by the form of its physical manifestation, be drawn to the making, holding, and using of physical tools.”</p>
+      <p class="f-zh">连对生的拇指都是面纱的帮手：与其重新发现心智之力，不如让这双手迷上制造、握住、使用工具。</p>
+      <p class="f-ref">—— SESSION 090 · (90.12)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 4 帷幕落下（模糊显影） -->
+<section class="scene" id="s4" data-c="#6e6a5f">
+  <div class="stage">
+    <p class="kicker">帷幕落下</p>
+    <p class="narr veiled">于是，一道帷幕垂下。<br>心智对心智自己闭上了眼睛：<br>你忘了你从哪里来，忘了你是谁，<br>忘了每个人都是你——<br>也正因如此，<br>你第一次可以重新选择。</p>
+    <p class="en">“The mechanism of the veiling between the conscious and unconscious portions of the mind was a declaration that the mind was complex. This, in turn, caused the body and the spirit to become complex.”</p>
+    <p class="zh">心智的意识部分与潜意识部分之间被遮蔽的机制，是一个宣告：心智是复合的。这一宣告随后也使身体与灵性成为复合的。</p>
+    <p class="ref">—— SESSION 083 · (83.19)</p>
+  </div>
+</section>
+
+<!-- 5 遮住了什么 -->
+<section class="station" id="s5" data-c="#4f5a6e">
+  <div class="pin"><div class="stage">
+    <p class="kicker">失物清单 · 遮住了什么</p>
+    <p class="narr">面纱最先遮住的不是外界，<br>是心智自己。<br>下面是一张失物招领单——<br>上面每一件，都还没有人来领。</p>
+    <p class="en">“The most effectual veiling was that of the mind.”</p>
+    <p class="zh">最有效的遮蔽，是心智的遮蔽。</p>
+    <p class="ref">—— SESSION 085 · (85.18)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">埋进土里的珠宝</p>
+      <p class="f-en">“After the veiling, almost no facets of the Creator were known to the mind. Almost all was buried beneath the veil.”</p>
+      <p class="f-zh">像大地覆盖地壳里所有的珠宝：面纱之后，心智几乎不再认得造物主的任何一面——几乎一切都被埋进帷幕之下。</p>
+      <p class="f-ref">—— SESSION 085 · (85.19)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">看不见远方的心</p>
+      <p class="f-en">“Without the veil the mind was not caught in your illusory time. With the veil, space/time is the only obvious possibility for experience.”</p>
+      <p class="f-zh">没有面纱时，心智不被困在你幻觉般的时间里；有了面纱，空间/时间成了体验唯一显眼的可能性。</p>
+      <p class="f-ref">—— SESSION 085 · (85.19)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">交还给手的身体</p>
+      <p class="f-en">“The knowledge of and control over the body, having been lost to a great extent in the veiling process, is thusly lost from the experience of the seeker.”</p>
+      <p class="f-zh">心智对身体的知识与控制，在遮蔽中大面积失守——从此身体像一件交还给本能的行李。</p>
+      <p class="f-ref">—— SESSION 085 · (85.19)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">连口渴也成了谜</p>
+      <p class="f-en">“The anger of separation is impossible without the veil. The lack of awareness of the body’s need for liquid is unlikely without the veil. The decision to contemplate perfection in discipline is quite improbable without the veil.”</p>
+      <p class="f-zh">没有面纱，就没有分离的愤怒；没有面纱，人不会察觉不到身体缺水；没有面纱，几乎不会有人立志在纪律中静观完美。</p>
+      <p class="f-ref">—— SESSION 105 · (105.17)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">身体从未被拿走</p>
+      <p class="f-en">“The position in creation of physical manifestation changed not one whit when the veil of forgetting was dropped.”</p>
+      <p class="f-zh">遗忘之幕落下时，肉体在造物中的位置分毫未动——被遮住的从来不是身体，而是心对身体的知识。</p>
+      <p class="f-ref">—— SESSION 105 · (105.13)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 6 帷幕后的深处 -->
+<section class="station" id="s6" data-c="#39445c">
+  <div class="pin"><div class="stage">
+    <p class="kicker">深处 · 帷幕的另一侧</p>
+    <p class="narr">被遮住的东西没有消失。<br>它们只是搬去了地下——<br>在你睡着的时刻、走神的时刻、<br>爱到忘了自己的时刻，<br>轻轻敲你的门。</p>
+    <p class="en">“In some cases, such as the dreaming and the contact with the higher self, the experience was quantitatively different due to the fact that the veiling is a primary cause of the value of dreams and is also the single door against which the higher self must stand awaiting entry.”</p>
+    <p class="zh">梦与高我的接触都因面纱而彻底改变：面纱是梦之价值的主因，也是高我必须站在门外等候进入的唯一一扇门。</p>
+    <p class="ref">—— SESSION 083 · (83.3)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">夜里寄来的信</p>
+      <p class="f-en">“The so-called dreaming contains a great deal which, if made available to the conscious mind and used, shall aid it in polarization to a great extent.”</p>
+      <p class="f-zh">所谓的梦包含着大量东西——若能交给清醒的心智去使用，将极大程度地帮助它的极化。</p>
+      <p class="f-ref">—— SESSION 085 · (85.19)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">穿过滤网的世界</p>
+      <p class="f-en">“However, the intended suggestion, in general, is an echo of our earlier suggestion that the nature of catalyst is that of the unconscious; that is, outward catalyst comes through the veil.”</p>
+      <p class="f-zh">催化剂的本性属于潜意识——也就是说，外界的一切催化，都是穿过面纱才抵达你的。</p>
+      <p class="f-ref">—— SESSION 093 · (93.20)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">会渗水的膜</p>
+      <p class="f-en">“The veil is indeed so.”</p>
+      <p class="f-zh">被问到面纱是否「半透」时，Ra 只答了一句：它确实如此。幕布会渗水，只是很慢。</p>
+      <p class="f-ref">—— SESSION 083 · (83.15)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">越抬越高的帘</p>
+      <p class="f-en">“Thusly the veil is shown both somewhat lifted and still present, since the work of mind and its transformation involves progressive lifting of the great veil betwixt conscious and deep minds.”</p>
+      <p class="f-zh">面纱被画成既微抬、又在场的模样——因为心智的功课，就是一寸一寸掀起意识与深层心智之间那道大幕。</p>
+      <p class="f-ref">—— SESSION 100 · (100.7)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 7 礼物 -->
+<section class="scene" id="s7" data-c="#6b5d49">
+  <div class="stage">
+    <p class="kicker">礼物</p>
+    <p class="narr">遮蔽不是剥夺，而是一份天赋：<br>它让「不曾存在的」<br>有了发生的余地。</p>
+    <p class="en">“Those which have chosen the service-to-others[77] path have simply used the veiling process in order to potentiate that which is not. This is an entirely acceptable method of self-knowledge of and by the Creator.”</p>
+    <p class="zh">选择了服务他人道路的存有，只是借遮蔽的过程去「使那尚未存在的变得有力」——这是造物主认识自己的一种完全可接受的方法。</p>
+    <p class="ref">—— SESSION 085 · (85.9)</p>
+  </div>
+</section>
+
+<!-- 8 极性的礼物 -->
+<section class="station" id="s8" data-c="#7d6a4f">
+  <div class="pin"><div class="stage">
+    <p class="kicker">礼物 · 极性因此远为有效</p>
+    <p class="narr">忘却之后，每次选择都压上了重量。<br>伤害真的会疼，爱真的会烫。<br>于是光与暗第一次分出了方向。</p>
+    <p class="en">“The veiling process made the polarity far more effective.”</p>
+    <p class="zh">遮蔽的过程，使极性远为有效。</p>
+    <p class="ref">—— SESSION 093 · (93.5)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">体验有了锋刃</p>
+      <p class="f-en">“Thusly, the experiences, both good and bad, or joyful and sad, of the mind/body/spirit before veiling would be pale, without vibrancy or the keen edge of interest that such brings in the post-veiling mind/body/spirit complex.”</p>
+      <p class="f-zh">面纱之前的一切体验——好坏、悲欢——都是苍白的；正是面纱给了体验那道鲜活的、锋利的边缘。</p>
+      <p class="f-ref">—— SESSION 105 · (105.18)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">被搅糊涂的男女</p>
+      <p class="f-en">“It is to be noted that the catalyst which may be processed by the pre-veil experience is insignificant compared to the catalyst offered to the thoroughly bemused male and female after the veil.”</p>
+      <p class="f-zh">面纱之前可被利用的催化剂，与面纱之后那对彻底糊涂的男女所收到的相比，几乎不值一提。</p>
+      <p class="f-ref">—— SESSION 095 · (95.19)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">一段楼梯的测量</p>
+      <p class="f-en">“Prior to the veiling process the measurement would be that of an entity walking up a set of your stairs, each of which was imbued with a certain quality of light.”</p>
+      <p class="f-zh">面纱之前的收割测量，像一个实体走上涂满光的阶梯——在哪一级停下，就得到哪一级的光。太从容了。</p>
+      <p class="f-ref">—— SESSION 082 · (82.29)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">门槛与信心的功课</p>
+      <p class="f-en">“The faculty of faith or will needs to be understood, nourished, and developed in order to have an entity which seeks past the boundary of third density.”</p>
+      <p class="f-zh">要越过第三密度的边界，信心与意志这两种官能必须先被理解、滋养、发展——门槛虽窄，功课却在自己身上。</p>
+      <p class="f-ref">—— SESSION 082 · (82.29)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">无人批改的考卷</p>
+      <p class="f-en">“No portion of the Creator audits the course, to use your experiential terms. Each incarnation is intended to be a course in the Creator knowing Itself.”</p>
+      <p class="f-zh">造物主没有任何部分会来审计这门课。每一次投生，本身就是造物主认识自己的一门课。</p>
+      <p class="f-ref">—— SESSION 082 · (82.25)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 9 拉开口的面纱 -->
+<section class="station" id="s9" data-c="#9a8663">
+  <div class="pin"><div class="stage">
+    <p class="kicker">穿透 · 拉开口的面纱</p>
+    <p class="narr">面纱可以慢慢掀开。<br>在梦里，在静默里，<br>更在两颗心相撞的地方——<br>宇宙最盛大的破幕演出，<br>发生在人与人之间。</p>
+    <p class="en">“In general we may say that by far the most vivid and even extravagant opportunities for the piercing of the veil are a result of the interaction of polarized entities.”</p>
+    <p class="zh">大致可以说：迄今最鲜明、甚至最盛大的破幕机会，来自已经极化的实体之间的相互作用。</p>
+    <p class="ref">—— SESSION 083 · (83.16)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">无数把钥匙</p>
+      <p class="f-en">“It was discovered, experientially and empirically, that there were as many ways to penetrate the veil as the imagination of mind/body/spirit complexes could provide.”</p>
+      <p class="f-zh">人们凭经验发现：穿透面纱的路，和心/身/灵复合体的想象力一样多。</p>
+      <p class="f-ref">—— SESSION 083 · (83.16)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">独处的密道</p>
+      <p class="f-en">“The various unmanifested activities of the self were found to be productive, in some degree, of penetration of the veil.”</p>
+      <p class="f-zh">自我的种种未显化活动——默想、静观、内在工作——被发现都在一定程度上有助于穿透面纱。</p>
+      <p class="f-ref">—— SESSION 083 · (83.16)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">从绿色生根</p>
+      <p class="f-en">“The penetration of the veil may be seen to begin to have its roots in the gestation of green-ray activity, that all-compassionate love which demands no return.”</p>
+      <p class="f-zh">穿透面纱的根，扎在绿光芒的孕育里——那种不要求任何回报的、遍及一切的爱。</p>
+      <p class="f-ref">—— SESSION 083 · (83.18)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">他者是钥匙</p>
+      <p class="f-en">“The other-self is primary catalyst in this particular path to the piercing of the veil, if you would call it that.”</p>
+      <p class="f-zh">在这条破幕之路上，首要的催化剂是他者——另一个人。</p>
+      <p class="f-ref">—— SESSION 083 · (83.18)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 10 终章 -->
+<section class="scene" id="sLast" data-c="#f5efe2">
+  <div class="stage">
+    <p class="kicker">回到光里</p>
+    <p class="narr">面纱不是为了让你迷失。<br>它是让合一第一次值得回家。<br>总有一天，你会亲手把它掀开——<br>在那一刻之前，<br>好好使用这份遗忘。</p>
+    <p class="en">“Secondly, the character of experience was altered drastically by the veiling process.”</p>
+    <p class="zh">其次，体验的品格被遮蔽的过程彻底改变了。</p>
+    <p class="ref">—— SESSION 083 · (83.3)</p>
+    <p class="en">“Within the adept is the potential for dismantling the veil to a greater or lesser extent that all may be seen again as one.”</p>
+    <p class="zh">在行家之内，藏着拆掉面纱的潜能——或多或少地，好让一切重新被看见为合一。</p>
+    <p class="ref">—— SESSION 083 · (83.18)</p>
+    <button class="again" id="again">回到面纱落下之前</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+遗忘面纱 · 滚动星旅 · 内容取自《一的法则》第 79-105 次集会中关于面纱的讨论<br>
+引文为英文原文逐字摘录；中文为本页面自拟 · 仅作沉浸学习实验
+</footer>
+
+<script>
+/* ===== 星空画布（固定，勿改） ===== */
+const cv=document.getElementById('sky'),cx=cv.getContext('2d');
+let W,H,stars=[];
+function size(){W=cv.width=innerWidth*devicePixelRatio;H=cv.height=innerHeight*devicePixelRatio;}
+size();addEventListener('resize',size);
+for(let i=0;i<230;i++)stars.push({x:Math.random(),y:Math.random(),z:.25+Math.random()*.75,p:Math.random()*6.28,s:Math.random()});
+
+/* ===== 氛围色插值（固定，勿改） ===== */
+function hex2rgb(h){h=h.replace('#','');if(h.length===3)h=h.split('').map(c=>c+c).join('');return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
+const scenes=[...document.querySelectorAll('.scene,.station')].map(s=>({el:s,c:hex2rgb(s.dataset.c)}));
+let amb=[245,239,226];
+function lerp(a,b,t){return a+(b-a)*t}
+function rgb2css(c,a){return `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${a})`}
+
+/* ===== 渲染循环（固定，勿改） ===== */
+let t=0;
+function frame(){
+  t+=.016;
+  const sy=scrollY,wh=innerHeight;
+  let target=scenes[0].c;
+  for(const s of scenes){
+    const r=s.el.getBoundingClientRect();
+    if(r.top<wh*.55&&r.bottom>wh*.45){target=s.c;break}
+  }
+  for(let i=0;i<3;i++)amb[i]=lerp(amb[i],target[i],.045);
+  const ac=amb;
+  document.documentElement.style.setProperty('--amb',rgb2css(ac,1));
+
+  cx.clearRect(0,0,W,H);
+  const g=cx.createRadialGradient(W/2,H*.86,0,W/2,H*.86,H*.75);
+  g.addColorStop(0,rgb2css(ac,.10));g.addColorStop(1,'rgba(0,0,0,0)');
+  cx.fillStyle=g;cx.fillRect(0,0,W,H);
+  const dark=1-Math.min(1,(Math.hypot(ac[0]-245,ac[1]-239))/200);
+  for(const st of stars){
+    const px=st.x*W,py=((st.y - sy*.00004*st.z)%1+1)%1*H;
+    const tw=.5+.5*Math.sin(t*1.3+st.p);
+    cx.globalAlpha=(0.12+0.5*tw*st.z)*(0.35+0.65*dark);
+    cx.fillStyle=rgb2css(ac,1);
+    const r=st.s*1.4*st.z*devicePixelRatio;
+    cx.beginPath();cx.arc(px,py,r,0,6.28);cx.fill();
+  }
+  const oy=H*.62+Math.sin(t*.8)*10*devicePixelRatio;
+  const og=cx.createRadialGradient(W/2,oy,0,W/2,oy,26*devicePixelRatio);
+  og.addColorStop(0,rgb2css(ac,.9));og.addColorStop(.35,rgb2css(ac,.25));og.addColorStop(1,'rgba(0,0,0,0)');
+  cx.globalAlpha=1;cx.fillStyle=og;
+  cx.beginPath();cx.arc(W/2,oy,26*devicePixelRatio,0,6.28);cx.fill();
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+/* ===== 场景显影（固定，勿改） ===== */
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>e.target.classList.toggle('on',e.isIntersecting));
+},{threshold:.01});
+document.querySelectorAll('.scene,.station').forEach(s=>io.observe(s));
+
+/* 细节片段显影（固定，勿改） */
+const ioFrag=new IntersectionObserver(es=>{
+  es.forEach(e=>e.target.classList.toggle('on',e.intersectionRatio>.15));
+},{threshold:[0,.35,.6]});
+document.querySelectorAll('.frag').forEach(f=>ioFrag.observe(f));
+
+/* ===== 进度轨道（固定，勿改） ===== */
+const rail=document.getElementById('rail');
+scenes.forEach((s,i)=>{
+  const row=document.createElement('div');row.className='r';
+  const lbl=document.createElement('span');lbl.className='lbl';
+  const k=s.el.querySelector('.kicker');
+  lbl.textContent=k?k.textContent.trim():(i===0?'开始':'终章');
+  const d=document.createElement('i');
+  row.appendChild(lbl);row.appendChild(d);
+  row.onclick=()=>s.el.scrollIntoView({behavior:'smooth'});
+  rail.appendChild(row);
+});
+setInterval(()=>{
+  const wh=innerHeight;
+  scenes.forEach((s,i)=>{
+    const r=s.el.getBoundingClientRect();
+    rail.children[i].classList.toggle('cur',r.top<wh*.55&&r.bottom>wh*.45);
+  });
+},200);
+
+/* ===== 本章定制交互 ===== */
+/* 回到开头 */
+document.getElementById('again').onclick=()=>scrollTo({top:0,behavior:'smooth'});
+</script>
+</body>
+</html>

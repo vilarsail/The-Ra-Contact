@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 055 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 055 · 交互式学习模块</h1>
+  <p class="sub">上半场拆解负面极化的账本——「召唤」与「竞价」如何天差地别，99% 的纯净意味着什么；下半场借金字塔的几何为身体能量研究凿开入口，最后看清疗愈如何发生：光中断、水晶催化、被疗愈者自己抓住接力棒。</p>
+  <div class="tagline">8 个主题 · 6 个学习步骤 · 20 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 负面极化的账本</a>
+<a href="#s3">③ 逆向竞价的条件</a>
+<a href="#s4">④ 两种接触的对照</a>
+<a href="#s5">⑤ 金字塔几何入门</a>
+<a href="#s6">⑥ 形状即编码</a>
+<a href="#s7">⑦ 疗愈机制</a>
+<a href="#s8">⑧ 收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>跟着问答推进器走一遍本集脉络，例行问答收进折叠区</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>算清负面极化的账本</b><span>奴役者加分、被奴役者减分，以及召唤与竞价的根本区别</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>拼出逆向竞价的条件</b><span>99% 的纯净、两种被曲解的魔法，再用模拟器拨一拨</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>分辨两种接触</b><span>竞价者与「忧伤的兄弟姐妹」：意志的方向、感激与胜负</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>进入金字塔的几何</b><span>交点为什么在两个域各有一个投影、六分之一处藏着什么</span></span></label></div>
+<div class="step-item" data-target="#s7"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>看清疗愈如何发生</b><span>光的中断、水晶的催化、被疗愈者的意愿——然后以金句收官（⑧收官章紧随其后）</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ 01 本章地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：这一集在问什么</h2></div>
+  <p class="sec-lead">上一集谈到了能量转移与心智配置，本集从两个方向续接：上半场发问者拿一句旧话追问「可收割的负面实体如何反过来拿捏猎户接触」，把负面极化的机制拆开；下半场他借金字塔的几何，为「身体的能量」研究凿一个入口，一路确认到疗愈的运作方式。开场与收尾各有一段例行问答。</p>
+
+  <div class="card">
+    <h3>问答脉络推进器：跟着发问者的追问走</h3>
+    <p>本集 19 个问答块可以串成一条线：例行问答 → 负面极化机制 → 金字塔几何 → 疗愈机制。点「下一步」，沿发问者的实际追问顺序走一遍。</p>
+    <div class="flow-track" id="mapTrack"></div>
+    <div class="flow-detail" id="mapDetail"></div>
+    <div class="flow-ctrl"><button class="tri-btn" id="mapPrev">上一步</button> <button class="tri-btn" id="mapNext">下一步</button></div>
+  </div>
+
+  <div class="card">
+    <h3>开场即答：怎么护住一个被攻击的器皿</h3>
+    <div class="q">发问者先问器皿状况，再问：我们能不能做点什么，减轻心灵攻击、最大程度地帮助她？</div>
+    <div class="quote">
+      <p class="en">There is no magic greater than honest distortion toward love.</p>
+      <p class="zh">没有比由衷朝向爱更大的「魔法」了。</p>
+      <span class="src">—— Session 055 · (55.2)</span>
+    </div>
+    <div class="plain">Ra 给的不是某个技巧，而是一种氛围：每个人由衷的关怀构成「心灵支持的氛围」，恰是心灵攻击的对立面——而且是潜意识层面真实的态度在起作用，无需表演。</div>
+  </div>
+
+  <div class="case"><b>病房守夜：</b>一位家人住院期间遭到网络谣言围攻，亲属们没有去对骂，而是轮班守在床边、把手机消息挡在门外——病房里的气氛始终是暖的。这正对应 Ra 所说的「心灵支持的氛围」：它不是对攻击的反击，而是攻击的反面，由每个在场者真实的态度叠加而成。</div>
+  <div class="case"><b>读书会找入口：</b>一位读者读完一本厚教材，总觉得「能量」一章隔着一层玻璃，于是从书里最具体的一个例子下手，先算一道小几何题找感觉——正如本集发问者自述「我在找一个进入信息的入口」：进不去大门时，先从能下手的窗户进。</div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 后勤</span></summary>
+  <div class="body">
+    <p><b>(55.1) 器皿状态：</b>身体复合体因心灵攻击而朝虚弱变貌；生命能量因在场者的疗愈工作而未受影响；投生过程本身也使身体偏向虚弱。</p>
+    <p><b>(55.2) 护持之道：</b>真诚朝向爱的态度构成心灵支持的氛围，是心灵攻击的最大对比；这出自每个人的潜意识，Ra 称没有比它更伟大的魔法。</p>
+    <p><b>(55.18) 收尾：</b>Ra 确认一切都好、小组很尽责，随后以爱与光道别。</p>
+  </div></details>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 02 负面极化的账本 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>负面极化的账本：奴役谁，谁加分谁减分</h2></div>
+  <p class="sec-lead">发问者引用上上次集会的一句话——可收割的负面行星实体经常试图对猎户接触「竞价或命令」——想知道这背后的极化机制。Ra 给出一本冷冰冰的账本：奴役即加分，被奴役即减分，但减分的一方会攒下翻本的渴望。</p>
+
+  <div class="card">
+    <h3>账本的两栏</h3>
+    <div class="q">负面实体之间的支配关系，究竟怎么改变各自的极性？</div>
+    <div class="quote">
+      <p class="en">The negative polarization is greatly aided by the subjugation or enslavement of other-selves.</p>
+      <p class="zh">负面极化极大地受益于对其他自我的征服或奴役。</p>
+      <span class="src">—— Session 055 · (55.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The entity so bidden or enslaved, in serving an other-self, will necessarily lose negative polarity, although it will gain in desire for further negative polarization.</p>
+      <p class="zh">被竞价或被奴役的一方，在服务另一个自我时必然损失负面极性——却会积攒起「今后要更负面」的渴望。</p>
+      <span class="src">—— Session 055 · (55.3)</span>
+    </div>
+    <div class="plain">奴役者加分，被奴役者减分但并非白亏：那份屈辱化成更强的支配欲，替他攒下下一次翻本的动机。</div>
+    <div class="analogy"><b>反向的复利：</b>负面极化像一笔反向复利——每把别人踩在脚下，账户余额增加；每次被迫低头服务，余额减少，但「迟早赢回来」的执念在暗处滚利息。</div>
+  </div>
+
+  <div class="card">
+    <h3>召唤 ≠ 竞价：发问者的前提被纠正</h3>
+    <div class="q">发问者顺势推论：那么仅仅「召唤或竞价一个猎户十字军」这个动作本身，就同时极化双方？Ra 直说：不正确。</div>
+    <div class="quote">
+      <p class="en">The calling mechanism is not congruent in the slightest degree with the bidding mechanism.</p>
+      <p class="zh">召唤机制与竞价机制在丝毫程度上都不一致。</p>
+      <span class="src">—— Session 055 · (55.4)</span>
+    </div>
+    <p>先分清两个词。<b>召唤（calling）</b>里，召唤者是个恳求的新手，请求「负面理解方面的帮助」；猎户的回应之所以给自己加分，是因为它在传播负面哲学的过程中把召唤者奴役了——被奴役者按上面的账本减分。<b>竞价（bidding）</b>是另一种局面：接触变成一场竞赛，召唤者不求帮助，只要求结果。</p>
+    <p>这场竞赛里猎户为什么会输？因为可收割的第三密度负面实体握有投生经验的联结点，而猎户十字军自己要进步，就必须在极大程度上遵守第一变貌（First Distortion，自由意志）。一旦对方做法恰当，猎户实体就可能被诱捕、反被竞价，第三密度实体成为主人——Ra 补充：这很罕见；一旦发生，猎户损失的负面极性与竞价者的强度成正比。</p>
+    <div class="plain">同一个「接触负面实体」的动作，取决于姿态是「求」还是「要」：求，是把自己的绳套递过去；要，是把猎户拖进一场它受自由意志法则约束、可能输掉的竞赛。</div>
+  </div>
+
+  <div class="fn-grid">
+    <div class="fn-card"><div class="front"><div class="cn">竞价</div><div class="sub">bidding</div><div class="tap">点击翻转</div></div><div class="back">不是请求，而是要求结果的竞赛：赢家把对方当仆人使唤，并按对方损失的强度给自己加负面极性。<em>像谈判桌上甩出最后通牒——只不过筹码是一个存有的自由。</em></div></div>
+    <div class="fn-card"><div class="front"><div class="cn">召唤</div><div class="sub">calling</div><div class="tap">点击翻转</div></div><div class="back">恳求的新手请求（负面）帮助；回应者借传播负面哲学奴役召唤者而加分。<em>像伸手借高利贷——钱到手，绳子也一并套上了。</em></div></div>
+    <div class="fn-card"><div class="front"><div class="cn">猎户十字军</div><div class="sub">Orion Crusader</div><div class="tap">点击翻转</div></div><div class="back">来自猎户方向的负面群体（实体或社会记忆复合体，social memory complex，众多意识合而共享的群体心智），向各行星传播服务自我哲学。<em>跨星系的负面「传教团」。</em></div></div>
+    <div class="fn-card"><div class="front"><div class="cn">第一变貌</div><div class="sub">First Distortion</div><div class="tap">点击翻转</div></div><div class="back">自由意志——太一无限造物者的第一变貌（distortion，对统一性的偏离状态）；连负面实体也必须遵守它才能进步，这正是它们可能被反向竞价的裂缝。<em>连骗子也得等你亲自开门——门把手永远在你这边。</em></div></div>
+  </div>
+
+  <div class="case"><b>职场压榨：</b>某经理常年把下属的功劳记成自己的、逼人加班顶雷——按 Ra 的账本，他在「奴役其他自我」上持续加分；被压的下属被迫服务上司，负面极性受损，心里却攒下「等我上位绝不手软」的渴望。一次职场互动，账本两头各记一笔。</div>
+  <div class="case"><b>传销里的两种角色：</b>新人谦卑地「求前辈带路」，前辈借传帮带灌输踩人哲学——这是召唤：回应者加分，新人被奴役。极少数场面里，新人反过来放话「不退入会费就把你们的话术录音挂上网」，逼前辈照办——这近似竞价：不求、只要结果。Ra 强调后者罕见，且要求行动者几乎全然为自我，寻常的维权并不在其列。</div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 03 逆向竞价的条件 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>逆向竞价的条件：99% 的纯净与两种魔法</h2></div>
+  <p class="sec-lead">顺着「做法恰当」四个字，发问者追问：怎样才算恰当？用什么方法沟通？Ra 给出两个硬指标和一个心理条件，并点名两条途径——都是被曲解的魔法。</p>
+
+  <div class="card">
+    <h3>门槛：恰当竞价 = 恰当负面</h3>
+    <div class="q">「当竞价做得恰当时」——这句限定是什么意思？</div>
+    <div class="quote">
+      <p class="en">To properly bid is to be properly negative. The percentage of thought and behavior involving service to self must approach 99% in order for a third-density negative entity to be properly configured for such a contest of bidding.</p>
+      <p class="zh">恰当竞价就是恰当负面：服务自我的思想与行为占比必须接近 99%，一个第三密度负面实体才算配置妥当、有资格进入这场竞价竞赛。</p>
+      <span class="src">—— Session 055 · (55.5)</span>
+    </div>
+    <div class="plain">「99%」不是修辞，是入场券：不够纯粹的负面者连竞赛资格都没有，遑论赢。</div>
+  </div>
+
+  <div class="card">
+    <h3>途径与心法</h3>
+    <div class="q">这种竞价者用什么方法与猎户实体沟通？</div>
+    <div class="quote">
+      <p class="en">One, the use of perversions of sexual magic; two, the use of perversions of ritual magic. In each case the key to success is the purity of the will of the bidder. The concentration upon victory over the servant must be nearly perfect.</p>
+      <p class="zh">其一，使用性魔法的曲解；其二，使用仪式魔法的曲解。每种情况里，成功的关键都在竞价者意志的纯净：对「胜过仆人」的专注必须近乎完美。</p>
+      <span class="src">—— Session 055 · (55.6)</span>
+    </div>
+    <div class="analogy"><b>同一支画笔：</b>魔法在此只是工具——性能量或庄严仪式本身无所谓正负，被「曲解」（perversion，被扭离本来的用途）成支配的容器，才成为负面的途径；如同同一支画笔，画出谁的作品取决于握笔的意志朝向哪里。</div>
+    <div class="plain">方法只是容器，真正被测量的是意志：全部心思压在「赢下这个仆人」一个点上，容不下第二个念头。</div>
+  </div>
+
+  <div class="card">
+    <h3>条件模拟器：反向竞价何时成立？</h3>
+    <p>把 (55.4) 与 (55.5) 的条件拼在一起拨一拨。三个开关都打开，竞赛才成立；缺任何一个，接触就仍停留在召唤或普通交易。</p>
+    <div id="bidBox">
+      <div class="cond-row"><div class="name">意志纯净接近 99%<small>服务自我的思想与行为几乎占满全部</small></div><label class="switch"><input type="checkbox" id="bidC1"><span class="slider"></span></label></div>
+      <div class="cond-row"><div class="name">不求帮助，只要求结果<small>接触从「请益」变成「竞赛」</small></div><label class="switch"><input type="checkbox" id="bidC2"><span class="slider"></span></label></div>
+      <div class="cond-row"><div class="name">对手受第一变貌约束<small>猎户十字军须靠遵守自由意志法则才能进步</small></div><label class="switch"><input type="checkbox" id="bidC3"><span class="slider"></span></label></div>
+    </div>
+    <div id="condResult"></div>
+  </div>
+
+  <div class="case"><b>「求办法」与「要结果」：</b>同一位网友，第一次在论坛发帖「求大神帮我找回账号」，乐于助「黑」的响应者借机给他装了后门——求援者被奴役，这是召唤。同一人后来直接放话「三天内不恢复，我就把你们的交易数据挂上暗网」，响应者被迫照办——不求、只要求结果，主导权易手。Ra 描述的正是后一种局面，并强调它罕见、要求行动者近乎全然为自我。</div>
+  <div class="case"><b>近乎完美的专注：</b>顶尖棋手在大对局里可以六个小时只装着一个念头——赢。Ra 说竞价者对「胜过仆人」的专注必须近乎完美，正是这种强度的单一志向；区别在于棋手赢的是棋局，竞价者想赢的是一个存有的自由。</div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 04 两种接触的对照 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>两种接触的对照：竞价者与忧伤的兄弟姐妹</h2></div>
+  <p class="sec-lead">讲完负面的机制，发问者把镜头转回自己：那我们现在与 Ra 的通讯，和刚才说的竞价有没有类比？Ra 的回答先是干脆的否认，然后是一段对「服务型接触」最坦白的自我描述。</p>
+
+  <div class="card">
+    <h3>毫无关系的两种接触</h3>
+    <div class="q">从意识极化的角度看，我们此刻与 Ra 的通讯，和「竞价」有类比吗？</div>
+    <div class="quote">
+      <p class="en">There is no relationship between this type of contact and the bidding process.</p>
+      <p class="zh">这类接触与竞价过程之间毫无关系。</p>
+      <span class="src">—— Session 055 · (55.7)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This contact may be characterized as one typical of the Brothers and Sisters of Sorrow wherein those receiving the contact have attempted to prepare for such contact by sacrificing extraneous, self-oriented distortions in order to be of service.</p>
+      <p class="zh">此处的接触可归入「忧伤的兄弟姐妹」的典型：接收接触的一方，为了能够服务，尝试以牺牲外在的、自我导向的变貌来预备自己。</p>
+      <span class="src">—— Session 055 · (55.7)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Both the caller and the contact are filled with gratitude at the opportunity of serving others.</p>
+      <p class="zh">召唤者与接触者双方，都为服务他人的机会而满怀感激。</p>
+      <span class="src">—— Session 055 · (55.7)</span>
+    </div>
+    <p>Ra 随即补了一句极坦白的话：这绝不预设双方接近竞价者那种完美或纯净——召唤群体可能带着许多变貌、处理着大量催化剂，Ra 自己也一样；把双方接通的，是压倒性的服务渴望，加上这个群体振动复合体的独特谐波。</p>
+    <div class="plain">竞价比的是谁更纯粹地指向自我；这里恰恰相反——双方都在往「少一点自我」的方向让，接通点是感激，不是胜负。</div>
+  </div>
+
+  <div class="yuan-grid">
+    <div class="yuan-card"><span class="y-tag">发起姿态</span><h4>要结果 ↔ 来请益</h4><p>竞价者<b>不求帮助，只要求结果</b>；「忧伤的兄弟姐妹」这边，召唤者是<b>恳求的新手</b>，为能服务而预备自己。</p></div>
+    <div class="yuan-card"><span class="y-tag">意志方向</span><h4>指向支配 ↔ 指向服务</h4><p>竞价者的意志纯净度全部投向<b>胜过仆人</b>；服务型接触的接通点是<b>压倒性的服务他人渴望</b>。</p></div>
+    <div class="yuan-card"><span class="y-tag">情绪基调</span><h4>胜负 ↔ 感激</h4><p>竞赛里只有赢家与输家；Ra 描述的接触里，<b>双方都满怀感激</b>——连「被帮助」也被看成服务的机会。</p></div>
+    <div class="yuan-card"><span class="y-tag">门槛</span><h4>99% ↔ 不预设完美</h4><p>竞价要求服务自我接近 <b>99%</b>；服务型接触<b>不要求完美或纯净</b>——带着变貌与催化剂也能接通。</p></div>
+  </div>
+
+  <div class="card">
+    <h3>归类练习：这是哪种接触？</h3>
+    <p>五个现代场景，判断各自更接近哪一种。</p>
+    <div id="contactSorter"></div>
+  </div>
+
+  <div class="card">
+    <h3>一次被搁置的追问</h3>
+    <div class="q">发问者想趁机弄懂一句旧话——「在所有类型的能量转移被体验并掌握之前，蓝色与靛蓝色辐射会有阻塞」。Ra 这次不接。</div>
+    <p>Ra 说：在这个空间/时间，我们尚未涵盖适当的中间材料，请在更合适的时空连接点再问。这不是拒绝，而是次第——中间材料没讲过，答案只会制造混淆。发问者也痛快接受，转头去找新的入口（于是有了后面两章的金字塔）。</p>
+    <div class="plain">问题没被回答，但「为什么不答」本身就是信息：教学有自己的顺序，跳步的答案帮不上忙。</div>
+  </div>
+
+  <div class="case"><b>借还伞点：</b>社区门口的公益借还伞架，发起人自己从不囤伞——伞不是「来到」他手里，而是经由他流到淋雨的人手里。Ra 在本章末尾的那句「事物不是来到正面导向者那里，而是经由这样的存有」，说的正是通道与终点的区别。</div>
+  <div class="case"><b>双向感激的热线：</b>深夜心理援助热线挂断前，接线员说「谢谢你说给我听」，来电者说「谢谢你陪我」——一通电话结束，双方都觉得自己被成全了。这对应 Ra 描述的画面：召唤者与接触者都为服务的机会满怀感激。</div>
+  <div class="case"><b>不完美的志愿者：</b>救援队的老队员家里也有一地鸡毛，出勤时照样手忙脚乱，但每次集合他第一个到。救援不要求队员完美——压倒性的「想帮上忙」已经足够把人与人接通，对应 Ra 说的「不预设完美或纯净」。</div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 05 金字塔几何入门 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>金字塔几何入门：交点为何落在六分之一处</h2></div>
+  <p class="sec-lead">被搁置之后，发问者换了一条路：形状被提过很多次，Ra 也说过形状本身不太重要——他偏要从这里凿入口，先问清「交点（intersection）」这个词到底是什么意思。</p>
+
+  <div class="card">
+    <h3>一个点，两个域</h3>
+    <div class="q">Ra 早前说过「四个侧面第一层三角形的交点在水平面上形成一个菱形」——这个「交点」指什么？</div>
+    <div class="quote">
+      <p class="en">Without intending to be obscure, we may note that the purpose of the shapes is to work with time/space portions of the mind/body/spirit complex.</p>
+      <p class="zh">无意含糊——形状的用途，是与心/身/灵复合体中属于时间/空间的部分一起工作。</p>
+      <span class="src">—— Session 055 · (55.9)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Therefore, the intersection is both space/time and time/space oriented and thus is expressed in three dimensional geometry by two intersections which, when projected in both time/space and space/time, form one point.</p>
+      <p class="zh">因此交点同时朝向空间/时间与时间/空间，在三维几何中由两个交点表达——它们分别投影到两个域，合为同一个点。</p>
+      <span class="src">—— Session 055 · (55.9)</span>
+    </div>
+    <p>先分清两个词：<b>空间/时间（space/time）</b>是我们熟悉的物理世界，用米和秒丈量；<b>时间/空间（time/space）</b>是心智运作的场域，那里不按空间距离排列。金字塔这类形状的作用面在后者——所以它的关键点位在我们这个域里「看起来」会隔一层：同一个点在两个域各有表达，三维几何里叠合成一处。发问者自己算出这个点位于构成侧面的三角形高度的六分之一处，Ra 确认计算基本正确，并称赞他的洞察力。</p>
+    <div class="plain">「交点」不是石头里的一个坐标，而是两个域的投影叠合处——这也解释了为什么用平面几何描述它时总觉得隔着一层。</div>
+  </div>
+
+  <div class="card">
+    <h3>两间房室：启蒙与疗愈分址办公</h3>
+    <div class="q">顺着算下去，发问者问：吉萨大金字塔里所谓的「王后室」，是不是启蒙之室？疗愈工作是不是在国王室？</div>
+    <div class="quote">
+      <p class="en">Again, you penetrate the outer teaching. … The Queen’s Chamber would not be appropriate or useful for healing work as that work involves the use of energy in a more synergic configuration rather than the configuration of the centered being.</p>
+      <p class="zh">又一次，你穿透了外在教导。…王后室并不适合疗愈工作——那项工作需要以更协同的配置使用能量，而非中心化存有的配置。</p>
+      <span class="src">—— Session 055 · (55.11)</span>
+    </div>
+    <p>发问者猜中了：王后室是启蒙之室（Ra 说他「再次穿透了外在教导」——即绕过表面的故事读到真意），疗愈则在国王室进行。Ra 顺带说明：「国王室」「王后室」是世人的俗称，不是他们的用语。</p>
+    <div class="analogy"><b>图纸与工地：</b>建筑师图纸上的一个点（时间/空间里的设计）与工地上放样出来的同一个点（空间/时间里的实体），靠「放样」这道工序叠合。金字塔的几何正像一次双向放样：把心智域里的关键位置，在石头中标定出来。</div>
+  </div>
+
+  <div class="case"><b>音叉与桌面：</b>敲响的音叉悬在空中，声音在空气里传播；手柄按上桌面，同一振动又沿木头走另一条路。指尖在桌面某一点摸到的最大振幅，是「同一个点」在两种介质里的表达——交点兼具空间/时间与时间/空间的双重面向，可以由此体会。</div>
+  <div class="case"><b>禅房与手术室：</b>一间小禅房供一个人闭关，越独立安静越好；手术室却要求无影灯、器械台、麻醉师同时到位。Ra 区分启蒙与疗愈，正是这个区别：启蒙对应中心化存有的配置，疗愈需要更协同的配置——所以王后室不做疗愈，国王室才做。</div>
+  <div class="case"><b>自算自证：</b>发问者没有干等答案，而是先按 Ra 早前给出的几何线索自己算出「六分之一」，再去对答案——像学生先做完题再看解析。Ra 的回应是确认加称赞，等于替这条「从形状进能量」的路线盖了章。</div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 06 形状即编码 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>形状即编码：共振室、安卡与 76°18′</h2></div>
+  <p class="sec-lead">沿着金字塔继续往下问：地面之下的那个室是干什么的？有本书把安卡形状与金字塔共振挂钩，对不对？顶角那个角度关键吗？Ra 的回答把「形状崇拜」轻轻放回它该在的位置。</p>
+
+  <div class="card">
+    <h3>地下的室：为催化剂调音</h3>
+    <div class="q">金字塔底部以下、大致与国王室同线的那个室是什么？</div>
+    <div class="quote">
+      <p class="en">The chamber you request to be informed about is a resonating chamber. The bottom of such a structure, in order to cause the appropriate distortions for healing catalyst, shall be open.</p>
+      <p class="zh">你所问的那个室是共振室。这类结构的底部应当开放，以便为疗愈催化剂造出适当的变貌。</p>
+      <span class="src">—— Session 055 · (55.13)</span>
+    </div>
+    <div class="plain">地下室的要点不在「神秘」，而在功能：一个底部开放的共振结构，让整座建筑为疗愈所需的能量配置调音。</div>
+  </div>
+
+  <div class="card">
+    <h3>安卡之辨：蜡笔级的形状研究</h3>
+    <div class="q">《大金字塔中的生命力》一书把安卡形状与金字塔中的共振联系起来——这个分析对吗？顶点处 76°18′ 的角又是不是关键角度？</div>
+    <div class="quote">
+      <p class="en">We have scanned your mind and find the phrase “working with crayons.” This would be applicable. There is only one significance to these shapes such as the crux ansata; that is the placing in coded form of mathematical relationships.</p>
+      <p class="zh">我们扫描了你的心智，找到一个短语：「用蜡笔工作」——这很贴切。安卡十字（crux ansata）这类形状只有一个意义：以编码的形式安放数学关系。</p>
+      <span class="src">—— Session 055 · (55.14)</span>
+    </div>
+    <p>关于角度，Ra 答：对预期的疗愈工作而言，76°18′ 是合适的。两问合起来看：形状不是符咒，是被编码的数学——角度真的重要（因为它服务于疗愈工作），但把形状当神秘符号去联想，就像拿蜡笔临摹电路图：画得再像也点不亮灯泡，而编码本身是真的。</p>
+    <div class="plain">形状唯一的意义是「编码的数学关系」——所以读它要读编码背后的数学，而不是给轮廓添仪式感。</div>
+    <div class="table-wrap"><table class="nine"><thead><tr><th>术语</th><th>英文</th><th>通俗理解</th></tr></thead><tbody>
+      <tr><td>交点</td><td>intersection</td><td>两个域的投影在三维几何中叠合而成的同一个点</td></tr>
+      <tr><td>王后室</td><td>Queen’s Chamber</td><td>俗称；启蒙之室，不适于疗愈工作</td></tr>
+      <tr><td>国王室</td><td>King’s Chamber</td><td>俗称；疗愈工作所在（名称并非 Ra 的用语）</td></tr>
+      <tr><td>共振室</td><td>resonating chamber</td><td>地下的室，底部开放，为疗愈催化剂造出适当变貌</td></tr>
+      <tr><td>安卡十字</td><td>crux ansata</td><td>形状的唯一意义：以编码形式安放数学关系</td></tr>
+      <tr><td>顶角</td><td>apex angle</td><td>76°18′，对预期的疗愈工作是合适的角度</td></tr>
+    </tbody></table></div>
+  </div>
+
+  <div class="case"><b>音乐厅的暗腔：</b>音乐厅的音质由肉眼看不见的地方决定：座椅下的吸声腔、墙内的角度、低频陷阱的深度。金字塔的地下共振室同理——底部开放、位置与国王室对齐，都是为了给「疗愈催化剂」这场演出把厅调好。</div>
+  <div class="case"><b>贴纸吉他：</b>初学的孩子在吉他指板上贴彩色贴纸标记按弦位置——贴纸没有魔力，它只是把指法关系编码成看得见的记号。有人围着贴纸的材质与颜色考据半天，却不去按弦：Ra 说的「用蜡笔工作」，正是形容把编码误当成研究对象本身。</div>
+  <div class="case"><b>锅盖天线：</b>卫星锅的仰角差一度就收不到信号——角度不是玄学，是对准的数学。76°18′ 之于金字塔，正如这个仰角之于卫星：为了预期的疗愈工作，这个角度是「合适」的。</div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 07 疗愈机制 ============ -->
+<section class="chapter" id="s7">
+  <div class="sec-head"><span class="num">07</span><h2>疗愈机制：光的中断与抓住接力棒</h2></div>
+  <p class="sec-lead">本集最后一个大问题从一个小细节问起：国王室上方那些小室是干什么的？Ra 说这要先讲一般机制——于是本集的核心图景浮出水面：疗愈不是「治好你」，而是把机会递到你手里。</p>
+
+  <div class="card">
+    <h3>光、水晶与意愿</h3>
+    <div class="q">为什么国王室上方有各种小室？——Ra 把问题放大来答：先讲清被疗愈者在室中如何被安置、又发生什么。</div>
+    <div class="quote">
+      <p class="en">The positioning of the entity to be healed is such that the life energies, if you will, are in a position to be briefly interrupted, or intersected, by light.</p>
+      <p class="zh">被疗愈者的摆位经过安排，使其生命能量恰好处在能被光短暂中断、交叉的位置。</p>
+      <span class="src">—— Session 055 · (55.16)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This light then may, by the catalyst of the healer with the crystal, manipulate the aural forces, as you may call the various energy centers, in such a way that if the entity to be healed wills it so, corrections may take place.</p>
+      <p class="zh">这光接着可以——以疗愈者与水晶为催化剂——操控你可以称为各能量中心（energy center，如光芒般分层的生命力枢纽）的光环力量；唯有当被疗愈者自己愿意，修正才会发生。</p>
+      <span class="src">—— Session 055 · (55.16)</span>
+    </div>
+    <p>之后，实体被自己那个「如今变貌较少」的能量场重新保护，走自己的路。整个过程的平衡条件有三：温度、气压、带电气氛——前两项由烟囱系统控制。发问者追问：这是否通过疏通能量中心，来完善它们产生的七个身体、把实体带回平衡？Ra 说这个器皿已经疲倦，只能简短作答。</p>
+    <div class="quote">
+      <p class="en">We must answer in brief and state simply that the distorted configuration of the energy centers is intended to be temporarily interrupted, and the opportunity is then presented to the one to be healed to grasp the baton, to take the balanced route, and to walk thence with the distortions towards dis-ease of mind, body, and spirit greatly lessened.</p>
+      <p class="zh">简而言之：能量中心的变貌配置将被暂时中断，随后机会呈递给被疗愈者——由他抓住接力棒、走平衡的路线，带着大大减轻的心/身/灵不适变貌继续前行。</p>
+      <span class="src">—— Session 055 · (55.17)</span>
+    </div>
+    <p>Ra 还强调：带电气氛与疗愈者引导的水晶是整个过程不可缺的部分——重组的可能性被给出之后，若没有疗愈者的在场与定向意志，实体无法被带回意识觉知的配置。</p>
+    <div class="plain">疗愈者与水晶能中断、能递棒，唯独不能替你跑：修正发生的条件，是被疗愈者自己的意愿。</div>
+  </div>
+
+  <div class="card">
+    <h3>流程推演：一场疗愈的七个节拍</h3>
+    <p>把 (55.16)–(55.17) 的机制按先后走一遍。注意第五拍：整条链上唯一不可替代的一环，是被疗愈者的意愿。</p>
+    <div class="flow-track" id="healTrack"></div>
+    <div class="flow-detail" id="healDetail"></div>
+    <div class="flow-ctrl"><button class="tri-btn" id="healPrev">上一步</button> <button class="tri-btn" id="healNext">下一步</button></div>
+  </div>
+
+  <div class="case"><b>除颤器：</b>急救室里电击让紊乱的心律停一拍、给窦房结一个重启的机会——机器不能替心脏跳动，只制造「重新来过」的窗口。这正对应「暂时中断变貌配置、机会呈现给被疗愈者」：抓住接力棒的必须是当事人自己。</div>
+  <div class="case"><b>康复科：</b>康复师把僵硬的关节活动度一点点打开、把动作模式摆正，但出院后不练，功能照样退回去。治疗师的手是催化剂，其「在场的定向意志」帮你回到觉知与配合——与 Ra 强调「没有疗愈者带领无法完成回归」互为映照。</div>
+  <div class="case"><b>手术室的环境工程：</b>手术要恒温恒湿、层流净化，条件不齐不开台。国王室的温度与气压由烟囱系统控制、再加带电气氛——环境平衡是流程的一部分，不是背景板。</div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 08 收官 ============ -->
+<section class="chapter" id="s8">
+  <div class="sec-head"><span class="num">08</span><h2>收官：金句与伏笔</h2></div>
+  <p class="sec-lead">本集在器皿的疲倦中提前收束，但两句话留了下来：一句关于正面存有如何接收事物，一句关于尚未展开的教导。</p>
+
+  <div class="saying">
+    <p class="en">Things come not to those positively oriented, but through such beings.</p>
+    <p class="zh">事物不是来到正面导向者那里——而是经由这样的存有。</p>
+    <span class="src">—— Session 055 · (55.7)</span>
+  </div>
+
+  <div class="card">
+    <h3>本集埋下的口子</h3>
+    <div class="q">能量转移与蓝/靛辐射阻塞的问题被搁置了——Ra 说：请在更合适的时空连接点再问。</div>
+    <div class="quote">
+      <p class="en">Please re-question at a more appropriate space/time nexus.</p>
+      <p class="zh">请在更合适的空间/时间连接点重新提问。</p>
+      <span class="src">—— Session 055 · (55.8)</span>
+    </div>
+    <p>另一处留白在结尾：Ra 连说「这个实体疲倦了，必须简短作答」，疗愈机制的细节只讲到「抓住接力棒」为止。随后他确认小组已经尽责，在爱与光中道别。</p>
+    <div class="quote">
+      <p class="en">All is well. You are conscientious. I now leave this working.</p>
+      <p class="zh">一切都好。你们是尽责的。我现在离开这次工作。</p>
+      <span class="src">—— Session 055 · (55.18)</span>
+    </div>
+    <div class="plain">被搁置的问题不是被否决：次第未到的教导先封存，器皿的状态优先——这两条处置本身就是本集示范的一部分。</div>
+  </div>
+
+  <div class="case"><b>接力交接区：</b>接力赛里，递棒的人跑得再快，接棒的手不伸出来就全盘皆输——Ra 用「抓住接力棒」（grasp the baton）形容被疗愈者的那一步，正是接力赛的原义：棒必须被接住，比赛才算数。</div>
+  <div class="case"><b>老师留一章：</b>学生跳章去问后面的大题，老师说「这一章的基础下周才讲，你先记住问题本身」——问题被记下而不是被敷衍；等基础到位，同一个问题自会以能懂的方式被回答。Ra 搁置能量转移之问，与此同构。</div>
+
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 055（`split/Ra_Session_055.md`）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra055-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+/* 问答脉络推进器（本章地图） */
+initStepper('mapTrack','mapDetail','mapPrev','mapNext',[
+  {t:'器皿状态',d:'<span class="qa-q">问：器皿今天状况如何？</span><b>答：</b>身体因心灵攻击而虚弱；生命能量因在场者的疗愈工作未受影响；投生过程本身也偏向虚弱。(55.1)'},
+  {t:'如何护持',d:'<span class="qa-q">问：我们能做点什么减轻心灵攻击？</span><b>答：</b>真诚朝向爱的关怀构成心灵支持的氛围，是攻击的对立面——没有比这更伟大的魔法。(55.2)'},
+  {t:'负面账本',d:'<span class="qa-q">问：负面实体反向竞价猎户，极化机制是什么？</span><b>答：</b>负面极化靠奴役其他自我：奴役者加分；被奴役者减分，却积攒起再负面化的渴望。(55.3)'},
+  {t:'召唤≠竞价',d:'<span class="qa-q">问：只要召唤猎户就同时极化双方吗？</span><b>答：</b>不正确。召唤是求帮助、被奴役；唯有「要结果」的竞赛里，猎户才可能因受第一变貌约束而被反向竞价。(55.4)'},
+  {t:'99%与魔法',d:'<span class="qa-q">问：「做法恰当」与沟通方法是什么？</span><b>答：</b>恰当竞价=恰当负面：服务自我接近 99%；途径是性魔法与仪式魔法的曲解，专注须近乎完美。(55.5–55.6)'},
+  {t:'与Ra的类比',d:'<span class="qa-q">问：我们与 Ra 的通讯和竞价有类比吗？</span><b>答：</b>毫无关系。这是「忧伤的兄弟姐妹」式的接触：双方为服务的机会满怀感激，且不预设完美。(55.7)'},
+  {t:'蓝靛之问',d:'<span class="qa-q">问：蓝/靛辐射阻塞与能量转移能讲了吗？</span><b>答：</b>中间材料尚未涵盖，请在更合适的时空连接点再问——发问者转头去找新入口。(55.8)'},
+  {t:'金字塔入口',d:'<span class="qa-q">问：「交点」一词是什么意思？</span><b>答：</b>形状作用于时间/空间部分；交点在两个域各有一个投影，三维几何里合为一点——发问者算出在侧面三角形高度的六分之一处，获确认。(55.9–55.10)'},
+  {t:'房室各司其职',d:'<span class="qa-q">问：王后室、国王室、地下的室各是干什么的？</span><b>答：</b>王后室用于启蒙、不做疗愈；疗愈在国王室；地下是底部开放的共振室；安卡是编码的数学关系；76°18′ 顶角适合疗愈。(55.11–55.15)'},
+  {t:'疗愈收束',d:'<span class="qa-q">问：疗愈到底怎么发生？</span><b>答：</b>摆位让生命能量可被光短暂中断，疗愈者与水晶操控能量中心，被疗愈者愿意则修正发生、自己抓住接力棒；随后 Ra 道别。(55.16–55.18)'}
+]);
+
+/* 术语卡翻转 */
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+/* 条件模拟器：反向竞价 */
+function updateBidSim(){
+  const c1=document.getElementById('bidC1').checked;
+  const c2=document.getElementById('bidC2').checked;
+  const c3=document.getElementById('bidC3').checked;
+  const box=document.getElementById('condResult');
+  const miss=[];
+  if(!c1)miss.push('缺「意志纯净接近 99%」——服务自我的占比不够，根本没资格进场（恰当竞价=恰当负面）。');
+  if(!c2)miss.push('缺「只要求结果」——还在求帮助，就仍是召唤：猎户继续当主人，召唤者继续被奴役。');
+  if(!c3)miss.push('缺「对手受第一变貌约束」——若接触可以绕开自由意志法则（或对象并非猎户接触），便无从拿捏。');
+  if(miss.length===0){
+    box.classList.remove('fail');
+    box.innerHTML='竞赛成立：第三密度实体反客为主，猎户十字军被诱捕、可被竞价，其负面极性按竞价者的强度折损。Ra 特意补了一句——这很罕见。';
+  }else{
+    box.classList.add('fail');
+    box.innerHTML='<b>还差得远：</b>'+miss.join('')+'三个条件凑不齐，反向竞价就不会发生。';
+  }
+}
+document.querySelectorAll('#bidBox input').forEach(sw=>sw.addEventListener('change',updateBidSim));
+updateBidSim();
+
+/* 归类练习：这是哪种接触？ */
+initSorter('contactSorter',[
+  {a:'网友私信「大师，带带我，教我几招快速搞钱的门路」。',opts:['负面召唤','负面竞价','服务他人式接触'],ans:'负面召唤',exp:'恳求的新手求负面帮助；回应者借传播负面哲学奴役他而加分。'},
+  {a:'帖主放话：「三天内不恢复我的账号，我就把你们的漏洞挂上暗网。」对方被迫照办。',opts:['负面召唤','负面竞价','服务他人式接触'],ans:'负面竞价',exp:'不求帮助、只要求结果，反客为主——前提是他几乎全然为自我、专注近乎完美。'},
+  {a:'深夜心理援助热线挂断前，接线员说「谢谢你说给我听」，来电者说「谢谢你陪我」。',opts:['负面召唤','负面竞价','服务他人式接触'],ans:'服务他人式接触',exp:'双方都为服务他人的机会满怀感激——这正是 Ra 描述的画面。'},
+  {a:'「成功学」课堂里新人谦卑求导师「带我飞」，导师借机灌输「踩着别人往上爬」的哲学。',opts:['负面召唤','负面竞价','服务他人式接触'],ans:'负面召唤',exp:'回应者以传播负面哲学加分，召唤者被奴役、损失负面极性。'},
+  {a:'读书会开始前，大家各自收起手机与自我小算盘，只为把这场共读办顺。',opts:['负面召唤','负面竞价','服务他人式接触'],ans:'服务他人式接触',exp:'以牺牲自我导向的变貌来预备服务——「忧伤的兄弟姐妹」式的准备。'}
+]);
+
+/* 疗愈流程推演 */
+initStepper('healTrack','healDetail','healPrev','healNext',[
+  {t:'摆位',d:'<b>第一拍·摆位：</b>被疗愈者的位置经过安排，使生命能量恰好处在能被光短暂中断、交叉的位置。(55.16)'},
+  {t:'平衡',d:'<b>第二拍·平衡：</b>把实体带入平衡——温度、气压、带电气氛；前两项由烟囱系统控制。(55.16)'},
+  {t:'中断',d:'<b>第三拍·中断：</b>能量中心的变貌配置被暂时打断——是暂时的，不是破坏。(55.17)'},
+  {t:'操控',d:'<b>第四拍·操控：</b>光经由疗愈者与水晶的催化剂，操控各能量中心的光环力量。(55.16)'},
+  {t:'意愿',d:'<b>第五拍·意愿：</b>唯有被疗愈者自己愿意，修正才发生——自由意志不可绕开，这是全链唯一不可替代的一环。(55.16)'},
+  {t:'重护',d:'<b>第六拍·重护：</b>实体被自己如今变貌较少的能量场重新保护，能走自己的路。(55.16)'},
+  {t:'回归',d:'<b>第七拍·回归：</b>没有疗愈者的在场与定向意志，实体无法被带回意识觉知的配置——催化剂贯穿始终。(55.17)'}
+]);
+
+renderPath();
+</script>
+</body>
+</html>

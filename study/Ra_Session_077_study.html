@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 077 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 077 · 交互式学习模块</h1>
+  <p class="sub">这一集 Ra 答应逐张讲解"哲学基础"：先讲清我们的太阳（子理则）如何用塔罗的三组七张搭出第三密度的体验舞台、为什么一切都汇向"选择"，再对比有/无自由意志的两种宇宙，最后立下研读原型的两条规矩，并以"投资机会"解释密度如何铺设。</p>
+  <div class="tagline">6 个主题 · 6 个学习步骤 · 23 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 理则的蓝图</a>
+<a href="#s3">③ 选择的分量</a>
+<a href="#s4">④ 单色的宇宙</a>
+<a href="#s5">⑤ 研读的约定</a>
+<a href="#s6">⑥ 投资与收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>问答走向、例行问答的位置，以及最值得精读的三段"集锦"</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>理则的蓝图</b><span>塔罗三组七张加"选择"的结构，以及它们藏在心智之根的位置</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>选择的分量</b><span>分清"火中锻造"与"精炼雕琢"两种强度，明白极化为何是收割的门票</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>单色的宇宙</b><span>无自由意志的理则进化有多慢，路西法为何被称为携光者</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>研读的约定</b><span>Ra 的两个请求：学生先说把握、人人以自己的方式感知</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>投资与收官</b><span>密度如何借"投资机会"铺设，本集金句与下一集的伏笔</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：这一集从攻击与片剂讲到塔罗的蓝图</h2></div>
+  <p class="sec-lead">第 77 集是一座桥。发问者说要把话题收回到"我们的太阳（子理则 sub-Logos，理则之下的局部创造者）为它的造物所定的计划"，Ra 给出的答案是塔罗式的 21+1 结构，并在结尾同意逐张研读这 21 个"哲学基础"——这为后续多集的原型（archetype，根概念的图景）研读立下了框架。前半段的器皿健康与攻击属例行事项，真正的教导从 77.11 开始。</p>
+
+  <div class="card">
+    <h3>本集在整部书中的位置</h3>
+    <p>发问者此问并非凭空而来：他自称要"go back to the plan of this Logos"——回到理则的造物计划本身，问它凭什么这样设计、设计了什么。Ra 的回答是把塔罗重新定义为第三密度的根概念目录，并说明所有牌最终指向第 22 张"选择"；结尾"这是本次工作的最后一个完整问题"暗示：逐张研读的工程将在之后的集会里展开。</p>
+    <div class="quote">
+      <p class="en">Those concept complexes you call the tarot lie, then, in three groups of seven: the mind cycle, one through seven; the physical complex cycle, eight through fourteen; the spiritual complex cycle, fifteen through twenty-one.</p>
+      <p class="zh">你们称为塔罗的那些概念复合体分为三组七张：心智循环一到七，身体复合体循环八到十四，灵性复合体循环十五到二十一。</p>
+      <span class="src">—— Session 077 · (77.12)</span>
+    </div>
+    <div class="plain">本集的主轴只有一条：理则用什么"牌面"给第三密度出题，以及为什么所有牌最后都指向第 22 张——选择。</div>
+    <div class="case"><b>先看集锦再看全场：</b>整集 26 个问答块中，77.1-77.10 与 77.25 都围绕器皿健康与后勤；教导主体是 77.11-77.24。就像看球赛先看三段回放——77.12（塔罗结构）、77.16（选择的功能）、77.17（无自由意志的宇宙），其余问答都在为这三处铺路。</div>
+    <div class="case"><b>拿到新游戏先读任务列表：</b>一位读者翻开原文前，先花五分钟走一遍下面的问答推进器，再读原文时就知道自己正处在哪一段、哪里可以快进、哪里要放慢——地图的价值正在于把 26 个问答块压成一条看得见的线索。</div>
+  </div>
+
+  <div class="card">
+    <h3>问答脉络推进器：本集的对话怎么展开</h3>
+    <p>点击节点或用按钮逐条推进，可以看到发问者如何从例行关心一路走到本集的核心设计。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="mapTrack"></div>
+      <div class="flow-detail" id="mapDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="mapPrev">← 上一问</button>
+        <button class="tri-btn" id="mapNext">下一问 →</button>
+      </div>
+    </div>
+  </div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 攻击 · 片剂 · 后勤</span></summary>
+    <div class="body">
+      <p><b>(77.1) 器皿状态：</b>与之前所述一致，无新变化。</p>
+      <p><b>(77.2-77.5) 集会前的攻击：</b>确有其事；被问"我们能做什么"时，Ra 直言唯一尚未全心全意尝试过的办法，就是停止继续这个通讯。</p>
+      <p><b>(77.6) 医院经历：</b>准备得很好，唯"沉思自我即造物主"可以做得更坚定；无须负面思想形态——消除它们，负面元素与负面实体便无从借力去恶化心智。</p>
+      <p><b>(77.7) 调频改进：</b>Ra 未另立新法，指向前一答所指的方向。</p>
+      <p><b>(77.8-77.9) 心率 115 与腹痛：</b>由猎户集团激发，但直接起因是摄入片剂：Pituitone 引起心跳反应，Spleentone 引起更偏器质性的腹部困扰。</p>
+      <p><b>(77.10) 两个建议：</b>停止摄入这类食物；更大程度觉察意志——Ra 无法就此指导，只指出它是心/身/灵复合体进化的关键钥匙。</p>
+      <p><b>(77.25) 收尾叮咛：</b>香炉只偏一度、无更深含义；请继续小心对齐；可动用已开始激活的疗愈能力，并鼓励器皿静卧片刻（先好好沟通，她不会喜欢）。</p>
+    </div>
+  </details>
+
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>理则的蓝图：塔罗为何是三组七张加一张"选择"</h2></div>
+  <p class="sec-lead">发问者想把话题收拢到"这个理则为它的造物所定的计划"。他的第一次提问被 Ra 退回——因为漏了"哪个理则"；补全之后，Ra 才展开本集的核心图景。</p>
+
+  <div class="card">
+    <h3>先校准问题：哪个理则？</h3>
+    <div class="q">发问者说"我想回到这个理则为它的造物所定的计划"，直接追问哲学基础——但他没有说明问的是哪一个理则，预设了对方知道所指。</div>
+    <div class="quote">
+      <p class="en">We cannot reply due to a needed portion of your query which has been omitted; that is, do we speak of this particular Logos?</p>
+      <p class="zh">我们无法回答，因为你的问题省略了一个必要的部分：我们谈论的是这个特定的理则吗？</p>
+      <span class="src">—— Session 077 · (77.11)</span>
+    </div>
+    <div class="plain">问题精确到对象，回答才可能精确——Ra 连"谈的是哪一位创造者"都不肯替发问者补全。</div>
+    <div class="case"><b>政务窗口：</b>有人到办事窗口问"我的补贴有多少"，却不说项目与年份，窗口无法作答；补全"哪一项、哪一年"之后问题才有了着落。Ra 的拒答正对应这种"缺了主语就无法回答"。</div>
+    <div class="case"><b>需求评审会：</b>产品经理说"把那个功能改好一点"就散会，工程师无从下手；把"哪个功能、改什么、给谁用"补齐，讨论才成立——发问者的第二问正是这样补齐的："我们太阳这个特定的子理则。"</div>
+  </div>
+
+  <div class="card">
+    <h3>计划的骨架：先心智，再身体，再灵性</h3>
+    <div class="q">补全问题后，Ra 用塔罗的概念复合体回答：这个理则给第三密度定的哲学计划是什么结构？发问者随后把它浓缩成"7+7+7 产生极化"，接近但漏了一处。</div>
+    <div class="quote">
+      <p class="en">The philosophy was to create a foundation, first of mind, then of body, and then of spiritual complex.</p>
+      <p class="zh">这个哲学是要先立心智之基，再立身体，再立灵性复合体。</p>
+      <span class="src">—— Session 077 · (77.12)</span>
+    </div>
+    <div class="plain">塔罗在这里不是占卜工具，而是理则发给第三密度的"根概念目录"：一到七心智、八到十四身体、十五到二十一灵性，第 22 张"选择"是终点题。</div>
+    <div class="analogy"><b>盖楼的顺序：</b>心智、身体、灵性像三层楼，每层七根柱子；第 22 张"选择"是楼顶的封顶石——整栋楼怎么盖，最后都汇到这一处。Ra 还提到一、八、十五这样的"同位"概念彼此呼应，好比三层楼在同一位置的柱子相互对齐。</div>
+    <div class="case"><b>新人手册：</b>一位新员工入职时拿到一本"文化手册"，里面不是操作步骤而是二十来条价值观；此后每个项目怎么选、怎么判断，都从这些根概念里长出来——塔罗之于第三密度心智，正像这本手册之于新人的判断力。</div>
+  </div>
+
+  <div class="card">
+    <h3>Ra 的补正：位置在心智之根</h3>
+    <div class="q">Ra 先肯定发问者"感知内容准确"，再指出他漏了关键的"位置"——这些基础究竟在哪里存在？</div>
+    <div class="quote">
+      <p class="en">You are incorrect in that you have no mention of the, shall we say, location of all of these concept complexes; that is, they exist within the roots of the mind, and it is from this resource that their guiding influence and leitmotifs may be traced.</p>
+      <p class="zh">你不正确之处在于没有提到这些概念复合体的位置：它们存在于心智的根源之中，它们的引导性影响与主题动机正是从这个资源里得以追溯。</p>
+      <span class="src">—— Session 077 · (77.13)</span>
+    </div>
+    <div class="plain">牌不在桌上，在你心智的根里：每个基础都是概念的复合体而非单点；由于理则立于自由意志，每个心/身/灵复合体感知到的面相都独一无二——只有第 22 号"选择"相对固定且单一。</div>
+    <div class="case"><b>反复循环的剧情：</b>有人发现自己每逢人生转折总撞见同一个母题：换工作时是"要不要说真话"，搬家时是"要不要留下来"，恋爱里是"要不要坦白"——Ra 说的主题动机（leitmotifs，根概念在个人生命里反复奏响的主旋律）就像这首循环的背景音乐，源头在心智之根。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>选择的分量：极化为何是收割的门票</h2></div>
+  <p class="sec-lead">三个七张的基础都通向第 22 张。发问者连问三层：这些基础是为"第三密度之后的体验"设的吗？强度会更大吗？这道选择题的功能究竟是什么？Ra 一一纠正、限定，最后给出全集最重的一句话。</p>
+
+  <div class="card">
+    <h3>位置的限定：基础属于第三密度</h3>
+    <div class="q">发问者猜想：既然理则预见极化选择，这整套计划是不是为了制造"第三密度之后的强烈体验"？Ra 先限定适用范围。</div>
+    <div class="quote">
+      <p class="en">These philosophical foundations are those of third density. Above this density there remains the recognition of the architecture of the Logos but without the veils which are so integral a part of the process of making the choice in third density.</p>
+      <p class="zh">这些哲学基础属于第三密度。在此密度之上，对理则架构的认知仍在，却没有那些帷幕——而帷幕正是第三密度做出选择的过程不可或缺的一环。</p>
+      <span class="src">—— Session 077 · (77.14)</span>
+    </div>
+    <div class="plain">21 个基础是第三密度的"课程表"；往上走，楼还是那栋楼，但考卷不再密封。</div>
+    <div class="case"><b>密室逃脱：</b>在谜题里你必须摸索、试错、争执，选哪扇门全凭自己；出来后看攻略一眼全懂——"在谜题中"是第三密度的帷幕，"看攻略"是更高密度无帷幕的认知，两者的强度不可同日而语。</div>
+  </div>
+
+  <div class="card">
+    <h3>强度的辨析：精雕粗坯 vs 火中锻造</h3>
+    <div class="q">发问者进一步猜测：选择的计划是为了让第三密度之后的体验"更强烈"。Ra 说：不正确——随即给出本集最著名的意象。</div>
+    <div class="quote">
+      <p class="en">The intensity of fourth density is that of the refining of the rough-hewn sculpture. This is, indeed, in its own way, quite intense, causing the mind/body/spirit complex to move ever inward and onward in its quest for fuller expression.</p>
+      <p class="zh">第四密度的强度在于对粗雕作品的精炼。这确实有其自身的强烈之处，促使心/身/灵复合体在追求更充分表达的路上不断向内、向前。</p>
+      <span class="src">—— Session 077 · (77.15)</span>
+    </div>
+    <div class="quote">
+      <p class="en">However, in third density the statue is forged in the fire. This is a type of intensity which is not the property of fourth, fifth, sixth, or seventh densities.</p>
+      <p class="zh">然而在第三密度，雕像是在火中锻造的。这种强度不属于第四、第五、第六或第七密度。</p>
+      <span class="src">—— Session 077 · (77.15)</span>
+    </div>
+    <div class="plain">第四密度不是"更炸裂"而是"更精细"；真正的烈火只在第三密度——正是这种强度逼出极化。</div>
+    <div class="analogy"><b>健身房的两段：</b>新手期靠大重量打底，浑身酸痛也要扛过去——这是"火中锻造"；进阶期雕刻细节、一点点修线条——这是"精炼"。两种都辛苦，性质完全不同。</div>
+    <div class="case"><b>被重铸的三个月：</b>一位创业者资金链断裂的同一周里，先后经历合伙人撤资与家人住院，后来他说"那三个月把我整个人重铸了一遍"——危机同时压上全部重量、逼出选择，正对应"雕像在火中锻造"。</div>
+    <div class="case"><b>一个"永"字：</b>一位书法老师年复一年只练一个字，没有危机也没有戏剧性，只有越来越细的体察——这种无火而持续的向内打磨，更接近 Ra 说的"精炼"式强度。</div>
+  </div>
+
+  <div class="card">
+    <h3>选择的功能：收割的门票</h3>
+    <div class="q">绕了一圈，发问者问出真正想问的：为什么理则如此强调这道选择题？它的功能究竟是什么？Ra 的回答只有两句，却把整个设计的目的讲尽了。</div>
+    <div class="plain">没有极化，就没有从第三密度的收割；更高密度的一切工作，用的都是在这里挣到的极性（本句原文见第 6 章金句卡）。</div>
+    <div class="case"><b>面试官的偏好：</b>校招面试里，资深的面试官不太问"你会什么"，而追问"两难时你怎么选"——因为选择才定义你今后的做事方式；第三密度的收割看的也是这个。</div>
+    <div class="case"><b>充电与极性：</b>两块从没充过电的电池谈不上正负极，只有充过电、分出极性的电池才能接进电路做工——Ra 说更高密度的工作"靠这次选择挣得的极性"，正是这个意思。</div>
+    <p>下面的归类练习帮你分清两种强度：</p>
+    <div id="fireSort"></div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>单色的宇宙：没有自由意志的理则如何进化</h2></div>
+  <p class="sec-lead">发问者抛出一个思想实验：假如一个理则的所有子理则只产出单极（比如只有正面极性），更高密度的工作还能完成吗？Ra 借这个问题展开了本集最壮阔的对比——有与无自由意志的两种宇宙。</p>
+
+  <div class="card">
+    <h3>思想实验：单极的造物可能吗？</h3>
+    <div class="q">发问者假设：通过第一变貌，我们的太阳若只产出正面极性，第四密度及以上的工作是否仍能进行？Ra 指出：确有理则如此设定计划，但那只在"自由意志缺席"的造物里成立。</div>
+    <div class="plain">代价是进化被慢放：那样的第三密度与第四密度都极漫长；实体开始看见造物主后，才快速走向第八密度——因为"不知道者不在乎"。</div>
+    <div class="quote">
+      <p class="en">The entities have the concepts of lawful and taboo, but the law is inexorable and all events occur as predestined. There is no concept of right and wrong, good or bad. It is a culture in monochrome.</p>
+      <p class="zh">这些实体有合法与禁忌的概念，但法律不可变更、万事如预定发生。没有对与错、善与恶的概念。这是一种单色的文化。</p>
+      <span class="src">—— Session 077 · (77.17)</span>
+    </div>
+    <div class="case"><b>规定到秒的流水线：</b>某工厂把工序精确到秒、动作画在墙上，工人不需要也不被允许做任何选择——日复一日几乎没有极化发生，正像 Ra 描述的无自由意志造物：进化极其漫长。</div>
+    <div class="case"><b>只有一条路的世界：</b>一款只有单一路线的游戏，玩家按键即播放、从无分岔——玩过的人都知道，没有选择就没有投入；宇宙尺度的"没有选择"，就是那种缓慢的单色存在。</div>
+  </div>
+
+  <div class="card">
+    <h3>路西法为何是"携光者"</h3>
+    <div class="q">在一个没有善恶概念的伊甸式造物里，"善恶之知"扮演了什么角色？Ra 给出一个惊人的定位。</div>
+    <div class="quote">
+      <p class="en">In this context you may see the one you call Lucifer as the true light-bringer in that the knowledge of good and evil both precipitated the mind/body/spirits of this Logos from the Edenic conditions of constant contentment but also provided the impetus to move, to work, and to learn.</p>
+      <p class="zh">在这种背景下，你们可把你称为路西法的存在视为真正的携光者：善恶之知既把这些心/身/灵从伊甸式恒常满足中抛离出来，也提供了行动、工作与学习的动力。</p>
+      <span class="src">—— Session 077 · (77.17)</span>
+    </div>
+    <div class="plain">在"没有善恶"的背景里，善恶知识本身就是光——它打破恒常满足，逼人动起来。</div>
+    <div class="case"><b>包办到大学的孩子：</b>一位家长事无巨细替孩子安排到高中毕业，孩子满足却从未练习过做决定；第一次自己选专业，混乱、后悔与成长同时开始——"善恶之知"正是这样的扰动：它终结了满足的静态，也开启了学习。</div>
+    <div class="case"><b>不给剧本的沙盒：</b>另一款游戏什么都不给：有人造桥、有人种田、有人做反派，玩家反而沉迷上千小时——自己选的目标才带来投入，这正是自由意志给体验带来的"品质与多样"。</div>
+  </div>
+
+  <div class="card">
+    <h3>理则们的"补选"与时间线</h3>
+    <div class="q">发问者追问一层：这些早期理则是怎么"错过"自由意志的？我们的理则又是怎么"选中"它的？Ra 的回答构成一条清晰的演进链。</div>
+    <div class="quote">
+      <p class="en">The, shall we say, saga of polarity, its consequences and limits, were unimagined until experienced.</p>
+      <p class="zh">容我们说，极性的传奇、它的后果与限制，在体验之前是无法想象的。</p>
+      <span class="src">—— Session 077 · (77.19)</span>
+    </div>
+    <div class="plain">早期无自由意志的理则无一例外建立了服务他人路径的子理则——不是因为高尚，而是因为极性的"传奇"还没被体验过；发问者概括为"尚未构想出、后来作为第一变貌的延伸长出来"，Ra 说：是的。</div>
+    <div class="timeline">
+      <div class="tl-item"><div class="t">早期理则：无自由意志的计划</div><div class="d">部分理则设定让心/身/灵复合体逐个真实颜色身体（true-color body）激活的计划，但不诉诸自由意志的预先应用。</div></div>
+      <div class="tl-item"><div class="t">结果：单色而漫长</div><div class="d">第三、第四密度以你们的时间衡量极其漫长；实体开始看见造物主后，才快速走向第八密度——不知道者不在乎。</div></div>
+      <div class="tl-item"><div class="t">善恶之知的扰动</div><div class="d">善恶知识把实体从伊甸式恒常满足中抛离出来，也提供了行动、工作、学习的动力。</div></div>
+      <div class="tl-item"><div class="t">补选自由意志</div><div class="d">这些理则自觉未给造物主足够品质与多样的自我经验，于是在较晚的空间/时间，在阐明各理则基础时选择了自由意志特性。</div></div>
+      <div class="tl-item"><div class="t">我们的理则：预先规划极性</div><div class="d">我们的太阳预先知道极性的传奇，并把主要原型哲学基础设计为第三密度所得极性的函数——Ra 评价为"完全精准正确"。</div></div>
+    </div>
+    <div class="case"><b>复盘会的发现：</b>团队上线一个功能前谁也没料到滥用方式，直到被滥用、吃过亏，才把它写进设计规范——"先体验、再理解、再预先设计"，正是 Ra 描述理则们从"无自由意志"走向"有自由意志"的顺序。</div>
+    <p>下面的归类练习帮你分清两种造物：</p>
+    <div id="cosmosSort"></div>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">无自由意志</span><h4>单色的慢放</h4><p><b>体验：</b>合法与禁忌、万事如预定，无对错善恶。<br><b>速度：</b>第三、第四密度极漫长，看见造物主后快速升向第八。<br><b>路径：</b>早期这些理则无一例外是服务他人路径。</p></div>
+      <div class="yuan-card"><span class="y-tag">有自由意志</span><h4>有张力的全景</h4><p><b>体验：</b>善恶与对错带来选择的张力，体验的品质与多样性爆发。<br><b>速度：</b>第三密度有了"火中锻造"的强度与极化的可能。<br><b>路径：</b>服务他人与服务自我两条路都打开。</p></div>
+      <div class="yuan-card"><span class="y-tag">我们的理则</span><h4>知晓极性后再设计</h4><p><b>位置：</b>预先知道极性的传奇，把 21+1 的基础写成第三密度的函数，让"选择"成为整座建筑的屋顶——Ra 称之为"完全精准正确"。</p></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>预先写好的极性与研读的两个约定</h2></div>
+  <p class="sec-lead">确认"我们的理则预先把极性写进设计"之后，发问者提议逐张细读这 21 个基础——Ra 应允，但先立下两条规矩。这两条规矩定义了此后所有原型研读的形态。</p>
+
+  <div class="card">
+    <h3>两次确认：从 quite 到 exquisitely</h3>
+    <div class="q">发问者连续确认两件事：我们的理则是否预先知道并计划了极性？它是否因此拥有"选定灵性进化加速形式"的优势？Ra 两次都肯定，且措辞明显升级。</div>
+    <div class="quote">
+      <p class="en">This is quite correct. … This is exquisitely correct.</p>
+      <p class="zh">这相当正确。……这完全精准正确。</p>
+      <span class="src">—— Session 077 · (77.21)(77.22)</span>
+    </div>
+    <div class="plain">我们的理则不是撞上了极性，而是知晓极性之后，把主要原型哲学基础当作"第三密度所得极性的函数"来设计——这就是本集主角的定位。</div>
+    <div class="case"><b>赛前录像分析：</b>一位教练反复研究对手录像，把训练课精确设计成"对付这套打法"的样子，而不是临场才摸索——我们的理则设计哲学基础，用的正是这种"预先知道"的优势。</div>
+  </div>
+
+  <div class="card">
+    <h3>两个请求：谁先说、怎么说</h3>
+    <div class="q">发问者提议"从心智开始逐张细读 21 个基础"，Ra 说可以，但有两个请求必须提出。</div>
+    <div class="quote">
+      <p class="en">Firstly, that an attempt be made to state the student’s grasp of each archetype. We may then comment. We cannot teach/learn to the extent of learn/teaching.</p>
+      <p class="zh">第一，学生须尝试陈述自己对每个原型的把握，然后我们才能评论。我们无法把"教/学"做到"学/教"的程度。</p>
+      <span class="src">—— Session 077 · (77.23)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Therefore, you may see that precision is not the goal; rather, quality of general concept complex perception is the goal.</p>
+      <p class="zh">因此你可以看到，精确不是目标；对一般概念复合体感知的品质才是目标。</p>
+      <span class="src">—— Session 077 · (77.23)</span>
+    </div>
+    <div class="plain">学生先讲、Ra 只评论；且每个心/身/灵复合体必须以自己的方式感知每个原型——Ra 还请发问者把这句话"像眼前的蜡烛一样"常记在心。</div>
+    <div class="case"><b>读书会的规矩：</b>一位领读人从不先给答案，而是让每人先讲"我读到了什么"，再逐一点评——Ra 的第一个请求正是这种结构：学生的陈述在先，教导在后。</div>
+    <div class="case"><b>美术馆里的一幅画：</b>同一幅画，有人看见漩涡般的焦虑，有人看见流转的星光——讲解员可以讲技法与背景，却不能替你看画；Ra 要求铭记"人人必须以自己的方式感知每个原型"，正是这个意思。</div>
+    <p>把研读的流程走一遍：</p>
+    <div class="demo-area">
+      <div class="flow-track" id="studyTrack"></div>
+      <div class="flow-detail" id="studyDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="studyPrev">← 上一步</button>
+        <button class="tri-btn" id="studyNext">下一步 →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>密度如何铺设：投资机会与收官</h2></div>
+  <p class="sec-lead">正题讲完，发问者问出准备好的大问题：密度是怎么由理则提供和设立的？Ra 先声明这是"本次工作的最后一个完整问题"——灵性攻击留下的伤痕需要料理——然后给出一个经济学式的回答，并以祝福收尾。</p>
+
+  <div class="card">
+    <h3>投资机会：密度不是自动扶梯</h3>
+    <div class="q">发问者想弄清：同样经历各密度，为什么有的实体快、有的慢？密度体系本身又是怎么搭起来的？</div>
+    <div class="quote">
+      <p class="en">Many come more rapidly to third density than others not because of an innate efficiency of catalysis but because of unusual opportunities for investment.</p>
+      <p class="zh">许多实体比其他实体更快抵达第三密度，不是因为催化的内在效率，而是因为不寻常的投资机会。</p>
+      <span class="src">—— Session 077 · (77.24)</span>
+    </div>
+    <div class="quote">
+      <p class="en">When fifth density has been obtained the process takes upon itself a momentum based upon the characteristics of wisdom when applied to circumstance.</p>
+      <p class="zh">当第五密度被达成，这个过程便凭借智慧应用于情境时的特性而获得自身的动力。</p>
+      <span class="src">—— Session 077 · (77.24)</span>
+    </div>
+    <div class="plain">密度像风险投资的赛道：第四密度的实体可以投资第三、第五投资第四；到第五密度之后，"智慧应用"接管进程，而理则本身也提供这类投资机会。</div>
+    <div class="case"><b>被收养的流浪猫：</b>一只流浪猫被一家人收养，每天被抚摸、说话、带着规律生活，几年间展现出近乎"人格"的灵性成长——Ra 观察第二密度：有些实体更快抵达第三密度，靠的不是催化更高效，而是被"投中"了。</div>
+    <div class="case"><b>退休导师的判断力：</b>一位资深工程师退休后不再冲在一线，而是把毕生判断力用来指导年轻人，谁遇到坎就点拨谁——不再靠堆时间做进度，而靠智慧的投放产生动力，这正对应"第五密度之后过程自生动能"。</div>
+  </div>
+
+  <div class="card">
+    <h3>本集术语卡：点开看白话定义</h3>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">理则</div><div class="sub">Logos</div><div class="tap">点击展开</div></div><div class="back">为一整片造物定下根本设计的大层级创造者；星系层次的"设计总纲"出自理则，本集聚焦的是它之下的太阳。<em>好比城市规划总纲的编制者。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">子理则</div><div class="sub">sub-Logos</div><div class="tap">点击展开</div></div><div class="back">理则之下的局部创造者——我们的太阳就是其中之一，为它的行星系统设计体验计划；本集问的正是"我们的这位子理则"。<em>像按总纲细化自己这一分区的建筑师。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">选择</div><div class="sub">The Choice</div><div class="tap">点击展开</div></div><div class="back">第 22 个概念复合体，第三密度的终点题：完成朝向服务他人或服务自我的极化；它是 21 个基础中唯一"相对固定且单一"者。<em>像义务教育结束后的那场分流考。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">帷幕</div><div class="sub">the veils</div><div class="tap">点击展开</div></div><div class="back">理则设在选择过程中的"看不见"：第三密度实体带着帷幕做选择；更高密度仍认得理则的架构，却没有帷幕。<em>考试时试卷密封，考完才公布答案。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">极化</div><div class="sub">polarity</div><div class="tap">点击展开</div></div><div class="back">选择在心/身/灵上留下的累积偏移，朝服务他人或服务自我；没有它就没有第三密度的收割，高密度的工作全凭它驱动。<em>电池充了电、分出正负极，才能接进电路做工。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">投资机会</div><div class="sub">investment</div><div class="tap">点击展开</div></div><div class="back">Ra 借来的经济学说法：第二密度实体因被更高密度"投入"关注而加速进入第三密度；第四投资第三、第五投资第四，理则本身也提供这类机会。<em>像贵人愿意把时间押在一个新人身上。</em></div></div>
+    </div>
+  </div>
+
+  <div class="saying">
+    <p class="en">The polarization, or choosing, of each mind/body/spirit is necessary for harvestability from third density. The higher densities do their work due to the polarity gained in this choice.</p>
+    <p class="zh">每个心/身/灵复合体的极化或选择，是从第三密度被收割的必要条件；更高的密度正是凭借这次选择中获得的极性而进行它们的工作。</p>
+    <span class="src">—— Session 077 · (77.16)</span>
+  </div>
+
+  <div class="card">
+    <h3>伏笔与祝福</h3>
+    <p>本集以例行叮咛收尾（77.25：香炉只偏一度、请继续小心对齐、一切顺利），真正的伏笔在 77.23——逐张研读 21 个基础的工程已经立约：学生先陈述对每个原型的把握，Ra 在其上评论，且人人以自己的方式感知。下一集起，发问者将按这个约定开始逐一陈述。</p>
+    <div class="case"><b>开题报告：</b>研究生与导师约定答辩形态：学生先讲、导师只点评方向、各人自选切入点——77.23 的两个请求就是这场"开题"，此后的多集都是在这份约定下逐章推进。</div>
+    <div class="case"><b>对齐香炉：</b>集会末 Ra 提醒香炉只偏一度、无更深含义，但出于器皿的身体舒适请继续小心对齐——仪式精度不承载神秘信息，承载的是对器皿的体贴。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 077（<code>split/Ra_Session_077.md</code>）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra077-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+/* ===== 问答脉络推进器（第 1 章 · 本章地图） ===== */
+initStepper('mapTrack','mapDetail','mapPrev','mapNext',[
+  {t:'开场与攻击',d:'<span class="qa-q">问：器皿状态如何？集会前是否受到攻击？我们能做什么？</span><b>答：</b>状态如前所述；攻击确有其事；你们唯一尚未全心全意尝试过的"保护"，就是停止继续这个通讯（77.1-77.5）。'},
+  {t:'器皿三问',d:'<span class="qa-q">问：医院准备能否改进？调频能否在非通讯时段改进？心率飙升与腹痛是猎户问候吗？</span><b>答：</b>准备做得好，唯"沉思自我即造物主"可以更坚定；调频照此方向即可；那次发作由猎户集团激发，但直接起因是摄入的片剂（77.6-77.8）。'},
+  {t:'片剂与疗愈',d:'<span class="qa-q">问：这些片剂是什么？还有新技巧可用吗？</span><b>答：</b>引起心跳反应的叫 Pituitone、引起腹部困扰的叫 Spleentone；这个载具靠灵性、心智与意志维持活力，物理疗愈并不合适，心智与灵性疗愈才有益；另建议停止摄入、并更大程度觉察意志（77.9-77.10）。'},
+  {t:'理则的蓝图',d:'<span class="qa-q">问：我们太阳这个子理则造物的哲学计划是什么？</span><b>答：</b>先立心智、再身体、再灵性之基——塔罗概念复合体分三组七张（1-7 心智、8-14 身体、15-21 灵性），第 22 张是"选择"（77.11-77.13）。'},
+  {t:'选择的分量',d:'<span class="qa-q">问：为什么这道选择题如此重要？</span><b>答：</b>极化是从第三密度被收割的必要条件，更高密度的工作全凭这次选择挣得的极性；第三密度的强度是"雕像在火中锻造"，为后续密度所无（77.14-77.16）。'},
+  {t:'两种理则',d:'<span class="qa-q">问：如果所有子理则只产出单极，更高密度的工作还能做吗？</span><b>答：</b>确有无自由意志的理则——那样的第三、第四密度极其漫长；早期这些理则无一例外是服务他人路径，后来才在演进中补选自由意志（77.17-77.20）。'},
+  {t:'我们的理则',d:'<span class="qa-q">问：我们的理则是否预先知道并计划了极性？</span><b>答：</b>正是——它把极性写进设计，借规划主要原型哲学基础选中了灵性进化的加速形式，Ra 称之为"完全精准正确"（77.21-77.22）。'},
+  {t:'约定与收尾',d:'<span class="qa-q">问：可以逐张研读 21 个基础吗？密度又是怎么设立的？</span><b>答：</b>可以，但学生须先陈述自己的把握、且人人须以自己的方式感知；密度借"投资机会"铺设——这是本次工作的最后一个完整问题（77.23-77.25）。'}
+]);
+
+/* ===== 研读流程推进器（第 5 章） ===== */
+initStepper('studyTrack','studyDetail','studyPrev','studyNext',[
+  {t:'学生先说',d:'<span class="qa-q">第一步</span><b>学生陈述把握：</b>逐张研读时，先由学生说出自己对每个原型（archetype）的理解——不是 Ra 先讲。'},
+  {t:'Ra 评论',d:'<span class="qa-q">第二步</span><b>Ra 只评论：</b>Ra 说明自己无法把"教/学"做到"学/教"的程度——方向由学生的陈述决定，Ra 在其上补充与纠偏。'},
+  {t:'人各有感',d:'<span class="qa-q">第三步</span><b>如眼前之烛：</b>铭记每个心/身/灵复合体必须以自己的方式感知每个原型——这句话要像摆在眼前的蜡烛一样常记于心。'},
+  {t:'品质优先',d:'<span class="qa-q">收束</span><b>目标不是精确：</b>要的不是逐字精准的定义，而是对一般概念复合体感知的品质。'}
+]);
+
+/* ===== 归类练习：火中锻造 vs 精炼雕琢 ===== */
+initSorter('fireSort',[
+  {a:'失业三个月，房贷、自尊与婚姻同时告急，人被逼着在深夜里回答"我到底是谁"。',opts:['火中锻造','精炼雕琢'],ans:'火中锻造',exp:'危机同时压上全部重量、逼出选择——这正是第三密度"雕像在火中锻造"式的强度。'},
+  {a:'退休后每天临帖一小时，笔画一点点沉稳，十年如一日向内打磨。',opts:['火中锻造','精炼雕琢'],ans:'精炼雕琢',exp:'没有危机、只有持续向内的细化，对应 Ra 说的第四密度"精炼粗雕"。'},
+  {a:'确诊重病后重新排列人生优先级，痛苦但前所未有地清醒。',opts:['火中锻造','精炼雕琢'],ans:'火中锻造',exp:'疼痛与抉择同在、逼出极化，属于第三密度的烈火。'},
+  {a:'资深工程师带新人，把毛坯代码一寸寸重构得干净流畅。',opts:['火中锻造','精炼雕琢'],ans:'精炼雕琢',exp:'在已有形骸上做精细修饰，是"精炼"的意象。'},
+  {a:'第一次独自生活，账单、做饭与孤独一起涌来，不得不学会照顾自己。',opts:['火中锻造','精炼雕琢'],ans:'火中锻造',exp:'生活突然上强度、逼出成长，属于火中锻造。'}
+]);
+
+/* ===== 归类练习：两种造物 ===== */
+initSorter('cosmosSort',[
+  {a:'一款只有单一路线的游戏：玩家按键即播放，从无分岔。',opts:['无自由意志的造物','有自由意志的造物'],ans:'无自由意志的造物',exp:'没有选择就没有投入——这正是"单色文化"的特征。'},
+  {a:'沙盒世界不给剧本：有人造桥、有人种田、有人做反派。',opts:['无自由意志的造物','有自由意志的造物'],ans:'有自由意志的造物',exp:'选择的多样性带来体验的品质与多样。'},
+  {a:'某个部落按祖辈历法劳作，法律不可变更、万事如预定，无对错善恶的概念。',opts:['无自由意志的造物','有自由意志的造物'],ans:'无自由意志的造物',exp:'Ra 自己举的例子：合法与禁忌、万事预定，一种单色的文化。'},
+  {a:'新员工可自选项目方向，做砸了复盘重来。',opts:['无自由意志的造物','有自由意志的造物'],ans:'有自由意志的造物',exp:'允许选择并承担后果，正是自由意志的核心。'},
+  {a:'伊甸式恒常满足：一切被安排好，满足但从未移动。',opts:['无自由意志的造物','有自由意志的造物'],ans:'无自由意志的造物',exp:'Ra 说的伊甸式条件：恒常满足却没有行动、工作与学习的动力。'}
+]);
+
+/* ===== 术语卡翻转 ===== */
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+renderPath();
+</script>
+</body>
+</html>

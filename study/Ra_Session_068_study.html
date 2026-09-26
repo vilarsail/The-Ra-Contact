@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 068 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 068 · 交互式学习模块</h1>
+  <p class="sub">这一集复盘了一次真实的「灵性劫夺未遂」：器皿在普通聚会中滑向出神时，第五密度的猎户势力试图错置她的心/身/灵复合体。由这场险情出发，Ra 讲清了出神状态的风险、第一变貌的边界，以及负面极性「必须借你自己的自由意志」行事的完整过程。</p>
+  <div class="tagline">7 个主题 · 6 个学习步骤 · 15 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 周日夜的险情</a>
+<a href="#s3">③ 错置计划与高我</a>
+<a href="#s4">④ 魔法防御的门槛</a>
+<a href="#s5">⑤ 一本书的回响</a>
+<a href="#s6">⑥ 猎户的作业流程</a>
+<a href="#s7">⑦ 收官：极性之钥</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>走一遍问答脉络推进器，了解这次「急诊」集会的来龙去脉，例行问答可跳过</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>复盘周日夜的险情</b><span>一句「但愿我在通灵 Ra」如何引来猎户实体，Latwii 又如何化解</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>拆解错置计划</b><span>黄色体外壳、高我的两个选项、自动形成的屏障，以及拨一遍条件模拟器</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>理解第一变貌的门槛</b><span>为什么出神中几乎无人能自卫、魔法防御为什么不能直接教</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>看懂那本书</b><span>旧小说里的错置情节从何而来：承诺如何激活可能性/概率漩涡</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>走完流程并收官</b><span>猎户实体的六步作业流程，最后在收官章对照正负极性那把钥匙</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ 01 本章地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：一场未遂的劫夺，一次加开的急诊</h2></div>
+  <p class="sec-lead">本集是临时加开的一次「急诊」：Don 即将离开一段时间，最放心不下的是周日夜晚的险情——器皿在一场普通聚会上为第五密度的 Latwii 传声时，一个猎户实体试图抓住她出神中的心/身/灵复合体。围绕这次未遂的劫夺，全集依次展开：险情复盘 → 错置计划与高我的抉择 → 出神防御与第一变貌的边界 → 一本书的回响 → 猎户实体的完整作业流程。</p>
+
+  <div class="card">
+    <h3>一场三人共同供电的通讯</h3>
+    <div class="q">身体能量已经完全耗尽，集会为什么还能开成？</div>
+    <div class="quote">
+      <p class="en">We have available transferred energy which is due to the service offered by two of this group and, therefore, we are able to continue.</p>
+      <p class="zh">我们有可用的转移能量——它来自小组中两位成员提供的服务，所以我们能够继续。</p>
+      <span class="src">—— Session 068 · (68.2)</span>
+    </div>
+    <div class="plain">这场通讯是「接力供电」的结果：器皿自己的电早已见底，接续它的是同伴的输出——而且接受这种能量，不会损害器皿正常的生命能。</div>
+    <div class="case"><b>备用电源：</b>登山队里主绳意外磨损，队友立刻递上自己的副绳让队伍继续下行——转移能量不是替器皿出力，而是让她「还有得耗」。Ra 同时说明：这次耗竭主要不是来自疼痛本身，而是持续体验这种变貌的累积效应。(68.2)</div>
+    <div class="case"><b>谁有权决定下次集会：</b>像医生给出全部检查数据、却把手术排期交给家属签字——Ra 明说无法具体推荐未来的决定，并为先前「隔日集会」的建议请求原谅：照顾器皿与全组的服务需要之间只有一条细线，而这次接触是你们自由意志的功能。(68.3)</div>
+  </div>
+
+  <div class="card">
+    <h3>问答脉络推进器：这一集是怎么问下来的</h3>
+    <p>从器皿状况到极性收官，九步走完本集的问答链。点击节点可来回查看。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="mapTrack"></div>
+      <div class="flow-detail" id="mapDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="mapPrev">上一步</button>
+        <button class="tri-btn" id="mapNext">下一步</button>
+      </div>
+    </div>
+  </div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 后勤安排</span></summary>
+  <div class="body">
+    <p><b>(68.1) 器皿状态：</b>身体能量完全耗尽，其余如前所述。</p>
+    <p><b>(68.2) 转移能量：</b>靠两位成员的服务得以继续；没有转移就应停止使用器皿。</p>
+    <p><b>(68.3) 集会频率：</b>由支援小组观察决定；Ra 为此前「隔日集会」的建议致歉。</p>
+    <p><b>(68.19) 收尾：</b>小组尽责，一切安好；转移能量将尽，Ra 简短告别。</p>
+  </div></details>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 02 周日夜的险情 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>险情复盘：一句「但愿我在通灵 Ra」</h2></div>
+  <p class="sec-lead">周日晚上并非正式集会：器皿在一场普通聚会上为第五密度的「智慧密度」存有 Latwii 传声。危机的引信，是一个几乎人人都会闪过的念头。</p>
+
+  <div class="card">
+    <h3>一个念头怎么成了门</h3>
+    <div class="q">器皿只是心里想了句「但愿我在通灵 Ra」，怎么就会招来危险？</div>
+    <div class="quote">
+      <p class="en">This instrument thought to itself, “I do not know this answer. I wish I were channeling Ra.” The ones of Latwii found themselves in the position of being approached by the Orion entity, which seeks to be of service in its own way.</p>
+      <p class="zh">那晚器皿被问到涉及 Ra 资料的问题，自认答不上来，便希望自己正在通灵 Ra，并开始为 Ra 接触做准备——而一直在旁窥伺的猎户实体（它总想「以自己的方式服务」）因此得到一个可乘之机，Latwii 恰恰想避开它。</p>
+      <span class="src">—— Session 068 · (68.5)</span>
+    </div>
+    <div class="plain">在出神的边缘，一个念头就等于一次呼唤——门从里面开了一条缝，外面的东西立刻接住。</div>
+    <div class="analogy"><b>虚掩的门：</b>深夜把家门虚掩着去倒垃圾——「就一小会儿」。倒垃圾本身没有任何错，错的时机让它成了一份邀请。</div>
+  </div>
+
+  <div class="card">
+    <h3>两个幸运条件</h3>
+    <div class="q">这场未遂的劫夺，最后靠什么挡下来的？</div>
+    <div class="quote">
+      <p class="en">It is fortunate for this instrument, firstly, that Latwii is of fifth density and able to deal with that particular vibratory complex which the Orion entity was manifesting; and, secondly, that there were those in the support group at that time which sent great amounts of support to the instrument in this crux.</p>
+      <p class="zh">幸运有二：其一，Latwii 是第五密度，应付得了猎户实体显现的那种振动复合体；其二，当时支援小组里有人在这个关键处向器皿送去大量支持。</p>
+      <span class="src">—— Session 068 · (68.5)</span>
+    </div>
+    <div class="plain">挡下劫夺的，是「守护者的段位」加上「身边人的支持」——而不是器皿自己会什么武功。</div>
+    <div class="case"><b>托住她的人：</b>产房里产妇用力时，家属能做的只是稳稳握住她的手——不能替她用力，但「她不是一个人在扛」这件事本身就是力量。危机时刻支援小组送出的支持，正是这一种托举。(68.5)</div>
+  </div>
+
+  <div class="card">
+    <h3>「不放手」的化解法</h3>
+    <div class="q">守护者没有正面开战，它做了什么？</div>
+    <div class="quote">
+      <p class="en">Thus what occurred was the ones of Latwii never let go of this instrument, although this came perilously close to breaking the Way of Confusion.</p>
+      <p class="zh">Latwii 自始至终没有松开这个器皿——尽管这险些打破困惑之道（Way of Confusion，自由意志之道的别称）。</p>
+      <span class="src">—— Session 068 · (68.5)</span>
+    </div>
+    <div class="plain">化解靠的是持续占用连接，而不是正面搏斗——线路一直被占着，劫夺者便无处下手。</div>
+    <div class="case"><b>占线的电话：</b>夜间值班员临时离席、替补未到，老班长干脆拿起电话不挂断，让线路始终被合法占用，直到交接完成——骚扰者再急也切不进来。Latwii 的对策正是如此：持续保持连接、持续通过器皿生成信息，直到她完全重新融合、平稳回到整合状态。(68.5)</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 03 错置计划与高我 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>错置计划：空壳、高我与自动形成的屏障</h2></div>
+  <p class="sec-lead">确认了「发生了什么」，Don 接着追问最坏的情况：这个实体的计划是什么、得手后会如何、高我还有没有选择。Ra 给出了本集中少见的、对负面作业近乎完整的白描。</p>
+
+  <div class="card">
+    <h3>剧本全貌：拐走住户，留下空壳</h3>
+    <div class="q">如果猎户实体得手，具体会发生什么？</div>
+    <div class="quote">
+      <p class="en">The plan, which is ongoing, was to take the mind/body/spirit complex while it was separated from its yellow-body physical-complex shell, to then place this mind/body/spirit complex within the negative portions of your time/space.</p>
+      <p class="zh">这项计划至今仍在进行：趁心/身/灵复合体与黄色体物理外壳分离时夺取它，放进你们时间/空间的负面部分。</p>
+      <span class="src">—— Session 068 · (68.6)</span>
+    </div>
+    <div class="plain">拐走「住户」、留下一具空房子，再把空房子推倒——失去灵魂的外壳会走向功能失常、昏迷，直到身体死亡。</div>
+    <div class="analogy"><b>空窗期：</b>一栋房子最容易被撬的时段，就是住户临时搬空家具的那几天——「住户不在家」的窗口期，正是出神状态。</div>
+  </div>
+
+  <div class="card">
+    <h3>高我的抉择：路变长，终点不变</h3>
+    <div class="q">灵魂被夺之后，就全盘皆输了吗？</div>
+    <div class="quote">
+      <p class="en">Thus this entity would become a negatively polarized entity without the advantage of native negative polarization. It would find a long path to the Creator under these circumstances although the path would inevitably end well.</p>
+      <p class="zh">如此一来，这个实体会成为一个负面极化实体，却没有天生负面极化的「优势」；在这种情况下，它通往造物主的路会很长——尽管这条路终究会以好的结局收束。</p>
+      <span class="src">—— Session 068 · (68.6)</span>
+    </div>
+    <div class="plain">极性能把路变得又长又苦，却改不了终点——即便最坏的剧情成真，结局仍导向造物主。</div>
+    <div class="analogy"><b>被误导的导航：</b>好比你被恶意改错了导航，多绕几百公里、多耗半箱油，但方向盘仍在你手里，目的地终究能到——只是这一程的风景全变了味。</div>
+  </div>
+
+  <div class="card">
+    <h3>黑暗与屏障：高我为什么不会「无限期搁置」</h3>
+    <div class="q">高我可以让被夺的复合体一直留在时间/空间里、不去投生吗？</div>
+    <div class="quote">
+      <p class="en">A highly polarized positive mind/body/spirit complex surrounded by negative portions of space/time[25] will experience only darkness, for, like the magnet, there is no, shall we say, likeness. Thus a barrier is automatically formed.</p>
+      <p class="zh">一个高度正面极化的心/身/灵复合体，被空间/时间的负面部分包围时只会经验到黑暗——因为如同磁铁，毫无相似性；于是一道屏障自动形成。</p>
+      <span class="src">—— Session 068 · (68.7)</span>
+    </div>
+    <div class="plain">高我几乎不会无限期搁置它：因为高我坚信，心/身/灵的职能就是经由其他自我去经验并学习、从而经验造物主——留在负面里等于什么都学不到。Don 进一步确认：那黑暗是在负面时间/空间中经验的。</div>
+    <div class="case"><b>磁铁与纽扣：</b>把一枚强磁铁丢进一盒塑料纽扣里——吸不起任何东西，也推不开任何东西，只能互不相干地悬着。极性不对等时，连「互动」都不成立，这正对应 Ra 说的那道自动形成的屏障。(68.7)</div>
+  </div>
+
+  <div class="card">
+    <h3>拒答与假设：提问的「语法」</h3>
+    <div class="q">以器皿为例，她会投生到第几密度？</div>
+    <div class="quote">
+      <p class="en">The answer to this query violates the First Distortion.</p>
+      <p class="zh">这次 Ra 干脆地拒答：回答这个问题违反第一变貌（First Distortion，即自由意志法则）——因为它指向一个具体实体的未来选择。</p>
+      <span class="src">—— Session 068 · (68.9)</span>
+    </div>
+    <p>Don 立刻换了一种问法：不再问「器皿会怎样」，而问「假设一个第六密度流浪者遭此劫会怎样」。Ra 随即可以作答。</p>
+    <div class="quote">
+      <p class="en">Your assumption is correct. The strength of the polarization would be matched as far as possible.</p>
+      <p class="zh">你的假设正确：那将是第六密度负面时间/空间，并投生于第六密度负面空间/时间；极化强度会尽可能匹配——只是负面第六密度同等强度的能量场稀少，匹配未必完全。</p>
+      <span class="src">—— Session 068 · (68.10)</span>
+    </div>
+    <div class="case"><b>法官的边界：</b>记者问法官「如果我是被告，会判几年？」法官不能答——把规则套到具体的人身上等于预判；但问「按条文，这类案子通常怎么判」就能公开讨论。Don 把「器皿」换成「第六密度流浪者」，正是把私人命运的问题改写成一般规则的问题。(68.9–68.10)</div>
+  </div>
+
+  <div class="card">
+    <h3>术语卡：读懂本集需要的七个词</h3>
+    <p>点击卡片翻面。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">出神状态</div><div class="sub">trance</div><div class="tap">点击翻面</div></div><div class="back">心/身/灵复合体离开黄色体物理外壳、进入时间/空间的状态——本集所有风险都发生在这种「住户暂时不在家」的窗口期。<em>比喻：飞机切到自动驾驶后，驾驶员离座的那段时间。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">黄色体</div><div class="sub">yellow body</div><div class="tap">点击翻面</div></div><div class="back">第三密度物理身体在 Ra 术语中的称呼；出神时它成为无意识的「外壳」——所以被错置后的空壳才会走向昏迷与死亡。<em>比喻：车主暂时离车、钥匙还插在车上的那几分钟。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">时间/空间</div><div class="sub">time/space</div><div class="tap">点击翻面</div></div><div class="back">与我们所处的「空间/时间」相对：那里时间固定、空间流动，是心/身/灵在出神与梦境中活动的场域；它的负面部分，就是猎户实体想存放夺来之物的「仓库」。<em>比喻：空间/时间是台前，时间/空间是后台——布景在此存放，也在此被动手脚。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">高我</div><div class="sub">higher self</div><div class="tap">点击翻面</div></div><div class="back">你在时间/空间中的更完整版本，从更长的时间线上照看投生中的心/身/灵；本集中它对被夺的复合体保有「留下或投生」的选择权。<em>比喻：留守本部的调度员，而出差在外的是你。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">流浪者</div><div class="sub">wanderer</div><div class="tap">点击翻面</div></div><div class="back">自愿从更高密度投生到第三密度来服务的实体；第六密度流浪者若遭错置，对方须以同等强度的负面场来匹配。<em>比喻：从总部下派基层支援的资深员工。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">猎户实体</div><div class="sub">Orion entity</div><div class="tap">点击翻面</div></div><div class="back">朝向服务自我极性的势力；本集中特指一个第五密度的负面导向个体，它「寻求以自己的方式服务」。<em>比喻：专挑空窗期下手的惯犯。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">Latwii</div><div class="sub">wisdom density</div><div class="tap">点击翻面</div></div><div class="back">第五密度「智慧密度」的存有，小组聚会上常借器皿传声的「兄弟姐妹」；本次险情中的守护者。<em>比喻：正好在场、且段位够高的值班同事。</em></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>条件模拟器：错置要成立，需要哪几件事同时发生</h3>
+    <p>拨动下面三个开关，看每条不满足时剧情如何改写——每一个分支都对应 Ra 本集的原话。</p>
+    <div class="cond-row"><div class="name">器皿进入出神<small>心/身/灵离开黄色体外壳，出现「窗口期」</small></div><label class="switch"><input type="checkbox" id="cond68_1" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">守护全部缺席<small>既无第五密度的紧握连接，也无支援小组的支持</small></div><label class="switch"><input type="checkbox" id="cond68_2" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">器皿自由跟随了实体<small>错置不违反其自由意志的唯一路径</small></div><label class="switch"><input type="checkbox" id="cond68_3" checked><span class="slider"></span></label></div>
+    <div id="condResult68"></div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 04 魔法防御的门槛 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>魔法防御为何不能直接教：第一变貌的门槛</h2></div>
+  <p class="sec-lead">Don 直言：除了核弹可能造成的心/身/灵完全解体，他想不出比这更糟的结果，于是请求 Ra 教授针对这种情境的魔法防御。Ra 的回应，是本集关于第一变貌最清晰的一课。</p>
+
+  <div class="card">
+    <h3>谁能在出神中自卫：几乎没有人</h3>
+    <div class="q">出神中的器皿为什么无法魔法自卫？</div>
+    <div class="quote">
+      <p class="en">This is also correct when applied, almost without exception, to those instruments working in trance which have not consciously experienced magical training in time/space in the, shall we say, present incarnation. The entities of your density capable of magical defense in this situation are extremely rare.</p>
+      <p class="zh">这不仅对器皿成立，而且几乎毫无例外地适用于所有在出神中工作、却在本次投生中未曾有意识地经历过时间/空间魔法训练的器皿——你们这个密度里，能在此情境中魔法自卫的实体极其罕见。</p>
+      <span class="src">—— Session 068 · (68.11)</span>
+    </div>
+    <div class="case"><b>没练过的泳姿：</b>一个从没下过水的人被浪卷离岸边——问题不在他不坚强，而在这个环境需要的技能他此生从未练习。出神中的心/身/灵面对第五密度猎手，缺的正是那套「没练过的泳姿」：时间/空间中的魔法训练。(68.11)</div>
+  </div>
+
+  <div class="card">
+    <h3>请求为何被拒：能力不能馈赠</h3>
+    <div class="q">后果如此严重，Ra 能不能破例直接教？</div>
+    <div class="quote">
+      <p class="en">This request lies beyond the First Distortion. The entity seeking magical ability must do so in a certain manner. We may give instructions of a general nature. This we have already done.</p>
+      <p class="zh">这个请求超出第一变貌的范围：寻求魔法能力的实体必须以特定方式自己去达成；Ra 只能给一般性指导——而一般性指导早已给过。</p>
+      <span class="src">—— Session 068 · (68.12)</span>
+    </div>
+    <div class="quote">
+      <p class="en">To take an entity before it is ready and offer it the scepter of magical power is to infringe in an unbalanced manner.</p>
+      <p class="zh">在实体尚未准备好时，把魔法力量的权杖递到它手里，是一种不平衡的侵犯。</p>
+      <span class="src">—— Session 068 · (68.12)</span>
+    </div>
+    <div class="plain">能力不能馈赠，只能生长——器皿已经开始平衡自我的过程，而这是一个漫长的过程；捷径本身就是那条不能走的路。</div>
+    <div class="case"><b>跑车钥匙：</b>驾校教练不会在学员第一次摸方向盘时，就交出赛道跑车的钥匙——把超出准备度的力量交出去不是帮忙，是制造事故。Ra 拒绝「直接教会魔法防御」正是同一个道理：准备好之前拿到权杖，权杖会先砸到自己。(68.12)</div>
+  </div>
+
+  <div class="card">
+    <h3>一条罕见的严厉叮嘱</h3>
+    <div class="q">Ra 为什么在这件事上「略带严厉」？</div>
+    <div class="quote">
+      <p class="en">We may suggest with some asperity[26] that the instrument never call upon Ra in any way while unprotected by the configuration which is at this time present.</p>
+      <p class="zh">Ra 带着少见的严厉叮嘱：在没有当前这套配置保护的情况下，器皿绝不要以任何方式呼唤 Ra。</p>
+      <span class="src">—— Session 068 · (68.12)</span>
+    </div>
+    <div class="case"><b>徒步者的铁律：</b>独自野营的人给自己立规矩：天黑之后、没有结伴、手机没电，绝不走夜路——规矩的严苛恰恰来自对风险的真实评估。Ra 对器皿的这句叮嘱，就是同一种「被风险校准过的纪律」。(68.12)</div>
+  </div>
+
+  <div class="card">
+    <h3>归类练习：Ra 为什么这样回应</h3>
+    <p>本集 Ra 有三种回应姿态：拒答（第一变貌）、给一般性指导、只提示而不代选。把下面每个提问归到正确的回应类型。</p>
+    <div id="sorterFd"></div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 05 一本书的回响 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>一本书的回响：承诺激活的可能性漩涡</h2></div>
+  <p class="sec-lead">讨论中 Don 意识到：小组几年前写的小说《埃斯梅拉达·斯威特沃特》里，「特罗斯特里克错置太空女孩心/身/灵复合体」的情节，与本集谈论的袭击几乎分毫不差。他问：我们当年做的那份工作，对我们的生命究竟意味着什么？Ra 先扫描了在场的每一位，确认可以开口。</p>
+
+  <div class="card">
+    <h3>承诺如何「调频」感知</h3>
+    <div class="q">为什么一本虚构作品，会与真实袭击对得上号？</div>
+    <div class="quote">
+      <p class="en">When the commitment was made between two of this group to work for the betterment of the planetary sphere, this commitment activated a possibility/probability vortex of some strength.</p>
+      <p class="zh">当小组中两位成员为改善行星球体而立下承诺时，这个承诺激活了一个具有相当强度的可能性/概率漩涡。</p>
+      <span class="src">—— Session 068 · (68.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The experience of generating this volume was unusual in that it was visualized as if watching the moving picture.</p>
+      <p class="zh">写这本书的体验不寻常：它不是「编」出来的，而是像看一部放映给自己看的电影——时间以「当下时刻」的形式变得可用。</p>
+      <span class="src">—— Session 068 · (68.14)</span>
+    </div>
+    <div class="plain">深度承诺会重新调频感知——承诺一立，与之相干的图景就开始向意识涌来。</div>
+    <div class="case"><b>流出来的剧本：</b>一对长期合作的编剧搭档说，剧本前四集「自己流了出来」，最后一集却磨了三个星期——不是能力退步，而是结局取决于角色尚未做出的选择。这正对应 Ra 的描述：主体像看电影般被「看见」，而非被编造。(68.14)</div>
+  </div>
+
+  <div class="card">
+    <h3>看得见开头，写不出结尾</h3>
+    <div class="q">为什么整本书都能「看见」，唯独结尾看不见？</div>
+    <div class="quote">
+      <p class="en">You could not end the volume, and the ending was not visualized as [was] the entire body of the material but [instead] was written or authored.</p>
+      <p class="zh">主体是被可视化出来的，结尾却怎么也看不见，只能被写出来、被创作。Ra 说，这是自由意志在整个造物中运作的作用——尚未被选择的未来，不会提前放映。</p>
+      <span class="src">—— Session 068 · (68.14)</span>
+    </div>
+    <p>Ra 同时确认：卷中包含对重大事件的观看，兼具象征性与具体性——那是在承诺释放的磁力吸引之下、在对这份使命之奉献的完整记忆恢复之后看见的。</p>
+    <div class="case"><b>立项之夜的推演：</b>一位公益项目发起人在立项当晚写下了一份推演笔记，五年后逐条对应了团队真实经历的波折——回头看，那不是预言，而是高度承诺状态下对「可能性空间」的敏锐扫描。Ra 确认这本书正是如此：属于使命记忆恢复后的产物。(68.14)</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 06 猎户的作业流程 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>猎户的作业流程：六步等一个「自由跟随」</h2></div>
+  <p class="sec-lead">弄清了「一次险情」与「一本书」，Don 转向防御的另一半：知己知彼。他先确认这样的提问在第一变貌之内——Ra 答了两个字：你在——然后请 Ra 从头追溯该实体的每一步。</p>
+
+  <div class="card">
+    <h3>六步推演：从觉察力量到等待跟随</h3>
+    <div class="q">这个实体从察觉小组存在到动手，究竟如何操作？</div>
+    <div class="demo-area">
+      <div class="flow-track" id="orionTrack"></div>
+      <div class="flow-detail" id="orionDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="orionPrev">上一步</button>
+        <button class="tri-btn" id="orionNext">下一步</button>
+      </div>
+    </div>
+    <div class="quote">
+      <p class="en">When the instrument leaves its physical vehicle it does so freely. Thus the misplacement of the mind/body/spirit complex of the instrument would not be a violation of its free will if it followed the entity freely. This is the process.</p>
+      <p class="zh">当器皿离开物理载具时，它是自由地这样做的。因此，若它自由地跟随该实体，错置它的心/身/灵复合体就不违反其自由意志。这就是流程。</p>
+      <span class="src">—— Session 068 · (68.16)</span>
+    </div>
+    <div class="plain">负面作业从头到尾都在等一个「你自己走过来」的瞬间——门必须从里面开。</div>
+    <div class="case"><b>独自夜攀的强手：</b>登山队里最强的队员若独自夜攀去「探路」，全队最坚固的一环反而成了最孤立的一环。Ra 强调这条（魔法工作之）路要「以小组为整体、不单独进行」，对应的正是这种结构性常识：保护以结伴为单位，不以个人勇气为单位。(68.16)</div>
+  </div>
+
+  <div class="card">
+    <h3>免疫之问：只能提示，不能代选</h3>
+    <div class="q">我们怎样才能作为一个小组，对此类影响免疫？</div>
+    <div class="quote">
+      <p class="en">We cannot speak to advise, but can only suggest, as we have before, that it would be appropriate for this group to embark upon such a path as a group, but not individually, for obvious reasons.</p>
+      <p class="zh">你们寻求的过程是你们自由选择的事。Ra 不能给建议，只能提示：这个小组以整体踏上这样一条道路是合适的，但不要单独进行——原因显而易见。</p>
+      <span class="src">—— Session 068 · (68.16)</span>
+    </div>
+    <div class="plain">防御的单位是小组，不是个人英雄；选择权始终留在你们手里，这是第一变貌的另一面。</div>
+    <div class="case"><b>越打越硬的小店：</b>一家小店被职业打假人反复骚扰后没有陷入内斗，反而把收货流程、票据管理磨得滴水不漏，团队凝聚力反而更强——对应 Ra 描述的那一步：「诱惑被忽略或拒绝后，力量源不但持续存在，还改善了和谐与服务之爱的内在连接」。攻击本身成了淬炼。(68.16)</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 07 收官 ============ -->
+<section class="chapter" id="s7">
+  <div class="sec-head"><span class="num">07</span><h2>收官：正面看见爱，负面靠聪明</h2></div>
+  <p class="sec-lead">最后一问直指核心：为什么会有实体「自由地」跟着负面存有走？Ra 的回答只有一句话，却是全集的钥匙。</p>
+
+  <div class="card">
+    <h3>一句话的钥匙</h3>
+    <div class="q">正面极性的人，为什么会跟着负面实体走？</div>
+    <div class="quote">
+      <p class="en">The positive polarity sees love in all things. The negative polarity is clever.</p>
+      <p class="zh">正面极性在万物中看见爱；负面极性则是聪明的。</p>
+      <span class="src">—— Session 068 · (68.17)</span>
+    </div>
+    <div class="plain">正面存有不设防，因为它预设万物之中皆有爱；负面存有不施力，只施聪明——顺着你的倾向说话，让门从里面被打开。Don 确认了那条铁律：负面极性若采用任何不借助其他自我自由意志的方式，就会失去魔法极化与力量。(68.18)</div>
+    <div class="case"><b>热心过头的中介：</b>一位新房东看中一个「热心代办一切」的中介——对方句句顺着她、处处替她省心，最后签下的却是全城最贵的一份合同。没有人强迫她，每一步都是她自己走过去的：负面力量的全部杠杆，就是你自己打开的那扇门。(68.17–68.18)</div>
+    <div class="case"><b>套路团队的窘境：</b>一个靠话术和催单成事的销售团队，一旦被明令禁止任何操控式话术，业绩立刻归零——他们的「力量」本来就寄生在别人的选择上。这正对应 Ra 确认的铁律：不借助其他自我的自由意志，负面极性就失去魔法极化与力量。(68.18)</div>
+  </div>
+
+  <div class="yuan-grid">
+    <div class="yuan-card"><span class="y-tag">正极</span><h4>正面极性</h4><p>在万物中看见爱（sees love in all things）；力量来自<b>和谐与服务之爱的内在连接</b>——诱惑与攻击反而使它更凝聚。</p></div>
+    <div class="yuan-card"><span class="y-tag">负极</span><h4>负面极性</h4><p>聪明（clever）；它的魔法力量必须<b>借助其他自我的自由意志</b>，否则极化与力量一并失去——本集那场劫夺的全部设计都围绕这条铁律。</p></div>
+    <div class="yuan-card"><span class="y-tag">守护</span><h4>险情中的「不放手」</h4><p>第五密度的 Latwii 紧握连接不放，加上支援小组的支持——正面的<b>持续在场</b>，对上了负面的<b>等待松手</b>。</p></div>
+    <div class="yuan-card"><span class="y-tag">底线</span><h4>高我的兜底</h4><p>即便最坏结果发生，这条路「不可避免地以好的结局收束」——<b>极性分岔的是路径，不是终点</b>。</p></div>
+  </div>
+
+  <div class="saying">
+    <p class="en">We thank you and leave you in the love and in the light of the One Infinite Creator. Go forth, therefore, rejoicing in the power and in the peace of the One Infinite Creator. Adonai.</p>
+    <p class="zh">我们感谢你们，并在太一无限造物主的爱与光中离开你们；向前去吧，在祂的力量与平安中欢欣。Adonai。</p>
+    <span class="src">—— Session 068 · (68.19)</span>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 068（<code>split/Ra_Session_068.md</code>）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra068-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+/* ===== 术语卡翻面 ===== */
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+/* ===== 第一章：问答脉络推进器 ===== */
+initStepper('mapTrack','mapDetail','mapPrev','mapNext',[
+ {t:'器皿与能量',d:'<span class="qa-q">问：身体能量完全耗尽，还要继续集会吗？</span><b>答：</b>靠小组中两位成员的转移能量才得以继续；若无转移，就该停止使用器皿。耗竭主要来自持续体验痛苦的累积效应。(68.1–68.2)'},
+ {t:'今天为何加开',d:'<span class="qa-q">问：为什么今天特意加开这次集会？</span><b>答：</b>Don 可能有一段时间不在，他有一个紧迫的问题——周日晚上，器皿在普通聚会中显然滑入了出神状态，他想弄清发生了什么。(68.4)'},
+ {t:'险情复盘',d:'<span class="qa-q">问：那晚究竟发生了什么？</span><b>答：</b>器皿正为第五密度的 Latwii 传声，心里冒出「但愿我在通灵 Ra」的念头并开始准备 Ra 接触；猎户实体趁机接近。Latwii 始终不放手，持续通讯让实体无法抓住器皿的心/身/灵复合体。(68.5)'},
+ {t:'错置计划',d:'<span class="qa-q">问：那个第五密度负面实体的计划是什么？</span><b>答：</b>趁心/身/灵复合体与黄色体外壳分离时夺取它，放进负面时间/空间；空壳将走向昏迷与身体死亡。此计划至今仍在进行。(68.6)'},
+ {t:'高我的抉择',d:'<span class="qa-q">问：被夺之后还有退路吗？</span><b>答：</b>高我可以让复合体留在时间/空间，但几乎不会无限期如此——其职能是经由其他自我经验造物主；正面复合体被负面环境包围只会经验黑暗，屏障自动形成。(68.7–68.8)'},
+ {t:'拒答与假设',d:'<span class="qa-q">问：以器皿为例会投生到哪个密度？</span><b>答：</b>回答它违反第一变貌，Ra 拒答；换成「第六密度流浪者」的假设即可回答：密度对应、极化强度尽可能匹配。(68.9–68.10)'},
+ {t:'防御的门槛',d:'<span class="qa-q">问：能否直接教我们魔法防御？</span><b>答：</b>不能——请求超出第一变貌；魔法能力须以特定方式自己求取，平衡自我已经开始且漫长；无保护配置下绝不要呼唤 Ra。(68.11–68.12)'},
+ {t:'一本书的回响',d:'<span class="qa-q">问：我们写的小说里「错置太空女孩」的情节意味着什么？</span><b>答：</b>承诺激活了可能性/概率漩涡：主体像看电影般被看见，结尾却写不出——自由意志在造物中运作；书中的图景是在使命记忆恢复后看见的。(68.13–68.14)'},
+ {t:'流程与收官',d:'<span class="qa-q">问：猎户实体如何一步步作业？为什么有人会自由跟随？</span><b>答：</b>觉察力量→派军团→诱惑被拒→亲自投射→找自由意志缺口→等待自由跟随；而「正面极性在万物中看见爱，负面极性是聪明的」，且负面极性不借他人自由意志就会失去魔法极化与力量。(68.15–68.18)'}
+]);
+
+/* ===== 第六章：猎户作业流程推进器 ===== */
+initStepper('orionTrack','orionDetail','orionPrev','orionNext',[
+ {t:'① 觉察力量',d:'<b>该实体觉察到一个力量源。</b>这个力量有能力为那些可能可收割的实体充能——这正是它想要让之失效的东西。'},
+ {t:'② 派出军团',d:'<b>它派出自己的军团，向力量源递上诱惑。</b>第一轮进攻不是亲自动手，而是试探与收买。'},
+ {t:'③ 诱惑被拒',d:'<b>诱惑被忽略或拒绝。</b>力量源不但持续存在，还改善了和谐与服务之爱的内在连接——攻击反而成了淬炼。'},
+ {t:'④ 亲自投射',d:'<b>实体断定必须亲自出手。</b>它通过投射进入力量源附近，评估局势——猎手从幕后走到了台前。'},
+ {t:'⑤ 找缺口',d:'<b>它受第一变貌约束，但可利用任何自由意志变貌。</b>器皿投生前关于物理载具的自由意志变貌是最有希望的目标；任何偏离服务他人的变貌也都合适。'},
+ {t:'⑥ 等自由跟随',d:'<b>器皿离开物理载体是自由的行为。</b>若它自由地跟随实体，错置便不违反其自由意志——这就是流程。'}
+]);
+
+/* ===== 第四章：归类练习 ===== */
+initSorter('sorterFd',[
+ {a:'发问者问：「以器皿为例，被夺后会投生到哪个密度？」',opts:['拒答 · 第一变貌','一般性指导','只提示不代选'],ans:'拒答 · 第一变貌',exp:'它指向一个具体实体的未来选择，回答等于干涉自由意志——Ra 明说这违反第一变貌 (68.9)'},
+ {a:'发问者改问：「假设一个第六密度流浪者遭此劫，会怎样？」',opts:['拒答 · 第一变貌','一般性指导','只提示不代选'],ans:'一般性指导',exp:'换成假设实体后成了规则问题，Ra 可以回答：密度对应、极化强度尽可能匹配 (68.10)'},
+ {a:'发问者请求：「Ra 能否教我们这种魔法防御？」',opts:['拒答 · 第一变貌','一般性指导','只提示不代选'],ans:'拒答 · 第一变貌',exp:'寻求魔法能力必须以特定方式自己完成，直接授予是不平衡的侵犯；一般性指导已经给过 (68.12)'},
+ {a:'发问者问：「这个负面实体如何着手错置的工作？」',opts:['拒答 · 第一变貌','一般性指导','只提示不代选'],ans:'一般性指导',exp:'Don 先确认提问在第一变貌之内（Ra：你在），Ra 随即完整描述了流程 (68.15–68.16)'},
+ {a:'发问者问：「小组怎样才能对此类影响免疫？」',opts:['拒答 · 第一变貌','一般性指导','只提示不代选'],ans:'只提示不代选',exp:'Ra 说不能建议、只能提示：以小组为单位踏上这条路是合适的，选择是你们的 (68.16)'}
+]);
+
+/* ===== 第三章：条件模拟器 ===== */
+function updateCond68(){
+  const a=document.getElementById('cond68_1').checked;
+  const b=document.getElementById('cond68_2').checked;
+  const c=document.getElementById('cond68_3').checked;
+  const r=document.getElementById('condResult68');
+  if(!a){
+    r.textContent='窗口期不存在：心/身/灵仍与黄色体外壳结合，实体无从抓取——错置的前提正是「分离状态」。Ra 对出神中器皿的评估证实了这一点 (68.6、68.11)。';
+    r.classList.add('fail');
+  }else if(!c){
+    r.textContent='门从里面才能打开：若器皿不自由跟随，错置便违反其自由意志；而负面极性一旦采用不借助他人自由意志的手段，就会失去魔法极化与力量——它宁可不出手 (68.16、68.18)。';
+    r.classList.add('fail');
+  }else if(!b){
+    r.textContent='本集的真实结局：Latwii 始终不放手，支援小组输送支持——持续通讯使实体「无法抓住」器皿的心/身/灵复合体，劫夺未遂 (68.5)。';
+    r.classList.remove('fail');
+  }else{
+    r.textContent='剧本成真：复合体被置于负面时间/空间，空壳走向昏迷与身体死亡；高我将选择留下、或允许同等极性的投生——但即便如此，这条长路仍会不可避免地以好的结局收束 (68.6)。';
+    r.classList.add('fail');
+  }
+}
+['cond68_1','cond68_2','cond68_3'].forEach(id=>document.getElementById(id).addEventListener('change',updateCond68));
+updateCond68();
+
+renderPath();
+</script>
+</body>
+</html>

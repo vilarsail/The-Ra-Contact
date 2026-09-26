@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 053 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 053 · 交互式学习模块</h1>
+  <p class="sub">这一集几乎全程是发问者为第一册读者补漏的「短暂问题」：Ra 一边付出极性代价破例作答，一边把星际联邦与猎户两种接触的原理、特征与分辨方法一次讲透。</p>
+  <div class="tagline">7 个主题 · 6 个学习步骤 · 19 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 边缘问题的代价</a>
+<a href="#s3">③ 唤醒流浪者</a>
+<a href="#s4">④ 身体检查的真相</a>
+<a href="#s5">⑤ 猎户的选择逻辑</a>
+<a href="#s6">⑥ 分辨试金石</a>
+<a href="#s7">⑦ 收官金句</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>弄清这场「短暂问题」集会为谁而设、聊了哪几块（§1）</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>算清边缘问题的代价</b><span>自由意志被缩减时，Ra 付出了什么（§2）</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>看懂联邦的接触方法</b><span>思想投射、流浪者与唤醒的目标（§3）</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>拆穿身体检查体验</b><span>潜意识期望与猎户恐吓的两个来源（§4）</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>推演猎户的选择逻辑</b><span>它为什么只找心智较弱者（§5）</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>练一遍分辨试金石</b><span>恐惧与末日，还是希望与服务；最后收官金句（§6-§7）</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ §1 本章地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：一场为读者而问的「短暂问题」集会</h2></div>
+  <p class="sec-lead">在此之前，Ra 的教导多沿义理主线推进；这一集则不同——发问者刚从拉勒米的活动回来，正准备把《一的法则》第一册传播给有过 UFO 经历的人。他担心书里的材料会让这类读者（其中许多是流浪者）误解自己的体验，于是请求暂停主线，集中问一系列「暂时性」的问题。这些问题琐碎，目的却很清楚：给读者清障。</p>
+  <div class="card">
+    <h3>本集在做什么</h3>
+    <p>全集二十四段问答可以归成一条线：<b>接触的来源与分辨</b>。发问者先说明来意，Ra 付出代价破例作答；随后依次展开——星际联邦（Confederation，服务他人的正面导向群体联盟）怎样接触与唤醒流浪者（wanderer，自愿从更高密度投生来助人的灵魂）；猎户（Orion group，服务自我的负面导向集团）怎样用「身体检查」恐吓人；猎户挑什么人下手；经历者如何分辨接触来源；最后以外形问答与收尾叮嘱结束。个人的健康与后勤问答，都收进下方折叠区。</p>
+    <div class="quote">
+      <p class="en">these questions, although for the most part transient, are aimed at eliminating certain distortions of understanding with respect to the material in Book I.</p>
+      <p class="zh">这些问题虽然大多是一时性的，但目标都在消除对第一册材料可能产生的理解偏差。</p>
+      <span class="src">—— Session 053 · (53.3)</span>
+    </div>
+    <div class="case">一位读者给出版方写信：她在某个深夜醒来，记得被光围住、被放到一张亮着软光的桌上「检查」，多年来她既觉得自己被选中、又怕自己是被入侵——她不知道该把这段经历归给帮助者还是操控者。这正是发问者想替第一册澄清的那类读者：不知道自己遭遇的接触来自光谱的哪一端。</div>
+    <div class="case">一位访谈主持人每次录制前都会胃痛、失眠——身体像被一只看不见的手把能量全数调去应付大事。器皿（instrument，通讯管道）集会前的疼痛与之同构：潜意识意志把可用的身体与生命能量全部调拨给接触，再叠加心灵攻击的加剧（53.1）。</div>
+  </div>
+  <div class="card">
+    <h3>问答脉络推进器：这场对话怎么展开</h3>
+    <p class="q">从器皿状态到收尾叮嘱，二十多个问答块是如何一步步聚焦到「接触的分辨」上的？点一遍就清楚。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="qaTrack"></div>
+      <div class="flow-detail" id="qaDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="qaPrev">← 上一问</button>
+        <button class="tri-btn" id="qaNext">下一问 →</button>
+      </div>
+    </div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 后勤 · 个人</span></summary>
+    <div class="body">
+      <p><b>(53.1) 器皿状态与锻炼：</b>状况如前所述；密集期已过，可改为每天锻炼一次——当前强度已在力量极限，长期蓄积生命能量、短期令人疲惫。集会前的疼痛来自潜意识意志的能量调拨，加上心灵攻击加剧原有状况，引起痉挛、头晕与心智变貌。</p>
+      <p><b>(53.2) 新成员加入：</b>该实体在灵性上属于这个团体、受欢迎；建议先安排特别的冥想时段，并以一张带字迹的照片冥想，让两位都偏向害羞孤独的实体预先建立和谐、不浪费能量。</p>
+      <p><b>(53.21) 银色斑点之问：</b>发问者代同伴问其身上的银色斑点，被 Ra 以「这构成侵犯」拒绝——他人的个人体验不由第三者代问。</p>
+      <p><b>(53.23) 球状闪电经历：</b>发问者与器皿童年时的球状闪电经历，被确认为「你们的族人前来祝福」。</p>
+      <p><b>(53.24) 收尾：</b>发问者为大量短暂问题致歉；Ra 说器皿很好，叮嘱仔细守护校准。</p>
+    </div>
+  </details>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ §2 边缘问题的代价 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>破例的代价：为什么 Ra 把这类问题称为「边缘」</h2></div>
+  <p class="sec-lead">地图铺好后，第一站就是发问者的头号问题：接触过 Betty Andreasson 的实体属于哪一方？这个问题看似只是给书补个注脚，Ra 却先声明它「处于边缘」、回答要付代价——这一段把自由意志法则（对他人选择空间的尊重）从口号变成了可以计价的账。</p>
+  <div class="card">
+    <h3>边缘问题：回答本身就是干预</h3>
+    <div class="q">发问者只想知道一次著名接触案例的「归属」，好让读者不误解——为什么 Ra 要先犹豫、先声明代价？</div>
+    <div class="quote">
+      <p class="en">This query is marginal. We will make the concession towards information with some loss of polarity due to free will being abridged. We request that questions of this nature be kept to a minimum.</p>
+      <p class="zh">这个问题处于边缘。我们会做出让步、提供信息——但由于自由意志因此被削减，会损失一些极性。我们请求这类问题尽量少问。</p>
+      <span class="src">—— Session 053 · (53.3)</span>
+    </div>
+    <p>Ra 给出的理由在回答本身：这类个案信息的价值，本可以由体验者自己去发现；别人替他说破，就占用了一部分他本该自己完成的寻找。Ra 付出的是<b>极性（polarity，服务他人或服务自我取向的强度）</b>——做服务他人之事本可增益极性，但因缩减了自由意志而打了折扣。</p>
+    <div class="plain">回答本该由体验者自己发现的答案，等于替对方用掉了一部分自由选择的空间——极性损失就是这笔账的记账方式。</div>
+    <div class="analogy"><b>比喻：</b>心理咨询师不会替来访者决定「要不要离婚」，只帮他看清自己的感受——因为替他决定，就剥夺了他本来要做的功课。Ra 详答一个个案也付出同类代价：说得越具体，自由意志被占用的越多。</div>
+    <div class="case">你把日记借给朋友，他说「要不要给别人看，我绝不转述」；你答「给你看不是要你替我保密，看完怎么处理是你的事」——这正是 Ra 对「要不要发表」的态度：所给的是自由给予的，只由发问者判断（53.4）。</div>
+    <div class="case">一部讲绝症的纪录片不用血腥画面吓人，而是让主人公走过死亡与告别、最后落在家人重建生活上——观众离场时带着的是希望而非恐惧。联邦式接触用的是同一套符号学：死亡、复活、爱与和平，讲新的黎明而非末日（53.3）。</div>
+  </div>
+  <div class="card">
+    <h3>那个个案长什么样</h3>
+    <div class="quote">
+      <p class="en">The entities in this and some other vividly remembered cases are those who, feeling the need to plant Confederation imagery in such a way as not to abrogate free will, use the symbols of death, resurrection, love, and peace…</p>
+      <p class="zh">在这个以及其他一些被清晰记住的案例里，那些实体感到需要以不废除自由意志的方式植入联邦的意象，于是使用死亡、复活、爱与和平的符号……</p>
+      <span class="src">—— Session 053 · (53.3)</span>
+    </div>
+    <p>Ra 还交代了执行流程：这类接触先由联邦成员谨慎挑选「家园振动相似」的实体，再提交土星议会（Council of Saturn，联邦的审批机构）批准，获批后才执行；特征是思想过程不痛苦、讯息讲新的黎明时代而非末日。至于发问者顺势追问的「蓝皮书」，Ra 只答了一个「不能」——拒答与作答一样，都是自由意志法则的执行。</p>
+    <div class="quote">
+      <p class="en">This project then goes before the Council of Saturn and, if approved, is completed.</p>
+      <p class="zh">这样的计划随后提交土星议会，一经批准便付诸执行。</p>
+      <span class="src">—— Session 053 · (53.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">That which we offer you is freely given and subject only to your discretion.</p>
+      <p class="zh">我们所给予的是自由给予的，只听从你的判断。</p>
+      <span class="src">—— Session 053 · (53.4)</span>
+    </div>
+    <div class="plain">个案可以答（付代价），却不能替人保密或替人决定——信息的取舍权始终在发问者手里。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ §3 唤醒流浪者 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>唤醒流浪者：星际联邦的接触方法</h2></div>
+  <p class="sec-lead">代价付了，接下来问正面那一侧：服务他人的星际联邦用什么技术、什么形式与人接触？这一章的答案围绕一个词——唤醒。联邦接触的目的不是展示奇迹，而是轻轻推醒那些忘了自己是谁的流浪者。</p>
+  <div class="card">
+    <h3>总原则：最好的接触，就是正在进行的这一场</h3>
+    <div class="q">发问者请 Ra 列举联邦接触人类的种种技术——他预期的恐怕是一份清单，Ra 却先给了一个出人意料的第一条。</div>
+    <div class="quote">
+      <p class="en">The most efficient mode of contact is that which you experience at this space/time. The infringement upon free will is greatly undesired.</p>
+      <p class="zh">最有效的接触模式，就是你们此刻在这个空间/时间正体验的这一场。对自由意志的侵犯是极不受欢迎的。</p>
+      <span class="src">—— Session 053 · (53.7)</span>
+    </div>
+    <p>发问者先问「能不能讲」，Ra 答「我们可以」却不展开，直到被追问才说——这种节奏本身就是信息：清单不如原则。原则有两条：最有效的接触是像这样一问一答的教导式通讯；而由于侵犯自由意志极不受欢迎，构成所谓「近距离接触」的思想投射（thought projection，投进意识里的影像与情节）只以流浪者为对象。</p>
+    <div class="analogy"><b>比喻：</b>问路时，最有效的方式不是收集第三方转述，而是直接问当事人——Ra 通讯就是人类与联邦之间「直接问当事人」的通道；天上划过的奇观再炫，也只是海报而非对话。</div>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">星际联邦</div><div class="sub">Confederation</div><div class="tap">点击翻开</div></div><div class="back">服务他人的正面导向社会记忆复合体联盟，本集的「接触方」之一；回答边缘问题也会损耗其极性。<em>像一支只做心理支持的救援队——想帮你，但绝不动手拖你。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">猎户集团</div><div class="sub">Orion group</div><div class="tap">点击翻开</div></div><div class="back">服务自我的负面导向群体，以恐吓与展示控制来施加影响；接触的大多数其实是猎户导向的（53.15）。<em>像以制造恐惧为饵的骗局团伙——吓你，是为了让你顺从。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">流浪者</div><div class="sub">wanderer</div><div class="tap">点击翻开</div></div><div class="back">从更高密度自愿投生到地球、协助这个周期的灵魂；本集说，正面「近距离接触」的对象只有他们。<em>像被派回老家的援建队员——故乡的暗号能唤醒他们。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">思想形态</div><div class="sub">thought-form</div><div class="tap">点击翻开</div></div><div class="back">由思想构成、带上形状与外观的体验载体；主观体验，大多不发生在这个密度（53.14）。<em>像一场清醒梦——逼真、主观、事后却找不到物理痕迹。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">思想投射</div><div class="sub">thought projection</div><div class="tap">点击翻开</div></div><div class="back">接触方在思想层面投放的影像与情节，构成所谓「近距离接触」与流浪者的会面。<em>像投到脑内小屏幕的私人放映，剧本随观众调整。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">社会记忆复合体</div><div class="sub">social memory complex</div><div class="tap">点击翻开</div></div><div class="back">记忆与觉知完全共享的群体意识；Ra 即属此类，联邦由这样的群体组成。<em>像全员共享一个大脑的团队，谁的经验都是大家的经验。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">土星议会</div><div class="sub">Council of Saturn</div><div class="tap">点击翻开</div></div><div class="back">星际联邦中审批接触项目的机构；本集的个案就是先立项、获批、再执行的。<em>像先过立项评审再动工的项目委员会。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">极性</div><div class="sub">polarity</div><div class="tap">点击翻开</div></div><div class="back">服务他人或服务自我的取向强度；做合于所选方向的事会增益它，缩减他人自由意志则会折损它。<em>像电池电量——方向对、做得实，蓄得越满。</em></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Morris 案例：一次唤醒的标准流程</h3>
+    <div class="q">发问者要一个具体例子：流浪者与正面社会记忆复合体（social memory complex，记忆与觉知完全共享的群体意识）的会面，体验起来是什么样？</div>
+    <div class="quote">
+      <p class="en">However, the inner voice alerted the one known as Morris to go by itself to another place, and there an entity, with the thought-form shape and appearance of the other contact, appeared and gazed at this entity, thus awakening in it the desire to seek the truth of this occurrence and of the experiences of its incarnation in general.</p>
+      <p class="zh">然而，内在声音提醒被称为 Morris 的实体独自前往另一个地方，在那里，一个带着先前接触之形状与外观的实体现身，凝视着它，从而在它之内唤醒了寻求这一事件与整个投生经历之真相的渴望。</p>
+      <span class="src">—— Session 053 · (53.8)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The feeling of being awakened or activated is the goal of this type of contact. The duration and imagery used varies depending upon the subconscious expectations of the wanderer which is experiencing this opportunity for activation.</p>
+      <p class="zh">被唤醒或被激活的感觉，就是这类接触的目标。持续时间与所用的意象，随经历这次激活机会的流浪者的潜意识期望而变化。</p>
+      <span class="src">—— Session 053 · (53.8)</span>
+    </div>
+    <div class="plain">不吓你、不抓你、不给你任务——只让你带着一个问题离开：我这一生，到底是怎么回事？</div>
+    <div class="case">Morris 的经历本身：朋友圈里其他人都看得见那个负面接触，唯独他看不见；内在声音叫他独自去另一处，一个实体现身、只是凝视他——这一眼唤醒了他求真与追问自己一生的渴望。唤醒本身，就是这次接触的全部目的。</div>
+    <div class="case">深夜刷手机，一条没有惊吓、没有噱头的短片忽然击中你：「我这样下去，到底要去哪里？」接下来几周你开始找书、早起、冥想。一次唤醒未必需要飞行器——方法灵活，常常发生在睡眠或最平常的日常里（53.12）。</div>
+  </div>
+  <div class="card">
+    <h3>方法多样，核心只有一个</h3>
+    <div class="quote">
+      <p class="en">The center of each approach is the entrance into the conscious and subconscious in such a way as to avoid causing fear and to maximize the potential for an understandable subjective experience which has meaning for the entity.</p>
+      <p class="zh">每种方法的核心，都是以不引起恐惧的方式进入意识与潜意识，并把对该实体有意义的、可理解的主观体验的潜力放到最大。</p>
+      <span class="src">—— Session 053 · (53.12)</span>
+    </div>
+    <p>Ra 说方法多种多样：许多发生在睡眠中，其余穿插在清醒时的活动之间，不必经过「近距离接触」那一套。衡量标准只有一条——不引起恐惧，且体验对该实体有意义、能被理解。</p>
+    <div class="case">一个总梦见白色房间与星空的人，多年后读到「流浪者」一词忽然对上号，却发现自己回想那个梦时只有平静。联邦式接触以「不引起恐惧」为底线，把体验调成对该实体最有意义的形状（53.12）。</div>
+    <div class="case">一位备考的上班族连续几晚梦见有人递给他一本看不清书名的册子，醒来并无惊吓，反而踏实了几分——这种「睡眠里的温和提示」正是 Ra 所说不必伴随奇观的唤醒路径（53.12）。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ §4 身体检查的真相 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>「身体检查」的真相：潜意识期望与猎户恐吓</h2></div>
+  <p class="sec-lead">正面那一侧讲完了，发问者把镜头转向流传最广的场景：被带上飞行器「做检查」。他的问题是——星际联邦和猎户两侧的人，是不是都在经历同一件事？Ra 的回答先纠正了问题本身，再把这个体验拆成两个来源。</p>
+  <div class="card">
+    <h3>期望决定体验的模样</h3>
+    <div class="quote">
+      <p class="en">The subconscious expectations of entities cause the nature and detail of thought-form experience offered by Confederation thought-form entities.</p>
+      <p class="zh">实体的潜意识期望，决定了联邦思想形态实体所提供的思想形态体验的性质与细节。</p>
+      <span class="src">—— Session 053 · (53.13)</span>
+    </div>
+    <p>这是理解「身体检查」的钥匙：体验的剧本不是单方面塞给你的，它顺着你的潜意识期望来。若一个流浪者期待身体检查，他就会经历身体检查——但会以期望所允许的最低惊恐与不适被体验。</p>
+    <div class="analogy"><b>比喻：</b>潜意识期望像点菜——后厨（接触方）按你的口味上菜；联邦尽量少盐少辣（把惊恐压到最低），猎户却故意端上你最怕的那道。</div>
+    <div class="plain">同一幕「检查」戏，剧本由体验者的潜意识合写；恐惧的剂量，取决于期望给接触方留了多少余地。</div>
+    <div class="case">同一间体检室，怕针的人腿软，老兵谈笑自若——医生的动作一样，紧张程度全看你对「体检」的想象。联邦的思想形态体验也顺着潜意识期望来：你期待什么，就把惊恐压到期望允许的最低（53.13）。</div>
+    <div class="case">同样是「被人带上船」的梦：不会游泳的人梦见被按进海里，水手却梦见在甲板上吹风——梦把素材按做梦者的期待裁剪。思想形态体验就是这样主观的东西，大多并不发生在这个密度（53.14）。</div>
+  </div>
+  <div class="card">
+    <h3>猎户版本：恐吓、羞辱与展示控制</h3>
+    <div class="q">发问者以为两侧的「检查」大同小异——Ra 为什么说他这一问「表明不正确的思维」？</div>
+    <div class="quote">
+      <p class="en">The Orion group uses the physical examination as a means of terrifying the individual and causing it to feel the feelings of an advanced second-density being such as a laboratory animal.</p>
+      <p class="zh">猎户集团利用身体检查来恐吓个体，让它感受到一个先进的第二密度存有——比如实验室动物——的感受。</p>
+      <span class="src">—— Session 053 · (53.14)</span>
+    </div>
+    <p>区别在意图：猎户的「检查」不是了解你，而是让你知道自己被摆布——把人降到实验室动物的位置，部分性经验也是这一体验的子类型，目的都一样：展示猎户集团对地球居民的控制。而这些思想形态体验是主观的，大多并不发生在这个密度。</p>
+    <div class="quote">
+      <p class="en">The thought-form experiences are subjective and, for the most part, do not occur in this density.</p>
+      <p class="zh">思想形态体验是主观的，且绝大多数并不发生在这个密度之中。</p>
+      <span class="src">—— Session 053 · (53.14)</span>
+    </div>
+    <div class="case">网络上流传最广的「绑架」叙事，几乎都有冷器械、动弹不得、任人摆布——讲者离开时只剩羞耻与恐惧。Ra 指出猎户正是用这种「检查」让人感到自己像实验室动物，以展示控制（53.14）。</div>
+    <div class="case">有人回忆一段说不清的经历，只记得「完全说不上话、被盯着、像件物品」——离开时对世界多了一分恐惧；对照 Morris 那一眼带来的求真渴望，两种「相遇」的意图高下立判（53.8、53.14）。</div>
+  </div>
+  <div class="card">
+    <h3>双重性质：接触确实有两种，但多数不是善意的</h3>
+    <div class="quote">
+      <p class="en">This is correct, although the preponderance of contacts is Orion-oriented.</p>
+      <p class="zh">这是正确的，尽管接触的大多数是猎户导向的。</p>
+      <span class="src">—— Session 053 · (53.15)</span>
+    </div>
+    <p>发问者的结论被确认了一半：「近距离接触」确实是双重的——可以是联邦，也可以是猎户。但 Ra 补上了关键的一方倾斜：就数量而言，大多数接触是猎户导向的。这为下一章的问题做了铺垫：猎户到底挑什么人？</p>
+    <div class="plain">天上的遭遇战真实存在，且噪音多、信号少——认出信号，需要下一章的试金石。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ §5 猎户的选择逻辑 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>猎户的选择逻辑：为什么只找心智较弱者</h2></div>
+  <p class="sec-lead">既然多数接触是猎户导向的，自然的追问是：正面极化的流浪者会不会也撞上猎户？猎户会不会专门盯着收割（harvest，密度周期末的极性筛选）光谱两端的高极化实体？Ra 先承认这题「难以准确回答」，再给出一段非常「商业分析」的答案——连猎户的行动都有成本收益计算。</p>
+  <div class="card">
+    <h3>正面流浪者遇上猎户：罕见，且原因清楚</h3>
+    <div class="q">发问者追问：正面极化的流浪者是否也曾与猎户发生「近距离接触」？为什么？</div>
+    <div class="quote">
+      <p class="en">When it occurs it is quite rare and occurs either due to the Orion entities’ lack of perception of the depth of positivity to be encountered or due to the Orion entities’ desire to, shall we say, attempt to remove this positivity from this plane of existence. Orion tactics normally are those which choose the simple distortions of mind which indicate less mental and spiritual complex activity.</p>
+      <p class="zh">它发生得相当罕见，要么因为猎户实体未能察觉将要遇到的正面性有多深，要么因为它们想把这份正面性从这个存在层面移除。猎户策略通常选择那些心智与灵性复合体活动较少的简单心智变貌。</p>
+      <span class="src">—— Session 053 · (53.11)</span>
+    </div>
+    <div class="plain">正面流浪者不是猎户的目标画像——撞上只发生在两种情形：看走眼了，或者蓄意拔钉子。</div>
+  </div>
+  <div class="card">
+    <h3>一笔成本账：为什么不碰高极化实体</h3>
+    <div class="q">猎户是否会瞄准收割光谱两端——无论正面还是负面极化——的地球实体？</div>
+    <div class="quote">
+      <p class="en">The most typical approach of Orion entities is to choose what you might call the weaker-minded entity that it might suggest a greater amount of Orion philosophy to be disseminated.</p>
+      <p class="zh">猎户实体最典型的做法，是挑选你或许会称为心智较弱的对象，以便向它建议传播更多的猎户哲学。</p>
+      <span class="src">—— Session 053 · (53.16)</span>
+    </div>
+    <p>Ra 接着讲了两条「风险线」：其一，少数猎户会被极化程度更高的负面实体召唤而分享信息（就像 Ra 此刻所做的一样），但这是有风险的——收割级的负面行星实体常常反过来指挥猎户，这种控制权之争一旦失利，会损害猎户集团的极性。其二，误触高极化的正面实体，几乎总会重创猎户部队，除非能把对方去极化（depolarize，把一个实体从已选极性上拉下来）——而这几乎闻所未闻。</p>
+    <div class="quote">
+      <p class="en">The resulting struggle for mastery, if lost, is damaging to the polarity of the Orion group.</p>
+      <p class="zh">由此产生的控制权之争，一旦失利，就会损害猎户集团的极性。</p>
+      <span class="src">—— Session 053 · (53.16)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Therefore, the Orion group prefers to make physical contact only with the weaker-minded entity.</p>
+      <p class="zh">因此，猎户集团宁可只与心智较弱的实体进行物理接触。</p>
+      <span class="src">—— Session 053 · (53.16)</span>
+    </div>
+    <div class="analogy"><b>比喻：</b>猎户的行动像钓鱼者挑水域——不去大鱼出没的深水（高极化实体），只在浅滩下网（心智较弱者）；深水里有把鱼线拽断的力量。</div>
+    <div class="case">电信诈骗的话术本从不发给律师和警察，专挑独居老人下手——不是因为老人更「坏」，而是因为更难被反驳的头脑才能被持续灌输。猎户选择心智较弱者，为的是散播更多猎户哲学（53.16）。</div>
+    <div class="case">一家大公司想把小团队整体收编，谈判桌上却被对方创始人反将一军，赔了名声还丢了几个骨干——试图指挥比自己更硬的对手，控制者先受损。猎户被高极化负面实体召唤时也面对这种「争夺控制权」，一旦失手，极性受损（53.16）。</div>
+    <div class="case">论坛上的挑衅者专回新手帖，遇到真正的行家就绕道——行家一句拆解就能让围观者看清是非，想拉人下水的反而下不来台。猎户误触高极化正面实体几乎必然自伤，因为去极化几乎闻所未闻（53.16）。</div>
+    <h3 style="margin-top:18px">条件模拟器：猎户的注意力会落到谁头上</h3>
+    <p>把 Ra 给出的线索拆成三个开关，拨一拨，看猎户的「名单」是怎么筛人的。</p>
+    <div class="cond-row"><div class="name">心智与灵性复合体活动较少<small>变貌较简单的头脑——猎户策略偏好的对象（53.11）</small></div><label class="switch"><input type="checkbox" id="condA"><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">独自一人、没有团体借力<small>不在互相给予力量的团体中（53.22）</small></div><label class="switch"><input type="checkbox" id="condB"><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">被误判了正面性的深度<small>猎户看走眼，或蓄意想移除正面性（53.11）</small></div><label class="switch"><input type="checkbox" id="condC"><span class="slider"></span></label></div>
+    <div id="condResult">拨动上方开关，看看猎户的选择逻辑如何运转。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ §6 分辨试金石 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>分辨试金石：恐惧与末日，还是希望与服务</h2></div>
+  <p class="sec-lead">两种接触都存在、且多数是猎户导向——那么一个有过遭遇经历的人，该怎么办？Ra 给出的判据朴素得出奇：不查飞行器型号，不验仙女座还是猎户座，只看接触的核心与它在你身上结出的果子。</p>
+  <div class="card">
+    <h3>看核心，看影响</h3>
+    <div class="q">发问者总结：经历者必须审视接触的核心及其对自己的影响，才能判断来源——这个方法对吗？</div>
+    <div class="quote">
+      <p class="en">If there is fear and doom, the contact was quite likely of a negative nature. If the result is hope, friendly feelings, and the awakening of a positive feeling of purposeful service to others, the marks of Confederation contact are evident.</p>
+      <p class="zh">如果充满恐惧与末日感，这次接触就很可能属于负面性质。如果结果是希望、友善的情感，以及一种以目的明确的服务他人为方向的正面感受的觉醒，那么星际联邦接触的印记就很明显。</p>
+      <span class="src">—— Session 053 · (53.17)</span>
+    </div>
+    <div class="analogy"><b>比喻：</b>分辨果树不看树干的花纹，看果子——尝一口是甜是苦，树的品种就瞒不住了。体验在你身上留下的果实（希望或恐惧），就是接触来源的签名。</div>
+    <div class="plain">来源不由外观决定，由果实决定：恐惧与末日属猎户，希望、友善与服务之感属联邦。</div>
+    <div class="case">深夜两条陌生短信：一条说「大祸临头，快转账消灾」，一条只说「别怕，去做你眼前能做的事」。前者靠恐惧夺走你的判断，后者唤醒你的责任感——分辨接触来源的试金石与之同构（53.17）。</div>
+    <div class="case">两个有同样无法解释经历的人：一个成了贩卖恐慌的主播，靠「末日将至」涨粉；一个去做了临终关怀志愿者，说那次相遇让他想「为别人做点什么」。同样的素材结出相反的果实——Ra 说，看接触的核心与它对你的影响（53.17）。</div>
+    <h3 style="margin-top:18px">试一试：哪种接触？</h3>
+    <p>下面五个场景全部来自现代日常，请判断它们更接近哪一种接触的特征。</p>
+    <div id="sortArea"></div>
+  </div>
+  <div class="card">
+    <h3>「近距离」这个词，Ra 觉得很好笑</h3>
+    <p>在回答「流浪者是否有过与着陆的思想形态飞行器接触」时，Ra 顺带拆掉了「近距离」这个词本身——这段话也是全集中少见的 Ra 幽默。</p>
+    <div class="quote">
+      <p class="en">We may note that in a universe of unending unity the concept of a “close encounter” is humorous, for are not all encounters of a nature of self with self? Therefore, how can any encounter be less than very, very close?</p>
+      <p class="zh">我们可以指出：在一个无尽合一的宇宙里，「近距离接触」这个概念是幽默的——难道一切相遇不都是自我与自我的相遇吗？因此，又有什么相遇能不是非常、非常近的呢？</p>
+      <span class="src">—— Session 053 · (53.9)</span>
+    </div>
+    <p>这句话把本集的实用话题接回了更大的框架：既然一切相遇都是自我与自我相遇，那么真正的问题从来不是「他们离我们多近」，而是「这次相遇唤起了什么」。</p>
+    <div class="table-wrap">
+      <table class="nine">
+        <thead><tr><th>术语</th><th>英文</th><th>通俗理解</th></tr></thead>
+        <tbody>
+          <tr><td>思想投射</td><td>thought projection</td><td>投进意识里的「私人放映」——影像与情节都发生在思想层面</td></tr>
+          <tr><td>思想形态</td><td>thought-form</td><td>由思想构成、带上形状与外观的体验载体，大多不发生在这个密度</td></tr>
+          <tr><td>近距离接触</td><td>close encounter</td><td>Ra 笑称这个词不成立——一切相遇都是自我与自我相遇</td></tr>
+          <tr><td>心智较弱实体</td><td>weaker-minded entity</td><td>心智与灵性复合体活动较少、变貌较简单的对象，猎户物理接触的首选</td></tr>
+          <tr><td>去极化</td><td>depolarize</td><td>把一个实体从已选的极性上拉下来——对正面实体几乎不可能</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ §7 收官 ============ -->
+<section class="chapter" id="s7">
+  <div class="sec-head"><span class="num">07</span><h2>收官：外形、独行的风险与本集金句</h2></div>
+  <p class="sec-lead">补漏进入尾声，剩下的问答短小而零散，却各有用处：外形问答告诉读者「别按长相站队」；两次拒答与一次生病的追问，则把自由意志与团体支持这两个主题在收尾处再敲一遍。</p>
+  <div class="card">
+    <h3>别按长相站队</h3>
+    <div class="q">发问者问联邦实体大多长什么样、能不能冒充地球人——这个「追星式」的好奇，Ra 却答得很有分寸。</div>
+    <div class="quote">
+      <p class="en">The fourth-density Confederation entity looks variously depending upon the, shall we say, derivation of its physical vehicle.</p>
+      <p class="zh">第四密度的联邦实体外形各异，取决于其物理载具的来源。</p>
+      <span class="src">—— Session 053 · (53.18)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Those of this nature are most often fifth-density.</p>
+      <p class="zh">具有这种性质的实体，多半属于第五密度。</p>
+      <span class="src">—— Session 053 · (53.19)</span>
+    </div>
+    <p>能完全融入人群、以地球人样貌出现的，多半已是第五密度的实体——猎户那一侧同样如此（53.20）。换言之，外形不提供任何判断依据，这与上一章「看果实不看长相」的试金石严丝合缝。至于发问者代同伴问的银色斑点，Ra 以「这构成侵犯」拒绝（53.21）——他人的个人体验，不由第三者代问，这也是一课。</p>
+    <div class="plain">长相、物种、名词都不能定善恶；能定善恶的，只有讯息带来的果实。</div>
+  </div>
+  <div class="card">
+    <h3>独自宣讲的风险：团体为什么重要</h3>
+    <div class="q">发问者问自己为何在外来演讲的场合病倒——Ra 先确认他的自我判断正确，再给出一个所有做事者都该记住的规律。</div>
+    <div class="quote">
+      <p class="en">The space/time of your allotted speaking was drawing near, and you came under Orion attack due to the great desire of some positively oriented entities to become aware of the Law of One. This may be expected, especially when you are not in a group lending strength to each other.</p>
+      <p class="zh">你被分配的演讲时刻临近了，由于一些正面导向实体强烈渴望认识一的法则，你遭到了猎户攻击。这是可以预期的，尤其当你不在一个彼此给予力量的团体中时。</p>
+      <span class="src">—— Session 053 · (53.22)</span>
+    </div>
+    <div class="plain">做的事越有光，越要结伴：团体里彼此借力，是独行者没有的防护。</div>
+    <div class="case">一个志愿者小队每次外展都两三人同行、回来互相复盘；有一次有人单独行动，回来直说「这次特别不顺」。Ra 的提醒与之相同：不在互相给予力量的团体中时，攻击尤其可以预期（53.22）。</div>
+    <div class="case">发问者独自去外地演讲前突然病倒，Ra 扫描后确认这是猎户攻击——因为正面实体强烈渴望认识一的法则；集体工作彼此借力，正是这种时刻的防护（53.22）。</div>
+  </div>
+  <div class="card">
+    <h3>伏笔与本集的位置</h3>
+    <p>这一集的答案将随第一册一起抵达读者手中：有过接触经历的人从此有了分辨的工具——看核心、看影响、看果实。而收尾那句「仔细守护校准」，与器皿的能量状态一样，是贯穿整个通讯的后勤线；发问者为短暂问题致歉，Ra 却没有责备——破例作答的代价，双方都算得清楚，也都认了。</p>
+  </div>
+  <div class="saying">
+    <p class="en">We leave you now, my friends, in the love and in the light of the One Infinite Creator. Go forth, therefore, rejoicing in the power and the peace of the Infinite Creator.</p>
+    <p class="zh">我们现在离开你们，我的朋友们，在太一无限造物主的爱与光中。向前去吧，在无限造物主的力量与和平中欢欣鼓舞。</p>
+    <span class="src">—— SESSION 053 · (53.24)</span>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 053（`split/Ra_Session_053.md`）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra053-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+ {t:'器皿状态与私人问题',d:'<span class="qa-q">问（53.1）：器皿状况如何？能否每天锻炼一小时？集会前的疼痛是不是猎户攻击？</span><b>答：</b>状况如前所述；密集期已过，可改为每天锻炼一次——当前强度已在力量极限，长期有益、短期疲惫。集会前的疼痛主因是潜意识意志把可用的身体与生命能量全部调拨给接触，加上心灵攻击加剧原有状况，引起痉挛、头晕与心智变貌。'},
+ {t:'新成员加入的安排',d:'<span class="qa-q">问（53.2）：某位新朋友能否不久后参加集会？</span><b>答：</b>该实体在灵性上属于这个团体、受欢迎；建议在正式参与前安排特别冥想时段，并用一张带字迹的照片冥想，预先建立和谐，避免两位都偏向害羞孤独的实体在问候时浪费能量。'},
+ {t:'本集目的：为第一册补漏',d:'<span class="qa-q">问（53.3）：拉勒米之行让发问者意识到，第一册可能让 UFO 经历者与流浪者误解自己的体验。</span><b>答：</b>他声明本集问题虽多为短暂性质，目标都是消除对第一册材料的理解偏差——答不出的就跳过。'},
+ {t:'边缘问题与极性代价',d:'<span class="qa-q">问（53.3-53.5）：接触 Betty Andreasson 的实体属于哪一方？信息要不要保密？「蓝皮书」是什么？</span><b>答：</b>这个问题是边缘性的——回答会因自由意志被缩减而损失极性，Ra 请求此类问题保持最少；所给的一切是自由给予的，只由发问者判断；蓝皮书则直接拒答。'},
+ {t:'联邦接触的总原则',d:'<span class="qa-q">问（53.6-53.7）：联邦都用什么技术、什么形式与人接触？</span><b>答：</b>最有效的接触模式就是此刻正在进行的这一场；对自由意志的侵犯极不受欢迎，因此构成所谓「近距离接触」的思想投射只以流浪者为对象。'},
+ {t:'Morris 案例与唤醒目标',d:'<span class="qa-q">问（53.8）：流浪者与正面社会记忆复合体的会面是什么体验？</span><b>答：</b>Morris 对朋友圈经历的负面接触视而不见，却受内在声音指引独赴他处，被一个凝视他的思想形态实体唤醒了求真之渴望——被唤醒或激活的感觉就是目标，时长与意象随潜意识期望而变。'},
+ {t:'唤醒方法的多样与核心',d:'<span class="qa-q">问（53.12-53.13）：联邦唤醒流浪者的一般方法是什么？「身体检查综合征」算什么？</span><b>答：</b>方法多样、灵活，不必经过「近距离接触」综合征；核心是进入意识与潜意识——避免恐惧、最大化对该实体有意义的可理解体验；而思想形态体验的性质与细节由潜意识期望决定，若期待身体检查，就会以期望允许的最低惊恐被体验。'},
+ {t:'身体检查的两种来源',d:'<span class="qa-q">问（53.14-53.15）：被带上双方飞行器的人，是否都在经历看似身体检查的体验？</span><b>答：</b>这一问表明不正确的思维：猎户用它恐吓个体、使其感到自己是被摆布的实验室动物般的存在，意图是展示控制；思想形态体验是主观的，大多不发生在这个密度。接触确实双重，但多数是猎户导向。'},
+ {t:'流浪者会遇上猎户吗',d:'<span class="qa-q">问（53.9-53.11）：正面极化的流浪者会与猎户发生「近距离接触」吗？为什么？</span><b>答：</b>会，但相当罕见——或因猎户未察觉正面性的深度，或因想把这个正面性从存在层面移除；猎户策略通常挑心智与灵性复合体活动较少的简单心智变貌。'},
+ {t:'猎户的选择逻辑',d:'<span class="qa-q">问（53.16）：猎户是否瞄准收割光谱两端的高极化实体？</span><b>答：</b>这是最难准确回答的一问：最典型做法是选心智较弱者，以便散播更多猎户哲学；与高极化负面实体往来有被反指挥的风险，误触正面实体则几乎总会自伤——因此猎户只与心智较弱者做物理接触。'},
+ {t:'分辨试金石与收尾',d:'<span class="qa-q">问（53.17-53.24）：经历者如何分辨？实体长什么样？为何演讲前生病？</span><b>答：</b>看接触的核心与影响——恐惧与末日属负面，希望与服务之感属联邦；第四密度联邦实体外形随载具来源各异，能冒充地球人的多是第五密度；独处无团体借力时，猎户攻击尤其可以预期。最后叮嘱：仔细守护校准，在造物主的力量与和平中欢欣前行。'}
+]);
+
+initSorter('sortArea',[
+ {a:'深夜野外，一次无法解释的相遇过后，你只想安安静静去做志愿者，心里充满希望',opts:['星际联邦式','猎户式'],ans:'星际联邦式',exp:'希望、友善与目的明确的服务他人之感，是星际联邦接触的印记（53.17）。'},
+ {a:'回忆里满是羞辱与恐惧，感觉自己像被摆布的实验动物',opts:['星际联邦式','猎户式'],ans:'猎户式',exp:'猎户用恐吓让人感到自己是被控制的实验室动物般的存在，意图是展示控制（53.14）。'},
+ {a:'接触传达的核心讯息是「新的黎明时代」，没有一句末日论',opts:['星际联邦式','猎户式'],ans:'星际联邦式',exp:'联邦式接触的特征：思想过程不痛苦，讯息讲新的黎明时代而非末日（53.3）。'},
+ {a:'体验把人吓得不敢声张，离开时只剩下对「大祸临头」的确信',opts:['星际联邦式','猎户式'],ans:'猎户式',exp:'恐惧与末日感说明接触很可能属负面性质（53.17）。'},
+ {a:'一次相遇唤醒了你寻找真相的渴望，想弄清自己的投生经历到底意味着什么',opts:['星际联邦式','猎户式'],ans:'星际联邦式',exp:'「被唤醒或激活」正是这类接触的目标，如 Morris 的例子（53.8）。'}
+]);
+
+function updateCond(){
+  const a=document.getElementById('condA').checked,
+        b=document.getElementById('condB').checked,
+        c=document.getElementById('condC').checked,
+        el=document.getElementById('condResult');
+  let msg='',fail=false;
+  if(!a&&!b&&!c){msg='三扇门都关着：猎户偏好的对象条件一个都不占——此时更可能遇到的是联邦的唤醒尝试，而非猎户的物理接触（53.16）。';}
+  else if(a&&b&&c){msg='最高风险组合：心智活动较简单又独自一人，猎户几乎必然将其列为物理接触的首选；若它还误判了你的正面深度，接触会更罕见也更危险（53.11、53.16、53.22）。';fail=true;}
+  else if(a&&b){msg='典型猎户目标：变貌较简单的心智可被灌入更多猎户哲学，独自一人又少了团体互相借力的防护（53.16、53.22）。';fail=true;}
+  else if(a&&c){msg='心智较弱本就是首选；再叠加「误判正面深度」，说明对方连猎物的成色都看不清——这种接触多半很快收场（53.11、53.16）。';fail=true;}
+  else if(b&&c){msg='误触高极化正面实体通常会让猎户自伤、绕道而行；但单独行动仍放大了被攻击的机会（53.16、53.22）。';fail=true;}
+  else if(a){msg='最典型的猎户画像：心智与灵性复合体活动较少、变貌简单——它要的就是能被持续灌输的对象（53.11、53.16）。';fail=true;}
+  else if(b){msg='单独行动时风险上升：Ra 提醒，不在互相给予力量的团体中，攻击尤其可以预期（53.22）。';fail=true;}
+  else{msg='这只在罕见情形下发生：猎户误判了正面性的深度，或想把这个正面性从存在层面移除（53.11）。';fail=true;}
+  el.innerHTML=msg;
+  el.classList.toggle('fail',fail);
+}
+['condA','condB','condC'].forEach(id=>document.getElementById(id).addEventListener('change',updateCond));
+updateCond();
+
+renderPath();
+</script>
+</body>
+</html>

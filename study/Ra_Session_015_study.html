@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 015 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 015 · 交互式学习模块</h1>
+  <p class="sub">这一集从一个后勤式的问题起步——「用器皿的时间怎么算」——却在几问之内追到「这个星球为什么快速衰老」，再由 Ra 给出从红色到紫色的能量中心全图，并用一次拒答划出教与学的界限。</p>
+  <div class="tagline">6 个主题 · 6 个学习步骤 · 19 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 快速衰老之谜</a>
+<a href="#s3">③ 平衡与七色中心</a>
+<a href="#s4">④ 教不能替代学</a>
+<a href="#s5">⑤ 长老种族</a>
+<a href="#s6">⑥ 变貌序列与收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>本集从「集会怎么计时」讲到「能量中心」，先看清三条主线</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>快速衰老之谜</b><span>行星以太层的接收器网失衡，以及「最伟大的服务只有一种」</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>平衡与七色能量中心</b><span>本集的核心教导：从红色到靛蓝，以及 Ra 关于「自我」的一次拒答</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>教不能替代学</b><span>为什么信使不能替寻求者学习，以及通往自我之心的路</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>长老种族是谁</b><span>留下来等人的牧者：一个兄弟会，而非社会记忆复合体</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>变貌序列与收官</b><span>三变貌之后彼此平等，爱/光与光/爱之别，以及本集留下的伏笔</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ s1 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：这一集在问什么</h2></div>
+  <p class="sec-lead">上一集刚谈过收割与「朝向自我之心」的努力；这一集从一个很琐碎的问题起步——用器皿的时间到底怎么算——却很快转到两个大题目：这个星球为什么会有快速衰老，以及一个个体究竟怎样「平衡」自己。Ra 在 (15.12) 把七个能量中心从头讲了一遍，又在 (15.13) 划出教与学的界限，最后以长老种族与变貌序列收束。</p>
+  <div class="card">
+    <h3>问答脉络：从时间预算到能量中心</h3>
+    <p>本集二十五个问答块，主线是三条：先把集会的计时原则讲清（15.1–15.3），再顺着「快速衰老」一路追到「平衡」的全图（15.4–15.14），最后回答长老种族与变貌序列（15.15–15.22），以器皿照料与流浪者密度收尾。点击节点看每一段在做什么。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="qaTrack"></div>
+      <div class="flow-detail" id="qaDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="qaPrev">← 上一步</button> <button class="tri-btn" id="qaNext">下一步 →</button></div>
+    </div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">计时 · 器皿照料 · 外部资料</span></summary>
+  <div class="body">
+    <p><b>(15.1)–(15.3) 集会计时：</b>发问者问「使用器皿的时长取决于时间、信息量还是字数」，并追问是否该加快提问。Ra 说关键变量是器皿的生命能量储备，而接触所需的能量是按时间的函数进入器皿的，所以「时间」才是因素；是否加快由他们自己决定，但投入时间会换来答案的精确性。</p>
+    <p><b>(15.23)–(15.24) 器皿照料：</b>器皿因僵硬需要在身体复合体上做操作，其余一切都好、能量平衡；心智能量有一处轻微变貌，来自对所爱之人的担忧，只是略微降低了生命能量。Ra 明确「操作」指的是按摩背部，并补充这必须由与该实体和谐的人来做。此后 Ra 问是否还有简短的问题，于是有了 (15.25)。</p>
+    <p><b>(15.17)–(15.19) 外部资料的对照：</b>发问者提到自己在一本名为《Road in the Sky》的书中读到过「长老种族」，想知道是不是同一个。Ra 先答「问题不明确，请重新陈述」，随后说明那类描述中存在变貌，并把答案落回先前已讲过的决策方式。</p>
+    <p><b>(15.0) / (15.25) 开场与收尾：</b>仍以「在无限造物主的爱与光中」致意开场，以「在太一无限造物主的力量与和平中欢欣前行」（Adonai）作结。</p>
+  </div></details>
+  <div class="case"><b>按小时租用的会议室：</b>团队借了一间按小时计费的会议室，投影一到期就断电。所以大家讨论的不是「今天要讲多少内容」，而是「这块场地我们还剩多少分钟可用」——本集开头正是这种现实约束：Ra 说接触所需的能量按时间的函数进入器皿，因此「时间」才是决定这次能谈多久的变量，而不是信息量或字数。</div>
+  <div class="case"><b>门诊里问「我该说快点还是说慢点」：</b>你挂的号只看十分钟，进门前问医生「我是不是该赶紧把症状列完？」医生说：「你慢慢说，但话说准，我就能少问一轮。」——这正对应 (15.3)：付出一些时间，会失去一部分回答时间，却换来答案的精确性。</div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ s2 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>快速衰老之谜：行星的接收器网失衡了</h2></div>
+  <p class="sec-lead">发问者从「为什么这个星球上会发生快速衰老」切入。Ra 的答案把个人身体状况直接连到行星的能量结构与人群的思想形态——衰老在这里不是单纯的生物学问题，而是能量能否被正确灌注的问题。顺着这个答案，15.5–15.8 又谈出「最伟大的服务」与「完美平衡者会怎样老」。</p>
+  <div class="card">
+    <h3>根源：以太层的接收器网 + 人群的思想形态</h3>
+    <div class="q">为什么这个星球上的人会快速衰老？这是身体本身的问题吗？</div>
+    <div class="quote">
+      <p class="en">Rapid aging occurs upon this third-density planet due to an ongoing imbalance of receptor web complex in the etheric portion of the energy field of this planet.</p>
+      <p class="zh">这个第三密度行星之所以发生快速衰老，是因为行星能量场的以太部分中，接收器网复合体持续处在失衡状态。</p>
+      <span class="src">—— Session 015 · (15.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The thought-form distortions of your peoples have caused the energy streamings to enter the planetary magnetic atmosphere—if you would so term this web of energy patterns—in such a way that the proper streamings are not correctly imbued with balanced vibratory light/love from the, shall we say, cosmic level of this octave of existence.</p>
+      <p class="zh">你们人群的思想-形态变貌，使能量流以这样一种方式进入行星的磁性大气层（如果你们这样称呼这张能量模式之网）：本该灌注的平衡振动性光/爱，无法从——姑且这么说——这个存在八度的宇宙层面正确地灌注下来。</p>
+      <span class="src">—— Session 015 · (15.4)</span>
+    </div>
+    <div class="plain">快速衰老的成因不在个体的身体内部，而在行星的以太层：接收器网失衡，加上人群思想形态的变貌，使本该灌注下来的平衡光/爱到不了位。</div>
+    <div class="analogy"><b>像小区的供水管网：</b>高楼里住户的水龙头出水发黄、水压不稳，住户换多少次水龙头都没用——问题在管网的输配是否平衡。Ra 把衰老的「上游」指到了行星这一层。</div>
+    <div class="case"><b>小区水压 vs 自家水龙头：</b>某小区管网长期压力不稳，家家户户的水龙头放出来都发黄。有人挨家换水龙头，效果都维持不了几天。对应 (15.4)：失衡发生在行星能量场的以太部分（管网），个体的能量灌注（水龙头出水）跟着出问题。</div>
+  </div>
+  <div class="card">
+    <h3>服务的尝试与「看起来年轻的人」</h3>
+    <div class="q">你们服务这个星球的尝试之一，是不是帮人们更充分地理解并实践一的法则，好让快速衰老变成正常衰老？</div>
+    <div class="quote">
+      <p class="en">You assume correctly to a great degree.</p>
+      <p class="zh">你在很大程度上假设得没错。</p>
+      <span class="src">—— Session 015 · (15.5)</span>
+    </div>
+    <div class="quote">
+      <p class="en">If you will observe those oriented through a lifetime-experiential-distortion complex from near the beginning of that experience, you will observe a relatively youthful, as you would call it, appearance.</p>
+      <p class="zh">如果你去观察那些从这段经验刚开始不久、就经由一生-体验-变貌复合体而定向的人，你会看到一种——按你们的说法——相对年轻的外表。</p>
+      <span class="src">—— Session 015 · (15.6)</span>
+    </div>
+    <div class="plain">Ra 确认这条路径在很大程度上是对的：理解并实践一的法则、学习服务的方式，是朝向「正常衰老」的方向；而一生早期就定下朝向的人，外表会显得相对年轻。</div>
+    <div class="case"><b>从年轻起就以照顾家人为重心的人：</b>社区里一位阿姨从二十几岁起就把主要精力放在照料家人与邻里上，六十岁仍被误认为五十出头。Ra 在 (15.6) 说的正是这种可观察的关联：一生早期就朝某个方向定向的人，外表会相对年轻。</div>
+  </div>
+  <div class="card">
+    <h3>服务只有一种：把自我奉献给造物主</h3>
+    <div class="q">那么，这个星球上的人个人所能做的最伟大的服务是什么？</div>
+    <div class="quote">
+      <p class="en">There is but one service. The Law is One. The offering of self to Creator is the greatest service—the unity, the fountainhead.</p>
+      <p class="zh">服务只有一种。法则即一。将自我奉献给造物主就是最伟大的服务——那是合一，是源头。</p>
+      <span class="src">—— Session 015 · (15.7)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The entity who seeks the One Creator is with infinite intelligence.</p>
+      <p class="zh">寻求太一造物主的实体，与无限智能同在。</p>
+      <span class="src">—— Session 015 · (15.7)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Thus, some become healers, some workers, some teachers, and so forth.</p>
+      <p class="zh">于是，有些人成为疗愈者，有些人成为工作者，有些人成为教师，如此等等。</p>
+      <span class="src">—— Session 015 · (15.7)</span>
+    </div>
+    <div class="plain">服务只有一种——把自我奉献给造物主。所谓「疗愈者、工作者、教师」的分别，只是这一种服务在各人不同的能量中心变貌下长出的不同形态。</div>
+    <div class="analogy"><b>一个总闸，很多水龙头：</b>整栋楼的水都来自同一个总闸，但每家的水龙头形状、口径、用途各不相同。「服务只有一种」不是要抹掉差异，而是说所有服务从同一个源头出发。</div>
+    <div class="case"><b>三十岁的体检报告像四十五岁：</b>一位三十岁的通勤族拿到体检报告，多项指标相当于四十五岁。医生问他作息，Ra 会把问题再往上游推一层：不是他一个人「不养生」，而是人群的思想形态让该进来的能量进不来。</div>
+  </div>
+  <div class="card">
+    <h3>条件模拟器：什么情况下衰老才是「正常」的</h3>
+    <div class="q">快速衰老既然是「条件」的问题，那需要哪些条件同时成立，才会转成正常衰老？</div>
+    <p>拨动下面的开关，看 Ra 在 (15.4)–(15.5) 描述的那套条件是否齐备。</p>
+    <div class="cond-row"><div class="name">行星以太层的接收器网复合体处于平衡<small>不再「持续失衡」</small></div><label class="switch"><input type="checkbox" id="cond1"><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">人群的思想-形态变貌不再让能量流走偏<small>能量进入行星磁性大气层的方式是「正确」的</small></div><label class="switch"><input type="checkbox" id="cond2"><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">平衡的振动性光/爱能正确灌注<small>来自这个存在八度的宇宙层面</small></div><label class="switch"><input type="checkbox" id="cond3"><span class="slider"></span></label></div>
+    <div id="condResult"></div>
+    <div class="obstacle-tags" id="condTags"></div>
+    <div class="plain">这三条不是三个独立的好处，而是同一件事的三个环节：网要平衡、流要不走偏、光/爱要灌注得到。Ra 说他们服务这个球体的一项尝试，正是帮人们理解并实践一的法则。</div>
+  </div>
+  <div class="card">
+    <h3>完美平衡者不显老，只是疲倦</h3>
+    <div class="q">如果一个实体在这个星球上就一的法则而言已经完美平衡，他还会经历衰老吗？</div>
+    <div class="quote">
+      <p class="en">A perfectly balanced entity would become tired rather than visibly aged. The lessons being learned, the entity would depart.</p>
+      <p class="zh">一个完美平衡的实体会变得疲倦，而不是显露出衰老；课程学完之后，这个实体就会离开。</p>
+      <span class="src">—— Session 015 · (15.8)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The understanding comes slowly, the body complex decomposing more rapidly.</p>
+      <p class="zh">理解来得缓慢，身体复合体则分解得更快。</p>
+      <span class="src">—— Session 015 · (15.8)</span>
+    </div>
+    <div class="plain">完美平衡者不再「变老」，而是疲倦——课业完成便离开。Ra 说这是另一种形式的衰老，是你们人群不经历的那一种。</div>
+    <div class="analogy"><b>办完事就退房，而不是住到房间变旧：</b>出差的人任务完成后就退房，房间并没有「用坏」；而长期住户的磨损是另一回事。Ra 把这两种「结束」区分得很清楚。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ s3 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>平衡是什么：从「无限的一」到七色能量中心</h2></div>
+  <p class="sec-lead">发问者追问「平衡」这个词的定义。Ra 从最远处讲起——无限的一、爱创造光、能量依入口点之网流入——再收回到个体：平衡就是每个能量中心明亮而完整地运作。中间夹着本集最关键的一段拒答：发问者想用「价值感/无价值感」去平衡「自我」，Ra 先说这个说法不对，接着拒绝在这个概念上继续工作。</p>
+  <div class="card">
+    <h3>平衡的图景：爱/光依「入口点之网」流入</h3>
+    <div class="q">我们说的「平衡」到底指什么？它凭什么会失衡？</div>
+    <div class="quote">
+      <p class="en">Picture, if you will, the One Infinite. You have no picture. Thus, the process begins.</p>
+      <p class="zh">请你试着描绘那无限的一。你无从描绘。于是，过程开始了。</p>
+      <span class="src">—— Session 015 · (15.9)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Love creating Light, becoming love/light, streams into the planetary sphere according to the electromagnetic web of points, or nexi, of entrance.</p>
+      <p class="zh">爱创造光，成为爱/光，依循那些入口点（或 nexus）所构成的电磁之网，流入行星领域。</p>
+      <span class="src">—— Session 015 · (15.9)</span>
+    </div>
+    <div class="quote">
+      <p class="en">In a balanced individual each energy center is balanced and functioning brightly and fully.</p>
+      <p class="zh">在一个平衡的个体身上，每一个能量中心都是平衡的，明亮而完整地运作。</p>
+      <span class="src">—— Session 015 · (15.9)</span>
+    </div>
+    <div class="plain">个体和行星一样，都是带「入口点」的电磁能量场之网；能量一直在按这张网流入，平衡与否取决于这张网通不通、有没有被阻塞弄歪。</div>
+    <div class="analogy"><b>信号一直在，看你天线接得怎样：</b>无线信号不会因为你打开收音机就变强，它本来就在空气里；你听到什么，取决于天线有没有对准、线有没有接好。Ra 说爱/光就是这样按入口点之网持续流入的。</div>
+    <div class="quote">
+      <p class="en">There is one energy. It may be understood as love/light, or light/love, or intelligent energy.</p>
+      <p class="zh">能量只有一种。它既可以被称为爱/光，也可以被称为光/爱，或智能能量。</p>
+      <span class="src">—— Session 015 · (15.9)</span>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Ra 的拒答：不是不肯答，是概念错了</h3>
+    <div class="q">我猜某处阻塞来自「自我」的失衡，可以用价值感/无价值感的平衡来纠正，对吗？</div>
+    <div class="quote">
+      <p class="en">This is incorrect.</p>
+      <p class="zh">这是不对的。</p>
+      <span class="src">—— Session 015 · (15.10)</span>
+    </div>
+    <div class="quote">
+      <p class="en">We cannot work with this concept as it is misapplied, and understanding cannot come from it.</p>
+      <p class="zh">我们无法在这个概念上工作，因为它被误用了，从中也产生不了理解。</p>
+      <span class="src">—— Session 015 · (15.11)</span>
+    </div>
+    <div class="plain">面对「怎样平衡自我（ego）」这个问题，Ra 不是不肯答，而是拒绝沿用这个词：它被误用了，理解没法从这里长出来。直到发问者改问「一个人怎样平衡自己」，本集最长的教导才被给出。</div>
+    <div class="analogy"><b>别对修车师傅说「我的车今天心情不好」：</b>师傅不会跟你讨论车的心情，只会请你描述具体症状——抖动、异响、什么时候出现。词不对，诊断就无法开始。Ra 对「自我」这个词的处理正是如此。</div>
+    <div class="case"><b>心理咨询师不接「我是不是自卑」这个问题：</b>你坐下就说「我这个问题大概是自卑」，咨询师没有反驳你，而是请你说说「上个星期具体发生了什么、当时你做了什么」。本集里 Ra 也是把问题从「这个词」拉回「具体是哪一处能量流被卡住」。</div>
+  </div>
+  <div class="card">
+    <h3>唯一步骤：理解这些能量中心</h3>
+    <div class="q">那么一个人怎样着手平衡自己？第一步是什么？</div>
+    <div class="quote">
+      <p class="en">The steps are only one; that is, an understanding of the energy centers which make up the mind/body/spirit complex.</p>
+      <p class="zh">步骤只有一个，那就是：理解构成心/身/灵复合体的那些能量中心。</p>
+      <span class="src">—— Session 015 · (15.12)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The first balancing is of the Malkuth, or Earth, vibratory energy complex, called the red-ray complex. An understanding and acceptance of this energy is fundamental.</p>
+      <p class="zh">第一个平衡的对象是 Malkuth，即地球振动能量复合体，称为红色光芒复合体。对这股能量的理解和接纳是根本性的。</p>
+      <span class="src">—— Session 015 · (15.12)</span>
+    </div>
+    <p>Ra 随后从下往上逐个讲下去。下表把七层的核心说法压缩成三列；「通俗理解」一列是本模块按英文原文改写的说明。</p>
+    <div class="table-wrap">
+    <table class="nine">
+      <thead><tr><th>能量中心</th><th>英文</th><th>通俗理解（本集中的说法）</th></tr></thead>
+      <tbody>
+        <tr><td>红色光芒</td><td>red-ray</td><td>又称 Malkuth／地球振动能量复合体。对这股能量的理解和接纳，是全部平衡工作的根基。</td></tr>
+        <tr><td>橙色光芒</td><td>orange-ray</td><td>情绪或人格复合体。阻塞常表现为个人怪癖，或在自我意识层面的理解、接纳自己上出现变形。</td></tr>
+        <tr><td>黄色光芒</td><td>yellow-ray</td><td>太阳神经丛中心，最接近日常所说的「自我」。阻塞常表现为朝权力操控方向的变形，以及和亲近者、关联者之间的社会性行为。</td></tr>
+        <tr><td>绿色光芒</td><td>green ray</td><td>心之中心。第三密度存有借以跃向无限智能的起跳板；阻塞表现为难以表达普世之爱或慈悲。</td></tr>
+        <tr><td>蓝色光芒</td><td>blue-ray</td><td>第一个既向内流入、也向外流出的中心。阻塞者难以把握自身的灵/心复合体，难以表达这种理解，也难以接收其他心/身/灵复合体的通讯。</td></tr>
+        <tr><td>靛蓝光芒</td><td>indigo-ray</td><td>松果体中心。阻塞表现为「无价值感」，使智能能量的流入减少；它接收的爱/光倾注扭曲最少，并握有通往智能无限门户之钥匙的潜能。</td></tr>
+        <tr><td>剩余的中心（紫罗兰光芒）</td><td>the remaining center of energy influx</td><td>心、身、灵振动复合体的总体表达。在这一层次上「平衡」或「不平衡」没有意义，它也无法像其他中心那样被操控。</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="plain">平衡不是把某个缺点「修好」，而是一层一层地把七个中心的阻塞弄通，让能量明亮而完整地流过去；本集把它拆成从红到靛的六个可工作的对象，最上面那层只能「是它将是的样子」。</div>
+    <div class="case"><b>手机信号满格却打不出电话：</b>屏幕上信号是满的，电话却一直不通。运营商没撤回信号，问题在你这栋楼的入口与线路。对应 (15.9)：爱/光持续按入口点之网流入，行星与个体能不能受用，看的是这些入口通不通。</div>
+  </div>
+  <div class="card">
+    <h3>最要紧的两处：前三个中心、以及靛蓝的门户</h3>
+    <div class="q">这七个中心里，哪几个是最要紧的？</div>
+    <div class="quote">
+      <p class="en">Those with blockages in these first three energy centers, or nexi, will have continuing difficulties in ability to further their seeking of the Law of One.</p>
+      <p class="zh">在前三个能量中心（或 nexus）有阻塞的人，在推进自己对一的法则的寻求这件事上，会持续遇到困难。</p>
+      <span class="src">—— Session 015 · (15.12)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The blue-ray center of energy streaming is the center which, for the first time, is outgoing as well as inpouring.</p>
+      <p class="zh">蓝色光芒的能量流中心，是第一个既向内流入、也向外流出的中心。</p>
+      <span class="src">—— Session 015 · (15.12)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The indigo-ray balancing is quite central to the type of work which revolves about the spirit complex (which has its influx then into the transformation, or transmutation, of third density to fourth density), it being the energy center receiving the least distorted outpourings of love/light from intelligent energy…</p>
+      <p class="zh">靛蓝色光芒的平衡，对于围绕灵性复合体展开的那类工作相当核心（它的流入随后进入第三密度向第四密度的转化或嬗变）；它是接收智能能量所倾注的爱/光时扭曲最少的中心……</p>
+      <span class="src">—— Session 015 · (15.12)</span>
+    </div>
+    <div class="plain">红、橙、黄是「向内」的三个地基，卡住就会持续拖住整个寻求；绿光是起跳板，蓝光第一次既出又入，靛蓝则握着通往智能无限门户的钥匙。</div>
+    <div class="quote">
+      <p class="en">The remaining center of energy influx is simply the total expression of the entity’s vibratory complex of mind, body, and spirit. It is as it will be.</p>
+      <p class="zh">剩下那个能量流入的中心，就是该实体心智、身体、灵性振动复合体的总体表达。它就是它将要成为的样子。</p>
+      <span class="src">—— Session 015 · (15.12)</span>
+    </div>
+    <div class="case"><b>总要在会上压过别人一头的同事：</b>他能力不差，但每次开会都抢结论、顺手把别人的方案改成自己的版本。本集把这类行为归到黄色光芒中心的阻塞（朝权力操控方向的变形）；而 Ra 说前三个中心卡住的人，会持续难以推进自己的寻求。</div>
+    <div class="case"><b>被夸之后立刻摆手的人：</b>朋友真心说「这件事你做得真好」，你的第一反应是「没有没有，运气好」。本集把这种表现放在靛蓝光芒中心：表现为「无价值感」，使智能能量的流入减少。</div>
+  </div>
+  <div class="card">
+    <h3>术语卡：本集的关键词</h3>
+    <div class="q">本集用的那些词——变貌、能量中心、智能能量、入口点——各自到底指什么？</div>
+    <p>点击卡片翻看解释。这几个词在全书反复出现，先在这里建立准确的直觉。</p>
+    <div class="quote">
+      <p class="en">The blockages of your planetary sphere cause some distortion of intelligent energy. The blockages of the mind/body/spirit complex further distort, or unbalance, this energy.</p>
+      <p class="zh">你们行星领域的阻塞，使智能能量发生了一些变形；而心/身/灵复合体的阻塞，则进一步扭曲或失衡了这股能量。</p>
+      <span class="src">—— Session 015 · (15.9)</span>
+    </div>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">变貌</div><div class="sub">distortion</div><span class="tap">点击展开</span></div><div class="back">对统一性的任何偏离状态，本身不含贬义。本集反复用它描述「思想-形态变貌」「能量中心的变貌」：偏离本身是中性的，只是会让能量流走偏。<em>比喻：同一束白光穿过棱镜分成七色——分开不是错，只是不再是一束。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">能量中心</div><div class="sub">energy center</div><span class="tap">点击展开</span></div><div class="back">心/身/灵复合体上能量进出的若干节点，本集从红色讲到靛蓝，共六个可工作的中心。阻塞表现为具体的行为或感受，平衡则是让它们明亮而完整地运作。<em>案例：像一栋楼的六个配电箱，任何一个跳闸，楼上楼下都暗。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">平衡</div><div class="sub">balancing</div><span class="tap">点击展开</span></div><div class="back">不是把某个缺点改掉，而是理解并疏通各个能量中心的阻塞，使智能能量不被进一步扭曲。本集的关键限定：第一步永远是对红色光芒的理解与接纳。<em>比喻：不是把走音的弦拧到最高，而是先听清它差多少，再把它调回和声里。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">智能能量</div><div class="sub">intelligent energy</div><span class="tap">点击展开</span></div><div class="back">本集说「能量只有一种」，它可以被理解为爱/光、光/爱，或智能能量——三个说法指同一件事的不同侧面。行星与个体的阻塞都会使它的流动变形。<em>比喻：同一个水源，叫「水」「自来水」「H₂O」都行，但堵在哪一段是具体的事。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">入口点 / nexus</div><div class="sub">points, or nexi, of entrance</div><span class="tap">点击展开</span></div><div class="back">能量进入一个场域的节点。本集说行星按这张电磁之网接收爱/光，个体「就像行星一样」也是这样一张网——这解释了为什么个体修炼与行星状况会用同一套语言。<em>案例：同样的雨，落在留了排水口的院子与封死地面的院子，结果完全不同。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">心/身/灵复合体</div><div class="sub">mind/body/spirit complex</div><span class="tap">点击展开</span></div><div class="back">Ra 对人类存在的标准称谓，强调心智、身体、灵性三者构成的统一结构。本集说「理解自我」的材料就是它，能量中心的平衡也围绕它展开。<em>比喻：同一栋房子的三个系统，分开讲，但住的是一个人。</em></div></div>
+    </div>
+    <div class="plain">这些词在本集里不是装饰：「一个能量」「入口点之网」「变貌」合起来，构成了从行星到个人都用同一套语言解释能量流动的框架。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ s4 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>教不能替代学：通往自我之心的路</h2></div>
+  <p class="sec-lead">讲完七色中心，发问者问：这些练习我们能发表吗？Ra 的回答不是「能」或「不能」，而是一条原则——信使不能替寻求者学习，否则就在自由意志的方向上造成失衡。随后发问者换了个角度问「如何寻求自我之心」，Ra 给出的路线是理解、体验、接纳、融合，而前提是冥想、沉思或祈祷。</p>
+  <div class="card">
+    <h3>允许的教，与不允许的代学</h3>
+    <div class="q">之前给我们的平衡练习，现在可以发表吗？还有没有其他关于具体练习或方法的信息？</div>
+    <div class="quote">
+      <p class="en">It is important to allow each seeker to enlighten itself rather than for any messenger to attempt in language to teach/learn for the entity, thus being teach/learner and learn/teacher.</p>
+      <p class="zh">重要的是让每一位寻求者自己去启迪自己，而不是让任何信使试图用语言替这个实体去教导/学习——那样他就成了教导者/学习者兼学习/教导者。</p>
+      <span class="src">—— Session 015 · (15.13)</span>
+    </div>
+    <div class="quote">
+      <p class="en">We learn from you. We teach to you. Thus, we teach/learn. If we learned for you, this would cause imbalance in the direction of the distortion of free will.</p>
+      <p class="zh">我们从你们学习。我们向你们教导。因此，我们教导/学习。如果我们替你们学习，那就会在自由意志这一变貌的方向上造成失衡。</p>
+      <span class="src">—— Session 015 · (15.13)</span>
+    </div>
+    <div class="plain">已发表的那批练习「总体上是良好的开端」，但无论谁来做信使，都不能替寻求者完成那一步学习——替学就是越界，越界的方向正是自由意志。</div>
+    <div class="analogy"><b>私教不能替你举铁：</b>教练可以把动作拆开讲、把计划写好，但那一组必须你自己举。他替你举完，你的肌肉不会因此变强，只会失衡。Ra 说的「如果我们替你们学习」，就是这个意思。</div>
+    <div class="case"><b>家长替孩子写作业：</b>作业本上字迹漂亮、答案全对，第二天测验孩子还是不会。本集把这件事说得更彻底：代做的成果不会落到学习者身上，反而在自由意志的方向上造成失衡。</div>
+  </div>
+  <div class="card">
+    <h3>材料就是你自己：四个动作，三个对象</h3>
+    <div class="q">那么，怎样寻求——或者说，寻求「自我之心」最好的方式是什么？</div>
+    <div class="quote">
+      <p class="en">However, we can only say the material for your understanding is the self: the mind/body/spirit complex.</p>
+      <p class="zh">我们只能这样说：供你们理解的材料就是自我，即心/身/灵复合体。</p>
+      <span class="src">—— Session 015 · (15.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The understanding, experiencing, accepting, and merging of self with self and with other-self and, finally, with the Creator, is the path to the heart of self.</p>
+      <p class="zh">对自我的理解、体验、接纳，以及自我与自我、与其他自我、最终与造物主的融合，就是通往自我之心的道路。</p>
+      <span class="src">—— Session 015 · (15.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">In each infinitesimal part of your self resides the One in all of Its power.</p>
+      <p class="zh">在你自我的每一个极小部分里，都住着那位拥有全部力量的太一。</p>
+      <span class="src">—— Session 015 · (15.14)</span>
+    </div>
+    <div class="plain">寻求自我之心的材料不是别人给的答案，而是你自己：四个动作——理解、体验、接纳、融合；三个对象——自我、其他自我、造物主。而这一切的前提是冥想、沉思或祈祷。</div>
+    <div class="analogy"><b>把散了一地的照片整理成一本相册：</b>你手里已经有很多张照片（各种理解），但堆着不动就只是散片；整理的过程才是把它合成一个整体的过程。Ra 在下面这句里说的正是这件事。</div>
+    <div class="quote">
+      <p class="en">Without such a method of reversing the analytical process, one could not integrate into unity the many understandings gained in such seeking.</p>
+      <p class="zh">缺少这种逆转分析过程的方法，一个人就无法把在寻求中得到的种种理解整合为合一。</p>
+      <span class="src">—— Session 015 · (15.14)</span>
+    </div>
+  </div>
+  <div class="card">
+    <h3>归类练习：这件事落在哪个能量中心？</h3>
+    <p>本集把七层中心逐一说清。判断下面每一件日常小事，按本集的说法主要落在哪一个中心。（选项为自己加上的简称：红＝红色光芒，依此类推。）</p>
+    <div id="sorterArea"></div>
+    <div class="case"><b>搜了一整晚答案，第二天还是不会：</b>你为一道难题翻了半夜资料，笔记记了三页，第二天依然推不出来；直到你合上笔记自己重推一遍才通。本集把这一步说成「逆转分析过程」：没有它，所得的理解无法整合为合一。</div>
+    <div class="case"><b>咨询师不给你标准答案：</b>你问「那我到底该怎么做」，对方说「我们一起看看上个星期发生了什么」。这不是敷衍——本集的原则是：信使不能替寻求者学习，否则越界的方向正是自由意志。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ s5 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>长老种族：留下来等同伴的人</h2></div>
+  <p class="sec-lead">话题从个人修炼转向一段「谁还留在地球上」的叙事。发问者先问上一集提到的「可收割实体选择进入第四密度的方式」是什么意思，Ra 答的是牧者／长老种族：他们选择自己离开的时间，而在此之前要等其他人。随后发问者追问他们的来历与身份，Ra 一边纠正外部资料的描述，一边给出一个关键限定——他们不是社会记忆复合体，而是一群献身服务的兄弟会。</p>
+  <div class="card">
+    <h3>牧者：选择离开的时间，但要等人</h3>
+    <div class="q">「可收割的实体将选择他们进入第四密度的方式」，这句话是什么意思？</div>
+    <div class="quote">
+      <p class="en">These shepherds, or, as some have called them, the "Elder Race," shall choose the time/space of their leaving. They are unlikely to leave until their other-selves are harvestable also.</p>
+      <p class="zh">这些牧者——有些人如此称呼他们——「长老种族」，将选择自己离开的时间/空间。在他们的其他自我也变得可收割之前，他们不太可能离开。</p>
+      <span class="src">—— Session 015 · (15.15)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The other-selves with whom these beings are concerned are those which did not attain harvest during the second major cycle.</p>
+      <p class="zh">这些存有挂念的其他自我，是那些在第二个主要周期里没有获得可收割状态的。</p>
+      <span class="src">—— Session 015 · (15.16)</span>
+    </div>
+    <div class="plain">所谓「选择进入第四密度的方式」，就是选择自己离开的时间/空间；而这群人的选择是被牵挂绊住的——其他自我未成就之前，他们不会先走。</div>
+    <div class="analogy"><b>登山队里经验最足的那个人：</b>先登顶的人完全可以先下山，但他留在原地等后面的队友。这种「留下」不是能力不够，而是他自己选的。</div>
+    <div class="quote">
+      <p class="en">The question is unclear. Please restate.</p>
+      <p class="zh">这个问题不清楚。请重新陈述。</p>
+      <span class="src">—— Session 015 · (15.17)</span>
+    </div>
+    <p>发问者问「能否谈谈长老种族的历史」时，Ra 的第一反应是要求重新陈述——这类拒答与澄清本身也是本集的一部分：问题不清，答案无从给出。</p>
+  </div>
+  <div class="card">
+    <h3>不是一个社会记忆复合体，而是一个兄弟会</h3>
+    <div class="q">我曾在《Road in the Sky》里读到过「长老种族」，是同一个吗？</div>
+    <div class="quote">
+      <p class="en">The question now resolves itself, for we have spoken previously[22] of the manner of decision-making which caused these entities to remain here upon the closing of the second major cycle of your current master cycle.</p>
+      <p class="zh">现在问题自己解开了，因为我们先前已经谈过那种决策方式——正是它让这些实体在你们当前主周期的第二个主要周期结束时留在这里。</p>
+      <span class="src">—— Session 015 · (15.18)</span>
+    </div>
+    <div class="quote">
+      <p class="en">There are some distortions in the descriptions of the one known as Michel[23]; however, these distortions have primarily to do with the fact that these entities are not a social memory complex, but rather a group of mind/body/spirit complexes dedicated to service.</p>
+      <p class="zh">不过，那些变形主要与这个事实有关：这些实体不是一个社会记忆复合体，而是一群献身于服务的心/身/灵复合体。</p>
+      <span class="src">—— Session 015 · (15.18)</span>
+    </div>
+    <div class="quote">
+      <p class="en">These entities work together, but are not completely unified; thus, they do not completely see each the other's thoughts, feelings, and motives.</p>
+      <p class="zh">这些实体一起工作，却没有完全统一；因此，他们并不能完全看见彼此的想法、感受和动机。</p>
+      <span class="src">—— Session 015 · (15.18)</span>
+    </div>
+    <div class="quote">
+      <p class="en">However, their desire to serve is the fourth-dimensional type of desire, thus melding them into what you may call a brotherhood.</p>
+      <p class="zh">不过，他们服务的渴望属于第四密度类型的渴望，这把他们融汇成你们可以称之为兄弟会的东西。</p>
+      <span class="src">—— Session 015 · (15.18)</span>
+    </div>
+    <div class="plain">外部描述之所以走样，关键就在这一点：他们不是一个完全统一、彼此可见心念的社会记忆复合体，而是一群因同一个服务渴望而聚在一起的个体，Ra 称其为兄弟会。</div>
+    <div class="case"><b>书里读到的「转述」：</b>你在某本书里读到过一个组织，后来见到当事人，才发现作者是用自己的理解在描述它。Ra 对那份外部描述的判断是：其中有变形，而变形主要集中在「它不是社会记忆复合体」这一点上。</div>
+  </div>
+  <div class="card">
+    <h3>他们也是一种「流浪者」</h3>
+    <div class="q">这些长老种族里面有流浪者吗？</div>
+    <div class="quote">
+      <p class="en">These are planetary entities harvested—wanderers only in the sense that they chose, in fourth-density love, to immediately reincarnate in third density rather than proceeding towards fourth density.</p>
+      <p class="zh">这些是被收割的行星实体——他们只在一种意义上算作流浪者：出于第四密度的爱，他们选择立刻重新投生于第三密度，而不是继续前往第四密度。</p>
+      <span class="src">—— Session 015 · (15.20)</span>
+    </div>
+    <div class="quote">
+      <p class="en">wanderers who have never left the earth plane because of their free will rather than because of their vibrational level.</p>
+      <p class="zh">是那些从未离开地球层面的流浪者——原因是他们的自由意志，而不是他们的振动层次。</p>
+      <span class="src">—— Session 015 · (15.20)</span>
+    </div>
+    <div class="plain">他们算「流浪者」，但不是因为我们熟悉的那种含义（不同振动层次的存在投生到这里）：他们本来就属于这里，是出于爱主动选择重投回来，留下是因为自由意志。</div>
+    <div class="quote">
+      <p class="en">We called them thusly to acquaint you, the questioner, with their identity as is understood by your mind complex-distortion.</p>
+      <p class="zh">我们这样称呼他们，是为了让你——发问者——认识他们的身份，一如你的心智复合体变貌所理解的样子。</p>
+      <span class="src">—— Session 015 · (15.19)</span>
+    </div>
+  </div>
+  <div class="card">
+    <h3>叙事线：他们为什么还在</h3>
+    <div class="q">这些「长老种族」是怎么走到今天这一步的？</div>
+    <p>把本集散落的句子排起来，可以得到这样一条脉络（顺序按本集的叙述整理，不是年表）。</p>
+    <div class="timeline">
+      <div class="tl-item"><div class="t">第二个主要周期结束</div><div class="d">他们因某种决策方式，在你们当前主周期的第二个主要周期结束时留在了这里。</div></div>
+      <div class="tl-item"><div class="t">被称作牧者／长老种族</div><div class="d">他们可以选择自己离开的时间/空间——「选择进入第四密度的方式」说的就是这件事。</div></div>
+      <div class="tl-item"><div class="t">等待其他自我</div><div class="d">他们不太可能离开，直到那些在第二个主要周期未获可收割状态的其他自我也成就。</div></div>
+      <div class="tl-item"><div class="t">选择重投第三密度</div><div class="d">出于第四密度的爱，他们选择立刻重新投生于第三密度，而不是继续前往第四密度。</div></div>
+      <div class="tl-item"><div class="t">至今未离开地球层面</div><div class="d">他们成为「从未离开地球层面的流浪者」——原因是自由意志，而非振动层次。</div></div>
+    </div>
+    <div class="case"><b>推迟退休的老工程师：</b>他可以按年限拿满退休金走人，却主动留任，就为了把这一届新人带完。对应 (15.15)：他们不太可能离开，直到其他自我也可收割。</div>
+    <div class="case"><b>目标一致却没共享心念的志愿救援队：</b>队里分工清楚、彼此信任，但你不知道队友今天为什么沉默；大家是被同一个愿望聚在一起的。对应 (15.18)：他们一起工作却不完全统一，因此不能完全看见彼此的想法、感受与动机。</div>
+    <div class="divider"></div>
+  </div>
+</section>
+
+<!-- ============ s6 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>变貌的序列与收官：爱/光与光/爱</h2></div>
+  <p class="sec-lead">最后两个问题问的是整个体系的骨架：变貌有没有顺序？爱/光与光/爱有什么区别？Ra 先给出「第一变貌自由意志 → 第二变貌理则、爱 → 光」这条三级序列，随即声明过了很短的一点之后，众多变貌彼此平等。第二个问题被 Ra 定为这个时间/空间的最后一个问题，答案是一组对应关系：爱/光是赋能者，光/爱是被爱印刻之后的显化。</p>
+  <div class="card">
+    <h3>变貌的序列：只到「光」为止有意义</h3>
+    <div class="q">一的法则有第一、第二、第三、第四变貌这样的序列吗？</div>
+    <div class="quote">
+      <p class="en">Only up to a very short point. After this point, the many-ness of distortions are equal one to another.</p>
+      <p class="zh">只到一个很短的点为止。过了这个点，众多变貌彼此之间是平等的。</p>
+      <span class="src">—— Session 015 · (15.21)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The First Distortion, Free Will, finds focus. This is the Second Distortion known to you as Logos, the Creative Principle, or Love. This intelligent energy thus creates a distortion known as Light.</p>
+      <p class="zh">第一变貌——自由意志——找到了焦点。这就是你们所知的第二变貌：理则（Logos）、创造性原则，或爱。这股智能能量于是造出一个称为光的变貌。</p>
+      <span class="src">—— Session 015 · (15.21)</span>
+    </div>
+    <div class="quote">
+      <p class="en">From these three distortions come many, many hierarchies of distortions, each having its own paradoxes to be synthesized, no one being more important than another.</p>
+      <p class="zh">从这三个变貌中生出许多许多层级的变貌，每一个都有自己的悖论要综合，没有一个比另一个更重要。</p>
+      <span class="src">—— Session 015 · (15.21)</span>
+    </div>
+    <p>于是序列只有三级：① 自由意志找到焦点 → ② 理则（爱）→ ③ 光。再往下就是「许多许多层级」的并列，各有自己的悖论要综合，没有谁比谁更重要。</p>
+    <div class="plain">「有序」只在这三级之内成立；过了这一点，谈论哪个变貌更重要就已经是错的——本集特意把这句话说了出来。</div>
+    <div class="analogy"><b>先有地基、再有骨架，之后就没有「哪块砖更重要」：</b>盖楼时确实有个先后：地基、骨架。但骨架立好之后，每一块砖都同样承重，谁都不能被跳过——这就是 Ra 说的「过了这个点之后彼此平等」。</div>
+    <div class="case"><b>培训营第一天就发手册：</b>有人以为入门就是把手册发完。但 Ra 对已发表练习的评价只是「总体上是良好的开端」，并且说其余可允许的信息要等提问线索走到那里——材料必须由发问者塑造成「你的心/身/灵能进入」的样子。</div>
+  </div>
+  <div class="card">
+    <h3>爱/光与光/爱：赋能者与显化</h3>
+    <div class="q">爱/光和光/爱之间有什么区别？</div>
+    <div class="quote">
+      <p class="en">This will be the final question of this time/space. There is the same difference between love/light and light/love as there is between teach/learning and learn/teaching. Love/light is the enabler, the power, the energy giver. Light/love is the manifestation which occurs when Light has been impressed with Love.</p>
+      <p class="zh">这将是这个时间/空间的最后一个问题。爱/光与光/爱之间的差别，就像教导/学习与学习/教导之间的差别。爱/光是赋能者、是力量、是能量的给予者；光/爱则是光被爱印刻之后所发生的显化。</p>
+      <span class="src">—— Session 015 · (15.22)</span>
+    </div>
+    <div class="plain">两者不是两种东西，而是同一件事的两个面向：爱/光负责给、负责赋能；光/爱是它印刻之后成形的那一面。Ra 用「教导/学习 ↔ 学习/教导」这组同构的词来做类比。</div>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">赋能者</span><h4>爱/光 love/light</h4><p>力量、能量的给予者——<b>让事情能够发生的那一面</b>。本集说它与「教导/学习」同构。</p></div>
+      <div class="yuan-card"><span class="y-tag">显化</span><h4>光/爱 light/love</h4><p>当光被爱印刻之后所发生的显化——<b>已经成形、看得见的那一面</b>。与「学习/教导」同构。</p></div>
+      <div class="yuan-card"><span class="y-tag">同构类比</span><h4>教导/学习 teach/learning</h4><p>我向你教，同时也在学。同一次交流里的「给予」方向。</p></div>
+      <div class="yuan-card"><span class="y-tag">同构类比</span><h4>学习/教导 learn/teaching</h4><p>同一次交流的另一个方向。Ra 说爱/光与光/爱之差，就像这两个词之差。</p></div>
+    </div>
+    <div class="case"><b>调音台上的推子与音色：</b>先用手把音量推子给足（爱/光——赋能者、力量），再用均衡和音色把声音塑造成实际听到的样子（光/爱——被印刻之后的显化）。两者描述的是同一条信号链的两端。</div>
+  </div>
+  <div class="card">
+    <h3>收官：两个密度，与一条不肯越过的线</h3>
+    <div class="q">既然我们都是流浪者，能不能告诉我们来自哪个密度？</div>
+    <div class="quote">
+      <p class="en">The wanderers in this working are of two densities: one the density of five, that is, of light; one the density of love/light, or unity.</p>
+      <p class="zh">这次工作中的流浪者来自两个密度：一个是第五密度，也就是光的密度；一个是爱/光，即合一的密度。</p>
+      <span class="src">—— Session 015 · (15.25)</span>
+    </div>
+    <div class="quote">
+      <p class="en">To express the identity of which came from which density we observe to be an infringement upon the free will of each.</p>
+      <p class="zh">至于要说出谁来自哪一个密度，我们观察认为那是对每一位自由意志的侵犯。</p>
+      <span class="src">—— Session 015 · (15.25)</span>
+    </div>
+    <div class="plain">Ra 愿意说「哪两个密度」，却拒绝说「谁属于哪一个」——这条线不是害羞，而是本集反复出现的原则：不侵犯他人的自由意志。</div>
+    <div class="case"><b>面试官问你上家公司薪资：</b>你只肯说「一个区间」，不肯落到具体数字。对应 (15.25)：Ra 给出两个密度，却拒绝指认谁来自哪里，因为那会侵犯每一位的自由意志。</div>
+    <div class="case"><b>「这个我以后再说」的老师：</b>学生追着问「还有没有别的方法」，老师答：「有，但你现在的提问还没走到那里。」——本集里 Ra 也是这样处理的：你们尚未在提问路线中触及这些项目，而发问者会把材料塑造成你们能进入的样子。</div>
+  </div>
+  <div class="saying">
+    <p class="en">There is but one service. The Law is One. The offering of self to Creator is the greatest service—the unity, the fountainhead.</p>
+    <p class="zh">服务只有一种。法则即一。将自我奉献给造物主就是最伟大的服务——那是合一，是源头。</p>
+    <span class="src">—— Session 015 · (15.7)</span>
+  </div>
+  <div class="card">
+    <h3>这一集留下的位置</h3>
+    <p>本集把「平衡」从一个笼统的词变成了七个具体的层次，也把教与学的界限讲得很硬：可以发表练习，但不能替谁完成那一步。收尾处 Ra 主动宣布 (15.22) 是这个时间/空间的最后一个问题，仍允许一个简短提问，才有了 (15.25) 的回答，然后以 Adonai 离开。</p>
+    <div class="quote">
+      <p class="en">There are other items of information allowable. However, you have not yet reached these items in your lines of questioning…</p>
+      <p class="zh">还有其他可允许提供的项目。不过，你们的提问线索还没有走到它们那里……</p>
+      <span class="src">—— Session 015 · (15.13)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Are there any short queries before we leave this instrument?</p>
+      <p class="zh">在离开这个器皿之前，你们还有简短的问题要问吗？</p>
+      <span class="src">—— Session 015 · (15.24)</span>
+    </div>
+    <div class="plain">读下一集时可以带着这个问题：Ra 说「还有其他可允许的信息项目」，而它们要等发问者把提问线索走到那里才出现——那会是什么？</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+<p>基于 The Ra Contact Session 015（split/Ra_Session_015.md）英文原文制作 · 交互式学习模块</p>
+<p>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文</p>
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra015-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+  {t:'(15.1)–(15.3) 集会计时',d:'<span class="qa-q">问：用器皿的时长是时间的函数、信息量的函数，还是字数的函数？我该加快提问吗？</span><b>答：</b>关键在器皿的生命能量储备，而接触所需的能量按时间的函数进入器皿，所以时间才是因素。是否加快由你们决定——但投入时间会换来答案的精确性。'},
+  {t:'(15.4)–(15.5) 快速衰老',d:'<span class="qa-q">问：这个星球上为什么发生快速衰老？你们的服务尝试之一是让人们理解并实践一的法则，好把快速衰老改成正常衰老吗？</span><b>答：</b>因为行星能量场的以太部分中接收器网复合体持续失衡，加上人群思想-形态变貌让能量流走偏，平衡的光/爱无法正确灌注。「你在很大程度上假设得没错。」'},
+  {t:'(15.6)–(15.8) 服务与衰老',d:'<span class="qa-q">问：最伟大的服务是什么？完美平衡的人还会衰老吗？</span><b>答：</b>服务只有一种——把自我奉献给造物主；由此长出的形态因人而异（疗愈者、工作者、教师……）。完美平衡者会疲倦而非显老，课程学完便离开。'},
+  {t:'(15.9)–(15.11) 平衡的定义',d:'<span class="qa-q">问：「平衡」是什么意思？阻塞是否来自「自我」的失衡，可用价值感/无价值感来纠正？</span><b>答：</b>爱与光按入口点之网流入行星与个体，平衡就是每个中心明亮完整地运作。Ra 判定那个说法「不正确」，并拒答「如何平衡自我」，因为该概念被误用了。'},
+  {t:'(15.12) 能量中心全图',d:'<b>答：</b>步骤只有一个——理解构成心/身/灵复合体的能量中心。随后从红色光芒（Malkuth／地球）讲到橙色、黄色、绿色、蓝色、靛蓝，最后是心身灵振动复合体的总体表达：那一层「平衡/不平衡」没有意义。'},
+  {t:'(15.13)–(15.14) 教与学的界限',d:'<span class="qa-q">问：平衡中心的练习可以发表吗？如何寻求自我之心？</span><b>答：</b>已发表的练习总体是良好的开端，但不能替寻求者学习，否则会在自由意志的方向上造成失衡。通往自我之心的材料就是自我本身：理解、体验、接纳、融合，前提是冥想、沉思或祈祷。'},
+  {t:'(15.15)–(15.20) 长老种族',d:'<span class="qa-q">问：可收割实体「选择进入第四密度的方式」是什么意思？长老种族是什么？</span><b>答：</b>这些牧者选择自己离开的时间/空间，在其他自我也可收割前不走；他们不是社会记忆复合体，而是一群献身服务的兄弟会；他们是出于第四密度的爱重投第三密度、因自由意志而从未离开地球的流浪者。'},
+  {t:'(15.21)–(15.25) 变貌与收官',d:'<span class="qa-q">问：变貌有序列吗？爱/光与光/爱之别是什么？我们来自哪个密度？</span><b>答：</b>序列只到「自由意志→理则/爱→光」这一点，之后众多变貌彼此平等。爱/光是赋能者，光/爱是被爱印刻后的显化。Ra 宣布这是最后一个问题；被允许的简短提问只得到「两个密度」，不肯指认谁来自哪里。'}
+]);
+
+const condKeys=['cond1','cond2','cond3'];
+const condMissing=[['cond1','接收器网复合体仍持续失衡'],['cond2','思想-形态变貌让能量流走偏'],['cond3','平衡的光/爱未能正确灌注']];
+const condResult=document.getElementById('condResult');
+const condTags=document.getElementById('condTags');
+function updateCond(){
+  const off=condMissing.filter(c=>!document.getElementById(c[0]).checked);
+  const all=document.getElementById('cond1').checked&&document.getElementById('cond2').checked&&document.getElementById('cond3').checked;
+  condResult.classList.toggle('fail',!all);
+  if(all){
+    condResult.innerHTML='<b>三条齐备：快速衰老的条件被解除。</b>接收器网恢复平衡、能量流不再走偏、来自宇宙层面的平衡振动性光/爱得以正确灌注——这正是 Ra 在 (15.5) 确认为「在很大程度上正确」的那条路径：让更多人理解并实践一的法则。Ra 在 (15.6) 还给了一个可观察的迹象：从经验早期就定下朝向的人，外表会相对年轻。';
+    condTags.innerHTML='';
+  }else{
+    condResult.innerHTML='<b>缺少 '+off.length+' 项：快速衰老继续。</b>只要还有一条不成立，行星的以太部分就仍处在失衡之中——Ra 在 (15.4) 描述的正是这个第三密度行星的现状。注意这三条不是「个人努不努力」的问题：能量能否正确灌注，取决于行星与人群这两个共同层面的条件。';
+    condTags.innerHTML=off.map(c=>'<span>缺：'+c[1]+'</span>').join('');
+  }
+}
+condKeys.map(k=>document.getElementById(k)).forEach(el=>el.addEventListener('change',updateCond));
+updateCond();
+
+document.querySelectorAll('.fn-card').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('open')));
+
+initSorter('sorterArea',[
+  {a:'连续熬夜赶项目，困到心慌也不肯停下来照顾身体',opts:['红','橙','黄','绿','蓝','靛'],ans:'红',exp:'红色光芒（Malkuth／地球振动能量复合体）：对这股能量的理解与接纳是全部平衡的根基。'},
+  {a:'出门前反复照镜子，担心自己「看起来不够正常」',opts:['红','橙','黄','绿','蓝','靛'],ans:'橙',exp:'橙色光芒（情绪或人格复合体）：阻塞常表现为个人怪癖，以及自我理解、自我接纳上的变形。'},
+  {a:'开会时抢过话头，顺手把别人的方案改成自己的版本',opts:['红','橙','黄','绿','蓝','靛'],ans:'黄',exp:'黄色光芒（太阳神经丛中心）：阻塞常表现为朝权力操控方向的变形，以及和亲近者、关联者之间的社会性行为。'},
+  {a:'明明很在意一个人，话到嘴边只剩一句「随便你」',opts:['红','橙','黄','绿','蓝','靛'],ans:'绿',exp:'绿色光芒（心之中心）：该区域的阻塞表现为难以表达普世之爱或慈悲。'},
+  {a:'拿到好机会的第一反应是「我不配」，感觉整个人被抽空',opts:['红','橙','黄','绿','蓝','靛'],ans:'靛',exp:'靛蓝光芒（松果体中心）：阻塞表现为「无价值感」，会使智能能量的流入减少。'}
+]);
+
+renderPath();
+</script>
+</body>
+</html>

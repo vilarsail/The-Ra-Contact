@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 041 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 041 · 交互式学习模块</h1>
+  <p class="sub">这一集先确认"搬家一千英里也不影响接触"，随后请 Ra 描述太阳——我们这个行星系统的子理则；再一路下探到第一密度的诞生与能量中心的首次点亮，最后问出"什么才算平衡到可以收割"，并以 Ra 自己的密度之旅收尾。</p>
+  <div class="tagline">8 个主题 · 6 个学习步骤 · 39 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 太阳与子理则</a>
+<a href="#s3">③ 觉知的火花</a>
+<a href="#s4">④ 橙光的退行</a>
+<a href="#s5">⑤ 激活与收割判准</a>
+<a href="#s6">⑥ 禁食与重新编程</a>
+<a href="#s7">⑦ 主要光芒的阶梯</a>
+<a href="#s8">⑧ 收官 · Ra 的来路</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>走一遍问答推进器，知道后面每一章对应本集的哪一段追问</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>认识太阳与子理则</b><span>理清理则→子理则→各密度的层级，看懂"第六密度的光"是什么意思</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>看觉知如何点燃</b><span>从光子到会动的单细胞：第一密度的形成与红→橙的关键一跃</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>掌握激活的判准</b><span>谁决定点亮的速度；为什么收割看平衡不看亮度——用条件模拟器试一遍</span></span></label></div>
+<div class="step-item" data-target="#s7"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>走完主要光芒的阶梯</b><span>从红光的根基到蓝光的"共同造物者"，用归类练习自查分辨力</span></span></label></div>
+<div class="step-item" data-target="#s8"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官：Ra 的来路与金句</b><span>看 Ra 自己的密度之旅如何印证本集教导，带走一句核心宣告</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ 01 本章地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：这一集在问什么</h2></div>
+  <p class="sec-lead">上一集的结尾留下两个话头——能量中心的"旋转速度"与"禁食清除思想形态"，本集把它们展开成主线：太阳（子理则）是什么→第一密度如何形成→能量中心如何点亮→橙色光芒的退行→转速、平衡与收割判准→禁食与重新编程→主要光芒的阶梯。开场先处理一个小小的后勤焦虑。</p>
+  <div class="card">
+    <h3>开场就值得记住的一句</h3>
+    <div class="q">发问者担心小组将来可能搬去一千多英里外，怕这会影响与 Ra 的接触——他自嘲这是个"愚蠢的问题"。</div>
+    <div class="quote">
+      <p class="en">The location is meaningless, for are we not in the creation?</p>
+      <p class="zh">地点毫无意义——因为我们难道不都在造物之中吗？</p>
+      <span class="src">—— Session 041 · (41.1)</span>
+    </div>
+    <p class="plain">接触不系于地点，而系于场所的"振动水平"：要么选对，要么亲手把它净化、以冥想奉献——打扫粉刷这类平凡事务也可以是这件事的一部分。</p>
+    <div class="case"><b>读书会搬家：</b>一个共读小组要从北京搬去一千多公里外的成都。书没换、人没换，他们只是把新场地彻底打扫、粉刷了被弄脏的墙面，并在第一次共读前集体静默冥想，把场地"奉献"给这项工作——这正是 (41.1)-(41.3) 的做法：地点无意义，场所却要认真判断与净化。</div>
+    <div class="case"><b>远程会议前的例行开场：</b>一支团队每次开会前都先花三分钟确认设备、关掉通知、清空桌面，然后才进正题——本集开头的场地问答就属于这类"例行开场"，真正的教导从太阳开始；按右上角折叠区可跳过。</div>
+  </div>
+  <div class="card">
+    <h3>问答脉络推进器</h3>
+    <p>按顺序走一遍本集的 9 个关键节点，看清对话怎么展开；点击节点可任意跳转。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="mapTrack"></div>
+      <div class="flow-detail" id="mapDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="mapPrev">上一问</button>
+        <button class="tri-btn" id="mapNext">下一问</button>
+      </div>
+    </div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 后勤</span></summary>
+  <div class="body">
+    <p><b>(41.1-41.3) 场地后勤：</b>Ra 确认搬家不影响接触——地点无意义；但新场所须自行判断其振动水平，或先净化并以冥想奉献（清洁粉刷即可）；小五芒星驱逐仪式有用，曾被他人用过的场所也能令人满意。</p>
+    <p><b>(41.27) 收尾照料：</b>发问者问能否让器皿更舒适或改进接触——Ra 答一切安好，以爱与光告别。</p>
+  </div></details>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 02 太阳与子理则 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>太阳的多副面孔：子理则如何创造你所体验的一切</h2></div>
+  <p class="sec-lead">发问者想"从智能无限一路推到我们当下的存在状态"，途中觉得困难，于是决定回头研究太阳——这个创造了本行星系统一切体验的子理则（sub-Logos，理则的后代；理则 Logos 是星系一级的创造原则）。Ra 的回答提醒我们：同一个太阳，在不同的关系里有不同的面向。</p>
+  <div class="card">
+    <h3>三副面孔：对无限、对智能能量、对各密度</h3>
+    <div class="q">发问者请 Ra 描述我们的太阳——他知道这是从源头推到自己这一步的关键一环。</div>
+    <div class="quote">
+      <p class="en">In relationship to intelligent infinity, the sun body is, equally with all parts of the infinite creation, part of that infinity.</p>
+      <p class="zh">就与智能无限（intelligent infinity，万有共同源出的无限本源）的关系而言，太阳体与造物的一切部分一样，是那无限自身的一部分。</p>
+      <span class="src">—— Session 041 · (41.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Thus by the sixth density the sun may be visited and inhabited by those dwelling in time/space, and may even be partially created from moment to moment by the processes of sixth-density entities in their evolution.</p>
+      <p class="zh">因此到了第六密度，太阳可以被居住在时间/空间（time/space，与空间/时间互为颠倒的形而上面向）中的实体访问与栖居，甚至可以在每一刻被第六密度实体的进化活动部分地创造出来。</p>
+      <span class="src">—— Session 041 · (41.4)</span>
+    </div>
+    <p class="plain">物理上它是一个经历聚变、辐射热与光的气体球；形而上它对第四至第七密度逐步显出"活的造物、共同实体"的本性——视角越高，太阳越"活"。</p>
+    <div class="analogy"><b>母公司与子公司：</b>理则像定下品牌总纲的母公司，太阳这样的子理则像各地子公司——在总纲（智能能量 intelligent energy，被组织起来可运行造物的能量）之内，用自由意志决定"本地产品"的一切细节。</div>
+    <div class="case"><b>天文馆之夜：</b>孩子在穹幕厅听到"太阳是氢聚变的气体球，辐射光热"，回家路上问妈妈"那太阳是活的吗"。两种说法都对：Ra 给的就是这两层——聚变气体球是物理面向，"活的共同实体"是第四密度以上逐步领会的形而上面向 (41.4)。</div>
+    <div class="case"><b>子公司的本地化权限：</b>同一家咖啡连锁在两个国家卖完全不同的菜单，总纲却一致——Ra 说层级关系正在于此：子理则"按理则设定的方式运用智能能量"，再用自由意志共同创造你所体验密度的全部细微差异 (41.4)。</div>
+  </div>
+  <div class="card">
+    <h3>你晒到的光，有些是"爱的后代"</h3>
+    <div class="q">发问者追问一句他没听懂的话：第六密度实体真的在创造太阳在他们密度中的显化吗？</div>
+    <div class="quote">
+      <p class="en">Thus you may think of portions of the light that you receive as offspring of the generative expression of sixth-density love.</p>
+      <p class="zh">因此，你接收到的光之中有一部分，可以看作第六密度之爱的生成性表达所繁衍的后代。</p>
+      <span class="src">—— Session 041 · (41.5)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This is precisely correct as seen in the latter portions of sixth density, seeking the experiences of the gateway density.</p>
+      <p class="zh">从第六密度后期——寻求门户密度（gateway density，Ra 对第七密度的称呼：完成并转向无时间性的门槛）之体验——的角度看，这正是正确的。</p>
+      <span class="src">—— Session 041 · (41.6)</span>
+    </div>
+    <p class="plain">一些以融合（fusion）为繁衍方式的第六密度存有，选择把这段体验活成太阳体存有性的一部分——这不是修辞，而是字面上的"光的出身"。</p>
+    <div class="case"><b>晒被子时的翻转：</b>下次把被子晒在阳光下时可以想一想：落在被面上的光，有一部分被 Ra 描述为第六密度存有"以融合繁衍"的生成表达——你正在接触某种"爱的后代" (41.5)。</div>
+    <div class="case"><b>毕业季的冲刺：</b>一支队伍在项目尾声主动承接最难的部分以便顺利"毕业"——Ra 确认，第六密度后期、寻求门户密度体验的实体，正是在借此更紧密地成为无限造物主的共同造物者 (41.6)。</div>
+  </div>
+  <div class="card">
+    <h3>两个边界澄清：太阳有密度吗 / 空间与时间的颠倒</h3>
+    <div class="q">发问者问：问"太阳本身有没有密度"有意义吗？本集后段他还顺带问了一个定义题：空间/时间与时间/空间差在哪里？</div>
+    <div class="quote">
+      <p class="en">The sub-Logos is of the entire octave and is not that entity which experiences the learning/teachings of entities such as yourselves.</p>
+      <p class="zh">子理则属于整个八度音程，并不是像你们这样的实体——那个去体验学习/教导的存有。</p>
+      <span class="src">—— Session 041 · (41.7)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Using your words, the difference is that between the visible and invisible, or the physical and metaphysical.</p>
+      <p class="zh">用你们的话说，区别就在可见与不可见、或物理与形而上学之间。</p>
+      <span class="src">—— Session 041 · (41.20)</span>
+    </div>
+    <p class="plain">问太阳"几密度"是问错了对象：它是撑起整个八度的子理则，不是在某一密度里上课的学生；而时间/空间就是那"不可见、形而上"的一面，与空间/时间互为颠倒（Ra 还顺带给出了 Larson 式的写法：s/t 与 t/s）。</p>
+    <div class="case"><b>问错了对象：</b>有人问图书馆"这本书是几年级的"，管理员答"馆不分年级，年级是读者的事"——太阳不属于某一个密度，密度是体验者这边的事 (41.7)。</div>
+    <div class="case"><b>一枚硬币的两面：</b>睁眼看到的世界受距离与先后约束，是"可见、物理"的空间/时间；梦里那种瞬息千里、不受先后约束的体验，更接近"不可见、形而上"的时间/空间——Ra 用可见/不可见一词道尽差别 (41.20)。</div>
+  </div>
+  <div class="card">
+    <h3>本节术语卡（点击翻面）</h3>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">理则 / 子理则</div><div class="sub">Logos / sub-Logos</div><span class="tap">点击翻面</span></div><div class="back">理则是星系一级的创造原则、爱与光的源头智慧；子理则是它的后代——我们这个行星系统的子理则就是太阳。<em>像总纲与分公司章程：总纲定框架，分公司用自由意志定细节。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">智能能量</div><div class="sub">intelligent energy</div><span class="tap">点击翻面</span></div><div class="back">已潜能化的智能无限被组织起来、可用于造物的能量；子理则"按理则设定的方式"运用它。<em>像电网：电站（智能无限）发电，电网（理则）把电送到各家各户，灯具的样式由各家自己定。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">门户密度</div><div class="sub">gateway density</div><span class="tap">点击翻面</span></div><div class="back">Ra 对第七密度的称呼：一个完成并转向无时间性、永恒性的门槛密度 (41.16)。<em>像毕业前的最后一学期：课程收束，准备走出校园。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">时间/空间</div><div class="sub">time/space</div><span class="tap">点击翻面</span></div><div class="back">与空间/时间互为颠倒的形而上、不可见的一面；Ra 在 (41.20) 用"可见/不可见、物理/形而上"来区分两者。<em>睁眼的世界是空间/时间；梦里瞬息千里的体验更接近时间/空间。</em></div></div>
+    </div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 03 觉知的火花 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>第一密度的诞生：漩涡、光子与觉知的火花</h2></div>
+  <p class="sec-lead">问完太阳，发问者把镜头拉到"第一密度刚形成时"：能量中心怎么首次出现？最简单的存有是什么？生命何时第一次"动起来"？这一段还包含一次有趣的岔路——发问者纠缠于一个化学细节，Ra 借机上了一课"什么才值得关注"。</p>
+  <div class="card">
+    <h3>图纸先于房子：能量中心先于显化而存在</h3>
+    <div class="q">发问者陈述自己的直觉理解：第一密度由一个漩涡般的能量中心形成，漩涡引发光的旋转振动，光随即凝聚成第一密度的物质——对吗？</div>
+    <div class="quote">
+      <p class="en">However, it is well to point out that the Logos has the plan of all the densities of the octave in potential completion before entering the space/time continuum in first density. Thus the energy centers exist before they are manifest.</p>
+      <p class="zh">然而值得指出：理则在进入第一密度的空间/时间连续体之前，就已拥有八度音程全部密度的潜在完成计划。因此，能量中心在它们被显化之前就已存在。</p>
+      <span class="src">—— Session 041 · (41.8)</span>
+    </div>
+    <p class="plain">漩涡图像"就你的推理所及"没错，但要点补上时间差：全部密度的蓝图在动工之前已经画完，显化只是把潜能放进空间/时间。</p>
+    <div class="analogy"><b>装修图纸：</b>砌墙之前，插座、灯位、水管已在图纸上定好；"这盏灯"在亮起之前，作为计划已经存在。</div>
+    <div class="case"><b>开工日的毛坯房：</b>业主指着图纸对工人说"这里会有一盏灯"——灯还没装，却在计划中"已存在"：能量中心也是如此，先在理则的计划里，再被显化 (41.8)。</div>
+    <div class="case"><b>最小的积木块：</b>有人问积木世界最小的零件是什么，答"最小的那一颗"——Ra 说最简单的显化存有是光，也就是你们所称的光子（photon），它是一切被表达的能量场的中心与基础 (41.9)。</div>
+  </div>
+  <div class="card">
+    <h3>从红到橙：觉知的火花第一次亮起</h3>
+    <div class="q">发问者接着问：第一密度有了火、风、地、水，生命在哪个时刻第一次个体化为"能自我移动的意识"？它带着哪种能量中心？</div>
+    <div class="quote">
+      <p class="en">As the vibratory energies move from red to orange the vibratory environment is such as to stimulate those chemical substances, which lately had been inert, to combine in such a fashion that love and light begin the function of growth.</p>
+      <p class="zh">当振动能量从红色移向橙色，振动环境足以刺激那些先前尚属惰性的化学物质以某种方式结合，爱与光便开始了成长的功能。</p>
+      <span class="src">—— Session 041 · (41.10)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The mechanism is one of the attraction of upward spiraling light. There is nothing random about this or any portion of evolution.</p>
+      <p class="zh">其机制是向上螺旋运动之光的吸引。进化的这一部分或任何部分，都没有随机性。</p>
+      <span class="src">—— Session 041 · (41.10)</span>
+    </div>
+    <p class="plain">红色密度的振动还不足以点燃"觉知的火花"；升到橙色，惰性化学物开始结合，单细胞生命出现——它带的正是橙色能量中心 (41.13)。</p>
+    <div class="case"><b>一滴池塘水：</b>孩子在显微镜下看到一滴池水里的单细胞生物在游动——那个"会动了"的瞬间，对应振动从红到橙、觉知火花第一次亮起的关口 (41.10、41.13)。</div>
+    <div class="case"><b>一锅汤的火候：</b>下锅前各种材料各自待着互不相干，火候一到便融合出全新的东西——红色密度的化学物质本属惰性，橙色振动的"火候"一到，结合与成长便开始 (41.10)。</div>
+  </div>
+  <div class="card">
+    <h3>铁基还是铜基：一次"不核心"的岔路</h3>
+    <div class="q">发问者纠结一个细节：那种单细胞生物（多态甲藻，polymorphous dinoflagellate）是铁基细胞（像植物）却能运动（像动物），能否说明这是植物到动物的过渡？</div>
+    <div class="quote">
+      <p class="en">The functioning of consciousness is the item of interest rather than the chemical makeup of a physical vehicle.</p>
+      <p class="zh">值得关注的是意识的功能，而不是物理载具的化学构成。</p>
+      <span class="src">—— Session 041 · (41.12)</span>
+    </div>
+    <p class="plain">Ra 不否定他的观察，但拒绝由此下结论：化学载具只是"最方便容纳意识的房子"，意识的功能才是看点——这类差异是子理则的瞬间选择，不是有成果的材料。</div>
+    <div class="case"><b>房子与住户：</b>两个邻居争论"新住户是什么样的人"：一个研究房子的建材，一个观察住户每天做什么。Ra 站在后一边——看意识的功能，而非载具的化学 (41.12)。</div>
+    <div class="case"><b>不断修订的谱系图：</b>教材年年改写"生命如何从植物过渡到动物"的谱系，学者们为差异与关联困惑不已——Ra 的提醒是：这是子理则一个瞬间的选择所决定的事，纠缠于此并非有成果的材料 (41.12)。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 04 橙光的退行 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>橙色光芒的退行：当绿色浪潮到来，为什么有人退回自我</h2></div>
+  <p class="sec-lead">从甲藻的橙色中心，发问者自然问到人的橙色中心——Ra 借这一问展开本集最贴近当下世界的一段教导：第三密度合适的颜色是黄色，但许多感受到"绿色振动"的人却退回了橙色。这是本集最容易被误读的地方：退行不等于负面极化。</p>
+  <div class="card">
+    <h3>同一种真实颜色，两副面孔</h3>
+    <div class="q">发问者问：甲藻的橙色中心与人类的橙色中心，在小尺度上相关联吗？</div>
+    <div class="quote">
+      <p class="en">The true color is precisely the same. However, the consciousness of the second-density beginning is primitive and the use of orange ray limited to the expression of self which may be seen to be movement and survival.</p>
+      <p class="zh">真实颜色（true color，光芒不受显化影响的本色）精确相同。然而第二密度初始阶段的意识是原始的，橙色光芒的使用仅限于自我的表达——可以看作运动与生存。</p>
+      <span class="src">—— Session 041 · (41.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Thus true-color orange is that which it is, without difference.</p>
+      <p class="zh">因此，真实颜色的橙色就是它本身，没有差别。</p>
+      <span class="src">—— Session 041 · (41.14)</span>
+    </div>
+    <p class="plain">颜色没有变，变的是"用颜色的人"：同一道光，在单细胞那里只是移动与求生，在人这里却穿过复杂得多的变貌系统显化。</p>
+    <div class="case"><b>同一支手电筒：</b>探洞者用它照亮前路，孩子拿它玩光斑游戏——光是同一种"真实颜色"，照出什么全看持灯者的状态 (41.14)。</div>
+    <div class="case"><b>小狗与成年人：</b>小狗的橙光只做两件事：跑动与觅食求生；一个成年人若同样只围绕自我运转，用的仍是"同一种颜色"，只是显化途径复杂得多 (41.14)。</div>
+  </div>
+  <div class="card">
+    <h3>谁在退行，为什么这不是负面极化</h3>
+    <div class="q">发问者还没问出口，Ra 替他展开了：第三密度里"卡在橙色"的人是谁？他们算负面极性吗？</div>
+    <div class="quote">
+      <p class="en">However, the influences of the true-color green acting upon yellow-ray entities have caused many entities to revert to the consideration of self rather than the stepping forward into consideration of other-self, or green ray.</p>
+      <p class="zh">然而，真实颜色——绿色——作用于黄色光芒实体所产生的影响，已使许多实体退回对自我的考虑，而非向前迈入对其他-自我、即绿色光芒的考虑。</p>
+      <span class="src">—— Session 041 · (41.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Those reverting to orange ray—and we may add these are many upon your plane at this time—are those who feel the vibrations of true-color green and, therefore, respond by rejecting governmental and societal activities as such and seek once more the self.</p>
+      <p class="zh">那些退回橙色光芒的人——我们可以补充说，此刻你们层面这样的人很多——是感受到真实颜色绿色之振动、因而以拒绝政府与社会活动本身作为回应、并再次寻求自我的人。</p>
+      <span class="src">—— Session 041 · (41.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This may not be seen to be of a negatively polarized nature, as the negatively polarized entity is working very intensively with the deepest manifestations of yellow-ray group energies, especially the manipulations of other-self for service to self.</p>
+      <p class="zh">这不可被视为负面极化的性质：负面极化的实体正在极其密集地运用黄色光芒群体能量最深层的显化——尤其是为了服务自我（service to self）而操纵其他-自我。</p>
+      <span class="src">—— Session 041 · (41.14)</span>
+    </div>
+    <p class="plain">退回橙光是"黄光这一步没走完"，不是走向负面：负面者密集操纵群体能量为私利服务，退行者只是退出社会、回头处理自我——他们的下一课是"自我相对于自我"的进一步激活与平衡。</p>
+    <div class="case"><b>退隐的工程师：</b>一位程序员感受到"共情与整体"的时代氛围（绿色振动），索性辞掉工作、退出全部社群、回乡独居种田——按 Ra 的分类，这不是负面极化，而是黄色光芒未发展平衡前的橙色退行，接下来的功课是把"自我相对于自我"进一步激活并平衡 (41.14)。</div>
+    <div class="case"><b>操控的对照：</b>另一位管理者用群体规则与信息差操纵下属为私利服务——这才是 Ra 所说的负面路径：密集运用黄光群体能量的深层显化、为服务自我而操纵其他-自我 (41.14)。</div>
+    <div class="case"><b>退出而非进攻：</b>两个人都不参加行业活动了：一个是厌恶圈子的操纵与倾轧、回家读书养花；一个是留下来继续布线布局、把人脉变成杠杆——Ra 的区分正在这里：退回自我 vs 操纵群体 (41.14)。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 05 激活与收割判准 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>激活的次第、意志与转速：什么才算"可以收割"</h2></div>
+  <p class="sec-lead">讲完橙光，发问者按颜色次第追问："谁最早点亮黄光？谁最早红橙黄绿全激活？"随后问出本集最核心的机制问题——理则、光与能量中心是什么关系，"旋转速度"又是什么。这一章的终点是一个判准：收割看平衡，不看亮度。</p>
+  <div class="card">
+    <h3>谁先点亮黄光与绿光</h3>
+    <div class="q">发问者想找"最早点亮某道光芒的最简单实体"：最早拥有黄光的是谁？最早红橙黄绿全激活的又是谁？</div>
+    <div class="quote">
+      <p class="en">Upon your planetary sphere those having the first yellow-ray experiences are those of animal and vegetable natures which find the necessity for reproduction by bisexual techniques, or who find it necessary to depend in some way upon other-selves for survival and growth.</p>
+      <p class="zh">在你们行星领域上，最早拥有黄色光芒体验的，是那些发现必须以双性方式繁殖、或必须以某种方式依赖其他-自我才能生存与成长的动物和植物性质的实体。</p>
+      <span class="src">—— Session 041 · (41.15)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The third-density being, having the potential for complete self-awareness, thus has the potential for the minimal activation of all energy centers. The fourth, fifth, and sixth densities are those refining the higher energy centers. The seventh density is a density of completion and the turning towards timelessness, or foreverness.</p>
+      <p class="zh">第三密度存有拥有完整自我觉知的潜能，因而具备全部能量中心最低限度激活的潜能。第四、第五和第六密度是精炼更高能量中心的密度。第七密度是完成、并转向无时间性或永恒性的密度。</p>
+      <span class="src">—— Session 041 · (41.16)</span>
+    </div>
+    <p class="plain">黄光从"需要他者"开始（双性繁殖、育幼、共生）；晚期第二密度的实体若有效利用体验，绿光已可能被振动激活；第三密度则潜在地全谱可激活——第二密度的动物同样带着全部中心，只是未激活 (41.17)。</p>
+    <div class="case"><b>企鹅轮班孵蛋：</b>南极的企鹅父母必须交替出海觅食、回巢孵蛋，谁也不能独自完成繁衍——"依赖其他-自我以求生存与成长"，正是最早黄光体验的画像 (41.15)。</div>
+    <div class="case"><b>老狗的告别：</b>养过狗的人常在老犬身上感到近乎无条件的爱与陪伴——晚期第二密度实体若有效利用了体验，绿色光芒已可振动并激活 (41.16)。</div>
+  </div>
+  <div class="card">
+    <h3>谁决定点亮的速度：把"机械进化"换掉</h3>
+    <div class="q">发问者想追问光、能量中心与理则之间的"机械关系"，Ra 把问题的方向整个换掉了。</div>
+    <div class="quote">
+      <p class="en">The answer is to redirect your thought processes from any mechanical view of evolution.</p>
+      <p class="zh">答案是：把你的思维过程从任何机械式的进化观上移开。</p>
+      <span class="src">—— Session 041 · (41.18)</span>
+    </div>
+    <p class="plain">分工只有两条：理则的意志设定"有哪些潜能"可被使用；而实体的意志，是激活与平衡各中心的速度与精密程度的唯一衡量——不是流水线，是自由意志的功课（这句的完整原文见第八章金句卡）。</p>
+    <div class="case"><b>乐谱与琴房：</b>作曲家写下乐谱（理则设定潜能），练到什么火候却全看琴童自己每天愿练多久、练得多细——实体的意志就是那把标尺 (41.18)。</div>
+    <div class="case"><b>同一间健身房：</b>两张一样的年卡（潜能相同），一年后两人的力量天差地别——决定的不是卡，是去卡的人：激活的速度与精密度是"唯一衡量" (41.18)。</div>
+  </div>
+  <div class="card">
+    <h3>转速、明亮与平衡：收割的判准</h3>
+    <div class="q">发问者回到上一集留下的话头：能量中心的"可变旋转速度"到底指什么？</div>
+    <div class="quote">
+      <p class="en">Each energy center has a wide range of rotational speed, or as you may see it more clearly in relation to color, brilliance.</p>
+      <p class="zh">每个能量中心都有很宽的旋转速度范围——或者换成颜色来看更清楚，即明亮度。</p>
+      <span class="src">—— Session 041 · (41.19)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The key to balance may then be seen in the unstudied, spontaneous, and honest response of entities toward experiences, thus using experience to the utmost, then applying the balancing exercises and achieving the proper attitude for the most purified spectrum of energy center manifestation in violet ray.</p>
+      <p class="zh">平衡的关键在于实体对体验不经造作、自发而诚实的回应，从而把体验利用到极致，然后应用平衡练习，达成适当的态度，以在紫罗兰色光芒中获得最净化的能量中心显化光谱。</p>
+      <span class="src">—— Session 041 · (41.19)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This is why the brilliance, or rotational speed, of the energy centers is not considered above the balanced aspect, or violet-ray manifestation, of an entity in regarding harvestability; for those entities which are unbalanced, especially as to the primary rays, will not be capable of sustaining the impact of the love and light of intelligent infinity to the extent necessary for harvest.</p>
+      <p class="zh">这就是在衡量可收割性（harvestability，密度之间的"毕业"资格）时，能量中心的明亮度不被置于实体的平衡面向——紫罗兰色显化——之上的原因：不平衡的实体、尤其是主要光芒不平衡的实体，无法在收割所需的程度上承受智能无限之爱与光的冲击。</p>
+      <span class="src">—— Session 041 · (41.19)</span>
+    </div>
+    <p class="plain">亮不等于稳：意志越集中净化，中心越明亮，且自我觉知的实体无须按序激活；但收割看的是紫罗兰色的整体平衡——不平衡者承受不住那"爱与光的冲击"。</p>
+    <div class="case"><b>偏科的马拉松选手：</b>某人配速惊人（某个中心极其明亮）却从不练核心力量，后半程崩掉——Ra 说，实体可能有极其明亮的中心，却因缺乏对体验整体性的关注而在紫罗兰面向相当不平衡 (41.19)。</div>
+    <div class="case"><b>复盘会上的真心话：</b>团队复盘失败项目时，成员不表演、不粉饰，第一反应诚实说出感受，之后才整理成改进清单——"自发诚实地回应体验→用到极致→再做平衡练习"正是这个顺序 (41.19)。</div>
+    <div class="case"><b>独奏者与乐队：</b>一位小提琴手炫技无双却从不看指挥，乐队合演时全场混乱——自我觉知的实体无须按序激活，但"合奏"（紫罗兰色的整体）才是被听见的方式 (41.19)。</div>
+  </div>
+  <div class="card">
+    <h3>条件模拟器：什么才算"可以收割"</h3>
+    <p>Ra 给出的判准不是"亮"，而是"平衡"。拨动下面的开关，看看缺了哪一条会怎样。</p>
+    <div id="condBox">
+      <div class="cond-row"><div class="name">主要光芒平衡<small>红、黄、蓝这些主要光芒之间没有严重失衡</small></div><label class="switch"><input type="checkbox" id="condA" checked><span class="slider"></span></label></div>
+      <div class="cond-row"><div class="name">关注体验的整体性<small>不只为某一个中心精修，而是照看全部经验</small></div><label class="switch"><input type="checkbox" id="condB" checked><span class="slider"></span></label></div>
+      <div class="cond-row"><div class="name">自发诚实的回应＋平衡练习<small>先真实回应体验、用到极致，再做平衡练习</small></div><label class="switch"><input type="checkbox" id="condC" checked><span class="slider"></span></label></div>
+    </div>
+    <div id="condResult"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 06 禁食与重新编程 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>禁食与重新编程：把催化剂的参数收回自己手里</h2></div>
+  <p class="sec-lead">话题从密度的宏大尺度骤然切回个人：上一集末尾提过"禁食可以移除不需要的思想形态"，发问者请 Ra 展开它的机制——由此引出本集最实用的教导：催化剂（catalyst，促成经验与成长的境遇材料）的编程权，可以收回自己手里。</p>
+  <div class="card">
+    <h3>禁食为什么能清思想形态</h3>
+    <div class="q">发问者问：禁食作为一种"移除不需要的思想形态"的方法，到底是怎么运作的？</div>
+    <div class="quote">
+      <p class="en">Thus the one discipline, or denial, of the unwanted portion as an appropriate part of the self is taken through the tree of mind down through the trunk to subconscious levels where the connection is made.</p>
+      <p class="zh">于是，"拒绝那不需要的部分是自我的一个适当部分"这一纪律，穿过心智之树、顺树干下行至潜意识层面，在那里建立连接。</p>
+      <span class="src">—— Session 041 · (41.21)</span>
+    </div>
+    <div class="quote">
+      <p class="en">All then falls away, and the entity—while understanding, if you will, and appreciating the nature of the rejected material as part of the greater self, nevertheless, through the action of the will—purifies and refines the mind/body/spirit complex, bringing into manifestation the desired mind complex or spirit complex attitude.</p>
+      <p class="zh">于是一切脱落：实体一面理解并领会被拒绝的材料属于更大的自我，一面仍借意志的行动净化并精炼心/身/灵复合体（mind/body/spirit complex，人作为心智-身体-灵性的统一存有结构），把想要的心智或灵性态度带入显化。</p>
+      <span class="src">—— Session 041 · (41.21)</span>
+    </div>
+    <p class="plain">禁食是类比，不是魔法：让"清除身体多余物"这个身体动作，把"这部分不再属于我"的意志一路送达潜意识，身、心、灵一致表态——而且必须由"有意识的存有"来做。</p>
+    <div class="analogy"><b>全屋断舍离：</b>真正扔掉一件东西之前，你得先承认"它曾是我生活的一部分"（理解被拒材料属于更大自我），然后才决定"但它现在不需要留下"——禁食把同一个决定做给身体看。</div>
+    <div class="case"><b>两个断食者：</b>两人都三天不吃饭：一个只是饿，另一个清楚自己在借"身体的清理"练习"对心智多余材料的拒绝"——Ra 说得很直白，这类技术必须由有意识的存有来用 (41.21)。</div>
+    <div class="case"><b>删 App 之前的一页纸：</b>有人卸载短视频应用前先写下一页纸："它给过我什么、我为什么不再需要它"，然后才删——把拒绝送到习惯的根（潜意识的连接处），而不只是删掉图标 (41.21)。</div>
+  </div>
+  <div class="card">
+    <h3>更进一步：不用禁食的重新编程</h3>
+    <div class="q">发问者追问：这是不是像"有意识地重新编程催化剂"——高我（higher self，制作体验课题的更完整自我）本用催化剂制造释放偏见的体验，现在自己动手编程？</div>
+    <div class="quote">
+      <p class="en">The self, if conscious to a great enough extent of the workings of this catalyst and the techniques of programming, may, through concentration of the will and the faculty of faith alone, cause reprogramming without the analogy of the fasting, the diet, or other analogous body complex disciplines.</p>
+      <p class="zh">自我若对催化剂的运作与编程技术有足够程度的意识，可以仅凭意志的集中与信心的能力完成重新编程，而不需要禁食、饮食或其他类似身体复合体纪律的类比。</p>
+      <span class="src">—— Session 041 · (41.22)</span>
+    </div>
+    <p class="plain">禁食只是"拐杖"：意识足够时，意志＋信心就够——对催化剂的觉察本身就是编程能力。</p>
+    <div class="case"><b>不用仪式的戒烟：</b>有人靠贴戒烟贴、换薄荷糖一步步替换（身体纪律的类比）；有人在看清"抽烟在替我回避什么"的那一刻直接放下——Ra 描述的正是后一条路：觉察够了，仅凭意志与信心就能重新编程 (41.22)。</div>
+    <div class="case"><b>写代码的两代人：</b>新手改配置文件反复试错，熟手直接读懂逻辑后改源码——对"催化剂如何运作"的觉知程度，决定了你需要多少外部类比 (41.22)。</div>
+  </div>
+  <div class="card">
+    <h3>对照校勘：一本书的"基本正确"</h3>
+    <div class="q">发问者拿一本叫《Initiation》的书来问：书里那位女士关于平衡的教导，是不是 Ra 的教导？</div>
+    <div class="quote">
+      <p class="en">This is basically correct with distortions that may be seen when this material is collated with the material we have offered.</p>
+      <p class="zh">这基本正确——但当这些材料与我们提供的材料对照校勘时，可以看到其中存在变貌（distortion，对统一性的偏离状态）。</p>
+      <span class="src">—— Session 041 · (41.24)</span>
+    </div>
+    <p class="plain">Ra 认可其主体，也指出对照的必要：不是"谁真谁假"，而是并排摆放时变貌自会显形——这也是读一切灵性材料的方法。</p>
+    <div class="case"><b>两份攻略并排看：</b>出发前你拿到两份旅行攻略，一份详尽一份简略；把两份并排放着，出入之处立刻显形——Ra 建议的正是这种"对照校勘"的读法 (41.24)。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 07 主要光芒的阶梯 ============ -->
+<section class="chapter" id="s7">
+  <div class="sec-head"><span class="num">07</span><h2>主要光芒的阶梯：从红光的根基到蓝光的"共同造物者"</h2></div>
+  <p class="sec-lead">临近收尾，Ra 主动讨来"最后一个完整问题"，发问者问出本集收官的一问：为什么红、黄、蓝被称为主要中心？有没有追溯到智能无限的更深刻说法？Ra 的回答把前几章讲过的颜色串成了一架梯子。</p>
+  <div class="card">
+    <h3>为什么红黄蓝是"主要"</h3>
+    <div class="q">发问者觉得自己从之前的材料已理解大半，但想再往下挖一层——这三种颜色能不能一路追到智能无限？</div>
+    <div class="quote">
+      <p class="en">The red, yellow, and blue rays are primary because they signify activity of a primary nature.</p>
+      <p class="zh">红、黄、蓝光芒之所以是主要的，因为它们标示着主要性质的活动。</p>
+      <span class="src">—— Session 041 · (41.25)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Red ray is the foundation; orange ray the movement towards yellow ray which is the ray of self-awareness and interaction. Green ray is the movement through various experiences of energy exchanges having to do with compassion and all-forgiving love to the primary blue ray, which is the first ray of radiation of self regardless of any actions from another.</p>
+      <p class="zh">红光是基础；橙光是朝向黄光——自我觉知与互动之光——的运动；绿光是穿过各种与慈悲及全然宽恕之爱有关的能量交换体验、走向主要蓝光的运动——蓝光是不论他人如何行动都辐射自我的第一道光芒。</p>
+      <span class="src">—— Session 041 · (41.25)</span>
+    </div>
+    <p class="plain">"主要"不是级别高，而是地基性的活动：红是根基，黄是自我觉知与互动，蓝是不依赖回应的自我辐射——橙与绿则是通向它们的"运动"。</p>
+    <div class="case"><b>创业公司的地基：</b>一家小公司活下来的次序像光的逐层点亮：先有账目与场地水电（红光=基础），再有分工与客户互动（橙→黄），然后是团队彼此的关怀（绿），最后是创始人在没人喝彩时仍把愿景讲出来（蓝）(41.25)。</div>
+    <div class="case"><b>学步与行走：</b>婴儿先能站稳（红的基础），再迈步朝人走去（橙→黄的运动），学会拥抱（绿），最终说出不受对方态度左右的真心话（蓝的辐射）——"运动"与"落脚点"在梯子上各占一级 (41.25)。</div>
+  </div>
+  <div class="card">
+    <h3>绿光的无力与蓝光的跃迁</h3>
+    <div class="q">这架梯子上最关键的一级台阶，是绿与蓝之间——Ra 用一句话点破了它们的分野。</div>
+    <div class="quote">
+      <p class="en">The green-ray entity is ineffectual in the face of blockage from other-selves. The blue-ray entity is a co-Creator.</p>
+      <p class="zh">绿色光芒实体在面对其他-自我的阻碍时是无力的。蓝色光芒实体是共同造物者。</p>
+      <span class="src">—— Session 041 · (41.25)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This may perhaps simply be a restatement of previous activity, but if you consider the function of the Logos as representative of the Infinite Creator in effectuating the knowing of the Creator by the Creator, you may perhaps see the steps by which this may be accomplished.</p>
+      <p class="zh">这或许只是对先前内容的重述；但若你思考理则的功能——作为无限造物主的代表，实现"造物主被造物主所知晓"——你或许就能看到这得以完成的步骤。</p>
+      <span class="src">—— Session 041 · (41.25)</span>
+    </div>
+    <p class="plain">绿光的美在慈悲，弱点是被对方的回应绑架；蓝光第一次做到"无论对方如何反应，我仍然表达"——这就是从"感受爱"到"共同造物"的跃迁。</p>
+    <div class="case"><b>被脸色绑架的关心：</b>一位母亲对孩子有求必应，孩子一冷脸她就慌了神——绿光的能量交换被对方的阻碍锁死；直到她说出"无论你怎么回应，我的关心不变"，表达才第一次成为辐射：蓝光的一步 (41.25)。</div>
+    <div class="case"><b>项目室里的两种好人：</b>甲是全组最会体谅的人，被抢功时一句话不说；乙同样温和，却能把方案清清楚楚讲出来、不因反对而收回——按 Ra 的阶梯，甲停在绿光，乙已站上蓝光 (41.25)。</div>
+  </div>
+  <div class="card">
+    <h3>归类练习：这句话是哪道光</h3>
+    <p>五个日常场景，判断它们各自对应哪道光芒的显化——点错会显示正确答案与理由。</p>
+    <div id="raySort"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 08 收官 ============ -->
+<section class="chapter" id="s8">
+  <div class="sec-head"><span class="num">08</span><h2>收官：Ra 的来路与本集的出口</h2></div>
+  <p class="sec-lead">问答的最后，Ra 回答了"你们自己如何走到今天"——一段压缩的密度之旅。它不只是自传：和谐、平衡慈悲、加速毕业，每一个词都是本集教导的活例；连"天真的代价"也是一段诚实的自省。</p>
+  <div class="card">
+    <h3>Ra 自己的激活之路</h3>
+    <div class="q">发问者明知这问题对本次集会可能太长，还是问了：Ra 这个社会记忆复合体（social memory complex，个体意识完全共享合一的群体存有）从最初如何发展、用过什么催化剂走到今天的光芒激活？</div>
+    <div class="quote">
+      <p class="en">The question does not demand a long answer, for we who experienced the vibratory densities upon that planetary sphere which you call Venus were fortunate in being able to move in harmony with the planetary vibrations with an harmonious graduation to second, to third, and to fourth, and a greatly accelerated fourth-density experience.</p>
+      <p class="zh">这个问题不需要长篇回答：因为我们这些在你们称为金星的行星领域上体验振动密度的实体，很幸运能与行星振动和谐共进——和谐地毕业至第二、第三、第四密度，并拥有一段大大加速的第四密度体验。</p>
+      <span class="src">—— Session 041 · (41.26)</span>
+    </div>
+    <div class="quote">
+      <p class="en">We spent much time/space, if you will, in fifth density balancing the intense compassion we had gained in fourth density.</p>
+      <p class="zh">我们在第五密度花费了大量时间/空间，来平衡我们在第四密度获得的强烈慈悲。</p>
+      <span class="src">—— Session 041 · (41.26)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Our harmony, however, has been a grievous source of naïveté as regards working with your planet.</p>
+      <p class="zh">然而，我们的和谐，就与你们行星的工作而言，一直是天真的一个沉痛根源。</p>
+      <span class="src">—— Session 041 · (41.26)</span>
+    </div>
+    <div class="timeline">
+      <div class="tl-item"><div class="t">金星 · 二至四密度</div><div class="d">与行星振动和谐共进，和谐毕业，第四密度体验大大加速 (41.26)。</div></div>
+      <div class="tl-item"><div class="t">第四密度</div><div class="d">社会记忆复合体极其牢固地凝聚，此后一直保持强大而助人的性质 (41.26)。</div></div>
+      <div class="tl-item"><div class="t">第五密度</div><div class="d">花大量时间/空间，平衡第四密度获得的强烈慈悲 (41.26)。</div></div>
+      <div class="tl-item"><div class="t">第六密度</div><div class="d">工作同样因和谐而加速；作为星际联邦（Confederation，服务他人的行星群体联盟）成员出发，更快接近第七密度毕业 (41.26)。</div></div>
+      <div class="tl-item"><div class="t">如今 · 自省</div><div class="d">和谐本身成为与地球打交道时"天真"的严重根源——顺境也会养出盲区 (41.26)。</div></div>
+    </div>
+    <div class="case"><b>顺境团队的盲区：</b>一支从未输过的冠军队伍第一次遇到混乱赛况便应对失灵——和谐是资源，也是把"天真"养大的温床；Ra 用它来自省自己的联邦工作 (41.26)。</div>
+    <div class="case"><b>照护者的第五密度功课：</b>一位长年照护重病家人的人，付出了近乎无限的慈悲之后，又用许多年学习不被这份慈悲压垮——Ra 说他们正是花大量"时间/空间"做这份平衡 (41.26)。</div>
+  </div>
+  <div class="card">
+    <h3>本集金句与出口</h3>
+    <div class="saying">
+      <p class="en">The will of the Logos posits the potentials available to the evolving entity. The will of the entity, as it evolves, is the single measure of the rate and fastidiousness of the activation and balancing of the various energy centers.</p>
+      <p class="zh">理则的意志设定进化中的实体可用的潜能；而实体的意志——随其进化——是各个能量中心激活与平衡之速度与精密程度的唯一衡量。</p>
+      <span class="src">—— Session 041 · (41.18)</span>
+    </div>
+    <div class="quote">
+      <p class="en">All is well. I leave you, my friends, in the love and in the light of the One Infinite Creator.</p>
+      <p class="zh">一切安好。我的朋友们，我在太一无限造物主的爱与光中离开你们。</p>
+      <span class="src">—— Session 041 · (41.27)</span>
+    </div>
+    <p class="plain">本集的出口：从"光如何点亮"到"谁在点亮"——理则给出潜能，意志决定快慢；蓝光把表达从回应中解放出来，而 Ra 自己的旅程提醒我们：连和谐都需要被平衡。</p>
+    <div class="case"><b>散会前的一句话：</b>团队例会的收尾固定是同一句"辛苦了，下次见"——看似客套，实则是把注意力从琐碎议程收回到共同目的上；Ra 的告别"在爱与光中离开你们"正是这种把结尾交给源头的做法 (41.27)。</div>
+    <div class="case"><b>留给下一集的线头：</b>本集把"收割看平衡"的判准交到读者手里，而蓝光实体的"共同造物"与 Ra 所在的星际联邦工作，都是后续集会可以继续展开的方向——地图的下一页从这里翻开。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 041（`split/Ra_Session_041.md`）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra041-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+const MAP_STEPS=[
+  {t:'场地后勤',d:'<span class="qa-q">问：若搬去一千多英里外，与 Ra 的接触会受影响吗？</span><b>答：</b>地点毫无意义——我们难道不都在造物之中吗？但工作场所要么振动水平适当，要么先净化并以冥想奉献（可能只是清洁粉刷这类平凡事务）。'},
+  {t:'太阳是什么',d:'<span class="qa-q">问：请描述我们的太阳。</span><b>答：</b>它有多副面孔：对智能无限，它与造物一切部分同为无限的一部分；对智能能量，它是理则之下的子理则，用自由意志共同创造各密度的全部细微差异；对各密度，物理上是聚变气体球，形而上是第四密度以上逐步被领会的活的共同实体。'},
+  {t:'第六密度的光',d:'<span class="qa-q">问：第六密度实体真的在创造太阳的显化？</span><b>答：</b>一些以融合为繁衍方式的实体，选择把这段体验活成太阳体存有性的一部分——你接收到的部分光，是第六密度之爱的生成表达的后代。'},
+  {t:'第一密度怎么来',d:'<span class="qa-q">问：第一密度由漩涡状能量中心引发光旋转、凝聚而成，对吗？</span><b>答：</b>就你的推理所及正确；但理则早已拥有八度全部密度的潜在完成计划——能量中心先于显化而存在。'},
+  {t:'觉知的火花',d:'<span class="qa-q">问：生命何时第一次"动起来"？</span><b>答：</b>红色密度的振动还不足以点燃觉知的火花；升到橙色，惰性化学物质结合，爱与光开始成长——单细胞出现，机制是向上螺旋之光的吸引，进化没有随机。'},
+  {t:'橙色光芒的退行',d:'<span class="qa-q">问：甲藻的橙光与人的橙光是同一回事吗？</span><b>答：</b>真实颜色精确相同；但第三密度许多人感受到绿色的振动，却退回对自我的考虑——这不是负面极化，而是黄光未平衡前的退行。'},
+  {t:'转速与平衡',d:'<span class="qa-q">问：能量中心的"旋转速度"是什么意思？</span><b>答：</b>意志越集中净化，中心越明亮，且无须按序激活。但收割看的是紫罗兰色的平衡——不平衡者承受不住智能无限之爱与光的冲击。'},
+  {t:'禁食与改写',d:'<span class="qa-q">问：禁食如何移除不需要的思想形态？</span><b>答：</b>它让"清除身体多余物"成为"拒绝心智多余材料"的类比，沿心智之树下行到潜意识建立连接；意识足够时，仅凭意志与信心就能重新编程，无须禁食。'},
+  {t:'收官 · Ra 的来路',d:'<span class="qa-q">问：Ra 自己是如何一步步走到今天的？</span><b>答：</b>金星上和谐毕业至二、三、四密度；第五密度花大量时间/空间平衡强烈慈悲；第六密度作为星际联邦成员出发——但和谐也让与地球的工作染上天真。整集讲光如何点亮，收束时点亮的却是 Ra 自己。'}
+];
+initStepper('mapTrack','mapDetail','mapPrev','mapNext',MAP_STEPS);
+
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+function renderCond(){
+  const a=document.getElementById('condA').checked,b=document.getElementById('condB').checked,c=document.getElementById('condC').checked;
+  const el=document.getElementById('condResult');
+  el.classList.remove('fail');
+  if(a&&b&&c){
+    el.innerHTML='✓ 三条都满足：这正对应 (41.19) 描述的收割画像——各中心经意志集中净化后，在紫罗兰色光芒中呈现最净化的显化光谱，足以承受智能无限之爱与光的冲击。';
+  }else{
+    const miss=[];
+    if(!a)miss.push('主要光芒之间失衡');
+    if(!b)miss.push('缺乏对体验整体性的关注');
+    if(!c)miss.push('回应体验不够自发诚实、也没有做平衡练习');
+    el.classList.add('fail');
+    el.innerHTML='△ 尚未满足——缺：'+miss.join('；')+'。按 (41.19)，这样的实体可能有极其明亮的中心，却无法在收割所需的程度上承受那爱与光的冲击。';
+  }
+}
+['condA','condB','condC'].forEach(id=>document.getElementById(id).addEventListener('change',renderCond));
+renderCond();
+
+const RAY_ITEMS=[
+  {a:'一家小公司先把账目、服务器和场地水电这些根基做扎实',opts:['红光','橙光','黄光','绿光','蓝光'],ans:'红光',exp:'红光是基础，标示主要性质的活动。'},
+  {a:'一滴池塘水里的单细胞生物第一次朝光游动、觅食求生',opts:['红光','橙光','黄光','绿光','蓝光'],ans:'橙光',exp:'第二密度初始意识用橙光做自我表达：运动与生存。'},
+  {a:'团队第一次立下分工与例会制度，成员各就各位开始互动',opts:['红光','橙光','黄光','绿光','蓝光'],ans:'黄光',exp:'黄光是自我觉知与互动的光芒，第三密度合适的真实颜色。'},
+  {a:'听到同事家里出了变故，放下手头的事陪他坐了很久',opts:['红光','橙光','黄光','绿光','蓝光'],ans:'绿光',exp:'绿光是慈悲与全然宽恕之爱的能量交换体验。'},
+  {a:'方案被否决后仍把立场清楚讲出来，不因反对而收回',opts:['红光','橙光','黄光','绿光','蓝光'],ans:'蓝光',exp:'蓝光是不论他人行动如何都辐射自我的第一道光芒——蓝光实体是共同造物者。'}
+];
+initSorter('raySort',RAY_ITEMS);
+
+renderPath();
+</script>
+</body>
+</html>

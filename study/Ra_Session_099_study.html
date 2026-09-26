@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 099 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 099 · 交互式学习模块</h1>
+  <p class="sub">这一集先为记录者靛蓝光芒的淤积开出三条处方，讲清「力量的流动靠持续使用」；再为塔罗探索立下恒常性原则，点出第五号牌的翅膀是一份盟约；主体精读第六号牌「心智的转化」——左右手路径的分野，在于意识心智对待深层心智与他人资源的态度。</p>
+  <div class="tagline">6 个主题 · 6 个学习步骤 · 17 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本集地图</a><a href="#s2">② 力量的流动</a><a href="#s3">③ 恒常与盟约</a><a href="#s4">④ 心智的转化</a><a href="#s5">⑤ 铭印与自由意志</a><a href="#s6">⑥ 收官·丝带</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>走一遍问答推进器，分清教导内容与例行问答</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>听懂靛蓝光芒的信号</b><span>理解力量的流动，试用三条处方的条件模拟器</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>立起恒常性原则</b><span>两套牌组怎么选，第五号牌的翅膀为何是盟约</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>精读第六号牌</b><span>求爱与掠夺、保护之箭与镜子，完成归类练习</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>辨析铭印与自由意志</b><span>一夫一妻是谁的设计，路标为何仍然亮着</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官：丝带与那道题</b><span>带走金句与伏笔，接住 Ra 留给学生的反问</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本集地图：一场短集里装了什么</h2></div>
+  <p class="sec-lead">这一集（1982 年 11 月 18 日）篇幅不长，却横跨三块领地：先照料器皿与记录者（例行），再为塔罗探索立规矩（恒常性）并精读第五、第六号牌（主体），最后以一夫一妻铭印之问与圣杯寄语收尾。小组正处在一段相对不适的时期——Ra 在收官时特意点出，并请他们回头重读先前的话。</p>
+
+  <div class="card">
+    <h3>本集在原型探讨中的位置</h3>
+    <p>从第 88 集起，小组一直在借塔罗图像探索原型心智。上一集确立了以「45 分钟录音信号」作为结束集会的参考点；本集先确认这个安排是否仍然合适，再把牌面从第五号牌推进到第六号牌——<b>心智的转化</b>。与此同时，Ra 给出一条贯穿全场的挑选标准：<b>恒常性（constancy）——在教导/学习的动力学里，最有效率的运作原则是「一直用同一套」</b>。</p>
+    <div class="quote">
+      <p class="en">I greet you in the love and in the light of the One Infinite Creator. We communicate now.</p>
+      <p class="zh">我在太一无限造物者的爱与光中向你们问候。此刻我们开始通讯。</p>
+      <span class="src">—— Session 099 · (99.0)</span>
+    </div>
+    <div class="plain">本集三根主线：力量的流动（靛蓝光芒的淤积）、恒常性与盟约（第五号牌）、心智的转化（第六号牌）。收官处 Ra 留下一句圣杯寄语，也留下一道没有替学生作答的题。</div>
+    <div class="case"><b>力量淤积的主管：</b>一位部门主管连续几周脾气临界、胸口发闷，下班后瘫在沙发上——不是活太多，而是他那种「扛事的力量」只进不出。这正是本集前半 Ra 为记录者诊断的形状，三条处方随后展开（见第 2 章）。</div>
+    <div class="case"><b>不停换教材的学习者：</b>有人学吉他，三个月换了四套教程，每套都「不太对」。Ra 对两套塔罗图像的回答适用于他：哪套都行，但要一套用到底——效率来自恒常，不来自挑选（见第 3 章）。</div>
+  </div>
+
+  <div class="card">
+    <h3>问答脉络推进器</h3>
+    <p>按顺序走一遍本集的问答链，看看对话如何从器皿照料一路推进到圣杯寄语：</p>
+    <div class="demo-area">
+      <div class="flow-track" id="flowTrack"></div>
+      <div class="flow-detail" id="flowDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="flowPrev">← 上一步</button>
+        <button class="tri-btn" id="flowNext">下一步 →</button>
+      </div>
+    </div>
+  </div>
+
+  <details class="dict"><summary>本集例行问答（可跳过）<span class="hint">器皿状态 · 后勤</span></summary>
+    <div class="body">
+      <p><b>(99.1) 器皿状态：</b>物理赤字持续，但移除过敏食物后有望减轻；生命能量略降仍强，心智/情绪能量趋于减弱。</p>
+      <p><b>(99.2) 过敏源：</b>酪乳——虽然它此前被恰当地用于喉咙与胸部的疗愈工作。</p>
+      <p><b>(99.3) 小金十字架：</b>金属物通常不被推荐，但对这个器皿被特别推荐：它所代表的意涵能稳固被共情变貌扰乱的心智/情绪模式；若要加固链子，加固环的纯度应不低于其余部分。</p>
+      <p><b>(99.4) 喉咙的魔法工作：</b>关于第五密度负面同伴所为及其后遗影响，无需再做任何处理。</p>
+      <p><b>(99.9) 结束时机：</b>45 分钟录音信号之后不久结束为宜——Ra 坦承当初高估了器皿的恢复力，这样做很可能延长她能为这次接触奉献的转世时光。</p>
+    </div>
+  </details>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>力量的流动：靛蓝光芒为什么会钝痛</h2></div>
+  <p class="sec-lead">例行问题之后，发问者替记录者转述了一段持续三周的状态：常在愤怒与沮丧的边缘、靛蓝光芒（indigo ray，第七个能量中心里与高我相接的那一道）中心有近乎持续的钝痛、能量像被抽干。Ra 没有把它当作孤立的身体问题，而是当作一堂关于「力量」的课来讲。</p>
+
+  <div class="card">
+    <h3>诊断：变貌的源头是视角的局限</h3>
+    <div class="q">发问者想知道：这种「愤怒临界 + 靛蓝钝痛 + 能量枯竭」的三连状态从哪里来？有什么想法或行动能缓解？</div>
+    <div class="quote">
+      <p class="en">As in all distortions, the source is the limit of the viewpoint.</p>
+      <p class="zh">如同一切变貌（distortion，对统一性的偏离状态），其源头是视角的局限。</p>
+      <span class="src">—— Session 099 · (99.5)</span>
+    </div>
+    <div class="plain">淤积不是「外界给了我太多火」，而是看世界的窗口开得太窄——火在窄窗里来回撞，就成了钝痛与枯竭。</div>
+    <div class="case"><b>只看 KPI 的季度末：</b>一位运营在冲刺周里满眼都是数据看板，同事的一句闲聊都能让她烦躁。她不是被同事惹恼，而是视角收窄到只剩一个维度——窗口越窄，撞在框上的火越多。这正是「视角的局限」在日常工作里的样子。</div>
+  </div>
+
+  <div class="card">
+    <h3>力量的天性：不靠节约，靠持续使用</h3>
+    <p>Ra 接着点出记录者的长处：力量（power）。而力量的特别之处在于——它不是省出来的。</p>
+    <div class="quote">
+      <p class="en">The flow of power, just as the flow of love or wisdom, is enabled not by the chary conserver of its use, but by the constant user.</p>
+      <p class="zh">力量的流动，正如爱与智慧的流动，成全它的不是那个小心翼翼节约着用的人，而是那个持续使用它的人。</p>
+      <span class="src">—— Session 099 · (99.5)</span>
+    </div>
+    <div class="analogy"><b>水库与闸门：</b>力量像水库的来水。闸门长期紧闭，水位不会「存出价值」，只会抬高坝体承受的压力；持续、有去向地放水，才是水的天性与价值。Ra 说充满力量的实体「必然需要运用那种显化」——建设性或破坏性的剧烈活动，就是力量的物理出口。</div>
+    <div class="case"><b>攒着不出手的合伙人：</b>一位合伙人决策果断、精力过人，却总觉得「要省着用」，把判断和推动力都攒着。半年后他失眠、易怒、开会走神——能量没有消失，只是变成了靛蓝处的钝痛。换到他主动牵头一个项目、每天把力量用出去之后，状态反而轻快了。</div>
+  </div>
+
+  <div class="card">
+    <h3>三条处方：给淤积的能量开出路</h3>
+    <p>Ra 给出的不是一句安慰，而是三条可以立刻照做的行为处方：</p>
+    <p><b>① 独自的剧烈活动：</b>做到真正的身体疲惫为止；若能把活动选成「旨在服务团体和谐」的事，效果更佳。</p>
+    <p><b>② 紧接的独处沉思：</b>在剧烈活动之后，尽快腾出空间/时间独自沉思。</p>
+    <p><b>③ 平衡与静默冥想：</b>热情而持续地练习——Ra 特别强调这条「不能从有益清单中删除」。</p>
+    <p><b>小模拟：</b>拨动开关，看淤积如何变化——</p>
+    <div class="cond-row"><div class="name">① 独自的剧烈活动<small>做到真正的身体疲惫，最好选服务团体和谐的事</small></div><label class="switch"><input type="checkbox" id="pw1" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">② 紧接的独处沉思<small>剧烈活动后尽快留出空间/时间给自己</small></div><label class="switch"><input type="checkbox" id="pw2" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">③ 平衡与静默冥想<small>热情而持续——Ra 说这条不可从清单删除</small></div><label class="switch"><input type="checkbox" id="pw3"><span class="slider"></span></label></div>
+    <div id="condPowerResult"></div>
+    <div class="quote">
+      <p class="en">It is well to know the self and to guard and use those attributes which the self has provided for its learning and its service.</p>
+      <p class="zh">认识自我，并守护、使用自我为它的学习与服务所备下的那些属性，是很好的。</p>
+      <span class="src">—— Session 099 · (99.5)</span>
+    </div>
+    <div class="case"><b>愤怒边缘的五公里：</b>晚上九点，一个人自觉火气快压不住了，换上跑鞋出门，独自跑到双腿发沉；冲澡后坐在阳台上什么都不做十五分钟。剧烈活动给了力量一个出口，随后的独处让它沉淀——这正对应处方①+②的组合。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>恒常与盟约：换牌之问与第五号牌的翅膀</h2></div>
+  <p class="sec-lead">讲完记录者的状态，发问者带回一个现实难题：他们拿到了新的一套塔罗图像（Royal Road），与一直使用的 C.C. Zain 图像相似又有差异——哪套更接近 Ra 的原意？而版权法可能迫使他们中途换牌。Ra 的回答先立原则，再落到一张具体的牌上。</p>
+
+  <div class="card">
+    <h3>恒常性：一套，且仅一套</h3>
+    <div class="q">发问者预设「一定有一套更接近原意的图像」，想知道该用哪套；他还提前报告了一个窘境：因为版权问题，恐怕不得不换。</div>
+    <div class="quote">
+      <p class="en">The principle which moves in accordance with the dynamics of teach/learning with most efficiency is constancy.</p>
+      <p class="zh">在教导/学习的动力学中，以最高效率运作的原则是恒常性。</p>
+      <span class="src">—— Session 099 · (99.6)</span>
+    </div>
+    <p>Ra 的回答出人意料地松：这组图像并不是 Ra 当年给的那套——「这不重要」；众多人造塔罗组里任何一套都能用。紧随其后的却是一句很紧的叮嘱：</p>
+    <div class="quote">
+      <p class="en">we suggest the maintaining of one and only one set of distorted images to be used for the querying and note that the images you now use are good.</p>
+      <p class="zh">我们建议维持一套、且仅一套带有变貌的图像用于询问，并指出：你们现在使用的这组图像是好的。</p>
+      <span class="src">—— Session 099 · (99.6)</span>
+    </div>
+    <div class="plain">工具不挑贵的、对的，只挑「从头用到尾」的——探索原型心智的效率来自恒常，不来自挑选。</div>
+    <div class="case"><b>版权墙的另一侧：</b>小组拿不到在用牌组的版权许可，只能「绕行」。发问者自嘲这个问题「对 Ra 的思维方式相当陌生」——所有权与许可属于第三密度的社会安排。Ra 并不评判版权法，只是给出一个不受它影响的原则：任何一套图像都能走完这条路，别让更换本身成为损耗。</div>
+  </div>
+
+  <div class="card">
+    <h3>第五号牌的翅膀：保护在承诺里</h3>
+    <div class="q">发问者猜测：第五号牌上悬在「心智意指者」上方的翅膀，是保护的象征——这个猜测对吗？</div>
+    <p>Ra 的回应是一句典型的「不否定、只加深」：你不是不正确，而是<b>不够</b>正确。</p>
+    <div class="quote">
+      <p class="en">The Significator owns a covenant with the spirit which it shall, in some cases, manifest through the thought and action of the adept.</p>
+      <p class="zh">意指者（Significator，牌组中代表提问者自身心智的那张牌）与灵性立有一份盟约：在某些情形中，它将通过熟练者的思想与行动显化出来。</p>
+      <span class="src">—— Session 099 · (99.7)</span>
+    </div>
+    <div class="quote">
+      <p class="en">If there is protection in a promise, then you have chosen the correct sound vibration, for the outstretched wings of spirit, high above manifestation, yet draw the caged mind onward.</p>
+      <p class="zh">如果保护存在于承诺之中，那么你选对了这个词——因为灵性那些伸展的翅膀，高高居于显化之上，却仍牵引着被囚禁的心智向前。</p>
+      <span class="src">—— Session 099 · (99.7)</span>
+    </div>
+    <div class="plain">翅膀不是一堵挡箭的墙，而是一份「约定会显化」的承诺——保护不是把风险拿走，而是让被囚的心智敢往前走。</div>
+    <div class="analogy"><b>安全绳，不是防护网：</b>攀岩者身上的绳子不会替他爬，也挡不住每块落石；它承诺的是「坠落有底」。有这根绳，人才敢把身体交给岩壁——翅膀之于意指者，正是这根绳。</div>
+    <div class="case"><b>导师的那句「我在」：</b>一位新手编辑不敢签下高难度的书稿，老主编只说了一句「你放手做，改不动的地方我在」。这句承诺没有替她改一个字，却让她敢一路向前——承诺即保护，正是 Ra 对翅膀的读法。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>第六号牌·心智的转化：向深层心智求爱，而非掠夺</h2></div>
+  <p class="sec-lead">本集的主体。发问者一口气给出他对第六号牌的四层读解，Ra 宣布「逐一谈来」（seriatim）——但先丢回一个问题，再纠正读法，最后把整张牌收拢成一句关于「态度」的公式。</p>
+
+  <div class="card">
+    <h3>发问者的读牌与 Ra 的反问</h3>
+    <div class="q">发问者的读法：交叉的双臂代表「转化可左可右」；两位女性把路径分别引向物理与心智；上方生物射出的箭指向左手路径，意味着这条路「没有保护」；箭手像第二密度实体，说明催化剂可来自进化较低的来源。</div>
+    <p>Ra 没有逐条点头。他先停下来，把一个发问者略过的地方递回给学生：</p>
+    <div class="quote">
+      <p class="en">Firstly, let us examine the crossed arms of the male who is to be transformed. What, O student, do you make of the crossing? What see you in this tangle?</p>
+      <p class="zh">首先，让我们端详这位将要转化之男性的交叉双臂。哦，学生，你如何看待这交叉？你在这纠结里看见了什么？</p>
+      <span class="src">—— Session 099 · (99.8)</span>
+    </div>
+    <p>值得注意的是：Ra 点出交叉处藏着「一个发问者未曾深究的创造性要点」，然后——没有给出答案。这道题留在牌面上，留给每一位读者。</p>
+  </div>
+
+  <div class="card">
+    <h3>先纠正读法：图像不按字面读</h3>
+    <p>对「左=物理、右=心智」的评估，Ra 的判语是「浅层的正确」（shallow correctness）——方向没错，但错失了更深的功课：无意识心智这片浩瀚之海，与意识心智是什么关系。</p>
+    <div class="quote">
+      <p class="en">Remember, O student, that these images are not literal. They haunt rather than explicate.</p>
+      <p class="zh">记住，哦，学生：这些图像不是字面的。它们萦绕人心，而非加以阐明。</p>
+      <span class="src">—— Session 099 · (99.8)</span>
+    </div>
+    <div class="plain">牌面负责「在你心里绕梁」，理解要靠你自己长出来——把图像当谜语逐字翻译，反而错过了它。</div>
+    <div class="case"><b>一张电影海报的两种观众：</b>有人看完海报把剧情猜了个遍，进影院只为核对每一处；有人只被某个画面勾住，散场半年后仍会无端想起它。前者在做「字面解读」，后者被「萦绕」了——Ra 提醒学生用后一种方式面对牌面。</div>
+  </div>
+
+  <div class="card">
+    <h3>核心教导：求爱，而非掠夺</h3>
+    <p>整段回应的枢纽，是意识心智该用什么态度对待深层心智（deep mind，意识水面下的浩瀚储藏）。Ra 给出一组对照：多数人把心智的树干与根当作被糟蹋的仓库，进去拿走的是「粗糙、被糟蹋、缺乏伟大美德之物」；另一些人把它看作少女，前去<b>求爱</b>——</p>
+    <div class="quote">
+      <p class="en">Those who turn to the deep mind seeing it in the guise of the maiden go forth to court it. The courtship has nothing of plunder in its semblance and may be protracted, yet the treasure gained by such careful courtship is great.</p>
+      <p class="zh">那些把深层心智看作少女模样而转向它的人，是前去求爱。这求爱的外表不含丝毫掠夺，也许旷日持久，但如此谨慎求爱所赢得的宝藏是巨大的。</p>
+      <span class="src">—— Session 099 · (99.8)</span>
+    </div>
+    <div class="analogy"><b>矿场与求婚者：</b>同是一座山，采矿队的逻辑是「钻进去、炸开、运走」，山的回应是塌方与矿渣；求婚者的逻辑是「常来、带尊重、等花开」，山的回应是把最深的泉眼指给他。对象未变，态度改写了所得。</div>
+    <div class="case"><b>挖素材式的自我复盘：</b>一个人被裁员后翻旧日记，急着从童年经历里「挖出问题根源」，挖到几条标签就停——『缺爱』『讨好型』。标签越挖越多，人越来越糙。这正是「把心智的树干与根当作被糟蹋的仓库」的样子：取出什么，取决于进场时把它当什么。</div>
+    <div class="case"><b>陪自己坐下来的三个月：</b>另一个人每周日晚给自己留半小时，不分析、不下结论，只是把当周卡住的情绪重新走一遍。第三个月，一个从未被问过的问题自己浮了上来。求爱式地对待深层心智——缓慢、无掠夺——换来的是「巨大的宝藏」。</div>
+  </div>
+
+  <div class="card">
+    <h3>保护之箭与镜子：两条路各自的样子</h3>
+    <p>发问者猜「箭 = 左手路径没有保护」。Ra 把这个读法整个翻转：那支箭恰恰是<b>保护</b>——只是两条路受保护的方式截然不同。</p>
+    <div class="quote">
+      <p class="en">This arrow is not the arrow which kills but, rather, that which, in its own way, protects.</p>
+      <p class="zh">这支箭不是杀人的箭，毋宁说，它以自己的方式施行保护。</p>
+      <span class="src">—— Session 099 · (99.8)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Those upon the right-hand path have no such protection against other-selves, for upon that path the doughty seeker shall find many mirrors for reflection in each other-self it encounters.</p>
+      <p class="zh">行在右手路径上的人没有这种对其他自我的保护，因为在那条路上，勇敢的寻求者将在遇见的每一个其他自我中，找到许多供反思的镜子。</p>
+      <span class="src">—— Session 099 · (99.8)</span>
+    </div>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">左手路径</span><h4>分离者的护甲</h4><p>选择<b>分离</b>——左手路径最具指示性的品质——的人，被力量与锐利保护着，免受其他自我的靠近；锐利到什么程度，对应心智在负面方向转化到什么程度。<b>那支箭替他们站岗。</b></p></div>
+      <div class="yuan-card"><span class="y-tag">右手路径</span><h4>没有护甲的寻求者</h4><p>右手路径上没有这层保护——每个迎面而来的其他自我，都是一面<b>供反思的镜子</b>。勇敢的寻求者不躲开照见，也不被照见击倒。</p></div>
+      <div class="yuan-card"><span class="y-tag">分野</span><h4>态度，而非路线图</h4><p>Ra 随后把两条路的差别收拢成一句：转化的左右之分，取决于意识心智对待<b>自身资源</b>与<b>其他自我资源</b>的态度。用同一片深水，一个抽水，一个求爱。</p></div>
+    </div>
+    <div class="case"><b>会议里的刺猬与镜子：</b>评审会上，方案被当众质疑。甲当场反击，句句带刺，会后谁也近不了他的身——锐利确实保护了他，也隔开了所有人；乙把那句最扎心的话抄在本子上，晚上问自己「它照出了我什么」。同一支箭：对甲是护甲，对乙是镜子。</div>
+  </div>
+
+  <div class="card">
+    <h3>术语速查与归类练习</h3>
+    <p>本集反复出现的几个原型术语，先存档再练习（点击卡片翻面）：</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">意指者</div><div class="sub">Significator</div><div class="tap">点击翻面</div></div><div class="back">牌组中代表「提问者自身心智」的那张牌——整副牌描述的都是它与各原型的关系。本集 Ra 说它与灵性立有盟约，有时经由熟练者的思想与行动显化。<em>比喻：像一纸契约——不保证无风无雨，只承诺风雨里有绳索。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">赋能者</div><div class="sub">Potentiator</div><div class="tap">点击翻面</div></div><div class="back">发问者用这个名字称呼牌面上引领路径的女性形象。Ra 未停留于命名，而是把镜头拉向更深处——无意识心智之海与意识心智的关系。<em>比喻：像舞台侧翼的灯光师——台前每一次亮起，光都来自你看不见的地方。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">深层心智</div><div class="sub">deep mind / the unconscious</div><div class="tap">点击翻面</div></div><div class="back">意识水面下的浩瀚储藏。Ra 说许多人在里面拿走粗糙之物，因为它被当作仓库；把它当少女求爱的人，得到巨大宝藏。<em>比喻：地下水层——井水的味道，取决于你打井的方式。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">熟练者</div><div class="sub">adept</div><div class="tap">点击翻面</div></div><div class="back">有意识地做内在功课的人——不是旁观的学员，而是亲手操作仪式与转化的实践者。盟约的显化、深层心智的路标，都由这样的人承接。<em>比喻：自己上杠铃的人，而不是只收藏教程的观众。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">左手路径</div><div class="sub">left-hand path</div><div class="tap">点击翻面</div></div><div class="back">以「分离」为核心选择的道路。本集强调它自有一支「保护之箭」：力量与锐利随负面转化而增长，替它挡开其他自我。<em>比喻：刺猬的刺——扎人，同时也是墙。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">右手路径</div><div class="sub">right-hand path</div><div class="tap">点击翻面</div></div><div class="back">以接纳与求爱态度对待自身与他人资源的道路。没有护甲，只有镜子——每个其他自我都是一次照见。<em>比喻：练拳的人不戴护具——每次挨近身的一下，都是照见自己的镜子。</em></div></div>
+    </div>
+    <p style="margin-top:16px">顺手检验一下你对两条路径的辨析：</p>
+    <div id="sorterArea"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>铭印与自由意志：一夫一妻是谁设计的</h2></div>
+  <p class="sec-lead">集会将尽，发问者抓住最后的机会问了一个出其不意的问题：第六号牌上可能描绘的交配，是否对应科学所研究的 DNA 铭印？终身配对的机制延续到第三密度了吗？Ra 的回答把「设计」与「选择」放上了同一架天平。</p>
+
+  <div class="card">
+    <h3>是的，这是 Logos 的设计——但只是起点</h3>
+    <div class="q">发问者预设「若一夫一妻有 DNA 机制，就该在第三密度继续生效」，想确认设计者与延续性。</div>
+    <div class="quote">
+      <p class="en">There are some of your second-density fauna which have instinctually imprinted monogamous mating processes. The third-density physical vehicle which is the basic incarnational tool of manifestation upon your planet arose from entities thusly imprinted, all the aforesaid being designed by the Logos.</p>
+      <p class="zh">你们的一些第二密度动物，本能地铭印了一夫一妻的配对过程。而第三密度的物理载具——你们星球上显化的基本转世工具——正是从如此铭印的实体中生长出来的；以上种种，皆由逻各斯（Logos，为整个星系经验绘制蓝图的设计者）所设计。</p>
+      <span class="src">—— Session 099 · (99.10)</span>
+    </div>
+    <div class="plain">一夫一妻的铭印是真的、是被设计的，但它在第三密度只算「出厂预装」——真正的操作系统是自由意志。</div>
+    <div class="case"><b>动物园里的认亲：</b>饲养员最清楚：一对天鹅认定彼此后常年成对，不需要婚姻制度提醒。这对应 Ra 说的「一些第二密度动物本能地铭印了一夫一妻的配对过程」——是编码，不是选择。</div>
+  </div>
+
+  <div class="card">
+    <h3>自由意志更响，路标仍亮着</h3>
+    <p>那人类呢？Ra 的回答分两层：显意识层面，编码几乎被覆盖；深层心智里，路标仍在。</p>
+    <div class="quote">
+      <p class="en">The free will of third-density entities is far stronger than the rather mild carryover from second-density DNA encoding, and it is not part of the conscious nature of many of your mind/body/spirit complexes to be monogamous due to the exercise of free will.</p>
+      <p class="zh">第三密度实体的自由意志，远强于第二密度 DNA 编码那相当温和的延续；由于自由意志的行使，对你们许多心/身/灵复合体（mind/body/spirit complex，人存在的三维统一结构）而言，一夫一妻并不在意识本性之内。</p>
+      <span class="src">—— Session 099 · (99.10)</span>
+    </div>
+    <div class="quote">
+      <p class="en">However, as has been noted there are many signposts in the deep mind indicating to the alert adept the more efficient use of catalyst. As we have said, the Logos of your peoples has a bias towards kindness.</p>
+      <p class="zh">然而，如已经指出的：深层心智中有许多路标，向警觉的熟练者指示催化剂（catalyst，促成成长发生的中介事件）的更有效用法。我们说过，你们人类的逻各斯有一种偏向仁慈的倾向。</p>
+      <span class="src">—— Session 099 · (99.10)</span>
+    </div>
+    <div class="case"><b>婚礼誓词前的鼻酸：</b>一个从没想过「要不要忠于伴侣」这类问题的人，念到誓词时忽然眼眶发热，自己也说不清为什么。在 Ra 的框架里，这不是命令，而是深层心智里的路标——它不强制路线，只向留意的人提示哪条路能「更有效地使用催化剂」。</div>
+    <div class="case"><b>被预装却不被决定的偏好：</b>新手机出厂预装了一套主题，你可以全部替换——多数人确实换了不少；但夜深人静时，默认主题偶尔显得顺眼。第二密度的铭印就像这套预装：真实存在、温和有限，终归由使用者的自由意志改写。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>收官：圣杯追寻者的无形丝带</h2></div>
+  <p class="sec-lead">最后的问句是每集的惯例——「还能为器皿或接触做些什么」。这一次 Ra 的回答指向的不是设备，而是团体的气氛：他们正处在相对不适之中，而他们有能力稳定地体验「非凡的和谐」。</p>
+
+  <div class="card">
+    <h3>从漩涡水到无形丝带</h3>
+    <p>Ra 先确认两件小事：添加漩涡水（swirling waters，为器皿安排的放松水疗）有帮助，器具已被认真排列；随后把话锋转向看不见的部分——那些从前行者手腕上飞出的<b>无形丝带</b>，要被有意识地加强。</p>
+    <div class="quote">
+      <p class="en">We encourage the conscious strengthening of those invisible ribands which fly from the wrists of those who go forward to seek what you may call the Grail.</p>
+      <p class="zh">我们鼓励有意识地加强那些无形的丝带——它们从那些前行去寻求你们所称之圣杯的人的手腕上飞出。</p>
+      <span class="src">—— Session 099 · (99.11)</span>
+    </div>
+    <div class="plain">和谐不是等来的状态，而是被有意识维护的连接——像照料水与器具那样，照料彼此之间的丝带。</div>
+    <div class="case"><b>志愿团队的周五致谢：</b>一个十二人的志愿团队平时各忙各的，唯一的仪式是周五晚在群里轮流说一句「这周谢谢谁、谢什么」。三个月后团队换了两次任务都没散——丝带不是任务本身，是那些被说出口的感谢。</div>
+    <div class="case"><b>给室友的那壶热水：</b>考研季，室友每晚复习到一点。一个人说不了什么大道理，只是把书房台灯调暖、烧好热水、替他把闹钟定好。「器具被认真排列」的样子，就是和谐在物理层面的显形——Ra 先确认水与器具，再谈丝带，顺序并非偶然。</div>
+  </div>
+
+  <div class="saying">
+    <p class="en">We leave you in hopes that each may find true colors to fly in that great metaphysical quest and urge each to urge each other in love, praise, and thanksgiving.</p>
+    <p class="zh">我们离开你们，愿每一个人都在那伟大的形而上学追寻中，找到真正属于自己的旗帜；并愿人人互相激励——在爱里、在赞美里、在感恩里。</p>
+    <span class="src">—— Session 099 · (99.11)</span>
+  </div>
+
+  <div class="card">
+    <h3>带走的金句与留下的那道题</h3>
+    <p><b>金句：</b>「它们萦绕，而非阐明」——面对原型图像（乃至整部资料），这句话是钥匙。</p>
+    <p><b>伏笔：</b>结束时机调整为「45 分钟信号之后不久」，是为器皿的延续做出的让步，将影响后续集会的节奏；而 Ra 在交叉双臂处留下的问题——「你在这纠结中看见了什么」——没有在本集合上。</p>
+    <div class="case"><b>把问题带进下一周：</b>下次翻开任何一张牌、任何一段读不懂的文字，先别急着查答案，照 Ra 的样子问自己一句：「你在这纠结里看见了什么？」——萦绕本身，就是教导的一部分。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 099（`split/Ra_Session_099.md`）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra099-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+/* 本集定制交互 */
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+initStepper('flowTrack','flowDetail','flowPrev','flowNext',[
+  {t:'开场',d:'<span class="qa-q">（本集以惯常的致意开场）</span><b>答：</b>Ra 在爱与光中问候小组，开启通讯（99.0）。本集篇幅不长：先是器皿照料与记录者状态，随后是两问塔罗议题，再以结束时机与铭印之问收束。'},
+  {t:'器皿与后勤',d:'<span class="qa-q">问：器皿状态如何？十字架能否佩戴？喉咙的魔法工作还要处理吗？</span><b>答：</b>物理赤字仍在，但移除过敏食物（酪乳）后有望减轻；小金十字架对这个器皿被特别推荐，可稳固被共情变貌扰乱的心智/情绪模式；魔法工作无需再做任何处理（99.1-99.4）。'},
+  {t:'靛蓝光芒之痛',d:'<span class="qa-q">问：记录者连续三周在愤怒边缘、靛蓝光芒中心钝痛、能量枯竭——源头何在、如何缓解？</span><b>答：</b>Ra 指出一切变貌的源头是视角的局限，开出三条行为处方；又点明记录者的长处是「力量」——力量的流动靠持续使用，而非小心储存（99.5）。'},
+  {t:'换牌之问',d:'<span class="qa-q">问：新拿到的 Royal Road 图像与在用的 C.C. Zain 图像，哪套更接近 Ra 的原意？</span><b>答：</b>两套都可用——这不是重点；教导/学习最有效率的动力原则是恒常性，建议维持一套且仅一套，而现用的这套不错（99.6）。'},
+  {t:'翅膀的猜测',d:'<span class="qa-q">问：第五号牌上位于心智意指者上方的翅膀，是保护的象征吗？</span><b>答：</b>「你不是不正确，而是不够正确」——意指者与灵性立有盟约；若说保护，那保护在承诺之中：灵性伸展的翅膀高居显化之上，仍牵引被囚禁的心智向前（99.7）。'},
+  {t:'第六号牌精读',d:'<span class="qa-q">问：交叉的双臂、指向左手路径的箭、两位衣着不同的女性，分别意味着什么？</span><b>答：</b>Ra 逐一辨析：图像不是字面的，它们萦绕而非阐明；左右手转化的分野，在于意识心智对待自身资源与他人资源的态度（99.8）。'},
+  {t:'结束时机',d:'<span class="qa-q">问：上集说的「45 分钟录音信号」仍是合适的结束点吗？</span><b>答：</b>由发问者裁量；Ra 坦承初见时高估了器皿的恢复力，在这类能量消耗后不久结束，很可能延长她能为接触奉献的转世时光（99.9）。'},
+  {t:'收官',d:'<span class="qa-q">问：一夫一妻是 Logos 的 DNA 设计吗？它延续到第三密度了吗？</span><b>答：</b>是第二密度的本能铭印，第三密度载具正源于此；但自由意志远强于这份温和的延续，深层心智中另有路标指向仁慈。随后 Ra 以圣杯与无形丝带的寄语作结（99.10-99.11）。'}
+]);
+
+initSorter('sorterArea',[
+  {a:'会议室里被当众顶撞，他记下这句话，晚上问自己：「它照出了我什么？」',opts:['右手路径','左手路径'],ans:'右手路径',exp:'Ra 说右手路径没有护甲，每个其他自我都是一面镜子——把攻击当镜子用，正是这条路的特点。'},
+  {a:'谈判前先把对方怕什么摸清楚，用威慑确保别人不敢靠近自己',opts:['右手路径','左手路径'],ans:'左手路径',exp:'选择分离的人靠力量与锐利自保，锐利程度与其负面转化相当——这正是「保护之箭」的运作。'},
+  {a:'翻出童年旧伤当素材，快速榨取几条感悟，挖完就走',opts:['右手路径','左手路径'],ans:'左手路径',exp:'把心智的树干与根当作被糟蹋的仓库，取出来的也多是粗糙、缺乏美德之物——这是掠夺式的态度。'},
+  {a:'面对说不清的情绪源头，他选择慢慢陪着自己了解，像追求一个人那样有耐心',opts:['右手路径','左手路径'],ans:'右手路径',exp:'把深层心智看作少女去追求——求爱无掠夺之意，可以漫长，但得到的宝藏巨大。'},
+  {a:'他尽量不与人深交，理由是「被人看透就不安全了」',opts:['右手路径','左手路径'],ans:'左手路径',exp:'「分离」是左手路径最具指示性的品质；护住自己的方式是让别人进不来。'}
+]);
+
+function updatePowerCond(){
+  const items=[
+    ['pw1','独自的剧烈活动','力量若无出口，谨慎的储存只会加深淤积——让身体达到真正的疲惫，最好选服务团体和谐的事。'],
+    ['pw2','活动后的独处沉思','剧烈活动松动的情绪需要紧接着的空间/时间来沉淀。'],
+    ['pw3','平衡与静默冥想','Ra 特别叮嘱这条不可从有益清单上删除——它是让处方长期生效的底盘。']
+  ];
+  const on=items.filter(x=>document.getElementById(x[0]).checked);
+  const off=items.filter(x=>!document.getElementById(x[0]).checked);
+  const el=document.getElementById('condPowerResult');
+  if(on.length===3){
+    el.classList.remove('fail');
+    el.innerHTML='<b>三条处方齐备。</b>力量有了出口，余波得以静置，日常练习维持平衡——储存过盛的能量就能转化为学习与服务。';
+  }else if(on.length===0){
+    el.classList.add('fail');
+    el.innerHTML='<b>一条都未启动。</b>能量继续淤积在靛蓝光芒附近，火气、钝痛与枯竭感只会反复出现——这是「储存能量过盛」未获疏导的样子。';
+  }else{
+    el.classList.add('fail');
+    el.innerHTML='<b>还缺：</b>'+off.map(x=>x[1]).join('、')+'。'+off.map(x=>x[2]).join('');
+  }
+}
+document.getElementById('pw1').onchange=updatePowerCond;
+document.getElementById('pw2').onchange=updatePowerCond;
+document.getElementById('pw3').onchange=updatePowerCond;
+updatePowerCond();
+
+renderPath();
+</script>
+</body>
+</html>

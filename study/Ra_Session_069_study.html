@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 069 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 069 · 交互式学习模块</h1>
+  <p class="sub">这一集延续上集的防护话题，把「正面实体何时会落到负面手里」逐项排查：出神的边界、第一变貌管谁、被错置的流浪者怎么回家，最后给出周日通灵的三道保险，并以白魔法问答与一句判词收尾。</p>
+  <div class="tagline">7 个主题 · 6 个学习步骤 · 22 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a><a href="#s2">② 出神的边界</a><a href="#s3">③ 第一变貌管谁</a><a href="#s4">④ 流浪者的回程</a><a href="#s5">⑤ 原理与力量</a><a href="#s6">⑥ 三道保险</a><a href="#s7">⑦ 白魔法收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>用问答推进器走完 23 个问答的主线，例行问答收进折叠区（第一章）</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>分清三种状态的边界</b><span>出神、死亡、无意识——哪种有危险、为什么（第二章）</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>看一次误判如何被纠正</b><span>发问者拿「第一变貌的平衡」套解释，Ra 给出干脆的「不」（第三章）</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>走一遍流浪者的回程</b><span>高我的不情愿、自我之爱的课程，以及为什么终点仍是好的（第四章）</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>吃透两个支点</b><span>错误路线图与力量对等——本集哲学密度最高的问答（第五章）</span></span></label></div>
+<div class="step-item" data-target="#s7"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官：保险清单与金句</b><span>三道保险如何落地，白魔法问答划下哪些界线（第六、七章）</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ 第 1 章 · 本章地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：这一集在防什么、怎么防</h2></div>
+  <p class="sec-lead">上一集留下一个悬着的问题——负面精通者能不能把出神中的器皿整个「搬走」。发问者开场就说，这是上次没来得及问完、必须继续的问题。本集几乎从头到尾都在给「防护」这件事划定边界：哪些状态危险、这算谁的自由意志、被错置了怎么回来、日常通灵怎么办。先走一遍主线，再逐章细读。</p>
+
+  <div class="card">
+    <h3>本集在全书中的位置</h3>
+    <p>这份通讯彼时正处在「防护焦虑」最重的一段：出神工作持续进行，一个猎户集团（Orion group，负面极性的实体集团）的对手始终想借这次接触做文章。上一集已正面谈过负面实体与保护机制，本集则像一次系统的安全排查——把状态逐项过一遍，把原理逐层问到底。主线可概括成四问：① 出神是唯一险境吗？→ ② 这算谁的自由意志？→ ③ 被错置的流浪者怎么回来？→ ④ 日常通灵如何加固？</p>
+    <div class="quote">
+      <p class="en">The unique characteristic of the workings, which the social memory complex Ra and your group have begun, is the intent to serve others with the highest attempt at near purity which we as comrades may achieve.</p>
+      <p class="zh">Ra 这个社会记忆复合体与你们小组所开始的这项工作，其独特之处在于：以我们作为同伴所能达到的、最接近纯粹的尝试来服务他人。</p>
+      <span class="src">—— Session 069 · (69.5)</span>
+    </div>
+    <p>正因为这份「接近纯粹」的服务意图，这项工作才惊动了更坚决的对手——这是理解全集气氛的钥匙。</p>
+    <div class="quote">
+      <p class="en">This has alerted a much more determined friend of negative polarity which is interested in removing this particular opportunity.</p>
+      <p class="zh">这已经惊动了一位决心大得多的负面极性「朋友」，它有兴趣移除这个特定的机会。</p>
+      <span class="src">—— Session 069 · (69.5)</span>
+    </div>
+    <div class="case"><b>热线电台的夜班：</b>把这次接触想成一档深夜仍在播出、信号异常清晰的热线电台——绝大多数听众只想听节目，但有一位反复打电话想「接管直播间」。本集的全部问答，就是主播与导播在排查：他到底能从哪扇门进来？哪几扇门其实根本没开？</div>
+    <div class="case"><b>出发前的路况排查：</b>像一支车队出发前逐段核查路线——发现「高速主路」（出神工作）确实有一个风险点，但「省道」（日常睡眠、麻醉手术）与「终点站」（死亡）其实都有护栏。Ra 的回答方式不是安抚，而是逐项指认：哪里有护栏、护栏为什么在那里。</div>
+  </div>
+
+  <div class="card">
+    <h3>问答脉络推进器</h3>
+    <p>本集共 23 个问答块。点「下一步」走完主线，括号内是原文段号。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="mapTrack"></div>
+      <div class="flow-detail" id="mapDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="mapPrev">上一步</button>
+        <button class="tri-btn" id="mapNext">下一步</button>
+      </div>
+    </div>
+  </div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 后勤</span></summary>
+    <div class="body">
+      <p><b>(69.0) 头发的干扰：</b>Ra 开场提出一个小请求——器皿的头发在这次工作中对接触造成轻微干扰，建议工作前把这「天线般的材料」梳理成更有序的配置。</p>
+      <p><b>(69.1) 器皿状况：</b>「如前所述」，没有新内容。</p>
+      <p><b>(69.2) 能量核实：</b>物理能量确实已完全耗尽，但转移来的身体能量可供本次工作使用。</p>
+    </div>
+  </details>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 2 章 · 出神的边界 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>出神的边界：负面实体到底能移走谁</h2></div>
+  <p class="sec-lead">发问者的原问题是：出神状态是不是正面实体被负面精通者引诱到负面时间/空间的「唯一条件」。Ra 的回答分三层：先纠正问题本身，再讲普通人真正的危险，最后把死亡与无意识这两种看似相似的状态划出去。</p>
+
+  <div class="card">
+    <h3>核心更正：危险不在「出神」，在「服务性离体」</h3>
+    <div class="q">发问者带着上集的担忧追问：是不是只有出神时，正面心/身/灵才会被负面精通者整个引走？——他预设了「出神＝险境」这个等式。</div>
+    <div class="quote">
+      <p class="en">The mind/body/spirit complex which freely leaves the third-density physical complex is vulnerable when the appropriate protection is not at hand.</p>
+      <p class="zh">自由离开第三密度物理复合体的心/身/灵，在适当保护不在手边时才是脆弱的。</p>
+      <span class="src">—— Session 069 · (69.3)</span>
+    </div>
+    <p>Ra 先把「出神」这个词换成更准确的描述：关键动作是「自由离开身体」。而绝大多数选择离体的人，做的根本不是会吸引负面极化注意的工作。</p>
+    <div class="plain">危险的本质不是「出了神」，而是「为了服务他人把心/身/灵从身体里意愿出去」这件事——它自带被极化对手注意的属性。</div>
+    <div class="case"><b>押运员与出租车司机：</b>一位司机每天接送陌生乘客，谁也不会盯上他；押运员把整箱现金搬出装甲车去「帮忙」，才立刻成为目标。对应：离体本身不惹麻烦，「带着高价值工作离体」才吸引负面极化的注意。</div>
+    <div class="case"><b>手术台上的八小时：</b>一位患者全身麻醉、昏迷八小时做手术——按 Ra 的说法，这种无意识里负面实体「不会发现移走心/身/灵是可能的」，因为他不是在以通灵方式服务，那条「危险特征」根本不生效（69.7）。</div>
+  </div>
+
+  <div class="card">
+    <h3>死亡与无意识：为什么它们反而受保护</h3>
+    <div class="q">发问者接着把范围扩大：那死亡（无论自然、意外还是自杀）呢？麻醉、药物造成的昏迷呢？——他想确认「保护性朋友」是不是在出神之外都够得着。</div>
+    <div class="quote">
+      <p class="en">This is correct largely because the entity without the attachment to the space/time physical complex is far more aware and without the gullibility which is somewhat the hallmark of those who love wholeheartedly.</p>
+      <p class="zh">这大体是正确的，因为脱离了对空间/时间物理复合体之依附的实体要清醒得多，也没有那种全心全意去爱的人所特有的轻信。</p>
+      <span class="src">—— Session 069 · (69.6)</span>
+    </div>
+    <div class="plain">死亡体验中负面朋友无法移走实体——但死亡的方式仍影响事后的顺畅程度：自然死亡最和谐；被谋杀者混乱、要花时间辨方向；自杀则需要大量疗愈，并向第三密度重新奉献、重学高我设定的课程。</div>
+    <div class="case"><b>两位老人不同的离场：</b>一位九旬老人在家人的陪伴里自然离世；另一位在事故中猝然离世。按 Ra 的区分，两者死后同样受同伴与指导灵保护，但前者「无疑更和谐」，后者需要一些时间/空间来「找到方向」——差别不在保护，在顺畅。</div>
+    <div class="case"><b>昏迷与出神的一线之隔：</b>同样是「叫不醒」，ICU 里靠呼吸机维持的昏迷者没人担心「被接走」，而出神通灵的器皿需要全程有人守着——差别正是那条判据：有没有「为服务他人而意愿离体」。</div>
+  </div>
+
+  <div class="card">
+    <h3>本器皿的异常：为什么碰不得、照不得</h3>
+    <div class="q">既然多数出神者的危险只是「身体被触碰」，为什么小组对器皿的出神如此紧张，连开灯都顾虑？——Ra 给出这个器皿的特殊之处。</div>
+    <div class="quote">
+      <p class="en">The unique characteristic, as we have said, which is, shall we say, dangerous, is the willing of the mind/body/spirit complex outward from the physical complex of third density for the purpose of service to others.</p>
+      <p class="zh">我们说过的那个可以说是危险的特征，是心/身/灵复合体为了服务他人之目的，从第三密度物理复合体中被意愿向外。</p>
+      <span class="src">—— Session 069 · (69.7)</span>
+    </div>
+    <p>对普通人，危险是触碰身体把灵「叫回来」、或损坏灵外质（ectoplasm，离体与召回所依赖的中介物质）的召回手段；而这个器皿的灵外质活动是「内在化」的，真正的困难只剩那一件事——负面的移除，且必须经过她自己的自由意志。</p>
+    <div class="plain">小组的所有防护规程（不触碰、不照人造光、只在受保护的工作中出神）都不是仪式性的迷信，而是在精确堵住 Ra 点名的每一扇门。</div>
+    <div class="case"><b>深夜值机的导播间：</b>直播进行中，导播不会随手碰主播的胳膊，也不会突然打开顶灯——不是怕吓到人，而是任何中断都可能让连线掉线。对应：触碰出神中的身体会把心/身/灵吸引回身体，人造光则会干扰灵外质的召回手段。</div>
+  </div>
+
+  <div class="card">
+    <h3>术语卡：本集反复出现的八个词</h3>
+    <p>先扫一遍正面，再逐张点开——每张都给白话定义，没读过前文也能看懂。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">心/身/灵复合体</div><div class="sub">mind/body/spirit complex</div><span class="tap">点击展开</span></div><div class="back">人这个存在的三维统一结构：心智、身体、灵性缺一不可。本集关心的是它的「整体移动」——离开身体的不是一团模糊的「灵魂」，而是完整的复合体。<em>像一台一体机：搬家时搬走的是整机，而不是只拔一根线。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">出神状态</div><div class="sub">trance</div><span class="tap">点击展开</span></div><div class="back">心/身/灵离开身体、身体被留下的深度状态。对多数人，出神的危险是身体被触碰或召回手段受损；对器皿，它是传递通讯的工作方式。<em>像无人值守的主机房：机器还在运转，操作员去了别处。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">灵外质</div><div class="sub">ectoplasm</div><span class="tap">点击展开</span></div><div class="back">离体与返回身体所依赖的一种中介物质。本器皿的灵外质活动是「内在化」的，因此怕被触碰、怕人造光——受损会影响召回。<em>像连接操作员与主机的缆线：碰着了、照坏了，回程就不顺畅。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">猎户集团</div><div class="sub">Orion group</div><span class="tap">点击展开</span></div><div class="back">负面极性的实体集团。它无法直接强迫任何人，全部希望是「不失去极性而侵犯自由意志」——所以只能设法让你自己开门。<em>像只研究「话术」不研究「撬锁」的骗子：门必须由你自己打开。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">负面精通者</div><div class="sub">negative adept</div><span class="tap">点击展开</span></div><div class="back">受过长期训练的负面魔法操作者，能设计处境「引诱」正面实体离开身体、进入负面时间/空间；引诱必须借实体自己的自由意志完成。<em>像钓鱼：鱼钩再精巧，也得鱼自己咬。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">流浪者</div><div class="sub">wanderer</div><span class="tap">点击展开</span></div><div class="back">从更高密度志愿投生到第三密度、来此服务的正面实体。本集确认：本主周期内只有一位流浪者被错置进负面时间/空间，且因困惑法则不能谈论是谁。<em>像志愿支教的老师：绝大多数平安任教，但校史上确有一人被「转错过学校」。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">高我</div><div class="sub">higher self</div><span class="tap">点击展开</span></div><div class="back">在时间/空间中更完整、更智慧的自我版本；投生经由它完成。回归负面时空的路之所以长，第一段正是它不愿进入负面空间/时间。<em>像总部的资深主管：可以批准外派，但极不愿把自己调进「问题分部」。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">困惑法则</div><div class="sub">Law of Confusion</div><span class="tap">点击展开</span></div><div class="back">即自由意志法则的另一称呼：任何一方不得侵犯他人的自由意志。Ra 因此拒绝谈论那位被错置流浪者的身份——说出来就等于干预他此刻正在学习的课程。<em>像一份保密协议：不是不能说话，而是说了就干扰对方自己的人生考卷。</em></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>归类练习：这个说法对吗？</h3>
+    <p>用刚学到的判据逐条判断，点选后看 Ra 的依据。</p>
+    <div id="sorterArea"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 3 章 · 第一变貌管谁 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>第一变貌管谁：发问者的一次误判</h2></div>
+  <p class="sec-lead">听完「服务性离体才有危险」，发问者试图把这件事放进更大的框架：这会不会是第一变貌（First Distortion，即自由意志法则）之下「平衡作用」的刻意安排？Ra 先嫌问题含糊、要求重述，然后给了一个干脆的「不」——并顺手画清了猎户集团的操作边界。</p>
+  <div class="card">
+    <h3>一次被否掉的漂亮理论</h3>
+    <div class="q">发问者的推理是：既然离体是「服务他人」，那负面服务的入侵岂不正好提供了平衡？——听起来像极性平衡机制在自动运转，所以入侵「魔法上可能」。</div>
+    <div class="quote">
+      <p class="en">However, this free will and the First Distortion applies only to the instrument.</p>
+      <p class="zh">然而，这种自由意志与第一变貌只适用于器皿。</p>
+      <span class="src">—— Session 069 · (69.9)</span>
+    </div>
+    <p>Ra 承认前半句：器皿的自由意志确实是猎户集团机会的必要部分。但「平衡」框架套错了地方——第一变貌描述的是器皿这一方的授权，不是给对面发的许可证。</p>
+    <div class="plain">发问者把「对方能得手」解释成了「宇宙特意安排的平衡」，Ra 把因果拨回原位：门开着是因为器皿自愿，不等于闯入者拿到了授权。</div>
+    <div class="case"><b>敞开的家门：</b>住户为了收快递方便特意敞开大门，小偷因此有了可乘之机——「门开着」确实是小偷机会的必要条件，但没有任何规则「批准」小偷进门；他的全部算盘，恰恰是在不被追责（不失去极性）的前提下越界。</div>
+    <div class="case"><b>被曲解的赛规：</b>棋类比赛允许「认输」这条规则，是为了保护选手的自由意志；有人却把它读成「可以趁机劝对手认输而不算犯规」。发问者的猜测正是这一类：把一条保护性规则，误读成了对另一方的许可。</div>
+  </div>
+  <div class="card">
+    <h3>猎户集团的如意算盘</h3>
+    <div class="quote">
+      <p class="en">The entire hope of the Orion group is to infringe upon free will without losing polarity. Thus this group, if represented by a wise entity, attempts to be clever.</p>
+      <p class="zh">猎户集团的全部希望，是在不失去极性的情况下侵犯自由意志。因此，这个集团若由一个有智慧的实体代表，就会试图表现得聪明。</p>
+      <span class="src">—— Session 069 · (69.9)</span>
+    </div>
+    <div class="plain">理解负面实体的万能钥匙：他们不破坏规则，而是把规则用到极限——设计处境让你「自愿」走向他们。</div>
+    <div class="case"><b>话术的边界：</b>电信诈骗从不直接抢钱，而是编一个「你涉嫌洗钱」的故事，让你自己转账、自己保密——每一步都有受害者的「自愿」参与。对应：负面精通者的引诱必须穿过实体自己的自由意志，这正是发问者后来得到确认的那句「错置必定是其自由意志的功能」（69.16）。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 4 章 · 流浪者的回程 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>流浪者的回程：错置一旦发生，为什么一走要那么久</h2></div>
+  <p class="sec-lead">确认过机制后，发问者问了一个更具体的问题：这样的事真的发生过吗？发生在谁身上？回去的路为什么不能「原路走回」？这一章的答案，是一条需要以密度计程的回家路。</p>
+  <div class="card">
+    <h3>发生过吗？只有一例，且不能谈论</h3>
+    <div class="q">发问者想估算规模：本主周期内来到这个行星的流浪者，有多少被这样错置过？——他做好了「很多」的心理准备。</div>
+    <div class="quote">
+      <p class="en">There has been only one. We cannot, due to the Law of Confusion, discuss the entity.</p>
+      <p class="zh">只有一例。由于困惑法则，我们不能谈论该实体。</p>
+      <span class="src">—— Session 069 · (69.12)</span>
+    </div>
+    <div class="plain">事件真实存在，但样本是「一」——而连这唯一的身份都要保密：说出他的处境，等于干预他此刻正在补修的课程。</div>
+    <div class="case"><b>校友名录上的空白行：</b>一所交换学校核查历年档案，发现只有一位学生被「转错过学校」；校方不但不公布姓名，连他现在在哪个班都不肯说——因为泄露处境本身，就会影响他补课的过程。</div>
+  </div>
+  <div class="card">
+    <h3>回程的两段路</h3>
+    <div class="q">为什么不能简单地「移回」同等价值的正面时间/空间？——发问者觉得回家路不该这么复杂。</div>
+    <div class="quote">
+      <p class="en">The path back revolves, firstly, about the higher self’s reluctance to enter negative space/time. This may be a significant part of the length of that path.</p>
+      <p class="zh">回归之路首先绕着高我对进入负面空间/时间的不情愿——这可能是那条路径长度中很可观的一部分。</p>
+      <span class="src">—— Session 069 · (69.11)</span>
+    </div>
+    <div class="quote">
+      <p class="en">However, the process of learning the accumulated lessons of love of self may be quite lengthy. Also the entity, in learning these lessons, may lose much positive orientation during the process, and the choice of reversing polarities may be delayed until the mid-sixth density.</p>
+      <p class="zh">然而，学习这些累积的自我之爱课程的过程可能相当漫长。此外，实体在学习过程中可能失去许多正面导向，而逆转极性的选择可能被推迟到第六密度中期。</p>
+      <span class="src">—— Session 069 · (69.11)</span>
+    </div>
+    <p>第一步卡在高我：投生必须经由它从时间/空间下行到空间/时间，而它极不愿踏进负面领域。第二步卡在课程本身：要在彻底负面的环境里学会「自我之爱」这门课——而正面个体恰恰是这门课的拙劣学生，比原生于那个振动模式的人花的时间多得多（69.15）。</p>
+    <div class="plain">回家的路不是「掉头就走」，而是先把对手学校的必修课修完、再申请转学——课程可能漫长，中途甚至可能被同化，但 Ra 明确说：最终结果是好的。</div>
+    <div class="demo-area">
+      <div class="flow-track" id="backTrack"></div>
+      <div class="flow-detail" id="backDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="backPrev">上一步</button>
+        <button class="tri-btn" id="backNext">下一步</button>
+      </div>
+    </div>
+    <div class="case"><b>误入对立学校的交换生：</b>一位凭自己的选择上错班车的交换生，想转回原校，得先把现学校的必修学分修满——那套学分规则与他过去的一切习惯相反，他学得极慢，还可能被同化；只有修完，才有资格申请转学（释放势差、改换极性）。</div>
+    <div class="case"><b>游戏里的转服机制：</b>角色被转到了对立阵营的服务器，想转回去，不仅自己要练到极高等级（可能直到「第六密度中期」），原服务器（高我）还得先点头接收——两头都慢，但设定上终究回得去。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 5 章 · 原理与力量 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>原理与力量：错误路线图，与对得上的频段</h2></div>
+  <p class="sec-lead">这是本集哲学密度最高的一个问答。发问者摊出真正的困惑：造物主的两个部分同等价值、极性相反，第一变貌凭什么允许「引诱」发生？Ra 给出两个支点——一个关于自由意志，一个关于力量。</p>
+  <div class="card">
+    <h3>支点一：错误路线图</h3>
+    <div class="q">发问者的难点在于：实体若「完全理解自己在做什么」就不会去做，可他偏偏不理解——自由意志何以容许一个人被错误信息引上岔路？</div>
+    <div class="quote">
+      <p class="en">The entity sets out to its destination. It wishes only to reach the point of destination but, becoming confused by the faulty authority and not knowing the territory through which it drives, it becomes hopelessly lost.</p>
+      <p class="zh">实体出发前往目的地。它一心只想抵达，却被错误的权威弄糊涂，又不熟悉它行驶其间的地界，于是彻底迷了路。</p>
+      <span class="src">—— Session 069 · (69.17)</span>
+    </div>
+    <div class="plain">自由意志不保证每一步计算都正确：地图错了、地界不熟，好心的旅人也会一头栽进岔路。Ra 的判词是「没有错误，但有意外」（Although there are no mistakes, there are surprises.）——这句金句在收官章完整重现。</div>
+    <div class="case"><b>导航软件的错路：</b>深夜开车去陌生城市，导航把你引上一条封路的匝道——你全程「自主驾驶」，每个转弯都是你自己打的方向盘，但图错了就是会迷路。对应：被负面精通者布置的「错误权威」引路的流浪者，错置依然经由他自己的选择发生。</div>
+    <div class="case"><b>照着过期攻略走：</b>旅行者拿三年前的攻略找一家老店，铺子早搬了，他还在原址转了两小时——没有谁存心骗他，只是权威（攻略）失效而地界（当下现实）不熟。Ra 强调这发生在「生命体验的方方面面」，不只发生在魔法工作里。</div>
+  </div>
+  <div class="card">
+    <h3>支点二：力量对等，才接得通</h3>
+    <div class="q">那为什么偏偏是「这种工作」会引来这种对手？Ra 换了个角度：把「魔法充能」这个被严重误解的词，换成「形而上力量」来解释。</div>
+    <div class="quote">
+      <p class="en">Those who do work of power are available for communication to and from entities of roughly similar power.</p>
+      <p class="zh">做力量工作的人，可与力量大致相似的实体进行双向通讯。</p>
+      <span class="src">—— Session 069 · (69.17)</span>
+    </div>
+    <p>这就是为什么这场接触会「惊动」对手：工作本身的量级把频道调到了高层——而双方各有长短，Ra 顺势做了一次盘点：</p>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">猎户实体</span><h4>力量不足，纪律极强</h4><p>没有这个群体的原生力量，但「相当训练有素」——所以只能靠聪明与耐心设局，无法正面硬来。</p></div>
+      <div class="yuan-card"><span class="y-tag">这个小组</span><h4>力量占优，合奏未始</h4><p>有原生力量，却缺乏与力量相称的技巧（finesse）；个体工作互相帮助，但「作为一个群体的工作」尚未开始。</p></div>
+      <div class="yuan-card"><span class="y-tag">通讯条件</span><h4>频段相近才听得见</h4><p>力量工作的量级决定了谁能接入这个频道——这既解释了 Ra 为何能来，也解释了对手为何能来敲门。</p></div>
+    </div>
+    <div class="case"><b>对讲机的功率与频段：</b>两台对讲机要在同一频段、功率相当时才通得了话。小组的工作把「发射功率」调得很高——接收端既有 Ra，也有觊觎这个频段的对手；好在对方功率不足，只是调试得极其精细。</div>
+    <div class="case"><b>五位独奏家的第一次合排：</b>五个各自练了多年的演奏家第一次坐到一起——单兵实力强，合奏却生涩。对应 Ra 的提醒：小组「尚未作为一个群体开始工作」，这正是技巧短板所在，也是后续集会反复练习协调的伏笔。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 6 章 · 三道保险 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>三道保险：周日通灵还能不能继续</h2></div>
+  <p class="sec-lead">原理讲完，回到最现实的操作问题：器皿每周日还通灵其他星际联邦（Confederation，正面星系文明的协作群体）成员，怎么防止她在非受保护场合滑入出神？Ra 给出三条，一条比一条朴素。</p>
+  <div class="card">
+    <h3>保险清单</h3>
+    <div class="q">小组的真实顾虑：周日场合没有这么周全的防护，她若滑入出神，就等于把上一章说的那扇门敞开——要不要干脆停掉？</div>
+    <div class="quote">
+      <p class="en">Firstly, the instrument must needs improve the disciplined subconscious taboo against requesting Ra. … The third is quite gross in its appearance but suffices to keep the instrument in its physical complex. The hand may be held.</p>
+      <p class="zh">其一，器皿必须强化那训练有素的、针对请求 Ra 的潜意识禁忌……其三在外观上相当粗糙，但足以把器皿留在其物理复合体之中——可以握住手。</p>
+      <span class="src">—— Session 069 · (69.18)</span>
+    </div>
+    <p>三道保险合起来是：① 每日有意识地认真思考，强化「不请求 Ra」的潜意识禁忌；② 暂不把器皿开放给问答；③ 握住手——第三条被 Ra 自己形容为「外观粗糙」却够用。</p>
+    <div class="plain">防线不只靠外部条件：最深的一道闸门设在器皿自己的潜意识里——「不请求 Ra」的禁忌越牢，意外滑入就越难发生。</div>
+    <div class="case"><b>戒烟者的晨间重申：</b>戒烟成功的人每天早晨对自己认真重申一遍「今天不抽」——正是「每日有意识且认真的思考」的样子。潜意识禁忌不是天生的墙，是天天砌的墙。</div>
+    <div class="case"><b>只播不互动的直播间：</b>平台暂时关掉连麦功能，主播照常开播——少了互动入口，就少了被拖进更深连线的触发器。对应第二道保险：不开放问答，通灵照做，但不再向深处开放。</div>
+  </div>
+  <div class="card">
+    <h3>握手为什么有效：一道双保险</h3>
+    <div class="q">握住一只手就能防住出神？——发问者需要确认这个「粗糙」方案的原理。</div>
+    <div class="quote">
+      <p class="en">This would prevent those levels of meditation which necessarily precede trance. Also in the event that, unlikely as it might seem, the entity grew able to leave the physical complex, the auric infringement and tactile pressure would cause the mind/body/spirit complex to refrain from leaving.</p>
+      <p class="zh">这会阻止那些必然先于出神的冥想层次。而且，即便——尽管看似不太可能——实体变得能够离开物理复合体，光环侵犯与触觉压力也会使心/身/灵复合体不离开。</p>
+      <span class="src">—— Session 069 · (69.19)</span>
+    </div>
+    <div class="plain">一道措施，两处起效：浅处拦住「滑向出神的必经冥想层次」，深处用触觉与光环的持续牵引留住身体里的住客。</div>
+    <div class="case"><b>攀岩的安全绳：</b>攀岩者腰间那根绳平时看着多余，真正坠落时却是全部——握住的手就是这样一根物理安全绳：浅层防止深入，深层在万一离体时把人拽住。</div>
+  </div>
+  <div class="card">
+    <h3>条件模拟器：风险是怎么凑齐的</h3>
+    <p>Ra 把危险讲得非常精确：不是「负面实体随时抓人」，而是几件事同时在场才构成机会。拨动开关，看这个组合如何被逐项拆掉。</p>
+    <div class="cond-row"><div class="name">为服务他人自愿离体<small>心/身/灵从第三密度身体被意愿出去——唯一「危险的特征」（69.7）</small></div><label class="switch"><input type="checkbox" id="c69a" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">在受保护的工作之外<small>没有支援小组、没有受保护集会的场合（69.3、69.18）</small></div><label class="switch"><input type="checkbox" id="c69b" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">滑入出神的冥想层次<small>必然先于出神的那些深度（69.18-69.19）</small></div><label class="switch"><input type="checkbox" id="c69c" checked><span class="slider"></span></label></div>
+    <div id="condResult">…</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 7 章 · 白魔法收官 ============ -->
+<section class="chapter" id="s7">
+  <div class="sec-head"><span class="num">07</span><h2>收官：白魔法问答与一句判词</h2></div>
+  <p class="sec-lead">最后一个议题回到「白魔法」：小组正借一本小说（《埃斯梅拉达·斯威特沃特》）里的情节推演魔法技术。Ra 借这三问答确认了他们的方向，也划下「不可说」的界线，最后以一句关于自由意志的判词收束全集。</p>
+  <div class="card">
+    <h3>书中的取回仪式：没有错误</h3>
+    <div class="q">小组反复引用书中的桥段：魔法师特罗斯特里克把「太空女孩」放进负面时间/空间，埃斯梅拉达设计仪式取回她——发问者想知道：这两套技术的设想有没有原则性错误？</div>
+    <div class="quote">
+      <p class="en">There were no errors. We only remind each that this particular character imaged forth by you was an experienced adept.</p>
+      <p class="zh">没有错误。我们只提醒各位：你们所想象出的这个特定角色，是一位经验丰富的精通者。</p>
+      <span class="src">—— Session 069 · (69.20)</span>
+    </div>
+    <p>还有一个小插曲：Ra 说的「经验丰富的精通者」指的是埃斯梅拉达而非特罗斯特里克——发问者猜错了对象。Ra 补充：对这门各自直觉到的艺术长期练习会有帮助；但方法论不可说，「因为那侵犯将是非常大的」；能谈的只有群体努力，而那也不过是确认已知（69.21）。</p>
+    <div class="plain">想象中的角色能被 Ra 当作「精通者」来点评——设计的原则对了，剩下的功夫在长期练习，而不在多问几个「怎么做」。</div>
+    <div class="case"><b>剧本围读会的收获：</b>编剧小组把一次营救行动写进剧本，顾问看完只纠正角色设定、不透露行动细节——原则层面的确认已经足够值钱；具体操作必须自己练出来，问也问不到。</div>
+  </div>
+  <div class="card">
+    <h3>自设仪式与传承仪式：Ra 的谨慎作答</h3>
+    <div class="q">最后一问：一个群体为自己的用途设计的仪式，与金色黎明会（Order of the Golden Dawn，近代西方著名魔法结社）这类传承团体的仪式相比，一样好还是更好？</div>
+    <div class="quote">
+      <p class="en">Although we are unable to speak with precision on this query, we may note some gratification that the questioner has penetrated some of the gist of a formidable system of service and discipline.</p>
+      <p class="zh">尽管我们无法就这个问题精确作答，我们可以指出一些欣慰：发问者已经穿透了这个强大的服务与纪律体系的若干要点。</p>
+      <span class="src">—— Session 069 · (69.22)</span>
+    </div>
+    <div class="plain">注意 Ra 的分寸：不比较、不打分，只确认方向——「服务与纪律体系」的要点被摸到了。这本身就是一次示范：谈论魔法容易滑向比较与炫耀，而体系的核心是纪律与服务。</div>
+    <div class="case"><b>自家编的曲子：</b>一支乐队按自己的曲目编排演出，未必输给照百年乐团总谱演奏的乐团——比「哪份谱子更好」更重要的，是乐队是否每天排练、是否为听众服务。Ra 拒绝打分，正是把焦点从「谱子」拨回「纪律与服务」。</div>
+  </div>
+
+  <div class="saying">
+    <p class="en">Free will does not mean that there will be no circumstances when calculations will be awry. This is so in all aspects of the life experience. Although there are no mistakes, there are surprises.</p>
+    <p class="zh">自由意志并不意味着不会有计算出错的时候。生命体验的方方面面都是如此。虽然没有错误，但有意外。</p>
+    <span class="src">—— Session 069 · (69.17)</span>
+  </div>
+
+  <div class="card">
+    <h3>收官要点：这一集留下了什么</h3>
+    <p><b>一条判据：</b>危险不在「出神」，在「为服务他人自愿离体」——它一次性解释了为什么死亡、麻醉、沉睡都安全，而出神工作需要全程防护。</p>
+    <p><b>一次纠正：</b>第一变貌只适用于器皿；猎户集团的全部本事是「不失去极性而侵犯自由意志」——理解负面操作的总钥匙。</p>
+    <p><b>一条长路：</b>被错置的流浪者要修完「自我之爱」的课程、等高我点头，才谈得上改换极性——终点是好的，过程以密度计。</p>
+    <p><b>三道保险：</b>潜意识禁忌、暂停问答、握手——防护从神秘仪式落回朴素操作。这条防护线并未到此结束，Ra 对「受保护的工作」的叮嘱还会在随后的集会里继续展开。</p>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 069（split/Ra_Session_069.md）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra069-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+initStepper('mapTrack','mapDetail','mapPrev','mapNext',[
+  {t:'器皿状况',d:'<span class="qa-q">问：器皿现在状况如何？（69.1-69.2）</span><b>答：</b>如前所述——物理能量已完全耗尽，但转移来的身体能量仍可供这次工作使用。'},
+  {t:'出神是唯一险境？',d:'<span class="qa-q">问：出神状态是否是正面实体被负面精通者引诱到负面时间/空间的唯一条件？（69.3-69.7）</span><b>答：</b>这是被误解的概念。危险的本质不是「出神」，而是「为服务他人自愿离体」；死亡与无意识状态都有保护。'},
+  {t:'第一变貌管谁？',d:'<span class="qa-q">问：这是不是第一变貌下平衡作用的功能？（69.8-69.9）</span><b>答：</b>不。自由意志与第一变貌只适用于器皿；猎户集团的全部希望是不失去极性而侵犯自由意志。'},
+  {t:'流浪者被错置过？',d:'<span class="qa-q">问：有没有流浪者被侵犯后置于负面时间/空间？（69.10-69.16）</span><b>答：</b>有过，本主周期内只有一例；回程要先过高我的不情愿，再修完自我之爱的课程。'},
+  {t:'哲学原理',d:'<span class="qa-q">问：第一变貌凭什么允许这种引诱发生？（69.17）</span><b>答：</b>两个支点——错误路线图与力量对等：自由意志不保证计算不出错，没有错误，但有意外。'},
+  {t:'三道保险',d:'<span class="qa-q">问：周日通灵怎么防滑入出神？（69.18-69.19）</span><b>答：</b>强化「不请求 Ra」的潜意识禁忌、暂不开放问答、握手——第三条外观粗糙但够用。'},
+  {t:'白魔法收尾',d:'<span class="qa-q">问：书中的取回仪式有没有设计错误？（69.20-69.22）</span><b>答：</b>没有错误；方法论不可说；Ra 对发问者触到「服务与纪律体系」的要点表示欣慰，并以「一切安好」作别。'}
+]);
+
+initStepper('backTrack','backDetail','backPrev','backNext',[
+  {t:'被错置',d:'<b>起点：</b>流浪者在其自身自由意志之下被引诱进入负面极化的时间/空间——Ra 确认错置必定以其自由意志为前提（69.16）。'},
+  {t:'全然黑暗',d:'<b>第一体验：</b>初入负面时间/空间，除了黑暗什么都体验不到；随后由高我投生到负面空间/时间，与负面极化的其他自我同处（69.14）。'},
+  {t:'高我不情愿',d:'<b>第一段路：</b>回归之路首先绕着高我对进入负面空间/时间的不情愿——这占去路径长度的很大一部分（69.11）。'},
+  {t:'学自我之爱',d:'<b>第二段路：</b>在彻底负面的环境中投生，必须学习/教导自我之爱的课程，从而与其他自我合一；正面个体是这门课的拙劣学生，比原生者耗时多得多（69.11、69.15）。'},
+  {t:'释放势差',d:'<b>改极性的时机：</b>课程完成后，实体可选择释放势差、改变极性（69.11）。'},
+  {t:'漫长但结局好',d:'<b>提醒：</b>期间可能失去许多正面导向，逆转极性的选择或推迟到第六密度中期；按你们的度量方式很耗时——尽管最终结果是好的（69.11）。'}
+]);
+
+initSorter('sorterArea',[
+  {a:'「出神状态是正面实体被负面精通者移走的唯一条件。」',opts:['对','不对'],ans:'不对',exp:'Ra 称之为被误解的概念：危险的本质是「为服务他人自愿离体」这类工作，不是出神这个状态本身（69.3、69.7）。'},
+  {a:'「对多数出神者而言，最大的危险是身体被触碰，或灵外质的召回手段受损。」',opts:['对','不对'],ans:'对',exp:'对大多数普通出神者，危险正是触碰身体把心/身/灵唤回、或损坏召回手段；本器皿的异常在于灵外质活动内在化（69.3）。'},
+  {a:'「无论死亡原因是什么，死后实体大体上都受同伴与指导灵保护。」',opts:['对','不对'],ans:'对',exp:'脱离身体依附的实体更清醒、更少轻信，负面朋友无法移走它；差异只在于死后的和谐程度（69.6）。'},
+  {a:'「自然死亡、被谋杀与自杀，对死后的影响完全一样。」',opts:['对','不对'],ans:'不对',exp:'自然死亡最和谐；谋杀致死者混乱、需要时间找方向；自杀需要大量疗愈工作，并向第三密度重新奉献、重学高我设定的课程（69.6）。'},
+  {a:'「医疗麻醉或药物造成的深度无意识中，负面实体同样能移走心/身/灵。」',opts:['对','不对'],ans:'不对',exp:'只要不是「以这种方式服务」而离体，负面导向实体就无法移走心/身/灵——危险特征只有服务性离体一种（69.7）。'}
+]);
+
+function update69Cond(){
+  const a=document.getElementById('c69a').checked;
+  const b=document.getElementById('c69b').checked;
+  const c=document.getElementById('c69c').checked;
+  const box=document.getElementById('condResult');
+  let fail=false,msg='';
+  if(!a){
+    msg='移除不成立。危险特征只有一个：为服务他人把心/身/灵从身体意愿出去——麻醉、药物、普通睡眠或任何非服务性的无意识中，「这种情形都不会生效」（69.7）。';
+  }else if(!b){
+    msg='受保护的工作在场，Ra 所说的「主要困难」——负面移除——被拦在门外；剩下的只是普通出神的常规风险（触碰身体、照射人造光）（69.3）。';
+  }else if(!c){
+    msg='尚缺最后一环：握手这类措施正是为了阻止必然先于出神的冥想层次——滑不到那个深度，离体就难以发生（69.18-69.19）。';
+  }else{
+    fail=true;
+    msg='三项同时成立：为服务他人自愿离体＋无保护环境＋滑入出神层次——这正是 Ra 提醒小组提防的处境，也是本集三道保险要拆掉的组合（69.3、69.18）。';
+  }
+  box.textContent=msg;
+  box.classList.toggle('fail',fail);
+}
+document.getElementById('c69a').addEventListener('change',update69Cond);
+document.getElementById('c69b').addEventListener('change',update69Cond);
+document.getElementById('c69c').addEventListener('change',update69Cond);
+update69Cond();
+
+renderPath();
+</script>
+</body>
+</html>

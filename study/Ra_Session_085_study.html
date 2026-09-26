@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 085 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 085 · 交互式学习模块</h1>
+  <p class="sub">这一集在器皿疼痛发作、第五密度负面同伴逼近的背景下继续面纱过程的讨论：负面道路建立在否认普世大爱的遗漏之上，终将召唤光；而面纱最珍贵的产物，是意志。</p>
+  <div class="tagline">「6 个主题 · 6 个学习步骤 · 25 组案例」</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 负面同伴</a>
+<a href="#s3">③ 那非是之物</a>
+<a href="#s4">④ 悲悯×智慧</a>
+<a href="#s5">⑤ 心智面纱</a>
+<a href="#s6">⑥ 收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>全集骨架：九步问答链与例行问答一览（第 1 章）</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>负面同伴的危机与名字的两难</b><span>相对极性的较量，权力与聚拢的选择（第 2 章）</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>那非是之物</b><span>负面道路的遗漏、黑暗与终局，外加一次传输纠错（第 3 章）</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>平衡悲悯与智慧</b><span>自由意志的边界，与平衡练习的实操（第 4 章）</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>心智的面纱</b><span>四项被遮蔽的功能，与面纱最重要的产物（第 5 章）</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官</b><span>窄带通道：器皿不是房子，以及一句金句（第 6 章）</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ 第 1 章 · 本章地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：疼痛、负面同伴与心智的面纱</h2></div>
+  <p class="sec-lead">这是面纱讨论上的一场「压缩集会」：器皿的疼痛发作贯穿始终，Ra 多次要求重复问题、主动收束篇幅。内容上，本集把前几次工作里一直在谈的面纱过程推向两个方向——它对负面极化意味着什么，以及它在心智里究竟遮住了什么。先走一遍下面的问答链，再进各章细读。</p>
+
+  <div class="card">
+    <h3>本集在全书中的位置</h3>
+    <p><b>承接：</b>前几次工作的主线是面纱过程——发问者在本集直接以此为基础提问（「我们一直在谈的面纱过程」），负面同伴也因监视通讯而知晓了这套讨论。</p>
+    <p><b>开启：</b>本集列出心智面纱遮住的四样东西，末尾 Ra 主动要求「只问简短问题」并提前收束——清单显然还有下文，这是留给下一次工作的线头。</p>
+    <p><b>本集议题清单：</b>① 负面同伴的魔法危机与名字的两难；② 那非是之物：负面道路的遗漏与终局；③ 一次传输纠错；④ 平衡悲悯与智慧的界限；⑤ 心智面纱的四项被遮蔽功能；⑥ 收官：窄带通道。</p>
+    <div class="quote">
+      <p class="en">We were having some difficulty with the channel of energy influx due to pain flare, as you call this distortion of the physical body complex of this instrument.</p>
+      <p class="zh">我们在能量流入的通道上遇到了困难，起因是这个器皿肉体复合体的变貌——你们称之为疼痛发作。</p>
+      <span class="src">—— Session 085 · (85.2)</span>
+    </div>
+    <div class="case"><b>直播信号抖动：</b>一位主播在信号不稳时先切到「安全模式」——只说必要的信息，等线路稳了再恢复正常节奏，下播还向观众致歉。Ra 本集开场正是如此：疼痛发作造成通道困难，于是「有必要尽可能简短地说话」，直到器皿的心/身/灵复合体被安全转移，随后才恳请小组宽容这份「失礼」。</div>
+    <div class="case"><b>晨会前的五分钟：</b>项目经理每天开正题前先花五分钟过一遍例行事务：谁身体不适、环境里有什么干扰、昨天留下的线头是什么——收拢完毕，剩下的时间全部留给真正要讨论的问题。本章就是这场集会的「晨会五分钟」：器皿状态与疼痛起伏都收进下面的折叠区，正题从负面同伴的危机开始。</div>
+  </div>
+
+  <div class="card">
+    <h3>问答脉络推进器：本集对话怎么走</h3>
+    <div class="demo-area">
+      <div class="flow-track" id="mapTrack"></div>
+      <div class="flow-detail" id="mapDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="mapPrev">← 上一问</button>
+        <button class="tri-btn" id="mapNext">下一问 →</button>
+      </div>
+    </div>
+  </div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 后勤</span></summary>
+  <div class="body">
+    <p><b>(85.1–85.2) 器皿状态：</b>疼痛发作造成通道困难，Ra 先简短说话、安全转移器皿后再答；目前肉体能量亏缺减轻、极度警惕的必要性降低，仍建议继续注意有益食物的摄取；生命能量如前，Ra 赞扬小组的警觉与照管。</p>
+    <p><b>(85.8) 冥想安排：</b>若无同伴手压而冥想，器皿的心/身/灵复合体有从第三密度分离的潜在风险——这一保护措施需要维持。</p>
+    <p><b>(85.17) 通道不稳：</b>Ra 因疼痛发作难以保持清晰通道，请发问者重复问题后再作答。</p>
+    <p><b>(85.20) 收尾致意：</b>Ra 表示小组勤奋尽责、校准极好，并说明不愿在通道次优时继续以免滥用器皿；通讯方式的教导部分见第 6 章。</p>
+  </div></details>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 2 章 · 负面同伴 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>负面同伴：极性的较量与名字的两难</h2></div>
+  <p class="sec-lead">例行状态确认后，发问者把焦点对准那位老对手：它现在贴得多近、这场危机到底是什么性质？接着他问了一个看似技术性的问题——它有没有名字、我们该不该知道？Ra 的回答把「知道一个名字」变成了一道关于权力与聚拢的选择题。</p>
+
+  <div class="card">
+    <h3>危机的性质：谁的极性更稳</h3>
+    <div class="q">发问者问：那位第五密度、服务自我极化的「同伴」目前状况如何？追问下去：这场所谓的危机，究竟是什么性质？</div>
+    <div class="quote">
+      <p class="en">Your companion has never been more closely associated with you than at the present nexus.</p>
+      <p class="zh">你们的这位同伴，从未像当前这个连结点这样与你们如此紧密地关联。</p>
+      <span class="src">—— Session 085 · (85.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">However, the faculties of will and faith and the calling to the light have been used by this group to the exclusion of any significant depolarization from the service-to-others path.</p>
+      <p class="zh">然而，意志与信仰的能力、以及对光的呼求，已被这个小组运用，从而排除了任何显著的、偏离服务他人道路的去极化（depolarization，极化积累的消退）。</p>
+      <span class="src">—— Session 085 · (85.4)</span>
+    </div>
+    <div class="plain">危机的本质是「相对极性」的较量：小组虽只有新手水平的有意识集体魔法能力，却靠意志、信仰与呼求光守住了服务他人的道路；负面同伴反而因探索分离之智慧的尝试失败而自己在去极化——所以它必须趁现在赶紧出手。</div>
+    <div class="analogy"><b>拔河与体重：</b>拔河的胜负不完全看谁的姿势好看，而看哪一边的「分量」持续在长——小组每一次用意志重新选择、每一次呼求光，都是在给正方加码；负面同伴每一次失败的操控，反而在给它自己减码。Ra 说的「相对极性的确定」，就是这两条曲线的对比。</div>
+  </div>
+
+  <div class="card">
+    <h3>守住极性的三件套（条件模拟器）</h3>
+    <div class="q">Ra 点出小组没有显著去极化的原因：意志、信仰与呼求光三样同时在场。试着拨动开关，看这道屏障如何起效、又如何出现缺口。</div>
+    <div class="cond-row"><div class="name">持续运用意志 <small>will——在每一次选择里重新选一次服务他人</small></div><label class="switch"><input type="checkbox" id="sw85a" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">持守信仰 <small>faith——确信所选的道路确实通向造物主</small></div><label class="switch"><input type="checkbox" id="sw85b" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">呼求光 <small>calling to the light——把正面的帮助请进来</small></div><label class="switch"><input type="checkbox" id="sw85c" checked><span class="slider"></span></label></div>
+    <div id="condResult">先拨一拨上面的开关。</div>
+    <div class="case"><b>守夜人的三件套：</b>野外考察队扎营在熊出没的地带，向导要求三件事同时做到：食物吊高（不留破绽）、篝火不灭（守住光亮）、结伴值守（互相照应）——少任何一件，风险立刻上来。Ra 描述的小组正是如此：三件套同时在场才「排除了任何显著的去极化」；何况对方是最熟练的第五密度精通者（adept，已能熟练运用能量中心与魔法能力的实体），小组在第三密度幻象里只有新手的有意识集体魔法能力，任何一件松手都可能被抓住空档。</div>
+  </div>
+
+  <div class="card">
+    <h3>名字的两难：权力，还是聚拢</h3>
+    <div class="q">发问者明知命名并非必要，只为提高沟通效率，问这位实体有没有名字；接着追问：知道名字，在魔法上对我们有害吗？</div>
+    <div class="quote">
+      <p class="en">If one wishes to have power over an entity it is an aid to know that entity's name. If one wishes no power over an entity but wishes to collect that entity into the very heart of one's own being, it is well to forget the naming.</p>
+      <p class="zh">如果一个人想对实体拥有权力，知道那个实体的名字是一种助力；如果一个人不想拥有权力、而是想把那个实体收进自己存在的核心，那么最好忘记命名。</p>
+      <span class="src">—— Session 085 · (85.7)</span>
+    </div>
+    <div class="plain">Ra 确认它有名字、知道名字「会有区别」，但拒绝替发问者选边：两条路在魔法上都可行，各自把走的人往不同方向极化——选择权在你。</div>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">权力之路</span><h4>知道名字</h4><p>想对实体拥有权力时，名字是一种助力——<b>名字成了控制的把手</b>，握住它就能拿捏对方。</p></div>
+      <div class="yuan-card"><span class="y-tag">聚拢之路</span><h4>忘记命名</h4><p>想把实体收进自己存在的核心时，最好忘掉标签——<b>档案放下了，人才能被请进心里</b>。</p></div>
+      <div class="yuan-card"><span class="y-tag">皆可行</span><h4>两条路都通</h4><p>Ra 并未说哪条「魔法上不成立」——两条都是可行的过程。<b>问题不在可行性，而在方向。</b></p></div>
+      <div class="yuan-card"><span class="y-tag">你的选择</span><h4>各自极化</h4><p>每一种过程都以特定方式极化：选权力，人往控制走；选聚拢，人往合一走。<b>Ra 把天平留给发问者自己。</b></p></div>
+    </div>
+    <div class="case"><b>谈判桌上的两种姿态：</b>采购经理老周面对一家爱打小报告的供应商——第一种做法是把它摸个底朝天：报价单、物流把柄、替代厂商报价全攥在手里，随时拿捏（知道名字＝权力）；第二种做法是主动放下对方的黑历史，按规矩办事，甚至把它请进长期合作的名单（忘记命名＝聚拢进自己存在的核心）。两条路都走得通，但每走一步，老周自己也朝着「控制者」或「整合者」多极化了一分——正如 Ra 说的，各自以特定方式极化，这是你的选择。</div>
+    <div class="case"><b>家族群里的「杠精」亲戚：</b>每次家庭聚会，表叔都要挑起争论。有人选择研究他的雷点与软肋，好在饭桌上「赢」他；有人干脆不接招，把他当自家亲戚请到桌边夹菜。前者在积累对人的权力，后者在练习把对方收进心里——同一位亲戚，两种反应，两个极化方向。这正是本集小组面对第五密度同伴的同一道题：不是消灭对方，而是决定自己往哪个方向走。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 3 章 · 那非是之物 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>那非是之物：负面道路的遗漏与终局</h2></div>
+  <p class="sec-lead">发问者接着提出一个很自然的推理：负面同伴既然一直在监听通讯、已经知晓面纱过程及其目的，那它的高负面极化岂不是维持不下去了？Ra 先纠正这个前提，再把「那非是之物」（that which is not）这条道路的机制从头讲了一遍——包括它终局的走向。本集还出了一次重要的传输错误，Ra 亲口纠正。</p>
+
+  <div class="card">
+    <h3>知识不动摇选择</h3>
+    <div class="q">发问者的推理是：既然负面实体已有意识地接受了面纱过程的真相，高度负面极化应该就难以为继了吧？他请 Ra 澄清这一点。</div>
+    <div class="quote">
+      <p class="en">The polarization process, as it enters fourth density, is one which occurs with full knowledge of the veiling process which has taken place in third density.</p>
+      <p class="zh">进入第四密度的极化过程，是在完全知晓第三密度中已发生的面纱过程的情况下进行的。</p>
+      <span class="src">—— Session 085 · (85.9)</span>
+    </div>
+    <div class="plain">Ra 纠正了这个预设：知识与记忆只是为更高密度的极化实体「提供信息」，并不影响已经做出、且作为第三密度之后极化工作基础的那个选择。选择该道路的实体只是利用面纱来增强那非是之物——Ra 说，这完全是造物主认识自我的可接受方法。</div>
+    <div class="case"><b>体检报告与生活方式：</b>小李的体检报告写着血脂偏高，他读得清清楚楚，甚至能向同事复述每项指标的含义——但午饭还是点了炸鸡。知识只是「提供信息」，改变方向的从来是选择。Ra 的纠正正在这里：第四密度的极化者在完全知晓面纱过程的情况下继续极化，「知道」并不进入「选择」的账本。</div>
+  </div>
+
+  <div class="card">
+    <h3>遗漏的机制：否认光谱正中</h3>
+    <div class="q">「增强那非是之物」到底是什么意思？Ra 用能量中心的光谱画出这条路的结构。</div>
+    <div class="quote">
+      <p class="en">If you see the energy centers in their various colors completing the spectrum you may see that the service-to-others[79] choice is one which denies the very center of the spectrum—that being universal love.</p>
+      <p class="zh">如果你看到能量中心以各色构成完整的光谱，就会看到这个选择否认了光谱的正中——即普世大爱（universal love，绿光芒之爱）。（注意：原文此处误传为「服务他人」，Ra 随后确认本意是「服务自我」，见本章末卡。）</p>
+      <span class="src">—— Session 085 · (85.11)</span>
+    </div>
+    <div class="plain">负面道路的一切建造都建立在一个遗漏之上：它删掉了光谱正中的普世大爱。这个遗漏在第四密度显现为自我之爱——橙、黄能量中心的最充分表达，被用来增强沟通与精通之境；在第五密度，则是没有悲悯的智慧。</div>
+    <div class="case"><b>只靠罚款管理的小区：</b>某小区物业把管理简化成一张罚单清单：遛狗罚、堆物罚、噪音罚。头三个月秩序井然，半年后业主开始互相举报、见面绕道，楼道里的公共绿植没人认养——把「共同善」（光谱正中）从系统里删掉后，剩下的每一次「有效管理」都建立在遗漏上，和谐一点点变成不和谐。Ra 说那非是之物是「自我施加的黑暗」，正是这个结构。</div>
+    <div class="case"><b>只看排名的班级：</b>老师宣布只按名次发奖，三个月后尖子生互相藏笔记、后进生撕卷子。系统里每一步都「理性」，但绿光芒层面的东西——愿意把自己的理解讲给同桌听——被当作愚蠢清除了出去。本集 Ra 说负面第五密度实体「真诚地认为绿光芒能量是愚蠢」：当一个系统否认普世大爱，最先被嘲笑的总是它。</div>
+  </div>
+
+  <div class="card">
+    <h3>终局：黑暗终将召唤光</h3>
+    <div class="q">这条路会一直走下去吗？Ra 给出了负面道路的终局判决。</div>
+    <div class="quote">
+      <p class="en">However, that which is not cannot endure throughout the octave of third density,[80] and, as darkness eventually calls the light, so does that which is not eventually call that which is.</p>
+      <p class="zh">然而，那非是之物无法贯穿八度音程（octave）而存续；正如黑暗终将召唤光明，那非是之物终将召唤那是之物。</p>
+      <span class="src">—— Session 085 · (85.11)</span>
+    </div>
+    <div class="plain">那非是之物是自我施加的黑暗，在其中和谐被转为永恒的不和谐——但它无法永远持续。负面道路走到自己黑暗的尽头时，恰恰会把「那是之物」召唤回来。</div>
+    <div class="case"><b>断网三个月后的重逢：</b>几个沉迷网游的朋友约定断网三个月，撑到最后的那个人发现自己最想念的不是游戏，而是一起打游戏的兄弟——自我封闭玩到尽头，召唤回来的恰恰是联结。「黑暗终将召唤光」在日常里的样子：把关系从生活里删掉的那条路，尽头站着的是关系。</div>
+    <div class="case"><b>被雪藏的实话：</b>一家公司开会没人敢说真话，坏消息层层过滤，直到产品崩了、全组通宵返工——掩盖无法无限存续，崩塌的那一刻，事实被大声召了回来。那非是之物「不能存续」不是说它不强大，而是说它自带终局。</div>
+  </div>
+
+  <div class="card">
+    <h3>一次必须记下的传输纠错</h3>
+    <div class="q">发问者发现，刚才那段通讯里 "others" 一词被传了三次、而本该是 "self"——若没察觉，会造成理解上的巨大偏差。这个传输问题是怎么回事？</div>
+    <p>Ra 先如实回应：Ra 自己<b>没有察觉</b>错误，但欢迎并鼓励发问者用感知去纠正传输错误；随后确认本意——是把<b>服务自我</b>道路作为那非是之物的道路来谈论。原因有二：其一，语言的笨拙与 Ra 对它的不熟悉；其二，一旦误称或误编号了某个事件或事物、且未被自己察觉，那个参照物很可能在后续传输时间里被重复使用。被问「是否掌握此刻地球上所有语言的所有词汇」时，Ra 的回答只有一个字：No。</p>
+    <div class="case"><b>同传的错词会传染：</b>一场同声传译里，译员把 "stakeholder" 顺口说成「股东」，之后整整一小时都沿用这个词，直到有人递纸条纠正——「误称一旦未被察觉就会被重复使用」是口译员的日常，也是 Ra 解释自己为何连错三次的原因。</div>
+    <div class="case"><b>「这个词我不认识」：</b>游客用蹩脚的外语问路，本地人没听懂其中一个词，直接说「这个词我不认识，你换个说法试试」——承认词汇的边界，比硬编一个答案更可信。Ra 面对同一个问题（是否掌握所有英语词汇）给出的正是这个干脆的「No」：教导者的诚实，也是教导的一部分。</div>
+  </div>
+
+  <div class="card">
+    <h3>本集术语卡：负面道路的关键词</h3>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">那非是之物</div><div class="sub">that which is not</div><span class="tap">点击翻面</span></div><div class="back">以否认为起点的那条路：否认光谱正中的普世大爱，一切建造都建立在这个遗漏之上；Ra 称之为自我施加的黑暗——但黑暗终将召唤光。<em>像把窗户全部封死的房间：里面每样东西都摆放得「正确」，唯独没有光。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">面纱过程</div><div class="sub">veiling process</div><span class="tap">点击翻面</span></div><div class="back">第三密度中被有意遮蔽心智各项功能的机制：它制造「不知道」，从而让选择有了重量、极化有了可能。正面与负面道路者都可以利用它。<em>像考前收走的标准答案——不是撕掉，是收进抽屉。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">极化／去极化</div><div class="sub">polarization / depolarization</div><span class="tap">点击翻面</span></div><div class="back">极化是朝服务他人或服务自我方向持续累积的选择倾向；去极化是这份积累的消退。本集「魔法层面的危机」，核心就是双方相对极性的确定。<em>像健身者的肌肉：练哪边哪边长，停练就掉——对面也没闲着。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">普世大爱</div><div class="sub">universal love</div><span class="tap">点击翻面</span></div><div class="back">能量中心光谱的正中，绿光芒的爱；负面选择否认的正是它，负面第五密度实体甚至真诚地认为绿光芒能量是愚蠢。<em>像十字路口的正中心——四个方向都从它出发，有人却宣布「这个中心不存在」。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">精通者</div><div class="sub">adept · adepthood</div><span class="tap">点击翻面</span></div><div class="back">已能熟练运用能量中心与魔法能力、在极化道路上深入工作的实体（或这种精熟之境）；负面第四密度以橙、黄光芒的最充分表达来增强沟通与精通之境。<em>像拿到驾照后的老司机——技能纯熟，开往哪个方向是另一回事。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">窄带通道</div><div class="sub">narrow-band channel</div><span class="tap">点击翻面</span></div><div class="back">Ra 与器皿之间的通讯方式：经由紫色光芒能量中心的一条窄而清晰的频道——是通道，不是居住。<em>像调频电台的专用频道——信号经由它抵达，电台并不住在收音机里。</em></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>归类练习：这道光是什么颜色</h3>
+    <div class="q">本集点名了三道光：橙／黄（自我之爱的最充分表达）、绿（普世大爱，光谱正中）、紫（窄带通道的所在）。判断下面每件事落在哪道光上。</div>
+    <div id="sort85"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 4 章 · 悲悯×智慧 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>平衡悲悯与智慧：为什么这个问题只能答一半</h2></div>
+  <p class="sec-lead">小组中的 Jim 递来一个个人问题：疗愈练习里，发展中的悲悯该用智慧去平衡吗？Ra 的回答值得细看——他先声明这个问题部分触及自由意志的禁区，再把能说的部分讲成一份平衡练习的操作手册：先诚实，再拆解，最后才谈爱与智慧的关系。</p>
+
+  <div class="card">
+    <h3>自由意志划下的边界</h3>
+    <div class="q">Jim 问：他投胎前的主要选择之一，是为疗愈打开绿光芒能量中心；如今悲悯在发展，该用智慧平衡它，还是任它尽量发展、不加平衡？</div>
+    <div class="quote">
+      <p class="en">This query borders upon that type of question to which answers are unavailable due to the free-will prohibitions upon information from teach/learners.</p>
+      <p class="zh">这个问题接近那一类无法给出答案的提问——自由意志禁止就教导/学习者（teach/learner）本人的信息作答。</p>
+      <span class="src">—— Session 085 · (85.16)</span>
+    </div>
+    <div class="plain">Ra 没有替 Jim 的灵魂做决定，而是把问题转成「平衡过程的学生」都能用的功课：这一半答案属于所有人，那一半属于 Jim 自己去发现。</div>
+    <div class="case"><b>职业规划的代问：</b>学生问职业顾问「我该不该转行」，顾问不会替他签字，只会给他一套评估工具：列条件、称权重、留出试错期。Ra 面对 Jim 的个人选择正是如此——自由意志的禁区不许 Ra 替人选路，但平衡方法本身可以倾囊相授。</div>
+  </div>
+
+  <div class="card">
+    <h3>平衡的实操：先诚实，再拆解</h3>
+    <div class="q">那这门功课具体怎么做？Ra 给出的第一步不是「更多悲悯」，而是最严格的诚实。</div>
+    <div class="quote">
+      <p class="en">It may take many, many essays into compassion before true universal love is the product of the attempted opening and crystallization of this all-important springboard energy center.</p>
+      <p class="zh">可能需要许多、许多次对悲悯的尝试，真正的普世大爱才会成为这个至关重要的跳板（springboard）能量中心尝试开启与结晶的产物。</p>
+      <span class="src">—— Session 085 · (85.16)</span>
+    </div>
+    <div class="plain">感知到悲悯时，先分析这种感知：看似包容一切的爱里可能混着许多其他成分，逐一平衡并接纳为自我的一部分——它们是过渡材料，伴你把学习/教导之座一点点移进绿光芒。</div>
+    <div class="case"><b>急诊科护士的自我盘点：</b>护士小陈看到病人受苦就抢着替家属签字、包办一切。督导让她在每次冲动后写三行字：我此刻的冲动里，多少是替病人好，多少是缓解自己的焦虑，多少是怕被说冷漠。写满一个本子后她发现，「悲悯」里确实混着别的东西——这正是 Ra 说的：先以最严格的诚实分析感知，再逐一平衡、接纳为自我的一部分。</div>
+    <div class="case"><b>公益群里的「有求必应」：</b>群友老郑见谁都捐、谁哭帮谁，被骗几次后学会先核实再出手——悲悯没有消失，但成分被逐一看清了：想帮人的心、怕被人说冷血的心、想当「群里好人」的心，各归各位。看似包容一切的爱里发现许多其他成分，每一个都被平衡并接纳，这才是 Ra 给的次序。</div>
+  </div>
+
+  <div class="card">
+    <h3>爱与智慧：同一枚硬币</h3>
+    <div class="q">等真正的普世大爱达成了，下一步就一定是智慧吗？Ra 的答案出乎意料地灵活。</div>
+    <div class="quote">
+      <p class="en">Love and wisdom, like love and light, are not black and white, shall we say, but faces of the same coin, if you will.</p>
+      <p class="zh">爱与智慧，如同爱与光，并不是黑白分明的——如果你愿意这么说，它们是同一枚硬币的两面。</p>
+      <span class="src">—— Session 085 · (85.16)</span>
+    </div>
+    <div class="plain">下一步可能是智慧，也可能不是：平衡的对象是<b>显化</b>时，平衡普世大爱与智慧确实合适；平衡的是<b>心智或灵性</b>时，则有许多微妙之处。并非所有情况都是「从悲悯移向智慧」。Ra 还提醒：随时记住自己希望从中移动的密度——第三密度学的是爱的课程；流浪者（wanderer，投胎到这里的更高密度灵魂）则带着其他课程半被遗忘的重叠。</div>
+    <div class="case"><b>新手主管与资深主管：</b>新手主管对下属只有温情、从不给难听的反馈，团队停在原地；资深主管知道什么时候该谈感受、什么时候该谈标准——他不是「先爱后智」地排队，而是在每件事上同时拿捏两面。爱与智慧是同一枚硬币的两面，不是固定顺序的先后两步。</div>
+    <div class="case"><b>留学回来的口音：</b>在国外住了十年的人回国，说话时不自觉冒出外语的语序和词汇——旧环境的印记半忘不忘地叠在新语言上。Ra 说流浪者身上正是这种「半被遗忘的重叠」：其他课程、其他密度的经验叠在第三密度的功课之上，平衡时也得把这些计入，不能只用本地的教材衡量自己。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 5 章 · 心智面纱 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>心智的面纱：被遮蔽的四样东西</h2></div>
+  <p class="sec-lead">回到面纱的主线，发问者问出本集分量最重的问题：面纱之后，哪些被遮蔽的功能对朝所需方向的极化影响最大？Ra 先给总答，再像清点库房一样逐项报出被埋的「宝石」——最后一项不是心智的功能，而是面纱造出的东西。</p>
+
+  <div class="card">
+    <h3>总答：面纱盖住的是心智</h3>
+    <div class="q">发问者先问总问题：被面纱遮蔽的功能或活动中，哪些对创造朝所需极化方向的进化作用最大？</div>
+    <div class="quote">
+      <p class="en">The most effectual veiling was that of the mind.</p>
+      <p class="zh">最有效的面纱，是心智的面纱。</p>
+      <span class="src">—— Session 085 · (85.18)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The primary veiling was of such significance that it may be seen to be analogous to the mantling of the earth over all the jewels within the earth's crust; whereas previously all facets of the Creator were consciously known. After the veiling, almost no facets of the Creator were known to the mind.</p>
+      <p class="zh">这次主要的面纱意义重大，可以被比作大地把地壳内的所有宝石盖住：在此之前，造物主的一切面向都被有意识地知晓；面纱之后，几乎没有任何面向被心智知晓。</p>
+      <span class="src">—— Session 085 · (85.19)</span>
+    </div>
+    <div class="plain">面纱不是删除功能，而是把功能埋进地下——宝石还在原处，只是不再露头。Ra 随后逐项清点：哪些被埋的宝石一旦重新挖出，最能帮助极化。</div>
+    <div class="case"><b>旧硬盘里的童年相册：</b>一块十年没开机的老硬盘，装着全部家庭照片——不是丢了，只是没人去读。面纱之于心智正如硬盘盖之于相册：数据都在，「几乎一切都被埋在面纱之下」；Ra 清点的四项功能，就是四张还没被读出来的盘。</div>
+  </div>
+
+  <div class="card">
+    <h3>被埋的四件宝（问答推进器）</h3>
+    <div class="q">Ra 依次报出清单：远见、做梦、知晓身体，以及最重要的产物——意志。逐节点开。</div>
+    <div class="demo-area">
+      <div class="flow-track" id="mindTrack"></div>
+      <div class="flow-detail" id="mindDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="mindPrev">← 上一步</button>
+        <button class="tri-btn" id="mindNext">下一步 →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>意志：面纱最重要的产物</h3>
+    <div class="q">清单的最后一项最特别：它不是被遮蔽的功能，而是面纱「造」出来的东西。</div>
+    <div class="quote">
+      <p class="en">Perhaps the most important and significant function that occurred due to the veiling of the mind from itself is not in itself a function of mind but rather is a product of the potential created by this veiling. This is the faculty of will or pure desire.</p>
+      <p class="zh">也许，因心智被面纱遮蔽于自身而产生的最重要、最显著者，本身并不是心智的功能，而是这场面纱所造潜力的产物——这就是意志或纯粹渴望的能力。</p>
+      <span class="src">—— Session 085 · (85.19)</span>
+    </div>
+    <div class="plain">选择的重量，只有在不知道答案的黑暗里才压得实：正因为心智对自己不再全知，「想要」才第一次有了全部的力量。这是面纱送给第三密度的最贵重之物。</div>
+    <div class="case"><b>梦境日记的一个月：</b>设计师小葵连着一个月醒来先写梦，月底翻看发现：白天卡住的两个方案，梦里早有提示——一部掉进水里的电梯、一扇打不开的门。Ra 说所谓做梦「包含大量内容」，若能提供给有意识心智并加以运用，将大大帮助极化；日记就是那根把梦捞回意识的线。</div>
+    <div class="case"><b>瑜伽馆里的重新认识：</b>五十岁的老赵第一次上瑜伽课，发现自己连「左边肩胛骨在哪」都感觉不到；练到第三个月，他能分清「酸」和「痛」，能提前察觉代偿。Ra 说，知晓身体在面纱前用处不大，面纱后面对身体与心智分离的浓密幻象，这份知晓「相当重要」——老赵练的就是它。</div>
+    <div class="case"><b>只活在「今天」的日程表：</b>小李的待办清单只写当天、从不写下周，直到导师让他加一页「三年后的自己在做什么」，他才发现自己一直被时间推着走。Ra 说：没有面纱时心智不被幻象时间困住；有了面纱，空间/时间成了唯一显然可行的经验可能——「远见」这门被遮蔽的功能，练的正是把长时段重新拉回视野。</div>
+    <div class="case"><b>戒糖第六周：</b>小陈戒糖的第一周全靠咬牙硬撑，第六周变成习惯，第十二周闻到蛋糕香已无感。撑过头几周靠的不是信息（危害她全知道），而是纯粹渴望。Ra 说这不是心智的功能，而是面纱造出的潜力的产物——正因为不知道「另一边是什么」，选择才有重量。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 6 章 · 收官 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>收官：窄带通道，器皿不是房子</h2></div>
+  <p class="sec-lead">集会末尾，发问者问了一个很多人好奇的问题：Ra 是否有个体化的部分「住」在器皿的身体里？Ra 的回答澄清了通灵的本质——通道，而非居所。最后以一句属于本集的金句收束：两条路都可行，选择在你。</p>
+
+  <div class="card">
+    <h3>Ra 如何与器皿同在</h3>
+    <div class="q">发问者问：是否有一个 Ra 的个体化部分或实体，为了通讯而居住在器皿的身体里？另外，我们能做些什么来改善接触、让器皿更舒适？</div>
+    <div class="quote">
+      <p class="en">We of Ra communicate through narrow-band channel through the violet-ray energy center.</p>
+      <p class="zh">我们 Ra 通过紫色光芒能量中心、以窄带通道进行通讯。</p>
+      <span class="src">—— Session 085 · (85.20)</span>
+    </div>
+    <div class="quote">
+      <p class="en">We are not, as you would say, physically indwelling in this instrument; rather, the mind/body/spirit complex of this instrument rests with us.</p>
+      <p class="zh">我们并没有——如你们所说——实际居住在这个器皿体内；更确切地说，这个器皿的心/身/灵复合体与我们同处。</p>
+      <span class="src">—— Session 085 · (85.20)</span>
+    </div>
+    <div class="plain">通灵不是「附体」：Ra 经由紫光芒的窄带频道传讯，器皿的复合体则「与 Ra 同处」。至于「能做什么」，Ra 的回答是肯定——你们勤奋而尽责，校准极好。</div>
+    <div class="case"><b>视频会议不是串门：</b>跨国的项目组每天连线，对方的画面声音经由一条视频链路传过来——同事并没有「住进」你的会议室，链路一断，通话结束，双方各自回到自己的房间。Ra 与器皿正是这种关系：紫光芒是那根线，「居住在体内」则是个误会。</div>
+    <div class="case"><b>电台主播与收音机：</b>主播的声音通过调频抵达你家的收音机，但主播并不住在收音机里；关掉电源，频道依旧存在，只是接收停了。「窄带通道」说的就是这条调频线路——器皿是灵敏的接收机，不是被占用的房子。</div>
+    <div class="case"><b>复盘会上的收尾：</b>季度复盘结束，主持人没有布置新任务，只说了一句「这季度大家勤奋尽责，各项对齐都很好」——散会。Ra 的临别语正是这种收束：肯定（勤奋、尽责、校准极好）与祝福（在太一无限造物主的力量与平安中欢欣），把未尽的话题留给下一次工作。</div>
+  </div>
+
+  <div class="saying">
+    <p class="en">Both processes are magically viable. Each is polarized in a specific way. It is your choice.</p>
+    <p class="zh">两种过程在魔法上都可行。每一种都以特定的方式被极化。这是你的选择。</p>
+    <span class="src">—— Session 085 · (85.7)</span>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 085（split/Ra_Session_085.md）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra085-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本集定制交互 ===== */
+const byId085=function(id){return document.getElementById(id)};
+
+initStepper('mapTrack','mapDetail','mapPrev','mapNext',[
+  {t:'开场与器皿状态',d:'<span class="qa-q">开场（85.0–85.2）</span><b>答：</b>因器皿疼痛发作，Ra 开头只能尽量简短说话、先安全转移器皿的心/身/灵复合体，并为「失礼」致歉；随后评估：警惕的必要性降低、继续注意饮食、生命能量如前，并赞扬小组的照管。'},
+  {t:'负面同伴的危机',d:'<span class="qa-q">问：那位第五密度、服务自我的「同伴」现在如何？（85.3–85.4）</span><b>答：</b>它从未像此刻这样与小组紧密关联——魔法层面正发生一场危机：确定双方之间<b>相对的极性</b>。小组只有新手的有意识集体魔法能力，却用意志、信仰与呼求光排除了显著去极化；同伴必须尽快出手，因为它自己正在去极化。'},
+  {t:'名字的两难',d:'<span class="qa-q">问：它有名字吗？知道名字有坏处吗？（85.5–85.7）</span><b>答：</b>有，而且「会有区别」。想知道名字，走的是<b>权力</b>之路；想把它收进自己存在的核心，最好<b>忘记命名</b>。两条路在魔法上都可行、各自极化——Ra 把选择留给发问者。'},
+  {t:'知识×选择',d:'<span class="qa-q">问：负面同伴既已知晓面纱过程，高负面极化还维持得住吗？（85.9–85.10）</span><b>答：</b>维持得住。第四密度的极化正是在<b>完全知晓</b>面纱的情况下进行的；知识与记忆只是提供信息，不影响已做出的选择——选择才是第三密度之后极化的基础。'},
+  {t:'那非是之物',d:'<span class="qa-q">问：「增强那非是之物」是什么意思？（85.11）</span><b>答：</b>那条道路否认光谱正中的<b>普世大爱</b>：第四密度显现为自我之爱（橙、黄光芒的最充分表达），第五密度是没有悲悯的智慧。但它是自我施加的黑暗，无法永远存续——黑暗终将召唤光。'},
+  {t:'传输纠错',d:'<span class="qa-q">问：刚才那段是不是传错了？（85.12–85.15）</span><b>答：</b>是。"others" 被传了三次、应为 "self"；Ra 确认本意是把<b>服务自我</b>道路作为那非是之物的道路来谈论，并解释两个原因：语言的笨拙、误称未被察觉就会被沿用。'},
+  {t:'悲悯×智慧',d:'<span class="qa-q">问（Jim）：悲悯该用智慧平衡，还是任其发展？（85.16）</span><b>答：</b>此问触及自由意志的禁区，答案不可得；Ra 转而给出平衡过程的功课：最严格的诚实、分析感知、发现成分——真正的普世大爱之前，可能要许多次尝试。'},
+  {t:'心智面纱',d:'<span class="qa-q">问：哪个面纱对极化最有效？（85.18–85.19）</span><b>答：</b><b>心智的面纱</b>。被遮蔽者：远见／观想、做梦、知晓身体；而面纱最重要的产物不是心智功能，而是<b>意志／纯粹渴望</b>。'},
+  {t:'收尾',d:'<span class="qa-q">问：Ra 是否居住在器皿体内？（85.20）</span><b>答：</b>不是——通讯经由紫色光芒能量中心的<b>窄带通道</b>，器皿的心/身/灵复合体「与 Ra 同处」。Ra 称赞小组勤奋尽责、校准极好，随后道别。'}
+]);
+
+initStepper('mindTrack','mindDetail','mindPrev','mindNext',[
+  {t:'被盖住的宝石',d:'<b>总起：</b>心智的面纱重大到如同大地把地壳内的所有宝石盖住——面纱前，造物主的一切面向都被有意识知晓；面纱后，几乎无一面向被心智知晓，几乎一切都被埋在面纱之下（85.19）。'},
+  {t:'① 远见／观想',d:'<b>visioning, envisioning, far-seeing：</b>没有面纱时，心智不被你们的幻象时间困住；有了面纱，空间/时间成了唯一显然可行的经验可能。把「远见」重新找回，极化便多了一件工具（85.19）。'},
+  {t:'② 做梦',d:'<b>dreaming：</b>所谓的梦包含大量内容——若能提供给有意识心智并加以运用，将在很大程度上帮助极化（85.19）。'},
+  {t:'③ 知晓身体',d:'<b>knowing of the body：</b>对身体的知识与掌控在面纱中大量丧失。面纱前它用处不大；面纱后，面对身体复合体与心智复合体分离的浓密幻象，这份知晓相当重要（85.19）。'},
+  {t:'④ 意志／纯粹渴望',d:'<b>will, pure desire：</b>它本身不是心智功能，而是面纱所造潜力的<b>产物</b>——Ra 称之为面纱最重要、最显著的成果（85.19）。随后 Ra 主动收束：通道次优，请只问简短问题，不愿滥用器皿。'}
+]);
+
+initSorter('sort85',[
+  {a:'小王在部门里精心经营人设，把每次会议都变成刷存在感的舞台，享受众人的注目与簇拥',opts:['橙／黄光芒','绿色光芒','紫色光芒'],ans:'橙／黄光芒',exp:'本集语境里，橙、黄光芒的最充分表达正是自我之爱——负面第四密度用它来增强沟通与精通之境（85.11）。'},
+  {a:'李医生下班后留在诊室，手把手教不会用挂号机的老人操作，不图任何回报',opts:['橙／黄光芒','绿色光芒','紫色光芒'],ans:'绿色光芒',exp:'不求回报的悲悯是绿光芒的普世大爱——光谱正中，负面第五密度实体却真诚地认为它是愚蠢（85.11）。'},
+  {a:'Ra 与这个小组的通讯经由器皿的哪个能量中心、以窄带进行？',opts:['橙／黄光芒','绿色光芒','紫色光芒'],ans:'紫色光芒',exp:'Ra 明说：我们通过紫色光芒能量中心以窄带通道通讯（85.20）。'},
+  {a:'张教练把学员的进步都归功于自己，用表扬与冷落交替让学员越来越离不开他',opts:['橙／黄光芒','绿色光芒','紫色光芒'],ans:'橙／黄光芒',exp:'掌控与自我之爱是橙、黄光芒的负面最充分表达——建立在否认普世大爱的遗漏之上（85.11）。'},
+  {a:'负面第五密度探索「智慧密度」时缺少的，恰是哪道光芒的能量？',opts:['橙／黄光芒','绿色光芒','紫色光芒'],ans:'绿色光芒',exp:'Ra 说他们是「没有悲悯、没有普世大爱」的实体——绿光芒正是被他们视为愚蠢的那个中心（85.11）。'}
+]);
+
+function sim85(){
+  const a=byId085('sw85a').checked,b=byId085('sw85b').checked,c=byId085('sw85c').checked;
+  const off=[];
+  if(!a)off.push('意志不在场：每一次选择少了一次对服务他人的重新确认，去极化便有了缝隙（85.4）。');
+  if(!b)off.push('信仰松动：对道路本身的确信是小组的承重墙，它一晃，判断就开始摇摆（85.4）。');
+  if(!c)off.push('不再呼求光：正面的帮助只能回应呼求——不再呼喊，帮助就悬在门外（85.4）。');
+  const el=byId085('condResult');
+  if(off.length===0){el.classList.remove('fail');el.innerHTML='<b>三件套齐全：</b>Ra 说，意志、信仰与对光的呼求被这个小组运用，「排除了任何显著的偏离服务他人道路的去极化」（85.4）。负面同伴若想消减小组的极化，必须趁现在出手——因为它自己在探索分离之智慧的失败尝试中正在去极化。';}
+  else if(off.length===3){el.classList.add('fail');el.innerHTML='<b>三件全缺：</b>面对一位最熟练的第五密度精通者，第三密度新手水平的有意识集体魔法能力很难守住相对极性——这正是本集「魔法层面危机」的悬念所在（85.4）。';}
+  else{el.classList.add('fail');el.innerHTML='<b>缺 '+off.length+' 件，屏障出现缺口：</b>'+off.join('');}
+}
+['sw85a','sw85b','sw85c'].forEach(function(id){byId085(id).addEventListener('change',sim85);});
+sim85();
+
+document.querySelectorAll('.fn-card').forEach(function(c){c.onclick=function(){c.classList.toggle('open');};});
+
+renderPath();
+</script>
+</body>
+</html>

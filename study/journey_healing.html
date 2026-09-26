@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css">
+<title>坠入疗愈 · 滚动星旅</title>
+<style>
+:root{
+  --amb:#f5efe2;          /* 当前场景氛围色，由 JS 实时插值 */
+  --ink:#efe9dd;
+  --ink-dim:rgba(239,233,221,.55);
+  --serif:"LXGW WenKai","霞鹜文楷","LXGW WenKai SC","Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:#070a12;color:var(--ink);font-family:var(--serif);
+  line-height:2;overflow-x:hidden;
+}
+canvas#sky{position:fixed;inset:0;width:100vw;height:100vh;z-index:0}
+
+/* ===== 进度轨道 ===== */
+#rail{
+  position:fixed;right:26px;top:50%;transform:translateY(-50%);z-index:8;
+  display:flex;flex-direction:column;gap:13px;align-items:flex-end;
+}
+#rail .r{display:flex;align-items:center;gap:10px;cursor:pointer}
+#rail .r i{
+  width:5px;height:5px;border-radius:50%;flex-shrink:0;
+  background:rgba(255,255,255,.16);transition:all .4s;
+}
+#rail .r.cur i{background:var(--amb);box-shadow:0 0 9px var(--amb);transform:scale(1.7)}
+#rail .lbl{
+  font-size:.72rem;letter-spacing:.12em;color:var(--ink);white-space:nowrap;
+  padding:3px 12px;border-radius:999px;background:rgba(7,10,18,.78);
+  border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(4px);
+  opacity:0;transform:translateX(10px);transition:all .35s ease;pointer-events:none;
+}
+#rail:hover .lbl{opacity:1;transform:none}
+#rail .r.cur .lbl{border-color:var(--amb);color:var(--amb)}
+
+main{position:relative;z-index:1}
+
+/* ===== 时刻场景（全屏居中） ===== */
+.scene{min-height:118vh;display:flex;align-items:center;justify-content:center;padding:14vh 22px}
+.stage{max-width:620px;text-align:center;opacity:0;transform:translateY(34px);filter:blur(6px);transition:opacity 1.6s ease,transform 1.6s ease,filter 1.6s ease}
+.scene.on .stage,.station.on .stage{opacity:1;transform:none;filter:blur(0)}
+.kicker{
+  font-size:.8rem;letter-spacing:.55em;text-indent:.55em;color:var(--amb);
+  margin-bottom:30px;opacity:.85;
+}
+.kicker::after{
+  content:"";display:block;width:34px;height:1px;margin:16px auto 0;
+  background:var(--amb);opacity:.5;
+}
+.narr{font-size:1.18rem;color:var(--ink);margin-bottom:38px;text-align:center}
+.en{
+  font-family:Georgia,"Times New Roman",serif;font-style:italic;
+  font-size:.98rem;line-height:1.9;color:var(--amb);opacity:.92;margin-bottom:16px;
+}
+.zh{font-size:.95rem;color:var(--ink-dim);margin-bottom:10px}
+.ref{font-size:.74rem;letter-spacing:.2em;color:rgba(239,233,221,.34)}
+
+/* ===== 站点（左钉住 · 右细节流） ===== */
+.station{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);align-items:stretch}
+.pin{
+  position:sticky;top:0;height:100vh;
+  display:flex;align-items:center;justify-content:center;padding:0 3vw;
+}
+.pin .stage{max-width:520px}
+.detail{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:10vh 5vw 10vh 0;
+}
+.frag{
+  min-height:60vh;display:flex;flex-direction:column;justify-content:center;
+  max-width:440px;
+  opacity:0;transform:translateY(30px);
+  transition:opacity 1.3s ease,transform 1.3s ease;
+}
+.frag.on{opacity:1;transform:none}
+.f-k{
+  font-size:.78rem;letter-spacing:.4em;color:var(--amb);opacity:.85;margin-bottom:18px;
+}
+.f-en{
+  font-family:Georgia,"Times New Roman",serif;font-style:italic;
+  font-size:.92rem;line-height:1.9;color:var(--amb);opacity:.9;
+  border-left:2px solid rgba(255,255,255,.18);padding-left:16px;margin-bottom:14px;
+}
+.f-zh{font-size:.93rem;color:var(--ink-dim);margin-bottom:8px}
+.f-ref{font-size:.72rem;letter-spacing:.2em;color:rgba(239,233,221,.32)}
+
+/* 开场 */
+#s0 .narr{font-size:1.5rem;letter-spacing:.1em;line-height:2.3}
+.hint{
+  margin-top:60px;font-size:.8rem;letter-spacing:.4em;text-indent:.4em;
+  color:var(--ink-dim);animation:drift 2.6s ease-in-out infinite;
+}
+@keyframes drift{0%,100%{transform:translateY(0);opacity:.45}50%{transform:translateY(9px);opacity:.95}}
+
+/* 可选演示区（如棱镜 / 时间线 / 对比路径） */
+.demo{margin:8px auto 42px}
+.timeline{position:relative;max-width:460px;margin:0 auto 42px;text-align:left;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:rgba(255,255,255,.14)}
+.tl-item{position:relative;padding:2px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:11px;height:11px;border-radius:50%;
+  background:#070a12;border:3px solid var(--amb)}
+.tl-item .t{font-weight:700;color:var(--amb);letter-spacing:.1em}
+.tl-item .d{font-size:.9rem;color:var(--ink-dim)}
+.paths{display:flex;gap:26px;justify-content:center;margin-top:46px;flex-wrap:wrap}
+.path{
+  width:210px;padding:30px 22px 26px;border-radius:16px;cursor:pointer;
+  border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.02);
+  transition:all .7s ease;
+}
+.path h3{font-size:1.05rem;letter-spacing:.3em;text-indent:.3em;margin-bottom:12px}
+.path p{font-size:.86rem;color:var(--ink-dim);line-height:1.9}
+.paths.p-a .path:not(.a),.paths.p-b .path:not(.b){opacity:.28;transform:scale(.96)}
+.paths.p-a .path.a,.paths.p-b .path.b{transform:scale(1.04)}
+
+/* 终章 */
+#sLast .en{font-size:1.06rem;line-height:2.2}
+#sLast .zh{font-size:1rem}
+.again{
+  margin-top:56px;font-family:var(--serif);font-size:.85rem;letter-spacing:.35em;text-indent:.35em;
+  color:var(--ink-dim);background:none;border:1px solid rgba(255,255,255,.14);
+  border-radius:999px;padding:11px 30px;cursor:pointer;transition:all .4s;
+}
+.again:hover{color:var(--ink);border-color:var(--amb)}
+
+footer{
+  position:relative;z-index:1;text-align:center;padding:40px 20px 56px;
+  font-size:.76rem;color:rgba(239,233,221,.3);letter-spacing:.08em;line-height:2.2;
+}
+@media (max-width:900px){
+  .station{display:block}
+  .pin{position:static;height:auto;padding:12vh 22px 2vh}
+  .pin .stage{margin:0 auto}
+  .detail{padding:0 22px 6vh;align-items:center}
+  .frag{min-height:auto;margin-bottom:7vh}
+}
+@media (max-width:640px){
+  .narr{font-size:1.05rem}
+  #s0 .narr{font-size:1.2rem}
+  #rail{display:none}
+}
+
+/* ===== 本章演示 · 静默显影 ===== */
+.veiled{transition:filter 3.2s ease,opacity 3.2s ease}
+#s4 .stage .veiled{filter:blur(12px);opacity:.14}
+#s4.on .stage .veiled{filter:blur(0);opacity:1}
+
+/* ===== 本章演示 · 灵之穿梭器 ===== */
+.magnet{position:relative;height:216px;width:300px;max-width:80vw;margin:8px auto 40px}
+.m-line{position:absolute;left:50%;transform:translateX(-50%);width:2px;border-radius:2px}
+.m-line.up{top:0;height:66px;background:linear-gradient(180deg,rgba(255,255,255,0),var(--amb))}
+.m-line.down{bottom:0;height:66px;background:linear-gradient(0deg,rgba(255,255,255,0),var(--amb))}
+.m-tag{position:absolute;left:14px;font-size:.66rem;letter-spacing:.28em;color:var(--ink-dim);white-space:nowrap}
+.m-line.up .m-tag{top:-6px}
+.m-line.down .m-tag{bottom:-6px}
+.shuttle{
+  position:absolute;left:50%;top:50%;width:20px;height:20px;
+  transform:translate(-50%,-50%) rotate(45deg) scale(.45);border:1px solid var(--amb);
+  opacity:.25;transition:all 2.4s ease .4s;
+}
+.scene.on .shuttle{transform:translate(-50%,-50%) rotate(45deg) scale(1);opacity:1;box-shadow:0 0 30px var(--amb)}
+</style>
+</head>
+<body>
+
+<canvas id="sky"></canvas>
+<div id="rail"></div>
+
+<main>
+
+<!-- 0 开场 · 一句反话 -->
+<section class="scene" id="s0" data-c="#f5efe2">
+  <div class="stage">
+    <p class="narr">每一双想治愈别人的手，<br>都要先听见一句反话。</p>
+    <p class="en">"The healer does not heal. The crystallized healer is a channel for intelligent energy which offers an opportunity to an entity that it might heal itself."</p>
+    <p class="zh">疗愈者并不疗愈。结晶化的疗愈者只是一条管道，为一个实体提供机会——让它可以疗愈它自己。</p>
+    <p class="ref">—— SESSION 066 · (66.10)</p>
+    <p class="hint">向下滚动 · 走进这句反话 ▾</p>
+  </div>
+</section>
+
+<!-- 1 起初 · 活石与水晶 -->
+<section class="station" id="s1" data-c="#b8c4cc">
+  <div class="pin"><div class="stage">
+    <p class="kicker">起初 · 活石与水晶</p>
+    <p class="narr">故事从很早的地方开始。<br>那时疗愈是一件被郑重对待的事：<br>一座对齐能量的建筑，一块被选中的晶体，<br>和一个为它修行了半生的人。</p>
+    <p class="en">"The stones are alive."</p>
+    <p class="zh">那些石头是活的——这一点，从未被你们文化的心智如此理解。</p>
+    <p class="ref">—— SESSION 002 · (2.4)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">谁来给水晶充电</p>
+      <p class="f-en">"All of these crystal healings are charged through purified channels. Without the relative crystallization of the healer working with the crystal, the crystal will not be properly charged."</p>
+      <p class="f-zh">所有的水晶疗愈都经由净化的管道充能——若与水晶协作的疗愈者自身未曾结晶，水晶便不会被正确充能。</p>
+      <p class="f-ref">—— SESSION 002 · (2.3)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">一架走调的钢琴</p>
+      <p class="f-en">"That, like many other pyramid structures, is like the piano out of tune: it, as this instrument would express, plays the tune, but oh so poorly."</p>
+      <p class="f-zh">吉萨的大金字塔如今像一架走调的琴：曲子还弹得出来，只是弹得太差了。</p>
+      <p class="f-ref">—— SESSION 004 · (4.6)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">钥匙不在石头里</p>
+      <p class="f-en">"However, the use of the structure for initiation and healing depends completely upon the inner disciplines of the channels attempting such work."</p>
+      <p class="f-zh">一座建筑能否用于启蒙与疗愈，完全取决于尝试者的内在修习。</p>
+      <p class="f-ref">—— SESSION 004 · (4.7)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">无结构之疗愈</p>
+      <p class="f-en">"Thus, there are those among your people at this time whose purity is already one with intelligent infinity. Without the use of structures, healer/patient can gain healing."</p>
+      <p class="f-zh">你们之中已有纯净与智能无限合一的人——不用任何结构，疗愈者与患者之间就能发生疗愈。</p>
+      <p class="f-ref">—— SESSION 004 · (4.8)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">金字塔的自白</p>
+      <p class="f-en">" … it is in no way necessary to use this shape in order to achieve healings, for seniority of vibration has caused the vibratory complexes of mind/body/spirit complexes to be healed to be less vulnerable to the trauma of the interrupted armoring."</p>
+      <p class="f-zh">作为金字塔的建造者，Ra 亲自承认：要达成疗愈，完全不必使用这个形状——后来的人们，已不再那么容易被中断护甲的创伤所伤。</p>
+      <p class="f-ref">—— SESSION 057 · (57.12)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 2 谁能拿起这份工作 -->
+<section class="station" id="s2" data-c="#d9a066">
+  <div class="pin"><div class="stage">
+    <p class="kicker">谁能拿起这份工作</p>
+    <p class="narr">「被选中的人，必须活出一的法则——对吗？」<br>Ra 给出的回答，短得像一次心跳。</p>
+    <p class="en">"This is both correct and incorrect."</p>
+    <p class="zh">这既正确，又不正确。</p>
+    <p class="ref">—— SESSION 004 · (4.13)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">两种能疗愈的人</p>
+      <p class="f-en">"Two kinds there are who can heal: those such as yourself who, having the innate distortion towards knowledge-giving of the Law of One, can heal but do not; and those who, having the same knowledge but showing no significant distortion consciously towards the Law of One in mind, body, or spirit, yet and nevertheless, have opened a channel to the same ability."</p>
+      <p class="f-zh">一种人向着一的法则，能疗愈却不疗愈；另一种人在心智、身体、灵性上都未见朝向一的法则，却也打开了同一条通道——要点是：有人未经训练，却仍在疗愈。</p>
+      <p class="f-ref">—— SESSION 004 · (4.14)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">当生活配不上工作</p>
+      <p class="f-en">" … those whose life does not equal their work may find some difficulty in absorbing the energy of intelligent infinity and thus become quite distorted in such a way as to cause disharmony in themselves and others, and perhaps even find it necessary to cease the healing activity."</p>
+      <p class="f-zh">生活与工作不相称的人，吸收智能无限的能量时会遇到困难——扭曲会反噬自身、波及他人，甚至不得不停下疗愈。</p>
+      <p class="f-ref">—— SESSION 004 · (4.14)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">开口请求之前</p>
+      <p class="f-en">" … a healer asking to learn must take the distortion understood as responsibility for that ask/receiving, thus healing. This is a[n] honor/duty which must be carefully considered in free will before the asking."</p>
+      <p class="f-zh">请求学习疗愈的那一刻，等于同时签下责任——这是一项荣誉/义务，必须在开口之前，于自由意志中细细掂量。</p>
+      <p class="f-ref">—— SESSION 004 · (4.20)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">疗愈者的职务说明</p>
+      <p class="f-en">"The role of the healer is to offer an opportunity for realignment, or aid in realignment, of either energy centers or some connection between the energies of mind and body, spirit and mind, or spirit and body."</p>
+      <p class="f-zh">疗愈者的职责只有一条：为重新校准提供机会——校准能量中心，或心智与身体、灵性与心智之间那些能量的连接。</p>
+      <p class="f-ref">—— SESSION 066 · (66.9)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">从肩上落下的重担</p>
+      <p class="f-en">" … if these healers could but fully realize that they are responsible only for offering the opportunity of healing, and not for the healing, many of these entities would feel an enormous load of misconceived responsibility fall from them."</p>
+      <p class="f-zh">只负责递出机会，不负责疗愈本身——若能真正明白这一点，许多被误解的重担会当场从肩上落下来。</p>
+      <p class="f-ref">—— SESSION 066 · (66.10)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 3 运作自存 -->
+<section class="scene" id="s3" data-c="#e0c060">
+  <div class="stage">
+    <p class="kicker">运作自存</p>
+    <p class="narr">没有一只手能替另一颗心完成和解。<br>疗愈者能做的，<br>是把自己借给那个瞬间。</p>
+    <p class="en">"Healing occurs when a mind/body/spirit complex realizes, deep within itself, the Law of One; that is, that there is no disharmony, no imperfection; that all is complete and whole and perfect. Thus, the intelligent infinity within this mind/body/spirit complex re-forms the illusion of body, mind, or spirit to a form congruent with the Law of One. The healer acts as energizer or catalyst for this completely individual process."</p>
+    <p class="zh">当一个心/身/灵复合体在自己深处认出了一的法则——没有不和谐，没有不完美，一切完整而圆满——疗愈便发生了：它内在的智能无限会把幻象重新塑形。而疗愈者，只是这个完全个体化过程中的充能器与催化剂。</p>
+    <p class="ref">—— SESSION 004 · (4.20)</p>
+    <p class="en">"It is not by example that the healer does the working. The working exists in and of itself."</p>
+    <p class="zh">疗愈者并不是通过示范来完成这个运作——运作存在于它自身之中，凭借它自身而存在。</p>
+    <p class="ref">—— SESSION 005 · (5.1)</p>
+  </div>
+</section>
+
+<!-- 4 第一重门 · 心智 -->
+<section class="station" id="s4" data-c="#46528c">
+  <div class="pin"><div class="stage">
+    <p class="kicker">第一重门 · 心智</p>
+    <p class="narr veiled">静默不是空无一物。<br>它是钥匙，<br>也是那扇门本身。</p>
+    <p class="en">"The prerequisite of mental work is the ability to retain silence of self at a steady state when required by the self. The mind must be opened like a door. The key is silence."</p>
+    <p class="zh">心智工作的先决条件，是在自我需要时把静默稳定地保持住。心智必须像一扇门那样被打开——钥匙，是静默。</p>
+    <p class="ref">—— SESSION 005 · (5.2)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">最要紧的已经发生</p>
+      <p class="f-en">"Firstly, the mind must be known to itself. This is perhaps the most demanding part of healing work. If the mind knows itself then the most important aspect of healing has occurred, for consciousness is the microcosm of the Law of One."</p>
+      <p class="f-zh">首先，心智必须被它自己知晓——这是疗愈中最难的部分。而一旦心智认识了自己，疗愈最重要的方面便已发生，因为意识就是一的法则的微观宇宙。</p>
+      <p class="f-ref">—— SESSION 004 · (4.17)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">给每个电荷找它的反面</p>
+      <p class="f-en">"The disciplines of the mind involve, first of all, identifying both those things of which you approve and those things of which you disapprove within yourself, and then balancing each and every positive and negative charge with its equal."</p>
+      <p class="f-zh">心智的修炼从盘点开始：找出你赞同的与不赞同的，然后给每一个正负电荷，配上它的等量。</p>
+      <p class="f-ref">—— SESSION 005 · (5.2)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">耐心的镜子</p>
+      <p class="f-en">"When you view patience, you are responsible for mirroring in your mental understanding patience/impatience."</p>
+      <p class="f-zh">看见耐心时，你有责任在心智中同时映出耐心/不耐烦——没有哪种品质是单独成立的。</p>
+      <p class="f-ref">—— SESSION 005 · (5.2)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">四种心智的地图</p>
+      <p class="f-en">"The fifth step involves observing the geographical and geometrical relationships and ratios of the mind, the other mind, the mass mind, and the infinite mind."</p>
+      <p class="f-zh">第五步是把目光抬高：观察心智、他者心智、群体心智与无限心智之间的地理与几何。</p>
+      <p class="f-ref">—— SESSION 005 · (5.2)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 5 第二重门 · 身体 -->
+<section class="station" id="s5" data-c="#c96a3a">
+  <div class="pin"><div class="stage">
+    <p class="kicker">第二重门 · 身体</p>
+    <p class="narr">心智像一棵树，身体是它结出的果实。<br>先让树专一、平衡、有觉知，<br>果实才谈得上甜。</p>
+    <p class="en">"We have considered the mind as a tree. The mind controls the body."</p>
+    <p class="zh">我们把心智看作一棵树。心智控制着身体。</p>
+    <p class="ref">—— SESSION 006 · (6.1)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">从稠密走到精微</p>
+      <p class="f-en">"Imagine the body. Imagine the more dense aspects of the body. Proceed therefrom to the very finest knowledge of energy pathways which revolve and cause the body to be energized."</p>
+      <p class="f-zh">想象身体，想象它较稠密的部分，再由此推进到那些流转并点亮身体的能量路径——一直走到最精微处。</p>
+      <p class="f-ref">—— SESSION 004 · (4.18)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">心智的孩子</p>
+      <p class="f-en">"The body is a creature of the mind's creation. It has its biases."</p>
+      <p class="f-zh">身体是心智造物的产物，带着它自己的偏好。</p>
+      <p class="f-ref">—— SESSION 005 · (5.2)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">情绪的落点</p>
+      <p class="f-en">"It is necessary to know your body well. This is a matter of using the mind to examine how the feelings, the biases—what you would call the emotions—affect various portions of the body complex."</p>
+      <p class="f-zh">要深知你的身体：用心智去查看，那些感觉与偏好——你们称为情绪——究竟落在了身体的哪些地方。</p>
+      <p class="f-ref">—— SESSION 005 · (5.2)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">凡俗皆可成圣礼</p>
+      <p class="f-en">"Understand that all natural functions of the body have all aspects from dense to fine and can be transmuted to what you may call sacramental."</p>
+      <p class="f-zh">身体的一切自然功能都兼有稠密与精微的面向，都能被转化为你们可称为神圣的事物。</p>
+      <p class="f-ref">—— SESSION 004 · (4.18)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">每个男人都是女人</p>
+      <p class="f-en">"The simplest example of this is the understanding that each biological male is female; each biological female is male."</p>
+      <p class="f-zh">最简单的例子：每个生物学男性都是女性，每个生物学女性都是男性——然后把这种理解，延伸到他人身体上去。</p>
+      <p class="f-ref">—— SESSION 005 · (5.2)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 6 第三重门 · 灵性 -->
+<section class="scene" id="s6" data-c="#a86fd9">
+  <div class="stage">
+    <p class="kicker">第三重门 · 灵性</p>
+    <div class="demo magnet">
+      <div class="m-line up"><span class="m-tag">向上 · 心/身的渴望</span></div>
+      <div class="shuttle"></div>
+      <div class="m-line down"><span class="m-tag">向下 · 无限的流入</span></div>
+    </div>
+    <p class="narr">最长、也最精微的一段修行。<br>灵不是天上的雷，<br>而是一件来回摆渡的船。</p>
+    <p class="en">"The function of the spirit is to integrate the upreaching yearning of the mind/body energy with the downpouring instreaming of infinite intelligence."</p>
+    <p class="zh">灵性的功能，是把心/身能量向上伸展的渴望，与无限智能向下倾注的流入，整合在一起。</p>
+    <p class="ref">—— SESSION 004 · (4.18)</p>
+    <p class="en">"The healing ability, like all other, what this instrument would call paranormal abilities, is effected by the opening of a pathway, or shuttle, into intelligent infinity."</p>
+    <p class="zh">疗愈的能力——连同一切所谓超自然的能力——都是通过打开一条通往智能无限的通道、一只穿梭器而生效的。</p>
+    <p class="ref">—— SESSION 006 · (6.1)</p>
+    <p class="en">"To others there may appear to be miracles. To the one who has carefully opened the door to intelligent infinity this is ordinary; this is commonplace; this is as it should be."</p>
+    <p class="zh">旁人看见的是奇迹；对那个谨慎打开这扇门的人来说，这是寻常，是平常，是本该如此。</p>
+    <p class="ref">—— SESSION 006 · (6.1)</p>
+  </div>
+</section>
+
+<!-- 7 绿色中心 · 手的机制 -->
+<section class="station" id="s7" data-c="#58b98a">
+  <div class="pin"><div class="stage">
+    <p class="kicker">绿色中心 · 手的机制</p>
+    <p class="narr">三重门之后，机制忽然变得具体：<br>能量在疗愈者体内盘旋、装满，<br>然后从一只手离开。</p>
+    <p class="en">"It is from the green center that the healing prana moves into the polarized healing right hand and therefrom to the one to be healed."</p>
+    <p class="zh">正是从绿色中心，疗愈的生命能量流入极化的疗愈右手，再从那里抵达被疗愈的人。</p>
+    <p class="ref">—— SESSION 066 · (66.5)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">行走的国王密室</p>
+      <p class="f-en">"You are correct in your assumption that the crystallized healer is analogous to the pyramidal action of the King's Chamber position."</p>
+      <p class="f-zh">发问者猜对了：结晶化的疗愈者，其作用类似于金字塔中国王密室位置的能量作用——一座会行走的小金字塔。</p>
+      <p class="f-ref">—— SESSION 066 · (66.5)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">结冰的光</p>
+      <p class="f-en">"Take, then, the crystal, and feel your polarized and potentiated, balanced energy channeled in green-ray healing through your being, going into and activating the crystalline regularity of frozen light, which is the crystal."</p>
+      <p class="f-zh">拿起水晶，感受你平衡的能量以绿光芒疗愈流过存在，去激活那凝固之光的规整——水晶，就是结了冰的光。</p>
+      <p class="f-ref">—— SESSION 057 · (57.6)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">先在自己身上练习</p>
+      <p class="f-en">"Only insofar as the healer has become balanced may it be a channel for the balancing of an other-self. The healing is first practiced upon the self, if we may say this in another way."</p>
+      <p class="f-zh">疗愈者自己平衡到什么程度，才能为另一个自我的平衡充当管道——这门功课，首先在自己身上练习。</p>
+      <p class="f-ref">—— SESSION 066 · (66.8)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">接住那根接力棒</p>
+      <p class="f-en">" … the opportunity is then presented to the one to be healed to grasp the baton, to take the balanced route, and to walk thence with the distortions towards dis-ease of mind, body, and spirit greatly lessened."</p>
+      <p class="f-zh">机会被递到被疗愈者面前：接住接力棒，走那条平衡的路——身、心、灵的失调由此大幅减轻。</p>
+      <p class="f-ref">—— SESSION 055 · (55.17)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">她的信心治好了她</p>
+      <p class="f-en">" … the entity healed had been healed by its faith, that is, its ability to allow and accept changes through the violet ray into the gateway of intelligent energy; secondly, saying always, "Tell no one.""</p>
+      <p class="f-zh">那位老师每次疗愈后只说两件事：是这个人的信心疗愈了他自己；以及——不要告诉任何人。</p>
+      <p class="f-ref">—— SESSION 073 · (73.13)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">作者栏必须留空</p>
+      <p class="f-en">"Infringement upon free will occurs in this circumstance only if the entity doing the working ascribes the authorship of this event to its self or its own skills."</p>
+      <p class="f-zh">只有当工作者把事件的作者署成自己的名字，自由意志才被侵犯——声明「没有工作来自我，只是通过我」，便不侵犯。</p>
+      <p class="f-ref">—— SESSION 073 · (73.14)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 8 时间/空间 · 疗愈真正发生之处 -->
+<section class="station" id="s8" data-c="#4a4fa0">
+  <div class="pin"><div class="stage">
+    <p class="kicker">时间/空间 · 疗愈真正发生之处</p>
+    <p class="narr">最后一处歧路：<br>疗愈并不发生在你看见的这具身体上。<br>身体只是领走结果的一方。</p>
+    <p class="en">"It is the adoption of the configuration which you call health by the etheric body in time/space which is the key to what you call health, not any event which occurs in space/time."</p>
+    <p class="zh">是以太体在时间/空间中对「健康」这一配置的采纳，才是健康的关键——而不是发生在空间/时间里的任何事件。</p>
+    <p class="ref">—— SESSION 066 · (66.14)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">以太体的签名</p>
+      <p class="f-en">"Healing is done in the time/space portion of the mind/body/spirit complex, is adopted by the form-making, or etheric, body and is then given to the space/time physical illusion for use in the activated yellow-ray mind/body/spirit complex."</p>
+      <p class="f-zh">疗愈在心/身/灵复合体的时间/空间部分完成，由塑形之体——以太体——采纳，再交付给空间/时间的物理幻象去使用。</p>
+      <p class="f-ref">—— SESSION 066 · (66.14)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">最伟大的疗愈者在你之内</p>
+      <p class="f-en">"Perhaps the greatest healer is within the self and may be tapped with continued meditation, as we have suggested."</p>
+      <p class="f-zh">也许最伟大的疗愈者就在自我之内，可以用持续的冥想接通。</p>
+      <p class="f-ref">—— SESSION 066 · (66.12)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">它可以选择留在病里</p>
+      <p class="f-en">"If the entity, at any level, desires to remain in the configuration of distortion which seems to need healing, it will do so."</p>
+      <p class="f-zh">如果那个实体在任何层面都想留在看似需要疗愈的配置里，它就会留下——机会递到了，不等于必须伸手。</p>
+      <p class="f-ref">—— SESSION 066 · (66.9)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">投生前签下的约</p>
+      <p class="f-en">" … that when the one wishing to be healed, though sincere, remains unhealed, as you call this distortion, you may consider pre-incarnative choices; and your more helpful aid to such an entity may be the suggestion that it meditate upon the affirmative uses of whatever limitations it might experience."</p>
+      <p class="f-zh">真诚却未痊愈时，可以考虑投生前的选择——更有帮助的援助，是建议他去冥想那些局限的肯定性用途。</p>
+      <p class="f-ref">—— SESSION 073 · (73.19)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">死后的长夜回顾</p>
+      <p class="f-en">"The process involves seeing in full the experience, seeing it against the backdrop of the mind/body/spirit complex total experience, forgiving the self for all missteps as regards the missed guideposts during the incarnation and, finally, the careful assessment of the next necessities for learning."</p>
+      <p class="f-zh">死亡之后也有一场疗愈：完整地看见那段经历，在全部体验的背景下看它，原谅自己错过的每一个路标，然后细心掂量下一次要学什么。</p>
+      <p class="f-ref">—— SESSION 071 · (71.6)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">黑暗里的小蜡烛</p>
+      <p class="f-en">"The advantage of time/space is that of the fluidity of the grand overview. The advantage of space/time is that, working in darkness with a tiny candle, one may correct imbalances."</p>
+      <p class="f-zh">时间/空间的优势是宏大全景的流动；空间/时间的优势是——在黑暗中持一支小蜡烛，人可以修正失衡。</p>
+      <p class="f-ref">—— SESSION 071 · (71.7)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 9 比人更大的伤口 -->
+<section class="scene" id="s9" data-c="#7a8a66">
+  <div class="stage">
+    <p class="kicker">比人更大的伤口</p>
+    <p class="narr">疗愈的对象，未必总是一个人。<br>有时是一片土地，一段历史，<br>一整颗星球的伤。</p>
+    <p class="en">"Such actions as nuclear destruction affect the entire planet. There are no differences at this level of destruction, and the planet will need to be healed."</p>
+    <p class="zh">核毁灭这样的事影响整颗行星；在那种毁灭的层面上没有分别——这颗行星将需要被疗愈。</p>
+    <p class="ref">—— SESSION 026 · (26.27)</p>
+    <p class="en">"Healing is a process of acceptance, forgiveness, and, if possible, restitution."</p>
+    <p class="zh">疗愈是一个接纳、宽恕，以及——如果可能——补偿的过程。</p>
+    <p class="ref">—— SESSION 026 · (26.30)</p>
+  </div>
+</section>
+
+<!-- 10 终章 · 爱的名字 -->
+<section class="scene" id="sLast" data-c="#f5efe2">
+  <div class="stage">
+    <p class="kicker">终章 · 爱的名字</p>
+    <p class="narr">三重门走完，把手放下来。<br>剩下的那位疗愈者，<br>从不需要名字。</p>
+    <p class="en">"To specifically answer your query, the crystallized healer has no will. It offers an opportunity without attachment to the outcome, for it is aware that all is one, and that the Creator is knowing Itself."</p>
+    <p class="zh">结晶化的疗愈者没有意志——它不执着于结果地提供一个机会，因为它知道：一切是一，造物主正在认识祂自己。</p>
+    <p class="ref">—— SESSION 066 · (66.15)</p>
+    <p class="en">"The great healer of distortions is love."</p>
+    <p class="zh">变貌的伟大疗愈者，是爱。</p>
+    <p class="ref">—— SESSION 062 · (62.26)</p>
+    <button class="again" id="again">回到静默</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+坠入疗愈 · 滚动星旅 · 内容取自《一的法则》十余次集会的疗愈讨论<br>
+引文为英文原文逐字摘录；中文为本页面自拟 · 仅作沉浸学习实验
+</footer>
+
+<script>
+/* ===== 星空画布（固定，勿改） ===== */
+const cv=document.getElementById('sky'),cx=cv.getContext('2d');
+let W,H,stars=[];
+function size(){W=cv.width=innerWidth*devicePixelRatio;H=cv.height=innerHeight*devicePixelRatio;}
+size();addEventListener('resize',size);
+for(let i=0;i<230;i++)stars.push({x:Math.random(),y:Math.random(),z:.25+Math.random()*.75,p:Math.random()*6.28,s:Math.random()});
+
+/* ===== 氛围色插值（固定，勿改） ===== */
+function hex2rgb(h){h=h.replace('#','');if(h.length===3)h=h.split('').map(c=>c+c).join('');return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
+const scenes=[...document.querySelectorAll('.scene,.station')].map(s=>({el:s,c:hex2rgb(s.dataset.c)}));
+let amb=[245,239,226];
+function lerp(a,b,t){return a+(b-a)*t}
+function rgb2css(c,a){return `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${a})`}
+
+/* ===== 渲染循环（固定，勿改） ===== */
+let t=0;
+function frame(){
+  t+=.016;
+  const sy=scrollY,wh=innerHeight;
+  let target=scenes[0].c;
+  for(const s of scenes){
+    const r=s.el.getBoundingClientRect();
+    if(r.top<wh*.55&&r.bottom>wh*.45){target=s.c;break}
+  }
+  for(let i=0;i<3;i++)amb[i]=lerp(amb[i],target[i],.045);
+  const ac=amb;
+  document.documentElement.style.setProperty('--amb',rgb2css(ac,1));
+
+  cx.clearRect(0,0,W,H);
+  const g=cx.createRadialGradient(W/2,H*.86,0,W/2,H*.86,H*.75);
+  g.addColorStop(0,rgb2css(ac,.10));g.addColorStop(1,'rgba(0,0,0,0)');
+  cx.fillStyle=g;cx.fillRect(0,0,W,H);
+  const dark=1-Math.min(1,(Math.hypot(ac[0]-245,ac[1]-239))/200);
+  for(const st of stars){
+    const px=st.x*W,py=((st.y - sy*.00004*st.z)%1+1)%1*H;
+    const tw=.5+.5*Math.sin(t*1.3+st.p);
+    cx.globalAlpha=(0.12+0.5*tw*st.z)*(0.35+0.65*dark);
+    cx.fillStyle=rgb2css(ac,1);
+    const r=st.s*1.4*st.z*devicePixelRatio;
+    cx.beginPath();cx.arc(px,py,r,0,6.28);cx.fill();
+  }
+  const oy=H*.62+Math.sin(t*.8)*10*devicePixelRatio;
+  const og=cx.createRadialGradient(W/2,oy,0,W/2,oy,26*devicePixelRatio);
+  og.addColorStop(0,rgb2css(ac,.9));og.addColorStop(.35,rgb2css(ac,.25));og.addColorStop(1,'rgba(0,0,0,0)');
+  cx.globalAlpha=1;cx.fillStyle=og;
+  cx.beginPath();cx.arc(W/2,oy,26*devicePixelRatio,0,6.28);cx.fill();
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+/* ===== 场景显影（固定，勿改） ===== */
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>e.target.classList.toggle('on',e.isIntersecting));
+},{threshold:.01});
+document.querySelectorAll('.scene,.station').forEach(s=>io.observe(s));
+
+/* 细节片段显影（固定，勿改） */
+const ioFrag=new IntersectionObserver(es=>{
+  es.forEach(e=>e.target.classList.toggle('on',e.intersectionRatio>.15));
+},{threshold:[0,.35,.6]});
+document.querySelectorAll('.frag').forEach(f=>ioFrag.observe(f));
+
+/* ===== 进度轨道（固定，勿改） ===== */
+const rail=document.getElementById('rail');
+scenes.forEach((s,i)=>{
+  const row=document.createElement('div');row.className='r';
+  const lbl=document.createElement('span');lbl.className='lbl';
+  const k=s.el.querySelector('.kicker');
+  lbl.textContent=k?k.textContent.trim():(i===0?'开始':'终章');
+  const d=document.createElement('i');
+  row.appendChild(lbl);row.appendChild(d);
+  row.onclick=()=>s.el.scrollIntoView({behavior:'smooth'});
+  rail.appendChild(row);
+});
+setInterval(()=>{
+  const wh=innerHeight;
+  scenes.forEach((s,i)=>{
+    const r=s.el.getBoundingClientRect();
+    rail.children[i].classList.toggle('cur',r.top<wh*.55&&r.bottom>wh*.45);
+  });
+},200);
+
+/* ===== 本章定制交互 ===== */
+/* 回到开头 */
+document.getElementById('again').onclick=()=>scrollTo({top:0,behavior:'smooth'});
+</script>
+</body>
+</html>

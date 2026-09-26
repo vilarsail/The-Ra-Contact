@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 003 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 003 · 交互式学习模块</h1>
+  <p class="sub">一次「热身集会」如何问出真东西：从两块顶石与搬石之谜，到智能能量、个体与群体的两种力量，再到金字塔作为疗愈机器与启蒙装置的一体两面。</p>
+  <div class="tagline">6 个主题 · 6 个学习步骤 · 13 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 提问的主权与混淆法则</a>
+<a href="#s3">③ 与岩石对话</a>
+<a href="#s4">④ 个体与群体</a>
+<a href="#s5">⑤ 疗愈机器与启蒙装置</a>
+<a href="#s6">⑥ 收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>10 个问答一条线走完：仪式微调 → 遗留两问 → 搬石之义理 → 疗愈与启蒙 → 收尾叮嘱。</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>自由意志的边界</b><span>Ra 为什么不替发问者规划问题，也不显露奇迹——混淆法则的两面。</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>与岩石对话</b><span>石块如何被移动：认出智能 → 建立连接 → 给出请求，并用模拟器亲手走一遍。</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>个体与群体</b><span>谁能移动山：净化个体 vs 群体心智，以及没有终点的法则阶梯。</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>疗愈机器与启蒙装置</b><span>一体两面的金字塔：心智先行，身体的启蒙从剥夺感官输入开始。</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官</b><span>带走三件事、一句金句、一个留给以后集会的伏笔。</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ 01 本章地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：一次「热身集会」的全貌</h2></div>
+  <p class="sec-lead">这是 Ra 系列的第 3 次集会（1981 年 1 月 21 日）。前两次集会里，Ra 完成了自我介绍，并讲到金字塔是疗愈机器与启蒙装置；本集先花几问校准开场仪式，再回答上集遗留的两个「给读者的入口问题」——大金字塔的顶石、石块如何搬动。正是这道热身题，牵出了本集最深的义理：能量智能而有层级、信心与智能无限、个体与群体的两种力量、思想-形态，最后谈金字塔的启蒙用途，并把「形状之谜」留给稍后的集会。</p>
+
+  <div class="card">
+    <h3>本集问答脉络：10 个问答，一条线看完</h3>
+    <p>从仪式检查到圣杯水，Ra 与发问者是这样一步步推进的。点击节点或用按钮前进。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="qaTrack"></div>
+      <div class="flow-detail" id="qaDetail"></div>
+      <div class="flow-ctrl"><button id="qaPrev" class="tri-btn">← 上一问</button> <button id="qaNext" class="tri-btn">下一问 →</button></div>
+    </div>
+    <div class="quote">
+      <p class="en">I greet you in the love and the light of the One Infinite Creator. I communicate with you now.</p>
+      <p class="zh">我在太一无限造物主的爱与光中向你们致意。我现在与你们通讯。——本集以这句固定的问候开场，也提示了全篇的基调：一切谈话都发生在「爱与光」的框架里。</p>
+      <span class="src">—— Session 003 · (3.0)</span>
+    </div>
+  </div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">开场仪式 · 器皿照料</span></summary>
+  <div class="body">
+    <p><b>(3.1) 仪式检查：</b>平衡器皿的器物应置于器皿的头部；开场目的陈述可接受，因为发言者渴望服务。</p>
+    <p><b>(3.2-3.5) 器物微调：</b>移动圣经、蜡烛与熏香；熏香须垂直于北偏东二十度的平面，再用眼睛做精细校正。Ra 解释：熏香充能器皿的物理身体并象征其人性，烟雾须与打开的圣经呈同一相对角度，蜡烛象征爱/光与光/爱——器皿从低到高被充能，得以平衡而不疲惫。</p>
+    <p><b>(3.17) 器皿照料：</b>Ra 扫描器皿，只建议对颈部区域提供更多支撑。</p>
+    <p><b>(3.18) 圣杯水：</b>只应用充能后的那只圣杯——其中未用过的材料接受、保留并回应爱之振动。</p>
+  </div></details>
+
+  <div class="card">
+    <h3>开场仪式不是迷信细节：器物是「变貌平衡器」</h3>
+    <p>Ra 甚至专门解释了蜡烛与熏香的角度为何重要：这些器物从身体到心智情感逐级「充能」，帮器皿看到它所寻求的天堂与和平的景象（3.4）。仪式的目的是让管道稳定，而不是表演神秘。</p>
+    <div class="case"><b>通勤前的固定动作：</b>一位上班族每天到工位先做同一套小动作——水杯放左边、便签贴正、耳机挂同一个挂钩。物品本身没有魔力，但这一套动作把他的心智「强调」统一到工作频道。开场器物对器皿做的正是这件事：用固定的物与角度，把心智情感复合体调到服务频道（3.1、3.4）。</div>
+    <div class="case"><b>读书会的开场白：</b>某读书会规定，领读必须由真心愿意服务大家的人开场——若让只想推销自己课程的人先发言，整场讨论的味道就变了。Ra 的告诫正是这一点：非把服务他人置于一切之上者参与开场，双方的变貌便无法适当融合，通讯质量随之受损（3.1）。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 02 提问的主权与混淆法则 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>提问的主权与混淆法则：Ra 为何不规划、不显露</h2></div>
+  <p class="sec-lead">本章把两段看似不相关的问答放在一起：一段是 Ra 拒绝替发问者规划提问序列（3.6），另一段是解释金字塔为何不一次性造成（3.14）。它们共享同一条法则——混淆法则，也就是自由意志法则：真正尊重对方的老师不替对方走路，真正谦逊的能者不炫耀能力。</p>
+
+  <div class="card">
+    <h3>不替你规划：提问的主权还给发问者</h3>
+    <div class="q">发问者提议：先问上集遗留的两个问题（顶石、搬石），作为读者的容易入口——「这只是我的一个猜测，请您纠正。」他其实想请 Ra 来安排整场对话的节奏。</div>
+    <div class="quote">
+      <p class="en">I will not suggest the proper series of questions. This is your prerogative as free agent of the Law of One, having learn/understood that our social memory complex cannot effectually discern the distortions of the societal mind/body/spirit complex of your peoples.</p>
+      <p class="zh">我不会建议适当的提问序列。这是一的法则的自由代理人的特权——Ra 已学习/理解到，Ra 的社会记忆复合体无法有效辨识地球人群的社会心/身/灵复合体的变貌。</p>
+      <span class="src">—— Session 003 · (3.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">We wish now to fulfill our teach/learning honor/responsibility by answering what is asked. This only will suffice, for we cannot plumb the depths of the distortion complexes which infect your peoples.</p>
+      <p class="zh">我们现在希望通过回答所问之事来履行教导/学习的荣誉/责任。仅此便已足够，因为我们无法探测那些感染你们人群的变貌复合体的深度。</p>
+      <span class="src">—— Session 003 · (3.6)</span>
+    </div>
+    <p>Ra 同时重申：顶石这类数据「不重要」——但仍然愿意回答。这是本系列的典型姿态：先划清重要性，再认真作答，把判断权留给发问者。</p>
+    <div class="plain">真正的服务不是替对方决定路径，而是只回答对方真正问出的问题。</div>
+    <div class="case"><b>不划重点的导师：</b>研究生请导师列出「该读什么书、该问什么问题」，导师拒绝了——但他会认真回答学生自己提出的每一个问题。求知的路径要学生自己走，问出好问题本身就是学习。Ra 对发问者正是这个态度（3.6）。</div>
+  </div>
+
+  <div class="card">
+    <h3>混淆法则：为何不显露奇迹</h3>
+    <div class="q">发问者自知问题琐碎：既然金字塔可以由思想造成，为什么非要拆成许多石块、一块块来，而不是一次造出整座？</div>
+    <div class="quote">
+      <p class="en">There is a law which we believe to be one of the more significant primal distortions of the Law of One. That is the Law of Confusion. You have called this the Law of Free Will.</p>
+      <p class="zh">有一条法则，Ra 相信它是一的法则较为重要的原初变貌之一。那就是混淆法则——你们把它称为自由意志法则。</p>
+      <span class="src">—— Session 003 · (3.14)</span>
+    </div>
+    <p>Ra 想造一个尽可能有效的疗愈机器（时间/空间比率复合体），却不愿让奥秘被民众穿透，以致 Ra 被崇拜为「奇迹金字塔的建造者」——于是金字塔「看起来是被制造的，而非被思想出来的」。能力不是问题，界限才是：混淆法则要求不干涉、不显威，把惊叹与选择的空间留给后人。</p>
+    <div class="plain">为了不被人崇拜，宁可选择看起来平凡——隐藏本身就是对自由意志的尊重。</div>
+    <div class="case"><b>魔术师的秘密：</b>一位魔术师有一手真正惊人的绝活，却故意把表演包装成普通机关道具——他不想被观众当成超能力者围观崇拜，只想让作品本身被使用。Ra 让金字塔「看起来是被制造的」，为的正是不让奥秘被穿透、自己被神化（3.14）。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 03 与岩石对话 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>与岩石对话：石块是怎样被移动的</h2></div>
+  <p class="sec-lead">「沉重的石块如何搬动」看似考古花絮，Ra 却借此给出了一堂存在论课：能量弥漫一切受造物，它是智能的、有层级的——岩石的每个原子都像人一样居于载具层级之中。移动石块不是对死物施力，而是与内居于活岩石中的造物主智能合作。</p>
+
+  <div class="card">
+    <h3>智能能量：有限却巨大</h3>
+    <div class="q">发问者想请 Ra 揭开「如何移动沉重石块」的谜底——他预设这是一个技术问题。</div>
+    <div class="quote">
+      <p class="en">This energy is intelligent. It is hierarchical.</p>
+      <p class="zh">这种能量是智能的；它是有层级的。</p>
+      <span class="src">—— Session 003 · (3.8)</span>
+    </div>
+    <div class="quote">
+      <p class="en">When one can speak to that intelligence, the finite energy of the physical, or chemical, rock/body is put into contact with that infinite power which is resident in the more well-tuned bodies, be they human or rock.</p>
+      <p class="zh">当一个人能与那智能对话，物理的或化学的岩石/身体的有限能量，便与内居于更精调身体——无论是人的还是岩石的——之中的无限力量建立了接触。</p>
+      <span class="src">—— Session 003 · (3.8)</span>
+    </div>
+    <p>正如人的心/身/灵复合体居于载具层级中、保有每一层的外壳与智能，岩石的每个原子也是如此。石头不是死物：它能被「说话」，也能合作。</p>
+    <div class="plain">移动石块的前提不是力气，而是看见：每个原子深处都住着智能。</div>
+    <div class="analogy"><b>老收音机：</b>音乐弥漫在空气里，老收音机必须被调谐到足够精确的频率才能把它放出来。「更精调的身体」就是那台调准了的收音机——无限力量一直都在，接触与否取决于调谐，无论是人的身体还是岩石的身体。</div>
+    <div class="case"><b>连上会议室的投屏：</b>会议室的无线投屏盒子一直都在。你得先确认它的存在（认出）、把电脑调到同一信道（连接）、再选择要投的文档（请求）——三步齐了，画面才出现。跳过任何一步，对着墙喊「投屏」都没有用。这正是 3.8 机制的现代版。</div>
+  </div>
+
+  <div class="card">
+    <h3>三步机制：认出 → 连接 → 请求</h3>
+    <div class="quote">
+      <p class="en">With this connection made, a request may be given. The intelligence of infinite rock-ness communicates to its physical vehicle…</p>
+      <p class="zh">连接建立之后，即可给出请求。「无限岩石性」的智能与它的物理载具沟通，所愿的分裂与移动便通过岩石性能量场从有限到无限的位移得以实现。</p>
+      <span class="src">—— Session 003 · (3.8)</span>
+    </div>
+    <p>Ra 特别说明：这不是人对石头的命令，而是「内居于活岩石中的造物主无限理解的合作」。而且这套机制不限于搬石头——它是一切「远距离作用」的共同原理，只是不在你们目前物理分析手段的覆盖范围内。</p>
+    <div class="plain">不是施法，而是合作：认出、连接、请求——三步缺一不可。</div>
+    <div class="case"><b>园丁与种子：</b>园丁无法命令种子发芽，只能提供合适的土壤与水分，与种子内部的生命力合作。Ra 说移石靠的是「内居于活岩石中的造物主无限理解的合作」——请求者更像是协调者，而不是发号施令者（3.8）。</div>
+
+    <h3 style="margin-top:18px">条件模拟器：搬动一块石头，需要什么？</h3>
+    <p>拨动三个开关，看看 3.8 的机制如何成立、又会在哪一步卡住。</p>
+    <div class="cond-row"><div class="name">认出岩石的智能<small>能量是智能的、有层级的——岩石的每个原子居于载具层级中</small></div><label class="switch"><input type="checkbox" id="rc1"><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">建立连接<small>有限能量接触内居于更精调身体中的无限力量</small></div><label class="switch"><input type="checkbox" id="rc2"><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">给出请求<small>所愿的分裂与移动被明确说出</small></div><label class="switch"><input type="checkbox" id="rc3"><span class="slider"></span></label></div>
+    <div id="condResult"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 04 个体与群体 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>个体与群体：谁能移动山，以及法则的阶梯</h2></div>
+  <p class="sec-lead">顺着搬石的话题，发问者得出一个诱人的推论：如果一个人完全觉知一的法则，用心智建金字塔就是寻常之事——对吗？Ra 先纠正用词（信心与智能无限），再纠正结构（个体力量与群体理解是两回事），最后把「谁建造了金字塔」的答案接到「群体心智」上：思想-形态。</p>
+
+  <div class="card">
+    <h3>「信心」这个词：一块绊脚石</h3>
+    <div class="q">发问者联想到一句话——「若有足够的信心，就可以对一座山说：移动，山就会移动」——并假设完全觉知一的法则者就能做这些事。</div>
+    <div class="quote">
+      <p class="en">You are precisely correct in your understanding of the congruency of faith and intelligent infinity; however, one is a spiritual term, the other more acceptable perhaps to the conceptual-framework distortions of those who seek with measure and pen.</p>
+      <p class="zh">你对信心与智能无限之相同性的理解是精确正确的；然而，一个是灵性术语，另一个或许对那些以量尺和笔寻求者的概念框架变貌来说更为可接受。</p>
+      <span class="src">—— Session 003 · (3.9)</span>
+    </div>
+    <p>Ra 没有否定发问者，而是指出：「信心」一词在两种传统之间制造了误解，而「智能无限（Intelligent Infinity）」是同一个实在的更精确说法。用词本身就影响理解——这是 Ra 反复示范的精确性。</p>
+    <div class="plain">信心与智能无限说的是同一件事；换一个不带宗教包袱的词，误解就少一分。</div>
+  </div>
+
+  <div class="card">
+    <h3>两种力量：净化个体 vs 群体心智</h3>
+    <div class="q">「如果一个个体完全知晓并活出一的法则，直接用心智建造金字塔就会是寻常之事——我正确吗？」</div>
+    <div class="quote">
+      <p class="en">In the first case, only the one individual, purified of all flaws, could move a mountain. In the case of mass understanding of unity, each individual may contain an acceptable amount of distortion and yet the mass mind could move mountains.</p>
+      <p class="zh">第一种情况里，只有那唯一的、净化了一切缺陷的个体能移动一座山；而在群体理解统一性的情况中，每个个体都可以含有可接受程度的变貌，群体心智却仍能移动山脉。</p>
+      <span class="src">—— Session 003 · (3.10)</span>
+    </div>
+    <div class="plain">个人英雄路线要求缺陷清零；团队路线允许人人带伤，只要方向合一。</div>
+    <div class="case"><b>龙舟与独木舟：</b>一个体能完美的划手可以独力驾独木舟渡江；而一条二十人的龙舟上人人略有短板，只要鼓点一致、桨频合一，照样破浪夺魁。Ra 区分的正是「净化一切缺陷的个体力量」与「每人可含可接受变貌的群体心智」（3.10）。</div>
+
+    <h3>法则的阶梯：进展没有终点</h3>
+    <div class="quote">
+      <p class="en">Those who are vibrating with the Law of Light seek the Law of One. Those who vibrate with the Law of One seek the Law of Foreverness.</p>
+      <p class="zh">以光的法则振动者寻求一的法则；以一的法则振动者寻求永恒之法则。</p>
+      <span class="src">—— Session 003 · (3.10)</span>
+    </div>
+    <div class="table-wrap">
+    <table class="nine">
+      <thead><tr><th>法则</th><th>英文</th><th>通俗理解</th></tr></thead>
+      <tbody>
+        <tr><td>一的法则</td><td>Law of One</td><td>一切为一：所有存有都是太一造物主的表达</td></tr>
+        <tr><td>混淆法则（自由意志法则）</td><td>Law of Confusion · Law of Free Will</td><td>一的法则最重要的原初变貌之一：不干涉、不显威，把选择留给每个实体</td></tr>
+        <tr><td>爱的法则</td><td>Laws of Love</td><td>进展的下一维度：由爱的法则支配、并寻求光的法则的理解</td></tr>
+        <tr><td>光的法则</td><td>Laws of Light</td><td>以光振动者据此更上一层，寻求一的法则</td></tr>
+        <tr><td>永恒之法则</td><td>Law of Foreverness</td><td>以一振动者所寻求的更远处——连 Ra 也仍在道上</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="case"><b>登山者的山头：</b>登上一座山头的人发现前方还有更高的山。以光的法则振动者寻求一的法则，以一的法则振动者寻求永恒之法则——连 Ra 也说「我们仍是 Ra，道途继续前行」。修行没有「一步到位」，也就不必焦虑「还没到位」（3.10）。</div>
+
+    <h3 style="margin-top:18px">归类练习：这股力量走的是哪条路径？</h3>
+    <p>每条场景属于哪一类？<b>A</b>＝个体净化后的力量 · <b>B</b>＝群体心智的力量 · <b>C</b>＝混淆法则（自由意志）的界限。点击作答。</p>
+    <div id="powerSorter"></div>
+  </div>
+
+  <div class="card">
+    <h3>从群体心智到思想-形态：金字塔是怎样「想」成的</h3>
+    <div class="q">发问者顺势追问：金字塔是不是许多人「合力」建成的？那些岩石是不是就地用思想造出来、而不是从别处搬来的？——这一问把「群体心智」落到了实处。</div>
+    <p>Ra 确认：金字塔由 Ra 的社会记忆复合体（social memory complex，个体心智在完全共享中合一而成的群体意识）所创造的思想-形态构建。大金字塔用「永固岩石（everlasting rock）」就地造成——思想-形态的变貌比岩石材料的能量场更规则；其他金字塔则用从一处搬到另一处的石头（3.11-3.13）。</p>
+    <div class="plain">大金字塔的石头是「就地想出来的」：从思想直接到有限能量与存有性。</div>
+    <div class="analogy"><b>3D 打印：</b>先有完整的设计模型（思想-形态），再让它「凝固」成实物。大金字塔相当于直接从模型打印出来；其他金字塔则是把现成的「标准件」搬运组装——这也是为什么前者更规则、变貌更少（3.13）。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 05 疗愈机器与启蒙装置 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>一体两面：疗愈机器与启蒙装置</h2></div>
+  <p class="sec-lead">收束本集的教导主线：大金字塔既是疗愈机器，也是启蒙装置——两者不是两个功能，而是同一个爱/光意图/分享复合体。Ra 还留了一个尾巴：金字塔形状本身在启蒙中的功能是个「大问题」，请他们稍后的集会再问；本集只讲了一个开头。</p>
+
+  <div class="card">
+    <h3>疗愈与启蒙：同一复合体的两个面向</h3>
+    <div class="q">「你们既说金字塔主要是疗愈机器，又说它是启蒙装置——这两个是同一个概念吗？」</div>
+    <div class="quote">
+      <p class="en">They are part of one complex of love/light intent/sharing.</p>
+      <p class="zh">它们是同一个爱/光意图/分享复合体的一部分。</p>
+      <span class="src">—— Session 003 · (3.15)</span>
+    </div>
+    <p>Ra 展开：要正确运用疗愈面向，必须有一个净化且奉献的管道或充能器，让无限造物主的爱/光流经；而启蒙方法正是制造这条管道的方式——预备心智、身体、灵性去服务造物主的工作。两者不可分割。</p>
+    <div class="plain">启蒙不是另一件事，而是让疗愈成为可能的前置工程：先造管道，再通光。</div>
+
+    <p style="margin-top:14px">点击卡片翻面，看本集的核心术语：</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">疗愈机器</div><div class="sub">healing machine</div><div class="tap">点击翻开</div></div><div class="back">Ra 对大金字塔的称呼之一：一个尽可能有效的时间/空间比率复合体，用于疗愈（3.14-3.15）。<em>像一间精密调校的手术室——建筑本身就是仪器。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">启蒙</div><div class="sub">initiation</div><div class="tap">点击翻开</div></div><div class="back">为服务造物主的工作而预备心智、身体、灵性的过程；疗愈面向要正确运用，就必须先有经过启蒙的净化管道（3.15）。<em>上岗前不只学技能，先校准整备这一个人。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">管道 · 充能器</div><div class="sub">channel · energizer</div><div class="tap">点击翻开</div></div><div class="back">让无限造物主的爱/光得以流经的净化且奉献的媒介（3.15）。<em>导线自己不发光，但电流必须经由它。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">心/身/灵复合体</div><div class="sub">mind/body/spirit complex</div><div class="tap">点击翻开</div></div><div class="back">人存在的三维统一结构；本集中同一层级逻辑也用于岩石的每个原子（3.1、3.8）。<em>一个词把「你」的全部层次打包，一个都不落下。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">爱/光 · 光/爱</div><div class="sub">love/light · light/love</div><div class="tap">点击翻开</div></div><div class="back">造物主能量的一体两面；本集中由蜡烛象征，与圣经、熏香共同构成器皿的平衡场景（3.4、3.15）。<em>像电压与电流——同一力量的两种次序称呼。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">器皿</div><div class="sub">instrument</div><div class="tap">点击翻开</div></div><div class="back">通灵集会中充当管道的人；本集开场摆弄圣经、蜡烛、熏香，全是为了平衡这只器皿（3.1、3.4）。<em>乐器需要调音，演奏才不走调。</em></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>心智先行：身体启蒙前的必修课</h3>
+    <div class="q">「金字塔的形状本身，是启蒙过程中的一个关键功能吗？」——Ra 称这是一个大问题，本集只开个头。</div>
+    <div class="quote">
+      <p class="en">Before the body can be initiated, the mind must be initiated.</p>
+      <p class="zh">在身体能被启蒙之前，心智必须先被启蒙。</p>
+      <span class="src">—— Session 003 · (3.16)</span>
+    </div>
+    <p>Ra 指出，这正是当前周期大多数修行者偏离之处。当作为心智真实身份的品格与人格被发现之后，身体必须以每一种方式被认识——身体的各种功能需要带着超然去理解与控制。</p>
+    <div class="quote">
+      <p class="en">The first use of the pyramid, then, is the going down into the pyramid for purposes of deprivation of sensory input so that the body may, in a sense, be dead and another life begin.</p>
+      <p class="zh">金字塔的第一个用途，是下降入内以剥夺感官输入，使身体在某种意义上死去，而另一种生命开始。</p>
+      <span class="src">—— Session 003 · (3.16)</span>
+    </div>
+    <div class="plain">次第不能乱：先找到「我是谁」（心智），再认识「这具身体如何运作」——顺序颠倒正是多数人偏离之处。</div>
+    <div class="case"><b>浮箱一小时：</b>都市白领花一小时漂进感官剥夺浮箱——黑暗、静默、失重，身体「关机」了，平时被淹没的念头才浮现出来。这正是金字塔第一个用途的现代缩印：剥夺感官输入，让身体在某种意义上死去、另一种生命开始（3.16）。</div>
+    <div class="case"><b>先讲价值观，再练操作：</b>一家医院让新护士先理解「我们为什么这样照顾病人」（身份与心智），再逐项训练操作规程（身体）；顺序颠倒的机构常培养出只会执行却不知为何的机器。对应「身体被启蒙之前，心智必须先被启蒙」（3.16）。</div>
+    <div class="case"><b>身体扫描冥想：</b>冥想 App 引导你从头到脚逐一觉察身体——不是压抑或强迫，而是「带着超然去了解和控制」每一个功能。这正是 Ra 说身体在被启蒙前必须经历的功课（3.16）。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 06 收官 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>收官：金句、伏笔与首尾的照料</h2></div>
+  <p class="sec-lead">本集的问答在器皿照料中收尾，但留下的东西远比一支颈枕多。带走三件事：服务藏在最细的照料里；力量有两种（净化个体与群体心智），且法则的阶梯没有终点；能力有界限，而界限本身就是教导（混淆法则）。</p>
+
+  <div class="card">
+    <h3>留下的伏笔：金字塔形状之谜</h3>
+    <div class="q">「金字塔的形状在启蒙过程中到底起什么作用？」——Ra 没有讲完，而是明确分期。</div>
+    <div class="quote">
+      <p class="en">This is a large question. We feel that we shall begin and ask you to re-evaluate and ask further at a later session this somewhat, shall we say, informative point.</p>
+      <p class="zh">这是一个大问题。Ra 感到应当先开个头，并请你们在稍后的集会中重新评估、进一步询问这个颇具信息量的要点。</p>
+      <span class="src">—— Session 003 · (3.16)</span>
+    </div>
+    <p>注意 Ra 的分寸：本集只讲了启蒙「两个主要功能」中与身体有关的第一个；形状的功能、以及第二个功能，都留给以后的集会。不为了「讲完整」而越界——这也是混淆法则的日常体现。</p>
+    <div class="plain">好老师会把最好的问题留在下一次：伏笔不是遗漏，而是节奏。</div>
+  </div>
+
+  <div class="card">
+    <h3>首尾呼应：服务藏在照料里</h3>
+    <p>本集从「熏香的角度对不对」开始，到「要不要换一杯水」结束。Ra 对宏大问题逐一认真作答，对琐细的照料也逐一认真回应——态度没有高低之分。</p>
+    <div class="case"><b>讲座开始前：</b>主办方反复调试麦克风高度与室温，结束时只提醒讲师「椅子加个靠垫」。服务不在宏大处，而在最细的照料里——正如本集开头为熏香角度反复微调、结尾 Ra 只叮嘱给颈部更多支撑（3.3、3.17）。</div>
+    <div class="case"><b>那只专属的小碗：</b>孩子认定的那只喂饭小碗——碗没变，但反复灌注的在意让它变得不同。Ra 说充能后那只圣杯的水最有益，因为其中未用过的材料「接受、保留并回应」爱之振动：物承载关系，关系激活物（3.18）。</div>
+    <div class="quote">
+      <p class="en">I will now leave this group rejoicing in the power and peace of the One Creator.</p>
+      <p class="zh">我现在将离开这个小组，于太一造物主的力量与和平中欢庆。——本集以这句固定的告别收束。</p>
+      <span class="src">—— Session 003 · (3.18)</span>
+    </div>
+  </div>
+
+  <div class="saying">
+    <p class="en">We cannot say what is beyond this dissolution of the unified self with all that there is, for we still seek to become all that there is, and still are we Ra. Thus our paths go onward.</p>
+    <p class="zh">我们无法说出统一自我与一切万有消融之后是什么，因为我们仍在寻求成为一切万有——而我们仍是 Ra。因此，我们的道途继续前行。</p>
+    <span class="src">—— Session 003 · (3.10)</span>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 003（`split/Ra_Session_003.md`）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra003-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本集定制交互 ===== */
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+  {t:'开场仪式',d:'<span class="qa-q">问：我们是否正确执行了启动通讯的仪式？(3.1)</span><b>答：</b>平衡器皿的器物应置于器皿头部，以获得最小的效果变貌；并告诫防止非把服务他人置于一切之上者参与开场——否则双方的变貌无法适当融合。'},
+  {t:'遗留两问',d:'<span class="qa-q">问：能否先问上集遗留的顶石与搬石问题，作为读者的入口？(3.6)</span><b>答：</b>Ra 拒绝替发问者规划提问序列——那是自由代理人的特权；同时重申这类数据不重要，但愿意回答所问之事。'},
+  {t:'顶石与烟囱',d:'<span class="qa-q">问：大金字塔的顶石是什么样子？(3.6-3.7)</span><b>答：</b>曾有两块顶石：原初一块由 Ra 设计、花岗岩制成，取其晶体属性，并借「烟囱」般的气流管道让全结构空气清新而无扰动；Ra 离开该密度后，原顶石被换成部分含金的更珍贵顶石——属性不变，只是少数人想把建筑仅作王家用途的变貌。'},
+  {t:'石块如何移动',d:'<span class="qa-q">问：沉重的石块是怎么被移动的？(3.8)</span><b>答：</b>能量是智能的、有层级的；与岩石的智能对话、建立连接、给出请求，岩石性能量场便从有限位移到无限——分裂与移动在造物主无限理解的合作中完成。'},
+  {t:'信心与智能无限',d:'<span class="qa-q">问：这是不是说「有足够的信心就能叫山移动」？(3.9)</span><b>答：</b>对信心与智能无限相同性的理解精确正确——但信心是灵性术语，智能无限则更合那些以量尺和笔寻求者的概念框架。'},
+  {t:'个体与群体',d:'<span class="qa-q">问：完全活出一的法则的人，建金字塔就是寻常之事吗？(3.10)</span><b>答：</b>不正确——个体力量与群体理解有别：净化一切缺陷的个体可移山；群体心智则在每人含可接受变貌时仍能移动山脉。随后引出法则的阶梯：爱→光→一→永恒。'},
+  {t:'思想-形态造石',d:'<span class="qa-q">问：金字塔由你们许多人共同建造吗？(3.11-3.13)</span><b>答：</b>是——由社会记忆复合体创造的思想-形态构建；大金字塔用「永固岩石」就地以思想造出，其他金字塔则搬运石块。'},
+  {t:'为何许多石块',d:'<span class="qa-q">问：为何不用思想一次造出整座金字塔？(3.14)</span><b>答：</b>混淆法则（你们称为自由意志法则）——不愿奥秘被穿透以致 Ra 被当作奇迹金字塔的建造者崇拜；因此它「看起来是被制造的，而非被思想出来的」。'},
+  {t:'疗愈与启蒙',d:'<span class="qa-q">问：疗愈机器与启蒙装置是同一概念吗？(3.15-3.16)</span><b>答：</b>二者是同一个爱/光意图/分享复合体的部分；身体被启蒙之前心智必须先被启蒙；金字塔第一个用途是剥夺感官输入。形状之谜被请到稍后的集会。'},
+  {t:'收尾叮嘱',d:'<span class="qa-q">问：我们有什么可以做得更好？(3.17-3.18)</span><b>答：</b>扫描器皿后只建议给颈部更多支撑；充能后的圣杯水最有益——其中未用过的材料接受、保留并回应爱之振动。'}
+]);
+
+function updateRockCond(){
+  var c1=document.getElementById('rc1').checked,
+      c2=document.getElementById('rc2').checked,
+      c3=document.getElementById('rc3').checked;
+  var box=document.getElementById('condResult');
+  box.classList.remove('fail');
+  var n=(c1?1:0)+(c2?1:0)+(c3?1:0);
+  if(n===3){
+    box.innerHTML='连接已建立，请求已给出：岩石性能量场从有限位移到无限，所愿的分裂与移动在造物主无限理解的合作中完成（3.8）。这不是「人对石头的命令」，而是三步合作。';
+  }else if(n===0){
+    box.classList.add('fail');
+    box.innerHTML='三个条件都未就位。Ra 的机制不是施法，而是「认出→连接→请求」的三步合作——先把每个原子里的智能层级看清楚（3.8）。';
+  }else if(!c1){
+    box.classList.add('fail');
+    box.innerHTML='缺第一步：认出能量是智能且有层级的。不先看见岩石里的智能，连接与请求都无从谈起（3.8）。';
+  }else if(!c2){
+    box.classList.add('fail');
+    box.innerHTML='缺第二步：与那智能建立连接——岩石/身体的有限能量尚未接触内居于更精调身体中的无限力量（3.8）。';
+  }else{
+    box.classList.add('fail');
+    box.innerHTML='缺第三步：给出请求。连接已在，但所愿的分裂与移动需要一个明确的请求——「无限岩石性」才能与其物理载具沟通（3.8）。';
+  }
+}
+document.getElementById('rc1').addEventListener('change',updateRockCond);
+document.getElementById('rc2').addEventListener('change',updateRockCond);
+document.getElementById('rc3').addEventListener('change',updateRockCond);
+updateRockCond();
+
+initSorter('powerSorter',[
+  {a:'一位闭关数十年的行者净化了自己所有的缺陷，据说能让泉水改道。',opts:['A','B','C'],ans:'A',exp:'个体力量路径：只有被净化了一切缺陷的个体才能独力移动一座山（3.10）。'},
+  {a:'一支龙舟队人人水平平平，但鼓点一致、桨频合一，照样逆流夺冠。',opts:['A','B','C'],ans:'B',exp:'群体心智路径：每个个体可含可接受程度的变貌，而群体心智仍能移动山脉（3.10）。'},
+  {a:'工程师造出真正惊人的技术，却故意加上「看似手工打造」的痕迹，唯恐用户把它神化。',opts:['A','B','C'],ans:'C',exp:'混淆法则的界限：不愿奥秘被穿透以致自己被崇拜——Ra 因此让金字塔「看起来是被制造的」（3.14）。'},
+  {a:'合唱团里每人音准都有小瑕疵，但和声整齐，唱出了任何独唱者都唱不出的磅礴。',opts:['A','B','C'],ans:'B',exp:'群体心智路径：变貌在协作中被中和，整体力量大于个体之和（3.10）。'},
+  {a:'程序员坚持独力重写整个内核，一行瑕疵都不留，终于让系统凭一己之力跑通。',opts:['A','B','C'],ans:'A',exp:'个体力量路径：purified of all flaws——净化一切缺陷后，个体即可移动「山」（3.10）。'}
+]);
+
+renderPath();
+</script>
+</body>
+</html>

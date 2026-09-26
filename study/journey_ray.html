@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css">
+<title>光之七门 · 滚动星旅</title>
+<style>
+:root{
+  --amb:#f5efe2;          /* 当前场景氛围色，由 JS 实时插值 */
+  --ink:#efe9dd;
+  --ink-dim:rgba(239,233,221,.55);
+  --serif:"LXGW WenKai","霞鹜文楷","LXGW WenKai SC","Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:#070a12;color:var(--ink);font-family:var(--serif);
+  line-height:2;overflow-x:hidden;
+}
+canvas#sky{position:fixed;inset:0;width:100vw;height:100vh;z-index:0}
+
+/* ===== 进度轨道 ===== */
+#rail{
+  position:fixed;right:26px;top:50%;transform:translateY(-50%);z-index:8;
+  display:flex;flex-direction:column;gap:13px;align-items:flex-end;
+}
+#rail .r{display:flex;align-items:center;gap:10px;cursor:pointer}
+#rail .r i{
+  width:5px;height:5px;border-radius:50%;flex-shrink:0;
+  background:rgba(255,255,255,.16);transition:all .4s;
+}
+#rail .r.cur i{background:var(--amb);box-shadow:0 0 9px var(--amb);transform:scale(1.7)}
+#rail .lbl{
+  font-size:.72rem;letter-spacing:.12em;color:var(--ink);white-space:nowrap;
+  padding:3px 12px;border-radius:999px;background:rgba(7,10,18,.78);
+  border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(4px);
+  opacity:0;transform:translateX(10px);transition:all .35s ease;pointer-events:none;
+}
+#rail:hover .lbl{opacity:1;transform:none}
+#rail .r.cur .lbl{border-color:var(--amb);color:var(--amb)}
+
+main{position:relative;z-index:1}
+
+/* ===== 时刻场景（全屏居中） ===== */
+.scene{min-height:118vh;display:flex;align-items:center;justify-content:center;padding:14vh 22px}
+.stage{max-width:620px;text-align:center;opacity:0;transform:translateY(34px);filter:blur(6px);transition:opacity 1.6s ease,transform 1.6s ease,filter 1.6s ease}
+.scene.on .stage,.station.on .stage{opacity:1;transform:none;filter:blur(0)}
+.kicker{
+  font-size:.8rem;letter-spacing:.55em;text-indent:.55em;color:var(--amb);
+  margin-bottom:30px;opacity:.85;
+}
+.kicker::after{
+  content:"";display:block;width:34px;height:1px;margin:16px auto 0;
+  background:var(--amb);opacity:.5;
+}
+.narr{font-size:1.18rem;color:var(--ink);margin-bottom:38px;text-align:center}
+.en{
+  font-family:Georgia,"Times New Roman",serif;font-style:italic;
+  font-size:.98rem;line-height:1.9;color:var(--amb);opacity:.92;margin-bottom:16px;
+}
+.zh{font-size:.95rem;color:var(--ink-dim);margin-bottom:10px}
+.ref{font-size:.74rem;letter-spacing:.2em;color:rgba(239,233,221,.34)}
+
+/* ===== 站点（左钉住 · 右细节流） ===== */
+.station{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);align-items:stretch}
+.pin{
+  position:sticky;top:0;height:100vh;
+  display:flex;align-items:center;justify-content:center;padding:0 3vw;
+}
+.pin .stage{max-width:520px}
+.detail{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:10vh 5vw 10vh 0;
+}
+.frag{
+  min-height:60vh;display:flex;flex-direction:column;justify-content:center;
+  max-width:440px;
+  opacity:0;transform:translateY(30px);
+  transition:opacity 1.3s ease,transform 1.3s ease;
+}
+.frag.on{opacity:1;transform:none}
+.f-k{
+  font-size:.78rem;letter-spacing:.4em;color:var(--amb);opacity:.85;margin-bottom:18px;
+}
+.f-en{
+  font-family:Georgia,"Times New Roman",serif;font-style:italic;
+  font-size:.92rem;line-height:1.9;color:var(--amb);opacity:.9;
+  border-left:2px solid rgba(255,255,255,.18);padding-left:16px;margin-bottom:14px;
+}
+.f-zh{font-size:.93rem;color:var(--ink-dim);margin-bottom:8px}
+.f-ref{font-size:.72rem;letter-spacing:.2em;color:rgba(239,233,221,.32)}
+
+/* 开场 */
+#s0 .narr{font-size:1.5rem;letter-spacing:.1em;line-height:2.3}
+.hint{
+  margin-top:60px;font-size:.8rem;letter-spacing:.4em;text-indent:.4em;
+  color:var(--ink-dim);animation:drift 2.6s ease-in-out infinite;
+}
+@keyframes drift{0%,100%{transform:translateY(0);opacity:.45}50%{transform:translateY(9px);opacity:.95}}
+
+/* 可选演示区（如棱镜 / 时间线 / 对比路径） */
+.demo{margin:8px auto 42px}
+.timeline{position:relative;max-width:460px;margin:0 auto 42px;text-align:left;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:rgba(255,255,255,.14)}
+.tl-item{position:relative;padding:2px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:11px;height:11px;border-radius:50%;
+  background:#070a12;border:3px solid var(--amb)}
+.tl-item .t{font-weight:700;color:var(--amb);letter-spacing:.1em}
+.tl-item .d{font-size:.9rem;color:var(--ink-dim)}
+.paths{display:flex;gap:26px;justify-content:center;margin-top:46px;flex-wrap:wrap}
+.path{
+  width:210px;padding:30px 22px 26px;border-radius:16px;cursor:pointer;
+  border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.02);
+  transition:all .7s ease;
+}
+.path h3{font-size:1.05rem;letter-spacing:.3em;text-indent:.3em;margin-bottom:12px}
+.path p{font-size:.86rem;color:var(--ink-dim);line-height:1.9}
+.paths.p-a .path:not(.a),.paths.p-b .path:not(.b){opacity:.28;transform:scale(.96)}
+.paths.p-a .path.a,.paths.p-b .path.b{transform:scale(1.04)}
+
+/* 终章 */
+#sLast .en{font-size:1.06rem;line-height:2.2}
+#sLast .zh{font-size:1rem}
+.again{
+  margin-top:56px;font-family:var(--serif);font-size:.85rem;letter-spacing:.35em;text-indent:.35em;
+  color:var(--ink-dim);background:none;border:1px solid rgba(255,255,255,.14);
+  border-radius:999px;padding:11px 30px;cursor:pointer;transition:all .4s;
+}
+.again:hover{color:var(--ink);border-color:var(--amb)}
+
+footer{
+  position:relative;z-index:1;text-align:center;padding:40px 20px 56px;
+  font-size:.76rem;color:rgba(239,233,221,.3);letter-spacing:.08em;line-height:2.2;
+}
+@media (max-width:900px){
+  .station{display:block}
+  .pin{position:static;height:auto;padding:12vh 22px 2vh}
+  .pin .stage{margin:0 auto}
+  .detail{padding:0 22px 6vh;align-items:center}
+  .frag{min-height:auto;margin-bottom:7vh}
+}
+@media (max-width:640px){
+  .narr{font-size:1.05rem}
+  #s0 .narr{font-size:1.2rem}
+  #rail{display:none}
+}
+
+/* ===== 本页定制：光之七门阶梯 ===== */
+.ladder{margin:10px auto 46px;width:230px;max-width:80vw}
+.rung{
+  height:9px;border-radius:5px;margin:7px auto;opacity:.13;filter:blur(2px);
+  background:var(--rc);
+  transition:opacity 1.2s ease,filter 1.2s ease,box-shadow 1.2s ease;
+  transition-delay:var(--d,0s);
+}
+.scene.on .rung{opacity:.95;filter:blur(0);box-shadow:0 0 18px var(--rc)}
+
+/* ===== 本页定制：转速之环 ===== */
+.rings{position:relative;width:180px;height:180px;margin:6px auto 40px}
+.ring{
+  position:absolute;border-radius:50%;
+  border:2px dashed rgba(255,255,255,.32);
+  animation:spinAround 3.4s linear infinite;
+}
+.ring.r1{inset:0;border-color:rgba(201,75,58,.5)}
+.ring.r2{inset:32px;border-style:dotted;animation-duration:1.2s;animation-direction:reverse;border-color:rgba(88,185,138,.55)}
+.ring.r3{inset:64px;border-width:1px;animation-duration:.55s;border-color:rgba(217,178,63,.6)}
+@keyframes spinAround{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.ring{animation:none}}
+</style>
+</head>
+<body>
+
+<canvas id="sky"></canvas>
+<div id="rail"></div>
+
+<main>
+
+<!-- 0 一的能量 -->
+<section class="scene" id="s0" data-c="#f5efe2">
+  <div class="stage">
+    <p class="narr">在你的身体里，<br>住着七扇门。<br>有一束光从脚底进来，<br>一路向上，一路学。</p>
+    <p class="en">"The blockages of the mind/body/spirit complex further distort, or unbalance, this energy. There is one energy. It may be understood as love/light, or light/love, or intelligent energy."</p>
+    <p class="zh">心/身/灵复合体的阻塞会进一步扭曲这种能量。能量只有一种——它可以被理解为爱/光、光/爱，或智能能量。</p>
+    <p class="ref">—— SESSION 015 · (15.9)</p>
+    <p class="hint">向下滚动 · 从脚底那束光开始 ▾</p>
+  </div>
+</section>
+
+<!-- 1 光之七门 -->
+<section class="scene" id="s1" data-c="#ffffff">
+  <div class="stage">
+    <p class="kicker">七扇门</p>
+    <div class="ladder">
+      <div class="rung" style="--rc:#a86fd9;--d:1.3s;width:92%"></div>
+      <div class="rung" style="--rc:#7a6fd9;--d:1.1s;width:84%"></div>
+      <div class="rung" style="--rc:#4f8fd9;--d:.9s;width:76%"></div>
+      <div class="rung" style="--rc:#58b98a;--d:.7s;width:68%"></div>
+      <div class="rung" style="--rc:#d9b23f;--d:.5s;width:60%"></div>
+      <div class="rung" style="--rc:#d97b3f;--d:.3s;width:52%"></div>
+      <div class="rung" style="--rc:#c94b3a;--d:.1s;width:44%"></div>
+    </div>
+    <p class="narr">光从大地进来了，<br>它想向上走。<br>但每一扇门前，<br>都有一门功课。</p>
+    <p class="en">"The most important concept to grasp about the energy field is that the lower, or negative pole, will draw the universal energy into itself from the cosmos. Therefrom it will move upward to be met and reacted to by the positive spiraling energy moving downward from within."</p>
+    <p class="zh">关于能量场，最重要的概念是：较低的极会把宇宙能量从宇宙中吸入自身；然后它向上移动，与自内向下螺旋而来的正向能量相遇、相反应。</p>
+    <p class="ref">—— SESSION 049 · (49.5)</p>
+  </div>
+</section>
+
+<!-- 2 红光芒 · 生存 -->
+<section class="station" id="s2" data-c="#c94b3a">
+  <div class="pin"><div class="stage">
+    <p class="kicker">红光芒 · 生存</p>
+    <p class="narr">最深的红，<br>是最容易被轻视的红。<br>吃饭、睡觉、活下来——<br>灵性的第一课，从来不在云端。</p>
+    <p class="en">"This ray may be understood to be the basic strengthening ray for each density. It shall never be condescended to as less important or productive of spiritual evolution, for it is the foundation ray."</p>
+    <p class="zh">这道光芒可以理解为每个密度的基本强化光芒。它绝不应被轻视为不重要、或对灵性进化没有贡献——因为它是地基。</p>
+    <p class="ref">—— SESSION 039 · (39.10)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">一切的地基</p>
+      <p class="f-en">"Thus, in first density the red ray is the foundation for all that is to come."</p>
+      <p class="f-zh">在第一密度，红色光芒是接下来一切事物的基础。</p>
+      <p class="f-ref">—— SESSION 040 · (40.3)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">体验的第一张椅子</p>
+      <p class="f-en">"The experience, whatever it may be, will be seated in red ray and considered as to its survival content and so forth."</p>
+      <p class="f-zh">无论什么样的体验，都会先在红色光芒里落座——先被问一句：它关系到生存吗。</p>
+      <p class="f-ref">—— SESSION 049 · (49.6)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">正负一样红</p>
+      <p class="f-en">"There is no difference in equally strongly polarized positive and negative entities as regards red ray."</p>
+      <p class="f-zh">就红色光芒而言，极化程度同样强烈的正面与负面实体没有差别——生存欲本身无所谓善恶。</p>
+      <p class="f-ref">—— SESSION 039 · (39.11)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">大地之门</p>
+      <p class="f-en">"The first balancing is of the Malkuth, or Earth, vibratory energy complex, called the red-ray complex. An understanding and acceptance of this energy is fundamental."</p>
+      <p class="f-zh">第一种平衡属于 Malkuth——地球的振动能量复合体，即红色光芒复合体。理解并接纳这种能量，是一切的根本。</p>
+      <p class="f-ref">—— SESSION 015 · (15.12)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 3 橙光芒 · 自我 -->
+<section class="station" id="s3" data-c="#d97b3f">
+  <div class="pin"><div class="stage">
+    <p class="kicker">橙光芒 · 自我</p>
+    <p class="narr">橙色是情绪的颜色。<br>你怎么对待自己的怪癖、<br>自己的羞耻、自己的没底气，<br>决定了光能不能继续往上。</p>
+    <p class="en">"The next energy complex which may be blocked is the emotional, or personal, complex also known as the orange-ray complex. This blockage will often demonstrate itself as personal eccentricities or distortions with regard to self-conscious understanding, or acceptance, of self."</p>
+    <p class="zh">下一个可能被阻塞的是情绪的、人格的复合体，即橙色光芒复合体。这种阻塞常常表现为个人的怪癖，或在有意识地理解自己、接纳自己方面的扭曲。</p>
+    <p class="ref">—— SESSION 015 · (15.12)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">移动与生长</p>
+      <p class="f-en">"In second density the orange ray is that of movement and growth of the individual, this ray striving towards the yellow ray of self-conscious manifestations of a social nature as well as individual …"</p>
+      <p class="f-zh">在第二密度，橙色光芒是个体的移动与生长——它奋力朝黄色光芒生长，朝着自我意识的方向。</p>
+      <p class="f-ref">—— SESSION 040 · (40.3)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">座位自己会上移</p>
+      <p class="f-en">"As the entity grows in self-acceptance and awareness of catalyst, the location of the comfortable seating of these experiences will rise to the new true-color entity."</p>
+      <p class="f-zh">随着一个实体在自我接纳与对催化剂的觉知中成长，这些体验安坐的位置，会自己升向新的真实颜色。</p>
+      <p class="f-ref">—— SESSION 049 · (49.6)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">饥饿的信号</p>
+      <p class="f-en">"If both entities are blocked, both will have an increased hunger for the same activity, seeking to unblock the baffled flow of energy."</p>
+      <p class="f-zh">如果双方都被阻塞，双方都会对同一种活动越发饥渴——想吃更多，只因为能量的流通被堵住了。</p>
+      <p class="f-ref">—— SESSION 084 · (84.18)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 4 黄光芒 · 关系与控制 -->
+<section class="station" id="s4" data-c="#d9b23f">
+  <div class="pin"><div class="stage">
+    <p class="kicker">黄光芒 · 关系与控制</p>
+    <p class="narr">黄色是人群里的你。<br>权力、面子、亲密与算计——<br>这里的功课是：<br>去爱，而不是去控制。</p>
+    <p class="en">"The third blockage resembles most closely that which you have called ego. It is the yellow-ray, or solar plexus, center. Blockages in this center will often manifest as distortions towards power manipulation and other social behaviors concerning those close and those associated with the mind/body/spirit complex."</p>
+    <p class="zh">第三种阻塞最像你们所谓的自我。它是黄色光芒、太阳神经丛中心。这里的阻塞常表现为权力操控的扭曲，以及与亲近之人相关的种种社会行为。</p>
+    <p class="ref">—— SESSION 015 · (15.12)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">伟大的垫脚石</p>
+      <p class="f-en">"The next foundation ray is yellow. This is the great stepping stone ray. At this ray the mind/body potentiates to its fullest balance. The strong red/orange/yellow triad springboards the entity into the center ray of green."</p>
+      <p class="f-zh">下一道地基光芒是黄色——伟大的垫脚石。在这道光芒处，心/身达到最充分的平衡；强大的红/橙/黄三一体，把实体弹射入中心的光芒：绿色。</p>
+      <p class="f-ref">—— SESSION 039 · (39.10)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">肘、膝与钻石</p>
+      <p class="f-en">"The yellow-ray center may be seen to have secondary energy centers in elbow, in knee, and in the subtle bodies at a slight spacing from the physical vehicle at points describing diamonds about the entity’s navel area surrounding the body."</p>
+      <p class="f-zh">黄色中心还有许多次级中心：肘、膝，以及围绕肚脐排成钻石形状的一圈精微点——针灸摸到的，多半是它们。</p>
+      <p class="f-ref">—— SESSION 049 · (49.5)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">用爱解封</p>
+      <p class="f-en">"Each entity must, in order to completely unblock yellow ray, love all which are in relationship to it, with hope only of the other-selves’ joy, peace, and comfort."</p>
+      <p class="f-zh">要彻底疏通黄色光芒，每个实体必须爱一切与它有关系的人——所求的，只是其他自我的喜悦、平静与安适。</p>
+      <p class="f-ref">—— SESSION 102 · (102.11)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">身体的账单</p>
+      <p class="f-en">"In order to observe the cause of physical distortions toward illness one must look to the energy center which is blocked. In this situation, the blockage being yellow-ray, the experience has had the characteristics of that region of the chemical body."</p>
+      <p class="f-zh">要找疾病的因，先看被阻塞的能量中心。这里是黄色光芒的阻塞，于是病症落在化学身体属于那个区域的部位。</p>
+      <p class="f-ref">—— SESSION 102 · (102.2)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 5 绿光芒 · 爱与接纳 -->
+<section class="station" id="s5" data-c="#58b98a">
+  <div class="pin"><div class="stage">
+    <p class="kicker">绿光芒 · 爱与接纳</p>
+    <p class="narr">绿色是心。<br>走到这里，光第一次学会<br>不带条件地给出去，<br>也不带条件地收回。</p>
+    <p class="en">"The center of heart, or green ray, is the center from which third-density beings may springboard, shall we say, towards infinite intelligence. Blockages in this area may manifest as difficulties in expressing what you may call universal love, or compassion."</p>
+    <p class="zh">心之中心，即绿色光芒，是第三密度存有跃向无限智能的跳板。这里的阻塞，常表现为难以表达你们所谓的普世之爱或慈悲。</p>
+    <p class="ref">—— SESSION 015 · (15.12)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">伟大的过渡光芒</p>
+      <p class="f-en">"the green ray, being the great transitional ray, must be given all careful consideration, for until transfers of energy of all types has been experienced and mastered to a great extent, there will be blockages in the blue and indigo radiations."</p>
+      <p class="f-zh">绿色光芒是伟大的过渡光芒：在各类能量转移被充分体验与掌握之前，蓝色和靛蓝的辐射里都会留有阻塞。</p>
+      <p class="f-ref">—— SESSION 054 · (54.31)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">先给接纳与自由</p>
+      <p class="f-en">"The first giving beyond green ray is the giving of acceptance, or freedom, thus allowing the recipient of blue-ray energy transfer the opportunity for a feeling of being accepted, thus freeing that other-self to express itself to the giver of this ray."</p>
+      <p class="f-zh">越过绿色之后的第一个给予，是给予接纳、给予自由——让另一个自我终于敢开口，说出它自己。</p>
+      <p class="f-ref">—— SESSION 032 · (32.5)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">占有的四种脸色</p>
+      <p class="f-en">"Fear of possession, desire for possession, fear of being possessed, desire to be possessed: these are the distortions which will cause the deactivation of green-ray energy transfer."</p>
+      <p class="f-zh">怕占有、想占有、怕被占有、想被占有——这四张脸色，会让绿色光芒的能量转移当场熄灭。</p>
+      <p class="f-ref">—— SESSION 032 · (32.14)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">过亮的心也会累</p>
+      <p class="f-en">"This instrument also experiences some distortion of the green-ray energy center which you may call the heart center. It is overly open due to an intensive desire-distortion on the part of this mind/body/spirit complex towards service to others, or as you may call it, universal love."</p>
+      <p class="f-zh">连 Ra 的器皿也有一颗开得过大的心——因为太渴望服务他人。心不是开得越大越好，靛蓝堵住时，绿光会把人耗尽。</p>
+      <p class="f-ref">—— SESSION 012 · (12.31)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 6 蓝光芒 · 沟通 -->
+<section class="station" id="s6" data-c="#4f8fd9">
+  <div class="pin"><div class="stage">
+    <p class="kicker">蓝光芒 · 沟通</p>
+    <p class="narr">蓝色第一次既流入、也流出。<br>说出来，也听得进——<br>沟通，是光的呼吸。</p>
+    <p class="en">"The blue-ray center of energy streaming is the center which, for the first time, is outgoing as well as inpouring. Those blocked in this area may have difficulty in grasping the spirit/mind complexes of its own entity, and further difficulty in expressing such understandings of self."</p>
+    <p class="zh">蓝色光芒的能量流中心，是第一个既向外流、又向内流的中心。此处的阻塞，让人难以把握自身实体的灵性/心智，也更难把这份理解表达出来。</p>
+    <p class="ref">—— SESSION 015 · (15.12)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">共同造物者</p>
+      <p class="f-en">"The green-ray entity is ineffectual in the face of blockage from other-selves. The blue-ray entity is a co-Creator."</p>
+      <p class="f-zh">绿色光芒的实体，面对他人的阻塞无能为力；蓝色光芒的实体，是共同造物者。</p>
+      <p class="f-ref">—— SESSION 041 · (41.25)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">不索回应的光</p>
+      <p class="f-en">"To answer your second question more fully we may say that it is correct that radiation without the necessity of response begins with blue ray …"</p>
+      <p class="f-zh">不索求回应的辐射，从蓝色光芒开始——绿光仍需交换，蓝光已经开始照耀，无论谁在听。</p>
+      <p class="f-ref">—— SESSION 054 · (54.31)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">Ra 借用的频道</p>
+      <p class="f-en">"We, for instance, make great use of this instrument's blue-ray energy center as we are attempting to communicate our distortion-understandings of the Law of One."</p>
+      <p class="f-zh">Ra 每晚与我们说话，走的正是这个器皿的蓝色光芒中心——你此刻读到的每一个字，都是一道蓝光。</p>
+      <p class="f-ref">—— SESSION 072 · (72.17)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 7 靛蓝光芒 · 行家的工作 -->
+<section class="station" id="s7" data-c="#7a6fd9">
+  <div class="pin"><div class="stage">
+    <p class="kicker">靛蓝光芒 · 行家的工作</p>
+    <p class="narr">靛蓝是行家的门。<br>在这里，光终于被允许<br>触到智能无限本身——<br>疗愈、教导、祈祷，都从这里出发。</p>
+    <p class="en">"The indigo ray, though precious, is that ray worked upon only by the adept, as you would call it. It is the gateway to intelligent infinity bringing intelligent energy through."</p>
+    <p class="zh">靛蓝光芒虽然珍贵，却只有你们所称的行家去修习。它是通往智能无限的门户，把智能能量带进来。</p>
+    <p class="ref">—— SESSION 039 · (39.10)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">内在、隐秘、无限</p>
+      <p class="f-en">"This is the energy center worked upon in those teachings considered inner, hidden, and occult, for this ray is that which is infinite in its possibilities. As you are aware, those who heal, teach, and work for the Creator in any way which may be seen to be both radiant and balanced are those activities which are indigo ray."</p>
+      <p class="f-zh">一切被视为内在、隐秘、奥秘的教导，修的都是这个中心——因为这道光芒的可能性是无限的。凡是既闪耀又平衡的疗愈、教导与工作，都是靛蓝光芒。</p>
+      <p class="f-ref">—— SESSION 039 · (39.10)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">不配感是一块石头</p>
+      <p class="f-en">"The next center is the pineal, or indigo-ray, center. Those blocked in this center may experience a lessening of the influx of intelligent energy due to manifestations which appear as unworthiness."</p>
+      <p class="f-zh">松果体、靛蓝光芒的中心——在这里堵住它的，常常是一句心底的低语：我不配。</p>
+      <p class="f-ref">—— SESSION 015 · (15.12)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">靛蓝救不了下面</p>
+      <p class="f-en">"The indigo center is indeed most important for the work of the adept. However, it cannot, no matter how crystallized, correct to any extent whatsoever imbalances or blockages in other energy centers. They must needs be cleared seriatim from red upwards."</p>
+      <p class="f-zh">靛蓝中心对行家的工作至关重要，但无论它多么结晶，也丝毫纠正不了其他中心的阻塞——下面的门，必须从红开始逐扇疏通。</p>
+      <p class="f-ref">—— SESSION 074 · (74.6)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">以无限接纳自己</p>
+      <p class="f-en">"The indigo ray is opened only through considerable discipline and practice largely having to do with acceptance of self, not only as the polarized and balanced self but as the Creator, as an entity of infinite worth."</p>
+      <p class="f-zh">靛蓝只有靠相当的纪律与练习才能打开——而练习的核心是接纳自己：不只作为已平衡的自己，更作为造物主，一个具有无限价值的实体。</p>
+      <p class="f-ref">—— SESSION 032 · (32.14)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">越结晶，越能表达</p>
+      <p class="f-en">"As the consciousness of the indigo ray becomes more crystalline, more work may be done; more may be expressed from intelligent infinity."</p>
+      <p class="f-zh">靛蓝光芒的意识越结晶，能做的工作就越多——从智能无限中，能表达出来的也越多。</p>
+      <p class="f-ref">—— SESSION 074 · (74.11)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 8 紫罗兰 · 合一的封印 -->
+<section class="station" id="s8" data-c="#a86fd9">
+  <div class="pin"><div class="stage">
+    <p class="kicker">紫罗兰 · 合一的封印</p>
+    <p class="narr">紫罗兰不努力，<br>不旋转，也不阻塞。<br>它只是把你全部的样子，<br>静静照出来。</p>
+    <p class="en">"As you are aware, the violet ray is constant and does not figure into a discussion of the functions of ray activation in that it is the mark, the register, the identity, the true vibration of an entity."</p>
+    <p class="zh">紫罗兰光芒是恒常的，不参与光芒激活的功能讨论——因为它是标记、是记录、是身份，是一个实体真实的振动。</p>
+    <p class="ref">—— SESSION 039 · (39.10)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">整只温度计</p>
+      <p class="f-en">"The energy ingress ends with indigo. The violet ray is a thermometer, or indicator, of the whole."</p>
+      <p class="f-zh">能量的进入止于靛蓝；紫罗兰光芒不是第七个关口，而是整只温度计——量的是你的全部。</p>
+      <p class="f-ref">—— SESSION 054 · (54.30)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">平衡与否，无关紧要</p>
+      <p class="f-en">"The remaining center of energy influx is simply the total expression of the entity’s vibratory complex of mind, body, and spirit. It is as it will be. “Balanced” or “imbalanced” has no meaning at this energy level, for it gives and takes in its own balance."</p>
+      <p class="f-zh">剩下的这个中心，只是心、身、灵振动复合体的总表达。它如其所是——在这个层级，「平衡」或「失衡」没有意义，它自给自取，自有其衡。</p>
+      <p class="f-ref">—— SESSION 015 · (15.12)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">从造物主到造物主</p>
+      <p class="f-en">"The most normal for the adept is the following: the indigo stimulation, activating that great gateway into healing, magical work, prayerful attention, and the radiance of being; and the stimulation of the violet ray which is the spiritual giving and taking from and to Creator, from Creator to Creator."</p>
+      <p class="f-zh">对行家而言最寻常的，是靛蓝的刺激打开疗愈、魔法与祈祷的伟大门户；以及紫罗兰的刺激——那是造物主对造物主、灵性上的给予与领取。</p>
+      <p class="f-ref">—— SESSION 050 · (50.13)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">收割只看这一色</p>
+      <p class="f-en">"This violet ray is the only consideration for fourth-density positive."</p>
+      <p class="f-zh">对收割进入第四密度正面而言，只考量这一道紫罗兰。</p>
+      <p class="f-ref">—— SESSION 034 · (34.16)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 9 速度与平衡 -->
+<section class="station" id="s9" data-c="#9a8fc4">
+  <div class="pin"><div class="stage">
+    <p class="kicker">速度与平衡</p>
+    <div class="rings">
+      <div class="ring r1"></div>
+      <div class="ring r2"></div>
+      <div class="ring r3"></div>
+    </div>
+    <p class="narr">阻塞的中心转得迟滞，<br>畅通的中心明亮如虹。<br>但 Ra 说：<br>合奏，比独奏重要。</p>
+    <p class="en">"You are partially correct. In the first three energy centers, a full unblocking of this energy will create speeds of rotation. As the entity develops the higher energy centers, however, these centers will then begin to express their nature by forming crystal structures."</p>
+    <p class="zh">你部分正确。在前三个能量中心，能量的完全畅通会产生旋转速度；而当实体发展更高的中心时，这些中心将开始以形成水晶结构来表达自己的本质。</p>
+    <p class="ref">—— SESSION 051 · (51.7)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">意志是旋钮</p>
+      <p class="f-en">"Each energy center has a wide range of rotational speed, or as you may see it more clearly in relation to color, brilliance. The more strongly the will of the entity concentrates upon and refines, or purifies, each energy center, the more brilliant, or rotationally active, each energy center will be."</p>
+      <p class="f-zh">每个能量中心的转速都有很宽的范围——或者更清楚地说，是明亮度。实体的意志越专注地精炼、净化一个中心，它就越明亮、转得越活跃。</p>
+      <p class="f-ref">—— SESSION 041 · (41.19)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">不必按顺序点亮</p>
+      <p class="f-en">"It is not necessary for the energy centers to be activated in order in the case of the self-aware entity. Thusly, entities may have extremely brilliant energy centers while being quite unbalanced in their violet-ray aspect due to lack of attention paid to the totality of experience of the entity."</p>
+      <p class="f-zh">对自我觉知的实体而言，中心不必按顺序激活。所以有人通体明亮，却因忽视体验的整体而在紫罗兰一栏严重失衡。</p>
+      <p class="f-ref">—— SESSION 041 · (41.19)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">合奏高于独奏</p>
+      <p class="f-en">"However, to fully activate each energy center is the mastery of few, for each center has a variable speed of rotation or activity. The important observation to be made, once all necessary centers are activated to the minimal necessary degree, is the harmony and balance between these energy centers."</p>
+      <p class="f-zh">完全激活每个中心只是少数人的精通；当必要的中心都达到最低限度的激活后，真正要紧的，是它们彼此之间的和谐与平衡。</p>
+      <p class="f-ref">—— SESSION 040 · (40.4)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">转得太快也是病</p>
+      <p class="f-en">"The strong back and forth motion indicates the reverse of blockage which is over-stimulation of a chakra, or energy center, which is occurring in order to attempt to balance some difficulty in body, or mind, complex activity."</p>
+      <p class="f-zh">钟摆强力的前后摇摆，是阻塞的反面：某个中心正过度激活，拼命想代偿身体或心智里的困难——那同样是不平衡。</p>
+      <p class="f-ref">—— SESSION 060 · (60.31)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 10 水晶结构 -->
+<section class="station" id="s10" data-c="#b9b4d6">
+  <div class="pin"><div class="stage">
+    <p class="kicker">水晶结构</p>
+    <p class="narr">当下三层真正走稳，<br>旋转会停下来，<br>凝固成晶体。<br>没有两片雪花相同，<br>但每一片都规则。</p>
+    <p class="en">"Each of the energy centers of the physical complex may be seen to have a distinctive crystalline structure in the more developed entity. Each will be somewhat different, just as in your world no two snowflakes are alike. However, each is regular."</p>
+    <p class="zh">在更发达的实体中，身体的每个能量中心都可以看到独特的晶体结构。每个都有些不同——就像你们的世界里没有两片雪花相同。然而，每一个都是规则的。</p>
+    <p class="ref">—— SESSION 051 · (51.8)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">轮、花、星</p>
+      <p class="f-en">"The red energy center often is in the shape of the spoked wheel. … The orange energy center in the flower shape containing three petals. … The yellow center again in a rounded shape, many faceted, as a star."</p>
+      <p class="f-zh">红色中心常是辐条轮；橙色中心是三瓣的花；黄色中心又回到圆形，切面繁多，如一颗星。</p>
+      <p class="f-ref">—— SESSION 051 · (51.8)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">莲花与百面镜</p>
+      <p class="f-en">"The green energy center sometimes called the lotus-shape, the number of points of crystalline structure dependent upon the strength of this center. … The blue energy center capable of having perhaps one hundred facets and capable of great flashing brilliance."</p>
+      <p class="f-zh">绿色中心有时被称为莲花形——瓣数取决于这中心的强度；蓝色中心可以拥有约一百个切面，并能发出巨大的闪耀光辉。</p>
+      <p class="f-ref">—— SESSION 051 · (51.8)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">三角与千瓣</p>
+      <p class="f-en">"The indigo center a more quiet center which has the basic triangular, or three-petaled, shape in many, although some adepts who have balanced the lower energies may create more faceted forms. … The violet energy center is the least variable and is sometimes described in your philosophy as thousand-petaled, as it is the sum of the mind/body/spirit complex distortion totality."</p>
+      <p class="f-zh">靛蓝中心更安静，多为基本的三角形或三瓣形；紫罗兰中心最少变化，在你们的哲学里有时被描述为千瓣——因为它是心/身/灵复合体变貌的总和。</p>
+      <p class="f-ref">—— SESSION 051 · (51.8)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">不碎的光</p>
+      <p class="f-en">"It will not splinter or break; it is very strong without effort; and it is radiant, traducing light into a beautiful refraction giving pleasure of the eye to many."</p>
+      <p class="f-zh">结晶意味着：不会碎裂，毫不费力地坚固，并且光芒四射——把光折成美丽的光谱，给许多人带来眼目之悦。</p>
+      <p class="f-ref">—— SESSION 047 · (47.7)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">雪花织成的器皿</p>
+      <p class="f-en">"You deal in this contact with, shall we say, forces of great intensity poured into a vessel as delicate as a snowflake and as crystalline."</p>
+      <p class="f-zh">在这样的接触里，极大强度的力量，被倾入一只如雪花般精致、如晶体般结构的器皿——那器皿就是你。</p>
+      <p class="f-ref">—— SESSION 064 · (64.5)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 11 光芒与密度 -->
+<section class="station" id="s11" data-c="#d9c9a3">
+  <div class="pin"><div class="stage">
+    <p class="kicker">光芒与密度</p>
+    <p class="narr">一个密度，就是一种真色。<br>而你此刻的每一刻，<br>其实都染着来自<br>下一道光芒的引力。</p>
+    <p class="en">"However, the frequency that is the basis of each density is what may be called a true color. This term is impossible to define given your system of sensibilities and scientific measurements, for color has vibratory characteristics both in space/time and in time/space."</p>
+    <p class="zh">每个密度的基础频率，可以称为一种「真色」。这个词在你们的感觉系统与科学测量里无法定义——因为颜色在空间/时间与时间/空间中都有振动特性。</p>
+    <p class="ref">—— SESSION 040 · (40.6)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">每个密度七扇门</p>
+      <p class="f-en">"As we have noted, each of the true-color densities has the seven energy centers, and each entity contains all this in potentiation. The activation, while in yellow ray, of violet-ray intelligent infinity is a passport to the next octave of experience."</p>
+      <p class="f-zh">每个真实颜色的密度都有七个能量中心，每个实体都以潜能包含着这一切。身处黄光芒之时激活紫罗兰的智能无限——那是通往下一八度体验的通行证。</p>
+      <p class="f-ref">—— SESSION 048 · (48.10)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">绿光照进心智</p>
+      <p class="f-en">"This is not only correct but we suggest you take this concept further and understand the great number of entities with the so-called mental diseases being due to the effect of this green-ray true color upon the mental configurations of those unready, mentally, to face the self for the first time."</p>
+      <p class="f-zh">如今地球的基础振动已是绿色的真色——第四密度。它照进那些心智上尚未准备好第一次面对自我的实体，于是有了这时代如此之多的「精神疾病」。</p>
+      <p class="f-ref">—— SESSION 040 · (40.15)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">光芒的礼物清单</p>
+      <p class="f-en">"The green-ray type of radiation in this case is the healing, the blue-ray the communication and inspiration, the indigo that energy of the adept which has its place in faith."</p>
+      <p class="f-zh">从智能无限透进来的辐射：绿光是疗愈，蓝光是沟通与灵感，靛蓝是行家的能量——它在信心中有其位置。</p>
+      <p class="f-ref">—— SESSION 054 · (54.31)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 12 王冠 -->
+<section class="scene" id="sLast" data-c="#f5efe2">
+  <div class="stage">
+    <p class="kicker">王冠</p>
+    <p class="narr">七道光走完了。<br>而在北极，<br>王冠早已在你头上。</p>
+    <p class="en">"Meanwhile the Creator lies within. In the north pole the crown is already upon the head and the entity is potentially a god. This energy is brought into being by the humble and trusting acceptance of this energy through meditation and contemplation of the self and of the Creator."</p>
+    <p class="zh">与此同时，造物主居于内在。在北极，王冠已戴在头上，实体潜在地是一位神。这份能量，是通过对自我与造物主的冥想与沉思、以谦卑与信任去接纳它，才被带入存在的。</p>
+    <p class="ref">—— SESSION 049 · (49.6)</p>
+    <p class="en">"To become the Creator is to become all that there is."</p>
+    <p class="zh">成为造物主，就是成为一切万有。</p>
+    <p class="ref">—— SESSION 074 · (74.11)</p>
+    <button class="again" id="again">回到脚底那束光</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+光之七门 · 能量中心与光芒 · 滚动星旅 · 内容取自《一的法则》近二十次集会的光芒与能量中心讨论<br>
+引文为英文原文逐字摘录；中文为本页面自拟 · 仅作沉浸学习实验
+</footer>
+
+<script>
+/* ===== 星空画布（固定，勿改） ===== */
+const cv=document.getElementById('sky'),cx=cv.getContext('2d');
+let W,H,stars=[];
+function size(){W=cv.width=innerWidth*devicePixelRatio;H=cv.height=innerHeight*devicePixelRatio;}
+size();addEventListener('resize',size);
+for(let i=0;i<230;i++)stars.push({x:Math.random(),y:Math.random(),z:.25+Math.random()*.75,p:Math.random()*6.28,s:Math.random()});
+
+/* ===== 氛围色插值（固定，勿改） ===== */
+function hex2rgb(h){h=h.replace('#','');if(h.length===3)h=h.split('').map(c=>c+c).join('');return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
+const scenes=[...document.querySelectorAll('.scene,.station')].map(s=>({el:s,c:hex2rgb(s.dataset.c)}));
+let amb=[245,239,226];
+function lerp(a,b,t){return a+(b-a)*t}
+function rgb2css(c,a){return `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${a})`}
+
+/* ===== 渲染循环（固定，勿改） ===== */
+let t=0;
+function frame(){
+  t+=.016;
+  const sy=scrollY,wh=innerHeight;
+  let target=scenes[0].c;
+  for(const s of scenes){
+    const r=s.el.getBoundingClientRect();
+    if(r.top<wh*.55&&r.bottom>wh*.45){target=s.c;break}
+  }
+  for(let i=0;i<3;i++)amb[i]=lerp(amb[i],target[i],.045);
+  const ac=amb;
+  document.documentElement.style.setProperty('--amb',rgb2css(ac,1));
+
+  cx.clearRect(0,0,W,H);
+  const g=cx.createRadialGradient(W/2,H*.86,0,W/2,H*.86,H*.75);
+  g.addColorStop(0,rgb2css(ac,.10));g.addColorStop(1,'rgba(0,0,0,0)');
+  cx.fillStyle=g;cx.fillRect(0,0,W,H);
+  const dark=1-Math.min(1,(Math.hypot(ac[0]-245,ac[1]-239))/200);
+  for(const st of stars){
+    const px=st.x*W,py=((st.y - sy*.00004*st.z)%1+1)%1*H;
+    const tw=.5+.5*Math.sin(t*1.3+st.p);
+    cx.globalAlpha=(0.12+0.5*tw*st.z)*(0.35+0.65*dark);
+    cx.fillStyle=rgb2css(ac,1);
+    const r=st.s*1.4*st.z*devicePixelRatio;
+    cx.beginPath();cx.arc(px,py,r,0,6.28);cx.fill();
+  }
+  const oy=H*.62+Math.sin(t*.8)*10*devicePixelRatio;
+  const og=cx.createRadialGradient(W/2,oy,0,W/2,oy,26*devicePixelRatio);
+  og.addColorStop(0,rgb2css(ac,.9));og.addColorStop(.35,rgb2css(ac,.25));og.addColorStop(1,'rgba(0,0,0,0)');
+  cx.globalAlpha=1;cx.fillStyle=og;
+  cx.beginPath();cx.arc(W/2,oy,26*devicePixelRatio,0,6.28);cx.fill();
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+/* ===== 场景显影（固定，勿改） ===== */
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>e.target.classList.toggle('on',e.isIntersecting));
+},{threshold:.01});
+document.querySelectorAll('.scene,.station').forEach(s=>io.observe(s));
+
+/* 细节片段显影（固定，勿改） */
+const ioFrag=new IntersectionObserver(es=>{
+  es.forEach(e=>e.target.classList.toggle('on',e.intersectionRatio>.15));
+},{threshold:[0,.35,.6]});
+document.querySelectorAll('.frag').forEach(f=>ioFrag.observe(f));
+
+/* ===== 进度轨道（固定，勿改） ===== */
+const rail=document.getElementById('rail');
+scenes.forEach((s,i)=>{
+  const row=document.createElement('div');row.className='r';
+  const lbl=document.createElement('span');lbl.className='lbl';
+  const k=s.el.querySelector('.kicker');
+  lbl.textContent=k?k.textContent.trim():(i===0?'开始':'终章');
+  const d=document.createElement('i');
+  row.appendChild(lbl);row.appendChild(d);
+  row.onclick=()=>s.el.scrollIntoView({behavior:'smooth'});
+  rail.appendChild(row);
+});
+setInterval(()=>{
+  const wh=innerHeight;
+  scenes.forEach((s,i)=>{
+    const r=s.el.getBoundingClientRect();
+    rail.children[i].classList.toggle('cur',r.top<wh*.55&&r.bottom>wh*.45);
+  });
+},200);
+
+/* ===== 本章定制交互 ===== */
+/* ===== 回到脚底那束光 ===== */
+document.getElementById('again').onclick=()=>scrollTo({top:0,behavior:'smooth'});
+</script>
+</body>
+</html>

@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css">
+<title>地球的史诗 · 滚动星旅</title>
+<style>
+:root{
+  --amb:#f5efe2;          /* 当前场景氛围色，由 JS 实时插值 */
+  --ink:#efe9dd;
+  --ink-dim:rgba(239,233,221,.55);
+  --serif:"LXGW WenKai","霞鹜文楷","LXGW WenKai SC","Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:#070a12;color:var(--ink);font-family:var(--serif);
+  line-height:2;overflow-x:hidden;
+}
+canvas#sky{position:fixed;inset:0;width:100vw;height:100vh;z-index:0}
+
+/* ===== 进度轨道 ===== */
+#rail{
+  position:fixed;right:26px;top:50%;transform:translateY(-50%);z-index:8;
+  display:flex;flex-direction:column;gap:13px;align-items:flex-end;
+}
+#rail .r{display:flex;align-items:center;gap:10px;cursor:pointer}
+#rail .r i{
+  width:5px;height:5px;border-radius:50%;flex-shrink:0;
+  background:rgba(255,255,255,.16);transition:all .4s;
+}
+#rail .r.cur i{background:var(--amb);box-shadow:0 0 9px var(--amb);transform:scale(1.7)}
+#rail .lbl{
+  font-size:.72rem;letter-spacing:.12em;color:var(--ink);white-space:nowrap;
+  padding:3px 12px;border-radius:999px;background:rgba(7,10,18,.78);
+  border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(4px);
+  opacity:0;transform:translateX(10px);transition:all .35s ease;pointer-events:none;
+}
+#rail:hover .lbl{opacity:1;transform:none}
+#rail .r.cur .lbl{border-color:var(--amb);color:var(--amb)}
+
+main{position:relative;z-index:1}
+
+/* ===== 时刻场景（全屏居中） ===== */
+.scene{min-height:118vh;display:flex;align-items:center;justify-content:center;padding:14vh 22px}
+.stage{max-width:620px;text-align:center;opacity:0;transform:translateY(34px);filter:blur(6px);transition:opacity 1.6s ease,transform 1.6s ease,filter 1.6s ease}
+.scene.on .stage,.station.on .stage{opacity:1;transform:none;filter:blur(0)}
+.kicker{
+  font-size:.8rem;letter-spacing:.55em;text-indent:.55em;color:var(--amb);
+  margin-bottom:30px;opacity:.85;
+}
+.kicker::after{
+  content:"";display:block;width:34px;height:1px;margin:16px auto 0;
+  background:var(--amb);opacity:.5;
+}
+.narr{font-size:1.18rem;color:var(--ink);margin-bottom:38px;text-align:center}
+.en{
+  font-family:Georgia,"Times New Roman",serif;font-style:italic;
+  font-size:.98rem;line-height:1.9;color:var(--amb);opacity:.92;margin-bottom:16px;
+}
+.zh{font-size:.95rem;color:var(--ink-dim);margin-bottom:10px}
+.ref{font-size:.74rem;letter-spacing:.2em;color:rgba(239,233,221,.34)}
+
+/* ===== 站点（左钉住 · 右细节流） ===== */
+.station{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);align-items:stretch}
+.pin{
+  position:sticky;top:0;height:100vh;
+  display:flex;align-items:center;justify-content:center;padding:0 3vw;
+}
+.pin .stage{max-width:520px}
+.detail{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:10vh 5vw 10vh 0;
+}
+.frag{
+  min-height:60vh;display:flex;flex-direction:column;justify-content:center;
+  max-width:440px;
+  opacity:0;transform:translateY(30px);
+  transition:opacity 1.3s ease,transform 1.3s ease;
+}
+.frag.on{opacity:1;transform:none}
+.f-k{
+  font-size:.78rem;letter-spacing:.4em;color:var(--amb);opacity:.85;margin-bottom:18px;
+}
+.f-en{
+  font-family:Georgia,"Times New Roman",serif;font-style:italic;
+  font-size:.92rem;line-height:1.9;color:var(--amb);opacity:.9;
+  border-left:2px solid rgba(255,255,255,.18);padding-left:16px;margin-bottom:14px;
+}
+.f-zh{font-size:.93rem;color:var(--ink-dim);margin-bottom:8px}
+.f-ref{font-size:.72rem;letter-spacing:.2em;color:rgba(239,233,221,.32)}
+
+/* 开场 */
+#s0 .narr{font-size:1.5rem;letter-spacing:.1em;line-height:2.3}
+.hint{
+  margin-top:60px;font-size:.8rem;letter-spacing:.4em;text-indent:.4em;
+  color:var(--ink-dim);animation:drift 2.6s ease-in-out infinite;
+}
+@keyframes drift{0%,100%{transform:translateY(0);opacity:.45}50%{transform:translateY(9px);opacity:.95}}
+
+/* 可选演示区（如棱镜 / 时间线 / 对比路径） */
+.demo{margin:8px auto 42px}
+.timeline{position:relative;max-width:460px;margin:0 auto 42px;text-align:left;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:rgba(255,255,255,.14)}
+.tl-item{position:relative;padding:2px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:11px;height:11px;border-radius:50%;
+  background:#070a12;border:3px solid var(--amb)}
+.tl-item .t{font-weight:700;color:var(--amb);letter-spacing:.1em}
+.tl-item .d{font-size:.9rem;color:var(--ink-dim)}
+.paths{display:flex;gap:26px;justify-content:center;margin-top:46px;flex-wrap:wrap}
+.path{
+  width:210px;padding:30px 22px 26px;border-radius:16px;cursor:pointer;
+  border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.02);
+  transition:all .7s ease;
+}
+.path h3{font-size:1.05rem;letter-spacing:.3em;text-indent:.3em;margin-bottom:12px}
+.path p{font-size:.86rem;color:var(--ink-dim);line-height:1.9}
+.paths.p-a .path:not(.a),.paths.p-b .path:not(.b){opacity:.28;transform:scale(.96)}
+.paths.p-a .path.a,.paths.p-b .path.b{transform:scale(1.04)}
+
+/* 时间轴显影（本章定制） */
+#s1 .tl-item{opacity:0;transform:translateX(-16px);transition:opacity 1.1s ease,transform 1.1s ease}
+#s1.on .tl-item{opacity:1;transform:none}
+#s1 .tl-item:nth-child(1){transition-delay:.1s}
+#s1 .tl-item:nth-child(2){transition-delay:.25s}
+#s1 .tl-item:nth-child(3){transition-delay:.4s}
+#s1 .tl-item:nth-child(4){transition-delay:.55s}
+#s1 .tl-item:nth-child(5){transition-delay:.7s}
+#s1 .tl-item:nth-child(6){transition-delay:.85s}
+#s1 .tl-item:nth-child(7){transition-delay:1s}
+
+/* 终章 */
+#sLast .en{font-size:1.06rem;line-height:2.2}
+#sLast .zh{font-size:1rem}
+.again{
+  margin-top:56px;font-family:var(--serif);font-size:.85rem;letter-spacing:.35em;text-indent:.35em;
+  color:var(--ink-dim);background:none;border:1px solid rgba(255,255,255,.14);
+  border-radius:999px;padding:11px 30px;cursor:pointer;transition:all .4s;
+}
+.again:hover{color:var(--ink);border-color:var(--amb)}
+
+footer{
+  position:relative;z-index:1;text-align:center;padding:40px 20px 56px;
+  font-size:.76rem;color:rgba(239,233,221,.3);letter-spacing:.08em;line-height:2.2;
+}
+@media (max-width:900px){
+  .station{display:block}
+  .pin{position:static;height:auto;padding:12vh 22px 2vh}
+  .pin .stage{margin:0 auto}
+  .detail{padding:0 22px 6vh;align-items:center}
+  .frag{min-height:auto;margin-bottom:7vh}
+}
+@media (max-width:640px){
+  .narr{font-size:1.05rem}
+  #s0 .narr{font-size:1.2rem}
+  #rail{display:none}
+}
+</style>
+</head>
+<body>
+
+<canvas id="sky"></canvas>
+<div id="rail"></div>
+
+<main>
+
+<!-- 0 开场：行走在你们的大地上 -->
+<section class="scene" id="s0" data-c="#f5efe2">
+  <div class="stage">
+    <p class="kicker">地球的史诗</p>
+    <p class="narr">在你们谈论文明之前，<br>这颗行星已经换过好几批居民。<br>有人把它炸掉，有人被搬来，<br>有人在大陆上建起光的学校，<br>然后沉入海底。<br>这个故事很长——我们从头讲。</p>
+    <p class="en">"We are old upon your planet and have served with varying degrees of success in transmitting the Law of One, of Unity, of Singleness to your peoples. We have walked your earth. We have seen the faces of your peoples."</p>
+    <p class="zh">我们在你们的行星上很古老，曾以不同程度的成功传递一的法则。我们曾行走在你们的大地上。我们曾见过你们民族的面孔。</p>
+    <p class="ref">—— SESSION 001 · (1.1)</p>
+    <p class="hint">向下滚动 · 从七十万零五千年前讲起 ▾</p>
+  </div>
+</section>
+
+<!-- 1 光的编年线 -->
+<section class="scene" id="s1" data-c="#9a8f7a">
+  <div class="stage">
+    <p class="kicker">光的编年线</p>
+    <p class="narr">七十万年，压缩成一条线。<br>每一段光，都是一次聚散。</p>
+    <div class="timeline">
+      <div class="tl-item"><p class="t">705,000 年前</p><p class="d">马尔戴克在战争中炸毁自己的行星——无人逃脱那个恐惧之结。</p></div>
+      <div class="tl-item"><p class="t">500,000 年前</p><p class="d">幸存者决定以「业力减轻」的方式转入地球，从猿身重新来过。</p></div>
+      <div class="tl-item"><p class="t">75,000 年前</p><p class="d">火星的第三密度中途夭折；守护者把实体迁入地球，三次主周期的钟声开始。</p></div>
+      <div class="tl-item"><p class="t">53,000–50,000 年前</p><p class="d">姆：有益而无害的大陆，随板块的重新调整沉入海底。</p></div>
+      <div class="tl-item"><p class="t">31,000–9,600 年前</p><p class="d">亚特兰蒂斯：从学习之庙到水晶武器，两场战争之后沉没。</p></div>
+      <div class="tl-item"><p class="t">11,000–6,000 年前</p><p class="d">Ra 以兄弟之形行走埃及；大金字塔以思想落成。</p></div>
+      <div class="tl-item"><p class="t">3,600 年前 · 今天</p><p class="d">猎户集团渗入，雅威改姓再战——哈米吉多顿仍在进行。</p></div>
+    </div>
+    <p class="en">"The first attempt to aid your peoples was at the time seven five oh oh oh [75,000]."</p>
+    <p class="zh">第一次援助你们族群的尝试，发生在七五零零零之时。</p>
+    <p class="ref">—— SESSION 014 · (14.4)</p>
+  </div>
+</section>
+
+<!-- 2 马尔戴克 -->
+<section class="station" id="s2" data-c="#c0483a">
+  <div class="pin"><div class="stage">
+    <p class="kicker">马尔戴克 · 一颗行星的葬礼</p>
+    <p class="narr">有一颗行星，把自己的家炸成了小行星带。<br>它的居民没有死——<br>他们只是再也不敢记得自己是谁，<br>直到有人解开那个结。</p>
+    <p class="en">"The peoples of Maldek had a civilization somewhat similar to that of the societal complex known to you as Atlantis in that it gained much technological information and used it without care for the preservation of their sphere, following to a majority extent the complex of thought, ideas, and actions which you may associate with your so-called negative polarity, or the service to self."</p>
+    <p class="zh">马尔戴克人民的文明与你们所知的亚特兰蒂斯颇为相似：获取了大量科技信息，却毫不顾及星球的存续，大体上遵循着你们所谓负面极性——服务自我——的思想与行动。</p>
+    <p class="ref">—— SESSION 010 · (10.1)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">七零五零零零</p>
+      <p class="f-en">"The devastation that wracked their biosphere and caused its disintegration resulted from what you call war."</p>
+      <p class="f-zh">摧毁整个生物圈、令行星解体的，源于你们所称的战争——升级到了当时技术的极限。</p>
+      <p class="f-ref">—— SESSION 010 · (10.1)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">恐惧之结</p>
+      <p class="f-en">"Approximately six hundred thousand [600,000] of your years ago, the then-existing members of the Confederation were able to deploy a social memory complex and untie the knot of fear. The entities were then able to recall that they were conscious."</p>
+      <p class="f-zh">六十万年前，星际联邦部署了一个社会记忆复合体，解开了恐惧之结——那些实体这才重新想起，自己是有意识的。</p>
+      <p class="f-ref">—— SESSION 010 · (10.1)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">无人逃脱</p>
+      <p class="f-en">"In the occurrence of planetary dissolution none escaped, for this is an action which redounds to the social complex of the planetary complex itself. None escaped the knot or tangle."</p>
+      <p class="f-zh">行星瓦解之时，无人逃脱——这一行动波及整个行星社会复合体本身。</p>
+      <p class="f-ref">—— SESSION 010 · (10.7)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">大脚怪的功课</p>
+      <p class="f-en">"Many of these entities were able to remove the accumulation of what you call karma, thus being able to accept a third-density cycle within a third-density body."</p>
+      <p class="f-zh">许多实体由此移除了所谓业力的累积，得以再次在第三密度身体中接受一个第三密度周期。</p>
+      <p class="f-ref">—— SESSION 010 · (10.4)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">四万六千年的呼求</p>
+      <p class="f-en">"The first calling was approximately four six thousand, forty-six thousand [46,000] of your years ago. This calling was of those of Maldek."</p>
+      <p class="f-zh">第一次呼求来自马尔戴克的实体——潜意识记得要纠正什么，显意识却一片混乱。</p>
+      <p class="f-ref">—— SESSION 021 · (21.16)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 3 火星 -->
+<section class="station" id="s3" data-c="#cf6b35">
+  <div class="pin"><div class="stage">
+    <p class="kicker">火星 · 被中断的红</p>
+    <p class="narr">又一颗行星没能走到终点。<br>红色的星球变得无法居住，<br>第三密度的课程停在一半。<br>守护者把它最珍贵的负载，<br>搬到了第三颗行星上。</p>
+    <p class="en">"The first of those to come here were brought from another planet in your solar system called by you the Red Planet, Mars. This planet's environment became inhospitable to third-density beings. The first entities, therefore, were of this race, as you may call it, manipulated somewhat by those who were Guardians at that time."</p>
+    <p class="zh">最早来到这里的实体，从你们太阳系中另一颗行星——你们称为红色星球的火星——被带来。该行星的环境变得不适合第三密度存有居住。</p>
+    <p class="ref">—— SESSION 009 · (9.6)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">一半来自火星</p>
+      <p class="f-en">"There were perhaps one-half of the third-density population being entities from the Red Planet, Mars, as you call it; perhaps one-quarter from second density of your planetary sphere; approximately one-quarter from other sources, other planetary spheres whose entities chose this planetary sphere for third-density work."</p>
+      <p class="f-zh">第三密度人口约一半来自红色星球火星；四分之一来自地球第二密度；四分之一来自选择这里做第三密度功课的其他行星。</p>
+      <p class="f-ref">—— SESSION 020 · (20.20)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">被加强的光之隔离</p>
+      <p class="f-en">"The light quarantine, which consists of the Guardians, or gardeners, as you may call them, which would have been in effect thus was intensified."</p>
+      <p class="f-zh">基因援助虽出于好意，却被视为对自由意志的侵犯——由守护者、或称园丁们组成的光之隔离，因此被加强。</p>
+      <p class="f-ref">—— SESSION 021 · (21.8)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">仍在疗愈的行星</p>
+      <p class="f-en">"Upon the entity known to you as Mars, as you have already discussed,[49] this entity was stopped in mid-third density, thus being unable to continue in progression due to the lack of hospitable conditions upon the surface. This planet shall be undergoing healing for some of your space/time millennia."</p>
+      <p class="f-zh">火星在第三密度中途被中止，再也无法继续前进。这颗行星将在你们的若干空间/时间千年中进行疗愈。</p>
+      <p class="f-ref">—— SESSION 030 · (30.14)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 4 钟声 -->
+<section class="scene" id="s4" data-c="#d9b23f">
+  <div class="stage">
+    <p class="kicker">三次主周期</p>
+    <p class="narr">每颗行星都有一座钟。<br>它不催促谁，只是到点就响。<br>响了三次——<br>第三次之后，行星把自己向前推。</p>
+    <p class="en">"This intelligent energy offers a type of clock. The cycles move as precisely as a clock strikes your hour. Thus, the gateway from intelligent energy to intelligent infinity opens regardless of circumstance on the striking of the hour."</p>
+    <p class="zh">这种智能能量提供了一种时钟；循环如时钟报时般精确。无论境况如何，钟声敲响时，从智能能量通往智能无限的大门都会开启。</p>
+    <p class="ref">—— SESSION 009 · (9.4)</p>
+  </div>
+</section>
+
+<!-- 5 姆 -->
+<section class="station" id="s5" data-c="#5f9a8a">
+  <div class="pin"><div class="stage">
+    <p class="kicker">第二周期 · 姆与一百五十人</p>
+    <p class="narr">第一个二十五千年的春天没有来，<br>种子没有发芽。<br>但在周期的前半，<br>一片叫姆的大陆<br>过着有益而无害的日子——<br>直到大地调整了它自己。</p>
+    <p class="en">"They were beings of a somewhat primitive nature, but those who had very advanced spiritual distortions. The civilization was part of this cycle, experienced early within the cycle at a time of approximately five three oh oh oh, fifty-three thousand [53,000] of your years ago. It was an helpful and harmless place which was washed beneath the ocean during a readjustment of your sphere's tectonic plates through no action of their own."</p>
+    <p class="zh">他们是性质颇为原始的存有，灵性却极为先进。那是一个有益而无害的地方——在星球构造板块的重新调整中被冲入海底，并非出于他们自身的行动。</p>
+    <p class="ref">—— SESSION 010 · (10.15)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">五万年前的沉没</p>
+      <p class="f-en">"This was approximately fifty thousand [50,000] of your years ago. The origins being approximately five three, fifty-three thousand [53,000] of your years ago, the damage being completed in that last small cycle of the first master cycle."</p>
+      <p class="f-zh">姆的毁灭约在五万年前——起源在五万三千年前，破坏完成于第一个大周期的最后一个小周期。</p>
+      <p class="f-ref">—— SESSION 021 · (21.25)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">不是巧合的巧合</p>
+      <p class="f-en">"There is a confluence of energies at the ending of a major cycle. This encouraged what was already an inevitable adjustment in the movement of the surfaces of your planetary sphere."</p>
+      <p class="f-zh">大周期结束时有一种能量的汇聚，它鼓励了行星表面运动中本已不可避免的调整。</p>
+      <p class="f-ref">—— SESSION 021 · (21.27)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">没有技术也算伟大</p>
+      <p class="f-en">"However, in the South American area of your planetary sphere, as you know it, there grew to be a great vibratory distortion towards love. These entities were harvestable at the end of the second major cycle without ever having formed strong social or technological complexes."</p>
+      <p class="f-zh">南美长出了朝向爱的伟大振动——他们从未建立强大的社会或技术复合体，却在第二个大周期结束时即可收割。</p>
+      <p class="f-ref">—— SESSION 021 · (21.28)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">一百五十个可收割者</p>
+      <p class="f-en">"There were approximately one hundred fifty [150] entities harvestable."</p>
+      <p class="f-zh">第二个大周期结束时，全行星约有三十多万个化身实体——可收割的，约一百五十个。</p>
+      <p class="f-ref">—— SESSION 022 · (22.10)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">光之盾的拜访</p>
+      <p class="f-en">"A light being appeared bearing that which may be called a shield of light. It spoke of the oneness and infinity of all creation and of those things which await those ready for harvest. It described in golden words the beauties of love as lived."</p>
+      <p class="f-zh">一个光之存有带着可称为光之盾的东西出现，用金色的话语描述爱作为生活的美——然后它离开，而那一百五十人决定留下来帮助行星意识。</p>
+      <p class="f-ref">—— SESSION 022 · (22.12)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 6 亚特兰蒂斯 -->
+<section class="station" id="s6" data-c="#4f6fd9">
+  <div class="pin"><div class="stage">
+    <p class="kicker">亚特兰蒂斯 · 天真的代价</p>
+    <p class="narr">三万一千年前开始形成的聚合社会，<br>先学合一，后用水晶。<br>他们不再疗愈自己，<br>转而创造生命。<br>两次战争之后，大陆沉没。</p>
+    <p class="en">"We remind you that we are one of the naïve members of that Confederation and are still attempting to recoup the damage for which we feel responsibility."</p>
+    <p class="zh">我们提醒你：我们是星际联邦中天真的成员之一，至今仍在试图弥补我们感到负有责任的损害。</p>
+    <p class="ref">—— SESSION 022 · (22.26)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">三万一千年的开端</p>
+      <p class="f-en">"The Atlantean race was a very conglomerate social complex which began to form approximately three one oh oh oh, thirty-one thousand [31,000] years in the past of your space/time continuum illusion."</p>
+      <p class="f-zh">亚特兰蒂斯种族是非常聚合的社会复合体，约三万一千年前开始形成；起初是一个缓慢生长、精于农耕的社会。</p>
+      <p class="f-ref">—— SESSION 010 · (10.15)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">创造生命，而不是疗愈自己</p>
+      <p class="f-en">"Thus they were able to create life forms. This they began to do instead of healing and perfecting their own mind/body/spirit complexes, turning their distortions towards what you may call the negative."</p>
+      <p class="f-zh">他们能创造生命形态，于是开始做这件事——代替疗愈与完善自己的心/身/灵复合体，把变貌转向负面。</p>
+      <p class="f-ref">—— SESSION 010 · (10.15)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">水晶、金字塔与学习之庙</p>
+      <p class="f-en">"However, requests being made for healing and other understandings, information was passed having to do with crystals and the building of pyramids as well as temples, as you would call them, which were associated with training."</p>
+      <p class="f-zh">由于疗愈等请求，关于水晶、金字塔与训练庙宇的信息被传递过去——那是学习之庙，不是把疗愈者奉为神明的祭坛。</p>
+      <p class="f-ref">—— SESSION 022 · (22.21)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">两场战争</p>
+      <p class="f-en">"The second and most devastating of the conflicts occurred approximately one oh eight two one, ten thousand eight hundred twenty-one [10,821] years in the past according to your illusion. This created an earth-changing configuration and the large part of Atlantis was no more, having been inundated. Three of the positively oriented of the Atlantean groups left this geographical locus before that devastation, placing themselves in the mountain areas of what you call Tibet, what you call Peru, and what you call Turkey."</p>
+      <p class="f-zh">一万零八百二十一年前，最具毁灭性的冲突令亚特兰蒂斯大部分沉没。三群正面导向的亚特兰蒂斯人提前退入西藏、秘鲁与土耳其的山区。</p>
+      <p class="f-ref">—— SESSION 010 · (10.15)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">水晶武器与最后的沉没</p>
+      <p class="f-en">"Earth changes continued due to these, what you would call, nuclear bombs and other crystal weapons, sinking the last great land masses approximately nine six zero zero [9,600] of your years ago."</p>
+      <p class="f-zh">核弹与水晶武器继续引发地球变化——约九千六百年前，最后的大片陆地沉没。</p>
+      <p class="f-ref">—— SESSION 024 · (24.4)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 7 埃及 -->
+<section class="station" id="s7" data-c="#d9a93f">
+  <div class="pin"><div class="stage">
+    <p class="kicker">埃及 · 作为兄弟行走</p>
+    <p class="narr">一万八千年前，Ra 曾在埃及上空盘旋，<br>然后离开——那里还没有适合的呼求。<br>八千五百年前，他们回来了。<br>这一次，作为兄弟。</p>
+    <p class="en">"The nexus, or center, of our efforts was a decision upon our parts that there was a sufficient calling to attempt to walk among your peoples as brothers."</p>
+    <p class="zh">我们努力的核心，是我们作出的一个决定：已有足够的呼求，让我们尝试作为兄弟行走在你们的人群之中。</p>
+    <p class="ref">—— SESSION 023 · (23.6)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">未采取行动的离开</p>
+      <p class="f-en">"We were drawn to spend some time, as you would call it, scanning the peoples for a serious interest amounting to a seeking with which we might help without infringement. We found that at that time the social complex was quite self-contradictory in its so-called religious beliefs, and, therefore, there was not an appropriate calling for our vibration. Thus, at that time, which you know of as approximately eighteen thousand [18,000] of your years in your past, we departed without taking action."</p>
+      <p class="f-zh">他们扫描人群，寻找可以无侵扰地帮助的寻求——却发现社会复合体的宗教信仰自相矛盾，于是一万八千年前未采取行动便离开了。</p>
+      <p class="f-ref">—— SESSION 023 · (23.1)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">水晶驱动的钟形飞行器</p>
+      <p class="f-en">"They saw what you would speak of as crystal-powered bell-shaped craft."</p>
+      <p class="f-zh">埃及人看见的是水晶驱动的钟形飞行器——但他们深信奇事本是世界的常态，因此并不惊讶。</p>
+      <p class="f-ref">—— SESSION 023 · (23.3)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">一个词，三十种印象</p>
+      <p class="f-en">"We discovered that for each word we could utter, there were thirty impressions we gave by our very being which confused those entities we had come to serve."</p>
+      <p class="f-zh">每说出一个词，他们的存在本身就在传递三十种印象。短暂同行之后，Ra 撤离了，花了大量时间思考如何最好地服务。</p>
+      <p class="f-ref">—— SESSION 023 · (23.6)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">阿肯那顿</p>
+      <p class="f-en">"The one known as “Akhenaten” was able to perceive this information without significant distortion and, for a time, moved, shall we say, heaven and earth in order to invoke the Law of One and to order the priesthood of these structures in accordance with the distortions of initiation and true compassionate healing. This was not to be long-lasting."</p>
+      <p class="f-zh">那位被称为“阿肯那顿”的存有几乎无变貌地领会了这些信息，一度竭尽全力召唤一的法则、整顿祭司制度——但这没有持续很久。</p>
+      <p class="f-ref">—— SESSION 023 · (23.6)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">以思想落成的山</p>
+      <p class="f-en">"The first, the Great Pyramid, was formed approximately six thousand [6,000] of your years ago."</p>
+      <p class="f-zh">大金字塔约于六千年前落成；此后约一千五百年间，其他金字塔以本地材料依次建成。</p>
+      <p class="f-ref">—— SESSION 023 · (23.6)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">悲伤的兄弟姐妹</p>
+      <p class="f-en">"We ask you to remember that we are of the Brothers and Sisters of Sorrow. When one has been rescued from that sorrow to a vision of the One Creator, then there is no concept of failure."</p>
+      <p class="f-zh">请记住，我们属于悲伤的兄弟姐妹。当一个人从悲伤中被救起、看见太一造物主，便没有失败的概念。</p>
+      <p class="f-ref">—— SESSION 023 · (23.10)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 8 金字塔 -->
+<section class="station" id="s8" data-c="#c9a23a">
+  <div class="pin"><div class="stage">
+    <p class="kicker">金字塔 · 石头是活的</p>
+    <p class="narr">更大的金字塔由「一」的力量建造。<br>它是一台疗愈机器，<br>一扇入门的门，<br>一道环绕行星的、<br>水晶结构组成的环。</p>
+    <p class="en">"The larger pyramids were built by our ability using the forces of One. The stones are alive. It has not been so understood by the mind/body/spirit [complex] distortions of your culture. The purposes of the pyramids were two:"</p>
+    <p class="zh">更大的金字塔是靠我们运用「一」之力量建造的。石头是活的。你们文化的心/身/灵[复合体]变貌从未这样理解过它。金字塔有两个目的。</p>
+    <p class="ref">—— SESSION 002 · (2.4)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">环绕地球的一环</p>
+      <p class="f-en">"Pyramid after pyramid, charged by the crystal and initiate, were designed to balance the incoming energy of the One Creation with the many and multiple distortions of the planetary mind/body/spirit."</p>
+      <p class="f-zh">一座又一座金字塔由水晶与入门者充能，用以平衡太一造物流入的能量与行星心/身/灵的诸多变貌——并与联邦兄弟建造的其他水晶结构连成一环。</p>
+      <p class="f-ref">—— SESSION 002 · (2.4)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">永久的岩石</p>
+      <p class="f-en">"We built with everlasting rock the Great Pyramid, as you call it. Other of the pyramids were built with stone moved from one place to another."</p>
+      <p class="f-zh">大金字塔以永久的岩石建成；其余金字塔的石块则是搬运而来。</p>
+      <p class="f-ref">—— SESSION 003 · (3.12)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">仿佛被建造，而非被思想</p>
+      <p class="f-en">"We wished to make an healing machine, or time/space ratio complex which was as efficacious as possible. However, we did not desire to allow the mystery to be penetrated by the peoples in such a way that we became worshiped as builders of a miraculous pyramid. Thus it appears to be made, not thought."</p>
+      <p class="f-zh">我们想造一台尽可能有效的疗愈机器，却不想让民众参透奥秘、把我们当作神迹的建造者来崇拜——于是它看上去是被建造出来的。</p>
+      <p class="f-ref">—— SESSION 003 · (3.14)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">让身体死一次</p>
+      <p class="f-en">"The first use of the pyramid, then, is the going down into the pyramid for purposes of deprivation of sensory input so that the body may, in a sense, be dead and another life begin."</p>
+      <p class="f-zh">金字塔的第一个用途是走入其中、剥夺感官输入——让身体在某种意义上死去，让另一种生命开始。</p>
+      <p class="f-ref">—— SESSION 003 · (3.16)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">走调的钢琴</p>
+      <p class="f-en">"That, like many other pyramid structures, is like the piano out of tune: it, as this instrument would express, plays the tune, but oh so poorly. The disharmony jangles the sensitive. Only the ghost of the streaming still remains due to the shifting of the streaming points which is, in turn, due to the shifting electromagnetic field of your planet; due also to the discordant vibratory complexes of those who have used the initiatory and healing place for less compassionate purposes."</p>
+      <p class="f-zh">吉萨的大金字塔如今像一架走调的钢琴：调子还在弹，但弹得太差。敏感者会被那不和谐刺痛——因为流入点已经漂移，也因为有人曾把启蒙与疗愈之地用作缺乏慈悲的用途。</p>
+      <p class="f-ref">—— SESSION 004 · (4.6)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">为所有人造的金字塔</p>
+      <p class="f-en">"These pyramids were somewhat at variance from the design that we had promulgated. However, the original ideas were the same with the addition of a desire, or intention, of creating places of meditation and rest, a feeling of the presence of the One Creator; these pyramids then being for all people, not only initiates and those to be healed."</p>
+      <p class="f-zh">南美的金字塔与 Ra 颁布的设计有些不同：它们为所有人而建——不只为了启蒙者与待治疗者，而是为了冥想、休息，与感受太一造物主的临在。</p>
+      <p class="f-ref">—— SESSION 023 · (23.16)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 9 雅威与猎户 -->
+<section class="station" id="s9" data-c="#8a5fb0">
+  <div class="pin"><div class="stage">
+    <p class="kicker">雅威与猎户 · 天空中的战事</p>
+    <p class="narr">三千六百年前，<br>猎户集团在穆大陆的遗民中<br>找到了肥沃的土壤。<br>曾以基因帮扶人类的雅威，<br>被迫改名，重新出发。</p>
+    <p class="en">"An entity of the Confederation, many, many thousands of your years in the past, the one you may call Yahweh, had, by genetic cloning, set up these particular biases among these peoples who had come gradually to dwell in the vicinity of Egypt, as well as in many, many other places, by dispersion after the down-sinking of the land mass Mu. Here the Orion group found fertile soil in which to plant the seeds of negativity; these seeds, as always, being those of the elite, the different, those who manipulate or enslave others."</p>
+    <p class="zh">星际联邦的一位实体——你们可称他为雅威——曾在数千年前借基因克隆，在穆大陆沉没后散居埃及附近等处的人们中设立了这些特定偏向。在这里，猎户集团找到了播下负面种子的肥沃土壤：精英、与众不同者、操纵或奴役他人者的种子。</p>
+    <p class="ref">—— SESSION 024 · (24.6)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">一场被判定失败的实验</p>
+      <p class="f-en">"The ones of Yahweh were attempting to create an understanding of the Law of One by creating mind/body complexes capable of grasping the Law of One. The experiment was a decided failure from the view of the desired distortions due to the fact that rather than assimilating the Law of One, it was a great temptation to consider the so-called social complex, or sub-complex, as elite or different, and better, than other-selves, this one of the techniques of service to self."</p>
+      <p class="f-zh">雅威实体想造出能领会一的法则的心/身复合体；实验却彻底失败——人们不吸收一的法则，反而自认精英、优于其他自我。</p>
+      <p class="f-ref">—— SESSION 018 · (18.21)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">名为「他来了」</p>
+      <p class="f-en">"In this complex the old Yahweh, now unnamed, but meaning "He comes," began to send positively oriented philosophy."</p>
+      <p class="f-zh">旧的雅威不再使用旧名——那名字意为“他来了”——开始发送正面导向的哲学。</p>
+      <p class="f-ref">—— SESSION 024 · (24.6)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">巨人的一代</p>
+      <p class="f-en">"Thus this entity, Yod Heh Shin Vau Heh, came among your people in form according to incarnate being and mated in the normal reproductive manner of your physical complexes, thus birthing a generation of much larger beings, these beings called “Anak.”"</p>
+      <p class="f-zh">那个实体以投生形态来到人群中繁衍，诞生了一代更巨大的存有，被称为“亚衲”（Anak）。</p>
+      <p class="f-ref">—— SESSION 024 · (24.9)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">末日的预言</p>
+      <p class="f-en">"The so-called prophets were often given mixed information, but the worst that the Orion group could do was to cause these prophets to speak of doom, as prophecy in those days was the occupation of those who love[d] their fellow beings and wish[ed] only to be of service to them and to the Creator."</p>
+      <p class="f-zh">猎户集团能做的最坏之事，是让先知谈论末日——因为在那些日子里，预言本是爱同胞之人的职业。</p>
+      <p class="f-ref">—— SESSION 024 · (24.14)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">流散</p>
+      <p class="f-en">"Although the impression that they had given to those who called them [was] that these entities were an elite group, that which you know as Diaspora occurred, causing much dispersion of these peoples so that they became an humbler and more honorable breed, less bellicose and more aware of the loving-kindness of the One Creator."</p>
+      <p class="f-zh">他们自以为是精英，然而流散发生了——被驱散的人们成为更谦卑、更可敬的族群，好战更少，更觉知太一造物主的慈爱。</p>
+      <p class="f-ref">—— SESSION 024 · (24.17)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">约柜与利未之子</p>
+      <p class="f-en">"This Ark was designed to constitute the place wherefrom the priests, as you call those distorted towards the desire to serve their brothers, could draw their power and feel the presence of the One Creator. However, it is to be noted that this entire arrangement was designed, not by the one known to the Confederation as Yahweh, but rather was designed by negative entities preferring this method of creating an elite called the Sons of Levi."</p>
+      <p class="f-zh">约柜本是为祭司汲取力量、感受造物主临在而设——但这整个安排并非出自雅威，而是负面实体设计的，用以制造一个名为利未之子的精英阶层。</p>
+      <p class="f-ref">—— SESSION 060 · (60.17)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 10 现在 -->
+<section class="scene" id="s10" data-c="#a8443a">
+  <div class="stage">
+    <p class="kicker">现在</p>
+    <p class="narr">马尔戴克的阴影，<br>并没有留在七十万年前。<br>Ra 拒绝预言你们的未来，<br>只说了一句可以核对的话。</p>
+    <p class="en">"We say only the conditions of mind exist for such development of technology and such deployment."</p>
+    <p class="zh">我们只说：这样的科技发展与其部署所需的心智条件，确实存在。需要的不是拆除玩具，而是导向——自由地选择，是你们的荣耀/责任。</p>
+    <p class="ref">—— SESSION 010 · (10.8)</p>
+    <p class="en">"The desire for this type of information attracted this data to your people. It was not given for a reason from outside influences; rather, it was desired by your peoples. From this point forward your reasoning is correct in that entities had desired the second chance which you mentioned."</p>
+    <p class="zh">对这类信息的渴望，把数据吸引到了你们人群之中——渴望马尔戴克式第二次机会的，从来都是你们自己。</p>
+    <p class="ref">—— SESSION 038 · (38.2)</p>
+  </div>
+</section>
+
+<!-- 11 尾声 -->
+<section class="scene" id="sLast" data-c="#f5efe2">
+  <div class="stage">
+    <p class="kicker">尾声 · 从未离开</p>
+    <p class="narr">一颗行星的爆炸，一次搬迁，<br>三次钟声，一座以思想立起的山，<br>一场打到今天的天空之战——<br>以及一群仍在第五维度里工作的访客。</p>
+    <p class="en">"The remaining part of the cycle, we have never been gone from your fifth dimension and have been working in this last minor cycle to prepare for harvest."</p>
+    <p class="zh">周期的剩余部分，我们从未离开你们的第五维度，并一直在这最后一个次级周期中工作，为收割做准备。</p>
+    <p class="ref">—— SESSION 014 · (14.4)</p>
+    <p class="en">"We came to your peoples to enunciate the Law of One. We wished to impress upon those who wished to learn of unity that in unity all paradoxes are resolved; all that is broken is healed; all that is forgotten is brought to light."</p>
+    <p class="zh">我们来到你们的人群，是为了阐述一的法则：在合一中，所有悖论都被解决；所有破碎的都被治愈；所有被遗忘的都被带到光明中。</p>
+    <p class="ref">—— SESSION 090 · (90.29)</p>
+    <button class="again" id="again">回到行星爆炸之前</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+地球的史诗 · 滚动星旅 · 收网自《一的法则》中关于马尔戴克、火星、三次主周期、姆与亚特兰蒂斯、雅威与猎户、埃及与金字塔的历史讨论<br>
+引文为英文原文逐字摘录；中文为本页面自拟 · 仅作沉浸学习实验
+</footer>
+
+<script>
+/* ===== 星空画布（固定，勿改） ===== */
+const cv=document.getElementById('sky'),cx=cv.getContext('2d');
+let W,H,stars=[];
+function size(){W=cv.width=innerWidth*devicePixelRatio;H=cv.height=innerHeight*devicePixelRatio;}
+size();addEventListener('resize',size);
+for(let i=0;i<230;i++)stars.push({x:Math.random(),y:Math.random(),z:.25+Math.random()*.75,p:Math.random()*6.28,s:Math.random()});
+
+/* ===== 氛围色插值（固定，勿改） ===== */
+function hex2rgb(h){h=h.replace('#','');if(h.length===3)h=h.split('').map(c=>c+c).join('');return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
+const scenes=[...document.querySelectorAll('.scene,.station')].map(s=>({el:s,c:hex2rgb(s.dataset.c)}));
+let amb=[245,239,226];
+function lerp(a,b,t){return a+(b-a)*t}
+function rgb2css(c,a){return `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${a})`}
+
+/* ===== 渲染循环（固定，勿改） ===== */
+let t=0;
+function frame(){
+  t+=.016;
+  const sy=scrollY,wh=innerHeight;
+  let target=scenes[0].c;
+  for(const s of scenes){
+    const r=s.el.getBoundingClientRect();
+    if(r.top<wh*.55&&r.bottom>wh*.45){target=s.c;break}
+  }
+  for(let i=0;i<3;i++)amb[i]=lerp(amb[i],target[i],.045);
+  const ac=amb;
+  document.documentElement.style.setProperty('--amb',rgb2css(ac,1));
+
+  cx.clearRect(0,0,W,H);
+  const g=cx.createRadialGradient(W/2,H*.86,0,W/2,H*.86,H*.75);
+  g.addColorStop(0,rgb2css(ac,.10));g.addColorStop(1,'rgba(0,0,0,0)');
+  cx.fillStyle=g;cx.fillRect(0,0,W,H);
+  const dark=1-Math.min(1,(Math.hypot(ac[0]-245,ac[1]-239))/200);
+  for(const st of stars){
+    const px=st.x*W,py=((st.y - sy*.00004*st.z)%1+1)%1*H;
+    const tw=.5+.5*Math.sin(t*1.3+st.p);
+    cx.globalAlpha=(0.12+0.5*tw*st.z)*(0.35+0.65*dark);
+    cx.fillStyle=rgb2css(ac,1);
+    const r=st.s*1.4*st.z*devicePixelRatio;
+    cx.beginPath();cx.arc(px,py,r,0,6.28);cx.fill();
+  }
+  const oy=H*.62+Math.sin(t*.8)*10*devicePixelRatio;
+  const og=cx.createRadialGradient(W/2,oy,0,W/2,oy,26*devicePixelRatio);
+  og.addColorStop(0,rgb2css(ac,.9));og.addColorStop(.35,rgb2css(ac,.25));og.addColorStop(1,'rgba(0,0,0,0)');
+  cx.globalAlpha=1;cx.fillStyle=og;
+  cx.beginPath();cx.arc(W/2,oy,26*devicePixelRatio,0,6.28);cx.fill();
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+/* ===== 场景显影（固定，勿改） ===== */
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>e.target.classList.toggle('on',e.isIntersecting));
+},{threshold:.01});
+document.querySelectorAll('.scene,.station').forEach(s=>io.observe(s));
+
+/* 细节片段显影（固定，勿改） */
+const ioFrag=new IntersectionObserver(es=>{
+  es.forEach(e=>e.target.classList.toggle('on',e.intersectionRatio>.15));
+},{threshold:[0,.35,.6]});
+document.querySelectorAll('.frag').forEach(f=>ioFrag.observe(f));
+
+/* ===== 进度轨道（固定，勿改） ===== */
+const rail=document.getElementById('rail');
+scenes.forEach((s,i)=>{
+  const row=document.createElement('div');row.className='r';
+  const lbl=document.createElement('span');lbl.className='lbl';
+  const k=s.el.querySelector('.kicker');
+  lbl.textContent=k?k.textContent.trim():(i===0?'开始':'终章');
+  const d=document.createElement('i');
+  row.appendChild(lbl);row.appendChild(d);
+  row.onclick=()=>s.el.scrollIntoView({behavior:'smooth'});
+  rail.appendChild(row);
+});
+setInterval(()=>{
+  const wh=innerHeight;
+  scenes.forEach((s,i)=>{
+    const r=s.el.getBoundingClientRect();
+    rail.children[i].classList.toggle('cur',r.top<wh*.55&&r.bottom>wh*.45);
+  });
+},200);
+
+/* ===== 本章定制交互 ===== */
+/* 回到开头 */
+document.getElementById('again').onclick=()=>scrollTo({top:0,behavior:'smooth'});
+</script>
+</body>
+</html>

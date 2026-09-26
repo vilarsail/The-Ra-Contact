@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 036 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 036 · 交互式学习模块</h1>
+  <p class="sub">发问者要求定义「心/身/灵复合体之整体」，Ra 顺势画出上层结构：整体是高我的资源，高我站在你的未来按需靠近。它只能为你安排课程，不能替你选择；而走分离路线的负面极化者，永远到不了超灵。</p>
+  <div class="tagline">6 个主题 · 6 个学习步骤 · 16 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 整体与调用链</a>
+<a href="#s3">③ 高我：未来的地图</a>
+<a href="#s4">④ 平行经验与时间</a>
+<a href="#s5">⑤ 负面路径的天花板</a>
+<a href="#s6">⑥ 流浪者与收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>这一集从定义问起，一路问出高我、时间、负面路径与流浪者</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>整体与调用链</b><span>什么是「心/身/灵复合体之整体」，以及谁调用谁</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>高我：未来的地图</b><span>它从你的未来靠近，但被自由意志挡在界线之外</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>平行经验与时间</b><span>赛斯资料被拿进来对照，Ra 却在「同时」这个词上拒答</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>负面路径的天花板</b><span>为什么从没有负面存有达成过超灵显现</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>流浪者与收官</b><span>遗忘的风险、一次拒答、三个人的理由，以及觉醒比例</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：这一集在问什么</h2></div>
+  <p class="sec-lead">发问者的起点是一个没被讲清的词。前几次通讯里出现过「心/身/灵复合体之整体」，但他拿不到定义，于是本集从「请你定义一下」开始，逐层往上问：整体与高我谁调用谁、高我站在什么位置、时间在中间造成了什么混淆。中途他把赛斯资料、巴顿、希姆莱都搬进来做压力测试，最后落到现实：地球上的流浪者，有多少人真的认出了自己。这一集没有留下明确的下集承诺——发问者自己说，他需要先冥想消化这些概念，才能构思下面的问题。</p>
+  <div class="card">
+    <h3>问答脉络：八站一路向上</h3>
+    <p>本集二十四段问答，核心是一条由下向上的链：从「整体是什么」，问到「高我在哪」，再到「谁走不到那里」，最后回到「我们身边有多少人」。点节点看每一段在做什么。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="qaTrack"></div>
+      <div class="flow-detail" id="qaDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="qaPrev">← 上一步</button> <button class="tri-btn" id="qaNext">下一步 →</button></div>
+    </div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">开场 · 器皿照料 · 收尾</span></summary>
+  <div class="body">
+    <p><b>(36.0) 开场：</b>Ra 在太一无限造物主的爱与光中致意，宣布本次通讯开始。</p>
+    <p><b>(36.13) 一句确认：</b>发问者追问希姆莱的高我性质，Ra 直接以「这是正确的」确认它为第六密度正面导向——这类一处一句的确认，本集有多处（如 36.19 确认接触资格包含穿透遗忘、36.20 确认否则混淆法则会禁止）。</p>
+    <p><b>(36.23) 消化与收尾安排：</b>发问者说这些概念太难，需要先冥想才能继续构思问题；Ra 于是只接受简短提问。</p>
+    <p><b>(36.24) 器皿与休息处：</b>Ra 说这个器皿状况良好，但「休息之处」对器皿物理载具背侧的舒适度有些不利影响，且此前已提过这一点。</p>
+    <p><b>(36.24) 告别：</b>Ra 说「你们是尽责的」，随后在无限造物主的爱与光中离开（Adonai）。</p>
+  </div></details>
+  <div class="case"><b>复述旧结论再问新问题：</b>你在季度复盘会开场先说「我理解我们上次定的是先做留存，对吗？」再问下一步——本集发问者正是这么开场的：他先把上一集出现过的「心/身/灵复合体之整体」这个词拎出来要求定义，确认了地基，才往下追问。</div>
+  <div class="case"><b>拿两个真实的人来压测概念：</b>学一套新说法时，你若能把它套到两个具体的人身上（一个选了极端路线的、一个位置很高的），才算真的懂。发问者就是这样追问的：巴顿与希姆莱被先后搬出来，当作概念的试金石。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>整体与调用链：它是高我的「资源库」</h2></div>
+  <p class="sec-lead">发问者要一个定义，Ra 给的是两层答案。第一层说「整体」在什么条件下才看得见：一个时间失效的维度。第二层说它和高我的分工：整体是高我调用的对象。所以别把它想成「最高存在」——它上面还有太一造物主，它自己则是同一实体诸多平行发展的汇集，像流沙一样不确定。</p>
+  <div class="card">
+    <h3>定义：一个时间不起作用的维度</h3>
+    <div class="q">你们之前提到过「心/身/灵复合体之整体」（mind/body/spirit complex totality），能不能给我们一个定义？</div>
+    <div class="quote">
+      <p class="en">There is a dimension in which time does not have sway. In this dimension the mind/body/spirit, in its eternal dance of the present, may be seen in totality, and before the mind/body/spirit complex, which then becomes a part of the social memory complex, is willingly absorbed into the allness of the One Creator, the entity knows itself in its totality.</p>
+      <p class="zh">存在一个时间不具支配力的维度。在其中，心/身/灵于永恒的当下之舞里可以被整体地看见；而这个心/身/灵复合体——它之后会成为社会记忆复合体的一部分——在被自愿吸入太一造物主的万有之前，它是在整体性中认识自己的。</p>
+      <span class="src">—— Session 036 · (36.1)</span>
+    </div>
+    <div class="plain">整体是「时间之外的全貌版自我」：在被并入太一之前，它先把自己完整地看过一遍。</div>
+    <div class="analogy"><b>像整部片子的分镜表：</b>你此刻演的是某一场戏，而整体是包含所有支线的分镜表。分镜表不在任何一场戏里，可它让这场戏有了位置。</div>
+    <div class="case"><b>三级会诊的调用链：</b>社区门诊的医生拿不准，于是调你的完整病历、再请专科会诊。上层档案越全，判断越准，但拍板治疗的仍是眼前这一步——正对应「我们调用高我，高我调用整体」这条链。</div>
+  </div>
+  <div class="card">
+    <h3>分工：每一层调用上一层</h3>
+    <div class="q">那么，我人生里那些突然出现的催化剂变化，是「整体」在负责安排吗？</div>
+    <div class="quote">
+      <p class="en">This is incorrect. The higher self, as you call it—that is, that self which exists with full understanding of the accumulation of experiences of the entity—aids the entity in achieving healing of the experiences which have not been learned properly and assists, as you have indicated, in further life experience programming, as you may call it.</p>
+      <p class="zh">这不对。你们称为高我者——也就是带着对实体全部经验积累的完整理解而存在的那个自我——协助实体疗愈那些没被学好的经验，并如你所说，参与后续生命经验的规划。</p>
+      <span class="src">—— Session 036 · (36.2)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The mind/body/spirit complex totality is that which may be called upon by the higher self aspect, just as the mind/body/spirit complex calls upon the higher self.</p>
+      <p class="zh">心/身/灵复合体之整体，是被高我这一层面所调用的对象；正如心/身/灵复合体也会调用高我。</p>
+      <span class="src">—— Session 036 · (36.2)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The mind/body/spirit complex totality is as the shifting sands and is, in some part, a collection of parallel developments of the same entity.</p>
+      <p class="zh">心/身/灵复合体之整体如同流沙，在某些部分上是同一实体诸多平行发展的汇集。</p>
+      <span class="src">—— Session 036 · (36.2)</span>
+    </div>
+    <div class="plain">日常课程的调整由高我经手；整体提供的是更上游的材料——「同一个实体在不同方向上被探索出的版本」之集合。整体在第七密度的进程中才进入意识。</div>
+    <div class="analogy"><b>像三层支援系统：</b>前线队员呼叫教练，教练调阅整个训练数据库。数据库不替你上场，但它决定教练能给你什么样的训练计划。</div>
+  </div>
+  <div class="card">
+    <h3>三层对照</h3>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">正在经验的一层</span><h4>心/身/灵复合体</h4><p>第三密度中的你。由心智、身体、灵性构成，本集里它是<b>调用高我的那一方</b>，毕业后成为社会记忆复合体的一部分。</p></div>
+      <div class="yuan-card"><span class="y-tag">回头协助的一层</span><h4>高我 / 超灵</h4><p>处于第六密度末、正进入第七密度的一个「更成熟的你」。它协助疗愈没学好的经验，并参与生命经验的规划。</p></div>
+      <div class="yuan-card"><span class="y-tag">时间之外的汇集</span><h4>心/身/灵复合体之整体</h4><p>被高我调用的<b>资源</b>：同一实体平行发展的集合，在第七密度进程中进入意识。它像流沙，不是一块固定的石板。</p></div>
+    </div>
+  </div>
+  <div class="case"><b>复盘会上那张「如果当初」清单：</b>创业失利后复盘，团队列出三条当初没走的路线，各自推演会通向哪里。Ra 说整体是「同一实体平行发展的汇合」——它给出的正是这类分支材料，而高我据此安排你下一轮要修什么。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>高我：目的地已知的地图，路要你自己走</h2></div>
+  <p class="sec-lead">理清层级之后，发问者开始测试高我这份「优势」有多大。他先问能否给一个实例（Ra 给了最简的那个：高我与你看似同时，其实不是），再问高我是否从未来运作，然后顺势问出关键一问：那它岂不是知道后面会发生什么？Ra 的回答是全场最硬的一句「这是不正确的」，理由只有一个——自由意志。</p>
+  <div class="card">
+    <h3>它站在你的未来，按需向你靠近</h3>
+    <div class="q">我们以为高我与我同时存在，是这样吗？它是不是从我的未来运作的？</div>
+    <div class="quote">
+      <p class="en">This is not actually simultaneous, for the higher self is moving to the mind/body/spirit complex, as needed, from a position in development of the entity which would be considered in the future of this entity.</p>
+      <p class="zh">这其实并非同时发生的：高我是从该实体发展历程中、会被视为其未来的一个位置上，按需要移向心/身/灵复合体的。</p>
+      <span class="src">—— Session 036 · (36.5)</span>
+    </div>
+    <div class="quote">
+      <p class="en">From the standpoint of your space/time, this is correct.</p>
+      <p class="zh">从你们的空间/时间这个角度来看，这是正确的。</p>
+      <span class="src">—— Session 036 · (36.6)</span>
+    </div>
+    <div class="plain">高我不与你并排站着，它站在你发展历程中更靠后的位置，需要时才向此刻的你移动——所以「从未来运作」这句话，只在空间/时间的角度看才成立。</div>
+    <div class="analogy"><b>像多年后的你给现在的你留信：</b>信写好了，放在抽屉里；只有你伸手去拉抽屉的时候，它才来到你面前。写的人不是「同时」的你。</div>
+  </div>
+  <div class="card">
+    <h3>界线：它不能替你选</h3>
+    <div class="q">那高我岂不是占了大便宜——它知道接下来会发生什么，所以知道我需要什么？</div>
+    <div class="quote">
+      <p class="en">This is incorrect, in that this would be an abrogation of free will.</p>
+      <p class="zh">这是不正确的，因为那将等于废除自由意志。</p>
+      <span class="src">—— Session 036 · (36.7)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Thus the higher self is like the map in which the destination is known; the roads are very well known, these roads being designed by intelligent infinity working through intelligent energy.</p>
+      <p class="zh">因此，高我就像一张目的地已知的地图；道路也一清二楚，这些道路是由智能无限通过智能能量铺设的。</p>
+      <span class="src">—— Session 036 · (36.7)</span>
+    </div>
+    <div class="quote">
+      <p class="en">However, the higher self aspect can program only for the lessons and certain predisposing limitations if it wishes. The remainder is completely the free choice of each entity. There is the perfect balance between the known and the unknown.</p>
+      <p class="zh">不过，若它愿意，高我这一层面只能就课程与某些预先设定的限制做出安排。其余部分完全是每个实体的自由选择。已知与未知之间，存在着完美的平衡。</p>
+      <span class="src">—— Session 036 · (36.7)</span>
+    </div>
+    <div class="plain">高我手上只有两样东西：课程表，和某些预先设好的限制条件。剩下的每一步都由你选——正因为已知与未知各占一半，选择才真的有意义。</div>
+    <div class="analogy"><b>像健身 App 给你排了训练计划：</b>它知道你该练什么、什么时候该减量，甚至能设一条「本周强度上限」；但举起来的那一下，只有你能做。</div>
+    <div class="case"><b>教练知道你会在第三周掉线：</b>教练看过你三年的训练数据，预料到你这周会撑不住，于是先把强度降一格——但他不会替你把杠铃举起来。这正是本集划的线：可规划课程与预设限制，不可代夺选择。</div>
+  </div>
+  <div class="card">
+    <h3>身份：自我对自我的荣耀与责任</h3>
+    <div class="q">高我有载具吗？每个实体的高我都是第六密度性质的？</div>
+    <div class="quote">
+      <p class="en">The higher self is of a certain advancement within sixth density going into the seventh.</p>
+      <p class="zh">高我处于第六密度内部某个进展阶段，正在进入第七密度。</p>
+      <span class="src">—— Session 036 · (36.8)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This is an honor/duty of self to self as one approaches seventh density.</p>
+      <p class="zh">当一个人接近第七密度时，这是自我对自我的荣耀与责任。</p>
+      <span class="src">—— Session 036 · (36.9)</span>
+    </div>
+    <div class="quote">
+      <p class="en">We make note at this time that each entity has several beings upon which to call for inner support. Any of these may be taken by an entity to be the mind/body/spirit complex totality. However, this is not the case.</p>
+      <p class="zh">我们在此指出：每个实体都有若干个可以召唤来获取内在支持的存有。其中任何一个都可能被这个实体当成心/身/灵复合体之整体。但事实并非如此。</p>
+      <span class="src">—— Session 036 · (36.10)</span>
+    </div>
+    <div class="plain">回头帮你的高我，是更成熟的「你自己」在接近第七密度时接下的差事；你的生活里确实还有其他可召唤的支援，但别把其中任何一个认成整体——这是 Ra 特意加的一句警告。</div>
+    <div class="case"><b>父母把山路修得安全一点：</b>孩子要去外地读书，父母拦不住，只能提前把住处找好、把紧急电话写在冰箱上。「预设的限制」就是这个意思：能设条件，不能设答案。</div>
+  </div>
+  <div class="card">
+    <h3>通道：冥想开门，极化加力</h3>
+    <div class="q">通往整体的通道是靠冥想打开的，我猜强烈的极化也有帮助，对吗？</div>
+    <div class="quote">
+      <p class="en">This is partially correct. Intense polarization does not necessarily develop, in the mind/body/spirit complex, the will or need to contact the oversoul.</p>
+      <p class="zh">这是部分正确的。强烈的极化并不必然在心/身/灵复合体中滋生出接触超灵的意志或需求。</p>
+      <span class="src">—— Session 036 · (36.11)</span>
+    </div>
+    <div class="quote">
+      <p class="en">However, given the polarization, the will is greatly enhanced and vice-versa.</p>
+      <p class="zh">不过，在已有极化的前提下，意志会被大大增强；反过来也一样。</p>
+      <span class="src">—— Session 036 · (36.11)</span>
+    </div>
+    <div class="plain">「部分正确」的落点在这里：极化与意志会互相放大，但极化本身不保证你「想找超灵」——Ra 说每条生命经验的道路都是独特的，别把相关当成必然。</div>
+    <div class="case"><b>练得好的人不一定想找教练：</b>健身房里练得最猛的那位，从不请私教，也从不看训练理论；而另一位水平一般的人每周都缠着教练问。Ra 那句「极化不必然生出接触超灵的意志」，说的就是这两种人的分别。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>平行经验与时间：「同时」这个词的陷阱</h2></div>
+  <p class="sec-lead">发问者搬来赛斯资料：每个地球实体都是超灵的一个面向，超灵在许多维度里有许多面向，各自学习，好让超灵平衡地进步。他由此推出「同一个高我可能管着许多个像我们这样的第三密度经验」，再推出「高我会不会为了同时试不同催化剂而拆成若干单元」。Ra 第一问给了条件性的肯定，第二问直接说不判对错——理由不是「不知道」，而是「时间」这个词在你们这里就是混淆的。</p>
+  <div class="card">
+    <h3>赛斯的说法：正确性是「可变的」</h3>
+    <div class="q">赛斯说地球上的每个实体都是超灵的一个面向，同一高我底下可能有许多类似我们这样的经验，对吗？</div>
+    <div class="quote">
+      <p class="en">The correctness of this statement is variable. The more in balance an entity becomes, the less the possibility/probability vortices may need to be explored in parallel experiences.</p>
+      <p class="zh">这个陈述的正确性是可变的。一个实体越趋于平衡，就越不需要在平行经验中去探索那么多的可能性/概率漩涡。</p>
+      <span class="src">—— Session 036 · (36.3)</span>
+    </div>
+    <div class="plain">「可变」的枢纽是平衡度：越平衡，需要分成好几条线去试的分支就越少。注意是「越少」，不是「没有」——平行探索仍然存在，只是不必那么多。</div>
+    <div class="analogy"><b>像一个成熟的团队少做 A/B 测试：</b>方案越成熟，需要同时跑的分组越少；但完全不做对照的团队，通常只是还没意识到自己在赌。</div>
+  </div>
+  <div class="card">
+    <h3>拒答：真正的同时性只在「一切同时发生」时才成立</h3>
+    <div class="q">那么高我或超灵会分解成众多单元，好「同时」体验不同类型的催化剂吗？</div>
+    <div class="quote">
+      <p class="en">True simultaneity is available only when all things are seen to be occurring at once.</p>
+      <p class="zh">真正的同时性，只有在一切事物都被视为同时发生的时候才存在。</p>
+      <span class="src">—— Session 036 · (36.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The concept of various parts of the being living experiences of varying natures simultaneously is not precisely accurate due to your understanding that this would indicate that this was occurring with true simultaneity. This is not the case.</p>
+      <p class="zh">「存有的各个部分同时经历性质不同的经验」这个概念并不精确，因为在你们的理解里，这会意味着它们是以真正的同时性发生的。而事实并非如此。</p>
+      <span class="src">—— Session 036 · (36.4)</span>
+    </div>
+    <div class="plain">Ra 不肯说这个陈述对或错，只指出「同时」这个词用错了地方。它并不否认平行经验，只是不接受「真正同时」这个框——而 Ra 之所以说不判对错，正是因为你们对时间的理解本身自带混淆。</div>
+    <div class="analogy"><b>像跨时区站会：</b>会议邀请上只有一个时间戳，可各地同事其实是在各自的当地时间线上先后进入会议室。一旦把那个时间戳当成「同时发生」，讨论就开始走形。</div>
+    <div class="quote">
+      <p class="en">The case is from universe to universe, and parallel existences can then be programmed by the higher self, given the information available from the mind/body/spirit complex totality regarding the probability/possibility vortices at any crux.</p>
+      <p class="zh">真实情形是从一个宇宙到另一个宇宙；而平行存在可以由高我规划——前提是它握有来自心/身/灵复合体之整体、关于任一关键节点上可能性/概率漩涡的信息。</p>
+      <span class="src">—— Session 036 · (36.4)</span>
+    </div>
+  </div>
+  <div class="card">
+    <h3>术语卡：本集的七个关键词</h3>
+    <p>点击卡片翻看解释。没读过前文的读者也能看懂——每张卡都先给一句白话定义。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">心/身/灵复合体之整体</div><div class="sub">mind/body/spirit complex totality</div><span class="tap">点击展开</span></div><div class="back">在时间不起作用的维度里被整体看见的那个「完整的你」，也是同一实体诸多平行发展的汇集，充当高我的资源；它在第七密度的进程中进入意识。<em>比喻：不只是你正在演的那一场戏，而是整部片子的分镜表，连没拍的支线都在里面。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">高我 / 超灵</div><div class="sub">higher self / oversoul</div><span class="tap">点击展开</span></div><div class="back">一个实体在发展历程中更靠后位置上的自己，处于第六密度末、正进入第七密度；它按需向当下的你靠近，协助疗愈没学好的经验并参与生命经验规划。Ra 称之为「自我对自我的荣耀/责任」。<em>案例：多年后的你回头留了一张地图，但从不替你走路。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">心/身/灵复合体</div><div class="sub">mind/body/spirit complex</div><span class="tap">点击展开</span></div><div class="back">Ra 对第三密度实体（人）的标准称谓，由心智、身体、灵性三者构成。本集里它是调用高我的那一方，日后成为社会记忆复合体的一部分。<em>比喻：队伍里的单个队员，向上可以呼叫教练。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">概率/可能性漩涡</div><div class="sub">probability/possibility vortices</div><span class="tap">点击展开</span></div><div class="back">尚未定案的各种分支走向——即在某个关键节点上「可能怎样」的集合。整体把它们提供给高我，高我据此规划未来的生命经验。<em>比喻：出发前导航给出的三条路线，各带一个预估用时。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">关键节点</div><div class="sub">crux</div><span class="tap">点击展开</span></div><div class="back">需要真正做选择的那个岔路口。Ra 说平行存在正是在这种节点上被规划——因为只有在这里，不同的走向才分得开。<em>案例：毕业那年你留在本地还是去外地，这类决定会分岔出两套人生剧本。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">遗忘</div><div class="sub">forgetting</div><span class="tap">点击展开</span></div><div class="back">投生到第三密度时遮蔽来处记忆的机制。穿透它既是流浪者觉醒的条件，也是与 Ra 这类接触得以成立的前提；而穿透之后，第三密度密集的催化剂会让极化效率大幅提升——所以它同时是风险与红利。<em>案例：被派去陌生国家从零开始，先失去原有的语言与人脉，再重新长出本事。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">流浪者</div><div class="sub">wanderer</div><span class="tap">点击展开</span></div><div class="back">原本属于更高密度、自愿投生到第三密度的实体。正面流浪者为了服务他人、散发对他人的爱而冒险遗忘；负面流浪者则是为了继续向负面极化，极其罕见。<em>比喻：总部做得顺手的高管主动申请去最混乱的前线驻扎，只为在最短时间里练出最多的东西。</em></div></div>
+    </div>
+  </div>
+  <div class="case"><b>灰度发布：</b>App 上新功能，团队先给 5% 用户看 A 版、另 5% 看 B 版，看数据再决定全量上线。Ra 说：实体越平衡，需要用这种平行试探去摸索的分支就越少——不是不用试，是不必试那么多。</div>
+  <div class="case"><b>四个同学的四条路：</b>同学聚会时你会发现，同一届毕业的人分别去了大厂、支教、创业和读博，各自把一路的经验带回来交换。Ra 所说「同一实体的平行发展」，在人的尺度上最接近这种多线程摸索——只是 Ra 强调，那条线不在「真正同时」里跑。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>负面路径的天花板：分离者到不了超灵</h2></div>
+  <p class="sec-lead">发问者把希姆莱推上测试台：他选了负面路径，那他的高我也是负面的吗？Ra 给出的边界非常清楚——超灵显现是「晚期第六密度」的荣耀/责任，而从没有负面存有达成过。原因不在于能力，而在于那条路要用「分离」去凑出「合一」所需的爱/光，几乎不可能。</p>
+  <div class="card">
+    <h3>没有负面存有达成过超灵显现</h3>
+    <div class="q">希姆莱选了负面路径，那他的高我是不是也住在第六密度负面的情境里？</div>
+    <div class="quote">
+      <p class="en">There are no [negative][55] beings which have attained the oversoul manifestation, which is the honor/duty of the mind/body/spirit complex totality of late sixth density, as you would term it in your time measurements.</p>
+      <p class="zh">没有任何负面存有达成过超灵的显现——按你们的时间尺度来说，那是晚期第六密度的心/身/灵复合体之整体的荣耀与责任。</p>
+      <span class="src">—— Session 036 · (36.12)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This love/light is very, very difficult to achieve in unity when following the negative path, and during the earlier part of the sixth density, society complexes of the negative orientation will choose to release the potential and leap into the sixth-density positive.</p>
+      <p class="zh">沿着负面路径行走时，要在合一中达成这种爱/光非常、非常困难；于是在第六密度的前段，负面导向的社会复合体会选择释放掉这份潜能，一跃进入第六密度正面。</p>
+      <span class="src">—— Session 036 · (36.12)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Therefore, the oversoul which makes its understanding available to all who are ready for such aid is towards the positive.</p>
+      <p class="zh">因此，那个把自己的理解提供给一切准备好接受这种援助者的超灵，是朝向正面的。</p>
+      <span class="src">—— Session 036 · (36.12)</span>
+    </div>
+    <div class="plain">第五密度毕业时「智慧」已经到手，但它必须配上等量的爱/光；而分离之路恰恰最难凑出这份爱。所以超灵一律朝向正面——这不是偏心，而是这条路本身走不到那里。</div>
+    <div class="analogy"><b>像一支只靠竞争黏合的团队：</b>业绩年年第一，可到了两个部门要合并的那一刻，大家才发现缺的不是能力，而是彼此之间的信任。</div>
+    <div class="case"><b>业绩第一但没人愿意同组的销售：</b>公司里那位销售三年个人业绩第一，却没人愿意与他同组。合并部门时问题暴露：他能完成任何指标，却拿不出让同事愿意托付的那份信任。这正是 Ra 说的「智慧齐备，但必须配上等量的爱/光」。</div>
+  </div>
+  <div class="card">
+    <h3>希姆莱从未向任何源头求助</h3>
+    <div class="q">那他投生期间，有没有以任何方式与自己的高我接触过？</div>
+    <div class="quote">
+      <p class="en">We remind you that the negative path is one of separation. What is the first separation? The self from the self.</p>
+      <p class="zh">我们提醒你：负面路径是一条分离之路。第一个分离是什么？是自我与自我的分离。</p>
+      <span class="src">—— Session 036 · (36.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The one known as Himmler did not choose to use its abilities of will and polarization to seek guidance from any source but its conscious drives, self-chosen in the life experience and nourished by previous biases created in other life experiences.</p>
+      <p class="zh">那位被称为希姆莱的实体，并未选择动用自己的意志与极化能力去向任何源头寻求指引，而只听从它自己有意识的驱动力——这些驱动力是它在生命经验中自行选定的，并由其他生命经验里形成的既有偏见所喂养。</p>
+      <span class="src">—— Session 036 · (36.14)</span>
+    </div>
+    <div class="plain">援助一直在，只是没有被取用；而「不取用」不是疏忽，是那条路线本身的逻辑：分离的第一刀，砍的就是自我与自我之间的联系。</div>
+    <div class="case"><b>从不请教任何人的中层主管：</b>一位主管遇到瓶颈时，从不向上级、同侪或外部顾问开口，只按自己那套判断推进。他不缺意志，也不缺极化能力，缺的是「向外求助」这个动作——Ra 对希姆莱的描述正是这一条。</div>
+  </div>
+  <div class="card">
+    <h3>不是被弹回去，而是自己重新定向</h3>
+    <div class="q">那么当他走到第六密度负面的开端，会不会「发现」高我是正面导向的，于是从负面跳到正面？</div>
+    <div class="quote">
+      <p class="en">It observes the spiritual entropy occurring due to the lack of ability to express the unity of sixth density.</p>
+      <p class="zh">它观察到了灵性熵增——起因是无力表达第六密度的合一。</p>
+      <span class="src">—— Session 036 · (36.15)</span>
+    </div>
+    <div class="quote">
+      <p class="en">…loving the Creator, and realizing at some point that the Creator is not only self but other-self as self, this entity consciously chooses an instantaneous energy reorientation so that it may continue its evolution.</p>
+      <p class="zh">……出于对造物主的爱，并在某个时点意识到造物主不只是自我、也是如同自我一般的其他自我，这个实体有意识地选择了一次瞬间的能量重新定向，以便继续自己的进化。</p>
+      <span class="src">—— Session 036 · (36.15)</span>
+    </div>
+    <div class="plain">转折不是外部强加的判决。这个第六密度负面实体极其智慧：它看得见分离带来的灵性熵增，于是自己按下重新定向的开关——因为不这样，进化就走不下去了。</div>
+    <div class="analogy"><b>像长期单干的人最终去组队：</b>不是有人命令他，而是他发现再往下走，独自一人已无法解决问题——他主动改了合作方式，而不是放弃目标。</div>
+  </div>
+  <div class="card">
+    <h3>归类练习：这是哪一条路</h3>
+    <p>本集把「分离」与「合一」当作两条路的判准。判断下面每件事更接近哪一条。</p>
+    <div id="sorterArea"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>流浪者与收官：带着遗忘回来的赌注</h2></div>
+  <p class="sec-lead">负面第六密度的实体被问到时，Ra 顺口提了一句：它们偶尔也会做流浪者，只是极其罕见。这就把话题带到了「遗忘」——流浪者为什么要冒忘记自己是谁的风险回到第三密度？随后发问者问出本集最敏感的一问（历史上有哪些负面流浪者），Ra 拒答；再问到接触的条件与人数，最后收到一组关于地球上流浪者觉醒程度的比例数据。</p>
+  <div class="card">
+    <h3>回来的理由：第三密度的催化剂特别猛</h3>
+    <div class="q">一个第六密度的实体，为什么要投生到一个会忘掉一切的地方？</div>
+    <div class="quote">
+      <p class="en">The wanderer has the potential of greatly accelerating the density whence it comes in its progress in evolution. This is due to the intensive life experiences and opportunities of the third density.</p>
+      <p class="zh">流浪者拥有潜能，可以极大地加速它所来自的密度在进化上的进展。原因就在第三密度密集的生命经验与机会。</p>
+      <span class="src">—— Session 036 · (36.17)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Thusly the positively oriented wanderer chooses to hazard the danger of the forgetting in order to be of service to others by radiating love of others.</p>
+      <p class="zh">因此，正面导向的流浪者选择去冒遗忘的危险，为的是通过散发对他人的爱来服务他人。</p>
+      <span class="src">—— Session 036 · (36.17)</span>
+    </div>
+    <div class="quote">
+      <p class="en">If the forgetting is penetrated the amount of catalyst in third density will polarize the wanderer with much greater efficiency than shall be expected in the higher and more harmonious densities.</p>
+      <p class="zh">如果遗忘被穿透，第三密度的催化剂量将以远高于在更高、更和谐的密度中所能预期的效率，使这位流浪者极化。</p>
+      <span class="src">—— Session 036 · (36.17)</span>
+    </div>
+    <div class="plain">赌注与回报对等：第三密度的催化剂又多又烈，一旦穿透遗忘，同样的时间能换到的极化远超和谐的高密度——代价是可能整趟都醒不过来。</div>
+    <div class="analogy"><b>像高原训练：</b>氧气稀薄时练一小时，抵得上平原上练几小时——前提是你没被高原反应撂倒。遗忘就是那道稀薄的空气。</div>
+    <div class="case"><b>总部高管申请去前线：</b>一位在总部做得顺风顺水的负责人，主动申请去最混乱的新市场从零带团队，明知要重学语言、重建人脉。这就是正面流浪者的选择：为了服务他人而冒险遗忘，换取更快的成长。</div>
+  </div>
+  <div class="card">
+    <h3>负面的流浪者，与一次拒答</h3>
+    <div class="q">那负面第六密度的实体也会作为流浪者回来吗？我们的历史上有例子吗？</div>
+    <div class="quote">
+      <p class="en">Once the negatively polarized entity has reached a certain point in the wisdom density it becomes extremely unlikely that it will choose to risk the forgetting, for this polarization is not selfless but selfish and, with wisdom, realizes the jeopardy of such “wandering.”</p>
+      <p class="zh">一旦负面极化的实体在智慧密度中走到某个点，它选择去冒遗忘之险的可能性就变得极低，因为这种极化不是无私的而是自私的，而它凭智慧认得出这种「流浪」的危险。</p>
+      <span class="src">—— Session 036 · (36.16)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Occasionally a sixth-density negative entity becomes a wanderer in an effort to continue to polarize towards the negative. This is extremely unusual.</p>
+      <p class="zh">偶尔，会有第六密度负面实体成为流浪者，以求继续朝负面极化。这极其罕见。</p>
+      <span class="src">—— Session 036 · (36.16)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This information could be harmful. We withhold it. Please attempt to view the entities about you as part of the Creator. We can explain no further.</p>
+      <p class="zh">这个信息可能有害。我们不予提供。请尝试把围绕在你身边的实体都视为造物主的一部分。我们无法再进一步解释。</p>
+      <span class="src">—— Session 036 · (36.18)</span>
+    </div>
+    <div class="plain">有，但极罕见——而「历史上有哪些人」这个问题，Ra 拒绝了。拒答的理由是这份名单可能有害，并顺手给了一个替代练习：把身边的人都看作造物主的一部分。拒答本身就是教导。</div>
+    <div class="analogy"><b>像医生不肯告诉你「哪种人容易得这个病」：</b>不是查不出，而是这类标签一旦贴到具体的人身上，你从此就会用猜忌去看每一个邻居。Ra 给出的替代方案是换个看法，而不是换一份名单。</div>
+    <div class="case"><b>指出「谁在害人」的会议：</b>项目复盘时有人提议点名几位「态度不端」的同事，主持人挡下来说：我们不点人，我们改流程。这与 Ra 的处置方式同构——拒绝提供可能被用来互相贴标签的信息，改为给出一个可以立刻实践的视角。</div>
+  </div>
+  <div class="card">
+    <h3>接触的条件：穿透遗忘，与三个人</h3>
+    <div class="q">我们在做的这种接触，资格里是否包括穿透遗忘的过程？三个是不是最少人数？</div>
+    <div class="plain">Ra 对前两问都直接确认：是的，穿透遗忘是这类接触成立的条件；否则混淆法则（Law of Confusion）就会拦住它。第三问的答案稍微展开了：「三个」既是下限，在这个小组里同时也是最高效的数字。</div>
+    <div class="quote">
+      <p class="en">For protection of this instrument, this is necessary as the minimum grouping, and also as the most efficient number due to the exceptional harmony in this group.</p>
+      <p class="zh">为了保护这个器皿，这是必要的最低人数组合；而由于这个小组有着非凡的和谐，它同时也是最高效的人数。</p>
+      <span class="src">—— Session 036 · (36.21)</span>
+    </div>
+    <div class="plain">Ra 还补了一句限定：在别的小组里人数可以更多；就这次接触而言，当下在场的这几位心/身/灵所给出的支持是最高效的。</div>
+    <div class="case"><b>纪录片小组坚持三人同行：</b>一个做敏感访谈的团队，无论预算多紧都坚持三人出勤：一人提问、一人记录、一人留意环境。少一个人不安全，多一个人反而互相干扰——对应 Ra 说的：三人是保护器皿的最低配置，在这个小组里也恰好是最优配置。</div>
+  </div>
+  <div class="card">
+    <h3>最后一问：每人一个超灵，外加两个「整体」</h3>
+    <div class="q">我们房间里这三个人，是不是各自有一个独立的、第六密度正面层级的高我？</div>
+    <div class="plain">Ra 先声明这是本次工作的最后一个完整问题，然后分两层回答。</div>
+    <div class="quote">
+      <p class="en">Firstly, it is correct that each in this dwelling place has one oversoul, as you may call it.</p>
+      <p class="zh">首先，这个居所里的每一位都拥有一个你们可以称为超灵的存在，这是正确的。</p>
+      <span class="src">—— Session 036 · (36.22)</span>
+    </div>
+    <div class="quote">
+      <p class="en">…each social memory complex has an oversoul of a type which is difficult to describe to you in words. In this group there are two such social memory complex totalities blending their efforts with your higher selves at this time.</p>
+      <p class="zh">……每个社会记忆复合体都拥有一个超灵，其类型很难用言语向你们描述。此刻在这个小组里，就有两个这样的社会记忆复合体之整体，正在与你们的高我融合它们的力量。</p>
+      <span class="src">—— Session 036 · (36.22)</span>
+    </div>
+    <div class="plain">答案是「是的，但不止」。三人长期和谐互动，额外牵动出一层 Ra 说难以言说的存在：社会记忆复合体也有自己的超灵，而此刻有两个这样的整体在与他们的高我协作。</div>
+    <div class="analogy"><b>像一支长期磨合的三人小队：</b>每个人有自己的教练，可因为配合太久，队伍本身也长出了自己的教练——那个教练不属于任何一个队员。</div>
+  </div>
+  <div class="card">
+    <h3>收尾数据：流浪者醒来了多少</h3>
+    <div class="q">今天地球上的流浪者里，有多大比例成功穿透了记忆阻断、意识到自己是谁？</div>
+    <div class="quote">
+      <p class="en">We can approximate the percentage of those penetrating intelligently their status. This is between eight and one-half and nine and three-quarters percent.</p>
+      <p class="zh">我们可以大致估算那些智能地穿透了自己身份者的比例：在百分之八点五到百分之九点七五之间。</p>
+      <span class="src">—— Session 036 · (36.24)</span>
+    </div>
+    <div class="quote">
+      <p class="en">There is a larger percentile group of those who have a fairly well defined, shall we say, symptomology indicating to them that they are not of this, shall we say, insanity.</p>
+      <p class="zh">还有一个比例更大的群体，他们身上有一种相当明确的、容我们说，症状学，向他们表明：自己并不属于这种，容我们说，疯狂。</p>
+      <span class="src">—— Session 036 · (36.24)</span>
+    </div>
+    <div class="quote">
+      <p class="en">So you see there are many gradations of awakening to the knowledge of being a wanderer.</p>
+      <p class="zh">所以你看，对于「自己是流浪者」这件事的觉醒，存在许多层次。</p>
+      <span class="src">—— Session 036 · (36.24)</span>
+    </div>
+    <div class="plain">觉醒不是开关而是坡道：约 8.5%–9.75% 有意识地认出身份；更大一群（占剩余者略多于一半）有明确征候；剩余者中近三分之一只是隐约觉得身上有些不同。Ra 最后补一句：本集这些话，正是对「中间这一群」和「第一群」才有意义。</div>
+    <div class="case"><b>检查指标全正常，却说不清哪里不对：</b>你连续几个月觉得「我跟这里不太一样」，体检报告却写着各项正常，只能在备注里写「疲劳待观察」。Ra 所说的「症状学」正是这种状态：说得出不对劲，却说不出是什么——它比完全无感更靠前一层，但还没到认出身份。</div>
+  </div>
+  <div class="card">
+    <h3>模拟器：一位流浪者的觉醒程度</h3>
+    <p>三个开关对应 Ra 给出的三个层次，层次是嵌套的（越往下越少人）。拨动看看你是哪一档。</p>
+    <div class="cond-row"><div class="name">有意识地、智能地认出自己的身份<small>不只是觉得不同，而是认了出来</small></div><label class="switch"><input type="checkbox" id="wc1"><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">有相当明确的「我不属于这里」的征候<small>一种说不清来源的确信</small></div><label class="switch"><input type="checkbox" id="wc2"><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">只是隐约觉得自身有些不同<small>最外围的那一层</small></div><label class="switch"><input type="checkbox" id="wc3"><span class="slider"></span></label></div>
+    <div id="condResult"></div>
+  </div>
+  <div class="saying">
+    <p class="en">Thus the higher self is like the map in which the destination is known; the roads are very well known, these roads being designed by intelligent infinity working through intelligent energy.</p>
+    <p class="zh">因此，高我就像一张目的地已知的地图；道路也一清二楚，因为这些道路是由智能无限通过智能能量铺设的。</p>
+    <span class="src">—— Session 036 · (36.7)</span>
+  </div>
+  <div class="card">
+    <h3>这一集留下的位置</h3>
+    <p>本集把上层的结构图画完了：整体的定义、高我的位置与权限、时间的混淆、负面路径的上限、流浪者的赌注，最后用一组比例数据落回地面。发问者在收尾前承认这些概念太难，说需要先冥想才能继续构思问题；Ra 于是只接受简短提问，回答了流浪者比例与器皿照料，随即离开。</p>
+    <div class="quote">
+      <p class="en">You are conscientious. We leave you now, my friends.</p>
+      <p class="zh">你们是尽责的。我的朋友们，我们现在离开你们。</p>
+      <span class="src">—— Session 036 · (36.24)</span>
+    </div>
+    <div class="plain">下一集的问题会从哪里接？发问者已经拿到「整体—高我—我们」这张图，而他手上还留着两条没走完的线：穿透遗忘的机制，与那两个「社会记忆复合体之整体」到底是什么。</div>
+  </div>
+  <div class="case"><b>把比例当刻度而不是标签：</b>看到「8.5%–9.75%」这样的数字，最省事的用法是拿它去判断别人。但 Ra 在同一段里说的是「有许多层次」——它的用处是给你一个刻度，让你耐心看待自己与旁人所处的位置。</div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+<p>基于 The Ra Contact Session 036（split/Ra_Session_036.md）英文原文制作 · 交互式学习模块</p>
+<p>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文</p>
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra036-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+  {t:'(36.0) 开场',d:'<b>致意与开场。</b>Ra 在太一无限造物主的爱与光中致意，宣布本次通讯开始。'},
+  {t:'(36.1) 定义整体',d:'<span class="qa-q">问：请给我们一个「心/身/灵复合体之整体」的定义。</span><b>答：</b>它存在于一个时间不具支配力的维度；在被吸入太一之前，实体在其中整体地认识自己。它充当高我的资源。'},
+  {t:'(36.2) 谁在规划',d:'<span class="qa-q">问：那么是整体在规划第三密度中催化剂的变化吗？</span><b>答：</b>不是。经手疗愈与生命经验规划的是高我；整体是被高我调用的对象，它像流沙，是同一实体平行发展的汇集。'},
+  {t:'(36.3–36.4) 平行经验与时间',d:'<span class="qa-q">问：赛斯说每个地球实体都是超灵的一个面向，同一高我底下有许多类似经验，对吗？高我会为此拆成若干单元吗？</span><b>答：</b>正确性是可变的——越平衡，需要平行探索的分支越少。至于「真正同时」，因为你们对时间的混淆，这个陈述我们不判对错。'},
+  {t:'(36.5–36.9) 高我从未来来',d:'<span class="qa-q">问：高我是否与我同时存在？它从我的未来运作吗？它有载具吗？</span><b>答：</b>看似同时，其实不是：它从实体发展历程中更靠后的位置按需靠近。从空间/时间的角度看，它确实从未来运作；它处于第六密度进第七密度的阶段，这是自我对自我的荣耀与责任。'},
+  {t:'(36.10–36.11) 通道与意志',d:'<span class="qa-q">问：通道靠冥想打开，强烈极化有帮助吗？</span><b>答：</b>部分正确：极化不必然生出接触超灵的意志，但极化会增强意志、意志也会增强极化。'},
+  {t:'(36.12–36.18) 负面路径与流浪者',d:'<span class="qa-q">问：负面第六密度的实体也有超灵吗？会作为流浪者回来吗？</span><b>答：</b>没有负面存有达成过超灵显现；早期第六密度的负面社会复合体会选择跃入正面。负面流浪者极其罕见，而具体名单 Ra 拒答。'},
+  {t:'(36.19–36.24) 条件与收尾',d:'<span class="qa-q">问：接触的资格是否包括穿透遗忘？三个人是最低配置吗？流浪者有多少醒来了？</span><b>答：</b>是的；三人的下限是为了保护器皿，也是这个和谐小组最高效的配置；约 8.5%–9.75% 智能地认出身份，更大一群有明确征候。Ra 随后离开。'}
+]);
+
+document.querySelectorAll('.fn-card').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('open')));
+
+initSorter('sorterArea',[
+  {a:'在团队里主动把功劳让出去，让具体做事的人被看见',opts:['合一取向（正面）','分离取向（负面）'],ans:'合一取向（正面）',exp:'本集说超灵朝向正面，因为正面之路走的是合一与爱；把他人看作与自己同等重要的他者，正是合一的动作。'},
+  {a:'遇到瓶颈时只按自己选定的判断推进，绝不向任何外部源头求助',opts:['合一取向（正面）','分离取向（负面）'],ans:'分离取向（负面）',exp:'Ra 描述希姆莱时正是这一条：不使用意志与极化的能力去寻求指引，只听从自己有意识的驱动力。'},
+  {a:'意识到造物主不只是自己，也是如同自己一般的他者，于是彻底改变方向',opts:['合一取向（正面）','分离取向（负面）'],ans:'合一取向（正面）',exp:'这是 36.15 里第六密度负面实体所做的瞬间能量重新定向——转折点是「其他自我如同自我」这个认识。'},
+  {a:'把身边的人按「有没有用」来分类，只在有利用价值时维持关系',opts:['合一取向（正面）','分离取向（负面）'],ans:'分离取向（负面）',exp:'Ra 说负面路径是分离之路，第一刀就是自我与自我的分离；把人当作工具的排序，走的正是分离。'},
+  {a:'即使代价是忘掉自己从哪来，也要把爱散发给他人',opts:['合一取向（正面）','分离取向（负面）'],ans:'合一取向（正面）',exp:'正面导向的流浪者正是这样选择的：冒险遗忘，为的是通过散发对他人的爱来服务他人。'}
+]);
+
+function renderWanderer(){
+  const a=document.getElementById('wc1').checked;
+  const b=document.getElementById('wc2').checked;
+  const c=document.getElementById('wc3').checked;
+  const el=document.getElementById('condResult');
+  let t='';
+  if(a){
+    t='<b>第一档：有意识地认出自己的身份。</b>Ra 估算这一群体占地球流浪者的 8.5% 到 9.75%。他们不只是觉得不同，而是智能地穿透了自己的身份；Ra 补了一句：本集的这些信息，正是对这一群与「有明确征候的中间一群」才有意义。';
+  }else if(b){
+    t='<b>第二档：有明确征候，但尚未认出。</b>Ra 说这一群规模更大——占「剩余人数」的略多于一半。他们身上有一套相当明确的征候，告诉自己「我不属于这里那种疯狂」，但还说不清自己是什么。';
+  }else if(c){
+    t='<b>第三档：只隐约觉得有些不同。</b>Ra 说，剩下的那部分人中，有近三分之一意识到自己身上有些东西不一样。仅止于此：没有征候，也谈不上认出身份，但已经比完全无感靠前一层。';
+  }else{
+    t='<b>尚未开始：仍完整地处在遗忘之中。</b>三个开关都不开，就是第三密度投生的默认状态——帷幕完好，既不觉得不同，也没有征候。Ra 说觉醒有许多层次，这一层就是还没上坡的那一层。';
+  }
+  el.innerHTML=t;
+}
+['wc1','wc2','wc3'].forEach(id=>document.getElementById(id).addEventListener('change',renderWanderer));
+renderWanderer();
+
+renderPath();
+</script>
+</body>
+</html>

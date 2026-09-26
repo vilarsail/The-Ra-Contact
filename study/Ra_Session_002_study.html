@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 002 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 002 · 交互式学习模块</h1>
+  <p class="sub">Ra 应下出书之约，为全书铺好第一块基石：一万一千年前星际联邦直接接触的失败教训、水晶疗愈「关键在人不在水晶」的原理、金字塔的启蒙与平衡两重目的，最后以「不请不答」的边界和一套器皿照料细节收尾。</p>
+  <div class="tagline">6 个主题 · 6 个学习步骤 · 17 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 出书之约</a>
+<a href="#s3">③ 联邦往事</a>
+<a href="#s4">④ 水晶疗愈</a>
+<a href="#s5">⑤ 金字塔</a>
+<a href="#s6">⑥ 收官·器皿照料</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>过一遍问答脉络与本集关键词，例行问答扫一眼折叠区即可</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>出书之约：教导/学习为何本身就是一的法则</b><span>Ra 为什么同意把通讯整理成书，以及「照亮」的分享逻辑</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>联邦往事：一次失败的直接接触</b><span>一万一千年前埃及与南美发生了什么，教训是什么</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>水晶疗愈：关键为何在人不在水晶</b><span>身体幻象的分层结构与疗愈者的结晶化</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>金字塔：启蒙之所与行星平衡环</b><span>两个目的，以及「石头是活的」这个被忽略的预设</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官：不请不答、净化对话与下一集伏笔</b><span>自由意志的边界、器皿照料细节、留给下次的两个问题</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ 第 1 章 · 本章地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：这一集到底在谈什么</h2></div>
+  <p class="sec-lead">上一集 Ra 完成初次接触，这一集是第一次正式问答。发问者带着三件事而来：把通讯整理成书、补上 Ra 的历史背景、弄清水晶疗愈与金字塔的来龙去脉；最后由 Ra 反问「要不要问问怎么正确使用器皿」，以一整套照料细节收尾。例行问答收在下方折叠区，正课从第 2 章开始。</p>
+
+  <div class="card">
+    <h3>本集在全书中的位置</h3>
+    <ul style="margin:6px 0 4px 20px;font-size:.94rem;color:var(--ink-soft)">
+      <li><b style="color:var(--ink)">承接：</b>第 1 集完成接触与本集的器皿安排；本集第一次进入实质问答。</li>
+      <li><b style="color:var(--ink)">本集五步：</b>出书之约 → 联邦历史 → 水晶疗愈 → 金字塔 → 器皿照料。</li>
+      <li><b style="color:var(--ink)">留下的钩子：</b>金字塔顶石与搬石技术（2.5）、水晶种类明细（2.3）都被请到「下一次再问」。</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>问答脉络推进器</h3>
+    <p style="font-size:.9rem;color:var(--ink-soft)">从左到右点节点（或用按钮），把本集七次交锋走一遍。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="mapTrack"></div>
+      <div class="flow-detail" id="mapDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="mapPrev">← 上一步</button>
+        <button class="tri-btn" id="mapNext">下一步 →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Ra 怎样说话：一问一答的体裁</h3>
+    <div class="q">发问者还没开口，Ra 先交代了游戏规则——你们问，我们答；而能真正听懂的人，很少。</div>
+    <div class="quote">
+      <p class="en">I greet you in the love and the light of our Infinite Creator.</p>
+      <p class="zh">我在我们无限造物主的爱与光中向你们致意——这句问候每次集会都会出现：爱与光既是 Ra 自称的身份，也是它所传递的东西。</p>
+      <span class="src">—— Session 002 · (2.0)</span>
+    </div>
+    <div class="quote">
+      <p class="en">and that is to respond to queries for information. We are comfortable with this format.</p>
+      <p class="zh">Ra 只回应询问，不主动灌输——这就是为什么整部资料是问答体：发问者的提问方式，决定了答案的形状。</p>
+      <span class="src">—— Session 002 · (2.0)</span>
+    </div>
+    <div class="plain">通讯的每一句都经由器皿与变貌传递，且「你问我才答」——理解这一点，才能理解全书为什么不写成论文，而写成实录。</div>
+    <div class="case"><b>答录机模式：</b>小林想让资深同事分享经验，群里群发消息没人接；改成在群里明确抛出一个一个具体问题，对方逐条回复，沟通立刻顺畅——Ra 在 (2.0) 一开场就说明自己正是如此工作：回应询问（respond to queries for information），不发问就没有答案。</div>
+    <div class="case"><b>翻译的损耗：</b>把一首中文诗机翻成英文再念给外国朋友听，意思还在、味道走样——Ra 说能「不经显著变貌」领会其通讯的人很少，任何跨层传递都要经过变貌（distortion，对统一性的偏离状态）；本页的中文讲解同样是一种转述，义理请以英文原文为准。</div>
+  </div>
+
+  <div class="card">
+    <h3>本集关键词（点卡片翻面）</h3>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">变貌</div><div class="sub">distortion</div><div class="tap">点按翻面</div></div><div class="back">对「太一／统一性」的任何偏离状态。Ra 的用法几乎不带贬义：任何视角、任何经验都是变貌，通讯必然经由变貌——问题只在偏离多少。<em>戴有色眼镜看白光：光没变，「颜色」是你的镜片加上的。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">教导/学习</div><div class="sub">teach/learn</div><div class="tap">点按翻面</div></div><div class="back">Ra 的复合词：教与学是同一事件的两面——教者同时在学习，分享本身就在结晶化分享者的振动。本集的出书之议正是例证。<em>把一个难点讲懂给同事的那一遍，往往也是你自己理解最深的一遍。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">星际联邦</div><div class="sub">Confederation</div><div class="tap">点按翻面</div></div><div class="back">由众多倾向服务的群体组成的跨文明联合体，Ra 自认是其中成员。一万一千年前来到地球的就是联邦成员；后文提到的「兄弟们」建造的其他水晶结构也出自联邦。<em>一个跨国救援网络——有能力出手，但守着「不请不打扰」的规矩。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">社会记忆复合体</div><div class="sub">social memory complex</div><div class="tap">点按翻面</div></div><div class="back">一群灵性进展足够、心智彼此完全贯通的实体结成的集体意识——经验与记忆真正共享，所以 Ra 总以「我们」自称。<em>不是群聊，而是一个真正共享记忆与认知的「我们」。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">流浪者</div><div class="sub">wanderer</div><div class="tap">点按翻面</div></div><div class="back">自愿从更进化的状态投生到较艰难环境中服务的灵魂。Ra 形容阿肯那顿「在你们层面上的生命经验很少」，正是一个流浪者。<em>自愿报名去偏远分部的总部骨干——降级不是流放，是选择。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">启蒙</div><div class="sub">initiation</div><div class="tap">点按翻面</div></div><div class="back">通过一连串考验净化自身、成为纯粹管道的过程。本集中它既是水晶使用者的门槛，也是金字塔的第一用途。<em>不是领证书，而是闯关——每一关都要脱掉一层旧皮。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">爱/光</div><div class="sub">love/light</div><div class="tap">点按翻面</div></div><div class="back">造物流经万有的能量流。Ra 的问候与告别都以它起收；本集末尾还提到：较少扭曲的爱/光正从特定方向流入地球——这也是器皿头部朝向的依据。<em>像阳光之于植物：不是推着你长，而是供给生长本身。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">思想-形态</div><div class="sub">thought-form</div><div class="tap">点按翻面</div></div><div class="back">由心智维持、具有某种独立效力的念头结构。净化对话的最后一句，正是要挡住它进入围绕器皿行走的圈。<em>散会后房间里没散掉的火药味——它会继续干扰下一个进来的人。</em></div></div>
+    </div>
+  </div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 后勤</span></summary>
+  <div class="body">
+    <p><b>(2.0) 开场致意：</b>Ra 问候并申明通讯方式——回应询问（正文第 3 张卡已展开）。</p>
+    <p><b>(2.3) 器皿疲惫约定：</b>发问者在括号里立下规矩：器皿一疲惫就中断通讯，充能后再恢复——这是全系列节奏管理的起点。</p>
+    <p><b>(2.4) 能量提示：</b>金字塔问答说到一半，Ra 说「这个器皿开始失去能量」，只再答一问。</p>
+    <p><b>(2.5) 请求改期：</b>顶石与搬石之问被 Ra 请求留到下一次工作时间（教导含义见第 6 章）。</p>
+  </div></details>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 2 章 · 出书之约 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>出书之约：教导/学习为何本身就是一的法则</h2></div>
+  <p class="sec-lead">发问者的第一个请求很实际：能不能把通讯做成一本书？Ra 的回答却把这件事从「出版项目」拔高到修行的层面——分享本身就是教导/学习，而教导/学习是一的法则最原初的显现之一。</p>
+
+  <div class="card">
+    <h3>为什么接触这个小组</h3>
+    <div class="q">「有足够多的人能理解、感兴趣吗？我们可以把它做成一本书吗？」——发问者先看读者数量，Ra 先看通讯本身。</div>
+    <div class="quote">
+      <p class="en">The possibility of communication, as you would call it, from the One to the One through distortion acceptable for meaning, is the reason we contacted this group.</p>
+      <p class="zh">从太一到太一、经由为意义所接受的变貌而进行的通讯——这种可能性，才是 Ra 接触这个小组的原因；出书只是它的自然延伸。</p>
+      <span class="src">—— Session 002 · (2.1)</span>
+    </div>
+    <div class="plain">Ra 同意出书，但理由和发问者设想的不同：不是为了传播给「足够多的人」，而是「从太一到太一」这个通讯事件本身值得发生。</div>
+    <div class="case"><b>写笔记的意外收获：</b>小周为了给同事讲清楚一个技术方案，逼自己把笔记整理成文，结果发现自己原来似懂非懂——Ra 说分享通讯最大的帮助是「规律化并结晶化你们自身的振动模式」：出书首先照亮的是整理者自己。</div>
+  </div>
+
+  <div class="card">
+    <h3>「如果一人被照亮，难道不是所有人都被照亮了吗？」</h3>
+    <div class="quote">
+      <p class="en">If one is illuminated, are not all illuminated?</p>
+      <p class="zh">照亮不是私产：一个人的照亮已经改变了整体——这是 Ra 同意分享的深层理由，也回答了「值得吗」的犹豫。</p>
+      <span class="src">—— Session 002 · (2.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">To teach/learn is the Law of One in one of its most elementary distortions.</p>
+      <p class="zh">教导/学习是一的法则在其最原初变貌之一——也就是说，「分享」不是一个附加动作，它就是一的法则的运转方式本身。</p>
+      <span class="src">—— Session 002 · (2.1)</span>
+    </div>
+    <div class="analogy"><b>点灯不损己：</b>一根蜡烛点燃另一根，自己的光不会因此变暗——房间却整体亮了一分。Ra 的「一人被照亮，难道不是所有人都被照亮了吗」正是这个结构：分享不减损分享者。</div>
+    <div class="case"><b>带新人：</b>老手给新人讲最基础的那一遍，往往要重新推敲一遍自己从没细想过的前提——教的人同时也在学（teach/learn 是一个词，不是两个）；Ra 把这个日常经验上升为一的法则的显现。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 3 章 · 联邦往事 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>联邦往事：为什么一万一千年前那场直接接触失败了</h2></div>
+  <p class="sec-lead">追历史之前，Ra 先校准期待：几千年前的投生状态是「虚假类型的兴趣」，它的教导是哲学性而非历史性的。但这段往事仍给了全书第一块基石——星际联邦曾经直接出手帮地球，结果翻车了。失败的方式，比成功更有教导价值。</p>
+
+  <div class="card">
+    <h3>先校准：历史是手段，不是目的</h3>
+    <div class="q">「讲讲你们的历史背景吧，这样写书有素材可开头。」——Ra 先纠正这个期待，再满足它。</div>
+    <div class="quote">
+      <p class="en">The teach/learning which is our responsibility is philosophical rather than historical.</p>
+      <p class="zh">Ra 负责的教导/学习是哲学性的，而非历史性的——年代与传奇只是入口，结构与方法才是要带走的东西。</p>
+      <span class="src">—— Session 002 · (2.2)</span>
+    </div>
+    <div class="plain">Ra 特意等到第二次询问才回答历史问题，为的就是强调：对「几千年前的故事」的好奇是虚假的兴趣，真正值得记住的是教训。</div>
+    <div class="case"><b>追星与听歌：</b>有粉丝把注意力全放在偶像的恋情八卦上，专辑却一张没听过——Ra 提醒发问者：对我们投生状态的好奇是「虚假类型的兴趣」，请把注意力放在哲学性教导上；听歌，别只追八卦。</div>
+  </div>
+
+  <div class="card">
+    <h3>时间轴：一万一千年的来龙去脉</h3>
+    <div class="timeline">
+      <div class="tl-item"><div class="t">一万一千年前 · 直接接触</div><div class="d">星际联邦来到两个与太一造物紧密接触的文化（埃及与南美一带）。「天真地相信」直接接触不会扰动个体感受与人格的自由意志变貌。</div></div>
+      <div class="tl-item"><div class="t">水晶与金字塔</div><div class="d">以与变貌相适的水晶，疗愈心/身/灵复合体的变貌——金字塔由此被创造。</div></div>
+      <div class="tl-item"><div class="t">技术被权力垄断 · 撤离</div><div class="d">技术大半被保留给具有权力变貌的人——「这并非一的法则的意图」。埃及的团体离开了；南美的团体没有轻易放弃，他们返回了。</div></div>
+      <div class="tl-item"><div class="t">责任仍在</div><div class="d">因对自己首先引发、后又发现被扭曲的意识改变负有责任，Ra「从未离开你们的振动」，并持续尝试接触埃及的统治者。</div></div>
+      <div class="tl-item"><div class="t">第十八王朝 · 阿肯那顿</div><div class="d">一位生命经验很少的「流浪者」法老接收到通讯：他把荣耀阿蒙（Amun）之名改为荣耀太阳圆盘的阿顿（Aten），并颁布一的法则。信者极少，祭司口头敷衍；他离开密度后多神信仰复辟，直到穆罕默德把民众带入更可理解的心/身/灵关系变貌。</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>失败的机制：好意为何翻车</h3>
+    <div class="q">明明带着服务的心意来，为什么反而造成扭曲？Ra 给出的诊断很冷静。</div>
+    <div class="quote">
+      <p class="en">We found that the technology was reserved largely for those with the effectual mind/body distortion of power. This was not intended by the Law of One.</p>
+      <p class="zh">技术大半落入掌权者之手——这并非一的法则的意图。好意不豁免后果：绕过自由意志的给予，会被现存权力结构没收。</p>
+      <span class="src">—— Session 002 · (2.2)</span>
+    </div>
+    <div class="plain">直接给答案、直接给技术，剥夺的是对方自己成长的过程—— 一的法则要求服务经由自由意志发生，跳过这一步，好意也会变质。</div>
+    <div class="case"><b>免费物资的两年：</b>某公益组织直接向小镇长期分发免费粮食，两年后发现本地商户倒闭、受助者反失去自理的动力——「直接给予」绕过了受助者自己的能力生长，和联邦当年直接给技术是同一类失误。</div>
+    <div class="case"><b>离职工程师：</b>工程师发现自家产品被客户改造成害人的工具后辞职，但没有离开行业，而是持续提醒、纠正后果——Ra 离开了埃及的人群，却「从未离开你们的振动」：对自己首先引发、后被扭曲的改变负责任到底。</div>
+  </div>
+
+  <div class="card">
+    <h3>阿肯那顿：最接近成功的一次</h3>
+    <div class="q">Ra 后来找到的是什么人？——一个年轻、经验少、却愿意把名字连同信仰一起改掉的法老。</div>
+    <div class="quote">
+      <p class="en">This entity, Akhenaten, became convinced that the vibration of One was the true spiritual vibration, and thus decreed the Law of One.</p>
+      <p class="zh">这位实体确信太一的振动才是真正的灵性振动，于是颁布了一的法则——但「颁布」是自上而下的，信者极少，改革随他离世而瓦解。</p>
+      <span class="src">—— Session 002 · (2.2)</span>
+    </div>
+    <div class="plain">名字从荣耀众多神明之一（阿蒙）改为荣耀太阳圆盘（阿顿），Ra 评价这个变貌「接近但未完全对齐」——最接近成功的尝试，仍败在信者寥寥与口头敷衍。</div>
+    <div class="case"><b>年轻主管的改革：</b>公司新上任的年轻主管推行一套彻底的新理念：中层口头拥护、实际照旧，他一离任旧做法全面回潮——阿肯那顿改革的翻版。Ra 如实讲出这次失败：改变若没有发生在众人的寻求里，就留不下来。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 4 章 · 水晶疗愈 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>水晶疗愈：为什么关键在人，不在水晶</h2></div>
+  <p class="sec-lead">发问者抓住 Ra 提到的「水晶」追问。Ra 的回答出乎意料：水晶疗愈的原理不在水晶，而在身体这个「幻象」的层级结构，以及使用者的净化程度——没有疗愈者自身的结晶化，水晶根本充不上能。</p>
+
+  <div class="card">
+    <h3>身体是分层的幻象</h3>
+    <div class="q">水晶到底作用在哪里？是砸在「病」上吗？——Ra 说要先理解身体结构的层级本质。</div>
+    <div class="quote">
+      <p class="en">The principle of crystal healing is based upon an understanding of the hierarchical nature of the structure of the illusion which is the physical body, as you would call it.</p>
+      <p class="zh">水晶疗愈的原理，建立在对身体这一「幻象」结构之层级本质的理解上——先看清分层，才谈得上对哪一层做什么。</p>
+      <span class="src">—— Session 002 · (2.3)</span>
+    </div>
+    <div class="plain">Ra 列了三类对应：作用于进入灵性身体的能量的水晶、作用于灵性到心智之变貌的水晶、平衡心智与身体之间变貌的水晶——不同层面用不同工具，没有一贴灵药。</div>
+    <div class="analogy"><b>调音台的推子：</b>不同推子管不同频段——低音、中音、高音各归各的，推错一个救不了另一个；水晶也一样，每一种只对应身体幻象的某一个层面。</div>
+    <div class="case"><b>失眠的三层：</b>同一桩失眠，可能同时有三种成分：卧室的电磁与光线干扰（进入身体的能量）、停不下来的焦虑念头（灵性到心智的变貌）、肩颈僵硬（心智与身体之间的失衡）——只吃安眠药只碰到一层，Ra 的分层诊断与此同理。</div>
+  </div>
+
+  <div class="card">
+    <h3>疗愈者的结晶化：充能的前提</h3>
+    <div class="q">工具重要，还是用工具的人重要？Ra 的答案不含糊。</div>
+    <div class="quote">
+      <p class="en">Without the relative crystallization of the healer working with the crystal, the crystal will not be properly charged.</p>
+      <p class="zh">没有与水晶协作的疗愈者自身的相对结晶化，水晶将无法被正确充能——工具的天花板，由使用者的净化程度决定。</p>
+      <span class="src">—— Session 002 · (2.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">a crystalline structure such as a diamond or ruby can be used by a purified channel who is filled with the love/light of One in almost any application.</p>
+      <p class="zh">反过来说：对一个充满太一之爱/光的净化管道，钻石或红宝石这样的晶体结构几乎在任何应用中都能用——瓶颈从来不在石头。</p>
+      <span class="src">—— Session 002 · (2.3)</span>
+    </div>
+    <div class="plain">水晶疗愈的次序是：先净化人，再谈水晶；此外还要与行星的能量场和宇宙流束恰当对齐，形状比率与放置才有意义。</div>
+    <div class="case"><b>名琴与调音师：</b>同一把斯特拉迪瓦里名琴，落在没调准自身状态的人手里声音平平，落到大师手里才发出全部音色——「没有疗愈者的结晶化，水晶无法被正确充能」说的正是这件事。</div>
+    <div class="case"><b>大家与毛笔：</b>书法大家拿一支普通毛笔照样写出好字，初学者用再贵的笔也没用——净化了的管道用钻石红宝石「几乎任何应用」皆可；工具的精妙，替代不了人的功夫。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 5 章 · 金字塔 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>金字塔：启蒙之所，与行星的平衡环</h2></div>
+  <p class="sec-lead">金字塔不是陵墓，而是两用设施——既是人的启蒙场所，也是行星能量的平衡器。Ra 顺手还纠正了一个更大的预设：那些石头，是活的。</p>
+
+  <div class="card">
+    <h3>谁建的、怎么建的</h3>
+    <div class="q">「金字塔是你们负责建的吗？」——Ra 的回答顺带推翻了我们文化对物质的基本假设。</div>
+    <div class="quote">
+      <p class="en">The larger pyramids were built by our ability using the forces of One. The stones are alive.</p>
+      <p class="zh">较大的金字塔由我们运用太一的力量建造——而「那些石头是活的」这一点，从未被你们文化如此理解。</p>
+      <span class="src">—— Session 002 · (2.4)</span>
+    </div>
+    <div class="plain">不是奴隶与杠杆，而是对「活的石头」的运用：对物质世界的基本预设不同，能做的事就完全不同。</div>
+    <div class="case"><b>老树桩：</b>园艺师面对一截老树桩，不当柴火烧，而当生命来养护——先确认它还活着，才谈得上怎么安置它；「石头是活的」意味着建造者与材料之间是协作，不是搬运。</div>
+  </div>
+
+  <div class="card">
+    <h3>两个目的：先育人，再平衡行星</h3>
+    <div class="quote">
+      <p class="en">Firstly, to have a properly oriented place of initiation for those who wished to become purified or initiated channels for the Law of One.</p>
+      <p class="zh">第一个目的：为那些希望成为一的法则净化/启蒙管道的人，提供一个适当朝向的启蒙场所——先造「人」这个仪器。</p>
+      <span class="src">—— Session 002 · (2.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Pyramid after pyramid, charged by the crystal and initiate, were designed to balance the incoming energy of the One Creation with the many and multiple distortions of the planetary mind/body/spirit.</p>
+      <p class="zh">第二个目的：一座又一座由水晶与启蒙者充能的金字塔，用来平衡太一造物流入的能量与行星心/身/灵的多重变貌——并与其他承载水晶的结构在地球表面连成一环。</p>
+      <span class="src">—— Session 002 · (2.4)</span>
+    </div>
+    <div class="plain">次序值得注意：金字塔先服务于「人的启蒙」，人才有能力再去平衡行星——设施是配合人的，不是替代人的。</div>
+    <div class="case"><b>固定的静室：</b>有人冥想多年养成一套固定流程：同一把朝向固定窗景的椅子、同样的入座细节，久之坐下即入状态——金字塔的第一个目的正是提供「适当朝向的启蒙场所」：让净化在稳定的结构里发生。</div>
+    <div class="case"><b>电网的调压器：</b>发电厂的电流要经变压器调压才能进千家万户，变压器错位就会烧电器——金字塔群由水晶与启蒙者充能，像沿地表布设的一圈「调压站」，把流入行星的能量调到居民承受得住的形态。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 6 章 · 收官 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>收官：不请不答、净化对话与下一集的伏笔</h2></div>
+  <p class="sec-lead">最后一问由 Ra 主动邀请：要不要问问怎么正确使用这个器皿？回答分三层——先是自由意志的边界（不请不答），再是一段可操作的净化对话，最后是整套出神布置。这一章也交代下一集的入口。</p>
+
+  <div class="card">
+    <h3>不请不答：信使也越过不了的线</h3>
+    <div class="q">「就当已经问过了。」——发问者坦言自己没有依据，只是把 Ra 递来的话头接住；Ra 却先郑重申明了一条边界。</div>
+    <div class="quote">
+      <p class="en">it is not our understanding that we have the right/duty to share our perceptions on any subject but philosophy without direct question.</p>
+      <p class="zh">若没有直接询问，Ra 并不认为自己有权利/义务分享哲学以外任何主题的认知——哪怕器皿的疲惫显而易见，也要等人开口。</p>
+      <span class="src">—— Session 002 · (2.6)</span>
+    </div>
+    <div class="plain">这就是自由意志法则在通讯中的样子：不请不答。Ra 先划线，再回答——随后才指出器皿「未被正确使用」，正经历不必要的疲劳变貌。</div>
+    <div class="case"><b>不请之忠告：</b>同事没问，你主动指点他该怎么带娃，对方表面点头、心里抵触——好建议没经过「请求」这道门，就成了冒犯；Ra 连「帮你把器皿用得舒服些」这种事，都要等发问者先问出口。</div>
+  </div>
+
+  <div class="card">
+    <h3>净化对话：四句安放一个空间</h3>
+    <p style="font-size:.9rem;color:var(--ink-soft)">Ra 给出的第一步是「转向太一之圈」，口头振动一段一问一答——点下面的节点走一遍。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="lawTrack"></div>
+      <div class="flow-detail" id="lawDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="lawPrev">← 上一句</button>
+        <button class="tri-btn" id="lawNext">下一句 →</button>
+      </div>
+    </div>
+    <div class="plain">这段对话不是咒语而是「定向」：先确立法则（一），再确立目的（寻求），再确立 Ra 的位置（谦卑信使），最后齐声宣告空间的净化——像一场开工前全员对齐的短会。</div>
+    <div class="case"><b>术前核对：</b>外科团队开台前逐项核对：护士念清单、主刀逐条确认、全员应答——半分钟的仪式安定了整间手术室；净化对话同理，四句问答把在场所有人的心先对齐到同一处。</div>
+  </div>
+
+  <div class="card">
+    <h3>出神布置：每个细节都有理由</h3>
+    <div class="quote">
+      <p class="en">This is the direction from which the newer, or New Age, distortions of love/light, which are less distorted, are emanating from, and this instrument will find comfort therein.</p>
+      <p class="zh">头部指向北偏东二十度——这是较少扭曲的爱/光流入的方向，器皿会在其中找到舒适；连朝向都不是任意的。</p>
+      <span class="src">—— Session 002 · (2.6)</span>
+    </div>
+    <div class="plain">布置清单：头前放未用过的圣杯盛水，正中放她最常翻阅的圣经（翻开约翰福音第一章），另一侧置未用香炉中的熏香，书后放白蜡烛；穿白袍、覆身俯卧、遮眼。Ra 自陈：这些细节看似远离教导，用意是安抚器皿周围之人的心智变貌；夜间集会宜先呼唤器皿、再开灯。</div>
+    <div class="case"><b>给病床换个朝向：</b>家人住院时，有人会把床转向窗边有自然光的方向、摆上一件她熟悉的物件——药没变，人却安稳了；Ra 的整套布置照顾的正是「敏感器皿从任何感官接收变貌」这件事。</div>
+    <div class="case"><b>下集分解：</b>追剧追到关键处偏偏「下集分解」——金字塔顶石的材质与搬石技术（2.5）、各种水晶的明细（2.3）都被 Ra 留到了下一次；这两个钩子就是下一集的入口，留意它们。</div>
+  </div>
+
+  <div class="card">
+    <h3>回头看：Ra 在本集怎样回应</h3>
+    <p style="font-size:.9rem;color:var(--ink-soft)">把本集五次问答按 Ra 的回应方式归类——点击选项查看依据。</p>
+    <div id="sortArea"></div>
+  </div>
+
+  <div class="saying">
+    <p class="en">Rejoice then, and purify this place in the Law of One. Let no thought-form enter the circle we have walked about this instrument, for the Law is One.</p>
+    <p class="zh">那么欢庆吧，在一的法则中净化这个场所；不让任何思想-形态进入我们围绕这个器皿所行走的圈，因为法则是一。——本集的落点：净化、守护、以及那句贯穿一切的「法则是一」。</p>
+    <span class="src">—— Session 002 · (2.6)</span>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 002（`split/Ra_Session_002.md`）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra002-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本集定制交互 ===== */
+initStepper('mapTrack','mapDetail','mapPrev','mapNext',[
+  {t:'开场',d:'<span class="qa-q">(2.0) Ra 开场致意，先交代通讯方式</span><b>答：</b>我的社会记忆复合体与少数能协调变貌者沟通的方式只有一种——回应信息的询问。于是全书定型为一问一答：你问什么，Ra 答什么。'},
+  {t:'能否出书',d:'<span class="qa-q">问：可以把你我之间的通讯整理成书吗？(2.1)</span><b>答：</b>可以。Ra 点出更深一层：从太一到太一、经由为意义所接受的变貌进行通讯，正是接触这个小组的原因；分享将帮助你们结晶化自身的振动模式——教导/学习是一的法则最原初的变貌之一。'},
+  {t:'历史背景',d:'<span class="qa-q">问：讲讲你们的历史？(2.2)</span><b>答：</b>Ra 特意等到第二次询问才作答，先校准：几千年造成的是虚假类型的兴趣，其教导是哲学性而非历史性的。随后讲述一万一千年前联邦在埃及与南美的直接接触及其失败。'},
+  {t:'水晶疗愈',d:'<span class="qa-q">问：水晶疗愈是什么原理？(2.3)</span><b>答：</b>身体这一幻象是分层的，水晶分别作用于灵性身体的能量、灵性到心智的变貌、心智与身体的平衡；但没有疗愈者自身的相对结晶化，水晶无法被正确充能。'},
+  {t:'金字塔',d:'<span class="qa-q">问：金字塔是你们建的吗？目的为何？(2.4)</span><b>答：</b>较大的金字塔由我们运用太一的力量建造，石头是活的；两个目的——为启蒙者提供适当朝向的场所、以水晶与启蒙者充能来平衡行星的能量。说到这里，Ra 提示器皿能量开始流失。'},
+  {t:'顶石与搬石',d:'<span class="qa-q">问：顶石是什么材质？石块怎么搬？(2.5)</span><b>答：</b>请把这个问题留到下一次工作时间——一个被留下的钩子，也是下一集的入口。Ra 转而邀请：关于器皿的正确使用，现在可以问。'},
+  {t:'器皿照料',d:'<span class="qa-q">问：怎样正确使用这个器皿？(2.6)</span><b>答：</b>先申明不请不答的边界，再给出一段净化对话（三问三答加齐声宣告）与整套出神布置；末了在喜悦与祝福中收束本集。'}
+]);
+initStepper('lawTrack','lawDetail','lawPrev','lawNext',[
+  {t:'第一问',d:'<span class="qa-q">问：What is the Law?（法则是什么？）</span><b>答：</b>The Law is One.（法则是一。）'},
+  {t:'第二问',d:'<span class="qa-q">问：Why are we here?（我们为什么在这里？）</span><b>答：</b>We seek the Law of One.（我们寻求一的法则。）'},
+  {t:'第三问',d:'<span class="qa-q">问：Why do we seek Ra?（我们为什么寻求 Ra？）</span><b>答：</b>Ra is an humble messenger of the Law of One.（Ra 是一的法则的谦卑信使。）'},
+  {t:'齐声宣告',d:'<span class="qa-q">双方齐声</span><b>答：</b>欢庆吧，在一的法则中净化这个场所；不让任何思想-形态进入我们围绕这个器皿所行走的圈，因为法则是一。'}
+]);
+initSorter('sortArea',[
+  {a:'「能否讲讲你们自己的历史背景？」(2.2)',opts:['直接回答','先校准前提','留待下次'],ans:'先校准前提',exp:'Ra 特意等到第二次询问才作答，先点出几千年时间/空间造成的是虚假类型的兴趣，申明教导是哲学性而非历史性的，然后才开讲。'},
+  {a:'「较大的金字塔是你们建的吗？目的是什么？」(2.4)',opts:['直接回答','先校准前提','留待下次'],ans:'直接回答',exp:'Ra 给出干脆的答案：由我们运用太一的力量建造，目的有二——启蒙场所与平衡行星能量。'},
+  {a:'「顶石是什么做的？石块怎么搬？」(2.5)',opts:['直接回答','先校准前提','留待下次'],ans:'留待下次',exp:'Ra 请求把这个问题放到下一次工作时间——器皿能量已开始流失，这也成为下一集的入口。'},
+  {a:'「具体要用哪些水晶？」(2.3)',opts:['直接回答','先校准前提','留待下次'],ans:'留待下次',exp:'Ra 说逐一讲解各种水晶会耗尽这个器皿，请他们在另一场集会中再问。'},
+  {a:'「我们可以把通讯整理成书吗？」(2.1)',opts:['直接回答','先校准前提','留待下次'],ans:'直接回答',exp:'Ra 同意分享，并给出更深一层理由：如果一人被照亮，难道不是所有人都被照亮了吗？'}
+]);
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+renderPath();
+</script>
+</body>
+</html>

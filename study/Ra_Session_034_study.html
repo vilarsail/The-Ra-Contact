@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 034 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 034 · 交互式学习模块</h1>
+  <p class="sub">本集先回答「穿透第八层会体验到什么」，并首次以「侵犯」为由婉拒了一个私人问题；接着给出「业力即惯性」的定义，一路讲到痛苦、疾病与先天缺陷如何充当催化剂；最后落到橙色、黄色、绿色三束光——社会、装置与战争都在其中显现。</p>
+  <div class="tagline">6 个主题 · 6 个学习步骤 · 20 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 穿透第八层</a>
+<a href="#s3">③ 业力与催化剂</a>
+<a href="#s4">④ 橙黄光芒的日常</a>
+<a href="#s5">⑤ 战争与收割</a>
+<a href="#s6">⑥ 收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>先看 20 个问答块各自在做什么，例行问答可以跳过</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>穿透第八层，与一次婉拒</b><span>同一章里 Ra 既讲了机制，也示范了「不解释」</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>业力与催化剂</b><span>惯性、刹车、痛苦三层次、走偏之后的补偿</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>橙黄光芒的日常</b><span>社会性自我、装置、电视：为什么总落在第二与第三中心</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>战争与收割</b><span>三条加速方向、一次术语更正，以及巴顿的总账</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官：金句与伏笔</b><span>带走一句最核心的宣告，并记下本集留下的问题</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：这一集在问什么</h2></div>
+  <p class="sec-lead">上一集给出了一张「学习催化剂的标题清单」——未显化的自我、显化的自我、社会性自我、装置、战争等等；本集发问者拿着这张清单逐项索要例子。但在要例子之前，他先问了两个自己的问题：穿透第八层到底是什么体验，以及 1964 年那次冥想里他到底经历了什么。前者 Ra 答了，后者 Ra 收住了——这个「收住」本身就是本集的第一课。</p>
+  <div class="card">
+    <h3>问答脉络：一条从「问自己」到「问社会」的线</h3>
+    <p>本集共 20 个问答块，主体是教导，只有少量例行内容。点击节点或按下面的按钮，看每一段在做什么。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="qaTrack"></div>
+      <div class="flow-detail" id="qaDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="qaPrev">← 上一步</button> <button class="tri-btn" id="qaNext">下一步 →</button></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>本集的整体形状</h3>
+    <p>从结构上看，本集是一条由内向外的滑线：先是个人性的问题（第八层、1964 年、业力），然后进入「未显化自我如何学习」的机制（痛苦、疾病、先天缺陷），最后完全转向外部——社会、装置、战争。Ra 在 (34.14) 还亲手把这两块缝在一起：战争与自我的关系，可以「与你们的小装置关联起来看待」。</p>
+    <div class="plain">一句话：本集教的是「催化剂如何运作」，而落点是橙色、黄色、绿色这三束光在个人与社会生活中的样子。</div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿锻炼 · 开场与收尾</span></summary>
+  <div class="body">
+    <p><b>(34.0) 开场：</b>Ra 以「在太一无限造物主的爱与光中向你们致意」开场，宣布本次通讯开始。</p>
+    <p><b>(34.1) 器皿锻炼：</b>发问者问「每天两次短时锻炼是否比一次长锻炼更好」，Ra 判定不正确。在器皿容易受到身体复合体变貌加剧的那个三个月期间，适当配置是「一次主要锻炼时段 + 你们日循环的晚些时候、傍晚冥想之前、约为主时段一半长度的一次」。Ra 承认这会消耗器皿，但会增强身体复合体、减少可能被利用的脆弱性。</p>
+    <p><b>(34.11) 名字确认：</b>发问者追问 (34.10) 里两位人物的姓氏，Ra 答：Albert Schweitzer 与 Martin Luther King。</p>
+    <p><b>(34.19) 收尾：</b>Ra 说一切都好，以爱、光与「永恒的平安」作结，最后是 Adonai。</p>
+  </div></details>
+  <div class="case"><b>会前先问安排：</b>重要会议开始前，你先问的是「今天几点开始、要不要准备材料」，而不是直接抛方案——本集开场 (34.1) 也是先落到器皿的锻炼安排上，而且 Ra 给的是很具体的时间表（一次主锻炼 + 傍晚半场），不是抽象建议。读实录时，别把这种开场当成客套跳过：它决定了后面能不能顺利工作。</div>
+  <div class="case"><b>先分类，再逐项要例子：</b>主管说「上次那份清单有六类，每一类给我一个真实例子」——本集发问者做的正是这件事。他在 (34.6)、(34.9)、(34.12)、(34.14) 反复用「同样的信息」这个说法向 Ra 索要各类催化剂的具体例子。读懂这条线索，20 个问答块就不再零散。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>穿透第八层：体验到什么，以及 Ra 为什么不全说</h2></div>
+  <p class="sec-lead">这一章只有两个问答块，但方向相反：第一个给出机制（穿透智能无限时的体验），第二个给出边界（Ra 拒绝解释发问者自己的那次体验）。两者合起来才是完整的一课——前者讲 Ra 知道什么，后者讲 Ra 选择不说什么。</p>
+  <div class="card">
+    <h3>各人的体验都不一样，但结果很像</h3>
+    <div class="q">你早先说，穿透第八层（智能无限层级）能让一个心/身/灵复合体在周期内的任何时间/空间被收割。那么真正穿透时，<b>那个实体体验到什么</b>？</div>
+    <div class="quote">
+      <p class="en">The experience of each entity is unique in perception of intelligent infinity.</p>
+      <p class="zh">每个实体在感知智能无限时，其体验都是独一无二的。</p>
+      <span class="src">—— Session 034 · (34.2)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The entity which reaches intelligent infinity most often will perceive this experience as one of unspeakable profundity.</p>
+      <p class="zh">触及智能无限的实体，最常把这种体验感知为一种无法言说的深邃。</p>
+      <span class="src">—— Session 034 · (34.2)</span>
+    </div>
+    <div class="quote">
+      <p class="en">However, it is not usual for the entity to immediately desire the cessation of the incarnation. Rather the desire to communicate or use this experience to aid others is extremely strong.</p>
+      <p class="zh">然而，实体通常不会立刻渴望终止这次投生；相反，把它用于沟通、或用来帮助他人的渴望极其强烈。</p>
+      <span class="src">—— Session 034 · (34.2)</span>
+    </div>
+    <div class="plain">穿透不是一种统一的「标准体验」——它按每个实体的独特性被感知，范围从无限的喜悦到强烈的服务他人之奉献；而最典型的后果不是「想离开」，是「想把这东西用出去」。</div>
+    <div class="analogy"><b>像各自看见的同一片星空：</b>一群人在山顶看银河，有人记住的是安静，有人记住的是自己的渺小，有人记住的是想立刻发消息给谁。Ra 说的正是这件事：内容各人不同，但「急着讲给别人听」几乎总会发生。</div>
+    <div class="case"><b>那次「状态特别好」的训练：</b>健身房里某天你突然找到节奏，练完后描述不出为什么好。同去的朋友说「我就是觉得安静」。两个人的说法完全不同，但共同点是第二天都急着拉别人一起来练——对应 (34.2)：感知独特，使用它的渴望极强。</div>
+  </div>
+  <div class="card">
+    <h3>一次基于「侵犯」的婉拒</h3>
+    <div class="q">1964 年前后我在冥想中意识到另一个密度、另一个行星，还像是移动了过去。<b>那次体验到底是什么</b>？</div>
+    <div class="quote">
+      <p class="en">We see some harm in full disclosure due to infringement.</p>
+      <p class="zh">我们认为，完全披露会因侵犯而造成伤害。</p>
+      <span class="src">—— Session 034 · (34.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">We content ourselves with suggesting that this entity, which is not readily able to subject itself to the process of hypnotic regression instigated by others, nevertheless, has had its opportunities for understanding of its beingness.</p>
+      <p class="zh">我们只满足于提出一点提示：这个实体虽然不易让自己接受由他人发起的催眠回溯过程，但它仍然已经拥有理解自身存在性的机会。</p>
+      <span class="src">—— Session 034 · (34.3)</span>
+    </div>
+    <div class="plain">Ra 没有否认那次体验，也没有解释它的内容——因为解释它，等于把这个实体自己的理解机会替他拿走。这就是「侵犯」在本集的具体含义。</div>
+    <div class="analogy"><b>像老师递上题却不给答案：</b>老师当然知道答案，但更知道一旦写下答案，这道题就不再是你的了。Ra 这里做的正是同样的事：给提示（你不适合被他人催眠回溯），不给结论。</div>
+    <div class="case"><b>咨询师不替你解梦：</b>你说「我梦见考试找不到考场，这代表什么？」咨询师答：「我可以陪你把梦讲完，但它的意义需要你自己认出来。」这正是 Ra 在 (34.3) 的姿态——你的体验是真的，可它的意义属于你。</div>
+    <div class="case"><b>家长替孩子写作业：</b>答案交上去了，分数也对，但孩子失去了这一次的功课。Ra 拒绝解释发问者 1964 年的体验，理由与此同类：完整的答案会换来一次失去。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>业力与催化剂：惯性、痛苦，与走偏之后</h2></div>
+  <p class="sec-lead">发问者一句「你能定义业力吗」，换来本集最凝练的一段回答：业力是惯性，宽恕是刹车，两者不可分割。接下来的四个问答块顺流而下——编程能不能安排催化剂？（能，但不必等它）；最常见的催化剂是什么？（痛苦，且多数在心智与情感层面）；催化剂走偏了怎么办？（会有额外的催化剂补上）；以及两个常被误解为「命运惩罚」的东西：传染病与先天缺陷。</p>
+  <div class="card">
+    <h3>业力不是账本，是动量</h3>
+    <div class="q">你能定义业力吗？</div>
+    <div class="quote">
+      <p class="en">Our understanding of karma is that which may be called inertia.</p>
+      <p class="zh">我们对业力的理解是：它可以被称为惯性。</p>
+      <span class="src">—— Session 034 · (34.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Those actions which are put into motion will continue, using the ways of balancing, until such time as the controlling or higher principle, which you may liken unto your braking, or stopping, is invoked.</p>
+      <p class="zh">那些被启动的行动会继续下去，以平衡的方式运作，直到那个控制性的、或更高的原则被调用——你们可以把它比作你们的刹车或停止。</p>
+      <span class="src">—— Session 034 · (34.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This stoppage of the inertia of action may be called forgiveness. These two concepts are inseparable.</p>
+      <p class="zh">行动惯性的这种停止，可以被称为宽恕。这两个概念不可分割。</p>
+      <span class="src">—— Session 034 · (34.4)</span>
+    </div>
+    <div class="plain">业力不是一本记录奖惩的账，而是一股一旦推动就会继续走的动量；宽恕则是把这股动量刹住的「更高原则」——Ra 说，刹车与惯性这两个概念不可分割。</div>
+    <div class="analogy"><b>下坡推车：</b>你只在开头推了一下，车就自己往下滑，还会自动绕开坑洼（Ra 说的「平衡的方式」）。刹车不是把车毁掉，只是让滑行停下来——而一辆没有刹车的车，不能称之为真正的车。</div>
+    <div class="case"><b>迟到了十年的道歉：</b>你年轻时借了朋友一笔钱，一直没还也没提，以为「等以后合适了再补」。某天你直接发消息把事情说清、把钱还上——旧账当场结清，而不是等那个「合适的时机」自动到来。对应 (34.5)：任何时候都能改善这些模式。</div>
+  </div>
+  <div class="card">
+    <h3>编程不是唯一出口</h3>
+    <div class="q">如果实体在一次投生中造了业，是不是会有编程让他遇上能走向宽恕的催化剂，从而减轻业力？</div>
+    <div class="quote">
+      <p class="en">This is, in general, correct. However, both self and any involved other-self may, at any time, through the process of understanding, acceptance, and forgiveness, ameliorate these patterns.</p>
+      <p class="zh">这大体上是对的。然而，自我以及任何涉及的另一个自我，都可以在任何时候，通过理解、接纳与宽恕的过程，来改善这些模式。</p>
+      <span class="src">—— Session 034 · (34.5)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Thus one who has set in motion an action may forgive itself and never again make that error. This also brakes, or stops, what you call karma.</p>
+      <p class="zh">因此，一个已经启动某个行动的人可以宽恕自己，并且不再犯同样的错误。这同样刹住了、或者说停止了你们所谓的业力。</p>
+      <span class="src">—— Session 034 · (34.5)</span>
+    </div>
+    <div class="plain">会有编程，但编程不是唯一出口。自我与所有相关方在任何时点都能用「理解、接纳、宽恕」直接改善模式；自我宽恕、不再重犯，也能把业力刹住。</div>
+    <div class="analogy"><b>自动扣款 vs 提前结清：</b>编程像一份分期扣款计划，它会按时自动发生；但你不必等它慢慢扣完——任何时候都能打电话提前结清。Ra 说的「理解、接纳、宽恕」，就是那个电话号码。</div>
+  </div>
+  <div class="card">
+    <h3>术语卡：先立住本集的六个词</h3>
+    <p>点击卡片展开。这几个词在本集与全书反复出现，先在这里建立准确的直觉。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">业力</div><div class="sub">karma</div><span class="tap">点击展开</span></div><div class="back">Ra 在本集给的唯一定义是：业力即惯性。它不是奖惩账本，而是「已启动的行动会继续走」这件事本身。<em>比喻：推下坡的车——重点不在于你推得对不对，而在于它已经在动。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">惯性</div><div class="sub">inertia</div><span class="tap">点击展开</span></div><div class="back">本集用来定义业力的那个词：运动一旦开始便会持续，并以「平衡的方式」运作，直到被某个更高的原则介入。<em>案例：家族里传下来的说话方式，你没刻意学，却自然地在用。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">宽恕</div><div class="sub">forgiveness</div><span class="tap">点击展开</span></div><div class="back">不是情绪上的「算了」，而是 Ra 所说的「行动惯性的停止」——那个更高的、起刹车作用的原则。它既对别人发生，也对自己发生（自我宽恕）。<em>比喻：刹车踏板，而不是减速带——它是被主动踩下的。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">未显化的自我</div><div class="sub">unmanifested self</div><span class="tap">点击展开</span></div><div class="back">指尚未向外表现出来、仍在内部运作的那部分自我。本集说，正是它与痛苦、疾病、先天缺陷这些催化剂打交道，并从中学习。<em>比喻：还没发出去的那封信——内容已经写好了，但还没到收件人手上。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">催化剂</div><div class="sub">catalyst</div><span class="tap">点击展开</span></div><div class="back">不是起作用的那一方，而是促成作用发生的中介。本集的关键补充是：催化剂本身不含答案，它只「造出学习的潜能」；而且它可能走偏，走偏之后会有更多催化剂补上。<em>案例：体检报告上的一个箭头——它不解释任何东西，但它逼你去面对。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">第二密度</div><div class="sub">second density</div><span class="tap">点击展开</span></div><div class="back">Ra 用来描述「生长与自我意识萌芽」层面的存在，包括动植物与微生物。本集提到：传染病是第二密度的实体，它们提供一种催化剂机会——若这份催化剂不需要，它们就不起作用。<em>比喻：一群敲门的人，你不需要开门时，敲门声对你没有作用。</em></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>小模拟器：一次损失之后，三个开关</h3>
+    <p>Ra 在 (34.5) 给出三个可以介入的动作：理解、接纳、宽恕。拨动开关，看 (34.4)–(34.6) 各自描述的结果。</p>
+    <div class="cond-row"><div class="name">理解<small>认出这份痛苦对应的功课——Ra 说这些功课几乎总是耐心、宽容与轻柔触碰</small></div>
+      <label class="switch"><input type="checkbox" id="condUnderstand"><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">接纳<small>接受自己心里也有那份苦涩与不耐烦，不把自己钉在「受害者」的位置上</small></div>
+      <label class="switch"><input type="checkbox" id="condAccept"><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">宽恕<small>让那个起刹车作用的更高原则介入——包括宽恕自己</small></div>
+      <label class="switch"><input type="checkbox" id="condForgive"><span class="slider"></span></label></div>
+    <div id="condResult"></div>
+  </div>
+  <div class="card">
+    <h3>最常见的催化剂：痛苦，以及它的三层</h3>
+    <div class="q">上次你给了标题清单，现在请给例子——未显化的自我如何产生学习催化剂？</div>
+    <div class="quote">
+      <p class="en">We observed your interest in the catalyst of pain. This experience is most common among your entities.</p>
+      <p class="zh">我们注意到你们对「痛苦」这种催化剂的兴趣。这种体验在你们人群中最常见。</p>
+      <span class="src">—— Session 034 · (34.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Almost always these lessons include patience, tolerance, and the ability for the light touch.</p>
+      <p class="zh">这些功课几乎总是包含耐心、宽容，以及轻柔触碰的能力。</p>
+      <span class="src">—— Session 034 · (34.6)</span>
+    </div>
+    <div class="plain">痛苦可能来自身体复合体，更常来自心智与情感复合体，少数情况下在复合体性质上是灵性的；它本身什么都不教，只是「造出一种学习的潜能」，而要学的功课几乎总是耐心、宽容、轻柔触碰。</div>
+    <div class="analogy"><b>像体检报告上的一个箭头：</b>箭头不解释自己是怎么来的，也不告诉你怎么办，但它让一件你一直回避的事变成了必须面对的事。Ra 说的「学习的潜能」就是那个箭头。</div>
+    <div class="case"><b>被裁员的那个月：</b>他本来只想赶紧找到下一份工作。真正被逼出来的功课却是「原来我一直用职位证明自己」。痛苦本身没教他什么，是它腾出的那段空档让他看见——这就是 (34.6) 说的：痛苦造出潜能，功课自己长出来。</div>
+    <div class="case"><b>膝盖痛让他第一次认真听身体：</b>跑了三年才去看医生，才第一次知道自己的发力方式一直偏着。这是「身体复合体的痛苦」，相对直接的那种；而同期他对同事的暴躁，则属于心智与情感层面的痛苦。</div>
+  </div>
+  <div class="card">
+    <h3>走偏的催化剂，与一定会补上的那一份</h3>
+    <div class="q">那些情感上的痛苦——比如所爱之人的身体复合体死亡，或某种看似失去——会带来什么？</div>
+    <div class="quote">
+      <p class="en">This is catalyst which has gone awry. In these cases, then, there will be additional catalyst provided to offer the unmanifested self further opportunities for discovering the self as all-sufficient Creator containing all that there is and full of joy.</p>
+      <p class="zh">这是已经走偏的催化剂。在这些情况下，将会有额外的催化剂被提供，给未显化的自我进一步的机会，去发现自我是全然自足、包含万有并且充满喜悦的造物主。</p>
+      <span class="src">—— Session 034 · (34.6)</span>
+    </div>
+    <div class="plain">催化剂可能被白白浪费——Ra 说那种情况下的结果恰恰相反：变成苦涩、不耐烦、酸楚。但催化剂不会被放弃：会有额外的催化剂补上，目标始终是让自我发现自己「全然自足、包含万有、充满喜悦」。</div>
+    <div class="analogy"><b>未读的提醒会再来一封：</b>忽略一封通知，系统会再发一封。但要注意，Ra 的措辞不是「惩罚」而是「机会」——补上来的催化剂，是为了让你发现自我本来的样子，不是为了让谁付出代价。</div>
+    <div class="case"><b>同一种冲突反复出现：</b>换了三家公司，都和同一类上司起冲突；每次都归因于运气差、行业差。直到某天意识到「这道题一直没交」——那就是 Ra 说的额外催化剂：题目会以新的外壳再来一次。</div>
+  </div>
+  <div class="card">
+    <h3>两个常被误读的「命运」：传染病与先天缺陷</h3>
+    <div class="q">传染病、先天缺陷，在未显化自我的这个过程里扮演什么角色？</div>
+    <div class="quote">
+      <p class="en">These so-called contagious diseases are those entities of second density which offer an opportunity for this type of catalyst.</p>
+      <p class="zh">这些所谓的传染病，是那些提供此类催化剂机会的第二密度实体。</p>
+      <span class="src">—— Session 034 · (34.7)</span>
+    </div>
+    <div class="quote">
+      <p class="en">If this catalyst is unneeded, then these second-density creatures, as you would call them, do not have an effect.</p>
+      <p class="zh">如果这种催化剂是不需要的，那么这些第二密度的生物——如你们会称呼它们的——就不会产生效果。</p>
+      <span class="src">—— Session 034 · (34.7)</span>
+    </div>
+    <div class="plain">传染病不是抽象的命运，而是第二密度实体在提供一种催化剂机会；若这份催化剂对你而言是多余的，它们就不起作用。Ra 同时提醒：这类概括总有例外，所以只能谈一般的运行方式，不能谈每一种情况。</div>
+    <div class="quote">
+      <p class="en">These defects are planned as limitations which are part of the experience intended by the entity totality complex. This includes genetic predispositions, as you may call them.</p>
+      <p class="zh">这些缺陷是被计划为限制的，它们是实体全体复合体所意图的经验的一部分。这包括你们所谓的遗传倾向。</p>
+      <span class="src">—— Session 034 · (34.8)</span>
+    </div>
+    <div class="plain">先天缺陷属于心/身复合体编程的一部分，是「被意图的经验」里的限制条件，遗传倾向也在其中。Ra 在这里没有给出道德解释，只给了结构解释：它属于编程。</div>
+    <div class="analogy"><b>摄影师只用一支定焦镜头：</b>限制不是惩罚，而是塑造作品的条件——不是因为它拍不到别的，而是因为限制让某一种看法成为可能。Ra 说先天缺陷「被计划为限制，是所意图经验的一部分」，正类似这种「一开始就选好的条件」。</div>
+    <div class="case"><b>病毒面前各人不同：</b>同一办公室同一支流感，有人中招躺三天，有人毫无反应。Ra 的说法是：如果这份催化剂不被需要，这些第二密度生物就不产生效果——不是谁体质好，而是题目有没有落到你身上。</div>
+    <div class="case"><b>家族里三代高血压：</b>爷爷、父亲、你，都在五十岁前后开始吃药。Ra 把这类「遗传倾向」明确归入编程的一部分——不是意外，也不是报应，而是这一次经验里预设好的条件。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>橙色与黄色：社会性自我、装置与电视</h2></div>
+  <p class="sec-lead">镜头从这里开始向外转。Ra 先把「自我与社会」的互动定位在第二与第三能量中心（也就是橙色与黄色光芒），然后顺势把同一个框架套到装置、玩具、发明与电视上。本章的五段回答，其实都在回答同一个问题：橙色与黄色这两束光在集体生活里长什么样。</p>
+  <div class="card">
+    <h3>想改造社会的人，站在哪两束光上</h3>
+    <div class="q">关于自我与社会性自我的关系，你能给我同样类型的信息吗？</div>
+    <div class="quote">
+      <p class="en">The societal and self interactions most often concentrate upon the second and third energy centers.</p>
+      <p class="zh">社会与自我的互动，最常集中在第二与第三能量中心。</p>
+      <span class="src">—— Session 034 · (34.9)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Thus those most active in attempting to remake or alter the society are those working from feelings of being correct personally, or of having answers which will put power in a more correct configuration.</p>
+      <p class="zh">因此，那些最积极地试图重塑或改变社会的人，是那些出于「自己个人是正确的」这种感觉、或手里握着「能把权力放到更正确配置上」的答案而行动的人。</p>
+      <span class="src">—— Session 034 · (34.9)</span>
+    </div>
+    <div class="quote">
+      <p class="en">There are some few whose desires to aid society are of a green-ray nature or above.</p>
+      <p class="zh">有少数人，他们帮助社会的愿望属于绿色光芒或更高层次的性质。</p>
+      <span class="src">—— Session 034 · (34.9)</span>
+    </div>
+    <div class="plain">改造社会的动力多半落在橙色与黄色：一边是「我是对的」，一边是「该由谁掌权、怎么配置才正确」。Ra 说这是一条从负到正的完整旅程，两个方向都会激活这些中心。只有少数人帮助社会的愿望属于绿光或更高——Ra 说这样的人很少，因为第四光芒层次的理解是：自由给予的普世之爱，比权柄、甚至比重组人群与政治结构更值得渴望。</div>
+    <div class="analogy"><b>住户大会上的两种发言：</b>「规矩必须这么定，不然就是错的」——这是第一种动力；「我说了算才有秩序」——这是第二种。同一个人在同一个会场里，这两种动力可以同时出现，而 Ra 说它们都能激活橙色与黄色。</div>
+    <div class="case"><b>小区业委会改选：</b>你花了三个周末挨家挨户争取支持，坚信只有自己那套方案能把管理权放到正确的位置上。这就是 (34.9) 描述的典型图景：积极的、出于「正确」的行动，落在第二与第三能量中心。</div>
+  </div>
+  <div class="card">
+    <h3>对比卡：两位正面取向的活跃灵魂</h3>
+    <div class="q">一个强烈倾向正面社会效应的人，与一个想建立社会帝国、以铁腕统治它的人，在黄色光芒的活动上有什么区别？</div>
+    <p>值得注意的是：Ra 并没有去描述「铁腕帝国」那一侧。他说「让我们以两个正面取向的活跃灵魂为例」——他是用两位正面人物来示范黄光在正面道路上可以长成什么样子。</p>
+    <div class="quote">
+      <p class="en">This entity was able to mobilize great amounts of energy and what you call money.</p>
+      <p class="zh">这个实体能够调动大量的能量，以及你们所谓的金钱。</p>
+      <span class="src">—— Session 034 · (34.10)</span>
+    </div>
+    <div class="quote">
+      <p class="en">However, the green and blue rays were of a toweringly brilliant nature as well.</p>
+      <p class="zh">然而，绿色与蓝色光芒也具有一种极其灿烂的性质。</p>
+      <span class="src">—— Session 034 · (34.10)</span>
+    </div>
+    <div class="quote">
+      <p class="en">However, this entity was able to keep open the green-ray energy and due to the severity of its testing, if anything, this entity may be seen to have polarized more towards the positive due to its fidelity to service to others in the face of great catalyst.</p>
+      <p class="zh">然而，这个实体能够保持绿色光芒能量开放；而且由于它所受考验的严峻，如果说有什么变化，这个实体因在巨大催化剂面前仍忠于服务他人，反而可以说是更偏向正面极化了。</p>
+      <span class="src">—— Session 034 · (34.10)</span>
+    </div>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">Albert ·（(34.11) 确认：Schweitzer）</span><h4>进去、筹款、疗愈</h4><p>进入一个对它而言陌生而「野蛮」的社会，为的是能疗愈。它<b>调动大量能量与金钱</b>；绿色光芒既用于疗愈、也用于音乐；黄光因筹措推广所需的资金而<b>明亮并结晶化</b>——同时绿光与蓝光也极其灿烂。</p></div>
+      <div class="yuan-card"><span class="y-tag">Martin ·（(34.11) 确认：Luther King）</span><h4>在负面的橙黄里守住绿光</h4><p>它<b>大量处理相当负面的橙色与黄色振动模式</b>，却保持绿光能量开放。Ra 说：因为考验严峻，它在巨大催化剂面前仍忠于服务他人，反而<b>更偏向正面极化</b>。</p></div>
+      <div class="yuan-card"><span class="y-tag">Ra 的判准</span><h4>看较高中心，不看「用不用黄光」</h4><p>较高层次被激活时，较低的能量点（在平衡的存有中）仍然<b>非常非常明亮</b>。所以问题不是黄光该不该用，而是它服务哪个方向。</p></div>
+      <div class="yuan-card"><span class="y-tag">没有说的那一半</span><h4>铁腕那一侧没有展开</h4><p>发问者问的是「正面 ↔ 铁腕」的对比，Ra 只答了正面这一侧。<b>这本身是限定的答复</b>——不要替 Ra 补上他没说的内容。</p></div>
+    </div>
+    <div class="plain">黄光完全可以被大量使用而不损害正面取向：Albert 靠筹集资金让黄光「明亮并结晶化」，Martin 长期在负面的橙黄模式里工作却因守住绿光而更偏向正面。Ra 的要点是：判断一个存有，看较高的中心有没有被激活。</div>
+  </div>
+  <div class="card">
+    <h3>装置：让复合体「不激活」，还是练习权力感</h3>
+    <div class="q">未显化自我与装置、玩具、发明之间的互动呢？</div>
+    <div class="quote">
+      <p class="en">In this particular instance we again concentrate, for the most part, in the orange and in the yellow energy centers.</p>
+      <p class="zh">在这一个特定的问题上，我们再次把重点大体放在橙色与黄色能量中心。</p>
+      <span class="src">—— Session 034 · (34.12)</span>
+    </div>
+    <div class="quote">
+      <p class="en">may be seen to have the distortion of keeping the mind/body/spirit complex unactivated so that yellow- and orange-ray activity is much weakened, thus carefully decreasing the possibility of eventual green-ray activation</p>
+      <p class="zh">可以被视为带有这样一种变貌：让心/身/灵复合体保持在不激活的状态，以致黄色与橙色光芒的活动大为削弱，从而「谨慎地降低」了最终绿色光芒被激活的可能性。</p>
+      <span class="src">—— Session 034 · (34.12)</span>
+    </div>
+    <div class="quote">
+      <p class="en">These may be seen to be ways of investigating the feelings of power; more especially, power over others or a group power over another group of other-selves.</p>
+      <p class="zh">这些可以被视为探索「权力感」的方式；更具体地说，是对他人的权力，或一个群体对另一个群体（其他自我）的权力。</p>
+      <span class="src">—— Session 034 · (34.12)</span>
+    </div>
+    <div class="plain">装置分两类：一类（通讯设备、不太具竞争性的消遣游戏）让复合体保持「不激活」，从而削弱黄光与橙光、并降低最终绿光被激活的可能；另一类（团队运动、交通工具等）则是探索权力感的工具——对他人的权力，或一个群体对另一个群体的权力。</div>
+    <div class="analogy"><b>像自动续费的会员：</b>它不是敌人，也不是毒药，但它让你长期处在「不激活」的状态——以至于你连「要不要打开绿色光芒」这个问题都没机会问出口。Ra 用的动词是「削弱」与「降低可能性」，不是「禁止」。</div>
+    <div class="case"><b>通勤地铁上的四十分钟：</b>早上刷短视频，晚上刷到睡着。这一天里橙色与黄色几乎没被激活过——按 (34.12) 的说法，这「谨慎地降低」了绿光最终被激活的可能性。注意 Ra 的语气是描述后果，不是下禁令。</div>
+    <div class="case"><b>周末五人制足球：</b>抢断、比分、谁是全场最佳——Ra 把团队运动列为「探索权力感」的装置，对应橙色光芒，而且特别点明是「一个群体对另一个群体的权力」。这不是坏事，但它练的是权力，不是爱。</div>
+  </div>
+  <div class="card">
+    <h3>电视：总体效果是「分散注意力与沉睡」</h3>
+    <div class="q">就这种催化剂而言，电视对我们社会的总体影响是什么？</div>
+    <div class="quote">
+      <p class="en">Without ignoring the green-ray attempts of many to communicate via this medium such information, truth, and beauty as may be helpful, we must suggest that the sum effect of this gadget is that of distraction and sleep.</p>
+      <p class="zh">我们不忽视许多人通过这个媒介传递可能有帮助的信息、真理与美的绿光尝试；但我们必须指出，这个小装置的总体效果是分散注意力与沉睡。</p>
+      <span class="src">—— Session 034 · (34.13)</span>
+    </div>
+    <div class="plain">Ra 先肯定了媒介上的绿光尝试，再单独给出「总体效果」的判断：分散注意力与沉睡。这两句话并不矛盾——个别内容的好坏，与整体使用的净效果是两件事。</div>
+    <div class="analogy"><b>一场永不散场的背景音：</b>不是没有好东西，而是它们混在无穷的噪音里；你记得看过什么，但说不清它留下了什么。整体效果不是「被欺骗」，而是「睡着了」。</div>
+    <div class="case"><b>「我看纪录片学知识」：</b>你确实在平台上刷到过真正有营养的内容。Ra 也说他不忽视这些绿光的尝试——但他把「总和效果」单独拿出来评估。对个人也一样：十条里有一条真好，不改变「整晚刷过去」的净效果。</div>
+  </div>
+  <div class="card">
+    <h3>归类练习：这件事主要在哪一束光上？</h3>
+    <p>本集的五段回答都绕着橙色、黄色、绿色打转。判断下面每一件事主要落在哪一束光上。</p>
+    <div id="sorterArea"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>战争与收割：三条加速方向，与巴顿的总账</h2></div>
+  <p class="sec-lead">本章是本集的高潮。发问者把同一套问题套到「战争与战争谣言」上，Ra 给出三条加速方向，随后当场更正自己用过的一个术语，并借此讲出「内部光芒是资历指标」这条规则；最后，收割究竟看哪几束光，以及一个真实人物——巴顿——的总账。</p>
+  <div class="card">
+    <h3>同一个战场，三条加速方向</h3>
+    <div class="q">自我与战争、以及战争的谣言，关系是什么？</div>
+    <div class="quote">
+      <p class="en">This war-and-self relationship is a fundamental perception of the maturing entity. There is a great chance to accelerate in whatever direction is desired.</p>
+      <p class="zh">这种「战争与自我」的关系，是成熟实体的一个基本感知。这里有一个极大的机会，可以朝任何所期望的方向加速。</p>
+      <span class="src">—— Session 034 · (34.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">One may polarize negatively by assuming bellicose attitudes for whatever reason.</p>
+      <p class="zh">一个人可以因为任何理由采取好战的态度，从而负面极化。</p>
+      <span class="src">—— Session 034 · (34.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">activating orange, yellow, and then green by heroic, if you may call them this, actions taken to preserve the mind/body/spirit complexes of other-selves</p>
+      <p class="zh">通过对保护其他自我的心/身/灵复合体而采取的英勇行动——如果你们可以这样称呼它们的话——激活橙色、黄色，然后绿色。</p>
+      <span class="src">—— Session 034 · (34.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Finally, one may polarize very strongly third ray[53] by expressing the principle of universal love at the total expense of any distortion towards involvement in bellicose actions.</p>
+      <p class="zh">最后，一个人可以完全牺牲任何涉入好战行动的变貌，来表达普世之爱的原则，从而非常强烈地在第三光芒[53]上极化。</p>
+      <span class="src">—— Session 034 · (34.14)</span>
+    </div>
+    <div class="plain">战争是一台加速器：好战→负面；在战争中英勇保护他人→依序激活橙、黄、然后绿，偏向正面；彻底拒绝好战、完整表达普世之爱→在绿光上极强烈地极化，可能在极短的时间/空间跨度内成为有意识的存有。</div>
+    <div class="analogy"><b>高压情境就像放大镜：</b>平时你的性格差异要几年才显出来，在高压下几个月就能定型。Ra 说的「极大的机会」，指的正是这种加速——方向由你选，速度不由你选。</div>
+    <div class="demo-area">
+      <div class="flow-track" id="warTrack"></div>
+      <div class="flow-detail" id="warDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="warPrev">← 上一步</button> <button class="tri-btn" id="warNext">下一步 →</button></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>一次当场更正：红紫固定，内部光芒可变</h3>
+    <div class="q">你刚才说的是「第三光芒」，那是你本来想用的词吗？</div>
+    <div class="quote">
+      <p class="en">We intended the green ray. Our difficulty lies in our perception of red ray and violet ray as fixed; thus the inner rays are those which are varying and are to be observed as those indications of seniority in the attempts to form an harvest.</p>
+      <p class="zh">我们本意是绿色光芒。我们的困难在于：我们把红色光芒与紫色光芒视为固定的；因此，内部那些光芒才是变动的，并且应当被视为「在尝试形成收割的过程中代表资历」的指标。</p>
+      <span class="src">—— Session 034 · (34.15)</span>
+    </div>
+    <div class="plain">Ra 当场把「第三光芒」更正为绿色光芒，并解释原因：红与紫在 Ra 的感知里是固定的两端，真正会变动、可用来衡量「资历」的，是中间那些光芒。</div>
+    <div class="analogy"><b>体检表上的固定项与可调项：</b>身高体重是坐标（红与紫），血压、血脂、血糖才是会变、被用来评估状态的那些数（内部的橙黄绿蓝）。看一个人处在什么阶段，看的是后一类指标。</div>
+    <div class="case"><b>游戏里的等级 vs 进度：</b>角色等级是门槛（固定），而装备、技能熟练度、任务完成度才是显示你走了多远的指标——Ra 说「资历」正是这种性质：不是你有没有红紫光，而是内部光芒的变动情况。</div>
+  </div>
+  <div class="card">
+    <h3>收割看哪几束光</h3>
+    <div class="q">那么强烈的红光，是不是也会像强烈的紫光一样被当作资历指标？</div>
+    <div class="quote">
+      <p class="en">This violet ray is the only consideration for fourth-density positive.</p>
+      <p class="zh">这种紫色光芒是第四密度正面唯一的考量。</p>
+      <span class="src">—— Session 034 · (34.16)</span>
+    </div>
+    <div class="quote">
+      <p class="en">the intensity of the red as well as the orange and the yellow rays is looked upon quite carefully</p>
+      <p class="zh">红色以及橙色和黄色光芒的强度会被相当仔细地审视。</p>
+      <span class="src">—— Session 034 · (34.16)</span>
+    </div>
+    <div class="quote">
+      <p class="en">it being extremely difficult to open the gateway to intelligent infinity from the solar plexus center</p>
+      <p class="zh">因为从太阳神经丛中心打开通往智能无限的门户，是极其困难的。</p>
+      <span class="src">—— Session 034 · (34.16)</span>
+    </div>
+    <div class="plain">Ra 说发问者的直觉「部分正确」：红光确实是所有振动层级发生之事的基础，但正面收割的唯一考量是紫光（那一切振动层级的总和）。负面收割不同——它要细看红、橙、黄的强度，因为负面进展需要大量这一类型的耐力与能量，而从太阳神经丛中心打开门户极其困难。</div>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">第四密度正面</span><h4>只看紫光</h4><p>紫光被视为一切振动层级的<b>总和</b>，正面的唯一考量就是它。红光在这里的角色只是「被激活后作为一切的基础」。</p></div>
+      <div class="yuan-card"><span class="y-tag">第四密度负面</span><h4>细看红、橙、黄</h4><p>负面路径需要<b>大量该类型的耐力与能量</b>，所以这三束光的强度被仔细审视；而它对实体的难处在于：要从太阳神经丛中心打开通往智能无限的门户。</p></div>
+      <div class="yuan-card"><span class="y-tag">发问者的直觉</span><h4>「部分正确」</h4><p>他把强红光当成资历指标——Ra 说这在一定程度上正确：红光是基础，但<b>正面不看它</b>。</p></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>光芒对照表：本集给每束光的定位</h3>
+      <div class="table-wrap">
+        <table class="nine">
+          <tr><th>术语</th><th>英文</th><th>通俗理解（本集语境）</th></tr>
+          <tr><td>红色光芒</td><td>red ray</td><td>Ra 视为固定；被激活时，是一切振动层级发生之事的基础。</td></tr>
+          <tr><td>橙色光芒</td><td>orange ray</td><td>个人对个人的层面：权力感、装置、团队运动。负面收割要审视它的强度。</td></tr>
+          <tr><td>黄色光芒</td><td>yellow ray</td><td>第三能量中心、社会性自我、群体与改造社会的动力。负面收割同样要看它。</td></tr>
+          <tr><td>绿色光芒</td><td>green ray</td><td>普世之爱，内含宽恕原则。Ra 本集把误说的「第三光芒」更正为它。</td></tr>
+          <tr><td>蓝色光芒</td><td>blue ray</td><td>与绿光同属「更高的层次」，被激活时低位光芒在平衡的存有中依然非常明亮。</td></tr>
+          <tr><td>紫色光芒</td><td>violet ray</td><td>Ra 视为固定的另一端；一切振动层级的总和，第四密度正面唯一的考量。</td></tr>
+        </table>
+      </div>
+      <p style="font-size:.88rem;color:var(--ink-soft);margin-top:10px">读法提示：Ra 在本集把「能量中心」与「光芒」混着用——第二能量中心即橙色光芒，第三能量中心即黄色光芒。看到「第二与第三中心」，可以直接想成橙与黄。</p>
+  </div>
+  <div class="card">
+    <h3>巴顿：一份完整的资产负债表</h3>
+    <div class="q">你能否以我们的巴顿将军为例，告诉我战争对他的发展产生了什么影响？</div>
+    <div class="quote">
+      <p class="en">This will be the last full question of this working.</p>
+      <p class="zh">这将是本次工作的最后一个完整问题。</p>
+      <span class="src">—— Session 034 · (34.17)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This entity was of a strong yellow-ray activation with frequent green-ray openings and occasional blue-ray openings. However, it did not find itself able to break the mold of previous traumatic experiences of a bellicose nature.</p>
+      <p class="zh">这个实体具有强烈的黄色光芒激活，伴随频繁的绿色光芒开启与偶尔的蓝色光芒开启。然而，它发现自己无法打破先前那些好战性质的创伤性经验的模子。</p>
+      <span class="src">—— Session 034 · (34.17)</span>
+    </div>
+    <div class="quote">
+      <p class="en">It polarized somewhat towards the negative in its lack of understanding the green ray it carried with it, rejecting the forgiveness principle which is implicit in universal love.</p>
+      <p class="zh">它因缺乏对自身所携带的绿色光芒的理解、拒绝了普世之爱中隐含的宽恕原则，而某种程度上偏向负面极化。</p>
+      <span class="src">—— Session 034 · (34.17)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The sum total of this incarnation, vibrationally, was a slight increase in positive polarity but a decrease in harvestability due to the rejection of the Law or Way of Responsibility; that is, seeing universal love, yet still it fought on.</p>
+      <p class="zh">这次投生在振动上的总和是：正面极性略有增加，但因拒绝「责任法则」或「责任之道」——也就是说，看见了普世之爱，却仍然继续战斗——可收割性下降了。</p>
+      <span class="src">—— Session 034 · (34.17)</span>
+    </div>
+    <div class="plain">巴顿（Ra 称他为 George）带着前世编程造成的、在这辈子不可抗拒的惯性而来：黄光强、绿蓝偶开，却打不破好战创伤的模式。因对真理与美的单一信念，他有一侧偏向正面；因不理解自己所携带的绿光、拒绝普世之爱中隐含的宽恕原则，他又一侧偏向负面。总账是：正面极性略增，可收割性下降。</div>
+    <div class="analogy"><b>一份不只看盈亏的报表：</b>利润涨了（正面极性略增），现金流却恶化了（可收割性下降）。Ra 的评估方式就是这样——不给你一个「好人/坏人」的标签，而是分开列示每一项。</div>
+    <div class="case"><b>「看见了却仍然」：</b>你已经知道自己错了、也知道该道歉（这就是「看见了普世之爱」），但你选择把话说硬、继续争这一口气。Ra 说这就是「责任法则」被拒绝，而它的代价正是可收割性的下降——你并没有变坏，只是这次没交付。</div>
+    <div class="quote">
+      <p class="en">This is precisely correct.</p>
+      <p class="zh">这完全正确。</p>
+      <span class="src">—— Session 034 · (34.18)</span>
+    </div>
+    <div class="plain">发问者接着问：这个实体几乎在战争一停止就死亡，是不是为了让他能立刻重新投生、以便有可能实现收割？Ra 的回答只有一句：完全正确。</div>
+    <div class="case"><b>第二天就安排补考：</b>期末考刚结束，老师没有让你等到下学期，而是直接安排了补考。可收割性下降不等于机会关闭——按 (34.18)，连投生的时间点都可以为这个目的服务。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>收官：金句与伏笔</h2></div>
+  <p class="sec-lead">本集从一个私人的提问开始，以一次婉拒收住，中间穿过业力、痛苦、疾病、社会、装置与战争——而把这些全部串起来的，是「惯性」与「刹车」这一组词。最后一问仍是器皿照料，然后 Ra 离开。</p>
+  <div class="saying">
+    <p class="en">This stoppage of the inertia of action may be called forgiveness. These two concepts are inseparable.</p>
+    <p class="zh">行动惯性的这种停止，可以被称为宽恕。这两个概念不可分割。</p>
+    <span class="src">—— Session 034 · (34.4)</span>
+  </div>
+  <div class="card">
+    <h3>本集的三个可带走的判断</h3>
+    <div class="plain">一、业力是动量不是判决，宽恕是那个刹车，而且它任何时候都能被踩下——包括对自己。</div>
+    <div class="plain">二、催化剂可能走偏，走偏了会有更多补上；但它的目标始终是让你发现自己「全然自足、包含万有、充满喜悦」，不是让你付出代价。</div>
+    <div class="plain">三、橙色与黄色是日常生活的主要战场——社会、装置、战争都在这里发生；而判定一个人的，是较高的中心有没有被激活。</div>
+  </div>
+  <div class="card">
+    <h3>收尾：一切都好</h3>
+    <div class="quote">
+      <p class="en">All is well. We leave you, my friends, in the love and the light of the One which is All in All.</p>
+      <p class="zh">一切都好。我们离开你们，我的朋友们，在「一切万有中的太一」之爱与光中。</p>
+      <span class="src">—— Session 034 · (34.19)</span>
+    </div>
+    <p>Ra 在 (34.17) 就宣布那是「最后一个完整问题」，之后只剩下 (34.18) 的一句确认与 (34.19) 的器皿照料。收尾语落在「永恒的平安」与 Adonai。</p>
+  </div>
+  <div class="card">
+    <h3>留下的伏笔</h3>
+    <p>本集把「催化剂标题清单」里的几项一一举例，但有些线索被留在了半空：装置与绿光激活的关系，Ra 只给了「削弱」与「降低可能性」这样的方向，没有展开；「可收割性下降」的实体之后会怎样，也只留下了 (34.18) 的那一句确认。</p>
+    <div class="plain">读下一集时可以带着这两个问题：那些让复合体「不激活」的装置，Ra 会不会讲得更细？以及，一个看见了普世之爱却仍继续战斗的实体，接下来会走到哪里？</div>
+  </div>
+  <div class="case"><b>每周五行周报：</b>与其每周记录「我表现如何」，不如写三行：这一周里，哪件事真正让某个旧模式松动了一点？本集的所有机制——业力、催化剂、光芒——描述的都是可观察的变化，而不是贴在身上的身份标签。</div>
+  <div class="case"><b>不要用这一集的词去评判别人：</b>读到「可收割性下降」时，最容易做的一件事就是把它套到身边的人身上。但本集开头 Ra 已经示范了另一种做法：当一个问题涉及某个具体人物自身的理解机会时，它选择不说，理由是「侵犯」(34.3)。把标签贴到别人身上，属于同一类动作。</div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+<p>基于 The Ra Contact Session 034（split/Ra_Session_034.md）英文原文制作 · 交互式学习模块</p>
+<p>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文</p>
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra034-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+
+/* --- 问答脉络 --- */
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+  {t:'开场与器皿','d':'<b>(34.0)–(34.1)。</b>致意之后，Ra 先处理器皿的锻炼安排：一天两次短时锻炼不正确；在易受身体变貌加剧的三个月里，应是一次主锻炼，加上傍晚冥想前约一半时长的一次。Ra 承认这会消耗器皿，但能增强身体复合体、减少可被利用的脆弱性。'},
+  {t:'第八层的体验','d':'<span class="qa-q">问：穿透第八层（智能无限）时，实体体验到什么？</span><b>答：</b>每个实体的感知都独一无二，范围从无限的喜悦到强烈的服务他人之奉献；最常被感知为无法言说的深邃。而且实体通常不会想立刻终止投生——相反，把这份体验用于帮助他人的渴望极其强烈。'},
+  {t:'一次婉拒','d':'<span class="qa-q">问：我 1964 年冥想中「到另一个密度、另一个行星」的体验是什么？</span><b>答：</b>Ra 认为完全披露会因侵犯而造成伤害，只提示：这个实体虽不易接受由他人发起的催眠回溯，却已经拥有理解自身存在性的机会。'},
+  {t:'业力＝惯性','d':'<span class="qa-q">问：你能定义业力吗？</span><b>答：</b>业力即惯性；被启动的行动会以平衡的方式继续，直到那个「更高原则」被调用——那就是宽恕。二者不可分割。自我与所有相关方在任何时候都能通过理解、接纳、宽恕改善这些模式。'},
+  {t:'痛苦催化剂','d':'<span class="qa-q">问：各标题下催化剂的例子是什么？</span><b>答：</b>最常见的是痛苦（身体／心智情感／灵性三层），功课几乎总是耐心、宽容、轻柔触碰。若走偏成苦涩、不耐烦、酸楚，会有额外的催化剂补上。传染病是第二密度实体提供的机会（不需要则无效）；先天缺陷属于编程的限制，含遗传倾向。'},
+  {t:'社会性自我','d':'<span class="qa-q">问：自我与社会性自我的关系？</span><b>答：</b>这类互动最常集中在第二与第三能量中心。改造社会者多出于「自己是对的」或「有更正确的权力配置」；少数人的愿望属于绿光或更高。Ra 举了两位正面取向的活跃灵魂：Albert 与 Martin（(34.11) 确认为史怀哲与马丁·路德·金）。'},
+  {t:'装置与电视','d':'<span class="qa-q">问：未显化自我与装置、玩具、发明的互动？</span><b>答：</b>又回到橙与黄。通讯设备与消遣游戏让复合体保持不激活，削弱黄橙、降低绿光最终被激活的可能；团队运动与交通工具则是探索权力感的装置。电视的总体效果是「分散注意力与沉睡」。'},
+  {t:'战争与收割','d':'<span class="qa-q">问：自我与战争的关系？</span><b>答：</b>三条加速方向：好战→负面；英勇护人→橙、黄、然后绿；彻底拒绝好战、表达普世之爱→在绿光极强极化。Ra 更正「第三光芒」为绿光，说明内部光芒才是资历指标；正面收割只看紫光，负面看红橙黄强度。以巴顿为例：正面极性略增，可收割性下降。'},
+  {t:'收尾','d':'<span class="qa-q">问：还能为器皿做什么吗？</span><b>答：</b>一切都好。Ra 以「一切万有中的太一之爱与光」与「永恒的平安」作结，最后是 Adonai。'}
+]);
+
+/* --- 战争的三条加速方向 --- */
+initStepper('warTrack','warDetail','warPrev','warNext',[
+  {t:'好战','d':'<b>负面极化。</b>Ra 说：一个人可以因为任何理由采取好战的态度，从而负面极化——理由本身不重要，方向会被加速。（(34.14)）'},
+  {t:'英勇护人','d':'<b>橙→黄→绿。</b>在战争情境中，为了保护其他自我的心／身／灵复合体而采取的英勇行动，会依序激活橙色、黄色，然后绿色，从而某种程度上偏向正面。（(34.14)）'},
+  {t:'彻底拒绝好战','d':'<b>在绿光上极强极化。</b>完全牺牲任何涉入好战的变貌、表达普世之爱，可能在你们时间／空间的一个极短暂跨度里成为有意识的存有。Ra 称这种路径为「创伤性进展」。（(34.14)）'},
+  {t:'共同的催化剂','d':'<b>创伤。</b>Ra 补了一句总结：在你们人群里，所有进展的很大比例都以创伤为催化剂。所以前面三条路径之所以能「加速」，代价就在这里。（(34.14)）'}
+]);
+
+/* --- 术语卡展开 --- */
+document.querySelectorAll('.fn-card').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('open')));
+
+/* --- 归类练习：这件事主要在哪一束光上 --- */
+initSorter('sorterArea',[
+  {a:'周末五人制足球，全队火力集中压制对方的核心球员',opts:['橙色','黄色','绿色','橙→黄→绿','橙黄被削弱'],ans:'橙色',exp:'Ra 把团队运动列为探索权力感的装置，对应橙色光芒——而且明确说是「一个群体对另一个群体的权力」(34.12)。'},
+  {a:'你在业主群里牵头改选，坚信只有自己那套方案才能把管理权放到正确的位置上',opts:['橙色','黄色','绿色','橙→黄→绿','橙黄被削弱'],ans:'黄色',exp:'社会与自我的互动最常集中在第二与第三能量中心；出于「自己是对的」或「更正确的权力配置」而重塑社会，属于黄色光芒(34.9)。'},
+  {a:'你放下对错之争，只是陪对方把话说完',opts:['橙色','黄色','绿色','橙→黄→绿','橙黄被削弱'],ans:'绿色',exp:'Ra 说少数人帮助他人的愿望属于绿色光芒或更高；普世之爱的原则正是在绿光上表达(34.9)、(34.14)。'},
+  {a:'商场起火时你冲回二楼，把行动不便的老人背到楼下',opts:['橙色','黄色','绿色','橙→黄→绿','橙黄被削弱'],ans:'橙→黄→绿',exp:'Ra 说，为了保护其他自我的心/身/灵复合体而采取的英勇行动，会依序激活橙色、黄色，然后绿色(34.14)。'},
+  {a:'连续三晚玩消遣小游戏到凌晨，白天照常上班',opts:['橙色','黄色','绿色','橙→黄→绿','橙黄被削弱'],ans:'橙黄被削弱',exp:'这类不太具竞争性的消遣装置让复合体保持不激活，使黄色与橙色光芒的活动大为削弱，从而降低绿光最终被激活的可能(34.12)。'}
+]);
+
+/* --- 条件模拟器：理解 / 接纳 / 宽恕 --- */
+function updateKarmaSim(){
+  const u=document.getElementById('condUnderstand').checked;
+  const a=document.getElementById('condAccept').checked;
+  const f=document.getElementById('condForgive').checked;
+  const box=document.getElementById('condResult');
+  let txt='',fail=false;
+  if(u&&a&&f){
+    txt='<b>三格全开：模式被改善。</b>Ra 说，自我以及任何涉及的另一个自我，都可以在任何时候通过理解、接纳与宽恕的过程来改善这些模式；一个已启动某个行动的人也可以宽恕自己、不再重犯——这同样刹住了那股惯性。(34.5)';
+  }else if(u&&a&&!f){
+    txt='<b>缺了宽恕：车还在滑。</b>理解与接纳已经到位，但那个起刹车作用的「更高原则」没有介入。Ra 把宽恕称为行动惯性的停止，并说它与业力不可分割——好消息是，它任何时候都能被调用。(34.4)–(34.5)';
+    fail=true;
+  }else{
+    txt='<b>催化剂走偏了。</b>Ra 说，这种情况下它往往只会导致相反的结果：苦涩、不耐烦、酸楚。但催化剂不会被放弃——会有额外的催化剂被提供，给未显化的自我进一步的机会，去发现自我是全然自足、包含万有并且充满喜悦的造物主。(34.6)';
+    fail=true;
+  }
+  box.innerHTML=txt;
+  box.classList.toggle('fail',fail);
+}
+document.querySelectorAll('.cond-row input').forEach(s=>s.addEventListener('change',updateKarmaSim));
+updateKarmaSim();
+
+renderPath();
+</script>
+</body>
+</html>

@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 024 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 024 · 交互式学习模块</h1>
+  <p class="sub">这一集追问「联邦为什么离开、又为什么谨慎地回来」——从亚特兰蒂斯的水晶武器，到猎户座借窗口效应进场、雅威的两条补偿路线，最后落回一条原则：自由意志必须被维护，有些答案可以被保留。</p>
+  <div class="tagline">6 个主题 · 6 个学习步骤 · 21 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 联邦为何退场</a>
+<a href="#s3">③ 猎户座如何进场</a>
+<a href="#s4">④ 雅威的两条补偿线</a>
+<a href="#s5">⑤ 火云、先知与流散</a>
+<a href="#s6">⑥ 收官：信息的边界</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>先看这一集的问答链怎么走、例行问答为什么可以跳过</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>联邦为何退场</b><span>三次接触指向同一门教训，以及由此定下的态度：谨慎与观察</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>猎户座如何进场</b><span>呼唤、窗口效应与被放松的巡逻——隔离为何在这时被穿过</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>雅威的两条补偿线</b><span>基因克隆留下的偏见，与投生、思想形态两种补救手法</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>火云、先知与流散</b><span>猎户座的可见手法、被掺入末日信息的先知，以及它为何撤离</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官：信息的边界</b><span>一场被测试的会面、被明确保留的答案，以及本集留下的伏笔</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：这一集在问什么</h2></div>
+  <p class="sec-lead">上一集讲到：在眼前这个两万五千年的周期里，联邦分别接触过亚特兰蒂斯、埃及与南美，然后就离开了。本集从那个「离开」接着往下问——为什么走、走了以后发生了什么、下一次接触又是被什么触发的。发问者先交代了自己写书的推进方式，随后一路追问到猎户座、雅威、先知，最后一个问题落在现代传闻上。本集因器皿状态而被 Ra 主动缩短，所以问答块不多，但每一块都换了线索。</p>
+  <div class="card">
+    <h3>问答脉络：七段，两个方向</h3>
+    <p>前半段在翻旧账（联邦的失败与谨慎），后半段在讲一场「对抗」——猎户座怎么进来、怎么被历史的走向甩出去。点节点看每一段在做什么。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="qaTrack"></div>
+      <div class="flow-detail" id="qaDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="qaPrev">← 上一步</button> <button class="tri-btn" id="qaNext">下一步 →</button></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>本集议题清单：四个落点</h3>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">(24.4)</span><h4>联邦的退场</h4><p>三次接触都偏离了原意，最严重的一次以核弹与水晶武器收场。<b>结论写在态度里：谨慎、观察、寻找变貌最小的方法。</b></p></div>
+      <div class="yuan-card"><span class="y-tag">(24.6)–(24.8)</span><h4>猎户座的进场</h4><p>3,600 年前涌入的那一方不是联邦。它靠着恰当而混合的<b>呼唤</b>，以及一段被放松的隔离巡逻，从窗口效应里进来。</p></div>
+      <div class="yuan-card"><span class="y-tag">(24.6)(24.9)(24.10)</span><h4>雅威的补偿</h4><p>更早的基因克隆留下了「我与众不同」的偏见；雅威承担了后果，用投生交配与思想形态两条路补救。</p></div>
+      <div class="yuan-card"><span class="y-tag">(24.18)–(24.20)</span><h4>信息的边界</h4><p>关于二十世纪五十年代的那场会面，Ra 说了；关于坠毁飞船与尸体，Ra 明确<b>拒绝</b>说——理由是不愿侵犯你们的未来。</p></div>
+    </div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 咳嗽请求 · 后勤收尾</span></summary>
+  <div class="body">
+    <p><b>(24.1) 器皿状态：</b>Ra 说这器皿身体复合体的生命能量偏低，本次集会将适当缩短——本集确实只走了二十来个问答块就收尾。</p>
+    <p><b>(24.2)–(24.3)(24.5)(24.7)(24.10)(24.15)(24.18)(24.21) 咳嗽请求：</b>Carla 请 Ra 让她按间隔咳嗽以缓解不适。Ra 先要求说明间隔（「请重新陈述询问，指明间隔时间」），随后同意；此后发问者每次开口前，几乎都先换来一声咳嗽。</p>
+    <p><b>(24.15)(24.21) 半句话被打断：</b>有两次发问者的问句刚起头就被咳嗽截断，Ra 不作补充——本集如实保留了这个节奏。</p>
+    <p><b>(24.22)–(24.23) 收尾与照料：</b>发问者说下次集会继续深入一的法则；Ra 只提醒一句：若器皿上半身被抬高，要调整她的上肢附属肢体，然后告别（Adonai）。</p>
+  </div></details>
+  <div class="case"><b>接手老项目先读日志：</b>你接手的系统里有个奇怪的开关没人敢动。你没急着改，而是把前一位负责人留下的手记翻了一遍，才知道这个字段曾经引发过一次线上事故。本集就是这种动作——发问者先把上一集的结论摆出来，问「你们为什么走、后来怎么又回来」。</div>
+  <div class="case"><b>讲座被叫停之后：</b>小区里办过一次健康讲座，因为有人借机推销保健品而被叫停。半年后想重办，组织者格外小心：先落实场地、先和物业划清边界，再考虑宣传。这正是 Ra 描述的联邦状态——不是不做了，而是先把「如何不做成扭曲」想清楚。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>联邦为何退场：三次接触的同一门教训</h2></div>
+  <p class="sec-lead">发问者复述上一集的结论（最后一个两万五千年周期里，亚特兰蒂斯、埃及、南美都被接触过，随后联邦离开），再问原因、后果与态度。Ra 的回答不是道歉，而是三段历史判断加一次方法论转向——问题始终不在给出去的信息，而在接收方怎么用它。</p>
+  <div class="card">
+    <h3>亚特兰蒂斯：被「扩大化」的信息</h3>
+    <div class="q">上一集说联邦接触过亚特兰蒂斯、埃及与南美之后就离开了。这次离开的原因、后果，以及你们对下一次接触的态度是什么？</div>
+    <div class="quote">
+      <p class="en">In the case of the Atlanteans, enlargements upon the information given resulted in those activities distorted towards bellicosity, which resulted in the final second Atlantean catastrophe one zero eight two one [10,821] of your years in the past, as you measure time.</p>
+      <p class="zh">就亚特兰蒂斯人而言，对所给信息的一再加码，使那些活动偏向了崇尚武力，结果是在你们所计量的时间中、一万零八百二十一年前，发生了第二次、也是最后一次亚特兰蒂斯大灾变。</p>
+      <span class="src">—— Session 024 · (24.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Earth changes continued due to these, what you would call, nuclear bombs and other crystal weapons, sinking the last great land masses approximately nine six zero zero [9,600] of your years ago.</p>
+      <p class="zh">由于这些你们会称为核弹与其他水晶武器的东西，地球变化持续发生，大约在你们九千六百年前，沉没了最后的大片陆地。</p>
+      <span class="src">—— Session 024 · (24.4)</span>
+    </div>
+    <div class="plain">问题不在信息本身，而在接收方把它「扩大化」——同一份礼物被加码成武器，代价是第二次大灾变、人口的流离，以及约九千六百年前的陆沉。</div>
+    <div class="analogy"><b>像把工具升级给了孩子：</b>你教他用螺丝刀修玩具，他却拿去拆插座。工具和知识都没变，后果却完全不同——这就是 enlargements upon the information given 的意思：信息被「再放大一层」，用途就失控了。</div>
+    <div class="case"><b>把健身计划擅自加倍：</b>教练给的是循序渐进的四周计划，学员嫌慢，把负重和剂量直接翻倍，半年后进了康复科。计划没错，是加码出了问题——正对应亚特兰蒂斯那条路径。</div>
+  </div>
+  <div class="card">
+    <h3>结论不在「不再接触」，而在态度</h3>
+    <div class="q">三次实验都偏离了原意，你们从中得出了什么结论？</div>
+    <div class="quote">
+      <p class="en">It was clear to not only us but also to the Council and the Guardians that our methods were not appropriate for this particular sphere.</p>
+      <p class="zh">不仅是我们，连议会与守护者们都清楚：我们的方法并不适合这个特定的星球。</p>
+      <span class="src">—— Session 024 · (24.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Our attitude, thus, was one of caution, observation, and continuing attempts to creatively discover methods whereby contact from our entities could be of service with the least distortion and, above all, with the least possibility of becoming perversions, or antitheses, of our intentions in sharing information.</p>
+      <p class="zh">因此我们的态度是：谨慎、观察，并持续创造性地寻找方法，好让来自我们实体的接触能以最小的变貌提供服务，而且最重要的是，尽可能不变成我们分享信息之本意的扭曲或对立面。</p>
+      <span class="src">—— Session 024 · (24.4)</span>
+    </div>
+    <div class="plain">埃及与南美的实验虽然没有那么毁灭性，但同样远离了原意。承认「方法不适配」之后，联邦没有停手，而是把态度定为谨慎、观察，并继续找变貌更小的方法。</div>
+    <div class="analogy"><b>像调整给药方式：</b>药有效，但副作用太大。医生不会放弃治疗，而是换剂量、换途径——联邦做的也是这件事：不改目标，改接触的方式。</div>
+    <div class="case"><b>越热心越糟的带教：</b>你带过三届新人，发现越是直接给答案，越有人放弃自己思考。于是你改了策略：只回答问题、不给方案，让人自己走到结论前。这正是联邦从三次接触里学到的转向——减少「给予」，增加「观察」。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>猎户座如何进场：呼唤、窗口效应与被放松的巡逻</h2></div>
+  <p class="sec-lead">联邦离开一段时间之后，是什么条件促成了下一次接触？Ra 把镜头切到 3,600 年前——进来的不是联邦，而是猎户座集团。发问者紧接着追问技术细节：他们究竟是怎么穿过隔离的？是运气好碰上了一个随机窗口吗？Ra 说不是，并把「谁能进来」讲成了一套有条件的机制。</p>
+  <div class="card">
+    <h3>3,600 年前的涌入：入口是「我很特别」</h3>
+    <div class="q">联邦远离地球之后，是什么状况促成了下一次接触？</div>
+    <div class="quote">
+      <p class="en">In approximately three six zero zero [3,600] of your years in the past, as you measure time, there was an influx of those of the Orion group, as you call them.</p>
+      <p class="zh">大约在你们所计量的时间中三千六百年前，出现了一股你们称之为猎户座集团的涌入。</p>
+      <span class="src">—— Session 024 · (24.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Due to the increasing negative influences upon thinking and acting distortions, they were able to begin working with those whose impression from olden times, as you may say, was that they were special and different.</p>
+      <p class="zh">由于对思维与行动变貌的负面影响日渐增长，他们得以开始与这样一些人合作：这些人从古老时代起就带着一种印象——你们可以这么说——即自己是特殊且与众不同的。</p>
+      <span class="src">—— Session 024 · (24.6)</span>
+    </div>
+    <div class="plain">猎户座的入口不是权力，而是一种身份感：谁早已相信「我与众不同」，谁就是它的第一批合作对象。</div>
+    <div class="analogy"><b>像精准投放的广告：</b>它不吵醒所有人，只找那些已经相信自己「本该更好」的人——这类人不需要被说服，只需要被确认。</div>
+    <div class="case"><b>学习群里的「精英叙事」：</b>某个付费群里反复强调「我们是最清醒的一小撮，外面的人都在被收割」。新人一旦接受这个前提，接下来任何操纵性的建议都显得理所当然——这就是「自认特殊且与众不同」的现代版本。</div>
+  </div>
+  <div class="card">
+    <h3>隔离为什么在那时可以被穿过</h3>
+    <div class="q">3,600 年前他们是怎么穿过隔离的？是随机的窗口效应吗？</div>
+    <div class="quote">
+      <p class="en">At that time this was not entirely so as there was a proper calling for this information. When there is a mixed calling, the window effect is much more put into motion by the ways of the densities.</p>
+      <p class="zh">那时并不完全如此，因为对这种信息确实存在恰当的呼唤。而当呼唤是混合的，窗口效应便更多由各密度的运作方式来推动。</p>
+      <span class="src">—— Session 024 · (24.8)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The quarantine in this case was, shall we say, not patrolled so closely, due to the lack of strong polarity, the windows thus needing to be very weak in order for penetration.</p>
+      <p class="zh">在这个例子里，容我们说，隔离并未被巡逻得那么严密——因为缺乏强烈的极性，所以窗口只要极为微弱就足以被穿透。</p>
+      <span class="src">—— Session 024 · (24.8)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The ones of Orion have the working only according to their call. This calling is in actuality not nearly as great.</p>
+      <p class="zh">猎户座实体则只依据对他们的呼唤而工作。而实际上，这份呼唤远没有那么大。</p>
+      <span class="src">—— Session 024 · (24.8)</span>
+    </div>
+    <div class="plain">不是运气，也不是硬闯：有人求这类信息（呼唤），而当时这颗星球缺乏强烈极性、隔离巡逻稀松，窗口只需极微弱就能穿透。关键是——猎户座只能「依呼唤而工作」。</div>
+    <div class="analogy"><b>像门禁：</b>它不是在墙上开洞，而是走门。门开着的时候进出容易；一旦有人守门（极性强烈），阻力就立刻大起来——Ra 把这称为「赋能之道，或四方之道」带来的阻力。</div>
+    <div class="case"><b>灰色插件从内部流入：</b>公司内网再严，只要有一批同事点名要某类工具（呼唤），又赶上安全审计的空窗期（巡逻松懈），灰色插件就会流进来。它不是砸开大门，而是门被从里面打开了。</div>
+  </div>
+  <div class="card">
+    <h3>条件模拟器：穿透需要哪些条件同时成立</h3>
+    <p>拨动开关，看看缺哪一条会让 3,600 年前的那次进场无法发生。</p>
+    <div class="cond-row"><span class="name">存在恰当的呼唤<small>有人主动祈求这类信息</small></span><label class="switch"><input type="checkbox" id="c1" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><span class="name">呼唤是混合的<small>正面与负面的诉求混杂在一起</small></span><label class="switch"><input type="checkbox" id="c2" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><span class="name">隔离被严密巡逻<small>这颗星球拥有强烈的极性</small></span><label class="switch"><input type="checkbox" id="c3"><span class="slider"></span></label></div>
+    <div class="cond-row"><span class="name">存在「自认特殊」的土壤<small>负面种子有处可落</small></span><label class="switch"><input type="checkbox" id="c4" checked><span class="slider"></span></label></div>
+    <div id="condResult"></div>
+    <div class="obstacle-tags"><span>呼唤 calling</span><span>窗口效应 window effect</span><span>隔离 quarantine</span><span>赋能之道 / 四方之道 Way of Empowering / Squares</span></div>
+    <div class="case"><b>会场里最先被说动的人：</b>一场氛围热烈的销售会上，最先举手的人往往不是最需要的，而是最想证明自己「跟别人不一样」的那几位。场合（窗口）合适、有人带头要求（呼唤）、而会场又没人管——条件齐了，话术就能落地。</div>
+  </div>
+  <div class="card">
+    <h3>术语卡：本节之后的六个关键词</h3>
+    <p>点击卡片翻看解释。每一张都自带一句白话定义，不需要读过前文也能看懂。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">呼唤</div><div class="sub">calling</div><span class="tap">点击展开</span></div><div class="back">来自人群的、对某一类信息或帮助的主动请求。Ra 强调：服务他人的力量与猎户座都「依呼唤而工作」，没有呼唤就没有工作。<em>比喻：客服只接起打进电话的人——不呼求，就不会有回应。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">窗口效应</div><div class="sub">window effect</div><span class="tap">点击展开</span></div><div class="back">隔离于某时某处出现的缝隙。它不全靠偶然：当呼唤是混合的，窗口效应就更多由各密度的运作方式推动；极性越弱，窗口越容易被穿透。<em>案例：老小区的侧门——不是被撬开的，是本来就虚掩着。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">隔离</div><div class="sub">quarantine</div><span class="tap">点击展开</span></div><div class="back">地球这一演化场域对外来影响的屏蔽，目的是不让星际实体随意干预人类的选择。它会被巡逻，但巡逻的严密程度与该星球的极性强度有关。<em>比喻：不是一堵墙，而是一片需要有守卫巡逻的边界。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">赋能之道 / 四方之道</div><div class="sub">Way of Empowering / Squares</div><span class="tap">点击展开</span></div><div class="back">Ra 用来描述一种在极性增强后出现的防护作用：它带来很大的阻力，使穿透变得困难。本集用它解释「为什么随着收割临近，猎户座反而更难进来」。<em>案例：安保升级后，老办法就不好使了。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">思想形态</div><div class="sub">thought-form</div><span class="tap">点击展开</span></div><div class="back">被造出来、可以被感官看见的构造物，用途是「暗示神秘或崇高之物」。本集说雅威后期更有效的手法就是它，猎户座也用它制造奇迹般的事件。<em>案例：舞台上的烟雾与追光——你看见的不是本体，而是为了让你产生某种感受而造出的形象。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">基因克隆</div><div class="sub">genetic cloning</div><span class="tap">点击展开</span></div><div class="back">本集说联邦实体雅威在许多千年前以此设置了「特殊且与众不同」的偏见——这是猎户座后来能播下负面种子的土壤，也是全书里少见的、把遗传层面的操作与分野连起来的段落。<em>比喻：地基里预埋的接口，房子还没盖，管子已经在那儿了。</em></div></div>
+    </div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>雅威的两条补偿线：从基因克隆到「轮中之轮」</h2></div>
+  <p class="sec-lead">上一章说猎户座 3,600 年前涌入，而它播下的「精英」种子有前因：更早的许多千年前，一位联邦实体用基因克隆在这些人中间设下了偏见。这一章讲这位实体——雅威——怎么面对自己留下的后果，以及它动用了哪些技术来补救。Ra 在末尾只「指了方向」，没有给全答案，这一点本身也是本集的教训之一。</p>
+  <div class="card">
+    <h3>前因：克隆留下的偏见，猎户座找到的土壤</h3>
+    <div class="q">猎户座凭什么能在这一批人身上开始工作？</div>
+    <div class="quote">
+      <p class="en">An entity of the Confederation, many, many thousands of your years in the past, the one you may call Yahweh, had, by genetic cloning, set up these particular biases among these peoples who had come gradually to dwell in the vicinity of Egypt, as well as in many, many other places, by dispersion after the down-sinking of the land mass Mu.</p>
+      <p class="zh">一个星际联邦的实体——你们可称之为雅威——在你们许多许多千年前，以基因克隆的方式，在这些族群中设下了这些特定的偏见：他们是穆大陆陆沉之后流散开来、逐渐定居于埃及附近以及许多许多其他地方的人。</p>
+      <span class="src">—— Session 024 · (24.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Here the Orion group found fertile soil in which to plant the seeds of negativity; these seeds, as always, being those of the elite, the different, those who manipulate or enslave others.</p>
+      <p class="zh">猎户座集团在这里找到了肥沃的土壤来播下负面性的种子；这些种子一如既往，属于精英、属于与众不同者、属于操纵或奴役他人者。</p>
+      <span class="src">—— Session 024 · (24.6)</span>
+    </div>
+    <div class="plain">偏见不是猎户座种下的，是更早的克隆留下的；猎户座只是发现这片土壤肥沃，把「精英、与众不同、操纵或奴役他人」的种子放了进去。</div>
+    <div class="analogy"><b>像厨房里已经备好的面粉：</b>面粉本来是为烤面包囤的，谁进来都能拿它做别的。材料的用途不由囤它的人决定，而由后来使用它的人决定。</div>
+    <div class="case"><b>「重点班」标签的后坐力：</b>小学被分进重点班的孩子，长大后容易觉得「我和一般人不一样」。当年只是一次编班（克隆留下的偏见），多年后却成了营销话术和极端团体最好用的入口——这正是「肥沃土壤」的日常版本。</div>
+  </div>
+  <div class="card">
+    <h3>补救一：名字被占用之后</h3>
+    <div class="q">雅威后来做了什么？</div>
+    <div class="quote">
+      <p class="en">The one known as Yahweh felt a great responsibility to these entities.</p>
+      <p class="zh">被称为雅威的这位实体，对这些实体感到巨大的责任。</p>
+      <span class="src">—— Session 024 · (24.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">However, the Orion group had been able to impress upon the peoples the name Yahweh as the one responsible for this elitism.</p>
+      <p class="zh">然而，猎户座集团已经成功地把「雅威」这个名字印在人们心里，作为这种精英主义的责任者。</p>
+      <span class="src">—— Session 024 · (24.6)</span>
+    </div>
+    <div class="plain">名字被对手占用了：人们把「精英主义」记在雅威名下。雅威没有去争辩，而是先「评估自己的振动模式」，让自己成为一个更雄辩有效的「声音振动复合体」，再以正面哲学重新出场。</div>
+    <div class="analogy"><b>像品牌被仿冒：</b>不跟山寨对骂，而是把自己的东西做得更清楚——让这个名字本身重新变得可信。</div>
+    <div class="case"><b>被冒名的公益项目：</b>你发起了一个助学计划，几年后有人打着同样的名号收「管理费」。你没有去撕，而是重建自己的渠道、公开每一笔账，让「这个名字＝透明助学」重新成立——对应 Ra 说的「成为一个更雄辩有效的声音振动复合体」。</div>
+  </div>
+  <div class="card">
+    <h3>时间线：从穆大陆到哈米吉多顿</h3>
+    <div class="q">这些事的先后顺序是怎样的？谁先到、谁后来？</div>
+    <p>本集把几件事串成了一条纵贯数千年、最后收在「撤离」上的线。Ra 特意纠正器皿口误，把时间定为三千三百年。</p>
+    <div class="timeline">
+      <div class="tl-item"><div class="t">穆大陆沉没之后</div><div class="d">人口流散，逐渐定居于埃及附近以及许多其他地方——这批人后来成了「特定偏见」的承载者。</div></div>
+      <div class="tl-item"><div class="t">许多、许多千年前 · 基因克隆</div><div class="d">雅威以基因克隆在这些族群中设下「特殊且与众不同」的偏见。</div></div>
+      <div class="tl-item"><div class="t">约 3,600 年前 · 猎户座涌入</div><div class="d">负面影响的增长让精英种子发芽；天空中同时出现一位被云遮蔽的火焰使者。</div></div>
+      <div class="tl-item"><div class="t">约 3,300 年前 · 「他来了」</div><div class="d">不再被称为雅威的实体开始发送正面导向的哲学；Ra 说，被称为哈米吉多顿的那场对抗，其激烈部分由此开始。</div></div>
+      <div class="tl-item"><div class="t">约 3,000 年 · 帝国离开天空</div><div class="d">猎户座一方无法长久维持存在，只得作出在物理层面撤离天空的决定。</div></div>
+      <div class="tl-item"><div class="t">其后约六百年 · 流散</div><div class="d">召唤他们的那群人四处分散，猎户座被迫彻底退出——原因见下一章。</div></div>
+    </div>
+    <div class="quote">
+      <p class="en">In this complex the old Yahweh, now unnamed, but meaning "He comes," began to send positively oriented philosophy.</p>
+      <p class="zh">在这个复合体里，旧的雅威——如今已不具名，但意为「他来了」——开始发送正面导向的哲学。</p>
+      <span class="src">—— Session 024 · (24.6)</span>
+    </div>
+    <div class="plain">这条线上最关键的一点：猎户座进来只比雅威的正面哲学早了约三百年——对抗是老问题换了一批参加者。</div>
+  </div>
+  <div class="card">
+    <h3>补救二：投生交配，与思想形态</h3>
+    <div class="q">猎户座与雅威的哲学都是靠心电感应传递的吗？还是用了别的手法？</div>
+    <div class="quote">
+      <p class="en">There were two other techniques used: one by the entity no longer called Yahweh, who still felt that if it could raise up entities which were superior to the negative forces, that these superior entities could spread the Law of One.</p>
+      <p class="zh">还用上了另外两种技术。其一出自那位不再被称为雅威的实体——它仍然认为，若能培育出优于负面力量的存有，这些更优越的存有就能传播一的法则。</p>
+      <span class="src">—— Session 024 · (24.9)</span>
+    </div>
+    <div class="quote">
+      <p class="en">came among your people in form according to incarnate being and mated in the normal reproductive manner of your physical complexes, thus birthing a generation of much larger beings</p>
+      <p class="zh">以投生者的形态来到你们的人群中，并以你们身体复合体的正常生殖方式交配，由此诞生了一代体型大得多的存有。</p>
+      <span class="src">—— Session 024 · (24.9)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The other method used to greater effect later in the scenario, as you would call it, was the thought-form such as we often use among your peoples to suggest the mysterious or the sublime.</p>
+      <p class="zh">另一种手法在你们所称的剧情里后来更见成效：即思想形态——就像我们常用来向你们的人群暗示神秘或崇高之物的那种。</p>
+      <span class="src">—— Session 024 · (24.9)</span>
+    </div>
+    <div class="plain">除了心电感应，还有两条路：一是亲自投生、按正常生殖方式交配，生出那代被称为「亚衲」的巨大存有，指望他们去传播一的法则；二是思想形态——造出能暗示神秘与崇高的可见形象。</div>
+    <div class="analogy"><b>像老师不再发讲义，而是下场当同学：</b>讲十场不如亲自进课堂和你们一起做实验——投生就是这条路：把自己变成教材本身。</div>
+    <div class="case"><b>云中浮现的巨大面孔：</b>一部动画里，主角抬头看见云层中浮现的巨影，全场安静——观众不会去问「它怎么做到的」，只感到崇高与不可解。这正是思想形态的用法：不是递一条指令，而是造出一个让人停止提问的画面。</div>
+    <div class="case"><b>顾问亲自入职三个月：</b>一位顾问在外面讲课讲不动的时候，索性进公司做了三个月员工：坐在同一个会议室、面对同一批客户。Ra 说雅威选的就是类似的事——投生、生育、把希望放在下一代存有身上。</div>
+  </div>
+  <div class="card">
+    <h3>被点到名的「轮中之轮」</h3>
+    <div class="q">那些神秘显现，你能举几个例子吗？</div>
+    <div class="quote">
+      <p class="en">This is information which you may discover. However, we will briefly point the way by indicating the so-called wheel within a wheel and the cherubim with sleepless eye.</p>
+      <p class="zh">这是你们可以自行发现的信息。不过我们会略微指个方向：所谓的「轮中之轮」，以及「永不闭眼的基路伯」。</p>
+      <span class="src">—— Session 024 · (24.10)</span>
+    </div>
+    <div class="plain">Ra 没有展开细节，而是把答案标成「你们可以自行发现」，只给了两个意象当路标。这与本集另一段（拒绝回答坠毁飞船）是同一个态度：不把该由你们走路的部分替你们走完。</div>
+    <div class="case"><b>导师只圈题目不给结论：</b>研究课上，导师在白板上写下两个关键词就说「你们自己去找」。他不是不知道答案，而是判断这一步应该由学生完成——Ra 对 (24.10) 的处理方式与此相同。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>猎户座的进与退：火云使者、被污染的先知、与流散的反噬</h2></div>
+  <p class="sec-lead">发问者接着问：猎户座在 3,600 年前用了什么手法，有没有留下记录的先知，它到底成功了没有。Ra 的描述很具体——天空中的使者、思想传递、奇迹般的事件；而它造成的最坏后果，不是战争，而是让本来只想服务他人的先知开始宣讲末日。最后发问者问出一个关键问题：既然进来了，为什么六百年后必须撤离？</p>
+  <div class="card">
+    <h3>手法：把自己做成「造物主的样子」</h3>
+    <div class="q">猎户座当时用了类似的手法吗？那位使者是什么样的？看过火云之后，信息又是怎么传进去的？</div>
+    <div class="quote">
+      <p class="en">The group, or empire, had an emissary in your skies at that time.</p>
+      <p class="zh">那时，那个集团——或者说帝国——在你们的天空中有一位使者。</p>
+      <span class="src">—— Session 024 · (24.11)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This emissary was of your fiery nature, which was hidden by the nature of cloud in the day.</p>
+      <p class="zh">这位使者具有你们所说的火的本质，白天则被云的本质所遮蔽。</p>
+      <span class="src">—— Session 024 · (24.12)</span>
+    </div>
+    <div class="quote">
+      <p class="en">By thought transfer and by the causing of fiery phenomena and other events to appear as being miraculous through the use of thought-forms.</p>
+      <p class="zh">通过思想传递，也通过以思想形态使火焰现象与其他事件显现为奇迹。</p>
+      <span class="src">—— Session 024 · (24.13)</span>
+    </div>
+    <div class="plain">它的手法是「符合预期」：藏起火的本质、用云让它看起来就该是这样，使目击者不再追问，并把它当成自己心中造物主的样子；随后靠思想传递与奇迹般的事件，把内容递进去。</div>
+    <div class="analogy"><b>像诈骗电话先报出你的订单号：</b>报得出细节，不是为了说明事实，而是为了让你停止怀疑。手法越贴合你原有的想象，你就越不会去核实。</div>
+    <div class="case"><b>像是「内部专家」的账号：</b>某短视频号头像穿着白大褂、简介写着三甲医院，开口就是「我们内部都知道」。你不再问「你是谁」，只关心他说什么——这就是「使载具与这些实体对造物主的概念相一致」的现代版本。</div>
+    <div class="case"><b>用「当场见效」代替说明：</b>推销会上，主持人请一位老人当场扔掉拐杖走了两步，全场沸腾，没人再问产品的原理——对应 Ra 所说的「使火焰现象与其他事件显现为奇迹」。</div>
+  </div>
+  <div class="card">
+    <h3>代价：预言被掺进了末日</h3>
+    <div class="q">那个时代有留下记录的先知吗？你是说猎户座成功污染了一些正面导向的先知？</div>
+    <div class="quote">
+      <p class="en">Those of the empire were not successful in maintaining their presence for long after the approximate three zero zero zero [3,000] date in your history and were, perforce, left with the decision to physically leave the skies.</p>
+      <p class="zh">帝国一方在你们历史中大约三千年前后，未能长久维持其存在，只得作出在物理层面离开天空的决定。</p>
+      <span class="src">—— Session 024 · (24.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The so-called prophets were often given mixed information, but the worst that the Orion group could do was to cause these prophets to speak of doom, as prophecy in those days was the occupation of those who love[d] their fellow beings and wish[ed] only to be of service to them and to the Creator.</p>
+      <p class="zh">所谓的先知们常常被给予混合的信息；猎户座集团所能做的最坏的事，就是让这些先知说出末日——因为在那些日子里，预言是那些爱同胞、只愿服务同胞与造物主之人的职业。</p>
+      <span class="src">—— Session 024 · (24.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This is correct. Your next query shall be the last full query for this session.</p>
+      <p class="zh">这是正确的。你的下一个询问，将是本次集会最后一个完整的询问。</p>
+      <span class="src">—— Session 024 · (24.16)</span>
+    </div>
+    <div class="plain">最坏的结果不是伪造一个先知，而是污染真实的先知：他们本是爱同胞、只愿服务的人，却被掺进了末日信息。Ra 确认了这一点，并同时收紧节奏——这之后只再回答一个完整问题。</div>
+    <div class="analogy"><b>像在科普文里偷塞一句「专家警告」：</b>文章整体还在，读者记住的却只剩恐慌。渠道越可信，掺进去的那一句越有杀伤力。</div>
+    <div class="case"><b>「转发这条保平安」：</b>家族群里最热心、最想帮人的长辈，转发的常常是带恐吓的假消息。渠道是好的（他真心想帮人），内容被掺了东西，而杀伤力恰恰来自他的可信度——这正是本集所说的「混合信息」。</div>
+  </div>
+  <div class="card">
+    <h3>反噬：流散如何解除了精英主义</h3>
+    <div class="q">为什么猎户座集团在约六百年之后不得不撤离？</div>
+    <div class="quote">
+      <p class="en">Although the impression that they had given to those who called them [was] that these entities were an elite group, that which you know as Diaspora occurred, causing much dispersion of these peoples so that they became an humbler and more honorable breed, less bellicose and more aware of the loving-kindness of the One Creator.</p>
+      <p class="zh">尽管他们给那些呼唤者留下的印象是「这群实体属于精英」，但你们所知的流散发生了，使这些人大量分散，从而成为一个更谦卑、更可敬的族群：更好战性更少，也更觉知太一造物主的慈爱。</p>
+      <span class="src">—— Session 024 · (24.17)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The creation about them tended towards being somewhat bellicose, somewhat oriented towards the enslavement of others, but they themselves, the target of the Orion group by means of their genetic superiority/weakness, became what you may call the underdogs, thereby letting the feelings of gratitude for their neighbors, their family, and their One Creator begin to heal the feelings of elitism which led to the distortions of power over others which had caused their own bellicosity.</p>
+      <p class="zh">他们周围的造物偏向好战、偏向奴役他人；但他们自己——猎户座集团凭其基因上的优越／脆弱所瞄准的目标——却成了人们所说的弱势者。于是，对邻居、家人与太一造物主的感恩之情，开始疗愈那份精英主义；正是这份精英主义引出了凌驾他人的权力变貌，也就造成了他们自身的好战。</p>
+      <span class="src">—— Session 024 · (24.17)</span>
+    </div>
+    <div class="plain">猎户座选人靠的是「基因上的优越／脆弱」，但被选中的这群人后来反而成了弱势者；流散之后，感恩开始疗愈那份精英主义。也就是说——它的种子里自带解药。</div>
+    <div class="analogy"><b>像被捧杀的孩子：</b>被贴上「天才」标签后经历挫折、被同龄人接住，反而慢慢放下了「我和你们不一样」的执念。标签是他被选中的原因，也是他最后失去它的原因。</div>
+    <div class="case"><b>少年班毕业三十年后：</b>当年最被看好的那位同学，后来退学、打工、被同事照应。他说真正的转变发生在「终于承认自己也需要别人帮忙」那一年——正是 Ra 说的「感恩开始疗愈精英主义感」。</div>
+    <div class="case"><b>被解散的「核心小组」：</b>公司里最受器重的小组一夜解散，成员散到不同行业。几年后他们反而更愿意协作、更少谈「只有我们懂」——分散（Diaspora）把人从精英叙事里拽了出来。</div>
+  </div>
+  <div class="card">
+    <h3>归类练习：这是种子，还是解药？</h3>
+    <p>判断下面每一种现代场景，属于猎户座播种的「精英叙事」，还是 Ra 描述的那条疗愈之路。</p>
+    <div id="sorterArea"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>收官：一场被测试的会面、被保留的答案</h2></div>
+  <p class="sec-lead">最后几个问答块都很短，却把本集的主题收回一处：与艾森豪威尔的接触是真的，那是一次测试；而坠毁飞船与尸体的问题被 Ra 明确拒绝。发问者说下次继续深入一的法则，Ra 只留下照料器皿的一句提醒与告别。</p>
+  <div class="card">
+    <h3>1950 年代的那场会面：一次测试</h3>
+    <div class="q">艾森豪威尔在二十世纪五十年代见过星际联邦或猎户座集团吗？</div>
+    <div class="quote">
+      <p class="en">The one of which you speak met with thought-forms which are indistinguishable from third density. This was a test.</p>
+      <p class="zh">你所说的那个人，遇见的是与第三密度无法区分的思维形态。这是一次测试。</p>
+      <span class="src">—— Session 024 · (24.19)</span>
+    </div>
+    <div class="quote">
+      <p class="en">We discovered that this entity did not feel that those under his care could deal with the concepts of other beings and other philosophies. Thus an agreement reached then allowed him to go his way, ourselves to do likewise; and a very quiet campaign, as we have heard you call it, be continued alerting your peoples to our presence gradually. Events have overtaken this plan.</p>
+      <p class="zh">我们发现，这个实体认为他照管下的人们无法处理其他存有与其他哲学的概念。于是当时达成协议，让他走他的路、我们走我们的；而一个非常安静的运动——如我们听你们这样称呼它——继续进行，逐步让你们的人群注意到我们的存在。事件已经使这项计划落后于形势。</p>
+      <span class="src">—— Session 024 · (24.19)</span>
+    </div>
+    <div class="plain">他见到的不是「外星人本人」，而是与第三密度无法区分的思维形态。联邦想测试的是：一个极其正面、淳朴、对权力没有显著欲望的人接触到和平信息时会怎么做。结果是他判断自己所照管的人还没准备好——双方各自安然而退，联邦转回低调的推进。</div>
+    <div class="analogy"><b>像试投一份方案：</b>先讲给最稳、最没有权力欲的那位高管听，观察他的反应，再决定是否拿到大会上——这次接触就是这种「探询」，而被测试者的回答改变了后续计划。</div>
+    <div class="case"><b>一个非常安静的运动：</b>有的小众产品不投广告、不做路演，只靠用户之间口耳相传，等别人慢慢发现它的存在——这正是 Ra 说的 very quiet campaign：逐步让人注意到，而不是一次性宣告。</div>
+  </div>
+  <div class="card">
+    <h3>信息的边界：Ra 明确保留了什么</h3>
+    <div class="q">有坠毁的飞船吗？现在有小型尸体存放在我们的军事设施里吗？</div>
+    <div class="quote">
+      <p class="en">We do not wish to infringe upon your future.</p>
+      <p class="zh">我们不希望侵犯你们的未来。</p>
+      <span class="src">—— Session 024 · (24.20)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Therefore, we shall withhold this information.</p>
+      <p class="zh">因此，我们将保留这个信息。</p>
+      <span class="src">—— Session 024 · (24.20)</span>
+    </div>
+    <div class="plain">被明确拒绝。理由不是「不知道」，而是不侵犯未来：在你们当前军事与情报思维还比较混乱的配置里，这个答案可能超出你们能适当处理的范围。</div>
+    <div class="analogy"><b>像不在走廊里谈预后：</b>医生不会站在人来人往的走廊里说完所有可能的结果——不是隐瞒，而是判断「此时此地给出这条信息，会不会反而伤害你」。</div>
+    <div class="case"><b>朋友问「我该不该辞职」：</b>你看得出他要的是一个决定，而不是信息。于是你没有替他选，只说「这件事得由你来定」——Ra 的 withhold 同属这种取舍：不是不回答，而是判断回答了会不会等于替你做了决定。</div>
+    <div class="case"><b>尚未定论的数据先不公布：</b>实验室里有一份还没定论的数据，提前泄露就会被舆论当成结论使用，负责人选择暂不公开——对应 Ra 说的「可能给你们超过你们能适当处理的内容」。</div>
+  </div>
+  <div class="saying">
+    <p class="en">Yet free will must be maintained, and those desiring negatively oriented information, as you would call it, must then be satisfied by those moving through by the window effect.</p>
+    <p class="zh">然而自由意志必须被维护；那些渴望负面导向信息的实体，必须由通过窗口效应进来的实体来满足。</p>
+    <span class="src">—— Session 024 · (24.8)</span>
+  </div>
+  <div class="card">
+    <h3>这一集留下的位置</h3>
+    <p>整集讲的其实是同一个难处：想帮忙的一方，怎样才能帮而不越界。联邦在亚特兰蒂斯、埃及、南美三次越过了界（结果不是灾难就是偏离），于是把态度改成谨慎、观察、找变貌最小的方法；猎户座则从另一端证明——它只能依呼唤而工作，靠的窗口会因星球的极性增强而关上；而雅威的补偿、以及 Ra 对本集最后那问的保留，也都在同一条线上。</p>
+    <div class="quote">
+      <p class="en">I am Ra. All is well. It is our joy to speak with you.</p>
+      <p class="zh">我是 Ra。一切都好。与你们交谈是我们的喜悦。</p>
+      <span class="src">—— Session 024 · (24.23)</span>
+    </div>
+    <div class="plain">读下一集时可以带着两个问题：那一代被寄望传播一的法则的巨大存有，后来怎么样了？而当发问者把书推进到第四密度与更深的哲学时，联邦对「能给多少」的界限会不会再变？</div>
+    <div class="case"><b>医生的第二意见：</b>复查时你问「我是不是得的是某一种病」，医生答「这次先不讨论未定的部分，等你把这三项检查做完」——信息不是被隐藏，而是被排进了次序。Ra 对本集最后一问的处理正是这样：先看你们能不能处理，再决定给不给。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+<p>基于 The Ra Contact Session 024（split/Ra_Session_024.md）英文原文制作 · 交互式学习模块</p>
+<p>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文</p>
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra024-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+  {t:'(24.0)–(24.3) 开场与器皿',d:'<span class="qa-q">问：器皿有点鼻塞，这次集会适合进行吗？能让她按间隔咳嗽吗？</span><b>答：</b>这器皿身体复合体的生命能量偏低，集会会适当缩短；咳嗽可行——但 Ra 先要求说明间隔，再予以同意。'},
+  {t:'(24.4) 联邦为何离开',d:'<span class="qa-q">问：上一次接触之后联邦离开了，原因、后果与态度是什么？</span><b>答：</b>三次实验都偏离原意——亚特兰蒂斯把信息「扩大化」而成好战，酿成 10,821 年前的第二次大灾变；埃及与南美同样远离意图。态度因此定为谨慎、观察，并持续寻找变貌最小的方法。'},
+  {t:'(24.6)(24.8) 下一次接触怎么来的',d:'<span class="qa-q">问：什么状况促成了下一次接触？他们怎么穿过隔离？</span><b>答：</b>3,600 年前猎户座涌入。因存在恰当而混合的呼唤，加上隔离未被严密巡逻（缺乏强烈极性），窗口只需极微弱便可穿透——而猎户座只能依呼唤而工作。'},
+  {t:'(24.6)(24.9)–(24.10) 雅威做了什么',d:'<span class="qa-q">问：雅威如何补救？用了哪些技术？</span><b>答：</b>更早的基因克隆留下了「特殊且与众不同」的偏见；雅威承担了责任，改以正面哲学出场，另用投生交配生出巨大存有（亚衲）与思想形态两条路。至于具体显现，Ra 只说「你们可以自行发现」，并点出轮中之轮与永不闭眼的基路伯。'},
+  {t:'(24.11)–(24.14)(24.16) 猎户座的手法',d:'<span class="qa-q">问：猎户座用了什么方法？有先知吗？它成功了吗？</span><b>答：</b>天空中的火云使者、思想传递与奇迹般的事件。帝国在约三千年前后被迫离开天空；先知常被给予混合信息，最坏的结果是让他们宣讲末日。Ra 确认这一点，并宣布下一问是最后一个完整问题。'},
+  {t:'(24.17) 猎户座为何撤离',d:'<span class="qa-q">问：他们为什么在约六百年之后必须撤离？</span><b>答：</b>不是被打败：流散让人大量分散，成为一个更谦卑、更可敬的族群；对邻居、家人与太一造物主的感恩，开始疗愈那份由精英主义引出的权力变貌。'},
+  {t:'(24.18)–(24.20) 现代传闻与信息的边界',d:'<span class="qa-q">问：艾森豪威尔见过谁？有坠毁飞船与尸体吗？</span><b>答：</b>他见到的是与第三密度无法区分的思维形态，一次测试；因他判断民众尚无法处理，双方各自退开。至于坠毁飞船与尸体，Ra 明确保留：不愿侵犯你们的未来。'}
+]);
+
+document.querySelectorAll('.fn-card').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('open')));
+
+initSorter('sorterArea',[
+  {a:'项目会上，负责人说「这批人不行，只有我们几个能扛」',opts:['负面种子','疗愈之路'],ans:'负面种子',exp:'「精英、与众不同」正是猎户座播下的种子类型 (24.6)，它通向凌驾他人的权力变貌 (24.17)。'},
+  {a:'被裁之后收到前同事的问候，也开始主动帮邻居搬东西',opts:['负面种子','疗愈之路'],ans:'疗愈之路',exp:'Ra 说对邻居、家人与太一造物主的感恩开始疗愈精英主义感，进而化解好战性与支配欲 (24.17)。'},
+  {a:'公司文化反复强调「我们是最聪明的那百分之一」',opts:['负面种子','疗愈之路'],ans:'负面种子',exp:'把身份感建立在「与众不同」上，等于给操纵与奴役他人的逻辑预留了接口 (24.6)。'},
+  {a:'移民社区被排挤之后互相扶持，对帮过自己的人心怀感谢',opts:['负面种子','疗愈之路'],ans:'疗愈之路',exp:'流散让这群人成了弱势者，感恩反而把他们从精英叙事里带了出来 (24.17)。'},
+  {a:'入群后被反复灌输「外面的人都是等着被割的羊」',opts:['负面种子','疗愈之路'],ans:'负面种子',exp:'这正是「精英、与众不同、操纵或奴役他人」的种子 (24.6)，猎户座只是找到了种它的土壤。'},
+  {a:'曾经爱炫耀的人，在受挫之后开始感谢家人的包容',opts:['负面种子','疗愈之路'],ans:'疗愈之路',exp:'谦卑与感恩是解药：Ra 说它疗愈的正是那份导致权力变貌的精英感 (24.17)。'}
+]);
+
+function condUpdate(){
+  const call=document.getElementById('c1').checked;
+  const mixed=document.getElementById('c2').checked;
+  const patrol=document.getElementById('c3').checked;
+  const soil=document.getElementById('c4').checked;
+  const el=document.getElementById('condResult');
+  let msg='',fail=false;
+  if(!call){
+    msg='<b>没有呼唤，就没有工作。</b>Ra 说猎户座「只依据对他们的呼唤而工作」——没有这道口子，窗口效应也不会为他们启动。这也解释了为什么联邦总是先等呼唤，再考虑接触。';
+    fail=true;
+  }else if(patrol){
+    msg='<b>隔离被严密巡逻时，阻力极大。</b>Ra 说「由于赋能之道，或称四方之道，对穿透存在很大的阻力」；星球极性越强，窗口就越难被穿透——这也正是随着收割临近，猎户座反而更难进来的原因。';
+    fail=true;
+  }else if(!mixed){
+    msg='<b>有呼唤，但缺一环。</b>Ra 说「当存在混合呼唤时，窗口效应更多地被密度的方式所启动」。只朝单一方向的祈求，不容易把窗口推成可穿透的状态——3,600 年前那次的呼唤是混杂的。';
+  }else if(!soil){
+    msg='<b>通道开了，却没人接。</b>负面种子需要落在「自认特殊、与众不同」的土壤里：雅威更早的基因克隆为猎户座备好了这片土。缺少这层土壤，即便进了场也找不到可以工作的对象。';
+  }else{
+    msg='<b>穿透成立，四条件齐备。</b>这正是本集描述的那个组合：恰当的呼唤存在，呼唤是混合的，隔离因缺乏强烈极性而未被严密巡逻，而人群中早已有「自认特殊」的土壤。于是 3,600 年前，猎户座的涌入发生了。';
+  }
+  el.innerHTML=msg;
+  el.classList.toggle('fail',fail);
+}
+document.querySelectorAll('.cond-row input').forEach(x=>x.addEventListener('change',condUpdate));
+condUpdate();
+
+renderPath();
+</script>
+</body>
+</html>

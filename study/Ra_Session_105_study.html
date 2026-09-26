@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 105 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 105 · 交互式学习模块</h1>
+  <p class="sub">这一集前半场逐项处理伤痕、净身与搬家的维护问答，后半场才进入真正的课：塔罗的下一部分——身体。Ra 用两次纠正把黄色光芒载具摆正：它不是加速进化的熔炉，而是让进化得以发生的必需品。</p>
+  <div class="tagline">6 个主题 · 6 个学习步骤 · 22 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 身体承接心智</a>
+<a href="#s3">③ 净化与自由意志</a>
+<a href="#s4">④ 必需品而非加速器</a>
+<a href="#s5">⑤ 帷幕前后</a>
+<a href="#s6">⑥ 收官叮嘱</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>分清"事务半场"与"教导半场"，走一遍本集问答链</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>身体如何承接心智</b><span>伤痕与心灵致意、吉姆的肾与"逐字执行"</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>净化的分寸与拒答的边界</b><span>三天两夜、蜂类边界，以及 Ra 为何不答鹰的问题</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>身体是必需品而非加速器</b><span>跟随 Ra 的两次纠正，走完"加速→必需→允许"三段收窄</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>对比帷幕前后</b><span>疾病、死亡与衰老为何被设计进第三密度</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官：把叮嘱带回生活</b><span>和谐如何平衡疲惫——金句与落点</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ 01 本章地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：先分清"事务半场"与"教导半场"</h2></div>
+  <p class="sec-lead">上一场之后，发问者自述在原型心智的提问方向上"处于困惑状态"（105.2）。本集于是暂缓原型问答：先用 (105.1)-(105.12) 一整段处理器皿伤痕、净身方案与搬家后勤，再从 (105.13) 起进入正题——<b>身体，塔罗的下一部分</b>。"身体"这一课的框架在本集立起，具体拆解留待后续。</p>
+
+  <div class="card">
+    <h3>本集的两半结构</h3>
+    <p><b>事务半场（105.1-105.12）</b>：器皿状态 → 伤痕起因 → 净身方案 → 吉姆的肾 → 新居净化与船屋 → 解圣化与搬迁提醒 → 鹰的谜题。其中伤痕与肾两问藏着前半场的真正教导——心智状态如何落在身体上（第 2、3 章展开）。</p>
+    <p><b>教导半场（105.13-105.22）</b>：身体的定位（必需品而非加速器）→ 帷幕前后的疾病与死亡 → 衰老的设计 → 临别叮嘱（第 4-6 章）。</p>
+    <div class="quote">
+      <p class="en">We have been, you might say, experimentally determining a lot of things about the body—the next portion of the tarot—and have been experiencing some of the feedback effects, I might say, between the mind and the body.</p>
+      <p class="zh">我们一直在——可以这么说——实验性地确定关于身体的许多事情：塔罗的下一部分；并且一直在体验心智与身体之间的反馈效应。</p>
+      <span class="src">—— Session 105 · (105.13)</span>
+    </div>
+    <p>这句出自发问者之口，是本集的"换场信号"：研究小组用亲身实验（器皿状态、吉姆的肾、净身方案）摸身体，Ra 则在后半场把这些现象接进义理。</p>
+    <div class="case"><b>读者的岔路口：</b>第一次读 105 集的人，会在 (105.2)-(105.12) 连续撞上灌肠、桑拿、大蒜与罗盘方位，很容易把整集当成"生活问答"跳过；坚持到 (105.13) 才发现，前面所有身体细节都是在给"身体到底是什么"这堂课清场——先补完功课，再上正课。</div>
+    <div class="case"><b>一次项目复盘会：</b>前 40 分钟处理"服务器为什么宕机、下季度办公室租哪"，后 40 分钟才进入"我们团队到底靠什么跑起来"。105 集的结构正是如此：维护半场逐项排障，教导半场立起身体这堂课的框架。</div>
+  </div>
+
+  <div class="card">
+    <h3>问答脉络推进器：这场集会怎么走</h3>
+    <p>点击节点或用按钮推进，看对话如何从器皿维护一步步走到"身体"这堂课。</p>
+    <div class="flow-track" id="qaTrack"></div>
+    <div class="flow-detail" id="qaDetail"></div>
+    <div class="flow-ctrl"><button class="tri-btn" id="qaPrev">← 上一节点</button> <button class="tri-btn" id="qaNext">下一节点 →</button></div>
+  </div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 维护 · 后勤</span></summary>
+  <div class="body">
+    <p><b>(105.0-105.1) 开场与器皿状态：</b>Ra 以爱与光致意；器皿意志与信心重新占据主导，身体亏损仍在。</p>
+    <p><b>(105.2-105.4) 伤痕与吉姆的肾：</b>个人健康问答，但其中"心灵致意"与"逐字执行"两段是真正的教导——见第 2 章。</p>
+    <p><b>(105.5-105.7) 新居净化：</b>兰尼尔湖住所良性，三天两夜即可；三处大蒜使用点，第二处约 37 英尺、磁方位 84-92 度。</p>
+    <p><b>(105.8-105.9) 船屋：</b>持续净化是为蜂类立边界——使其不须蜇人、不愿栖息。</p>
+    <p><b>(105.10) 解圣化：</b>仪式无需更改；建议感谢并祝福居住期间投入的每株第二密度木本植物。</p>
+    <p><b>(105.11) 搬迁提醒：</b>器皿勿参与打包搬运（会激活尘霉过敏），鲍勃帮忙；加倍饮水；新居通讯无碍。</p>
+    <p><b>(105.12) 鹰：</b>Ra 以反问回应，不予确认（混淆法则）——见第 3 章。</p>
+  </div></details>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 02 身体承接心智 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>身体如何承接心智：伤痕、心灵致意与"逐字执行"</h2></div>
+  <p class="sec-lead">发问者把两个健康问题摆上台面：器皿背上对称的伤痕从何而来、吉姆的肾病为何复发。Ra 的两个回答指向同一件事——身体不撒谎：持续的攻击会在皮肤上留痕，合一的意愿会被身体按字面执行。</p>
+
+  <div class="card">
+    <h3>心灵致意：攻击递来的是"分离"的机会</h3>
+    <div class="q">器皿背上为何出现对称伤痕？是不是日常照料出了纰漏？</div>
+    <div class="quote">
+      <p class="en">The welting is a symptom of that which has been a prolonged psychic greeting. The opportunity for this entity to experience massive allergic reaction from streptococcal and staphylococcal viruses[141] has been offered in hopes that this entity would wish to leave the incarnation.</p>
+      <p class="zh">伤痕是长期心灵致意（psychic greeting，持续的心灵攻击）的症状：一次由链球菌与葡萄球菌引发大规模过敏反应的机会被提供，用意是期望这个实体愿意离开投生。</p>
+      <span class="src">—— Session 105 · (105.2)</span>
+    </div>
+    <p>Ra 补上时间线：上一次同类心智状态出现在 9 月 12 日，当时第五密度同伴措手不及；这一次，实体已有准备。攻击随后递来两次触发点——都与"分开"有关：一次在<b>选房</b>时，一次在<b>离开旧居、消解世俗纽带</b>的前景里。</p>
+    <div class="quote">
+      <p class="en">Both opportunities were met by this entity with a refusal to separate self from other-self, with further work also upon the indigo-ray level concerning the avoidance of martyrdom while maintaining unity in love.</p>
+      <p class="zh">两次机会都被这个实体以"拒绝将自我与他人-自我分离"来应对，同时在靛蓝光芒层面继续工作：避免殉道，同时在爱中保持合一。</p>
+      <span class="src">—— Session 105 · (105.2)</span>
+    </div>
+    <div class="plain">心灵攻击最想买到的不是你的病，而是你的"切割"——守住合一就守住了要害；但免疫防线已被突破，身体护理仍要认真做。</div>
+    <div class="analogy"><b>比喻：</b>心灵致意像一场离间计——不正面强攻，而是反复递上"你和同伴分开会更好"的诱饵。Ra 点出的两次机会（选房、离开旧居）正是诱饵抛出的时刻。</div>
+    <div class="case"><b>被挖角的骨干：</b>竞争对手约谈某团队核心成员，反复暗示"带你现在那批同事纯属拖累"。这类话术不直接攻击，只递来一个与人切割的机会——与 Ra 描述的两次机会同构；那位成员像器皿一样拒绝切割，攻击便没能从关系上突破。(105.2)</div>
+    <div class="case"><b>拒绝殉道的女儿：</b>女儿独自照顾患病母亲，谢绝一切帮助，理由是"要苦一起苦"。Ra 点出的功课正是这个：避免殉道，同时在爱中保持合一——把所有苦揽到自己身上，并不是爱的必选项。(105.2)</div>
+  </div>
+
+  <div class="card">
+    <h3>吉姆的肾：形而上意愿被身体"逐字执行"</h3>
+    <div class="q">吉姆明明在做灵性净化，肾病为什么反而复发？是不是修行"修出了问题"？</div>
+    <div class="quote">
+      <p class="en">The entity did not grasp the literal way in which metaphysical intentions are translated by the body complex of one working in utter unity of purpose.</p>
+      <p class="zh">这个实体没有领会：对一个以完全合一的目的工作的人，形而上意愿会被身体复合体以字面的方式转译。</p>
+      <span class="src">—— Session 105 · (105.4)</span>
+    </div>
+    <p>经过是这样的：吉姆决意净化自己、追求并沉思完美，这份奉献不断强化，直到心/身/灵复合体与这个意图"和谐共鸣"——随后是祈祷、禁食、忏悔与欢庆的时期。尚未痊愈的身体开始逐个器官系统性地净化，把"不完美"的残渣全数送往肾脏，而水分不足以稀释这些毒素。</p>
+    <div class="quote">
+      <p class="en">The toxins stayed with the body complex and reactivated a purely physical illness. There is no metaphysical portion in this relapse.</p>
+      <p class="zh">毒素留在了身体复合体里，重新激活了一种纯粹身体性的疾病。这次复发中没有任何形而上成分。</p>
+      <span class="src">—— Session 105 · (105.4)</span>
+    </div>
+    <div class="plain">意图越合一，身体执行得越字面——发愿"净化"，就要按净化的物理规律来：给足稀释的水、给足恢复的时间；复发是纯身体的，不必附会成灵性挫败。</div>
+    <div class="analogy"><b>比喻：</b>这像给一位从不质疑的执行者下指令——你说"把仓库清空"，他就真的一件不留，连该退货的也一起清了。身体在完全合一的意图中就是这位执行者：不问副作用，逐字照办。</div>
+    <div class="case"><b>长假的净化誓言：</b>一位养生爱好者在假期第一天立誓"这七天彻底净化身体"：断食加汗蒸，却仍熬夜工作、水喝得很少——第三天头晕送医。用 105.4 的话说：合一意图中的"净化"被身体逐字执行，水分不足让排出的毒素滞留体内。(105.4)</div>
+    <div class="case"><b>疗愈的同一个机制：</b>Ra 说吉姆的疗愈"正通过对身体复合体健康的肯定而显化"——与净化誓言同一机制：肯定什么，身体就朝什么走。所以 Ra 开出的方案（多饮水）与誓言（净化）并不冲突，而是把誓言接到地上。(105.4)</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 03 净化与自由意志 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>净化新居与自由意志的边界：Ra 说什么、不说什么</h2></div>
+  <p class="sec-lead">小组即将搬去兰尼尔湖，发问者把净化方案、仪式与搬迁安排逐项拿来确认。这一章最有意思的不是清单本身，而是 Ra 的分寸感：该具体处给出罗盘读数，该止步处宁可反问不答。</p>
+
+  <div class="card">
+    <h3>净化的分寸：三天两夜，三处用蒜</h3>
+    <div class="q">旧方法（36 小时盐处理）还够用吗？新居有没有必须提前排掉的雷？</div>
+    <div class="quote">
+      <p class="en">The cleansing of the dwelling of which you speak need be only three nights and two days. This dwelling is benign. The techniques are acceptable.</p>
+      <p class="zh">你所说的住所净化只需要三天两夜。这栋住所是良性的。这些技术是可接受的。</p>
+      <span class="src">—— Session 105 · (105.6)</span>
+    </div>
+    <p>Ra 把清单落到三处大蒜使用点：<b>上下铺房间</b>顶垫下方；<b>朝路的外墙</b>、以小石头为中心——发问者追问坐标，Ra 给出约 37 英尺、磁方位 84-92 度（并声明只能给近似值）；<b>船屋</b>则要每周以大蒜、切开的洋葱与行走光之边界来净化，蒜葱常挂、每周更换（105.6-105.7）。</p>
+    <div class="plain">该做的做、能省的省：住所本身良性，净化不必加码；真正的风险点（船屋）才需要每周维护——精准比隆重更重要。</div>
+    <div class="case"><b>搬进二手房的合租客：</b>先全屋擦洗通风两晚，把旧家具当面道谢后再处理，最后在门口摆一盆新绿植——"不是怕脏，是想把上一段生活的气息请出去"。这与"三天两夜"的净化同构：把物理清洁与形而上的告别合成一个完整动作。(105.6)</div>
+    <div class="case"><b>物业与蜂巢：</b>小区处理蜂患时不掏巢喷药，而是把蜂巢旁的步道改线、种上蜜蜂不爱停留的植物——"造一个边界，让它们既不须蜇人、也不愿栖息"。Ra 对船屋的方案正是这个思路：不消灭，只划界。(105.8-105.9)</div>
+  </div>
+
+  <div class="card">
+    <h3>慎答与不答：自由意志划出的线</h3>
+    <div class="q">为什么有的问题 Ra 给到罗盘读数，有的却反问回去、甚至请发问者自己想？</div>
+    <div class="quote">
+      <p class="en">We weigh this answer carefully, for it comes close to abrogation of free will, but find the proximity acceptable due to this instrument’s determination to be of service to the One Infinite Creator regardless of personal circumstance.</p>
+      <p class="zh">我们仔细权衡了这个回答，因为它接近废除自由意志；但鉴于这个器皿无论个人境遇如何都决心服务太一无限造物主，我们发现这种接近是可以接受的。</p>
+      <span class="src">—— Session 105 · (105.11)</span>
+    </div>
+    <p>被权衡之后给出的答案其实很朴素：器皿不要参与打包搬运，以免激活休眠的尘霉过敏——鲍勃会来帮忙，抄写员加倍饮水。一句生活提醒，也要先过"自由意志"这道秤。而面对<b>鹰的意义</b>（发问者想确认：一年前那只鹰是否在警示他所选的房子形而上非良性），Ra 连权衡的余地都不留：</p>
+    <div class="quote">
+      <p class="en">What bird comes to affirm for Ra? What bird would be chosen to warn? We ask the questioner to ponder these queries.</p>
+      <p class="zh">什么鸟会来为 Ra 作确认？什么鸟会被选择来作警告？我们请发问者思考这些问题。</p>
+      <span class="src">—— Session 105 · (105.12)</span>
+    </div>
+    <div class="plain">解读征兆的钥匙 Ra 坚决不接——替人选路、替人解兆都在侵蚀自由意志；能给的只有事实与建议，判断留给你。</div>
+    <div class="case"><b>朋友的决定：</b>朋友拿着体检报告问"我是不是该辞职休养"，你摆完事实就停住："这个决定只能你做。"Ra 给出"器皿别碰纸箱"前先声明这接近废除自由意志——可说的说尽，该留的留给选择。(105.11)</div>
+    <div class="case"><b>牌面的解读权：</b>朋友发来一张牌面问"这是不是说我们该分手"——好的回应不是替她下结论，而是反问："你抽到它时，心里第一个念头是什么？"这正是 Ra 面对鹰的问题的方式：把解读权还给提问者。(105.12)</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 04 必需品而非加速器 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>身体的定位：必需品，而非加速器</h2></div>
+  <p class="sec-lead">正题开始：小组一直在实验性地研究"身体——塔罗的下一部分"。发问者带着一个漂亮的假说而来，Ra 却两次只纠正他的用词——这场"加速→必需→允许"的步步收窄，是本集的核心一课。</p>
+
+  <div class="card">
+    <h3>三段收窄：从"加速"到"允许"</h3>
+    <div class="q">身体的价值是不是"把催化剂反馈给心智、制造极化"，甚至"加速心智的进化"？</div>
+    <div class="quote">
+      <p class="en">The position in creation of physical manifestation changed not one whit when the veil of forgetting was dropped.</p>
+      <p class="zh">当遗忘面纱落下时，物理显化在造物中的位置丝毫没有改变。</p>
+      <span class="src">—— Session 105 · (105.13)</span>
+    </div>
+    <p>先把底定住：发问者对身体的描述（反馈催化剂、制造极化）对帷幕前的心/身/灵与帷幕后的心/身/灵复合体<b>都</b>适用——面纱没有改变身体的角色。剩下的分歧只在"它对进化到底起什么作用"，看下面的推进：</p>
+    <div class="flow-track" id="bodyTrack"></div>
+    <div class="flow-detail" id="bodyDetail"></div>
+    <div class="flow-ctrl"><button class="tri-btn" id="bodyPrev">← 上一步</button> <button class="tri-btn" id="bodyNext">下一步 →</button></div>
+    <div class="quote">
+      <p class="en">It is perhaps more accurate to note that the yellow-ray, physical vehicle is a necessity without which the mind/body/spirit complex cannot pursue evolution at any pace.</p>
+      <p class="zh">或许更准确的说法是：黄色光芒物理载具是一种必需品——没有它，心/身/灵复合体无法以任何速度追求进化。</p>
+      <span class="src">—— Session 105 · (105.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Your query implied that physical vehicles accelerated growth. The more accurate description is that they permit growth.</p>
+      <p class="zh">你的提问暗示物理载具加速成长。更准确的描述是：它们允许成长。</p>
+      <span class="src">—— Session 105 · (105.16)</span>
+    </div>
+    <div class="plain">身体不替你进化、也不让进化变快；没有它，这场进化根本无从展开——它是"门票"，不是"外挂"。</div>
+    <div class="case"><b>深水区新手：</b>初学者坚信"泳池越深、进步越快"，专挑深水区结果呛水放弃。泳池从不加速你学游泳，但没有泳池你连练习都无法开始——"允许成长，而非加速成长"说的正是这种区别。(105.16)</div>
+    <div class="case"><b>换器材的实验室：</b>把进口高端器材换成"够用就行"的基础款，学生的理解力并没有变差——器材决定"能不能做实验"，不决定"学得多快"。Ra 的两次纠正（加速改必需、加速改允许），就是把"设备崇拜"还原为"设备是前提"。(105.14、105.16)</div>
+  </div>
+
+  <div class="card">
+    <h3>存在与载具：玩家不等于角色</h3>
+    <div class="q">如果载具只是必需品，那"我"是不是就是这具身体？没有身体时"我"在哪？</div>
+    <div class="quote">
+      <p class="en">Each mind/body/spirit, or mind/body/spirit complex, has an existence simultaneous with that of creation. It is not dependent upon any physical vehicle.</p>
+      <p class="zh">每个心/身/灵，或心/身/灵复合体，都有一个与造物同时的存在。它不依赖于任何物理载具。</p>
+      <span class="src">—— Session 105 · (105.16)</span>
+    </div>
+    <p>Ra 的完整表述有两层：存在不靠载具——它与造物同时；但要在各密度<b>进化、改变、学习并显化造物主</b>，相应的物理载具是必要前提。两层合起来，才是不夸大也不贬低身体的位置。</p>
+    <div class="case"><b>屏幕前的玩家：</b>角色扮演游戏里，玩家不等于角色：角色会阵亡，玩家还在屏幕前。载具是这一局的角色，不是玩家本人；但想在这局里学习，就必须有一个角色可操作。(105.16)</div>
+    <div class="case"><b>换手机的人：</b>有人换手机后惊觉"号码没变、聊天记录还在，只是设备换了"。Ra 把这个直觉翻转成立论：存在从来不属于设备；设备（载具）是每个密度配发的、为学习而设的终端。(105.16)</div>
+  </div>
+
+  <div class="card">
+    <h3>术语卡：这一课的关键词</h3>
+    <p>点击卡片翻面。每个术语都给一句白话定义——没读过前集也能看懂。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">黄色光芒身体</div><div class="sub">yellow-ray body</div><div class="tap">点击翻面</div></div><div class="back">第三密度的物理载具，Ra 也称"黄色光芒、化学身体"。本集定位：不是进化的加速器，而是没有它进化便无从展开的必需品。<em>像泳池之于学游泳——不替你游，但没它练不了。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">熔炉</div><div class="sub">athanor</div><div class="tap">点击翻面</div></div><div class="back">炼金术中促成转化的炉子；Ra 借指身体之于心智——催化剂在其中被"烧"成经验与极化。发问者沿用此说，Ra 把它校准为更稳的"必需品"。<em>炉子不决定炼金快慢，但没有炉子根本开不了工。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">遗忘面纱</div><div class="sub">veil of forgetting</div><div class="tap">点击翻面</div></div><div class="back">遮住"我本不死不灭"这层记忆的面纱。本集用它解释：分离的愤怒、对身体需求的疏忽、苦修式净化的冲动，都是面纱之后的产物。<em>开卷考试变闭卷，紧张与专注才出现。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">心/身/灵 · 心/身/灵复合体</div><div class="sub">mind/body/spirit · complex</div><div class="tap">点击翻面</div></div><div class="back">同一个你，帷幕前后两个名字：区别只是"深层心智中的遗忘"；身体外观、表面与本能活动大致相同。<em>同一台戏的两个版本：一版有剧本提示，一版没有。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">意符</div><div class="sub">Significator</div><div class="tap">点击翻面</div></div><div class="back">原型心智中"代表你"的那张牌。发问者问帷幕前的老人是否满面皱纹、意符是否长那样；Ra 答：意符"看起来如每个实体所想象的样子"。<em>镜子照出的样子，取决于照镜子的心。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">穿梭器</div><div class="sub">shuttle</div><div class="tap">点击翻面</div></div><div class="back">灵复合体在密度间往返的功能角色。经验足够深时（第五、尤其第六层级的学习），它自己知道"课学够了"，身体便不必再内建毁灭作为提醒。<em>老司机不需要倒车雷达提醒到位。</em></div></div>
+    </div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 05 帷幕前后 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>帷幕前后：疾病、死亡与衰老为何被如此设计</h2></div>
+  <p class="sec-lead">发问者把吉姆的肾当作样本，请 Ra 做一次思想实验：同样的病若发生在没有遗忘面纱的时代，还会一样吗？由此铺开帷幕前世界的疾病、死亡与衰老图景。</p>
+
+  <div class="card">
+    <h3>样本回归：吉姆的肾在帷幕前会发生吗</h3>
+    <div class="q">同样的肾病、同样的净化决定，放在没有面纱的时代还会出现吗？</div>
+    <div class="quote">
+      <p class="en">The anger of separation is impossible without the veil. The lack of awareness of the body’s need for liquid is unlikely without the veil. The decision to contemplate perfection in discipline is quite improbable without the veil.</p>
+      <p class="zh">没有帷幕，分离的愤怒是不可能的。没有帷幕，对身体需要液体的缺乏意识是不太可能的。没有帷幕，在纪律中沉思完美的决定是相当不可能的。</p>
+      <span class="src">—— Session 105 · (105.17)</span>
+    </div>
+    <div class="plain">吉姆事件的每个环节——疏忽、苦修、情绪——都由面纱供料：帷幕不是背景板，而是这套剧情得以成立的前提。</div>
+    <div class="case"><b>开卷与闭卷：</b>开卷考试人人从容，闭卷考试才有真正的紧张与专注。遗忘面纱把"人人知道自己不死"的开卷人生变成闭卷考试——疏忽与苦修的张力都从"不知道"来。(105.17)</div>
+    <div class="case"><b>忘记加水的人：</b>除湿机连续运转却忘了倒水箱，最终烧坏电机——不是机器想惩罚谁，只是缺了养护。Ra 并没有说帷幕前的人不会生病，而是说那三条"剧情线"（愤怒、无觉知、苦修）几乎不成立。(105.17)</div>
+  </div>
+
+  <div class="card">
+    <h3>帷幕前的病与死：良性领域，苍白体验</h3>
+    <div class="q">没有面纱时，生病和死亡是什么光景？还会怕吗？</div>
+    <div class="quote">
+      <p class="en">The patterns of illness, disease, and death are a benignant demesne within the plan of incarnational experience.</p>
+      <p class="zh">疾病、病症与死亡的模式，是投生体验计划中一个良性的领域。</p>
+      <span class="src">—— Session 105 · (105.18)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Thusly, the experiences, both good and bad, or joyful and sad, of the mind/body/spirit before veiling would be pale, without vibrancy or the keen edge of interest that such brings in the post-veiling mind/body/spirit complex.</p>
+      <p class="zh">因此，帷幕前心/身/灵的体验——无论好坏、悲喜——都会是苍白的，没有活力，也没有帷幕后那种由体验带来的兴趣的锐利边缘。</p>
+      <span class="src">—— Session 105 · (105.18)</span>
+    </div>
+    <p>Ra 的重述是：帷幕前也有病与死，一些疗愈由心/身/灵自行决定发生，投生以病至死正常收尾并被平静接受——因为"心/身/灵继续存在"一目了然。代价是：剧情还在，入戏的深度没了。</p>
+    <div class="case"><b>排练厅的哭戏：</b>一群知道"这只是排练"的演员，哭戏再投入也留三分清醒。帷幕前的世界正是如此：病与死被平静接受，投入感却打了折。(105.18)</div>
+    <div class="case"><b>已知结局的电影：</b>二刷一部已知结局的电影，悬念全消——你能欣赏技巧，却不再屏息。Ra 说的"苍白、没有锐利边缘"，就是这种少了悬念的人生。(105.18)</div>
+  </div>
+
+  <div class="card">
+    <h3>衰老的设计：把"该走了"编进身体</h3>
+    <div class="q">人为什么会衰老？既然完全可以一路年轻，为什么要让身体走下坡？</div>
+    <div class="quote">
+      <p class="en">Within third density, not to build into the physical vehicle its ending would be counterproductive to the mind/body/spirit complexes therein residing; for within the illusion it seems more lovely to be within the illusion than to drop the garment which has carried the mind/body/spirit complex and move on.</p>
+      <p class="zh">在第三密度中，不把物理载具的终结编进其设计，对居住其中的心/身/灵复合体反而有害；因为在幻象里，"留在幻象中"比"脱下承载自己的外衣、继续前行"显得更可爱。</p>
+      <span class="src">—— Session 105 · (105.20)</span>
+    </div>
+    <p>衰老并非帷幕的产物：帷幕前的身体同样显现全部衰老迹象（105.19），两种状态的全部区别只是"深层心智中的遗忘"。Ra 给出的设计理由分两段：在第三密度，倒计时必须内建；而当人格的纪律把复合体带入第五、尤其第六层级的学习后，就不再需要——灵复合体作为<b>穿梭器</b>经验已深，知道学习强度与课程增量的恰当程度何时达成（105.20）。</p>
+    <div class="plain">衰老是仁慈的倒计时：让"该走了"变得可见，人才舍得放下；修炼到深处，倒计时才不再必要。</div>
+    <div class="case"><b>限时四小时的剧本杀：</b>开场就印明时长，玩家才舍得在最后关头押上全力；若宣布"想玩多久玩多久"，多数人会无限拖延关键选择——"幻象比脱下外衣更可爱"，正是无限时长的风险。(105.20)</div>
+    <div class="case"><b>图书馆的还书日期：</b>书有到期日，读者才会用完就还；若宣布"想借多久借多久"，书架迟早被搬空。第三密度把"到期日"印在身体上——不是惩罚，是流通的保障。(105.20)</div>
+  </div>
+
+  <div class="card">
+    <h3>归类练习：哪些改变是帷幕带来的</h3>
+    <p>把每个场景归入正确的一类——点选后即时显示答案与依据。</p>
+    <div id="veilSort"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 06 收官 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>收官叮嘱：疲惫以和谐平衡</h2></div>
+  <p class="sec-lead">最后一问照例是"还能为器皿做什么、能否改善通讯"。这一次 Ra 没有开出新措施，只给出一段关于关系的叮嘱——这是本集留下的落点。</p>
+
+  <div class="card">
+    <h3>硬件已到位，被点名维护的是关系</h3>
+    <div class="q">设备、校准、临时措施都已做过——还有什么可做的吗？</div>
+    <div class="quote">
+      <p class="en">We find the weariness of the group well-balanced by its harmony. That weariness shall continue in any future circumstance during your incarnations.</p>
+      <p class="zh">我们发现这个小组的疲惫被其和谐很好地平衡了。在你们投生期间，这种疲惫在任何未来境遇中都将持续。</p>
+      <span class="src">—— Session 105 · (105.22)</span>
+    </div>
+    <p>Ra 确认：一切校准都被细致遵守，能为器皿做的已全心全意做了，器皿自身正坚持不懈地做靛蓝光芒的工作。既然硬件无可挑剔，叮嘱便落在另一端——疲惫不会消失，所以要"关注彼此的爱与感恩，永远在友谊中相聚"。发问者也被点名：他与器皿的纽带紧密到"一方的每个困难在同情中就是另一方的困难"，因此要加倍饮水、同休共感。</p>
+    <div class="plain">能做的都已做到位之后，真正剩余的功课是关系本身：疲惫是常数，和谐是变量——把变量做大。</div>
+    <div class="case"><b>冲刺第三个月的团队：</b>全员疲惫，组长没有再开动员会，而是逐个补上欠着的"谢谢"，并当众认了一次自己的错——用耐心、安慰与安静修复每一根断裂的情感之线，正是 Ra 的叮嘱方向。(105.22)</div>
+    <div class="case"><b>睡前的两件小事：</b>一对双职工夫妻约定：无论多晚，睡前互相说一件感谢对方的小事。感谢不是锦上添花，而是与疲惫对冲的那一端资本——和谐。(105.22)</div>
+  </div>
+
+  <div class="saying">
+    <p class="en">Therefore look you to your love and thanksgiving for each other, and join always in fellowship, correcting each broken strand of that affection with patience, comfort, and quietness.</p>
+    <p class="zh">所以，请关注彼此的爱与感恩，永远在友谊中相聚——用耐心、安慰与安静，修复那情感中每一根断裂的线。</p>
+    <span class="src">—— Session 105 · (105.22)</span>
+  </div>
+
+  <p class="sec-lead" style="margin-top:18px"><b>伏笔：</b>"身体——塔罗的下一部分"在本集只完成了第一课：载具的定位（必需品、允许成长）已经立起，帷幕与衰老的设计也已铺开；塔罗之身的正面拆解，要由此继续往下问。</p>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 105（<code>split/Ra_Session_105.md</code>）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra105-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+/* 本章地图：问答脉络推进器 */
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+ {t:'开场 · 器皿状态', d:'<span class="qa-q">问：器皿今天的状态如何？</span><b>答：</b>比上一次好得多——意志与信心重新在存在与平衡中占据主导；但身体上的亏损仍在。(105.0-105.1)'},
+ {t:'伤痕起因', d:'<span class="qa-q">问：器皿背上对称的伤痕是怎么回事？</span><b>答：</b>那是长期心灵致意（psychic greeting，持续的心灵攻击）的症状：一次由链球菌与葡萄球菌引发大规模过敏反应的机会被提供，用意是期望该实体愿意离开投生。上次同类状态（9 月 12 日）打得第五密度同伴措手不及；这次，实体已有准备。(105.2)'},
+ {t:'两次机会', d:'<span class="qa-q">问：攻击是怎么被挡下的？</span><b>答：</b>攻击又递来两次触发点：选房时、以及离开旧居时消解世俗纽带的前景——两次都是"将自我与他人-自我分离"的机会。器皿两次都以拒绝分离回应，并在靛蓝光芒层面继续工作：避免殉道，同时在爱中保持合一。(105.2)'},
+ {t:'净身方案', d:'<b>答：</b>免疫防线已被突破、淋巴系统卷入病毒入侵——Ra 建议净化黄色光芒化学身体：治疗性灌肠或结肠清洗、每天一到两次桑拿、连续约七个日常周期用力摩擦皮肤。饮食不必特意改：器皿进食量本就很小，且已避开鲜奶与油。(105.2-105.3)'},
+ {t:'吉姆的肾', d:'<span class="qa-q">问：吉姆的肾病为什么复发？</span><b>答：</b>他决意净化自己、沉思完美，意图强化到与心/身/灵复合体和谐共鸣——身体于是把"净化"按字面执行，逐个器官清理，而水分不足以稀释毒素；毒素滞留，重新激活纯身体性疾病。这次复发没有形而上成分。(105.4)'},
+ {t:'新居与船屋', d:'<b>答：</b>兰尼尔湖住所是良性的，净化三天两夜即可；三处按先前方式使用大蒜（上下铺顶垫下方、朝路外墙小石头一带、船屋），第二处约 37 英尺、磁方位 84-92 度。船屋另需每周以大蒜、切开的洋葱与光之边界维护——让蜂类既不须蜇人、也不愿栖息。(105.5-105.9)'},
+ {t:'告别旧居', d:'<b>答：</b>解圣化仪式无需更改；建议感谢并祝福居住期间投入的每一株第二密度木本植物。搬迁上：器皿不要参与打包搬运，以免激活尘霉过敏——鲍勃会来帮忙；身心净化完成后，在新居联系 Ra 没有困难。(105.10-105.11)'},
+ {t:'鹰的谜题', d:'<span class="qa-q">问：一年前那只鹰，是不是在警示所选房子形而上非良性？</span><b>答：</b>Ra 不作确认："什么鸟会来为 Ra 确认？什么鸟会被选择来警告？我们请发问者思考这些问题。"——在混淆法则（自由意志法则）之内，解读征兆的钥匙留在发问者手里。(105.12)'},
+ {t:'身体这堂课', d:'<b>答：</b>后半场进入正题：小组实验研究"身体——塔罗的下一部分"。Ra 两次纠正用词——黄色光芒载具不是加速进化的熔炉，而是没有它进化便无从展开的必需品；它"允许成长"，而非"加速成长"。(105.13-105.16)'},
+ {t:'帷幕与衰老', d:'<b>答：</b>把吉姆的肾放回帷幕前：分离的愤怒不可能、对身体需要的无觉知不太可能、苦修式净化的决定相当不可能。帷幕前的病与死是平静接受的良性领域，体验却因此苍白；衰老不是帷幕的产物，而是把"终结"编进第三密度载具的设计。(105.17-105.21)'},
+ {t:'临别叮嘱', d:'<b>答：</b>小组的疲惫被其和谐很好地平衡；疲惫在任何未来境遇都会持续——所以要关注彼此的爱与感恩，用耐心、安慰与安静修复每一根断裂的情感之线。(105.22)'}
+]);
+
+/* 身体定位：三段收窄推进器 */
+initStepper('bodyTrack','bodyDetail','bodyPrev','bodyNext',[
+ {t:'发问者的假说', d:'<span class="qa-q">问：黄色光芒身体的主要价值，是不是"把催化剂反馈给心智、制造极化的装置"？帷幕前也是如此吗？</span><b>答：</b>这个描述对心/身/灵与心/身/灵复合体都适用——"遗忘面纱落下时，物理显化在造物中的位置丝毫未变。"(105.13)'},
+ {t:'第一次纠正', d:'<span class="qa-q">问：所以身体从起初就是加速心智进化的熔炉？</span><b>答：</b>更准确地说：它是必需品——没有它，进化在任何速度上都无法展开。"加速"暗示可有可无，"必需"才是它的身份。(105.14)'},
+ {t:'追问到底', d:'<span class="qa-q">问：那不穿上黄色光芒身体，进化就不可能了？</span><b>答：</b>不。每个心/身/灵（复合体）都有一个与造物同时的存在，不依赖任何物理载具。(105.15-105.16)'},
+ {t:'准确定位', d:'<b>答：</b>存在不靠载具；但要在各密度进化、改变、学习并显化造物主，相应的物理载具是必要前提——"它们允许成长"，而非"加速成长"。(105.16)'}
+]);
+
+/* 帷幕前后：归类练习 */
+initSorter('veilSort',[
+ {a:'把死亡体验为与整体的分离，并为此愤怒', opts:['帷幕后才这样','帷幕前后都这样'], ans:'帷幕后才这样', exp:'Ra：没有帷幕，分离的愤怒根本不可能。(105.17)'},
+ {a:'忘了身体此刻最需要的是补水，毒素滞留体内', opts:['帷幕后才这样','帷幕前后都这样'], ans:'帷幕后才这样', exp:'对身体需要的无觉知，在帷幕前"不太可能"——彼时它对身体状态一目了然。(105.17)'},
+ {a:'决意在纪律中沉思完美，开始禁食净化（如吉姆）', opts:['帷幕后才这样','帷幕前后都这样'], ans:'帷幕后才这样', exp:'这个决定在帷幕前"相当不可能"——没有遗忘，苦修失去张力。(105.17)'},
+ {a:'身体显现衰老的迹象', opts:['帷幕后才这样','帷幕前后都这样'], ans:'帷幕前后都这样', exp:'帷幕前的身体同样显现全部衰老迹象；区别只在深层心智中的遗忘。(105.19)'},
+ {a:'表面活动、本能反应与身体外观', opts:['帷幕后才这样','帷幕前后都这样'], ans:'帷幕前后都这样', exp:'Ra 明说这些"大致相同"——帷幕改的是深层心智，不是表层剧本。(105.19)'}
+]);
+
+/* 术语卡翻面 */
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+renderPath();
+</script>
+</body>
+</html>

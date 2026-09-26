@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 026 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 026 · 交互式学习模块</h1>
+  <p class="sub">这一集把镜头从个人修炼拉到历史尺度：三千年来的圣书碎片、两百年前开始现身的流浪者、骤增的 UFO 与被扭曲的礼物，以及核爆之后那场不分受害与加害的行星疗愈——最后收在一个更进阶的问题上：性爱中的能量转移如何从红光走到靛蓝光。</p>
+  <div class="tagline">7 个主题 · 6 个学习步骤 · 26 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 传承与到来</a>
+<a href="#s3">③ 流浪者的名册</a>
+<a href="#s4">④ UFO 为何骤增</a>
+<a href="#s5">⑤ 核爆与行星疗愈</a>
+<a href="#s6">⑥ 着陆与污染</a>
+<a href="#s7">⑦ 性能量转移与收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>先看这一集从「设置确认」一路问到「性爱能量转移」的问答链，例行问答可跳过</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>传承与到来</b><span>三千年里的圣书碎片、近八十年的沉默，与两百年前开始的流浪者投生</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>流浪者的名册</b><span>林肯为什么不是流浪者，以及「载具被另一个实体接手」是什么意思</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>UFO 为何骤增</b><span>两份被扭曲的礼物：爱因斯坦与特斯拉，以及联邦的补救方式</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>核爆与行星疗愈</b><span>更重的创伤、不失落任何一部分造物主，以及受害与加害不作区分的疗愈</span></span></label></div>
+<div class="step-item" data-target="#s7"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>着陆、污染与收官</b><span>猎户座十字军的逻辑、「青草」比喻，以及红光到靛蓝光的能量转移次第</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：这一集在问什么</h2></div>
+  <p class="sec-lead">本集是 1981 年 2 月的第 26 次集会，紧接 025 之后。上一集留下两条线：器皿因服用 LSD 而失去大量生命能量，以及 Ra 预告过「因参与性生殖复合行为而可能发生的能量阻塞与转移」——本集把这两条线都收了回来。开场先确认集会设置，随后发问者把镜头拉到历史尺度：三千年、八十年、两百年。整集几乎没有空白，只有咳嗽与后勤穿插其间。</p>
+  <div class="card">
+    <h3>问答脉络：八个段落一条线</h3>
+    <p>这一集的问题按时间尺度由远及近、由群体到个人往下走。点击节点看每一段在做什么。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="qaTrack"></div>
+      <div class="flow-detail" id="qaDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="qaPrev">← 上一步</button> <button class="tri-btn" id="qaNext">下一步 →</button></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Ra 的边界：先说明后果，再让你自己决定</h3>
+    <div class="q">我们为器皿所做的这些改动会不会影响通讯？该继续，还是该中止？</div>
+    <div class="quote">
+      <p class="en">You may do as you wish. However, we would be unable to use this instrument at this space/time nexus without these modifications.</p>
+      <p class="zh">你们可以照自己的意愿去做。不过，若没有这些调整，我们就无法在这个空间/时间节点上使用这个器皿。</p>
+      <span class="src">—— Session 026 · (26.3)</span>
+    </div>
+    <div class="plain">Ra 不替人做决定，只把后果讲明白——自由意志原则在实务层面就是长这个样子。</div>
+    <div class="analogy"><b>像医生把两种方案都摆在桌上：</b>他会说清哪种恢复快、哪种后遗症多，然后补一句「你来定」。他不会按住你的手签同意书。</div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿设置 · 咳嗽 · 录制空白 · 虚弱期</span></summary>
+  <div class="body">
+    <p><b>(26.1)(26.2) 设置确认：</b>发问者问为器皿所做的改动是否影响通讯，Ra 先答「这是正确的」，被追问后厘清为「这些改变确实影响了这次通讯」。</p>
+    <p><b>(26.9)(26.14)(26.24)(26.29)(26.35)(26.37)(26.39) 器皿的咳嗽：</b>发问者每次请求时，Ra 让器皿咳嗽（记为 [Cough.]），本集共七次；这是出神通讯中的生理照料，本身不含教导内容。</p>
+    <p><b>(26.38) 录音空白的插话：</b>谈到器皿在某次（录音空白）经验中的表现时，Ra 自我更正并指出器皿的生命能量正在变低，随即转入收尾询问。</p>
+    <p><b>(26.40) 器皿的虚弱期：</b>Ra 说身体复合体的虚弱期约为三个太阴周期；首次摄入约造成一个太阴周期，第二次则产生累积或加倍效应；并说这个器皿状况良好。</p>
+  </div></details>
+  <div class="case"><b>排练前先问一句：</b>乐队换了音箱摆位，你没直接开练，先问主唱「这个位置你唱得顺吗？」——本集开场就是这句话：改动做完了，先确认它有没有影响工作本身。</div>
+  <div class="case"><b>教练不替你决定：</b>你说「膝盖有点疼，今天还练吗？」教练答「你决定；但按今天这个动作练，会更疼。」——Ra 的答复同构：可以按自己的意愿行事，后果摆在明处。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>传承与到来：圣书里的碎片，与两百年前的信号</h2></div>
+  <p class="sec-lead">发问者先问一个很大的问题：在这个周期的最后三千年里，一的法则有没有像现在这样被完整地传递过？Ra 先关掉一扇门——这个密度里不存在完整来源——再打开一扇窗：圣书里有碎片。接着他把时间尺度推向近八十年与近两百年，讲出流浪者为何在这个时候出现。</p>
+  <div class="card">
+    <h3>只有碎片，没有完整来源</h3>
+    <div class="q">过去三千年，一的法则是否曾以书面或口述的方式被完整地传递过？在其他来源中能不能找到？</div>
+    <div class="quote">
+      <p class="en">There is no possibility of a complete source of information of the Law of One in this density. However, certain of your writings passed to you as your so-called holy works have portions of this law.</p>
+      <p class="zh">在这个密度里，不可能存在一份完整的一的法则信息来源。不过，那些作为你们所谓圣书传到你们手中的著作，确实含有这一法则的部分内容。</p>
+      <span class="src">—— Session 026 · (26.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Withdrawing from each of the collections of which you speak the portions having to do with the Law of One, the content is approximately equal. However, the so-called Old Testament has a larger amount of negatively influenced material, as you would call it.</p>
+      <p class="zh">若从你所说的那两部文集里各抽出与一的法则相关的部分，其含量大致相等；只是你们所称的旧约含有更多受负面影响的材料。</p>
+      <span class="src">—— Session 026 · (26.7)</span>
+    </div>
+    <div class="plain">法则在圣书里以碎片形式存在，新旧约的碎片量相当；但 Ra 拒绝给出「多少百分比受猎户座影响」这类数字——判断权被留给读者。</div>
+    <div class="quote">
+      <p class="en">We prefer that this be left to the discretion of those who seek the Law of One. We are not speaking in order to judge.</p>
+      <p class="zh">我们更愿意把这件事留给寻求一的法则的人自行斟酌。我们说话不是为了评判。</p>
+      <span class="src">—— Session 026 · (26.8)</span>
+    </div>
+    <div class="analogy"><b>像两本不同年代的菜谱：</b>都收了同一道祖传菜，分量差不多；只是其中一本被后人夹进了不少重口味的改法。你没法靠「页数比例」判断哪本更接近原味，只能自己下厨试。</div>
+    <div class="case"><b>奶奶笔记本上的三道菜：</b>你从笔记本里抄到了三道菜的配方，可火候、食材的季节、手上该有的手感都没写下来。Ra 说这个密度里不存在完整来源、圣书里只有部分内容，说的正是这种断层。</div>
+    <div class="case"><b>老板拒绝给部门排名：</b>你问「A 部门和 B 部门各占多少责任？」老板答「这该由你们自己判断，我不是来评判的。」——本集 Ra 拒答污染百分比，理由一字不差：这样的陈述会被读成判决。</div>
+  </div>
+  <div class="card">
+    <h3>时间尺度：三千年、八十年、两百年</h3>
+    <div class="timeline">
+      <div class="tl-item"><div class="t">近三千年</div><div class="d">发问者给出的坐标：当前周期的最后三千年。Ra 说这期间没有一的法则的完整来源，圣书里只有碎片。</div></div>
+      <div class="tl-item"><div class="t">近八十年</div><div class="d">Ra 说这段时间没有与你们人群中的人通讯过；「一的道途」（Ways of One）很少被传递，只有罕见的实例。</div></div>
+      <div class="tl-item"><div class="t">第四密度的通讯</div><div class="d">与此并行的是：由于朝向第四密度收割的牵引，来自第四密度的通讯很多，内容是「宇宙之爱与理解之道」；其余教导留给理解深度足够、因而吸引进一步通讯的实体。</div></div>
+      <div class="tl-item"><div class="t">近两百年</div><div class="d">大约两百年前，开始有相当数量的实体凭借资历、为学习/教导的目的而投生，而非为较浅的学习/教导——Ra 称这是「允许通讯发生的信号」。</div></div>
+      <div class="tl-item"><div class="t">流浪者现身</div><div class="d">流浪者约在此时期开始让人感受到他们的存在：先提供含自由意志变貌的想法，为后来带着更具体信息的流浪者铺路——思想必须先于行动。</div></div>
+    </div>
+    <div class="quote">
+      <p class="en">The wanderers which came among you began to make themselves felt at approximately this time, firstly offering ideas or thoughts containing the distortion of Free Will.</p>
+      <p class="zh">来到你们中间的流浪者，大约在这个时期开始让人感受到他们的存在：他们首先提供的是带有自由意志变貌的想法或思想。</p>
+      <span class="src">—— Session 026 · (26.13)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This was the prerequisite for further wanderers which had information of a more specific nature to offer. The thought must precede the action.</p>
+      <p class="zh">这是后续流浪者得以带来更具体信息的前提条件。思想必须先于行动。</p>
+      <span class="src">—— Session 026 · (26.13)</span>
+    </div>
+    <div class="plain">联邦加大介入不是因为想给人「更多闲暇」；真正的信号是：地球自己开始有一批为学习/教导而来的实体投生，通讯才有可能发生。</div>
+    <div class="case"><b>先有论文，再有产品：</b>一项技术总是先在论文与讨论里成形，几年后才有人做出实物。Ra 说流浪者先带来「含自由意志变貌的想法」，才为后来带来具体信息的流浪者开路——思想必须先于行动。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>流浪者的名册：林肯为何不在其中</h2></div>
+  <p class="sec-lead">顺着「谁来了」的话题，发问者开始点名：林肯是不是流浪者？Ra 说不——由此带出本集一个很特别的区分：有的人是投生而来的流浪者，有的人则是自己的载具被另一个实体接手使用。途中 Ra 还纠正了一个听错的名字。</p>
+  <div class="card">
+    <h3>两种「外来者」：投生者与借载具者</h3>
+    <div class="q">亚伯拉罕·林肯会不会是一位流浪者？</div>
+    <div class="quote">
+      <p class="en">This entity was a normal, shall we say, Earth being which chose to leave the vehicle and allow an entity to use it on a permanent basis.</p>
+      <p class="zh">这个实体是一个正常的——容我们这样说——地球存有；他选择离开自己的载具，并允许另一个实体永久性地使用它。</p>
+      <span class="src">—— Session 026 · (26.15)</span>
+    </div>
+    <div class="quote">
+      <p class="en">You would do better considering the incarnations of wanderers such as the one known as Thomas, the one known as Benjamin.</p>
+      <p class="zh">你不如去考察那些流浪者的投生——比如那位被称为托马斯的，和那位被称为本杰明的。</p>
+      <span class="src">—— Session 026 · (26.15)</span>
+    </div>
+    <div class="plain">林肯不是流浪者：他是一位地球存有主动离开载具，让另一个实体永久接手使用——Ra 说这种情形比起流浪者现象要罕见得多。真正属流浪者的是托马斯与本杰明。</div>
+    <div class="analogy"><b>像老店换人经营：</b>创始人不做了，把铺子交给一个外来团队长期打理；招牌没换、街坊照旧进出，可做事的路数已经完全变了。这就是「载具被永久接手」的意思。</div>
+    <div class="case"><b>换个招牌还留着老员工：</b>一家小馆子被新团队接手，菜名全没改，但后厨换了人、味道慢慢变了——食客直到某天才察觉。Ra 描述的「地球存有离开、另一个实体永久使用载具」正是这类不易察觉的交接。</div>
+  </div>
+  <div class="card">
+    <h3>名字的精度：不是爱迪生，是杰斐逊</h3>
+    <div class="q">你说的是托马斯·爱迪生和本杰明·富兰克林吗？</div>
+    <div class="quote">
+      <p class="en">This is incorrect. We were intending to convey the sound vibration complex, Thomas Jefferson. The other, correct.</p>
+      <p class="zh">这是不正确的。我们本意要传达的声音振动复合体是托马斯·杰斐逊。另一位，正确。</p>
+      <span class="src">—— Session 026 · (26.16)</span>
+    </div>
+    <div class="plain">Ra 只说了一个「托马斯」，发问者自行补成爱迪生；Ra 立刻纠正——名字在 Ra 的用法里是「声音振动复合体」，不是可以随便替换的标签。</div>
+    <div class="case"><b>群聊里的对号入座：</b>你在群里说「托马斯就是爱迪生吧」，对方回「我说的是杰斐逊」。——本集就是这样一次纠正：先指出「这不对」，再补上准确的声音振动复合体，然后确认另一半没错。</div>
+  </div>
+  <div class="card">
+    <h3>接手者的来处，与那场暗杀</h3>
+    <div class="q">使用林肯身体的实体来自哪个密度？他的遇刺是否受到猎户座或其他负面势力的影响？</div>
+    <div class="quote">
+      <p class="en">This entity was fourth-vibration.</p>
+      <p class="zh">这个实体属于第四振动。</p>
+      <span class="src">—— Session 026 · (26.17)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This is correct.</p>
+      <p class="zh">这是正确的。</p>
+      <span class="src">—— Session 026 · (26.19)</span>
+    </div>
+    <div class="plain">接手的实体属于第四振动，且是正面的（26.17、26.18）；而面对「遇刺是否受猎户座或其他负面势力影响」这一问，Ra 的回答就是上面那句确认。</div>
+    <div class="case"><b>把账目公开的人突然离职：</b>团队里那个坚持要公开账目的人被排挤走，当时大家都说是巧合；半年后回看，才发现几位反对者早把每一步都串好了。本集里 Ra 对遇刺一事的确认，说的正是这种「不是偶然」。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>UFO 为何骤增：两份被扭曲的礼物</h2></div>
+  <p class="sec-lead">话题转到 UFO。发问者注意到近三四十年间 UFO 现象忽然为大众所知，问原因为何。Ra 给出的答案出人意料：因为联邦曾先后给过两份礼物，而它们都被拿去做了武器。</p>
+  <div class="card">
+    <h3>爱因斯坦与特斯拉：被转用的信息</h3>
+    <div class="q">历史上一直有 UFO，但过去四十年 UFO 活动增加的最初原因是什么？</div>
+    <div class="quote">
+      <p class="en">Information which Confederation sources had offered to your entity, Albert [Einstein], became perverted, and instruments of destruction began to be created, examples of this being the Manhattan Project and its product.</p>
+      <p class="zh">星际联邦的来源曾提供给你们的实体阿尔伯特[爱因斯坦]的信息被扭曲了，毁灭性的器具开始被造出来——曼哈顿计划及其产物就是例子。</p>
+      <span class="src">—— Session 026 · (26.20)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Information offered through wanderer, sound vibration, Nikola [Tesla], also being experimented with for potential destruction: example, your so-called Philadelphia Experiment.</p>
+      <p class="zh">通过流浪者——声音振动尼科拉[特斯拉]——所提供的信息，也被拿去试验其潜在的毁灭用途：例如你们所谓的费城实验。</p>
+      <span class="src">—— Session 026 · (26.20)</span>
+    </div>
+    <div class="plain">UFO 现象增多不是一场宣传战，而是一次补救：本来要帮助这个行星的信息被扭曲成毁灭工具，联邦因而决定以思想形态介入，设法平衡这些扭曲。</div>
+    <div class="quote">
+      <p class="en">Thus, we felt a strong need to involve our thought-forms in whatever way we of the Confederation could be of service in order to balance these distortions of information meant to aid your planetary sphere.</p>
+      <p class="zh">因此我们感到迫切需要让我们的思想形态介入——只要星际联邦能以任何方式服务，就去服务——以平衡这些原本意在帮助你们行星领域、却已被扭曲的信息。</p>
+      <span class="src">—— Session 026 · (26.20)</span>
+    </div>
+    <div class="analogy"><b>把火借给邻居取暖：</b>结果火被拿去点着了别人家的房子。你没法把火收回来，只能从那天起挨家挨户去讲怎么防火。</div>
+    <div class="case"><b>开源的安全工具反被滥用：</b>一位工程师把自写的安全工具开源，本意是帮大家加固系统；两年后它出现在勒索软件里。已发布的版本收不回来，他只能开始写更清楚的文档、划定使用边界——这就是 Ra 说的「平衡被扭曲的信息」。</div>
+    <div class="case"><b>用户数据被转手卖掉：</b>你把调研数据交给合作方，指望改进产品；对方转手做成画像工具卖给广告商。对应「给予爱因斯坦的信息被扭曲」——好心给的原料，被拿去做了另一件事。</div>
+  </div>
+  <div class="card">
+    <h3>「部分正确」：除了营造神秘，还有别的服务</h3>
+    <div class="q">你们是不是用 UFO 营造神秘氛围，再以可接受也可拒绝的心电感应信息，让人开始认真思考后果？</div>
+    <div class="quote">
+      <p class="en">This is partially correct. There are other services we may perform.</p>
+      <p class="zh">这部分是正确的。我们还能提供其他服务。</p>
+      <span class="src">—— Session 026 · (26.21)</span>
+    </div>
+    <div class="plain">发问者的猜测只对了一半。Ra 补上的那项服务更实际：在核装置被使用的场合，由联邦接手灵魂或灵复合体的整合——而方法是对维度能量场的理解。</div>
+    <div class="quote">
+      <p class="en">This is accomplished through our understanding of dimensional fields of energy. The higher, or more dense, energy field will control the less dense.</p>
+      <p class="zh">这是通过我们对维度能量场的理解来完成的。更高——或者说更密集——的能量场会控制较不密集的能量场。</p>
+      <span class="src">—— Session 026 · (26.24)</span>
+    </div>
+    <div class="case"><b>新版本能读旧文件，反过来不行：</b>升级后的软件能打开旧格式，旧版却打不开新版文件。Ra 说「更高或更密集的能量场会控制较低者」——这个方向的不可逆性，正是这句话的要点。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>核爆之后：更重的创伤，与一场全行星的疗愈</h2></div>
+  <p class="sec-lead">上一章末尾提到联邦会在核爆时接手灵魂整合，发问者立刻追问：这是怎么做到的？广岛与长崎的死者如今如何？这种死法会不会耽误他们的收割？这一串追问给出本集最沉重、也最动人的一段教导——Ra 确保的是「不失落」，而不是「不痛」。</p>
+  <div class="card">
+    <h3>为什么需要「接手」整合</h3>
+    <div class="q">你说星际联邦已经做过灵魂或灵体的整合，那具体是什么意思？</div>
+    <div class="quote">
+      <p class="en">The use of intelligent energy transforming matter into energy is of such a nature among these weapons that the transition from space/time third density to time/space third density, or what you may call your heaven worlds, is interrupted in many cases.</p>
+      <p class="zh">在这些武器中，以智能能量把物质转化为能量的那种用法具有这样的性质：从空间/时间的第三密度过渡到时间/空间的第三密度——也就是你们可能称为天堂世界的那些地方——在许多情况下会被打断。</p>
+      <span class="src">—— Session 026 · (26.22)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This would be the loss to the Creator of part of the Creator, and thus we were given permission not to stop the events, but to ensure the survival of the, shall we say, disembodied mind/body/spirit complex.</p>
+      <p class="zh">这将是造物主失去自身的一部分；因此我们得到许可，不是去阻止那些事件，而是确保那——容我们说——脱离身体的心/身/灵复合体得以存活。</p>
+      <span class="src">—— Session 026 · (26.23)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This we did in those events which you mention, losing no spirit, or portion, or holograph, or microcosm of the macrocosmic Infinite One.</p>
+      <p class="zh">在你提到的那些事件里，我们做的就是这件事：没有丢失任何一个灵、任何一个部分、任何一个全息映像，也没有丢失宏观无限太一的任何一个微观宇宙。</p>
+      <span class="src">—— Session 026 · (26.23)</span>
+    </div>
+    <div class="plain">核爆的创伤会打散灵复合体的振动，使过渡无法完成；联邦被允许做的不是阻止事件，而是接手整合——好让造物主不失去自己的任何一部分。</div>
+    <div class="analogy"><b>像地震中的图书馆：</b>你无法阻止地震，但可以组织人手，把散落一地的手稿一页页收拢、编号、归位，不让任何一页从此失散。</div>
+    <div class="case"><b>消防员到场时，火已经烧起来了：</b>他们的第一要务不是「让这场火没发生过」，而是把人从窗口接出来。Ra 说的正是这个次序：不阻止事件，只确保存活。</div>
+  </div>
+  <div class="card">
+    <h3>会不会更轻？不会，但实体仍是实体</h3>
+    <div class="q">所以你们能让核爆死者在进入天堂世界时的创伤，不比被子弹打死或老死更大？</div>
+    <div class="quote">
+      <p class="en">This is incorrect. It would be more traumatic. However, the entity would remain an entity.</p>
+      <p class="zh">这不对。那会更创伤。然而，这个实体仍然会是一个实体。</p>
+      <span class="src">—— Session 026 · (26.25)</span>
+    </div>
+    <div class="quote">
+      <p class="en">They of this trauma have not yet fully begun the healing process. They are being helped as much as is possible.</p>
+      <p class="zh">承受这一创伤的那些实体，尚未完全开始疗愈的过程。他们正得到尽可能多的帮助。</p>
+      <span class="src">—— Session 026 · (26.26)</span>
+    </div>
+    <div class="plain">联邦能保证的是「不失落」，不是「不痛」：创伤更重，疗愈至今尚未真正开始，帮助只能给到力所能及的程度。</div>
+    <div class="case"><b>ICU 门外的家属：</b>医生能承诺病人活着出重症监护室，却不能承诺他醒来时不带后遗症。家属能做的，是在床边尽力陪着。对应「更创伤，但实体仍然是一个实体」。</div>
+  </div>
+  <div class="card">
+    <h3>行星也要疗愈：受害与加害不作区分</h3>
+    <div class="q">如果一个人当时在广岛或长崎，且正准备达到可收割状态，这种死法会不会让他无法被收割？</div>
+    <div class="quote">
+      <p class="en">Such actions as nuclear destruction affect the entire planet. There are no differences at this level of destruction, and the planet will need to be healed.</p>
+      <p class="zh">像核毁灭这样的行动会影响整个行星。在这个层级的毁灭上不存在差别，而这个行星将需要被疗愈。</p>
+      <span class="src">—— Session 026 · (26.27)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Once the healing has taken place the harvest may go forth unimpeded. However, the entire planet will undergo healing for this action, no distinction being made betwixt victim and aggressor, this due to damage done to the planet.</p>
+      <p class="zh">一旦疗愈完成，收割便可不受阻碍地进行。然而整个行星都将为这一行动经历疗愈，受害者与侵略者之间不作区分——这是由于对行星本身造成的损害。</p>
+      <span class="src">—— Session 026 · (26.28)</span>
+    </div>
+    <div class="plain">核爆的账不止记在受难者身上：真正被伤到的是行星本身，所以疗愈的范围是全体；收割则等疗愈完成后照常进行。</div>
+    <div class="case"><b>工厂排污后的整条河：</b>上游工厂违法排污，受害的是下游渔村；可清理时不能只测渔村那段水面——整条河的底泥都得处理，因为受损的是河本身。对应「受害者和侵略者不作区分」。</div>
+  </div>
+  <div class="card">
+    <h3>疗愈的机制：接纳、宽恕、弥补</h3>
+    <div class="q">那么，行星疗愈的机制是什么？</div>
+    <div class="quote">
+      <p class="en">Healing is a process of acceptance, forgiveness, and, if possible, restitution. The restitution not being available in time/space, there are many among your peoples now attempting restitution while in the physical.</p>
+      <p class="zh">疗愈是一个接纳、宽恕，以及——如果可能的话——弥补的过程。由于在时间/空间里无从弥补，你们人群中有许多人正趁着还在肉身之中尝试弥补。</p>
+      <span class="src">—— Session 026 · (26.30)</span>
+    </div>
+    <div class="quote">
+      <p class="en">These attempt feelings of love towards the planetary sphere, and comfort and healing of the scars, and the imbalances of these actions.</p>
+      <p class="zh">他们尝试对行星领域怀有爱的感受，并安抚、疗愈这些行动留下的伤痕与失衡。</p>
+      <span class="src">—— Session 026 · (26.31)</span>
+    </div>
+    <div class="plain">疗愈由三段构成：接纳、宽恕、弥补。而弥补只能在还活着的时候做——所以现在正有人在做这件事。</div>
+    <div class="case"><b>给老房子补墙：</b>你小时候在奶奶家的墙上刻满了字，如今房子要交给下一家人。你能做的不是抹掉痕迹，而是把裂缝补好、把墙面重刷，再对住进来的人说一声抱歉。对应「弥补在时间/空间中不可用，只能在肉身里做」。</div>
+    <div class="case"><b>十年后的同学会道歉：</b>你主动找到当年被你起外号的人当面道歉。伤害已经发生，时间不能倒回；但这次弥补，只能在还见得到面的时候做。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>着陆与污染：猎户座十字军的逻辑</h2></div>
+  <p class="sec-lead">后半段，发问者把注意力放到那些「接触事件」上：既然联邦在以心电感应接触 UFO 群体，那些真正降落下来的飞行器又是谁的？被接触者必须先「呼唤」对方吗？他也想知道有多大比例的接触群体被污染了。Ra 在回答之前，要求读者先接受一个反直觉的前提：第四密度的负面，真诚地相信自己是在爱。</p>
+  <div class="card">
+    <h3>接触的两种形态：心电感应与现身天空</h3>
+    <div class="q">UFO 现象公开之后，很多群体报告了接触与心电感应通讯。联邦是不是倾向于向这些群体施加心电感应通讯？</div>
+    <div class="quote">
+      <p class="en">This is correct although some of our members have removed themselves from the time/space using thought-form projections into your space/time and have chosen, from time to time, with permission of the Council, to appear in your skies without landing.</p>
+      <p class="zh">这是正确的；不过我们有些成员已经借着思想形态的投射，从时间/空间移入你们的空间/时间，并时不时在议会的许可下，选择出现在你们的天空中而不着陆。</p>
+      <span class="src">—— Session 026 · (26.32)</span>
+    </div>
+    <div class="plain">联邦确实以心电感应接触有兴趣的群体；此外部分成员会以思想形态投射现身天空——只出现、不着陆，且需议会许可。</div>
+    <div class="case"><b>只做公开讲座、不进你公司：</b>一位专家愿意在公开场合回答问题，但拒绝进你的公司做内部顾问。对应联邦的自我限定：出现在你们的天空中，但不着陆。</div>
+  </div>
+  <div class="card">
+    <h3>降落的都是谁，以及「呼唤」是否必要</h3>
+    <div class="q">除了与艾森豪威尔接触的那次，所有已发生的着陆都是猎户座群体或类似群体吗？被接触者是否必须先呼唤他们？</div>
+    <div class="quote">
+      <p class="en">Except for isolated instances of those of, shall we say, no affiliation, this is correct.</p>
+      <p class="zh">除了那些——容我们说——没有归属的孤立实例之外，这是正确的。</p>
+      <span class="src">—— Session 026 · (26.33)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Once having reached third-density space/time continuum through your so-called windows, these crusaders may plunder as they will, the results completely a function of the polarity of the, shall we say, witness, subject, or victim.</p>
+      <p class="zh">一旦通过你们所谓的窗口抵达第三密度的空间/时间连续体，这些十字军便可以随心所欲地掠夺；结果完全取决于——容我们说——目击者、对象或受害者的极性。</p>
+      <span class="src">—— Session 026 · (26.34)</span>
+    </div>
+    <div class="plain">着陆基本属于猎户座阵营。负面的「十字军」一旦经由窗口进入这个空间/时间，就能自由行动——能造成什么结果，取决于被接触者自身的极性，而不必然取决于他有没有呼唤。</div>
+    <div class="analogy"><b>不请自来的推销员：</b>门开着，他就进来了。他能不能成交，取决于你有多想要他手上的东西。</div>
+    <div class="case"><b>被精准推送的广告：</b>你从没搜过那件东西，只是随口和朋友聊过，广告就找上门了。它不需要你「呼唤」，只需要你身上有一处可以被触动的偏好。对应「可否掠夺，取决于对象自身的极性」。</div>
+  </div>
+  <div class="card">
+    <h3>他们的逻辑：爱自己就是爱一切</h3>
+    <div class="q">他们为什么这样做？</div>
+    <div class="quote">
+      <p class="en">This is due to the sincere belief of fourth-density negative that to love self is to love all.</p>
+      <p class="zh">这是因为第四密度的负面真诚地相信：爱自己就是爱一切。</p>
+      <span class="src">—— Session 026 · (26.34)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Each other-self which is thus either taught or enslaved thus has a teacher which teaches love of self.</p>
+      <p class="zh">每一个因此被教导或被奴役的其他自我，于是有了一位教导「爱自己」的老师。</p>
+      <span class="src">—— Session 026 · (26.34)</span>
+    </div>
+    <div class="plain">负面的十字军并不认为自己在作恶：他们真诚地相信「爱自己就是爱一切」，于是把奴役包装成教学——目标是收成第四密度的负面。</div>
+    <div class="case"><b>「为你好」型的控制上司：</b>他真心相信让你无条件服从就是把你「带出来」，还把这称为培养。对应 Ra 所说：被奴役的其他自我，也有了一位教导「爱自己」的老师。</div>
+  </div>
+  <div class="card">
+    <h3>术语卡：读懂这一集的关键词</h3>
+    <p>点击卡片翻看解释。这几个词在本集里反复出现，先在这里建立准确的直觉。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">一的法则</div><div class="sub">Law of One</div><span class="tap">点击展开</span></div><div class="back">万物皆一：一切存在都是同一个无限造物主的不同表达。本集说这个密度里不存在它的完整信息来源，圣书里只有碎片。<em>比喻：同一束白光透过棱镜散成七色——颜色都在，只是分开来看。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">流浪者</div><div class="sub">wanderer</div><span class="tap">点击展开</span></div><div class="back">来自更高密度、主动投生到第三密度来服务的实体，通常会「遗忘」自己是谁。本集说他们在约两百年前开始让人感受到存在，且是带信息来的（如特斯拉）。<em>案例：外派到陌生城市开分店的人，连自己是外派都忘了。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">极性</div><div class="sub">polarity</div><span class="tap">点击展开</span></div><div class="back">一切行为与意图的取向，朝「服务他人」或朝「服务自我」积累。本集说 UFO 接触的结果「完全取决于目击者、对象或受害者的极性」。<em>比喻：同一笔钱，可以捐出也可以拿去收买——方向不同，积累的东西就不同。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">服务自我 / 服务他人</div><div class="sub">service to self / service to others</div><span class="tap">点击展开</span></div><div class="back">两条极化路线：把他人当作对象与工具，是服务自我；把他人的需要视为其他自我的需要，是服务他人。本集说橙光、黄光层次的性关系会朝服务自我极化——一方成了对象，另一方成了掠夺者。<em>案例：把约会当作「攻略」，还是当作认识一个人。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">第四密度负面</div><div class="sub">fourth-density negative</div><span class="tap">点击展开</span></div><div class="back">已经极化到第四密度、但方向是服务自我的一群实体；本集称之为「十字军」。他们真诚地相信爱自己就是爱一切，因此把奴役当成教学。<em>比喻：自认在「锻炼你」的严苛教练——他自己不觉得那是伤害。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">混淆法则 / 自由意志</div><div class="sub">Law of Confusion / Free Will</div><span class="tap">点击展开</span></div><div class="back">Ra 不替人决定、不下判断的原则。本集里它出现两次：拒答「污染百分比」（会给在世者带来混淆），以及「你们可以按自己的意愿行事」。<em>案例：老师说「你自己选，但要知道代价」。</em></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>归类练习：这是服务他人，还是服务自我？</h3>
+    <p>本集 Ra 说极性的方向决定一切。判断下面每个现代场景偏向哪一侧。</p>
+    <div id="sorterArea"></div>
+  </div>
+  <div class="card">
+    <h3>别把重要性押在具体信息上</h3>
+    <div class="q">这些接触群体有多大比例被猎户座信息严重污染？有没有人保持纯粹？</div>
+    <div class="quote">
+      <p class="en">To give you this information would be to infringe upon the free will, or confusion, of some living.</p>
+      <p class="zh">给你这个信息，就会侵犯某些在世者的自由意志——或者说，他们的混淆。</p>
+      <span class="src">—— Session 026 · (26.36)</span>
+    </div>
+    <div class="quote">
+      <p class="en">It is not the specificity of the information which attracts negative influences; it is the importance placed upon it.</p>
+      <p class="zh">吸引负面影响的，不是信息的具体程度，而是你赋予它的重要性。</p>
+      <span class="src">—— Session 026 · (26.36)</span>
+    </div>
+    <div class="plain">Ra 拒答百分比，理由是会影响在世者的自由意志；他给出的替代建议是：不要去看信息有多具体，而要看自己把多少重要性押在了它上面。</div>
+    <div class="case"><b>追「内部消息」的股民：</b>他买的不是消息本身，是自己对这条消息的重视——正因如此，只要有人愿意喂他「内部消息」，他就随时可以被牵着走。对应「吸引负面影响的不是具体性，而是被赋予的重要性」。</div>
+    <div class="case"><b>群里抢「秘传法门」：</b>同一个呼吸练习，被标上「不外传」三个字以后，人们立刻排起队来。变的不是练习，而是人们附加在它上面的重要性。</div>
+    <div class="quote">
+      <p class="en">it pales to insignificance, just as the grass withers and dies while the love and the light of the One Infinite Creator redounds to the very infinite realms of creation forever and ever, creating and creating itself in perpetuity.</p>
+      <p class="zh">它相比之下微不足道——正如青草枯萎凋零，而太一无限造物主的爱与光却回荡至创造的无限领域，永永远远，在不断创造、并创造自身之中，绵延无尽。</p>
+      <span class="src">—— Session 026 · (26.36)</span>
+    </div>
+    <div class="case"><b>每年返青又枯黄的草坪：</b>你年年除草、年年看它枯黄，觉得白忙；可真正在延续的是土壤、阳光与生命本身，不是这一茬草。对应 Ra 那句「为何要关心那在季节中绽放、枯萎、又重生的青草呢」。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s7">
+  <div class="sec-head"><span class="num">07</span><h2>性爱中的能量转移：从红光到靛蓝光，与收官</h2></div>
+  <p class="sec-lead">收尾前，发问者替器皿转达了一个「更进阶」的问题：因参与性生殖复合行为而产生的能量阻塞与转移，正面的与负面的，究竟怎么运作？一个想与一的法则一致的人，在这个领域能积极地做什么？Ra 先声明只能给出一般性回答，然后按光芒层次，从红光一路讲到靛蓝光。</p>
+  <div class="card">
+    <h3>红光与橙黄光：随机、食欲与「对象」</h3>
+    <div class="q">性生殖行为中的能量阻塞与转移是怎么运作的？寻求与一的法则一致的人能做什么？</div>
+    <div class="quote">
+      <p class="en">This is properly a more advanced question. Due to the specificity of the question we may give general answer.</p>
+      <p class="zh">这严格来说是一个更进阶的问题。由于问题很具体，我们只能给出一般性的回答。</p>
+      <span class="src">—— Session 026 · (26.38)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The first energy transfer is red ray. It is a random transfer having to do only with your reproductive system.</p>
+      <p class="zh">第一种能量转移是红光。它是一种随机转移，只与你们的生殖系统有关。</p>
+      <span class="src">—— Session 026 · (26.38)</span>
+    </div>
+    <div class="quote">
+      <p class="en">What these vibratory levels are seeking is green-ray activity.</p>
+      <p class="zh">这些振动层次所寻求的，其实是绿色光芒的活动。</p>
+      <span class="src">—— Session 026 · (26.38)</span>
+    </div>
+    <div class="quote">
+      <p class="en">this being polarizing towards the negative: one being seen as object rather than other-self, the other seeing itself as plunderer, or master, of the situation.</p>
+      <p class="zh">这种转移会朝负面极化：一方被视为对象，而不是其他自我；另一方则把自己看作这场情境中的掠夺者或主宰者。</p>
+      <span class="src">—— Session 026 · (26.38)</span>
+    </div>
+    <div class="plain">红光只是生理层面的随机交换。在橙光、黄光层次尝试性爱，如果只有一方在这一层振动，就会形成阻塞，让那方生出永无止境的欲求——因为这一层真正要找的，是绿光。</div>
+    <div class="analogy"><b>像口渴时喝汽水：</b>越喝越渴，因为身体要的其实是水。橙光、黄光层次的性活动追求的不是它自己真正想要的东西，所以欲望永远填不满。</div>
+    <div class="case"><b>搭伙式的关系：</b>两个人各取所需，谁也没打算把对方当人看；时间久了，一方越来越饿，越饿越要。这就是 Ra 说的「永无止境的欲求」。</div>
+  </div>
+  <div class="card">
+    <h3>绿光：两种结果，与一道闸门</h3>
+    <div class="q">如果双方都在绿光这一层呢？</div>
+    <div class="quote">
+      <p class="en">Firstly, if both vibrate in third ray, there will be a mutually strengthening energy transfer.</p>
+      <p class="zh">首先，如果双方都在第三光芒中振动，就会出现一种相互强化的能量转移。</p>
+      <span class="src">—— Session 026 · (26.38)</span>
+    </div>
+    <div class="quote">
+      <p class="en">this energy transfer being blocked only if one or both entities have fear of possession, of being possessed, of desiring possession, or desiring being possessed.</p>
+      <p class="zh">而这种能量转移，唯有在一方或双方对占有、被占有、渴望占有或渴望被占有怀有恐惧时，才会被阻塞。</p>
+      <span class="src">—— Session 026 · (26.38)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The other green-ray possibility is that of one entity offering green-ray energy, the other not offering energy of the universal love energy, this resulting in a blockage of energy for the one not green ray, thus increasing frustration or appetite; the green-ray being polarizing slightly towards service to others.</p>
+      <p class="zh">绿光的另一种可能是：一方提供绿光能量，另一方没有提供宇宙之爱的能量；结果是那个不在绿光的一方出现能量阻塞，挫折感或欲求随之增加；而绿光那一方则略微朝服务他人极化。</p>
+      <span class="src">—— Session 026 · (26.38)</span>
+    </div>
+    <div class="plain">双方都在绿光时，能量互相强化：负极/女性一方被从存有的根部向上抽取能量、身体因而焕新；正面/男性一方获得一种滋养灵性的灵感。只要任一方带着占有、被占有、渴望占有或渴望被占有的恐惧，这条通路就会卡住。</div>
+    <div class="analogy"><b>两口井互相引水：</b>两边水位都够，水就循环起来，越流越活。只要有一边加了闸门——怕被夺、怕被占——流动就断在闸门那里。</div>
+    <div class="case"><b>「我不能太依赖他」：</b>一方嘴上不说，心里始终防着一句「我别太依赖他」；于是每次亲近都在某个点停住。对应 Ra 列出的四种恐惧：怕占有、怕被占有、怕自己想要占有、怕自己想要被占有。</div>
+    <div class="case"><b>把对方当伙伴，还是当目标：</b>同一场约会，一个人想的是「今晚怎么推进」，另一个人想的是「她今天过得怎么样」。Ra 说前者会朝负面极化：对方成了对象，自己成了掠夺者；后者才走绿光那一侧。</div>
+  </div>
+  <div class="card">
+    <h3>蓝光与靛蓝光：没有阻塞的可能</h3>
+    <div class="q">更高层的转移是什么样的？</div>
+    <div class="quote">
+      <p class="en">The blue-ray energy transfer is somewhat rare among your people at this time but is of great aid due to energy transfers involved in becoming able to express the self without reservation or fear.</p>
+      <p class="zh">蓝光能量转移在你们人群中目前还比较罕见，但助益很大——它涉及的能量转移，使人能够毫无保留、无所畏惧地表达自我。</p>
+      <span class="src">—— Session 026 · (26.38)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The indigo-ray transfer is extremely rare among your people. This is the sacramental portion of the body complex whereby contact may be made through the violet ray with intelligent infinity.</p>
+      <p class="zh">靛蓝光转移在你们人群中极为罕见。这是身体复合体中神圣的部分，借此可以透过紫光与智能无限建立接触。</p>
+      <span class="src">—— Session 026 · (26.38)</span>
+    </div>
+    <div class="quote">
+      <p class="en">No blockages may occur at these latter two levels due to the fact that if both entities are not ready for this energy, it is not visible, and neither transfer nor blockage may take place. It is as though the distributor were removed from a powerful engine.</p>
+      <p class="zh">在后两个层次上不会发生任何阻塞，原因在于：如果双方尚未准备好接受这种能量，它就是不可见的，既没有转移，也不会有阻塞。这就好比一台强大引擎上的配电器被取走了。</p>
+      <span class="src">—— Session 026 · (26.38)</span>
+    </div>
+    <div class="plain">蓝光是「能毫无保留、无所畏惧地表达自我」；靛蓝光是身体复合体里神圣的部分，借紫光接触智能无限。这两层之所以不会阻塞，是因为「没准备好就看不见」——根本没有通路可堵。</div>
+    <div class="analogy"><b>Ra 自己的比喻：配电器被取走的引擎。</b>没有配电器，电流根本不会送到火花塞——不是被堵住，而是压根没接上。</div>
+    <div class="case"><b>能说「我不知道怎么办」的关系：</b>在有的人面前，你敢说出这句话而不怕被看轻——Ra 说这是蓝光：能够毫无保留、无所畏惧地表达自我，而这种能力本身会带来极大的助益。</div>
+    <div class="table-wrap">
+      <table class="nine">
+        <tr><th>光芒层次</th><th>英文</th><th>通俗理解</th></tr>
+        <tr><td>红光</td><td>red ray</td><td>随机转移，只与生殖系统有关，不涉及极化方向。</td></tr>
+        <tr><td>橙光 / 黄光</td><td>orange / yellow ray</td><td>只有一方在这一层振动就会阻塞，生出永无止境的欲求；若发生转移，则朝负面极化——一方是对象，另一方是掠夺者或主宰者。</td></tr>
+        <tr><td>绿光</td><td>green ray</td><td>双方都在则互相强化（一方身体焕新、一方灵性得滋养）；只有一方在，则另一方阻塞、挫折与欲求增加，绿光方略微朝服务他人极化。四种占有相关的恐惧会让它卡住。</td></tr>
+        <tr><td>蓝光</td><td>blue ray</td><td>罕见而助益大：使人能毫无保留、无所畏惧地表达自我。</td></tr>
+        <tr><td>靛蓝光</td><td>indigo ray</td><td>极罕见；身体复合体的神圣部分，经紫光与智能无限建立接触。后两层「没准备好就看不见」，故无所谓阻塞。</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <h3>条件模拟器：什么样的性能量转移会发生？</h3>
+    <p>拨动开关，看看 Ra 描述的四种结果哪一种出现。</p>
+    <div class="cond-row"><div class="name">双方都在同一光芒层次中振动<small>不是只有一方在渴望</small></div><label class="switch"><input type="checkbox" id="condA" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">双方都没有占有相关的恐惧<small>不怕被占有，也不怕自己渴望占有</small></div><label class="switch"><input type="checkbox" id="condB" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">双方都提供宇宙之爱<small>不是单方面给出</small></div><label class="switch"><input type="checkbox" id="condC" checked><span class="slider"></span></label></div>
+    <div id="condResult"></div>
+  </div>
+  <div class="saying">
+    <p class="en">This is the message we bring. Each entity is only superficially that which blooms and dies. In the deeper sense, there is no end to beingness.</p>
+    <p class="zh">这就是我们带来的信息。每个实体都只是表面上像那会绽放、也会凋零之物；在更深的意义上，存在本身没有尽头。</p>
+    <span class="src">—— Session 026 · (26.36)</span>
+  </div>
+  <div class="card">
+    <h3>这一集留下的位置</h3>
+    <p>本集把 025 的两条伏笔都收了：器皿的虚弱期得到说明，而 Ra 当时预告过的「性生殖行为中的能量阻塞与转移」，在这一集得到完整的一般性回答。同时，发问者第一次明确说出他接下来的计划——做一份「一的法则导论」，遍历这七万五千年周期的高点；Ra 的回答是留有余地的。</p>
+    <div class="quote">
+      <p class="en">It is partially possible, given the background we have laid.</p>
+      <p class="zh">鉴于我们已经奠定的背景，这是部分可能的。</p>
+      <span class="src">—— Session 026 · (26.38)</span>
+    </div>
+    <div class="quote">
+      <p class="en">I leave you, my friends, in the love and the light of the One Infinite Creator.</p>
+      <p class="zh">我的朋友们，我以太一无限造物主的爱与光离开你们。</p>
+      <span class="src">—— Session 026 · (26.40)</span>
+    </div>
+    <div class="plain">读下一集时可以带着这个问题：发问者说要「遍历七万五千年周期的高点」，那条历史线会从哪里讲起？</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+<p>基于 The Ra Contact Session 026（split/Ra_Session_026.md）英文原文制作 · 交互式学习模块</p>
+<p>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文</p>
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra026-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+  {t:'(26.1–26.3) 设置确认',d:'<span class="qa-q">问：为器皿做的调整会不会影响通讯？该继续还是中止？</span><b>答：</b>你们可以按自己的意愿行事；但没有这些调整，我们就无法在这个空间/时间节点使用这个器皿——决定权在你们，后果由我们讲明。'},
+  {t:'(26.4–26.9) 圣书里的碎片',d:'<span class="qa-q">问：过去三千年，一的法则有没有被完整传递过？</span><b>答：</b>这个密度里不存在完整来源，但圣书里有部分内容；新旧约抽掉法则相关部分后含量大致相等，只是旧约有更多受负面影响的材料。至于受猎户座影响的百分比，Ra 拒答——那会被读成评判。'},
+  {t:'(26.10–26.13) 八十与两百年',d:'<span class="qa-q">问：近八十年，一的法则由谁传递过？联邦为何加大介入？</span><b>答：</b>Ra 这八十年没有与你们通讯过，一的道途很少被传递；来自第四密度的通讯则很多，那是宇宙之爱与理解之道。约两百年前，有一批凭资历为学习/教导而来的实体投生，这才是允许通讯发生的信号；流浪者随之现身，先带来含自由意志变貌的想法——思想必须先于行动。'},
+  {t:'(26.15–26.19) 流浪者名册',d:'<span class="qa-q">问：林肯是流浪者吗？</span><b>答：</b>不是。他是一位正常的地球存有，选择离开载具，让另一个第四振动、正面的实体永久接手——这比流浪者现象罕见得多。流浪者的例子是托马斯（经纠正为杰斐逊）与本杰明。林肯遇刺一事，Ra 确认受到猎户座或负面势力影响。'},
+  {t:'(26.20–26.24) UFO 骤增',d:'<span class="qa-q">问：近四十年 UFO 活动增加的最初原因是什么？</span><b>答：</b>给爱因斯坦的信息被扭曲成曼哈顿计划，经特斯拉提供的信息被用于毁灭性试验（费城实验）；联邦因此以思想形态介入，平衡这些被扭曲的信息。发问者猜测的「营造神秘加心电感应」只对了一半——联邦还接手核爆时的灵魂整合，靠的是对维度能量场的理解：更密集的能量场控制较不密集者。'},
+  {t:'(26.25–26.31) 核爆与疗愈',d:'<span class="qa-q">问：核爆而死会更轻吗？会不会耽误收割？行星疗愈怎么做？</span><b>答：</b>会更创伤，但实体仍是实体；广岛长崎的受创者尚未真正开始疗愈。整颗行星都将疗愈，受害者与侵略者不作区分，因为受损的是行星本身。疗愈的过程是接纳、宽恕与弥补——弥补在时间/空间中不可用，所以趁活着时去做。'},
+  {t:'(26.32–26.37) 着陆与污染',d:'<span class="qa-q">问：降落的都是谁？要呼唤他们吗？有多大比例被污染？</span><b>答：</b>除无归属的孤立实例外，着陆多属猎户座；第四密度负面的十字军一旦经窗口进入便可自由掠夺，结果取决于对象的极性——他们真诚地相信爱自己就是爱一切。污染比例被拒答，因为会侵犯在世者的自由意志；要注意的不是信息多具体，而是你赋予它多少重要性。'},
+  {t:'(26.38–26.40) 性能量转移',d:'<span class="qa-q">问：性生殖行为中的能量阻塞与转移怎么运作？</span><b>答：</b>红光只是随机的生理转移；橙黄光只有一方振动会阻塞并生出无止境的欲求，若转移则朝负面极化；绿光双方同频则互相强化，有占有相关的恐惧就卡住；蓝光使人能毫无保留地表达自我；靛蓝光借紫光接触智能无限，后两层没准备好就看不见，故无所谓阻塞。最后 Ra 说明器皿的虚弱期约为三个太阴周期，随即以 Adonai 收尾。'}
+]);
+
+document.querySelectorAll('.fn-card').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('open')));
+
+initSorter('sorterArea',[
+  {a:'约会把对方当成「攻略目标」，只在能换到好处时才投入',opts:['服务他人','服务自我'],ans:'服务自我',exp:'橙光、黄光层次的转移会朝负面极化：一方被视为对象，而不是其他自我。'},
+  {a:'明知没有回报，仍把整理好的资料发给同行',opts:['服务他人','服务自我'],ans:'服务他人',exp:'把对方的成长当作其他自我的事，是绿光那一侧的方向。'},
+  {a:'让新同事事事依赖你，以此保住自己在团队里的位置',opts:['服务他人','服务自我'],ans:'服务自我',exp:'对应 Ra 说的：被奴役的其他自我，于是有了一位教导「爱自己」的老师。'},
+  {a:'开会时把责任推给不在场的人，自己拿功劳',opts:['服务他人','服务自我'],ans:'服务自我',exp:'把他人当作可用的工具与代价承担者，是朝服务自我的极化。'},
+  {a:'在伴侣低谷期以对方的需要为先，不记回报',opts:['服务他人','服务自我'],ans:'服务他人',exp:'这正是 Ra 描述绿光式的给予：以开放的绿光方式奉献自己，而非试图接收或操控其他自我。'},
+  {a:'匿名捐款，却四处希望别人知道是自己捐的',opts:['服务他人','服务自我'],ans:'服务自我',exp:'Ra 说吸引负面影响的不是行为的具体形式，而是你赋予它的重要性——这里的重心仍落在「自己」。'}
+]);
+
+function updateCond(){
+  const a=document.getElementById('condA').checked,
+        b=document.getElementById('condB').checked,
+        c=document.getElementById('condC').checked,
+        box=document.getElementById('condResult');
+  let html='',fail=false;
+  if(!a){
+    fail=true;
+    html='<b>阻塞——只有一方在这一层振动：</b>在那个层次振动的一方会生出永无止境的欲求，因为这一层真正要找的是绿光的活动。';
+  }else if(!b){
+    fail=true;
+    html='<b>阻塞——恐惧这道闸门：</b>即使双方都在绿光，只要一方或双方对占有、被占有、渴望占有或渴望被占有怀有恐惧，这条能量转移就会被卡住。';
+  }else if(!c){
+    html='<b>单方面的绿光：</b>一方提供绿光能量、另一方没有提供宇宙之爱，那个不在绿光的一方出现能量阻塞，挫折感或欲求随之增加；绿光那一方则略微朝服务他人极化。';
+  }else{
+    html='<b>相互强化的能量转移：</b>负极/女性一方被从存有的根部向上抽取能量、身体因而焕新；正面/男性一方获得一种满足并滋养灵性部分的灵感。双方都被极化，并释放出各自丰盈过剩的能量。';
+  }
+  box.innerHTML=html;
+  box.classList.toggle('fail',fail);
+}
+['condA','condB','condC'].forEach(id=>document.getElementById(id).addEventListener('change',updateCond));
+updateCond();
+
+renderPath();
+</script>
+</body>
+</html>

@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css">
+<title>原型心智与塔罗 · 滚动星旅</title>
+<style>
+:root{
+  --amb:#f5efe2;          /* 当前场景氛围色，由 JS 实时插值 */
+  --ink:#efe9dd;
+  --ink-dim:rgba(239,233,221,.55);
+  --serif:"LXGW WenKai","霞鹜文楷","LXGW WenKai SC","Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:#070a12;color:var(--ink);font-family:var(--serif);
+  line-height:2;overflow-x:hidden;
+}
+canvas#sky{position:fixed;inset:0;width:100vw;height:100vh;z-index:0}
+
+/* ===== 进度轨道 ===== */
+#rail{
+  position:fixed;right:26px;top:50%;transform:translateY(-50%);z-index:8;
+  display:flex;flex-direction:column;gap:13px;align-items:flex-end;
+}
+#rail .r{display:flex;align-items:center;gap:10px;cursor:pointer}
+#rail .r i{
+  width:5px;height:5px;border-radius:50%;flex-shrink:0;
+  background:rgba(255,255,255,.16);transition:all .4s;
+}
+#rail .r.cur i{background:var(--amb);box-shadow:0 0 9px var(--amb);transform:scale(1.7)}
+#rail .lbl{
+  font-size:.72rem;letter-spacing:.12em;color:var(--ink);white-space:nowrap;
+  padding:3px 12px;border-radius:999px;background:rgba(7,10,18,.78);
+  border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(4px);
+  opacity:0;transform:translateX(10px);transition:all .35s ease;pointer-events:none;
+}
+#rail:hover .lbl{opacity:1;transform:none}
+#rail .r.cur .lbl{border-color:var(--amb);color:var(--amb)}
+
+main{position:relative;z-index:1}
+
+/* ===== 时刻场景（全屏居中） ===== */
+.scene{min-height:118vh;display:flex;align-items:center;justify-content:center;padding:14vh 22px}
+.stage{max-width:620px;text-align:center;opacity:0;transform:translateY(34px);filter:blur(6px);transition:opacity 1.6s ease,transform 1.6s ease,filter 1.6s ease}
+.scene.on .stage,.station.on .stage{opacity:1;transform:none;filter:blur(0)}
+.kicker{
+  font-size:.8rem;letter-spacing:.55em;text-indent:.55em;color:var(--amb);
+  margin-bottom:30px;opacity:.85;
+}
+.kicker::after{
+  content:"";display:block;width:34px;height:1px;margin:16px auto 0;
+  background:var(--amb);opacity:.5;
+}
+.narr{font-size:1.18rem;color:var(--ink);margin-bottom:38px;text-align:center}
+.en{
+  font-family:Georgia,"Times New Roman",serif;font-style:italic;
+  font-size:.98rem;line-height:1.9;color:var(--amb);opacity:.92;margin-bottom:16px;
+}
+.zh{font-size:.95rem;color:var(--ink-dim);margin-bottom:10px}
+.ref{font-size:.74rem;letter-spacing:.2em;color:rgba(239,233,221,.34)}
+
+/* ===== 站点（左钉住 · 右细节流） ===== */
+.station{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);align-items:stretch}
+.pin{
+  position:sticky;top:0;height:100vh;
+  display:flex;align-items:center;justify-content:center;padding:0 3vw;
+}
+.pin .stage{max-width:520px}
+.detail{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:10vh 5vw 10vh 0;
+}
+.frag{
+  min-height:60vh;display:flex;flex-direction:column;justify-content:center;
+  max-width:440px;
+  opacity:0;transform:translateY(30px);
+  transition:opacity 1.3s ease,transform 1.3s ease;
+}
+.frag.on{opacity:1;transform:none}
+.f-k{
+  font-size:.78rem;letter-spacing:.4em;color:var(--amb);opacity:.85;margin-bottom:18px;
+}
+.f-en{
+  font-family:Georgia,"Times New Roman",serif;font-style:italic;
+  font-size:.92rem;line-height:1.9;color:var(--amb);opacity:.9;
+  border-left:2px solid rgba(255,255,255,.18);padding-left:16px;margin-bottom:14px;
+}
+.f-zh{font-size:.93rem;color:var(--ink-dim);margin-bottom:8px}
+.f-ref{font-size:.72rem;letter-spacing:.2em;color:rgba(239,233,221,.32)}
+
+/* 开场 */
+#s0 .narr{font-size:1.5rem;letter-spacing:.1em;line-height:2.3}
+.hint{
+  margin-top:60px;font-size:.8rem;letter-spacing:.4em;text-indent:.4em;
+  color:var(--ink-dim);animation:drift 2.6s ease-in-out infinite;
+}
+@keyframes drift{0%,100%{transform:translateY(0);opacity:.45}50%{transform:translateY(9px);opacity:.95}}
+
+/* 可选演示区（如棱镜 / 时间线 / 对比路径） */
+.demo{margin:8px auto 42px}
+.timeline{position:relative;max-width:460px;margin:0 auto 42px;text-align:left;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:rgba(255,255,255,.14)}
+.tl-item{position:relative;padding:2px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:11px;height:11px;border-radius:50%;
+  background:#070a12;border:3px solid var(--amb)}
+.tl-item .t{font-weight:700;color:var(--amb);letter-spacing:.1em}
+.tl-item .d{font-size:.9rem;color:var(--ink-dim)}
+.paths{display:flex;gap:26px;justify-content:center;margin-top:46px;flex-wrap:wrap}
+.path{
+  width:210px;padding:30px 22px 26px;border-radius:16px;cursor:pointer;
+  border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.02);
+  transition:all .7s ease;
+}
+.path h3{font-size:1.05rem;letter-spacing:.3em;text-indent:.3em;margin-bottom:12px}
+.path p{font-size:.86rem;color:var(--ink-dim);line-height:1.9}
+.paths.p-a .path:not(.a),.paths.p-b .path:not(.b){opacity:.28;transform:scale(.96)}
+.paths.p-a .path.a,.paths.p-b .path.b{transform:scale(1.04)}
+
+/* 塔罗牌显形 */
+.arcana{display:flex;gap:22px;justify-content:center;margin:8px auto 42px}
+.tcard{
+  --r:0deg;
+  width:96px;height:150px;border-radius:12px;
+  border:1px solid rgba(255,255,255,.22);
+  background:linear-gradient(165deg,rgba(255,255,255,.09),rgba(255,255,255,.015));
+  box-shadow:0 14px 34px rgba(0,0,0,.35);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  opacity:0;transform:translateY(26px) rotate(var(--r));
+  transition:opacity 1.5s ease var(--d,0s),transform 1.5s ease var(--d,0s);
+}
+.tcard b{font-size:1.45rem;letter-spacing:.14em;color:var(--amb);font-weight:700}
+.tcard i{font-style:normal;font-size:.66rem;letter-spacing:.28em;text-indent:.28em;color:var(--ink-dim)}
+.scene.on .tcard{opacity:1;transform:translateY(0) rotate(var(--r))}
+
+/* 终章 */
+#sLast .en{font-size:1.06rem;line-height:2.2}
+#sLast .zh{font-size:1rem}
+.again{
+  margin-top:56px;font-family:var(--serif);font-size:.85rem;letter-spacing:.35em;text-indent:.35em;
+  color:var(--ink-dim);background:none;border:1px solid rgba(255,255,255,.14);
+  border-radius:999px;padding:11px 30px;cursor:pointer;transition:all .4s;
+}
+.again:hover{color:var(--ink);border-color:var(--amb)}
+
+footer{
+  position:relative;z-index:1;text-align:center;padding:40px 20px 56px;
+  font-size:.76rem;color:rgba(239,233,221,.3);letter-spacing:.08em;line-height:2.2;
+}
+@media (max-width:900px){
+  .station{display:block}
+  .pin{position:static;height:auto;padding:12vh 22px 2vh}
+  .pin .stage{margin:0 auto}
+  .detail{padding:0 22px 6vh;align-items:center}
+  .frag{min-height:auto;margin-bottom:7vh}
+}
+@media (max-width:640px){
+  .narr{font-size:1.05rem}
+  #s0 .narr{font-size:1.2rem}
+  #rail{display:none}
+}
+</style>
+</head>
+<body>
+
+<canvas id="sky"></canvas>
+<div id="rail"></div>
+
+<main>
+
+<!-- 0 抽牌之前 -->
+<section class="scene" id="s0" data-c="#f5efe2">
+  <div class="stage">
+    <p class="narr">你洗过牌，抽过牌，<br>也许被一张「塔」或「月亮」惊到过。<br>但这副牌最初不是用来算命的——<br>它是一间神殿的入门课本，<br>教人读的那本书，是你自己。</p>
+    <p class="en">"The tarot was devised by the third-density population of Venus a great measure of your space/time in your past."</p>
+    <p class="zh">塔罗是由金星第三密度的人口设计的——在你们过去的很长一段空间/时间之前。</p>
+    <p class="ref">—— SESSION 088 · (88.14)</p>
+    <p class="hint">向下滚动 · 翻开第一张牌 ▾</p>
+  </div>
+</section>
+
+<!-- 1 心智之井 -->
+<section class="station" id="s1" data-c="#d9c08a">
+  <div class="pin"><div class="stage">
+    <p class="kicker">心智之井</p>
+    <p class="narr">每个理则——每个星系的造物之心——<br>都为它的孩子们留了一口井。<br>井里不是水，<br>是这一方造物里一切经验的图案。<br>原型心智，就是这口井的名字。</p>
+    <p class="en">"The archetypical mind may be defined as that mind which is peculiar to the Logos of this planetary sphere."</p>
+    <p class="zh">原型心智可以定义为：这个行星球体的理则所特有的心智。它不同于浩瀚的宇宙全心智，包含着理则所乐意给出的、对宇宙存在性的种种精炼。</p>
+    <p class="ref">—— SESSION 074 · (74.4)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">直觉的名册</p>
+      <p class="f-en">"They are hierarchical and proceed from the entity’s own subconscious mind to group, or planetary mind, to guides, to higher self, to archetypical mind, to cosmic mind or intelligent infinity."</p>
+      <p class="f-zh">直觉求助的名册是有等级的：从自己的潜意识心智出发，到群体或行星心智，到指导灵，到高我，再到原型心智，最后是宇宙心智——即智能无限。</p>
+      <p class="f-ref">—— SESSION 067 · (67.28)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">一张无变貌的蓝图</p>
+      <p class="f-en">"The archetypical mind, when penetrated lucidly, is a blueprint of the builded structure of all energy expenditures and all seeking, without distortion."</p>
+      <p class="f-zh">当原型心智被清晰地穿透，它是一张没有任何变貌的蓝图——画着全部能量的支出与全部寻求的建成结构。而它，就藏在你深层心智之内。</p>
+      <p class="f-ref">—— SESSION 091 · (91.37)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">孔雀开屏的理由</p>
+      <p class="f-en">"Each Logos desires to create a more eloquent expression of experience of the Creator by the Creator. The archetypical mind is intended to heighten this ability to express the Creator in patterns more like the fanned peacock’s tail: each facet of the Creator vivid, upright, and shining with articulated beauty."</p>
+      <p class="f-zh">每个理则都想造出更雄辩的表达：让造物主经由造物主去体验自己。原型心智就像孔雀展开的尾屏——造物主的每一面都鲜明、挺立、闪耀着清晰的美。</p>
+      <p class="f-ref">—— SESSION 090 · (90.16)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">偶然的共振</p>
+      <p class="f-en">"At the point at which an entity, either by accident or design, reflects an archetype, the archetypical mind resonates."</p>
+      <p class="f-zh">当一个实体——出于意外或出于设计——映照出某个原型时，原型心智就发生共振。随机激活几乎从第三密度一开始就有；有纪律地使用这件工具，则要晚得多。</p>
+      <p class="f-ref">—— SESSION 090 · (90.15)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 2 金星的神殿 -->
+<section class="station" id="s2" data-c="#cf9048">
+  <div class="pin"><div class="stage">
+    <p class="kicker">金星的神殿</p>
+    <p class="narr">这副牌的出生地不在埃及，<br>也不在欧洲——<br>在金星。在你们的过去，<br>一段很长很长的时间里，<br>一群第三密度的金星人<br>把它造了出来。</p>
+    <p class="en">"The concept of the tarot originated within the planetary influence you call Venus."</p>
+    <p class="zh">塔罗的概念，起源于你们称之为金星的行星影响。</p>
+    <p class="ref">—— SESSION 088 · (88.13)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">许多世代的功课</p>
+      <p class="f-en">"The product of many, many generations of work upon what we conceived to be the archetypical mind produced the tarot which was used by our peoples as a training aid in developing the magical personality."</p>
+      <p class="f-zh">在 Ra 所认为的原型心智上，经过许多、许多世代的功课，产出了塔罗——Ra 的人民用它作为发展魔法人格的训练辅助。</p>
+      <p class="f-ref">—— SESSION 088 · (88.14)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">不用牌的课</p>
+      <p class="f-en">"It was by this method of sustained visualization over a period of training that we worked with these concepts."</p>
+      <p class="f-zh">Ra 自己不用牌。他们靠的是训练期内持续不断的观想——把复杂的意象画在心里。每张牌配一个观想的做法，Ra 从未想过。</p>
+      <p class="f-ref">—— SESSION 088 · (88.19)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">口与耳</p>
+      <p class="f-en">"The process was cabalistic; that is, of the oral tradition of mouth to ear."</p>
+      <p class="f-zh">老师怎样把观想传给学生？口传——嘴到耳的口头传统。</p>
+      <p class="f-ref">—— SESSION 088 · (88.20)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">迦勒底的混入</p>
+      <p class="f-en">"Those cards of which you speak were the product of the influence of those of Chaldea and Sumer."</p>
+      <p class="f-zh">宫廷牌与小牌不是 Ra 的教导——它们是迦勒底与苏美尔影响的产物。</p>
+      <p class="f-ref">—— SESSION 088 · (88.22)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">换个星系看星星</p>
+      <p class="f-en">"There is no other Logos the archetypical mind of which would be the same, any more than the stars would appear the same from another planet in another galaxy."</p>
+      <p class="f-zh">没有另一个理则的原型心智与此相同，就像从另一个星系的行星上望去，星空不会是同一片。不过 Ra 与地球确是同源——Ra 正是从金星进化而来。</p>
+      <p class="f-ref">—— SESSION 076 · (76.10)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 3 埃及的次第 -->
+<section class="scene" id="s3" data-c="#b08768">
+  <div class="stage">
+    <p class="kicker">埃及的次第</p>
+    <div class="arcana">
+      <div class="tcard" style="--r:-4deg;--d:.1s"><b>一</b><i>矩阵·心智</i></div>
+      <div class="tcard" style="--r:0deg;--d:.35s"><b>八</b><i>矩阵·身体</i></div>
+      <div class="tcard" style="--r:4deg;--d:.6s"><b>十五</b><i>矩阵·灵性</i></div>
+    </div>
+    <p class="narr">后来，这套图被带到了埃及。课是这样上的：<br>先把二十二张图三张一组地看，心智、身体、灵性逐一对照；<br>再两两成对地凝视；意指者被单独留下；<br>最后一步，不是读懂它们——是成为它们。</p>
+    <p class="en">"At this point, using various other aids to spiritual evolution, we encouraged the initiate to learn to become each archetype and, most importantly, to know, as best as possible within your illusion, when the adoption of the archetype’s persona would be spiritually or metaphysically helpful."</p>
+    <p class="zh">在这一点上，我们鼓励启蒙者学习「成为」每一个原型——而最重要的是，在你们幻象中尽可能最好地知道：何时采用这个原型的角色，才在灵性或形而上层面有所帮助。</p>
+    <p class="ref">—— SESSION 088 · (88.24)</p>
+    <div class="timeline">
+      <div class="tl-item"><p class="t">三三成列</p><p class="d">1·8·15，2·9·16……7·14·21，最后是 22。让心智、身体、灵性的同类原型并肩而立，基本的关系开始显形。</p></div>
+      <div class="tl-item"><p class="t">成对凝视</p><p class="d">一与二，三与四，五，六与七。在成对的注视里，极性开始开口说话。</p></div>
+      <div class="tl-item"><p class="t">独留一张</p><p class="d">意指者不配对——它的另一半，是第二十二号。</p></div>
+      <div class="tl-item"><p class="t">成为原型</p><p class="d">学生不再站在牌的对面。学生走进牌里去。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 心智的七张牌 -->
+<section class="station" id="s4" data-c="#6f86b8">
+  <div class="pin"><div class="stage">
+    <p class="kicker">心智 · 七张牌</p>
+    <p class="narr">前七张牌属于心智。<br>第一张，就是那个魔法师：<br>意识本身——<br>而意识自己，是不动的。</p>
+    <p class="en">"In the mind complex the Matrix may be described as consciousness. It has been called the Magician. It is to be noted that, of itself, consciousness is unmoved. The Potentiator of consciousness is the unconscious. This encompasses a vast realm of potential in the mind."</p>
+    <p class="zh">在心智复合体中，矩阵可以被描述为意识。它被称为魔法师。值得注意的是，意识本身是不动的。意识的赋能者是潜意识——它涵盖了心智中一个广阔的潜能领域。</p>
+    <p class="ref">—— SESSION 078 · (78.11)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">万物所由来</p>
+      <p class="f-en">"The Matrix of Mind is that from which all comes. It is unmoving yet is the activator in potentiation of all mind activity."</p>
+      <p class="f-zh">心智的矩阵是万物所由来的那个东西。它不动，却在潜能中激活一切心智活动。</p>
+      <p class="f-ref">—— SESSION 079 · (79.20)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">意识下潜的海</p>
+      <p class="f-en">"The Potentiator of the Mind is that great resource which may be seen as the sea into which the consciousness dips ever deeper and more thoroughly in order to create, ideate, and become more self-conscious."</p>
+      <p class="f-zh">心智的赋能者是一片可以纵身下潜的大海——意识往更深处、更彻底地下潜，为了创造、为了构想，为了变得更有自我意识。</p>
+      <p class="f-ref">—— SESSION 079 · (79.20)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">未喂养的心智</p>
+      <p class="f-en">"We ask the student to consider the concept of the unfed conscious mind, the mind without any resource but consciousness."</p>
+      <p class="f-zh">学生啊，请思考「未喂养的有意识心智」——除了意识之外没有任何资源的心智。别把它与你体验到的、早已浸过赋能与催化的那团复杂性混为一谈。</p>
+      <p class="f-ref">—— SESSION 091 · (91.33)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">女祭司</p>
+      <p class="f-en">"The unconscious is, indeed, what may be poetically described as High Priestess, for it is the Potentiator of the Mind, and as potentiator for the mind is that principle which potentiates all experience."</p>
+      <p class="f-zh">潜意识，确实可以被诗意地描述为女祭司——它是心智的赋能者，是赋能一切经验的那条原理。</p>
+      <p class="f-ref">—— SESSION 078 · (78.34)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">被无意识加冕</p>
+      <p class="f-en">"The broad name for Archetype Four may be the Experience of the Mind. In the tarot you find the name of Emperor. Again this implies nobility, and in this case we may see the suggestion that it is only through the catalyst which has been processed by the potentiated consciousness that experience may ensue. Thusly is the conscious mind ennobled by the use of the vast resources of the unconscious mind."</p>
+      <p class="f-zh">原型四，皇帝——心智的体验。只有经由被赋能的意识处理过的催化剂，体验才会随之而来。有意识心智因动用无意识的浩瀚资源而被加冕。</p>
+      <p class="f-ref">—— SESSION 078 · (78.37)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">狮子拉的战车</p>
+      <p class="f-en">"One may also see the Way of the Mind as showing the kingdom or fruits of appropriate travel through the mind in that the mind continues to move as majestically through the material it conceives of as a chariot drawn by royal lions or steeds."</p>
+      <p class="f-zh">心智的大道展示着恰当穿越心智的王国与果实：心智继续庄严地行进在它所构想的原野上，如一辆由皇家狮子或骏马牵引的战车。</p>
+      <p class="f-ref">—— SESSION 079 · (79.41)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 5 面纱的两端 -->
+<section class="station" id="s5" data-c="#525e9d">
+  <div class="pin"><div class="stage">
+    <p class="kicker">面纱的两端</p>
+    <p class="narr">面纱落下的那一刻，<br>矩阵与赋能者被分给了两种性别——<br>心智的这一对如此，身体的那一对恰好相反。<br>从此，每个人<br>都是一张对折的牌。</p>
+    <p class="en">"When the veiling process was accomplished, to the male polarity was attracted the Matrix of the Mind and to the female, the Potentiator of the Mind; to the male the Potentiator of the Body, to the female the Matrix of the Body."</p>
+    <p class="zh">遮蔽过程完成时，心智的矩阵被吸引到男性极性，心智的赋能者被吸引到女性极性；身体的赋能者走向男性，身体的矩阵走向女性。</p>
+    <p class="ref">—— SESSION 087 · (87.28)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">伸向锁住的东西</p>
+      <p class="f-en">"Look again, O student. Does the hand reach within? Nay. Without potentiation the conscious mind has no inwardness. That hand, O student, reaches towards that which, outside its unpotentiated influence, is locked from it."</p>
+      <p class="f-zh">再看一次，学生啊。魔法师那只手伸向内在吗？不。未经赋能，有意识心智没有内在。那只手伸向的，正是在它未被赋能的影响之外、对它锁住的东西。</p>
+      <p class="f-ref">—— SESSION 091 · (91.20)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">折翼的鸟</p>
+      <p class="f-en">"The folded wing in this image is intended to suggest that just as the Matrix figure, the Magician, cannot act without reaching its wingèd spirit, so neither can the spirit fly lest it be released into conscious manifestation and fructified thereby."</p>
+      <p class="f-zh">折叠的翅膀在暗示：正如魔法师不触及他有翼的灵性便无法行动，灵性也无法飞翔——除非它被释放进有意识的显化，并由此结出果实。</p>
+      <p class="f-ref">—— SESSION 091 · (91.24)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">出生前的选择题</p>
+      <p class="f-en">"We are suggesting that the Potentiator of the Mind is an archetype which may aid the adept in grasping the nature of this pre-incarnative and continuingly incarnative series of choices."</p>
+      <p class="f-zh">心智的赋能者这个原型，能帮行家看清那一系列选择的本质——在你出生之前就编好的催化剂，与你投生中持续做出的选择，原是同一张卷子。</p>
+      <p class="f-ref">—— SESSION 092 · (92.12)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">从深处抽上来</p>
+      <p class="f-en">"We ask that you consider that the archetypical mind informs those thoughts which then may have bearing upon the mind, the body, or the spirit. The archetypes do not have a direct linkage to body or spirit. All must be drawn up through the higher levels of the subconscious mind to the conscious mind, and thence they may flee whither they have been bidden to go."</p>
+      <p class="f-zh">原型与身体或灵性没有直接的连线。一切都必须经由潜意识的更高层，被抽到意识心智那里——然后它们才飞往被吩咐去的地方。</p>
+      <p class="f-ref">—— SESSION 088 · (88.17)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 6 催化剂之火 -->
+<section class="station" id="s6" data-c="#b05a41">
+  <div class="pin"><div class="stage">
+    <p class="kicker">催化剂 · 体验</p>
+    <p class="narr">第三张牌，是面纱之后才添上的。<br>它出厂时就被「装了药」：<br>为了让你摇摆，<br>为了让你在每一次被推动时，<br>自己决定往哪边倒。</p>
+    <p class="en">"Though far too rigid in your statements, you perceive correct relationships. There is a great deal of dynamic interrelationship in these first four archetypes."</p>
+    <p class="zh">你的陈述过于僵化，但关系感知得正确。在这前四个原型之中，有大量动态的相互关系——它们不是流水线，是一团活的火。</p>
+    <p class="ref">—— SESSION 079 · (79.35)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">本性是水</p>
+      <p class="f-en">"Your own nature is water in that you as mind/body/spirit complexes are easily impressed and moved. Indeed, this is the very fiber and nature of your journey and vigil in this density: to not only be moved but to instruct yourself as to the preferred manner of your movement in mind, body, and spirit."</p>
+      <p class="f-zh">你的本性是水：作为心/身/灵复合体，你很容易被感动、被推动。而这正是这段旅程的纤维与本质——不止被推动，还要教自己：在心智、身体与灵性中，你偏好的运动方式是什么。</p>
+      <p class="f-ref">—— SESSION 088 · (88.23)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">守护催化剂的太阳</p>
+      <p class="f-en">"Therefore, we request that you retain the concept of polarity, but release the cups from their strictured form. The element you deal with is not in motion in its original form, but is, indeed, the abiding sun which, from the spirit, shines in protection over all catalyst available from the beginning of complexity to the discerning mind/body/spirit complex."</p>
+      <p class="f-zh">保留极性，但把杯子从束缚的形式里解放出来。那元素原初并不运动——它是长明的太阳，从灵性中照耀，守护着自复杂性开端以来、对明辨的心/身/灵复合体可得的一切催化剂。</p>
+      <p class="f-ref">—— SESSION 093 · (93.8)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">一间新房</p>
+      <p class="f-en">"It is then that the adept would call upon the new mind, untouched and virgin, and dwell within the archetype of the new and unblemished mind without bias, without polarity, full of the magic of the Logos."</p>
+      <p class="f-zh">当行家的意识被最晦涩的念头塞到爆裂、蓝光与靛光的工作被堵死时，他会召唤那颗崭新、未被触及的心智——住进那个无偏无极、满是理则魔法的原型里去。</p>
+      <p class="f-ref">—— SESSION 091 · (91.35)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 7 自在之物 -->
+<section class="station" id="s7" data-c="#40518f">
+  <div class="pin"><div class="stage">
+    <p class="kicker">自在之物</p>
+    <p class="narr">最容易犯的错，<br>是把二十二个原型读成一张流程图。<br>Ra 说：不要。<br>每一个都是自在之物——<br>有它自己的概念复合体，<br>自己的旋律。</p>
+    <p class="en">"To attempt to condense the archetypes is to make an erroneous attempt. Each archetype is a significant ding an sich, or thing in itself, with its own complex of concepts."</p>
+    <p class="zh">试图浓缩原型，是一种错误的尝试。每个原型都是一个重要的自在之物（ding an sich），拥有它自己的概念复合体。</p>
+    <p class="ref">—— SESSION 088 · (88.17)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">旋律先于关系</p>
+      <p class="f-en">"While it is informative to survey the relationships of one archetype to another, it can be said that this line of inquiry is secondary to the discovery of the purest gestalt or vision or melody which each archetype signifies to both the intellectual and intuitive mind."</p>
+      <p class="f-zh">审视原型与原型之间的关系固然有启发，但这条路线次于另一件事：发现每个原型向智性与直觉心智所意味的最纯粹的格式塔、异象或旋律。</p>
+      <p class="f-ref">—— SESSION 088 · (88.17)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">身体不停机</p>
+      <p class="f-en">"In the body the Matrix may be seen as Balanced Working or Even Functioning. Note that here the Matrix is always active with no means of being inactive. The Potentiator of the body complex, then, may be called Wisdom, for it is only through judgment that the unceasing activities and proclivities of the body complex may be experienced in useful modes."</p>
+      <p class="f-zh">身体的矩阵是平衡运作：它始终活跃，没有「不活动」的模式。身体的赋能者则可称为智慧——只有经由判断，身体那不停歇的活动才能以有用的方式被体验。</p>
+      <p class="f-ref">—— SESSION 078 · (78.11)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">灵魂之夜与闪电</p>
+      <p class="f-en">"The Matrix of the Spirit is what you may call the Night of the Soul, or Primeval Darkness. … The potential power of this extremely receptive Matrix is such that the Potentiator may be seen as Lightning. In your archetypical system called the tarot this has been refined into the concept complex of the Lightning Struck Tower."</p>
+      <p class="f-zh">灵性的矩阵是灵魂之夜、原初黑暗；它的赋能者是闪电——在塔罗里被精炼成「被闪电击中的塔」。在心智、身体、灵性三处，同一对原型的三副面孔，谁也不能替谁。</p>
+      <p class="f-ref">—— SESSION 078 · (78.11)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">不是奖赏，是框架</p>
+      <p class="f-en">"While studying the archetypical mind we may suggest that the student look at the Great Way of the Mind not as that which is attained after contact with intelligent infinity, but rather as that portion of the archetypical mind which denotes and configures the particular framework within which the Mind, the Body, or the Spirit archetypes move."</p>
+      <p class="f-zh">别把大道看作与智能无限接触之后的奖品。它是原型心智中标注并配置出那个特定框架的部分——心智、身体、灵性的原型，都在框架之内移动。</p>
+      <p class="f-ref">—— SESSION 092 · (92.17)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">没有教条</p>
+      <p class="f-en">"As you can see, much work was done creatively by each initiate. We have no dogma to offer. Each perceives that which is needful and helpful to the self."</p>
+      <p class="f-zh">每个启蒙者都创造性地完成了大量功课。我们没有教条可以提供。每个人感知到对自我必要而有益的东西。</p>
+      <p class="f-ref">—— SESSION 088 · (88.24)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">超越纸面</p>
+      <p class="f-en">"It is more nearly well if the adept go beyond whatever has been written and make such correspondences that the archetype can be called upon at will."</p>
+      <p class="f-zh">行家最好超越一切已写下的东西，做出自己的对应——好让原型可以随叫随到。</p>
+      <p class="f-ref">—— SESSION 074 · (74.4)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 8 大奥秘与占卜 -->
+<section class="station" id="s8" data-c="#7d7389">
+  <div class="pin"><div class="stage">
+    <p class="kicker">大奥秘 · 占卜</p>
+    <p class="narr">那为什么今天，人人都在用塔罗算命？<br>因为祭司们把两股传统拧成了一股。<br>Ra 说得干脆：<br>这二十二张牌，<br>本来就不站在算命那一边。</p>
+    <p class="en">"In and of themselves the Major Arcana have no rightful place in divination, but rather are tools for the further knowledge of the self by the self for the purpose of entering a more profoundly, acutely realized present moment."</p>
+    <p class="zh">就大奥秘本身而言，它们在占卜中没有正当的位置——它们是自我用来进一步认识自我的工具，为了进入一个更深刻、更敏锐地实现的当下时刻。</p>
+    <p class="ref">—— SESSION 088 · (88.23)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">占卜不是原意</p>
+      <p class="f-en">"Due to the influence of the Chaldees, the system of archetypical images was incorporated by the priests of that period into a system of astrologically based study, learning, and divination. This was not a purpose for which Ra developed the tarot."</p>
+      <p class="f-zh">由于迦勒底人的影响，那个时代的祭司把这套原型图像纳入了以占星为基础的研究与占卜体系。这不是 Ra 发展塔罗的目的。</p>
+      <p class="f-ref">—— SESSION 093 · (93.17)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">被磁化的牌</p>
+      <p class="f-en">"When the archetypes are shuffled into the mix of astrologically oriented cards which form the so-called Court Arcana and Minor Arcana, these archetypes become magnetized to the psychic impressions of the one working with the cards, and thusly become instruments of a linkage between the practitioner of the astrological determinations and divinations and the one requesting information."</p>
+      <p class="f-zh">当原型被洗进宫廷牌与小牌的占星混合里，它们会被读牌人的灵性印象磁化，成为占卜者与问事者之间的连结器皿——看起来有趣，却是另一门手艺了。</p>
+      <p class="f-ref">—— SESSION 088 · (88.23)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">纸板上的变貌</p>
+      <p class="f-en">"Our great avoidance of interpreting, for the first time, for the learn/teacher various elements of a picture upon a piece of pasteboard is involved both with the Law of Confusion and with the difficulties of the distortions of the pictures upon the pasteboard."</p>
+      <p class="f-zh">Ra 极力避免第一次就替学习/教导者解释纸板图像的种种元素——这既关乎混淆法则，也关乎纸板上的图像本身容易走样的困难。</p>
+      <p class="f-ref">—— SESSION 089 · (89.25)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">星辰的地图</p>
+      <p class="f-en">"Thus those who know the stars and their configurations and influences are able to see a rather broadly drawn map of the country through which an entity has traveled, is traveling, or may be expected to travel, be it upon the physical, the mental, or the spiritual level."</p>
+      <p class="f-zh">至于占星：了解星辰及其影响的人，能看到一幅粗线条的地图——一个实体已走过、正走着、或可预期将走的国度，无论在身体、心智还是灵性的层面上。</p>
+      <p class="f-ref">—— SESSION 088 · (88.23)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 9 第二十二号 · 选择 -->
+<section class="station" id="s9" data-c="#8f66cc">
+  <div class="pin"><div class="stage">
+    <p class="kicker">第二十二条奥秘</p>
+    <p class="narr">二十二张牌里，<br>有一张，是 Ra 完成第三密度之后<br>才真正学会用的。<br>它不在七的体系里——<br>它是一切配对的另一半，<br>意指者的另一半。</p>
+    <p class="en">"The one great breakthrough which was made after our work in third density was done was the proper emphasis given to the Arcanum Number Twenty-Two which we have called The Choice."</p>
+    <p class="zh">在我们第三密度的工作完成之后所取得的一个重大突破，是对第二十二号奥秘——我们称之为「选择」——给予了恰当的强调。</p>
+    <p class="ref">—— SESSION 088 · (88.16)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">留给它的空位</p>
+      <p class="f-en">"You will note that the consideration of the Significator was left unpaired, for the Significator shall be paired with Archetype Twenty-Two."</p>
+      <p class="f-zh">你会注意到，意指者被留作不配对的那一张——因为它将与第二十二号原型配对。</p>
+      <p class="f-ref">—— SESSION 088 · (88.24)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">磨锐目光</p>
+      <p class="f-en">"…a proper understanding, if we may use this misnomer, of Archetype Twenty-Two is greatly helpful in sharpening the basic view of the Significator of Mind, Body, and Spirit; and, further, throws into starker relief the Transformation and Great Way of Mind, Body, and Spirit complexes."</p>
+      <p class="f-zh">对第二十二号原型的恰当理解，极大有助于磨锐对心智、身体、灵性之意指者的基本看法——并让转化与大道，以更鲜明的对比浮现出来。</p>
+      <p class="f-ref">—— SESSION 089 · (89.26)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">二十二是上限</p>
+      <p class="f-en">"The sevens plus The Choice is the greatest number which has been used, by our knowledge, by Logoi. It is the result of many, many previous experiments in articulation of the One Creator."</p>
+      <p class="f-zh">据我们所知，七加「选择」，是各理则用过的最大原型数量。这是许多、许多次先行实验在阐述太一造物主之后结出的成果。</p>
+      <p class="f-ref">—— SESSION 091 · (91.16)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">一步步长出来</p>
+      <p class="f-en">"You must grasp the idea that the archetypes were not developed at once but step by step, and not in order as you know the order at this space/time, but in various orders."</p>
+      <p class="f-zh">必须领会：原型不是一次成形的，而是一步一步长出来的——并且不按你们如今所知的顺序，而是以各种顺序。</p>
+      <p class="f-ref">—— SESSION 091 · (91.17)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 10 回到牌桌 -->
+<section class="scene" id="sLast" data-c="#f5efe2">
+  <div class="stage">
+    <p class="kicker">回到牌桌</p>
+    <p class="narr">旅程的尽头没有牌桌，<br>只有那个一直坐在你对面的自己。<br>原型不是进化的发动机——<br>它是看清这场进化的一面镜子，<br>被擦拭得毫无扭曲。</p>
+    <p class="en">"The archetypes are not the foundation for spiritual evolution but rather are the tool for grasping in an undistorted manner the nature of this evolution."</p>
+    <p class="zh">原型不是灵性进化的基础，而是以未变貌的方式把握这场进化之本质的工具。</p>
+    <p class="ref">—— SESSION 091 · (91.36)</p>
+    <p class="en">"It is appropriate to study one form of constructed and organized distortion of the archetypical mind in depth in order to arrive at the position of being able to become and to experience archetypes at will."</p>
+    <p class="zh">深入钻研原型心智的某一种被构建、被组织的形式，是恰当的——为的是抵达那个位置：能够随意地成为原型、体验原型。</p>
+    <p class="ref">—— SESSION 076 · (76.9)</p>
+    <button class="again" id="again">再洗一次牌</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+原型心智与塔罗 · 滚动星旅 · 内容取自《一的法则》第 67–93 次集会的原型心智讨论<br>
+引文为英文原文逐字摘录；中文为本页面自拟 · 仅作沉浸学习实验
+</footer>
+
+<script>
+/* ===== 星空画布（固定，勿改） ===== */
+const cv=document.getElementById('sky'),cx=cv.getContext('2d');
+let W,H,stars=[];
+function size(){W=cv.width=innerWidth*devicePixelRatio;H=cv.height=innerHeight*devicePixelRatio;}
+size();addEventListener('resize',size);
+for(let i=0;i<230;i++)stars.push({x:Math.random(),y:Math.random(),z:.25+Math.random()*.75,p:Math.random()*6.28,s:Math.random()});
+
+/* ===== 氛围色插值（固定，勿改） ===== */
+function hex2rgb(h){h=h.replace('#','');if(h.length===3)h=h.split('').map(c=>c+c).join('');return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
+const scenes=[...document.querySelectorAll('.scene,.station')].map(s=>({el:s,c:hex2rgb(s.dataset.c)}));
+let amb=[245,239,226];
+function lerp(a,b,t){return a+(b-a)*t}
+function rgb2css(c,a){return `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${a})`}
+
+/* ===== 渲染循环（固定，勿改） ===== */
+let t=0;
+function frame(){
+  t+=.016;
+  const sy=scrollY,wh=innerHeight;
+  let target=scenes[0].c;
+  for(const s of scenes){
+    const r=s.el.getBoundingClientRect();
+    if(r.top<wh*.55&&r.bottom>wh*.45){target=s.c;break}
+  }
+  for(let i=0;i<3;i++)amb[i]=lerp(amb[i],target[i],.045);
+  const ac=amb;
+  document.documentElement.style.setProperty('--amb',rgb2css(ac,1));
+
+  cx.clearRect(0,0,W,H);
+  const g=cx.createRadialGradient(W/2,H*.86,0,W/2,H*.86,H*.75);
+  g.addColorStop(0,rgb2css(ac,.10));g.addColorStop(1,'rgba(0,0,0,0)');
+  cx.fillStyle=g;cx.fillRect(0,0,W,H);
+  const dark=1-Math.min(1,(Math.hypot(ac[0]-245,ac[1]-239))/200);
+  for(const st of stars){
+    const px=st.x*W,py=((st.y - sy*.00004*st.z)%1+1)%1*H;
+    const tw=.5+.5*Math.sin(t*1.3+st.p);
+    cx.globalAlpha=(0.12+0.5*tw*st.z)*(0.35+0.65*dark);
+    cx.fillStyle=rgb2css(ac,1);
+    const r=st.s*1.4*st.z*devicePixelRatio;
+    cx.beginPath();cx.arc(px,py,r,0,6.28);cx.fill();
+  }
+  const oy=H*.62+Math.sin(t*.8)*10*devicePixelRatio;
+  const og=cx.createRadialGradient(W/2,oy,0,W/2,oy,26*devicePixelRatio);
+  og.addColorStop(0,rgb2css(ac,.9));og.addColorStop(.35,rgb2css(ac,.25));og.addColorStop(1,'rgba(0,0,0,0)');
+  cx.globalAlpha=1;cx.fillStyle=og;
+  cx.beginPath();cx.arc(W/2,oy,26*devicePixelRatio,0,6.28);cx.fill();
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+/* ===== 场景显影（固定，勿改） ===== */
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>e.target.classList.toggle('on',e.isIntersecting));
+},{threshold:.01});
+document.querySelectorAll('.scene,.station').forEach(s=>io.observe(s));
+
+/* 细节片段显影（固定，勿改） */
+const ioFrag=new IntersectionObserver(es=>{
+  es.forEach(e=>e.target.classList.toggle('on',e.intersectionRatio>.15));
+},{threshold:[0,.35,.6]});
+document.querySelectorAll('.frag').forEach(f=>ioFrag.observe(f));
+
+/* ===== 进度轨道（固定，勿改） ===== */
+const rail=document.getElementById('rail');
+scenes.forEach((s,i)=>{
+  const row=document.createElement('div');row.className='r';
+  const lbl=document.createElement('span');lbl.className='lbl';
+  const k=s.el.querySelector('.kicker');
+  lbl.textContent=k?k.textContent.trim():(i===0?'开始':'终章');
+  const d=document.createElement('i');
+  row.appendChild(lbl);row.appendChild(d);
+  row.onclick=()=>s.el.scrollIntoView({behavior:'smooth'});
+  rail.appendChild(row);
+});
+setInterval(()=>{
+  const wh=innerHeight;
+  scenes.forEach((s,i)=>{
+    const r=s.el.getBoundingClientRect();
+    rail.children[i].classList.toggle('cur',r.top<wh*.55&&r.bottom>wh*.45);
+  });
+},200);
+
+/* ===== 本章定制交互 ===== */
+/* ===== 回到开头 ===== */
+document.getElementById('again').onclick=()=>scrollTo({top:0,behavior:'smooth'});
+</script>
+</body>
+</html>

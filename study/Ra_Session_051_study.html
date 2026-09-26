@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 051 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 051 · 交互式学习模块</h1>
+  <p class="sub">卷三的第一场集会：发问者先替朋友问清「收割是否有监督」「星际旅行如何跨越距离」，随后转入本集主线——七个身体的能量如何流入、在哪里被堵，埃及鸟画错在哪里，最后落到「死后由靛蓝身体塑形」这个收官之问。</p>
+  <div class="tagline">6 个主题 · 6 个学习步骤 · 14 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 收割的监督</a>
+<a href="#s3">③ 飞行器三型</a>
+<a href="#s4">④ 七个身体</a>
+<a href="#s5">⑤ 死亡的真义</a>
+<a href="#s6">⑥ 收官：水晶与靛蓝</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>卷三开篇的两个「替人问的」问题与一条能量主线，先走一遍问答推进器</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>收割的三层监督</b><span>判据自动，过程有人护送：天使层、星际联邦、守护者各管什么</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>飞行器三型</b><span>氢能低温、光速弹弓、思想旅行；再问一句：为何要用载具</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>七个身体与阻塞</b><span>「心智配置」这个词，漏掉了灵与心、身与心之间的那些堵点</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>死亡的真义</b><span>埃及鸟画的诺斯替变貌，对照死时真正需要的两件事</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官：水晶与靛蓝</b><span>从旋转到水晶的两种激活，再到「死后谁在造形」的最后回答</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ 第 1 章：本章地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：卷三开篇，两个「替人问的」问题与一条能量主线</h2></div>
+  <p class="sec-lead">上一集把话题收在「紫罗兰光芒」这个收割判据上。本集是《一的法则》卷三的第一场集会：发问者带着两个替外界朋友问的问题开场——收割有没有监督、星际飞行器如何跨越光速难题——然后转入本集真正的正题：七个身体与能量流入的阻塞方式，一路追问到「死后由哪个身体塑形」。</p>
+
+  <div class="card">
+    <h3>本集议题清单</h3>
+    <p>① 收割的三层监督（51.1）　② 飞行器三型与载具之问（51.2-51.4）　③ 七个身体与能量阻塞（51.5）　④ 埃及鸟画与死亡的真义（51.6）　⑤ 旋转、水晶与靛蓝身体——收官（51.7-51.11）</p>
+  </div>
+
+  <div class="card">
+    <h3>问答脉络推进器</h3>
+    <p class="hint" style="font-size:.88rem;color:var(--ink-soft)">点击节点或用按钮，走一遍本集的问答链。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="flowTrack"></div>
+      <div class="flow-detail" id="flowDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="flowPrev">← 上一问</button>
+        <button class="tri-btn" id="flowNext">下一问 →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>先记住本集的地基：判据自动，过程有人护送</h3>
+    <div class="q">「既然收割看的是紫罗兰光芒这个硬指标，还需要实体来监督吗？」——这是发问者替朋友问出的第一问，也是理解本集「自动与监督并存」的钥匙。</div>
+    <div class="quote">
+      <p class="en">In time of harvest there are always harvesters. The fruit is formed as it will be, but there is some supervision necessary to ensure that this bounty is placed as it should be, without the bruise or the blemish.</p>
+      <p class="zh">收割的时节总有收割者。果实按其本性长成，但仍需要一些监督，好让这份丰收被安置在它该在的地方——没有瘀伤，没有瑕疵。</p>
+      <span class="src">—— Session 051 · (51.1)</span>
+    </div>
+    <div class="plain">判据（紫罗兰光芒）自动起作用，但「自动」不等于「无人照看」——监督的目的不是改判，而是保全程无损。</div>
+    <div class="case"><b>招生录取：</b>分数线一公布，谁上线是自动的——但班主任仍在场：确认你按时报名、材料齐全、志愿没填错行。规则不因任何人改变，可「过程无损」需要有人护送。这正是 Ra 说的：紫罗兰光芒自动生效，监督确保丰收被安置得没有瘀伤或瑕疵。</div>
+    <div class="case"><b>打开本页的你：</b>如果带着「灵性话题要么玄、要么与我无关」的预设来读，本集可能被开头两问劝退。换一个视角：这一集先拆掉「全靠自动、无需照看」的机械想象，再拆掉「身体只有一个」的单层想象——两层拆除，都是为后面的能量话题铺路。</div>
+  </div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">开场致意 · 器皿状态</span></summary>
+  <div class="body">
+    <p><b>(51.0) 开场致意：</b>Ra 在太一无限造物主的爱与光中致意，开始通讯。</p>
+    <p><b>(51.11) 器皿舒适度：</b>发问者问能否做什么让器皿更舒适或改善通讯——Ra：一切都好，你们是尽责的；随后在爱与光中、以 Adonai 收尾。</p>
+  </div></details>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 2 章：收割的监督 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>收割的三层监督：果实自己成熟，帮手防止磕碰</h2></div>
+  <p class="sec-lead">这是发问者眼中「非短暂」的那一问，替朋友 Leo Sprinkle 而问。Ra 先给出总答案——收割是自动的，随后列出三层帮手的名单。这一答的精妙之处在于：自动与监督并不矛盾，各管各的。</p>
+
+  <div class="card">
+    <h3>自动的判据，周全的护送</h3>
+    <div class="q">收割到底是不是全自动的？如果是，为什么还需要三层帮手？</div>
+    <div class="quote">
+      <p class="en">Thus the harvest is automatic in that those harvested will respond according to that which is unchangeable during harvest. That is the violet-ray emanation. However, these helpers are around to ensure a proper harvesting so that each entity may have the fullest opportunity to express its violet-ray selfhood.</p>
+      <p class="zh">因此收割是自动的：被收割者将按照收割期间不可改变的东西来回应——那就是紫罗兰光芒的放射。然而，这些帮助者守在一旁，确保收割得宜，好让每个实体都有最充分的机会表达其紫罗兰光芒的自我本质。</p>
+      <span class="src">—— Session 051 · (51.1)</span>
+    </div>
+    <div class="plain">收割的判据不可更改、自动生效；帮手们守护的是「过程」，让每个实体都有最充分的机会表达自己。</div>
+    <div class="case"><b>体检采血：</b>指标由机器自动判读，没人能在化验单上改数字；但护士仍要保证采血顺利、样本不混、送检及时。监督不碰结果，只保过程无损耗——对应 Ra 说的「让每个实体有最充分的机会表达其紫罗兰光芒的自我本质」。</div>
+  </div>
+
+  <div class="card">
+    <h3>三层帮手各管什么</h3>
+    <div class="q">这三层分别是谁？各守哪一段？</div>
+    <p><b>第一层 · 行星与天使层：</b>离你最近的守护——你的心/身/灵复合体全体（即高我），加上因你内在的寻求而被吸引到你身边的内层存有。他们认识你，因为是你自己的寻求把他们引来。</p>
+    <div class="quote">
+      <p class="en">This type of guardian includes the mind/body/spirit complex totality or higher self of an entity and those inner plane entities which have been attracted to this entity through its inner seeking.</p>
+      <p class="zh">这类守护者包括一个实体的心/身/灵复合体全体（即高我），以及那些通过该实体的内在寻求而被吸引到它身边来的内层存有。</p>
+      <span class="src">—— Session 051 · (51.1)</span>
+    </div>
+    <p><b>第二层 · 星际联邦：</b>站在光/爱阶梯边缘的小位置上值勤的存有：不管你多困惑、多联系不上高我，他们保证你不因光之力量以外的任何原因摔下去——摔了就接住、扶正、送回光里。</p>
+    <div class="quote">
+      <p class="en">The second class of those who ward this process are those of the Confederation who have the honor/duty of standing in the small places at the edge of the steps of light/love so that those entities being harvested will not, no matter how confused or unable to make contact with their higher self, stumble and fall away for any reason other than the strength of the light. These Confederation entities catch those who stumble and set them aright so that they may continue into the light.</p>
+      <p class="zh">第二类守护这个过程的存有是星际联邦的成员，他们的荣耀/职责是站在光/爱阶梯边缘的小小位置上，好让正在被收割的实体——无论多么困惑、多么联系不上自己的高我——都不会因光之力量以外的任何原因绊倒坠落。这些联邦实体接住绊倒的人，把人扶正，好让他能继续走进光里。</p>
+      <span class="src">—— Session 051 · (51.1)</span>
+    </div>
+    <p><b>第三层 · 守护者：</b>来自 Ra 之上一个八度音程的群体，作为「光的带来者」服务，以极其精细的辨别力给出精确的光/爱放射，从而确认每个实体精确的振动。</p>
+    <div class="quote">
+      <p class="en">This group is from the octave above our own and serves in this manner as light-bringers. These Guardians provide the precise emissions of light/love in exquisitely fastidious disseminations of discrimination so that the precise light/love vibration of each entity may be ascertained.</p>
+      <p class="zh">这个群体来自我们之上的八度音程，以这种方式作为光的带来者服务。他们以极其精细的辨别力给出精确的光/爱放射，好让每个实体精确的光/爱振动得以被确认。</p>
+      <span class="src">—— Session 051 · (51.1)</span>
+    </div>
+    <div class="case"><b>马拉松赛道上的三层保障：</b>亲友陪跑认得你的节奏（天使层：高我与被你内在寻求引来的存有）；补给站志愿者在陡坡边伸手扶一把摔倒的人（星际联邦：接住绊倒者、扶正送回赛道）；终点计时精确到秒，判定每个人的成绩（守护者：精确确认每个实体的振动）。三层互不替代，缺一层都容易有人中途退赛。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 3 章：飞行器三型 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>飞行器三型：为什么大多数存有根本不需要「你们所知的飞行器」</h2></div>
+  <p class="sec-lead">发问者自认这是个「短暂」问题，替一位深研 UFO 现象的朋友问：接近光速时质量趋近无限，第四密度的飞行器怎么到得了地球？Ra 没有直接算物理题，而是先拆前提——问题本身就带着地球式的想象。</p>
+
+  <div class="card">
+    <h3>先拆前提，再谈可能</h3>
+    <div class="q">接近光速时质量趋近无限，第四密度的飞行器怎么跨越遥远距离到达这里？为什么需要飞行器？</div>
+    <div class="quote">
+      <p class="en">Secondly, those, for the most part, coming from distant points, as you term them, do not need craft as you know them. The query itself requires understanding which you do not possess. We shall attempt to state what may be stated.</p>
+      <p class="zh">其次，那些大部分来自远方地点——如你们所称——的存有，并不需要你们所知的飞行器。这个问题本身需要你们尚不具备的理解。我们将尝试陈述可以陈述的部分。</p>
+      <span class="src">—— Session 051 · (51.2)</span>
+    </div>
+    <div class="plain">对更高密度的存有，「移动」根本不是地球式物流问题——发问者的前提（必须乘飞行器跨越距离）才是第一个要拆的东西。</div>
+    <div class="case"><b>快递与传真：</b>想给异地同事传一句话，你不会打包一只纸箱寄过去——「怎么送」取决于你送的是什么。用地球式物流思维去想星际旅行，问题本身就问偏了；Ra 顺着可以说的部分，仍给出了三型清单。</div>
+  </div>
+
+  <div class="card">
+    <h3>三种旅行方式</h3>
+    <div class="q">既然不必都靠飞行器，那实际存在哪几种走法？</div>
+    <p><b>类型一 · 氢能与低温（少数第三密度）：</b>已学会在恒星系之间用飞行器旅行、却仍受你们所知限制的实体。他们以不同的方式使用氢，并靠低温减缓身体与心智的进程来熬过漫长航程——天狼星的来客属于此类。</p>
+    <p><b>类型二 · 光速弹弓（本银河系四至六密度）：</b>掌握一种以光速为弹弓的能量系统，在你们看来几乎不耗时便抵达想去之处。</p>
+    <p><b>类型三 · 思想旅行（其他银河系与本银河系部分四至六密度）：</b>学会必要的个性修炼，把宇宙视为一个存有，凭思想从一个地点到另一个地点，并物质化包裹光体的载具。</p>
+    <div class="quote">
+      <p class="en">One is the type which, coming from fourth, fifth, or sixth density in your own galaxy, has access to a type of energy system which uses the speed of light as a slingshot, and thus arrives where it wishes without any perceptible time elapsed, in your view.</p>
+      <p class="zh">一种是来自你们自己银河系第四、五、六密度的类型，可以使用一种把光速当作弹弓的能量系统，因此在你们看来，抵达想去的地方没有可感知的时间流逝。</p>
+      <span class="src">—— Session 051 · (51.2)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The other type of experience is that of fourth, fifth, and sixth densities of other galaxies, and some within your own galaxy, which have learned the necessary disciplines of personality to view the universe as one being and, therefore, are able to proceed from locus to locus by thought alone, materializing the necessary craft, if you will, to enclose the light body of the entity.</p>
+      <p class="zh">另一种经验类型属于其他银河系以及你们银河系内的某些第四、五、六密度存有：他们已学会必要的个性修炼，把宇宙看作一个存有，因此能够仅凭思想从一个地点移动到另一个地点，并物质化必要的载具来包裹实体的光体。</p>
+      <span class="src">—— Session 051 · (51.2)</span>
+    </div>
+    <div class="case"><b>ICU 的亚低温脑保护：</b>医生把病人的体温主动降到偏低水平，让代谢与神经活动慢下来，为修复争取时间。这与类型一的思路同构——不是飞得更快，而是把「旅行者自身的进程」调慢，来扛住漫长的航程。</div>
+  </div>
+
+  <div class="card">
+    <h3>归类练习：谁属于哪一型</h3>
+    <p class="hint" style="font-size:.88rem;color:var(--ink-soft)">下面五个场景都出自本集或其直接推论，判断各属于哪一型旅行方式。</p>
+    <div id="sorterArea"></div>
+  </div>
+
+  <div class="card">
+    <h3>载具之问：有思想为何还要「壳」</h3>
+    <div class="q">Ra 你们当年去埃及也用了钟形飞行器——既然能凭思想行事，为什么还要用载具？</div>
+    <div class="quote">
+      <p class="en">The vehicle, or craft, is that thought-form upon which our concentration may function as motivator. We would not choose to use our mind/body/spirit complexes as the focus for such a working.</p>
+      <p class="zh">载具或飞行器是那个思想-形态，我们的专注可以以其为推动者来运作。我们不会选择用自己的心/身/灵复合体作为这种工作的焦点。</p>
+      <span class="src">—— Session 051 · (51.4)</span>
+    </div>
+    <div class="plain">载具是让专注可以借力推动的「思想-形态」（thought-form，由专注维持的形态）——Ra 不愿把自己的存在本体直接当作这种工作的焦点。</div>
+    <p>顺带一提：发问者猜测猎户集团的大多数着陆属于思想旅行型，Ra 的回答是——猎户集团混合了倒数第二种（光速弹弓）与最后一种（思想旅行）。</p>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 4 章：七个身体与阻塞 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>七个身体与阻塞：「心智配置」这个词漏掉了什么</h2></div>
+  <p class="sec-lead">正题开始。发问者鼓起勇气提出一个自己都没把握的整体框架——七个身体对应光谱七色，能量经七个中心流入，「心智配置」可能阻塞流入。Ra 的回答方式很有代表性：先肯定大框架，再精确指出哪一个词把问题想简单了。</p>
+
+  <div class="card">
+    <h3>发问者的框架与 Ra 的判定</h3>
+    <div class="q">我们有七个身体对应光谱七色，创造它们的普遍能量经七个脉轮流入来发展完善身体；心智配置可能阻塞流入——这个说法哪里错了？</div>
+    <div class="quote">
+      <p class="en">Your statement is substantially correct. To use the term "mental configuration" is to oversimplify the manners of blockage of instreaming which occur in your density. The mind complex has a relationship to the spirit and body complexes which is not fixed. Thus blockages may occur betwixt spirit and mind, or body and mind, upon many different levels.</p>
+      <p class="zh">你的陈述大体正确。但「心智配置」这个说法，把你们密度中能量流入被阻塞的方式过度简化了。心智复合体与灵性复合体、身体复合体之间的关系并非固定不变；阻塞可能发生在灵与心之间、身体与心之间，且在许多不同的层面上。</p>
+      <span class="src">—— Session 051 · (51.5)</span>
+    </div>
+    <div class="plain">框架大体正确，但阻塞不是「心智配置」一处的事——灵与心、身与心之间的许多层面都可能堵。</div>
+  </div>
+
+  <div class="card">
+    <h3>阻塞的微妙：次色与组合</h3>
+    <div class="q">既然大体正确，Ra 补的这块拼图是什么？</div>
+    <p>Ra 补上的是「分辨率」：每个能量中心还有七个次色（sub-colors，每个能量中心内再分的七个子层级）；灵性/心智的阻塞与心智/身体的阻塞相互叠加，同一个中心可以被多种方式影响。这就是为什么平衡与进化是一个如此精细的过程。</p>
+    <div class="quote">
+      <p class="en">We reiterate that each energy center has seven sub-colors, let us say for convenience. Thus spiritual/mental blockages combined with mental/bodily blockages may affect each of the energy centers in several differing ways. Thus you may see the subtle nature of the balancing and evolutionary process.</p>
+      <p class="zh">我们重申，为方便起见可以说，每个能量中心都有七个次色。灵性/心智的阻塞与心智/身体的阻塞相互叠加，会以好几种不同的方式影响每一个能量中心——由此你可以看到平衡与进化过程何等微妙。</p>
+      <span class="src">—— Session 051 · (51.5)</span>
+    </div>
+    <div class="case"><b>电脑故障排查：</b>同样是「网页打不开」，可能是网线松了（身体层）、可能是浏览器插件冲突（心智层）、也可能是域名解析配置（心智与其他层之间）出了问题。症状相同，堵点各异——只查一个层面，常常修不好。Ra 说阻塞可能发生在「灵与心之间、身与心之间的许多不同层面」，正是这个意思。</div>
+    <div class="case"><b>乐队排练：</b>主唱今天状态不对，不一定是嗓子的事——可能没睡好（身体拖累了心），也可能在为白天一场争执分神（心智的事渗进了表达）。同一个「中心」的表现，要沿不同接合处去查；再乘上七个次色，组合方式成倍增多。</div>
+  </div>
+
+  <div class="card">
+    <h3>本集术语卡（点击翻面）</h3>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">紫罗兰光芒</div><div class="sub">violet ray</div><div class="tap">点击翻面</div></div><div class="back">第七能量中心的放射；收割时实体凭它作出回应，且在收割期间不可改变——相当于决赛时唯一有效的成绩单。<em>比喻：终点计时芯片读出的最终成绩，谁也改不了。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">心/身/灵复合体全体</div><div class="sub">mind/body/spirit complex totality</div><div class="tap">点击翻面</div></div><div class="back">高于这一世人格的「完整版你」，也就是常说的「高我」；收割时它属于天使层，守在你最近处。<em>比喻：一位一直在场、最了解你的监护人。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">思想-形态</div><div class="sub">thought-form</div><div class="tap">点击翻面</div></div><div class="back">由专注维持的形态。Ra 的飞行器就是思想-形态：专注以它为推动者，而不必动用自己的心/身/灵复合体当焦点。<em>比喻：操控无人机——注意力放在机器上，而不是把自己「扔」过去。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">诺斯替主义</div><div class="sub">Gnosticism</div><div class="tap">点击翻面</div></div><div class="back">Ra 对一类变貌的称呼——相信靠精心设计的动作、概念与符号就能获得知识与恰当位置；埃及鸟画正属此类。<em>比喻：只收集「上岸攻略」与幸运符，却不碰课本本身。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">次色</div><div class="sub">sub-colors</div><div class="tap">点击翻面</div></div><div class="back">每个能量中心内再分的七个子层级；两类阻塞相互组合，让每个中心受影响的方式成倍增多。<em>比喻：七根主弦每根还有七个品位，跑音的组合远不止七种。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">子子理则</div><div class="sub">sub-sub-Logos</div><div class="tap">点击翻面</div></div><div class="back">Ra 对「一个人」的正式称呼——理则（Logos）之下再下一层的创造单位；靛蓝身体为其汲取自由意志，选择经验的场所与类型。<em>比喻：分形结构上的一小枝，仍携带整体的生成规则。</em></div></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 5 章：死亡的真义 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>死亡的真义：埃及鸟画错在哪里</h2></div>
+  <p class="sec-lead">发问者从《大金字塔的秘密》书后的埃及图画切入：画中有鸟飞越水平躺卧的实体，这与 Ra 有关吗？Ra 的回答出人意料地直接——他先认领「死亡是门户」这个教导属于自己，再指出那些图画把它变貌成了什么。</p>
+
+  <div class="card">
+    <h3>Ra 认领教导，再指出变貌</h3>
+    <div class="q">《大金字塔的秘密》书后的埃及图画里，鸟飞越水平躺卧的实体——这是什么？与 Ra 有关吗？</div>
+    <div class="quote">
+      <p class="en">These drawings of which you speak are some of many which distort the teaching of our perception of death as the gateway to further experience.</p>
+      <p class="zh">你所说的这些图画，属于把「我们对死亡的感知——它是通往进一步经验的门户」这一教导加以变貌的众多图画之列。</p>
+      <span class="src">—— Session 051 · (51.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This may be termed, in your philosophy, the distortion of Gnosticism: that is, the belief that one may achieve knowledge and a proper position by means of carefully perceived and accentuated movements, concepts, and symbols.</p>
+      <p class="zh">在你们的哲学里，这可以称为诺斯替主义的变貌：即相信人可以借助被精心感知和强调的动作、概念与符号，来获得知识与恰当的位置。</p>
+      <span class="src">—— Session 051 · (51.6)</span>
+    </div>
+    <div class="plain">教导本身（死亡是通往进一步经验的门户）是 Ra 的；变貌在于把注意力引向「死亡过程的具体细节」与符号化的操作。</div>
+    <div class="case"><b>只收集「攻略」的备考者：</b>转发锦鲤、摆好笔的朝向、背口诀式的「玄学动作」，却不碰课本本身——相信靠精心设计的动作与符号就能「获得知识与恰当的位置」。Ra 给这类相信起的名字，正是诺斯替主义的变貌。</div>
+    <div class="case"><b>追悼会上的规格攀比：</b>有人执着于仪式的规格、流程与排场，仿佛场面的隆重程度决定逝者「去得好不好」。按 Ra 的说法，注意力放错了地方——真正有用的是下一张卡里的两件朴素事。</div>
+  </div>
+
+  <div class="card">
+    <h3>死时真正需要的两件事</h3>
+    <div class="q">那死亡这件事，到底需要什么？</div>
+    <div class="quote">
+      <p class="en">In fact, the process of the physical death is as we have described before: one in which there is aid available, and the only need at death is the releasing of that entity from its body by those around it and the praising of the process by those who grieve.</p>
+      <p class="zh">事实上，物理死亡的过程正如我们先前所描述：其中有援助可用；死亡时唯一需要的，是在旁的人把该实体从身体中释放出来，以及哀悼者对这一过程的赞颂。</p>
+      <span class="src">—— Session 051 · (51.6)</span>
+    </div>
+    <div class="plain">死亡不需要复杂仪式——需要的是放行与赞颂，这两件事任何普通人此刻就能做到。</div>
+    <div class="case"><b>病房里的告别：</b>家属握着临终者的手说：「你可以放心走了，我们都会好好的。」一句放行、一句祝福，胜过一切繁复的排场——这正是 Ra 描述的死亡时刻唯一需要的两件事。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 6 章：收官 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>收官：从旋转到水晶，再到死后塑形的靛蓝身体</h2></div>
+  <p class="sec-lead">沿着「阻塞」的话题，发问者想起 Ra 早先谈过的能量中心旋转速度，假设转速是阻塞的函数。Ra 部分肯定——然后对话被一路引向本集最后一个大问题：物理身体死亡之后，由哪个身体塑形。</p>
+
+  <div class="card">
+    <h3>两种激活形态：旋转与水晶</h3>
+    <div class="q">能量中心的旋转速度，是不是阻塞程度的函数——阻塞越少、转速越高、流入越大？</div>
+    <div class="quote">
+      <p class="en">In the first three energy centers, a full unblocking of this energy will create speeds of rotation. As the entity develops the higher energy centers, however, these centers will then begin to express their nature by forming crystal structures. This is the higher, or more balanced, form of activation of energy centers as the space/time nature of this energy is transmuted to the time/space nature of regularization and balancing.</p>
+      <p class="zh">在前三个能量中心，这种能量被完全疏通时会产生旋转速度。然而当实体发展出更高的能量中心时，这些中心将开始以形成水晶结构的方式表达自己的本质。这是能量中心激活的更高、更平衡的形式——这种能量的空间/时间性质，被转化为规律化与平衡的时间/空间性质。</p>
+      <span class="src">—— Session 051 · (51.7)</span>
+    </div>
+    <div class="plain">「转速=少阻塞」只对前三个中心成立；更高中心的「通畅」不再表现为转得快，而是长出规则的晶体。</div>
+    <div class="case"><b>风扇与雪花：</b>前三中心像风扇——阻力越小转得越快，「通畅」表现为转速；更高中心像水结成雪花——不是转得更猛，而是长出规则的形状。两种都叫「通畅」，形态却完全不同，后者是更高、更平衡的激活形式。</div>
+  </div>
+
+  <div class="card">
+    <h3>七个水晶形状：各不相同，然而规则</h3>
+    <div class="quote">
+      <p class="en">Each of the energy centers of the physical complex may be seen to have a distinctive crystalline structure in the more developed entity. Each will be somewhat different, just as in your world no two snowflakes are alike. However, each is regular.</p>
+      <p class="zh">在更发达的实体身上，身体复合体的每个能量中心都可以看到独特的晶体结构。每一个都有些不同——正如你们的世界里没有两片雪花是相同的；然而，每一个都是规则的。</p>
+      <span class="src">—— Session 051 · (51.8)</span>
+    </div>
+    <div class="table-wrap">
+    <table class="nine">
+      <thead><tr><th>中心</th><th>水晶形状（Ra 原述）</th><th>通俗理解</th></tr></thead>
+      <tbody>
+        <tr><td>红色</td><td>辐条轮 spoked wheel</td><td>像老式车轮——根基与驱动的结构</td></tr>
+        <tr><td>橙色</td><td>含三片花瓣的花形</td><td>像初绽的三瓣花——个体与关系开始成形</td></tr>
+        <tr><td>黄色</td><td>圆形、多切面，如星</td><td>像切面繁多的星——自我与他人交锋的节点</td></tr>
+        <tr><td>绿色</td><td>莲花形，点数视强度</td><td>晶体结构的点数取决于这个中心的强度</td></tr>
+        <tr><td>蓝色</td><td>可达约一百个切面</td><td>切面极多、能发出巨大的闪耀光辉</td></tr>
+        <tr><td>靛色</td><td>基本的三角或三瓣形，更安静</td><td>已平衡较低能量的行家可以造出更多切面的形态</td></tr>
+        <tr><td>紫色</td><td>千瓣，最少变化</td><td>它是心/身/灵复合体变貌总体的总和</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="case"><b>指纹与雪花：</b>没有两个人的晶体结构完全相同，但每一个都规则——独特与秩序并不冲突。Ra 正是用雪花作比来说明这一点：差异是常态，规则是底线。</div>
+  </div>
+
+  <div class="card">
+    <h3>条件模拟器：水晶结构如何形成</h3>
+    <p>拨动开关，看 Ra 描述的两种激活形态分别在什么条件下出现。</p>
+    <div class="cond-row"><div class="name">阻塞被清理<small>前三中心完全畅通</small></div><label class="switch"><input type="checkbox" id="cond1"><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">更高中心得到发展<small>高于前三中心的那些中心次第展开</small></div><label class="switch"><input type="checkbox" id="cond2"><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">较低能量得到平衡<small>行家功课：处理下方尚未平衡之处</small></div><label class="switch"><input type="checkbox" id="cond3"><span class="slider"></span></label></div>
+    <div id="condResult"></div>
+  </div>
+
+  <div class="card">
+    <h3>一次拒答：混淆法则</h3>
+    <div class="q">我此刻在靛蓝中心有一种感觉——如果它完全激活、毫无阻塞，我会不会在那里毫无感觉？</div>
+    <div class="quote">
+      <p class="en">This query, if answered, would infringe upon the Law of Confusion.</p>
+      <p class="zh">这个问题若被回答，将侵犯混淆法则。</p>
+      <span class="src">—— Session 051 · (51.9)</span>
+    </div>
+    <p>发问者把问题对准了自己的直接经验，Ra 拒绝回答。这个拒答本身就是教导：关于另一个实体能量中心的确切「标准答案」，会干涉其自由的发现进程——有些答案必须由你自己走到那一步才知道。</p>
+  </div>
+
+  <div class="card">
+    <h3>靛蓝身体：死后的形态制造者</h3>
+    <div class="q">物理身体死亡后，主要激活的身体是靛蓝，而且你说它是「形态制造者」——为什么会这样？</div>
+    <div class="quote">
+      <p class="en">The indigo body may be seen to be an analog for intelligent energy. It is, in microcosm, the Logos. The intelligent energy of the mind/body/spirit complex totality draws its existence from intelligent infinity, or the Creator.</p>
+      <p class="zh">靛蓝身体可以被视为智能能量的类似物；在微观中，它就是理则。心/身/灵复合体全体的智能能量，从智能无限——也就是造物主——汲取其存在。</p>
+      <span class="src">—— Session 051 · (51.10)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This will may be drawn upon by the indigo, or form-making, body, and its wisdom used to then choose the appropriate locus and type of experience which this co-Creator, or sub-sub-Logos you call so carelessly a person, will take.</p>
+      <p class="zh">这意志可以被靛蓝身体——那造形的身体——汲取，其智慧随后被用来为这个共同创造者、这个被你们如此轻率地称作「一个人」的子子理则，选择恰当的场所与经验类型。</p>
+      <span class="src">—— Session 051 · (51.10)</span>
+    </div>
+    <div class="plain">死后第一激活的靛蓝身体是「造形者」：它从智能无限汲取意志与智慧，替你这个「子子理则」选择下一段经验的场所与类型。</div>
+    <div class="case"><b>图纸与房子：</b>物质身体像一座已建成的房子，靛蓝身体是那张图纸——死亡时房子交还，图纸仍带着下一步的设计继续。Ra 说靛蓝是「造形的身体」，正是说它握着经验「在哪发生、发生什么」的选择权。</div>
+    <p>本集的最后一个完整询问到此为止。Ra 交代节奏：之后只留简短询问的时间——收尾只有一句例行关怀（见第 1 章折叠区）。</p>
+  </div>
+
+  <div class="saying">
+    <p class="en">Free Will has potentiated both the Creator of us all and our selves as co-Creators with intelligent infinity which has will.</p>
+    <p class="zh">自由意志已为我们所有人的造物主、也为我们自身赋能——使我们成为与拥有意志的智能无限同在的共同创造者。</p>
+    <span class="src">—— Session 051 · (51.10)</span>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 051（`split/Ra_Session_051.md`）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra051-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本集定制交互 ===== */
+
+/* ① 问答脉络推进器（第 1 章） */
+initStepper('flowTrack','flowDetail','flowPrev','flowNext',[
+  {t:'开场与来意',d:'<span class="qa-q">问：(51.0-51.1) 卷三开篇，发问者带着哪两个「替朋友问」的问题？</span><b>答：</b>Ra 致意后先接第一个——收割时节总有收割者，果实按其本性形成，但需要监督以确保丰收被妥善安置、没有瘀伤或瑕疵。'},
+  {t:'三层监督',d:'<span class="qa-q">问：(51.1) 既然判据是紫罗兰光芒，监督如何运作？</span><b>答：</b>三层帮手——天使层（高我与被内在寻求引来的内层存有）、星际联邦（接住绊倒者并扶正）、守护者（来自上一八度音程，精确确认每个实体的振动）。收割自动，监督保过程无损。'},
+  {t:'旅行三型',d:'<span class="qa-q">问：(51.2) 接近光速质量趋无限，第四密度飞行器怎么来？</span><b>答：</b>Ra 先同意这材料短暂，再纠正前提——大部分远方来客不需要你们所知的飞行器；随后列出三型：氢能低温（如天狼星来客）、光速弹弓、思想旅行。'},
+  {t:'猎户与载具',d:'<span class="qa-q">问：(51.3-51.4) 猎户集团属于哪一型？Ra 为何去埃及还要用钟形飞行器？</span><b>答：</b>猎户集团混合了倒数第二种与最后一种；载具是思想-形态，专注以其为推动者运作——Ra 不愿以自身的心/身/灵复合体作这种工作的焦点。'},
+  {t:'七个身体',d:'<span class="qa-q">问：(51.5) 七个身体对应七色、能量经七中心流入、心智配置可阻塞——哪里错了？</span><b>答：</b>陈述大体正确；「心智配置」过度简化——阻塞可发生在灵与心之间、身与心之间的许多层面，且每个中心还有七个次色，组合方式成倍增多。'},
+  {t:'鸟画与死亡',d:'<span class="qa-q">问：(51.6) 埃及鸟画与 Ra 有关吗？</span><b>答：</b>那些图画是把「死亡为通往进一步经验之门户」这一教导加以变貌的众多图画之一（诺斯替式）；死时唯一需要的是在旁者放行、哀悼者赞颂，而非精心重复的仪式。'},
+  {t:'旋转与水晶',d:'<span class="qa-q">问：(51.7-51.9) 旋转速度是阻塞的函数吗？</span><b>答：</b>部分正确——前三中心完全畅通会产生转速；更高中心则以形成水晶结构表达本质（更高、更平衡的激活）。发问者追问自身靛蓝中心的感觉，Ra 以混淆法则拒答。'},
+  {t:'靛蓝塑形与收尾',d:'<span class="qa-q">问：(51.10-51.11) 为何死后主要激活的身体是靛蓝？</span><b>答：</b>靛蓝身体是智能能量的类似物、微观中的理则；自由意志赋能了共同创造者，靛蓝身体汲取这意志，以其智慧为「被你们轻率称作一个人的子子理则」选择经验的场所与类型。末了例行关怀，Adonai 收尾。'}
+]);
+
+/* ② 归类练习：谁属于哪一型旅行（第 3 章） */
+initSorter('sorterArea',[
+  {a:'天狼星的来客：乘飞行器跨越漫长距离，靠低温减缓身体与心智进程来熬过航程',opts:['类型一','类型二','类型三'],ans:'类型一',exp:'少数第三密度实体以与你们不同的方式使用氢，并用低温减缓进程——仍受限于你们所知的规则，耗时很长。'},
+  {a:'本银河系的五密度群体：启动一种能量系统，把光速当作弹弓，转眼抵达目的地',opts:['类型一','类型二','类型三'],ans:'类型二',exp:'来自本银河系第四、五、六密度的类型——在你们看来，没有可感知的时间流逝。'},
+  {a:'某六密度存有：经由个性修炼把宇宙视为一个存有，凭一个念头出现在另一处',opts:['类型一','类型二','类型三'],ans:'类型三',exp:'学会必要个性修炼的存有凭思想移动，并物质化必要的载具来包裹光体。'},
+  {a:'猎户集团的一次典型着陆',opts:['类型一','类型二','类型三','二与三混合'],ans:'二与三混合',exp:'Ra 明确说：猎户集团混合了倒数第二种与最后一种类型。'},
+  {a:'Ra 当年前往埃及时使用的钟形飞行器',opts:['类型一','类型二','类型三'],ans:'类型三',exp:'Ra 说他们是「通过思想」做到的——载具是思想-形态，专注以其为推动者；这与类型三凭思想物质化载具一致。'}
+]);
+
+/* ③ 条件模拟器：水晶结构如何形成（第 6 章） */
+function updateCond(){
+  var c1=document.getElementById('cond1').checked;
+  var c2=document.getElementById('cond2').checked;
+  var c3=document.getElementById('cond3').checked;
+  var el=document.getElementById('condResult');
+  var msg='',fail=false;
+  if(!c1&&!c2&&!c3){
+    msg='一切还停在未发展的形态。Ra 的讨论从「清理阻塞」开始——在此之前，谈不上转速，也谈不到水晶。';fail=true;
+  }else if(!c1){
+    msg='顺序反了：前三中心要「完全畅通」才出现转速，更高中心的发展也以清理为前提——先从低层的功课做起。';fail=true;
+  }else if(!c2&&!c3){
+    msg='前三中心完全畅通会产生旋转速度——这是通畅的第一种形态：转得更快。更高中心的水晶形态，还需要它们开始发展。';
+  }else if(!c2&&c3){
+    msg='平衡较低能量是行家的功课，但更高中心尚未发展时，「更多切面」的形态无从谈起——先让中心发展起来。';fail=true;
+  }else if(c2&&!c3){
+    msg='更高中心开始发展后，不再以转速、而以水晶结构表达本质——这是更高、更平衡的激活形式。';
+  }else{
+    msg='已平衡较低能量的行家，可以让靛蓝这样的中心长出更多切面的形态——如雪花般各不相同，然而每一个都规则。';
+  }
+  el.textContent=msg;
+  el.classList.toggle('fail',fail);
+}
+['cond1','cond2','cond3'].forEach(function(id){document.getElementById(id).addEventListener('change',updateCond);});
+updateCond();
+
+/* ④ 术语卡翻转（第 4 章） */
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+renderPath();
+</script>
+</body>
+</html>

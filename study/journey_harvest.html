@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css">
+<title>收割与毕业 · 滚动星旅</title>
+<style>
+:root{
+  --amb:#f5efe2;          /* 当前场景氛围色，由 JS 实时插值 */
+  --ink:#efe9dd;
+  --ink-dim:rgba(239,233,221,.55);
+  --serif:"LXGW WenKai","霞鹜文楷","LXGW WenKai SC","Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:#070a12;color:var(--ink);font-family:var(--serif);
+  line-height:2;overflow-x:hidden;
+}
+canvas#sky{position:fixed;inset:0;width:100vw;height:100vh;z-index:0}
+
+/* ===== 进度轨道 ===== */
+#rail{
+  position:fixed;right:26px;top:50%;transform:translateY(-50%);z-index:8;
+  display:flex;flex-direction:column;gap:13px;align-items:flex-end;
+}
+#rail .r{display:flex;align-items:center;gap:10px;cursor:pointer}
+#rail .r i{
+  width:5px;height:5px;border-radius:50%;flex-shrink:0;
+  background:rgba(255,255,255,.16);transition:all .4s;
+}
+#rail .r.cur i{background:var(--amb);box-shadow:0 0 9px var(--amb);transform:scale(1.7)}
+#rail .lbl{
+  font-size:.72rem;letter-spacing:.12em;color:var(--ink);white-space:nowrap;
+  padding:3px 12px;border-radius:999px;background:rgba(7,10,18,.78);
+  border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(4px);
+  opacity:0;transform:translateX(10px);transition:all .35s ease;pointer-events:none;
+}
+#rail:hover .lbl{opacity:1;transform:none}
+#rail .r.cur .lbl{border-color:var(--amb);color:var(--amb)}
+
+main{position:relative;z-index:1}
+
+/* ===== 时刻场景（全屏居中） ===== */
+.scene{min-height:118vh;display:flex;align-items:center;justify-content:center;padding:14vh 22px}
+.stage{max-width:620px;text-align:center;opacity:0;transform:translateY(34px);filter:blur(6px);transition:opacity 1.6s ease,transform 1.6s ease,filter 1.6s ease}
+.scene.on .stage,.station.on .stage{opacity:1;transform:none;filter:blur(0)}
+.kicker{
+  font-size:.8rem;letter-spacing:.55em;text-indent:.55em;color:var(--amb);
+  margin-bottom:30px;opacity:.85;
+}
+.kicker::after{
+  content:"";display:block;width:34px;height:1px;margin:16px auto 0;
+  background:var(--amb);opacity:.5;
+}
+.narr{font-size:1.18rem;color:var(--ink);margin-bottom:38px;text-align:center}
+.en{
+  font-family:Georgia,"Times New Roman",serif;font-style:italic;
+  font-size:.98rem;line-height:1.9;color:var(--amb);opacity:.92;margin-bottom:16px;
+}
+.zh{font-size:.95rem;color:var(--ink-dim);margin-bottom:10px}
+.ref{font-size:.74rem;letter-spacing:.2em;color:rgba(239,233,221,.34)}
+
+/* ===== 站点（左钉住 · 右细节流） ===== */
+.station{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);align-items:stretch}
+.pin{
+  position:sticky;top:0;height:100vh;
+  display:flex;align-items:center;justify-content:center;padding:0 3vw;
+}
+.pin .stage{max-width:520px}
+.detail{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:10vh 5vw 10vh 0;
+}
+.frag{
+  min-height:60vh;display:flex;flex-direction:column;justify-content:center;
+  max-width:440px;
+  opacity:0;transform:translateY(30px);
+  transition:opacity 1.3s ease,transform 1.3s ease;
+}
+.frag.on{opacity:1;transform:none}
+.f-k{
+  font-size:.78rem;letter-spacing:.4em;color:var(--amb);opacity:.85;margin-bottom:18px;
+}
+.f-en{
+  font-family:Georgia,"Times New Roman",serif;font-style:italic;
+  font-size:.92rem;line-height:1.9;color:var(--amb);opacity:.9;
+  border-left:2px solid rgba(255,255,255,.18);padding-left:16px;margin-bottom:14px;
+}
+.f-zh{font-size:.93rem;color:var(--ink-dim);margin-bottom:8px}
+.f-ref{font-size:.72rem;letter-spacing:.2em;color:rgba(239,233,221,.32)}
+
+/* 开场 */
+#s0 .narr{font-size:1.5rem;letter-spacing:.1em;line-height:2.3}
+.hint{
+  margin-top:60px;font-size:.8rem;letter-spacing:.4em;text-indent:.4em;
+  color:var(--ink-dim);animation:drift 2.6s ease-in-out infinite;
+}
+@keyframes drift{0%,100%{transform:translateY(0);opacity:.45}50%{transform:translateY(9px);opacity:.95}}
+
+/* 可选演示区（如棱镜 / 时间线 / 对比路径） */
+.demo{margin:8px auto 42px}
+.timeline{position:relative;max-width:460px;margin:0 auto 42px;text-align:left;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:rgba(255,255,255,.14)}
+.tl-item{position:relative;padding:2px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:11px;height:11px;border-radius:50%;
+  background:#070a12;border:3px solid var(--amb)}
+.tl-item .t{font-weight:700;color:var(--amb);letter-spacing:.1em}
+.tl-item .d{font-size:.9rem;color:var(--ink-dim)}
+.paths{display:flex;gap:26px;justify-content:center;margin-top:46px;flex-wrap:wrap}
+.path{
+  width:210px;padding:30px 22px 26px;border-radius:16px;cursor:pointer;
+  border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.02);
+  transition:all .7s ease;
+}
+.path h3{font-size:1.05rem;letter-spacing:.3em;text-indent:.3em;margin-bottom:12px}
+.path p{font-size:.86rem;color:var(--ink-dim);line-height:1.9}
+.paths.p-a .path:not(.a),.paths.p-b .path:not(.b){opacity:.28;transform:scale(.96)}
+.paths.p-a .path.a,.paths.p-b .path.b{transform:scale(1.04)}
+
+/* 光之直线 */
+.lightline{position:relative;height:130px;margin:8px auto 46px;width:460px;max-width:88vw}
+.ll-beam{
+  position:absolute;left:0;right:0;top:50%;height:2px;transform:translateY(-50%);
+  background:linear-gradient(90deg,rgba(255,255,255,.06),rgba(255,255,255,.7));border-radius:2px;
+}
+.ll-stop{
+  position:absolute;right:15%;top:50%;transform:translateY(-50%);
+  width:10px;height:10px;border-radius:50%;background:var(--amb);opacity:.5;
+  box-shadow:0 0 22px 6px rgba(255,255,255,.22);
+}
+.ll-spirit{
+  position:absolute;left:3%;top:50%;width:13px;height:13px;border-radius:50%;
+  background:#fff;box-shadow:0 0 20px 5px rgba(255,255,255,.7);
+  transform:translateY(-50%);
+  transition:left 4.8s cubic-bezier(.2,.62,.32,1) .5s;
+}
+.scene.on .ll-spirit{left:73%}
+
+/* 终章 */
+#sLast .en{font-size:1.06rem;line-height:2.2}
+#sLast .zh{font-size:1rem}
+.again{
+  margin-top:56px;font-family:var(--serif);font-size:.85rem;letter-spacing:.35em;text-indent:.35em;
+  color:var(--ink-dim);background:none;border:1px solid rgba(255,255,255,.14);
+  border-radius:999px;padding:11px 30px;cursor:pointer;transition:all .4s;
+}
+.again:hover{color:var(--ink);border-color:var(--amb)}
+
+footer{
+  position:relative;z-index:1;text-align:center;padding:40px 20px 56px;
+  font-size:.76rem;color:rgba(239,233,221,.3);letter-spacing:.08em;line-height:2.2;
+}
+@media (max-width:900px){
+  .station{display:block}
+  .pin{position:static;height:auto;padding:12vh 22px 2vh}
+  .pin .stage{margin:0 auto}
+  .detail{padding:0 22px 6vh;align-items:center}
+  .frag{min-height:auto;margin-bottom:7vh}
+}
+@media (max-width:640px){
+  .narr{font-size:1.05rem}
+  #s0 .narr{font-size:1.2rem}
+  #rail{display:none}
+}
+</style>
+</head>
+<body>
+
+<canvas id="sky"></canvas>
+<div id="rail"></div>
+
+<main>
+
+<!-- 0 开场 · 收割就在当下 -->
+<section class="scene" id="s0" data-c="#f5efe2">
+  <div class="stage">
+    <p class="narr">麦子熟了的时候，<br>没有人开会讨论要不要收。<br>一颗行星也一样——<br>时节一到，<br>光会来点名。</p>
+    <p class="en">"The harvest is now. … for this which resides clearly in the violet-ray energy field will determine the harvesting of each mind/body/spirit complex."</p>
+    <p class="zh">收割就在当下。而决定每一个心/身/灵复合体如何被收割的，是那清晰地居于紫罗兰光芒能量场里的东西。</p>
+    <p class="ref">—— SESSION 014 · (14.14)</p>
+    <p class="hint">向下滚动 · 走进收割的时节 ▾</p>
+  </div>
+</section>
+
+<!-- 1 果实与收割者 -->
+<section class="scene" id="s1" data-c="#fdf8ec">
+  <div class="stage">
+    <p class="kicker">果实与收割者</p>
+    <p class="narr">收割不是考试。<br>没有考场，没有铃，<br>也没有谁举着分数。<br>Ra 只给了一个果园的比喻：<br>果实自己长成，<br>园丁只负责不让它磕碰。</p>
+    <p class="en">"In time of harvest there are always harvesters. The fruit is formed as it will be, but there is some supervision necessary to ensure that this bounty is placed as it should be, without the bruise or the blemish."</p>
+    <p class="zh">收割的时节总有收割者。果实按它自己的样子长成，但需要一些照看，好让这份收成被安置得妥妥帖帖——不带淤伤，不带瑕疵。</p>
+    <p class="ref">—— SESSION 051 · (51.1)</p>
+  </div>
+</section>
+
+<!-- 2 钟声与周期 -->
+<section class="station" id="s2" data-c="#d9c47a">
+  <div class="pin"><div class="stage">
+    <p class="kicker">钟声 · 两万五千年一格</p>
+    <p class="narr">收割有它的时刻表。<br>每隔两万五千年，钟摆经过一次；<br>三格之后，钟声为所有人而鸣——<br>因为行星本身，<br>要翻到下一页了。</p>
+    <p class="en">"One major cycle is approximately twenty-five thousand [25,000] of your years. There are three cycles of this nature during which those who have progressed may be harvested. At the end of three major cycles … all are harvested regardless of their progress, for during that time the planet itself has moved through the useful part of that dimension and begins to cease being useful for the lower levels of vibration within that density."</p>
+    <p class="zh">一个主要周期约两万五千年。其间走过三格，进步者可被收割；三格走到尽头，无论进度如何，所有人都会被收割——因为行星已穿过这个维度对低振动而言有用的部分，它开始不再适用了。</p>
+    <p class="ref">—— SESSION 006 · (6.15)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">宇宙的中位数剧本</p>
+      <p class="f-en">"It is, however, more toward the median, or mean, shall we say, of third-density developments throughout the one infinite universe that there be a small harvest after the first cycle; the remainder having significantly polarized, the second cycle having a much larger harvest; the remainder being even more significantly polarized, the third cycle culminating the process and the harvest being completed."</p>
+      <p class="f-zh">放眼整个一无限宇宙，第三密度更常见的节奏是：第一格小收，第二格大收，第三格收官。</p>
+      <p class="f-ref">—— SESSION 020 · (20.27)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">渐强的四十年前奏</p>
+      <p class="f-en">"The first harbingers of this were approximately forty-five of your years ago, the energies vibrating more intensely through the forty-year period preceding the final movement of vibratory matter, shall we say, through the quantum leap, as you would call it."</p>
+      <p class="f-zh">大约四十五年前，能量开始越振越强——那是振动物质跃过你们所说的量子跃迁之前，四十年的渐强前奏。</p>
+      <p class="f-ref">—— SESSION 040 · (40.10)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">无人能预演收成</p>
+      <p class="f-en">"The harvesting is not yet, thus estimation is meaningless."</p>
+      <p class="f-zh">有人想预估会有多少人毕业，Ra 只回了一句：收割尚未到来，因此估算是无意义的。</p>
+      <p class="f-ref">—— SESSION 006 · (6.19)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 3 第一声空钟 -->
+<section class="scene" id="s3" data-c="#8d8577">
+  <div class="stage">
+    <p class="kicker">第一声空钟</p>
+    <p class="narr">两万五千年前，钟声响过一次。<br>没有一个人毕业——<br>正面没有，负面也没有。<br>守望者们做了什么？<br>什么也没做，只是继续等。<br>因为园丁不能替种子发芽。</p>
+    <p class="en">"There was no action taken except to remain aware of the possibility of a calling for help or understanding among the entities of this density. The Confederation is concerned with the preservation of the conditions conducive to learning. This, for the most part, revolves about the primal distortion of Free Will."</p>
+    <p class="zh">除了保持觉察、等待这密度里的实体发出求助或求懂的呼求之外，没有采取任何行动。星际联邦所守护的，是有利于学习的条件——而这条件，首先围绕自由意志。</p>
+    <p class="ref">—— SESSION 021 · (21.14)</p>
+  </div>
+</section>
+
+<!-- 4 紫罗兰称重 -->
+<section class="station" id="s4" data-c="#8f6fd9">
+  <div class="pin"><div class="stage">
+    <p class="kicker">紫罗兰 · 一杆光做的秤</p>
+    <p class="narr">那么谁来打分？<br>答案是：没有人打分。<br>每个实体周身都笼着一层紫罗兰的光，<br>它记下了你全部的选择，<br>然后在收割时，替你说话。</p>
+    <p class="en">"Thus the harvest is automatic in that those harvested will respond according to that which is unchangeable during harvest. That is the violet-ray emanation."</p>
+    <p class="zh">收割是自动的：被收割者将依收割期间不可改变之物来回应——那便是紫罗兰光芒的放射。</p>
+    <p class="ref">—— SESSION 051 · (51.1)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">唯一的考量</p>
+      <p class="f-en">"In the graduation or harvesting to fourth-density positive, the red ray is seen only as that which, being activated, is the basis for all that occurs in vibratory levels, the sum of this being violet-ray energy. This violet ray is the only consideration for fourth-density positive."</p>
+      <p class="f-zh">毕业去正面的第四密度时，红光只是万物激活的地基，一切振动的总和归于紫罗兰——紫罗兰，是唯一的考量。</p>
+      <p class="f-ref">—— SESSION 034 · (34.16)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">转速再亮也不算数</p>
+      <p class="f-en">"This is why the brilliance, or rotational speed, of the energy centers is not considered above the balanced aspect, or violet-ray manifestation, of an entity in regarding harvestability …"</p>
+      <p class="f-zh">能量中心转得多快、多亮，都不是砝码；秤上只放一样东西：平衡。</p>
+      <p class="f-ref">—— SESSION 041 · (41.19)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">失衡者经不起光</p>
+      <p class="f-en">"… for those entities which are unbalanced, especially as to the primary rays, will not be capable of sustaining the impact of the love and light of intelligent infinity to the extent necessary for harvest."</p>
+      <p class="f-zh">主要光芒失衡的实体，扛不住收割时智能无限之爱与光的冲击——不是不许走，是走不动。</p>
+      <p class="f-ref">—— SESSION 041 · (41.19)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">一次异常的换装</p>
+      <p class="f-en">"Here we have the anomaly of harvest. In harvest the entity will then transfer its indigo body into violet-ray manifestation as seen in true-color yellow. This is for the purpose of gauging the harvestability of the entity."</p>
+      <p class="f-zh">死后的流程里有个例外时刻：为了称量收割资格，实体会把靛蓝色的身体暂时换成紫罗兰的显化——像专门为过秤换上素衣。</p>
+      <p class="f-ref">—— SESSION 048 · (48.7)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">负面的账本更厚</p>
+      <p class="f-en">"In assessing the harvestable fourth-density negative, the intensity of the red as well as the orange and the yellow rays is looked upon quite carefully, as a great deal of stamina and energy of this type is necessary for the negative progression, it being extremely difficult to open the gateway to intelligent infinity from the solar plexus center."</p>
+      <p class="f-zh">称量负面候选者时，红、橙、黄三光都要细看：要从太阳神经丛一路打开智能无限之门，需要惊人的体力与燃料。</p>
+      <p class="f-ref">—— SESSION 034 · (34.16)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 5 一条光的直线 -->
+<section class="scene" id="s5" data-c="#5a55c9">
+  <div class="stage">
+    <p class="kicker">一条光的直线</p>
+    <div class="lightline">
+      <div class="ll-beam"></div>
+      <div class="ll-stop"></div>
+      <div class="ll-spirit"></div>
+    </div>
+    <p class="narr">被收割的实体去往哪里，<br>不靠抽签，也没有谁指路。<br>眼前只有一条越来越亮的直线：<br>你走，一直走，<br>直到光亮得睁不开眼。<br>你在哪里停下，<br>哪里就是你的下一站。</p>
+    <p class="en">"The spirit complex of each harvested entity moves along the line of light until the light grows too glaring, at which time the entity stops."</p>
+    <p class="zh">每个被收割实体的灵复合体沿光的直线前行，直到光变得过于炫目，实体便停下来——停下的地方，就是它此刻能承受的位置。</p>
+    <p class="ref">—— SESSION 006 · (6.14)</p>
+  </div>
+</section>
+
+<!-- 6 三层守望者 -->
+<section class="station" id="s6" data-c="#3d55c9">
+  <div class="pin"><div class="stage">
+    <p class="kicker">三层守望者</p>
+    <p class="narr">收割自动，却仍有人值守。<br>一层在你自己之内，<br>一层站在光的阶梯边上，<br>一层来自上一个八度。<br>他们不改变秤上的读数，<br>只保证每颗果实<br>都被完完整整地称过。</p>
+    <p class="en">"There are those of three levels watching over harvest."</p>
+    <p class="zh">有三个层次的存有，守望收割。</p>
+    <p class="ref">—— SESSION 051 · (51.1)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">第一层：你的高我</p>
+      <p class="f-en">"The first level is planetary and that which may be called angelic. This type of guardian includes the mind/body/spirit complex totality or higher self of an entity and those inner plane entities which have been attracted to this entity through its inner seeking."</p>
+      <p class="f-zh">最近的一层守望者被称为天使般的：是你自己的高我，以及那些因你内在的寻求而被吸引来的内层存有。</p>
+      <p class="f-ref">—— SESSION 051 · (51.1)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">接住绊倒者的人</p>
+      <p class="f-en">"… will not, no matter how confused or unable to make contact with their higher self, stumble and fall away for any reason other than the strength of the light. These Confederation entities catch those who stumble and set them aright so that they may continue into the light."</p>
+      <p class="f-zh">星际联邦的成员守在光之阶梯边缘的小小位置上：无论你多么慌乱、多么够不着自己的高我，他们都会接住你、扶正你，让你继续走进光里——除非拦下你的，是光本身的强度。</p>
+      <p class="f-ref">—— SESSION 051 · (51.1)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">光之带来者</p>
+      <p class="f-en">"The third group watching over this process is that group you call the Guardians. This group is from the octave above our own and serves in this manner as light-bringers."</p>
+      <p class="f-zh">第三组是你们称为守护者的群体：他们来自比 Ra 更高的八度，作为光之带来者，以极精细的辨别力投放光/爱，好量出每个实体精确的振动。</p>
+      <p class="f-ref">—— SESSION 051 · (51.1)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">一面光之盾的拜访</p>
+      <p class="f-en">"A light being appeared bearing that which may be called a shield of light. It spoke of the oneness and infinity of all creation and of those things which await those ready for harvest. It described in golden words the beauties of love as lived."</p>
+      <p class="f-zh">第二周期末，一百五十个可收割的南美实体收到过一次拜访：一位携着光盾的光之存有，用金色的话语，描述了爱在被活出来时的美。</p>
+      <p class="f-ref">—— SESSION 022 · (22.12)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">牧人不先走</p>
+      <p class="f-en">"These shepherds, or, as some have called them, the "Elder Race," shall choose the time/space of their leaving. They are unlikely to leave until their other-selves are harvestable also."</p>
+      <p class="f-zh">那些本可早早进入第四密度的牧者——所谓长老种族——迟迟不肯动身：要等到他们的其他自我，也变得可以被收割。</p>
+      <p class="f-ref">—— SESSION 015 · (15.15)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 7 门槛 -->
+<section class="station" id="s7" data-c="#58b98a">
+  <div class="pin"><div class="stage">
+    <p class="kicker">门槛 · 不看学历</p>
+    <p class="narr">收割没有笔试，没有教籍，<br>没有谁必须先读过一的法则。<br>秤上只认一件事：<br>你把自己交给了谁。<br>（把光标放上去，看看两条路各自的门槛）</p>
+    <p class="en">"People of this planet, following any religion or no religion at all, or having no intellectual knowledge of the Law of One or of anything at all, can still be harvested into the fourth density if they are of that vibration."</p>
+    <p class="zh">无论信奉哪种宗教、毫无宗教，或对一的法则乃至任何事物一无所知——只要他们在那振动之中，依然可以被收割进第四密度。Ra 确认：这是正确的。</p>
+    <p class="ref">—— SESSION 017 · (17.15)</p>
+    <div class="paths" id="paths">
+      <div class="path a"><h3>正面 · 五十一分</h3><p>对他人福祉的奉献<br>过了半数，<br>便够得着正面第四密度。</p></div>
+      <div class="path b"><h3>负面 · 九十五分</h3><p>服务自我趋近全部，<br>才走得过那扇<br>又直又窄的门。</p></div>
+    </div>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">冷漠的陷坑</p>
+      <p class="f-en">"To attain fifty-one percent dedication to the welfare of other-selves is as difficult as attaining a grade of five percent dedication to other-selves. The, shall we say, sinkhole of indifference is between those two."</p>
+      <p class="f-zh">做到五十一分为他人，与做到五分为他人，一样困难——因为两者之间横着那个「冷漠的陷坑」，大多数人一生都悬在坑里。</p>
+      <p class="f-ref">—— SESSION 017 · (17.33)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">九十五分的窄门</p>
+      <p class="f-en">"The entity who wishes to pursue the path of service to self must attain a grade of five—that is five percent service to others, ninety-five percent service to self. It must approach totality. The negative path is quite difficult to attain harvestability upon and requires great dedication."</p>
+      <p class="f-zh">负面路径的门槛反而更高：百分之九十五服务自我，必须趋近全部——这条路窄而陡，需要惊人的献身。</p>
+      <p class="f-ref">—— SESSION 017 · (17.32)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">先承认自己不懂</p>
+      <p class="f-en">"It is absolutely necessary that an entity consciously realize it does not understand in order for it to be harvestable. Understanding is not of this density."</p>
+      <p class="f-zh">想被收割，有一个绝对必要的前提：有意识地明白自己并不理解。理解，不属于这个密度。</p>
+      <p class="f-ref">—— SESSION 016 · (16.39)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">每一步都算数</p>
+      <p class="f-en">"In this density an increase in the serving of others, or the serving of self, will almost inevitably increase the ability of an entity to enjoy an higher intensity of light. Thus, in this density, we may say, it is hardly possible to polarize without increasing in harvestability."</p>
+      <p class="f-zh">在第三密度，无论朝哪边用力，极化几乎必然推高可收割性——你走的每一步，都在为那场收成称重。</p>
+      <p class="f-ref">—— SESSION 071 · (71.2)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">排课的资历</p>
+      <p class="f-en">"Entities wishing to obtain critically needed experience in order to become harvestable are incarnated with priority over those who will, without too much probable/possible doubt, need to re-experience this density."</p>
+      <p class="f-zh">临近期末，排课开始向考生倾斜：急需经验以变得可收割的实体，优先获得投生的机会。</p>
+      <p class="f-ref">—— SESSION 017 · (17.41)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 8 混合收割 · 三种去向 -->
+<section class="station" id="s8" data-c="#b3763f">
+  <div class="pin"><div class="stage">
+    <p class="kicker">混合收割 · 三种去向</p>
+    <p class="narr">一颗行星走到收割日，<br>果实很少是同一种熟法。<br>去第四密度的，<br>去负面第四密度的，<br>再把第三密度读一遍的——<br>同一颗星球，三种告别。</p>
+    <p class="en">"Among planetary harvests which yield an harvest of mind/body/spirit complexes: approximately 10% are negative; approximately 60% are positive; and approximately 30% are mixed with nearly all harvest being positive."</p>
+    <p class="zh">在产出心/身/灵复合体收割的行星中：约一成是负面收割，六成是正面收割，三成是混合收割——而混合者的果实，几乎全是正面的。</p>
+    <p class="ref">—— SESSION 065 · (65.13)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">正面者不在这平面</p>
+      <p class="f-en">"This is correct except we may note a small point. The positively oriented harvested entities will remain in this planetary influence but not upon this plane."</p>
+      <p class="f-zh">收割后的去向各不相同：正面的实体将留在地球的行星影响范围内，却不在这平面上——他们将住进第四密度的地球。</p>
+      <p class="f-ref">—— SESSION 063 · (63.9)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">马尔德克的假如</p>
+      <p class="f-en">"Thus it, though unknown, would most probably have been a mixed harvest—a few moving to fourth density, a few moving towards fourth density in service to self, the great majority repeating third density."</p>
+      <p class="f-zh">那颗毁于战争的行星若未自毁，大概率也是一场混合收割：少数向上，少数走向负面，绝大多数再读一遍。</p>
+      <p class="f-ref">—— SESSION 011 · (11.3)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">正面需要自我决定</p>
+      <p class="f-en">"The ability to polarize positively requires a certain degree of self-determination."</p>
+      <p class="f-zh">为什么强负面的行星几乎收不到正面果实？因为正面极化需要一种自我决定——被压到底的人，连选择都是奢侈。</p>
+      <p class="f-ref">—— SESSION 065 · (65.14)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">不数人头</p>
+      <p class="f-en">"We are servants. If we are called, we shall serve with all our strength. To count the numbers is without virtue."</p>
+      <p class="f-zh">发问者想预估收割人数会因催化剂增加多少，Ra 婉拒了：我们是仆人；蒙召便全力以赴——数人头，没有美德。</p>
+      <p class="f-ref">—— SESSION 065 · (65.15)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">可收割者寥寥</p>
+      <p class="f-en">"Thus, the harvest shall be such that many will repeat the third-density cycle. The energies of your wanderers, your teachers, and your adepts at this time are all bent upon increasing the harvest. However, there are few to harvest."</p>
+      <p class="f-zh">这颗星球的收成注定艰难：许多人将重复第三密度。流浪者、教师与修习者的能量全都倾注于增加收割——可收割者，仍然寥寥。</p>
+      <p class="f-ref">—— SESSION 013 · (13.23)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">负面收割的震颤</p>
+      <p class="f-en">"The negative harvest is one of intense disharmony, and the planet will express this."</p>
+      <p class="f-zh">一颗整体滑向负面的行星也有它的毕业礼——但那是一场强烈的不和谐，行星自己会把这份震荡表达出来。</p>
+      <p class="f-ref">—— SESSION 066 · (66.29)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 9 各层的毕业礼 -->
+<section class="station" id="s9" data-c="#4f8fd9">
+  <div class="pin"><div class="stage">
+    <p class="kicker">各层的毕业礼</p>
+    <p class="narr">收割不只发生在第三密度。<br>每一层都有自己的门槛：<br>二到三，是被爱过；<br>三到四，是选定了方向；<br>四到五，是看懂了舞步；<br>五到六，是接下一的法则。</p>
+    <p class="en">"The qualifications for fifth density, however, involve understanding. This then becomes the primary qualification for graduation from fourth to fifth density. To achieve this graduation the entity must be able to understand the actions, the movements, and the dance. There is no percentage describable which measures this understanding."</p>
+    <p class="zh">而第五密度的资格是理解——这是四到五毕业的首要条件：能看懂那行动、那运动、那支舞。没有任何百分比可以度量这种理解。</p>
+    <p class="ref">—— SESSION 047 · (47.6)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">被爱过的猫</p>
+      <p class="f-en">"Perhaps the most common occurrence of second-density graduation during third-density cycle is the so-called pet: the animal which is exposed to the individualizing influences of the bond between animal and third-density entity."</p>
+      <p class="f-zh">第二密度最常见的毕业方式，是成为宠物：在与第三密度实体的联结里，那只动物被「个体化」的力量触碰——从此不再回到无差别的群体意识。</p>
+      <p class="f-ref">—— SESSION 020 · (20.3)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">不认日历的收割</p>
+      <p class="f-en">"The cycle of experience is approximately 30 million of your years if the entities are not capable of being harvested sooner. There is in this density a harvest which is completely the function of the readiness of the social memory complex."</p>
+      <p class="f-zh">第四密度的经验周期长达三千万年——但收割不认日历，只认一件事：社会记忆复合体是否已经准备好。</p>
+      <p class="f-ref">—— SESSION 043 · (43.13)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">没有智慧的慈悲</p>
+      <p class="f-en">"A large percentage of fourth-density negative entities continue the negative path from fourth- to fifth-density experience, for without wisdom the compassion and desire to aid other-self is not extremely well-informed. Thus, though one loses approximately two percent moving from negative to positive during the fourth-density experience, we find approximately eight percent of graduations into fifth density those of the negative."</p>
+      <p class="f-zh">到了第四密度，仍有约百分之八的毕业者走负面——没有智慧，慈悲不过是不甚明智的热情；也有约百分之二的人，在路上换了方向。</p>
+      <p class="f-ref">—— SESSION 047 · (47.5)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">五之内的自由</p>
+      <p class="f-en">"This is correct although in fifth density entities may choose to learn as a social memory complex or as mind/body/spirit complexes, and may graduate to sixth density under these conditions, for the wisdom density is an extremely free density, whereas the lessons of compassion leading to wisdom necessarily have to do with other-selves."</p>
+      <p class="f-zh">智慧的密度极其自由：结伴学或独自学都可以，两种走法都能毕业去第六密度——因为爱与慈悲的功课，到五已经写完了。</p>
+      <p class="f-ref">—— SESSION 043 · (43.14)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">责任即荣耀</p>
+      <p class="f-en">"The fifth-density harvest is of those whose vibratory distortions consciously accept the honor/duty of the Law of One. This responsibility/honor is the foundation of this vibration."</p>
+      <p class="f-zh">第五密度的收割，收的是那些有意识地接受「一的法则」这份荣誉/义务的实体——责任即荣耀，是这个振动的地基。</p>
+      <p class="f-ref">—— SESSION 016 · (16.41)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">极性到五为止</p>
+      <p class="f-en">"In fifth-density harvest, polarization has very little to do with harvestability."</p>
+      <p class="f-zh">在第三密度，极化与收割形影不离；到了第五密度的收割，极性几乎与可收割性无关。</p>
+      <p class="f-ref">—— SESSION 071 · (71.3)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 10 Ra 自己的收割 -->
+<section class="scene" id="s10" data-c="#6a4fd9">
+  <div class="stage">
+    <p class="kicker">Ra 自己的收割</p>
+    <p class="narr">说收割的人，也被收割过。<br>金星的第三密度走完时，<br>他们没有交出一份满分答卷——<br>只是背起没毕业的同伴，<br>继续走。</p>
+    <p class="en">"We were a small population which dwelt upon what you would consider difficult conditions. Our harvest was approximately 6 million 500 thousand mind/body/spirit complexes. There were approximately 32 million mind/body/spirit complexes repeating third density elsewhere."</p>
+    <p class="zh">我们是一个小群体，住在你们会视为艰苦的环境里。我们的收割约为六百五十万个心/身/灵复合体；另有约三千两百万个，在别处重复第三密度。</p>
+    <p class="ref">—— SESSION 089 · (89.28)</p>
+    <p class="en">"Those of us which had the gift of polarity felt deep compassion for those who seemed to dwell in darkness."</p>
+    <p class="zh">我们之中拥有极性天赋的人，对那些似乎居于黑暗中的同伴，怀有深深的悲悯。</p>
+    <p class="ref">—— SESSION 089 · (89.29)</p>
+    <p class="en">"I am sixth density with a strong seeking towards seventh density. The harvest for us will be in only approximately two and one-half million of your years, and it is our desire to be ready for harvest as it approaches in our space/time continuum."</p>
+    <p class="zh">我是第六密度，正向第七密度强烈寻求。我们的收割仅在大约两百五十万年后——我们渴望的，是在它临近时，自己已经准备好。</p>
+    <p class="ref">—— SESSION 014 · (14.19)</p>
+  </div>
+</section>
+
+<!-- 终章 · 只有一次收割 -->
+<section class="scene" id="sLast" data-c="#f5efe2">
+  <div class="stage">
+    <p class="kicker">只有一次收割</p>
+    <p class="narr">负面与正面，快与慢，<br>此刻与两百万年之后——<br>所有的路，<br>都汇进同一场收成。</p>
+    <p class="en">"There is one harvest. Those able to enter fourth density through vibrational complex levels may choose the manner of their further seeking of the One Creator."</p>
+    <p class="zh">只有一次收割。那些能凭振动水平进入第四密度的实体，可以自行选择继续寻求太一造物主的方式。</p>
+    <p class="ref">—— SESSION 016 · (16.11)</p>
+    <p class="en">"The original desire is that entities seek and become one. If entities can do this in a moment, they may go forward in a moment …"</p>
+    <p class="zh">太初的渴望，是实体们寻求并成为一。若能在一瞬间做到，便在一瞬间前行——钟声从来只为你准备好的那一刻而鸣。</p>
+    <p class="ref">—— SESSION 020 · (20.27)</p>
+    <button class="again" id="again">回到此刻的麦田</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+收割与毕业 · 滚动星旅 · 内容取自《一的法则》中关于收割与毕业的十余次集会讨论<br>
+引文为英文原文逐字摘录；中文为本页面自拟 · 仅作沉浸学习实验
+</footer>
+
+<script>
+/* ===== 星空画布（固定，勿改） ===== */
+const cv=document.getElementById('sky'),cx=cv.getContext('2d');
+let W,H,stars=[];
+function size(){W=cv.width=innerWidth*devicePixelRatio;H=cv.height=innerHeight*devicePixelRatio;}
+size();addEventListener('resize',size);
+for(let i=0;i<230;i++)stars.push({x:Math.random(),y:Math.random(),z:.25+Math.random()*.75,p:Math.random()*6.28,s:Math.random()});
+
+/* ===== 氛围色插值（固定，勿改） ===== */
+function hex2rgb(h){h=h.replace('#','');if(h.length===3)h=h.split('').map(c=>c+c).join('');return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
+const scenes=[...document.querySelectorAll('.scene,.station')].map(s=>({el:s,c:hex2rgb(s.dataset.c)}));
+let amb=[245,239,226];
+function lerp(a,b,t){return a+(b-a)*t}
+function rgb2css(c,a){return `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${a})`}
+
+/* ===== 渲染循环（固定，勿改） ===== */
+let t=0;
+function frame(){
+  t+=.016;
+  const sy=scrollY,wh=innerHeight;
+  let target=scenes[0].c;
+  for(const s of scenes){
+    const r=s.el.getBoundingClientRect();
+    if(r.top<wh*.55&&r.bottom>wh*.45){target=s.c;break}
+  }
+  for(let i=0;i<3;i++)amb[i]=lerp(amb[i],target[i],.045);
+  const ac=amb;
+  document.documentElement.style.setProperty('--amb',rgb2css(ac,1));
+
+  cx.clearRect(0,0,W,H);
+  const g=cx.createRadialGradient(W/2,H*.86,0,W/2,H*.86,H*.75);
+  g.addColorStop(0,rgb2css(ac,.10));g.addColorStop(1,'rgba(0,0,0,0)');
+  cx.fillStyle=g;cx.fillRect(0,0,W,H);
+  const dark=1-Math.min(1,(Math.hypot(ac[0]-245,ac[1]-239))/200);
+  for(const st of stars){
+    const px=st.x*W,py=((st.y - sy*.00004*st.z)%1+1)%1*H;
+    const tw=.5+.5*Math.sin(t*1.3+st.p);
+    cx.globalAlpha=(0.12+0.5*tw*st.z)*(0.35+0.65*dark);
+    cx.fillStyle=rgb2css(ac,1);
+    const r=st.s*1.4*st.z*devicePixelRatio;
+    cx.beginPath();cx.arc(px,py,r,0,6.28);cx.fill();
+  }
+  const oy=H*.62+Math.sin(t*.8)*10*devicePixelRatio;
+  const og=cx.createRadialGradient(W/2,oy,0,W/2,oy,26*devicePixelRatio);
+  og.addColorStop(0,rgb2css(ac,.9));og.addColorStop(.35,rgb2css(ac,.25));og.addColorStop(1,'rgba(0,0,0,0)');
+  cx.globalAlpha=1;cx.fillStyle=og;
+  cx.beginPath();cx.arc(W/2,oy,26*devicePixelRatio,0,6.28);cx.fill();
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+/* ===== 场景显影（固定，勿改） ===== */
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>e.target.classList.toggle('on',e.isIntersecting));
+},{threshold:.01});
+document.querySelectorAll('.scene,.station').forEach(s=>io.observe(s));
+
+/* 细节片段显影（固定，勿改） */
+const ioFrag=new IntersectionObserver(es=>{
+  es.forEach(e=>e.target.classList.toggle('on',e.intersectionRatio>.15));
+},{threshold:[0,.35,.6]});
+document.querySelectorAll('.frag').forEach(f=>ioFrag.observe(f));
+
+/* ===== 进度轨道（固定，勿改） ===== */
+const rail=document.getElementById('rail');
+scenes.forEach((s,i)=>{
+  const row=document.createElement('div');row.className='r';
+  const lbl=document.createElement('span');lbl.className='lbl';
+  const k=s.el.querySelector('.kicker');
+  lbl.textContent=k?k.textContent.trim():(i===0?'开始':'终章');
+  const d=document.createElement('i');
+  row.appendChild(lbl);row.appendChild(d);
+  row.onclick=()=>s.el.scrollIntoView({behavior:'smooth'});
+  rail.appendChild(row);
+});
+setInterval(()=>{
+  const wh=innerHeight;
+  scenes.forEach((s,i)=>{
+    const r=s.el.getBoundingClientRect();
+    rail.children[i].classList.toggle('cur',r.top<wh*.55&&r.bottom>wh*.45);
+  });
+},200);
+
+/* ===== 本章定制交互 ===== */
+/* 门槛对比：正面 / 负面两条路 */
+const paths=document.getElementById('paths');
+document.querySelectorAll('.path').forEach(p=>{
+  p.addEventListener('mouseenter',()=>paths.classList.add('p-'+(p.classList.contains('a')?'a':'b')));
+  p.addEventListener('mouseleave',()=>paths.classList.remove('p-a','p-b'));
+  p.addEventListener('click',()=>{
+    paths.classList.remove('p-a','p-b');
+    paths.classList.add('p-'+(p.classList.contains('a')?'a':'b'));
+  });
+});
+
+/* 回到开场 */
+document.getElementById('again').onclick=()=>scrollTo({top:0,behavior:'smooth'});
+</script>
+</body>
+</html>

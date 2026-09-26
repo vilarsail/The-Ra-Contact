@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 104 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 104 · 交互式学习模块</h1>
+  <p class="sub">这一集几乎全是照料与陪伴：运动量、意志与殉道、一只老猫的眼疾。Ra 把每一次「帮忙」的收益与代价摆上天平，最后用一个「不」字收束全场。</p>
+  <div class="tagline">5 个主题 · 5 个学习步骤 · 19 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本集地图</a>
+<a href="#s2">② 运动的两种答案</a>
+<a href="#s3">③ 意志与殉道</a>
+<a href="#s4">④ 甘道夫的眼睛</a>
+<a href="#s5">⑤ 收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>一场照料与陪伴的集会：六块议题怎么串成一条问答链</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>运动的两种答案</b><span>身体账与心情账分开算，以及「强调失衡来平衡失衡」的思路</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>意志与殉道</b><span>没有喜悦与信心的付出算什么；想而不行，已有的会被移走</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>甘道夫的眼睛</b><span>想帮忙与帮助的代价：一份被反复掂量的账本</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>收官：巧合之道与一个「不」字</b><span>引言里多出的一句话、帷幕前的大问题，与舞台上的我们</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ 第 1 章 · 本集地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本集地图：一场照料与陪伴的集会</h2></div>
+  <p class="sec-lead">第 104 集没有新的密度、原型或历史叙事，几乎全部篇幅都在照料与陪伴——器皿的运动量与饮食、意志的使用方式，以及发问者为老猫甘道夫眼疾发起的连环追问。议题虽小，Ra 的回答方式却很有代表性：每一项「帮助」都被放到收益与代价的天平上称过，称完才给结论。</p>
+
+  <div class="card">
+    <h3>本集在全书中的位置</h3>
+    <p>本集已处这场通讯的尾声阶段，证据都在集内：器皿的身体困难（狼疮样变化、痉挛）成了问答主轴；小组所写的书已到出版商手里、引言还被改动了一句（104.25）；Ra 在收尾前主动提示「再提出一个完整的问题」（104.25）——而那最后一个大问题只得到一个「不」字，集会就此落幕。</p>
+    <p>主要议题清单：① 器皿状态 ② 运动量的两种答案 ③ 意志与殉道 ④ 胃背与饮食 ⑤ 甘道夫的眼疾与「帮助的代价」 ⑥ 引言异动 ⑦ 收官之问与落幕。</p>
+  </div>
+
+  <div class="card">
+    <h3>问答脉络推进器</h3>
+    <p>从器皿状态到落幕，本集的问答链一共八步。点节点或用按钮走一遍，先看清对话怎么展开。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="flowTrack1"></div>
+      <div class="flow-detail" id="flowDetail1"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="flowPrev1">← 上一步</button> <button class="tri-btn" id="flowNext1">下一步 →</button></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>本集的底色：幻象在换，支撑未换</h3>
+    <p>整集谈的都是些「小事」，但收尾那段话把小事托住了——舞台在换、幕布落下、灯光再亮，底下的支撑从未换过。</p>
+    <div class="quote">
+      <p class="en">And throughout the grand illusion, and the following, and the following, there is the undergirding majesty of the One Infinite Creator. All is well. Nothing is lost.</p>
+      <p class="zh">在一层层更换的盛大幻象之下，始终垫着太一无限造物主的庄严。一切都好，什么也不会真正丢失。</p>
+      <span class="src">—— Session 104 · (104.26) 收尾</span>
+    </div>
+    <div class="case"><b>照顾者的日程表：</b>一位长期照护术后老人的子女，把每周复查、康复动作、饮食禁忌列成表格逐项过——第 104 集前半正是这样一份「照护问答」：运动、饮食、身体极限，一项项问、一项项答（104.1-104.4）。</div>
+    <div class="case"><b>老猫眼花的主人：</b>家里十几岁的猫开始撞家具，主人连夜搜索「老年白内障要不要治」——发问者在本集后半做的事一模一样：能不能治、怎么治、要不要搬家，一个都不放过（104.5-104.24）。</div>
+  </div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 身体照料 · 中途仪式</span></summary>
+  <div class="body">
+    <p><b>(104.0) 开场致意：</b>Ra 在太一无限造物主的爱与光中向小组致意。</p>
+    <p><b>(104.1) 器皿状态：</b>朝向身体枯竭与生命能损耗的读数较上次询问时有所减轻，但读数中仍有相当大的偏向。</p>
+    <p><b>(104.4) 胃背痉挛：</b>最大的帮助已在给予；避免油炸食物、保持愉悦的和谐都有帮助；痉挛会随器皿在靛蓝光芒（indigo-ray，能量中心之一）层面的工作而消退——发炎仍在，症状已远非药物可医，因为她自己选择了催化剂。</p>
+    <p><b>(104.20-104.21) 中途仪式：</b>Ra 请发问者在器皿胸前上方呼气，完成后继续作答。</p>
+  </div></details>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 2 章 · 运动的两种答案 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>运动的两种答案：身体账与心情账分开算</h2></div>
+  <p class="sec-lead">器皿想知道有氧运动、散步和涡流浴各自的最适宜量。Ra 给了两组数字——不是讨价还价，而是两套坐标系：一套按一般情况算，一套按器皿的双重状况（黄色光芒身体困难＋心智复合体变貌）算。数字背后还藏着一条容易被忽略的分别：运动喂的不只是身体。</p>
+
+  <div class="card">
+    <h3>两套坐标，两组数字</h3>
+    <div class="q">有氧、散步、涡流浴，各做多少才最优？——这是一道「给个数」的题，Ra 却坚持先分坐标系再给数。</div>
+    <div class="quote">
+      <p class="en">Firstly, to speak to the general case, which pertains to this instrument in varying degree, each form of exercise is well accomplished approximately three to four times per your week. The amount of exercise, all quantified as one sum, is approximately one hour per diurnal period.</p>
+      <p class="zh">先按一般情况说（在不同程度上适用于该器皿）：每种运动每周约三到四次；把总量合起来算，大约每天一小时。</p>
+      <span class="src">—— Session 104 · (104.2)</span>
+    </div>
+    <p>第二套答案则针对她「双重状况」：黄色光芒（yellow-ray，关乎肉身层面的能量中心）的身体困难——肌肉与部分器官正经历狼疮样变化——加上心智复合体的变貌。涡流浴每周四到五次；散步与运动随她的意愿；总量无论如何不超过每日九十分钟。两条原则撑起这组数字：</p>
+    <div class="quote">
+      <p class="en">The exercise regains the wasting physical muscular strength. In some ways the walking is the more appropriate exercise due to the proximity of the entity to second-density creatures, particularly your trees.</p>
+      <p class="zh">运动能恢复正在流失的肌肉力量；而在某些方面，散步是更合适的运动——因为它让她得以亲近第二密度（second density，动植物所处的低阶密度）的生物，尤其是树木。</p>
+      <span class="src">—— Session 104 · (104.2)</span>
+    </div>
+    <div class="plain">运动有两本账：身体上的恢复，和心智/情感上的滋养——靠近树木的散步两本都喂，靠近人造物只喂身体那一本。</div>
+    <div class="case"><b>跑步机与小区的树：</b>同是快走四十分钟——在健身房跑步机上刷完，卡路里一样，回家心里还是堵的；绕着小区那排老树走一圈，身体消耗相同，人却松了下来。Ra 说的正是这层分别：亲近树木喂养的是心智/情感需求，人造景观给不了（104.2）。</div>
+    <div class="case"><b>复健科的两份处方：</b>医生给膝盖术后病人开了「每天步行＋水中康复」，又补一句「别超过九十分钟」——前一半是身体账，后一半是本钱的警戒线。Ra 给器皿的运动建议同样是这两层：先恢复，再设上限（104.2）。</div>
+  </div>
+
+  <div class="card">
+    <h3>用「加量」来纠正失衡？</h3>
+    <div class="q">为什么 Ra 一边设上限，一边又允许「过度磨损身体」——这两件事不矛盾吗？</div>
+    <div class="quote">
+      <p class="en">It is the way of distortion that in order to balance a distortion one must accentuate it. Thusly, the over-wearing of the body may, if correctly motivated, produce a lack of deficit, at which juncture the lesser exercise limitations should be put into practice.</p>
+      <p class="zh">变貌之道在于：要平衡一种变貌，必须先强调它。因此，若动机正确，让身体过度消耗反而可能填平亏空——到了那一刻，就该改用较宽松的运动限制。</p>
+      <span class="src">—— Session 104 · (104.2)</span>
+    </div>
+    <p>Ra 同时提醒支持小组：鼓励任何运动，唯独不鼓励超出时限的部分——那个时限已远超这具身体复合体的承受力。换句话说，加量可以是药，但得有动机正确这个前提，还得知道何时收手。</p>
+    <div class="plain">修正失衡的路径可以是先把它强调到头——前提是动机正确，而且到点就收。</div>
+    <div class="analogy"><b>把亏空吃干净：</b>长期熬夜的人偶尔用一个周末把「睡眠债」狠狠补齐，之后再回到正常作息——先把失衡强调到头、再回归常态，正是同一种平衡思路；区别只在于动机是修复还是放纵（104.2）。</div>
+    <div class="case"><b>拦人加练的教练：</b>学员伤后急于恢复，天天加量；教练不拦温和的加练，只拦超过身体极限的部分——「鼓励任何运动，除了超出时限的那种」，Ra 给支持小组的边界与此相同（104.2）。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 3 章 · 意志与殉道 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>意志的明智使用：殉道、显化与静默</h2></div>
+  <p class="sec-lead">这一问出自器皿自己的总结：她认定「不明智地使用意志，就是在没有喜悦与信心的情况下使用意志，这构成殉道」。Ra 没有替她下定义，而是在她的定义上补了两件事——知识必须显化出来，平衡必须靠静默；然后明确划线：建议只到这里，其余的路她自己走。</p>
+
+  <div class="card">
+    <h3>殉道的定义是谁下的？</h3>
+    <div class="q">器皿带着自己的结论来求证：没有喜悦与信心成分的意志使用，是否就是殉道？——注意，这个定义是她的领悟，不是 Ra 先给的。</div>
+    <p>Ra 先对这份思考表示肯定，随即给出一个更冷的推论：想得有力的人，要么行动有力，要么已有的会被移走。</p>
+    <div class="quote">
+      <p class="en">The entity which is strong to think shall either be strong to act or that which it has shall be removed. Thus manifestation of knowledge is an area to be examined by the instrument.</p>
+      <p class="zh">思考有力的实体，要么行动有力，要么它所拥有的将被移走。因此，知识的显化是器皿需要审视的领域。</p>
+      <span class="src">—— Session 104 · (104.3)</span>
+    </div>
+    <div class="plain">光想不做，攒下的领悟留不住——知识必须被活出来，才算数。</div>
+    <div class="case"><b>收藏夹里的课程：</b>一个人囤了几十门课、上千篇干货，从不实践；几年后平台下架、笔记散佚，「它所拥有的」真的被移走了。Ra 提醒器皿审视的正是这个领域：领悟要显化成行动（104.3）。</div>
+    <div class="case"><b>没有喜悦的陪护：</b>子女照顾患病长辈，样样做到位，心里却满是「我应该」的怨气——照护照做，但这正是器皿所定义的殉道式用意志。同样的付出，换一种带着喜悦与信心的心态，性质就不同（104.3）。</div>
+  </div>
+
+  <div class="card">
+    <h3>平衡怎么做：Ra 只说到这里</h3>
+    <div class="q">既然找到了病根，平衡的具体方法能不能再讲细一点？Ra 的回应是给出方向，然后明确止步。</div>
+    <div class="quote">
+      <p class="en">We may go no further than this recommendation of regularized leisure, and desire that the entity discover the fundamental truths of these distortions as it will.</p>
+      <p class="zh">我们只能建议到「规律化的休闲」为止，不能更进一步；我们希望该实体依自己的意愿，去发现这些变貌的基本真理。</p>
+      <span class="src">—— Session 104 · (104.3)</span>
+    </div>
+    <p>在此之前 Ra 给出的路径是：在分析与显化中、伴随静默的沉思来完成平衡，并可通过「显化的静默」与减少常规活动来加强。但具体悟到什么，Ra 不代劳——这是自由意志法则在一件小事上的完整示范：给方向，不给答案，把发现留给本人。</p>
+    <div class="plain">Ra 的建议有边界：只到「规律化的休闲」为止，其余的路留给走的人自己发现。</div>
+    <div class="case"><b>只改计划表不说破的教练：</b>教练看出学员的问题在心态而非动作，于是只调整了训练表，把「为什么练不动」留给学员自己悟——Ra 的分寸与此一致：建议到规律化休闲为止，基本真理由实体自行发现（104.3）。</div>
+
+    <h3 style="margin-top:18px">本节术语速查（点卡片展开）</h3>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">殉道</div><div class="sub">martyrdom</div><span class="tap">点开</span></div><div class="back">本集的定义出自器皿自己：在没有喜悦与信心成分的情况下使用意志，消耗自己却不出于爱。<em>像拧一根发条上得太紧、又没对着目标的钟——弦断了，钟也没走对。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">显化</div><div class="sub">manifestation</div><span class="tap">点开</span></div><div class="back">把已经领会的知识做出来、活出来。Ra 的推论：想而不行，已有的会被移走，所以显化是需要审视的领域。<em>学会的菜谱要真的下厨——只收藏不试做，厨艺不会长在你身上。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">规律化的休闲</div><div class="sub">regularized leisure</div><span class="tap">点开</span></div><div class="back">Ra 给器皿的唯一建议：把静默与闲暇排进日程、减少常规活动，以此加强平衡；再多的具体方法，留给她自己发现。<em>不是再多上一门课，而是把日程表空出一块、守住它。</em></div></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 4 章 · 甘道夫的眼睛 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>甘道夫的眼睛：想帮忙，与帮助的代价</h2></div>
+  <p class="sec-lead">发问者为老猫甘道夫的眼疾连续追问了近二十个回合——这是本集最长的一串问答。Ra 每一次都认真作答，但每一次回答都在称量同一件事：这个帮助的收益，值不值得它付出的代价。称到最后，账本上每一项「治疗」都被其代价抵消，剩下唯一的建议是陪伴。</p>
+
+  <div class="card">
+    <h3>状况与预后</h3>
+    <div class="q">猫的眼睛到底出了什么问题？会不会瞎、会不会很快死？——发问者想先弄清「病情」。</div>
+    <div class="quote">
+      <p class="en">The one known as Gandalf nears the end of its incarnation. Its eyesight dims, and the aqueous membrane becomes tough. This is not a comfortable circumstance, but is one which causes the entity no true discomfort.</p>
+      <p class="zh">被称为甘道夫的实体已接近这次投生的终点：视力变暗，水状膜变得坚韧。这并非舒适的处境，却并未给它带来真正的痛苦。</p>
+      <span class="src">—— Session 104 · (104.5)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The one known as Gandalf will not lose eyesight, or life, on most possibility/probability vortices for three of your seasons, approximately.</p>
+      <p class="zh">在大多数可能性/概率漩涡中，甘道夫大约在你们的三个季节之内，既不会失去视力，也不会失去生命。</p>
+      <span class="src">—— Session 104 · (104.9)</span>
+    </div>
+    <p>至于失明的形而上原因，Ra 的回答出人意料地平淡：这个案例里形而上成分极小——这就是老年的应得催化剂（condign catalyst，理所应得、当之无愧的经历）。能看见吗？能（104.8）。</p>
+    <div class="plain">眼疾属于年龄本身，不是什么灵性事件；多数概率分支下，还有大约三个季节的时光。</div>
+    <div class="case"><b>体检报告上的「老年性改变」：</b>医生对七十岁病人的片子写下「退行性改变，无需特殊治疗」——不是没有问题，而是这问题属于年龄本身。Ra 对甘道夫眼疾的定性与此相同：先归位，再谈要不要处理（104.16、104.5）。</div>
+  </div>
+
+  <div class="card">
+    <h3>疗法的账本：每一项「帮助」都被代价抵消</h3>
+    <div class="q">有什么办法治吗？——发问者一路让步地找方案：不经限制滴药行不行？别的技术行不行？麻醉后滴行不行？</div>
+    <div class="quote">
+      <p class="en">There is a course of therapy which would aid the situation. However, we do not recommend it as the condition is more benign than the treatment.</p>
+      <p class="zh">确实有一种疗法能改善状况。不过我们不推荐它——因为这个状况比治疗本身更温和。</p>
+      <span class="src">—— Session 104 · (104.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The cat would find the experience of being confined while the drops were given more distorted than the discomfort it now feels but is able to largely ignore.</p>
+      <p class="zh">滴药时被限制行动的体验，对这只猫而言，比它此刻能基本忽略的不适更有变貌（更难受）。</p>
+      <span class="src">—— Session 104 · (104.7)</span>
+    </div>
+    <p>发问者仍不死心，把每个方案都问了一遍。滴药的效果：视力或可改善两三成、眼部不那么紧绷，但代价是僵硬迅速加重、保持静止姿势相当不适（104.17）。麻醉给药：伤害远超好处（104.18）。需要多少次：约四十到六十次（104.19）。药的名字：Ra 遇到困难，不作回答（104.23）。</p>
+    <div class="quote">
+      <p class="en">Over a period of applications the eyesight would improve somewhat, perhaps 20, perhaps 30%. The eye region would feel less tight. Balanced against this is rapidly increasing stiffness of motion so that the holding in a still position is necessarily quite uncomfortable.</p>
+      <p class="zh">经过一段时间的用药，视力会有所改善，或许 20%，或许 30%，眼部也会不那么紧绷。但与之相抵的是运动僵硬迅速加重——保持静止姿势必然相当不适。</p>
+      <span class="src">—— Session 104 · (104.17)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The harm done by putting the allopathic anesthetic into the body complex of this harvestable entity far overshadows the stillness accruing therefrom which would allow administration of medicaments.</p>
+      <p class="zh">把对抗疗法（allopathic，现代主流医学的常规疗法）的麻醉剂注入这个可收割实体（harvestable entity，已临近收获资格的实体）的身体复合体，所造成的伤害远远超过由此获得的安静——而那种安静本是为了给药。</p>
+      <span class="src">—— Session 104 · (104.18)</span>
+    </div>
+    <div class="quote">
+      <p class="en">We have a difficulty. Therefore, we shall refrain from answering this query.</p>
+      <p class="zh">我们遇到困难，因此将不作回答。——这是 Ra 对「眼药水叫什么名字」的完整回应。</p>
+      <span class="src">—— Session 104 · (104.23)</span>
+    </div>
+    <div class="plain">帮助是否成立，要看收益与代价的账——这份账本里，每一项「治疗」都比「状况本身」更有害。</div>
+    <div class="case"><b>裹毛巾灌药的主人：</b>有人给猫喂药先拿毛巾裹住强灌，猫从此见人就躲；有人把药拌进罐头，猫毫无察觉。同是喂药，前者制造的限制比病本身更难受——这正是 104.7 的道理：别让治疗比病更重。</div>
+    <div class="case"><b>病房外的抉择：</b>家属问医生「能不能再加一轮化疗」，医生评估后说「病情比治疗更折磨人」。甘道夫的眼疾是同一道题：当状况比治疗更良性时，「不治」就是最优解（104.6-104.7）。</div>
+  </div>
+
+  <div class="card">
+    <h3>Ra 给的三条建议</h3>
+    <div class="q">治就算了——那到底还能怎么「帮」它？Ra 给的答案没有一条是医疗。</div>
+    <div class="quote">
+      <p class="en">Secondly, we would suggest that this entity goes to a graduation if it desires. Otherwise, it may choose to reincarnate to be with those companions it has loved.</p>
+      <p class="zh">其次，若它愿意，就去经历一次毕业（graduation，密度收获后进入下一密度的转变）；否则，它可以选择重新投生，与它所爱的同伴们在一起。</p>
+      <span class="src">—— Session 104 · (104.11)</span>
+    </div>
+    <p>三条建议合起来是：其一，可能性/概率漩涡（possibility/probability vortex，未来可能走向的分支）中也包括它投生更长久的那些；其二，愿则毕业，否则重投与所爱相伴；其三，名为贝蒂的实体有办法让它更朝向舒适。至于贝蒂是谁、会做什么——Ra 只答「卡拉拥有这个信息」（104.12），不代答。这个保留本身就是教导：属于它自己的路，旁人不替它说破。</p>
+    <div class="plain">真正的「帮忙」不在治好眼疾，而在把它走哪条路的选择留给它自己。</div>
+    <div class="quote">
+      <p class="en">The vision is less than adequate but is nearly accommodated by a keen sense of smell and of hearing.</p>
+      <p class="zh">视力虽已不足，但凭借敏锐的嗅觉与听觉几乎可以补足。</p>
+      <span class="src">—— Session 104 · (104.13)</span>
+    </div>
+    <div class="case"><b>带老狗搬家的一家人：</b>全家担心十几岁的狗认不得新家，结果它靠气味和声音两天就摸熟了。Ra 对搬家的判断与此一致：嗅觉与听觉几乎补足视力，熟悉的同伴与家具才是适应新环境的关键（104.13）。</div>
+    <div class="case"><b>不替朋友做决定的人：</b>朋友犹豫要不要接受一份外地工作，你把利弊摆清楚后说「这条路你自己选」——Ra 连「贝蒂是谁」都不肯替发问者说破，把知情与选择的余地留给当事人（104.12）。</div>
+  </div>
+
+  <div class="card">
+    <h3>收束：从「怎么治」到「怎么陪」</h3>
+    <p>发问者为反复追问道歉，说自己已接受维持现状。Ra 对这只猫的最后建议不是任何疗法，而是一句：</p>
+    <div class="quote">
+      <p class="en">Rejoice in its companionship.</p>
+      <p class="zh">在它的陪伴中欢喜吧。</p>
+      <span class="src">—— Session 104 · (104.24)</span>
+    </div>
+    <div class="case"><b>陪床的最后两周：</b>家属把能想到的治疗都问遍之后，医生说「接下来的时间是用来相处的」。发问者收到的正是这句话的猫版：别再想办法修了，去欢喜地陪伴（104.24）。</div>
+    <div class="case"><b>「帮」与「替」的一线之隔：</b>同事手忙脚乱时，递工具是帮，抢过键盘替他做是替。这一章的账本反复称量的正是这条线：可以做的（搬家、陪伴）都不越界，弊大于利的（滴药、麻醉）都在替它承受它没选择的代价。</div>
+
+    <h3 style="margin-top:18px">归类练习：每条「帮忙」的判决书</h3>
+    <p>把发问者提过的每个方案放回 Ra 的账本里。点按钮看判决与理由。</p>
+    <div id="sortArea1"></div>
+  </div>
+
+  <div class="card">
+    <h3>本章术语速查（点卡片展开）</h3>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">可能性/概率漩涡</div><div class="sub">possibility/probability vortex</div><span class="tap">点开</span></div><div class="back">未来可能走向的一束束分支。Ra 说甘道夫「在大多数漩涡中」三个季节内不会失明或离世——说的是分支的概率，不是铁板一块的定数。<em>像天气预报的降水概率：不是「会/不会」，而是哪边的分支更密。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">应得催化剂</div><div class="sub">condign catalyst</div><span class="tap">点开</span></div><div class="back">理所应得、当之无愧的经历。甘道夫的眼疾被如此定性：形而上成分极小，它就是老年本身的催化剂。<em>像鞋底的自然磨损——不是谁的错，是走了一辈子的路留下的。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">可收割实体</div><div class="sub">harvestable entity</div><span class="tap">点开</span></div><div class="back">已临近收获（密度转换）资格的实体。Ra 用这个词说明为何麻醉的伤害远超好处：越接近收割，身体越不可轻损。<em>临近交付的展品，搬运时格外小心——损一处，前功尽弃。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">对抗疗法</div><div class="sub">allopathic</div><span class="tap">点开</span></div><div class="back">现代主流医学的常规疗法。Ra 多次以「对抗疗法的医生会怎么做」开头，再称量这套疗法的收益与代价——不是否定医学，而是把它放上天平。<em>工具箱里的一件工具：好用，但不是每颗螺丝都得用它拧。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">黄色光芒</div><div class="sub">yellow-ray</div><span class="tap">点开</span></div><div class="back">能量中心之一，关乎肉身层面。器皿的身体困难被描述为「黄色光芒、身体困难」——运动建议的第二套答案正是按这个坐标给出的。<em>像体检单上的「身体科」：同一道医嘱，内科与康复科各有一套打法。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">靛蓝光芒</div><div class="sub">indigo-ray</div><span class="tap">点开</span></div><div class="back">能量中心之一。Ra 说器皿的痉挛会随其靛蓝光芒层面的工作而消退——身体的症状，有一半的处方开在灵性工作里。<em>像失眠的处方里有一味「睡前放下手机」——药不在药盒里。</em></div></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 5 章 · 收官 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>收官：巧合之道、一个「不」字与舞台上的我们</h2></div>
+  <p class="sec-lead">收尾两问，一问只得一句归类，一问只得到一个「不」字。但正是这两次极简的回答，示范了 Ra 面对无法展开之事的方式：不追查、不渲染、不代答——然后留下一整段关于舞台与幻象的告别辞。</p>
+
+  <div class="card">
+    <h3>多出来的那句话</h3>
+    <div class="q">出版商退回的引言里，多出一句来路不明的话——它从哪来？发问者想追问「来源」。</div>
+    <div class="quote">
+      <p class="en">For although originally part of Jesus' teachings, they were censored from all subsequent editions by the Empress.</p>
+      <p class="zh">「因为虽然原是耶稣教导的一部分，它们却被女皇从其后各版中删除了。」——这句被添进引言的话，正是发问者困惑的来源。</p>
+      <span class="src">—— Session 104 · (104.25)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This follows the way of subjectively interesting happenings, conditions, circumstances, or coincidences.</p>
+      <p class="zh">这遵循了主观上有趣的事件、状况、境遇或巧合之道。</p>
+      <span class="src">—— Session 104 · (104.25)</span>
+    </div>
+    <p>Ra 不做侦探式解读，只给它一个归类；随后立刻把话头转向正事——建议再提出一个完整的问题。对来路不明之事的态度本身就是示范：不否认、不编织故事，一句归类就放下。</p>
+    <div class="plain">对无法追查的巧合，Ra 给的不是解释，而是一个让事情放下的类别。</div>
+    <div class="case"><b>被平台改掉的文案：</b>作者发现上传的文章被悄悄改了一句，追查半天没有结论——Ra 面对同类事件的态度是不追查来源、不编织阴谋，只归入「主观上有趣」一类，然后继续做正事（104.25）。</div>
+    <div class="case"><b>群聊里的「细思极恐」：</b>有人把几件不相干的巧合串成一段惊悚故事发到群里，越传越玄——Ra 的回应示范了另一种收法：不渲染、不站队，一个类别归完即止（104.25）。</div>
+  </div>
+
+  <div class="card">
+    <h3>最后的问题：帷幕之前有原型计划吗？</h3>
+    <div class="q">Ra 提示「再问一个完整的问题」之后，发问者抛出了一个关于进化源头的大假设——帷幕（veiling，第三密度中意识对深层心智的遮蔽过程）之前，是否根本没有进化的原型计划、一切全交给自由意志？</div>
+    <p>Ra 的回答只有一个词：「不。」（104.26）——假设不成立，但没有展开：是「曾有原型计划」，还是「自由意志并非全然任意」，本集没有说。这半句留白就停在了这里。随后是全场的告别辞：</p>
+    <div class="quote">
+      <p class="en">We leave you in appreciation of the circumstances of the great illusion in which you now choose to play the pipe and timbrel and move in rhythm. We are also players upon a stage.</p>
+      <p class="zh">我们离去，怀着对这伟大幻象的欣赏——你们此刻选择在其中吹笛、击鼓、踏着节拍舞动。我们也是舞台上的演员。</p>
+      <span class="src">—— Session 104 · (104.26) 收尾</span>
+    </div>
+    <div class="case"><b>幕间换布景的话剧团：</b>观众看着一幕幕换景、幕布落下又亮灯——演员还是同一批，剧场还是同一座。Ra 用同一个比喻收束全部对话：舞台在换，底下的支撑从未换过（104.26 收尾）。</div>
+    <div class="case"><b>毕业典礼散场时：</b>家长看着台上孩子鞠躬谢幕——结束的是「这一幕」，孩子这个人、家里的关系一点没少。「幕布落下」落的是幕次，不是存在本身；「没有失去任何东西」说的正是这层（104.26 收尾）。</div>
+  </div>
+
+  <div class="saying">
+    <p class="en">All is well. Nothing is lost. Go forth rejoicing in the love and the light, the peace and the power of the One Infinite Creator.</p>
+    <p class="zh">一切都好。没有失去任何东西。在太一无限造物主的爱与光、和平与力量中，欢欣前行吧。</p>
+    <span class="src">—— Session 104 · (104.26) 收尾</span>
+  </div>
+
+  <div class="card">
+    <h3>留给读者的两处留白</h3>
+    <p><b>留白一：</b>Ra 主动提示「再提出一个完整的问题」（104.25），问出的那个大问题只得到一个「不」字——帷幕之前究竟有没有原型计划、什么模样的计划，本集没有展开。<br><b>留白二：</b>引言异动的来龙去脉，Ra 只给了一个类别（「主观上有趣」），没有给出源头。<br><b>留给读者的问题：</b>当你想帮一个人（或一只猫）的时候，你算的是「我能做到什么」，还是「他/它愿意承受什么」？——这一集的账本，最后称的是这个问题。</p>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+<p>基于 The Ra Contact Session 104（split/Ra_Session_104.md）英文原文制作 · 交互式学习模块</p>
+<p>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文</p>
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra104-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+/* 问答脉络推进器（第 1 章地图） */
+initStepper('flowTrack1','flowDetail1','flowPrev1','flowNext1',[
+ {t:'器皿状态',d:'<span class="qa-q">问：这个器皿今天状态如何？</span><b>答：</b>朝向身体枯竭与生命能损耗的读数较上次询问时有所减轻，但仍有相当大的偏向（104.1）。'},
+ {t:'运动量',d:'<span class="qa-q">问：有氧、散步、涡流浴各多少量才最好？</span><b>答：</b>Ra 分两套坐标作答：一般情况每周各三到四次、总量约每天一小时；按器皿的双重状况则涡流浴每周四到五次、散步与运动随意愿、总量每日不超过九十分钟（104.2）。'},
+ {t:'意志与殉道',d:'<span class="qa-q">问：没有喜悦与信心地使用意志，是不是就是殉道？</span><b>答：</b>Ra 肯定器皿的这份思考，并补上一条推论：思考有力者要么行动有力，要么已有的将被移走——知识的显化需要审视（104.3）。'},
+ {t:'胃背痉挛',d:'<span class="qa-q">问：还能为器皿的胃和背痉挛做点什么？</span><b>答：</b>最大的帮助已在给予；避免油炸食物、保持愉悦的和谐有帮助；痉挛会随靛蓝光芒层面的工作消退（104.4）。'},
+ {t:'甘道夫的眼睛',d:'<span class="qa-q">问：猫甘道夫的眼睛出了什么问题？</span><b>答：</b>它已接近这次投生的终点：视力变暗、水状膜变韧——不算舒适，但没有真正的痛苦；能看见，多数概率分支下约三个季节内不会失明或离世（104.5-104.9）。'},
+ {t:'怎么帮它',d:'<span class="qa-q">问：我们能做点什么帮甘道夫？</span><b>答：</b>Ra 给三条：概率分支中包括更长的投生；愿则毕业、否则重投与所爱相伴；名为贝蒂的实体可助其更舒适——贝蒂是谁，Ra 请问卡拉（104.10-104.13）。'},
+ {t:'眼药水拉锯',d:'<span class="qa-q">问：不经限制滴药？别的技术？麻醉后滴？药名叫什么？</span><b>答：</b>不太可能；没有；麻醉的伤害远超好处（约 40-60 次用药也只能改善两三成，且僵硬迅速加重）；药名——Ra「遇到困难」，不作回答（104.14-104.23）。'},
+ {t:'收官',d:'<span class="qa-q">问：最后还有什么建议？</span><b>答：</b>对猫：「在它的陪伴中欢喜吧」（104.24）；引言异动属「主观上有趣之事」（104.25）；帷幕前的原型计划之问只得到一个「不」字，集会在舞台比喻与祝福中落幕（104.26）。'}
+]);
+
+/* 归类练习（第 4 章）：每条「帮忙」的判决 */
+initSorter('sortArea1',[
+ {a:'不经限制地给甘道夫滴眼药水（让它不被按住）',opts:['可以做','弊大于利','Ra 不答'],ans:'弊大于利',exp:'Ra 说这「不太可能」——要滴药就得限制它的行动，而那种体验比它能基本忽略的不适更有变貌（104.14、104.7）。'},
+ {a:'先麻醉再滴药，让猫全程无感',opts:['可以做','弊大于利','Ra 不答'],ans:'弊大于利',exp:'把对抗疗法麻醉剂注入这个可收割实体的身体复合体，伤害远远超过由此获得的安静（104.18）。'},
+ {a:'问出眼药水的名字，自己去买',opts:['可以做','弊大于利','Ra 不答'],ans:'Ra 不答',exp:'「我们遇到困难，因此不作回答」——Ra 在这里明确划线（104.23）。'},
+ {a:'搬家到新环境',opts:['可以做','弊大于利','Ra 不答'],ans:'可以做',exp:'视力不足可由敏锐的嗅觉与听觉几乎补足；同伴与家具熟悉，短时间内即可满意地适应（104.13）。'},
+ {a:'维持现状，只是陪伴',opts:['可以做','弊大于利','Ra 不答'],ans:'可以做',exp:'Ra 的最终建议只有一句：在它的陪伴中欢喜吧（104.24）。'}
+]);
+
+/* 术语卡翻转 */
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+renderPath();
+</script>
+</body>
+</html>

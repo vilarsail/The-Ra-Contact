@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 044 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 044 · 交互式学习模块</h1>
+  <p class="sub">这是一场关于「如何把接触维持下去」的短集：器皿生命力告急，Ra 拆开了意志、奉献与能量流失的机制，确立了由小组做判断者的原则，又给出化解负面影响的方法与滋养生命力的清单，最后以一句「没有错误」收尾。</p>
+  <div class="tagline">7 个主题 · 6 个学习步骤 · 18 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 生命力与两难</a>
+<a href="#s3">③ 奉献的能量</a>
+<a href="#s4">④ 信号与化解</a>
+<a href="#s5">⑤ 恢复生命力</a>
+<a href="#s6">⑥ 生命之树</a>
+<a href="#s7">⑦ 收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>用问答推进器走一遍全场脉络，例行问答可以跳过</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>生命力与两难</b><span>意志在硬撑什么：「殉道未必有益」与「手被绑住」的两难</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>奉献的能量</b><span>为什么停下来也补不回来，谁来决定集会的节奏</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>信号与化解</b><span>左耳、右耳、头顶的音调各是什么，负面影响的正确化解姿势</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>恢复生命力</b><span>高我的类比为何帮不上忙，真正管用的清单是什么</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>工具与收官</b><span>生命之树的位置是关系不是密码，终点是第 07 章那句「没有错误」</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：一场关于「如何把接触维持下去」的短集</h2></div>
+  <p class="sec-lead">这场集会从头到尾都在处理同一件事：通灵这项工作还能不能长期做下去。开场第一问就是器皿的生命力问题，中间两次想停下来、又两次把机制问清楚，最后连「跑题」的生命之树问答，也落回同一个母题——工具与意图的边界。发问者在收尾时自己给本场定了性，Ra 则用一句话把所有自责轻轻放下。</p>
+  <div class="card">
+    <h3>问答脉络：从「还能不能继续」到「没有错误」</h3>
+    <p>本集十八个问答块（含开场与收尾）可以收成八段。点击节点，看每一段在做什么。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="qaTrack"></div>
+      <div class="flow-detail" id="qaDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="qaPrev">← 上一步</button> <button class="tri-btn" id="qaNext">下一步 →</button></div>
+    </div>
+    <div class="quote">
+      <p class="en">I think the most important thing we accomplished is knowing how to better regulate the instrument's sessions…</p>
+      <p class="zh">发问者的自评：本场最重要的收获，是知道了怎样才能更好地调节器皿的集会节奏——这一句把全场零零散散的问答收成了一个主题。</p>
+      <span class="src">—— Session 044 · (44.17)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Our hopes, may we say, for long-term contact through this instrument depend upon its maturing ability to be of service to other-selves by accepting their help and thus remaining a viable instrument.</p>
+      <p class="zh">容我们说，我们对长期接触的期望，系于这位器皿日渐成熟的能力：借着接受其他自我的帮助来服务他们，从而让自己保持可用——「接受帮助」是本集反复出现的关键词。</p>
+      <span class="src">—— Session 044 · (44.1)</span>
+    </div>
+    <div class="plain">这场短集的主线不是新教导，而是一次「维保」：能量怎么被消耗、谁来决定节奏、影响怎么化解、活力怎么补充——全部指向「让这件事能长期做下去」。</div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">开场 · 器皿状态 · 梦的来源 · 收尾致意</span></summary>
+  <div class="body">
+    <p><b>(44.0) 开场：</b>Ra 在太一无限造物主的爱与光中致意，宣布本次通讯开始。</p>
+    <p><b>(44.1) 器皿状态：</b>器皿对自身生命力有疑问、小组难以评估；Ra 获许做「最谨慎而非最渴望」的评估——由此展开的教导见第 2 章。</p>
+    <p><b>(44.11) 器皿的梦：</b>器皿今早的梦被当场「查来源」——感受层受猎户座影响，具体意象出自她自己的无意识象征联想（一般原理见第 4 章）。</p>
+    <p><b>(44.17) 收尾致意：</b>发问者为「跑题」道歉；Ra 回应「没有错误」，并嘱咐众人在造物主的大能与平安中欢喜前行，以 Adonai 作结（见第 7 章）。</p>
+  </div></details>
+  <div class="case"><b>例会前先看状态表：</b>某个项目组每周例会前，负责人会先看关键成员的睡眠与体检数据，再决定今天议程压多少活。本集整场都在做同一件事——先确认「器皿还有没有能量」，再决定谈什么；生命力评估不是客套，而是这场集会能开下去的前提。</div>
+  <div class="case"><b>复盘会上的那句总结：</b>一个磕磕绊绊的项目收尾时，负责人在复盘会上说：「这轮最大的收获不是功能上线，而是把节奏机制定了下来。」发问者在 (44.17) 也是这么总结的——技巧、数字、术语都只是路过，「知道如何调节集会」才是带得走的东西。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>生命力与意志：硬撑为什么不可取</h2></div>
+  <p class="sec-lead">集会一开始就亮起黄灯：器皿自己拿不准生命力还剩多少，小组也评估不了，只好请 Ra 来说。Ra 的回答没有停留在「她还好吗」，而是把镜头对准了一个机制——这次没有额外的能量来源，是器皿的意志在驱动身体复合体硬撑；随后他给出了一句分量很重的提醒：殉道未必有益。</p>
+  <div class="card">
+    <h3>器皿的活力之问：这次是意志在硬撑</h3>
+    <div class="q">器皿对自己的生命力有疑问，我们一直难以评估——Ra 能对此评论吗？她的能量到底从哪里来、现在还剩多少？</div>
+    <div class="quote">
+      <p class="en">Sexual energy transfers have at some workings given this instrument additional vital resources upon which to draw. However, this is not so at this working and, therefore, the will of the instrument drives its bodily complex.</p>
+      <p class="zh">性能量转移在某些集会中曾给这位器皿提供额外的生命资源可供取用；然而本次集会并非如此——因此，是器皿的意志在驱动它的身体复合体。</p>
+      <span class="src">—— Session 044 · (44.1)</span>
+    </div>
+    <div class="plain">生命力（vital energy，器皿可供集会调用的能量储备，与普通的疲惫不是一回事）有它的来源清单；这一次清单上的项目缺位，器皿是在靠意志硬撑。</div>
+    <div class="analogy"><b>像手机只剩 5% 电还开着高性能模式：</b>跑是跑得动，但掉电的速度不再由你想要的亮度决定——意志接管身体的代价，要到事后才看得见。</div>
+  </div>
+  <div class="card">
+    <h3>殉道未必有益：把评判交还给谁</h3>
+    <div class="q">意志这样硬撑有什么问题？器皿该拿自己的「要不要继续」怎么办？</div>
+    <div class="quote">
+      <p class="en">May we note that martyrdom is not necessarily helpful. … Allow decisions to be made without expectation or attachment to the outcome.</p>
+      <p class="zh">容我们指出，殉道未必有益。……允许决定被做出，而不带着对结果的期望或执着——决定可以交给更合适的人，执着才是消耗。</p>
+      <span class="src">—— Session 044 · (44.1)</span>
+    </div>
+    <div class="plain">Ra 请器皿自己检视并辨别这些想法的真伪；若属实，就把评判的力量释放给利益远比她平衡的支持小组——不是放弃自省，而是承认「当事人立场」会影响判断。</div>
+    <div class="analogy"><b>像手术前不自己签字定方案：</b>再理性的病人，轮到自己上手术台也很难冷静权衡；把判断交给利益不系于自身的团队，不是软弱，而是让决定回到最平衡的位置上。</div>
+  </div>
+  <div class="card">
+    <h3>「我们的手在某种程度上被绑住了」</h3>
+    <div class="q">既然没人能评估能量，那就请 Ra 在必要时尽快终止接触，行吗？</div>
+    <div class="quote">
+      <p class="en">In your way of speaking our hands are, to a certain extent, tied. This instrument has called upon inner reserves which are dearly bought. … The only way of avoiding this sharing of service at whatever cost is to refrain from the working. It is a dilemma.</p>
+      <p class="zh">用你们的说法，我们的手在某种程度上被绑住了。这位器皿已动用了付出高昂代价才换来的内在储备。……避免这种不计代价之服务的唯一方式，是不举行这项工作。这是一个两难。</p>
+      <span class="src">—— Session 044 · (44.2)</span>
+    </div>
+    <div class="plain">Ra 无法替器皿叫停：一旦开始工作，就有荣幸/责任把这份已付出的能量用到最好，能量低了 Ra 会明说。真正的决定权在「做不做」这个更早的关口，而不是「做多久」。</div>
+  </div>
+  <div class="case"><b>上线前夜的「我还能行」：</b>项目上线前一周，主力工程师天天靠咖啡撑到凌晨，同事提出替班被他拒绝——「这摊事我最熟」。Ra 对器皿的提醒同样适用于他：殉道未必有益；把「今天还冲不冲」的评判交给看得见全局的人，项目才活得久。</div>
+  <div class="case"><b>体检报告自己解读还是交给医生：</b>有人拿到体检报告自己上网查，越查越焦虑；也有人把解读权交给医生，只负责配合。Ra 建议器皿把评判交给支持小组，是同一个结构——当事人对自己的「服务者身份」有情感牵连，平衡的判断需要外在的视角。</div>
+  <div class="case"><b>已经驶上单行桥的车：</b>上了单行桥就无法中途掉头，只能开到对面出口，唯一的替代方案是当初不上桥。Ra 说的两难正是这个结构——唯一能避免「不计代价分享服务」的方式，是不举行工作；而选择工作，就意味着接受它的全部代价。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>奉献的能量：为什么停下来也补不回来</h2></div>
+  <p class="sec-lead">发问者做了个看起来稳妥的决定：先终止接触，让器皿补足能量再继续。Ra 却借这个机会（他自陈是在回应一个未被提出的问题，并为此请求原谅侵犯）讲出了本集最核心的机制——器皿为接触奉献的生命能量，已经流失了；集会开不开，都改变不了这一点。理解了这个机制，「谁来决定集会节奏」的答案就自动浮现。</p>
+  <div class="card">
+    <h3>叫停也叫不回能量</h3>
+    <div class="q">我们先终止接触，让器皿攒够必要的能量再说——这总不会错吧？</div>
+    <div class="quote">
+      <p class="en">The energy has been lost to the instrument, dedicated to this purpose only. You may do as you will, but this is the nature of the instrument's preparation for contact and is the sole reason we may use it.</p>
+      <p class="zh">能量已经从器皿那里流失了——它被专门奉献给了这个目的。你可以按自己的意愿行事，但这正是器皿为接触做准备的性质，也是我们能够使用它的唯一原因。</p>
+      <span class="src">—— Session 044 · (44.7)</span>
+    </div>
+    <div class="plain">停不下来的不是 Ra，而是能量的去向：为接触做准备的那一刻，能量就已经划走；「专款专用」是这份奉献的性质，不是谁可以随时撤销的安排。</div>
+  </div>
+  <div class="card">
+    <h3>机制拆解：渴望的那一刻，能量就被预订</h3>
+    <div class="q">能再解释一遍吗？能量到底是怎么「已经」流失的？</div>
+    <div class="quote">
+      <p class="en">Each of you in this working has consciously dedicated the existence now being experienced to service to others. … Thus once the vital energy is dedicated by the instrument to our communications, even if the working did not occur, this vital energy would be lost to the day-by-day experience of the instrument. Thus we indicated the importance of the instrument's releasing of the will from the process of determining the times of working…</p>
+      <p class="zh">这次工作中的每一位，都已有意识地把自己正在体验的存在奉献给服务他人。……因此，生命能量一旦被器皿奉献给我们的通讯，即使集会不举行，它也从器皿的日常体验中流失了。所以我们才指出，让器皿把意志从决定集会时间的过程中释放出来，是重要的……</p>
+      <span class="src">—— Session 044 · (44.8)</span>
+    </div>
+    <div class="plain">机制是：器皿渴望接触的那一刻，能量就被聚拢并「预订」给了通讯——集会开不开，这些能量都回不到柴米油盐里。所以 Ra 一贯的主张是：器皿不该用意志参与「何时集会」的决定。</div>
+    <div class="analogy"><b>像为婚礼付出的定金：</b>日子定下来那一刻，钱就已经划走了；婚礼办不办，这笔钱都不会回到日常账户。器皿「渴望接触」的那一刻，能量同样已经被划走。</div>
+  </div>
+  <div class="card">
+    <h3>条件模拟器：长期接触还撑得下去吗</h3>
+    <div class="q">发问者的跟进提议：既然能量已经流失，不妨继续本场；以后由小组谨慎监测、做集会时间的唯一判断者。Ra 的评价是「极为正确」。</div>
+    <div class="quote">
+      <p class="en">This is profoundly correct. This instrument's determination to continue contact during this period has already extended the low energy period.</p>
+      <p class="zh">这是极为正确的。这位器皿在此期间继续接触的决心，已经延长了低能量期。</p>
+      <span class="src">—— Session 044 · (44.9)</span>
+    </div>
+    <p style="margin:14px 0 0;font-size:.93rem">拨动下面三个开关，看这套安排离 Ra 说的「长期接触」还有多远：</p>
+    <div class="demo-area" style="text-align:left">
+      <div class="cond-row"><div class="name">器皿把意志从「决定集会时间」上松开<small>渴望接触的那一刻，能量就被聚拢并奉献出去（44.8）</small></div><label class="switch"><input type="checkbox" id="m1"><span class="slider"></span></label></div>
+      <div class="cond-row"><div class="name">小组谨慎监测，做集会时间的唯一判断者<small>发问者在 (44.9) 的提议，Ra 称「极为正确」</small></div><label class="switch"><input type="checkbox" id="m2"><span class="slider"></span></label></div>
+      <div class="cond-row"><div class="name">器皿接受帮助，把评判交还给支持小组<small>「殉道未必有益」——接受帮助才能保持可用（44.1）</small></div><label class="switch"><input type="checkbox" id="m3"><span class="slider"></span></label></div>
+      <div id="condResult"></div>
+    </div>
+  </div>
+  <div class="case"><b>定金已经付了：</b>一场婚礼定了场地、付了定金，后来婚期取消——这笔钱不会回到日常账户，只会留在「婚礼」这个用途上。Ra 说器皿奉献给通讯的生命能量正是如此：即使集会不举行，流失也照常发生。</div>
+  <div class="case"><b>演出状态一开嗓就停不下来：</b>歌手一进入「今天有演出」的状态，当天的精力就已经被导向晚上；哪怕演出临时取消，白天也回不到普通节奏。器皿渴望接触的那一刻，能量同样被聚拢、从日常用途中被抽走。</div>
+  <div class="case"><b>把排期权交出去的负责人：</b>一位带病坚持的负责人不再自己决定「今天要不要上线」，而是让两位看得到全局的同事做决定，她只负责执行。这正是 (44.9) 的安排：由不被低能量状态影响的人做唯一判断者——Ra 的评语是「极为正确」。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>信号与梦境：如何辨别，如何化解</h2></div>
+  <p class="sec-lead">能量问题的背景音，是这群人正处在「负面干扰最强烈的时期」。发问者顺势问起刚才开场时左耳听到的那声音调——由此牵出一小段「信号说明书」：什么声音来自哪里、该把它当成什么。接着是本集最实用的一段：收到了不想要的影响，该怎么办。Ra 给的方法朴素得惊人，而且明确说了什么做法是反效果。</p>
+  <div class="card">
+    <h3>耳边的音调：一声负面信号与两种正面信号</h3>
+    <div class="q">通讯开始时我左耳听到一声音调——那是什么？那我平时怎么分辨正面信号？</div>
+    <div class="quote">
+      <p class="en">Two types there are of positive signal. First, in the right ear location the signal indicates a sign that you are being given some unworded message saying, "Listen. Take heed." The other positive sign is the tone above the head which is a balanced confirmation of a thought.</p>
+      <p class="zh">正面信号有两种。第一种，在右耳位置，该信号表示你正被给予某种无言的信息，它说：「聆听。留心。」另一种正面信号是头顶上方的音调，它是对某个想法的平衡确认。</p>
+      <span class="src">—— Session 044 · (44.4)</span>
+    </div>
+    <div class="plain">左耳那声是负面导向信号（44.3 的直接回答）；正面信号有两种——右耳的音调像一句无言的「聆听。留心。」，头顶上方的音调则不添加新内容，只确认你刚起的那个念头「是平衡的」。</div>
+    <div class="analogy"><b>像导航的两种提示：</b>转向前的语音提示要你「注意，接下来要变道」；到达后的一声轻响只是确认「路线走对了」。右耳与头顶的区别，正是提示与确认的区别。</div>
+  </div>
+  <div class="card">
+    <h3>「你难道不是一切万有？」</h3>
+    <div class="q">我还会收到其他负面信号吗？——为什么偏偏是我对这些负面性质的信号开放？</div>
+    <div class="quote">
+      <p class="en">You are able to receive thought-forms, word-forms, and visions. … Are you not all things?</p>
+      <p class="zh">你能够接收思想形态、词语形态与幻象——不过，你似乎能够辨别。……你难道不是一切万有吗？</p>
+      <span class="src">—— Session 044 · (44.5–44.6)</span>
+    </div>
+    <div class="plain">对「为什么我会收到这些」，Ra 不给防御方案，只反问一句：你难道不是一切万有吗？——开放不是漏洞，而是「是万物」的自然结果；真正的日常功夫是辨别，不是关门。</div>
+  </div>
+  <div class="card">
+    <h3>化解的方法：分享与爱，而不是贬低</h3>
+    <div class="q">我们每个人都会收到信号和梦境。有什么办法，能消除来自负面源头、我们不想要的影响？</div>
+    <div class="quote">
+      <p class="en">To share the difficult contact with the other-selves associated with this working and to meditate in love for these senders of images and light for self and other-selves is the most available means of nullifying the effects of such occurrences.</p>
+      <p class="zh">与这次工作相关的其他自我分享这些困难的接触，并为这些图像的发送者做爱的冥想、为自我与其他自我求取光——这是化解这类事件影响的最可行方式。</p>
+      <span class="src">—— Session 044 · (44.10)</span>
+    </div>
+    <div class="plain">方法有两件：以信任分享，加上对发送者的爱的冥想——对发送者慈悲，对自我如铠甲。反效果的做法也点了名：用理智或意志的纪律去贬低这些体验，反而会延长影响。</div>
+    <div class="analogy"><b>像处理塞进信箱的小广告：</b>拿进屋里、当趣闻跟家人念两句，纸很快进了垃圾桶；把它锁进抽屉「眼不见为净」，反而每次开抽屉都会想起它。压抑给影响续命，分享让它落地。</div>
+  </div>
+  <div class="card">
+    <h3>连梦也要查来源</h3>
+    <div class="q">器皿今早醒来就转述的那个梦，来源是什么？</div>
+    <div class="quote">
+      <p class="en">The feeling of the dream, shall we say, was Orion-influenced. The clothing of the dream revealing more the instrument's unconscious associative patterns of symbolism.</p>
+      <p class="zh">这个梦的感受层面，容我们说，受猎户座（Orion，Ra 语境中负面影响的来源之一）影响；而梦的外衣——那些具体意象——则更多显露了器皿自己无意识的象征联想模式。</p>
+      <span class="src">—— Session 044 · (44.11)</span>
+    </div>
+    <div class="plain">一个梦被拆成两层查账：感受层的来源是外来的，意象层的内容是自己的。这正好演示了对待一切「不请自来之物」的态度——先分清哪些是影响、哪些是自己，再谈化解。</div>
+  </div>
+  <div class="card">
+    <h3>归类练习：这属于哪一类？</h3>
+    <p>把下面每一段情境，对到正确的类别上。</p>
+    <div id="signalArea"></div>
+  </div>
+  <div class="case"><b>互助群里先发出来再说：</b>一个疾病互助群有条群规：收到怪私信，先截图发群里让大家看，别一个人琢磨。这正对应 Ra 的方法——与共同工作的人们分享困难接触；而那句「别自己吓自己，想多了」式的打发，对应的是被点名的反效果：用理智贬低体验，影响反而延长。</div>
+  <div class="case"><b>把噩梦当早饭桌上的笑话：</b>有人连着做噩梦，独自上网查解梦越查越怕；后来改成每天早餐讲给家人听、一笑而过，梦慢慢就淡了。以信任分享、对「发送者」不带恨意，正是 Ra 说的那副组合：对发送者慈悲，对自我如铠甲。</div>
+  <div class="case"><b>开放端口不是漏洞：</b>一台对外服务的服务器必然会收到扫描，运维要做的是辨别与过滤，而不是拔网线。发问者问「我为什么对负面信号开放」，Ra 的反问——你难道不是一切万有吗——把问题从「防御」挪到了「辨别」。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>恢复生命力：真正管用的清单</h2></div>
+  <p class="sec-lead">发问者带着一段自己的旧经验回到主线：几年前冥想中手臂发光、不自主地快速移动——他真正想问的是，这类经验或练习能不能给器皿「充电」。Ra 先把这条线索剪断，再交出一份朴素得多的清单：能直接滋养生命力的，不是壮观的现象，而是美、音乐、崇拜与自由给予的爱。</p>
+  <div class="card">
+    <h3>手臂发光的经验：高我的类比</h3>
+    <div class="q">几年前冥想中，我的手臂发光、不自主地快速移动——那是什么？</div>
+    <div class="quote">
+      <p class="en">The phenomenon was an analogy made available to you from your higher self. The analogy was that the being that you were was living in a way not understood by, shall we say, physicists, scientists, or doctors.</p>
+      <p class="zh">这个现象是你的高我（higher self，更完整的自己，会以类比、梦与信号向日常自我传递信息）向你提供的一个类比。这个类比是：你所是的那个存有，正以一种不被物理学家、科学家或医生理解的方式生活着。</p>
+      <span class="src">—— Session 044 · (44.12)</span>
+    </div>
+    <div class="plain">那不是待解读的勋章，而是高我递来的一句话：你现在的生活方式，本来就无法用常规框架解释——现象的意义在信息，不在能量。</div>
+  </div>
+  <div class="card">
+    <h3>Ra 先剪断一条线索</h3>
+    <div class="q">所以这类经验能帮我们给器皿恢复活力吗？</div>
+    <div class="quote">
+      <p class="en">Your experience was a function of your ability to contact intelligent infinity. Therefore, it does not have a direct bearing upon this instrument's vital energy.</p>
+      <p class="zh">你的经验是你接触智能无限（intelligent infinity，造物未显化的无限本源）之能力的一个功能。因此，它与这位器皿的生命能量没有直接关系。</p>
+      <span class="src">—— Session 044 · (44.13)</span>
+    </div>
+    <div class="plain">发问者真正想要的是「给器皿充电的办法」；Ra 先把那条壮观的线索剪断：那经验属于另一个层面，帮不上生命力的忙——然后才给出真正管用的清单。</div>
+  </div>
+  <div class="card">
+    <h3>直接管用的清单</h3>
+    <div class="q">那到底做什么，才能增加器皿在集会中的生命力？</div>
+    <div class="quote">
+      <p class="en">We have spoken before of those things which aid this instrument in the vital energy: the sensitivity to beauty, to the singing of sacred music, to the meditation and worship, to the sharing of self with self in freely given love either in social or sexual intercourse. These things work quite directly upon the vitality. This instrument has a distortion towards appreciation of variety of experiences. This, in a less direct way, aids vitality.</p>
+      <p class="zh">我们以前谈过那些有助于这位器皿生命能量的事物：对美的敏感、对神圣音乐的歌唱、冥想与崇拜、在社交或性的亲密中以自由给予的爱分享自我。这些事物相当直接地作用于生命力。这位器皿有一种偏好多样体验的倾向，这以一种较不直接的方式助益生命力。</p>
+      <span class="src">—— Session 044 · (44.13)</span>
+    </div>
+    <div class="plain">直接作用于生命力的是四件朴素的事：美、神圣音乐、冥想与崇拜、自由给予的爱；器皿「喜欢多样体验」的特质则间接加分。注意这份清单没有一条需要「练成什么」，全是可以立刻去做的事。</div>
+    <div class="analogy"><b>像照护者的清单：</b>护士会提醒长期照护病人的家属——你自己的睡眠、散步和一顿正经吃饭不是奢侈品，而是照护能不能持续的条件。Ra 的清单就是这份「照护者清单」。</div>
+  </div>
+  <div class="card">
+    <h3>术语卡：本集的关键词</h3>
+    <p>点击卡片翻看解释。这几个词在本集反复出现，先在这里建立准确的直觉。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">生命力</div><div class="sub">vital energy</div><span class="tap">点击展开</span></div><div class="back">器皿可供集会调用的能量储备，与日常的疲惫不是一回事：它会被「奉献」给特定目的而流失，也能被美、音乐、崇拜与爱直接滋养——所以小组才需要专门评估它。<em>案例：汽车的油量灯——仪表盘上的疲惫指数再低，也未必等于油箱见底。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">意志</div><div class="sub">will</div><span class="tap">点击展开</span></div><div class="back">Ra 称之为最核心、最宝贵的机能；但本集提醒它有一种危险的用法——驱动身体硬撑，这可能在身体复合体中造成严重变貌。意志该用在服务上，而不是替身体透支。</div></div>
+      <div class="fn-card"><div class="front"><div class="cn">性能量转移</div><div class="sub">sexual energy transfer</div><span class="tap">点击展开</span></div><div class="back">在某些集会中为器皿提供额外生命资源的机制；开场时 Ra 说明本次没有，因此器皿只能动用意志与高价换来的内在储备——这解释了为什么这一场格外吃紧。</div></div>
+      <div class="fn-card"><div class="front"><div class="cn">内在储备</div><div class="sub">inner reserves</div><span class="tap">点击展开</span></div><div class="back">付出高昂代价才换来的备用能量，器皿已经动用了它们——这也是 Ra 说「我们的手在一定程度上被绑住」的原因：能量既已付出，就只能把它用到最好。</div></div>
+      <div class="fn-card"><div class="front"><div class="cn">高我</div><div class="sub">higher self</div><span class="tap">点击展开</span></div><div class="back">更完整的自己，会以类比、梦与信号向日常自我传递信息。本集中发问者手臂发光的经验，就被 Ra 归为高我提供的类比——是信息，不是可转移的燃料。<em>比喻：像母校寄来的纪念徽章——有意义，但不能当饭卡刷。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">猎户座影响</div><div class="sub">Orion-influenced</div><span class="tap">点击展开</span></div><div class="back">Ra 用来描述梦与信号之「感受层来源」的说法：器皿今早的梦感受层受猎户座影响，而具体意象出自她自己的无意识象征。外来的影响与自己的材料，在同一个梦里分层共存。<em>案例：收到骚扰短信——短信内容是别人的，点开时的紧张却是自己的。</em></div></div>
+    </div>
+  </div>
+  <div class="case"><b>充电宝接错了接口：</b>手台快没电了，有人递来另一个品牌的专用底座——再精致也对不上。发问者手臂发光的经验很震撼，但 Ra 指出它联系着智能无限、与器皿的生命能量没有直接关系：不是给器皿充电的接口。</div>
+  <div class="case"><b>护士先安顿家属：</b>重症病房外，护士拦住熬红眼的家属：「你先去吃口热饭——你倒下了，病人才真的没人管。」Ra 的清单是同一件事：器皿身边的美、音乐、崇拜与爱，不是点缀，而是这场长期照护能不能持续的供给线。</div>
+  <div class="case"><b>换着路线散步的人：</b>同一条公园步道，有人每天换一条路线、留意今天的云和鸟鸣；也有人刷着手机走完全程。Ra 说器皿偏好多样体验的特质「以较不直接的方式助益生命力」——新鲜感本身就是一种养分。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>生命之树：工具是中立的，极性出自意图</h2></div>
+  <p class="sec-lead">主线的间隙，发问者岔进了一个技术问题：一张魔法实践进阶图（生命之树，Tree of Life，从 Malkuth 到 Kether 的十个位置）能不能跟密度、颜色对上号？左手路径是不是就是服务自我？Ra 连续两次纠正，并留下本集最常被引用的一句：工具只是工具。这段「岔路」其实与主线同构——决定结果的从来不是物件本身，而是使用它的意图。</p>
+  <div class="card">
+    <h3>与密度一一对应？基本不正确</h3>
+    <div class="q">生命之树的位置是否对应颜色或密度——Malkuth 是第一密度、Yesod 第二、Hod 与 Netzach 第三、Tiphareth 第四，以此类推？</div>
+    <div class="quote">
+      <p class="en">This is basically incorrect, although you are upon the correct track of thinking. Each of these stations has a complex number and shading of energy centers as well as some part in various balances; the lower, the middle, the high, and the total balance. Thus there are complex colors, or rays, and complex charges, if you will, in each station.</p>
+      <p class="zh">这基本上是不正确的，虽然你的思路走在正确的轨道上。这些位置的每一个都有复杂的数字与能量中心的色调，并且在多种平衡中各占一部分：较低的、中间的、较高的，以及整体的平衡。因此，每个位置里都有复杂的颜色或光芒，以及复杂的电荷。</p>
+      <span class="src">—— Session 044 · (44.14)</span>
+    </div>
+    <div class="plain">生命之树不是一张「第几层＝第几密度」的密码本：每个位置都混合着多个能量中心的数字与色调，并参与好几种平衡——把它读成对照表，方向对了一半，结构错了全部。</div>
+    <div class="analogy"><b>像和弦与单音：</b>想用七个键一一对应七种情绪的人会发现，同一个和弦在不同曲子里情绪完全不同——键位是关系，不是密码本。</div>
+  </div>
+  <div class="card">
+    <h3>左手路径＝服务自我？工具只是工具</h3>
+    <div class="q">那么图中左手边的路径是否代表服务自我，右手边的路径代表服务他人？</div>
+    <div class="quote">
+      <p class="en">This is incorrect. These stations are relationships. Each path has these relationships offered. The intent of the practitioner in working with these powerful concepts determines the polarity of the working. The tools are the tools.</p>
+      <p class="zh">这是不正确的。这些位置是关系。每条路径都提供这些关系。实践者在运用这些强大概念时的意图，决定了这项工作的极性。工具只是工具。</p>
+      <span class="src">—— Session 044 · (44.15)</span>
+    </div>
+    <div class="plain">位置是关系，每条路径都提供同样的关系；决定极性的是实践者的意图。这也回答了主线上的问题——集会、图表、能量，都是工具，方向由使用者给定。</div>
+  </div>
+  <div class="card">
+    <h3>Ipsissimus：一个限定意义的回答</h3>
+    <div class="q">作为收尾问题：Ipsissimus（对精通者的称谓）能有正面或负面极性，还是必须两者皆非？</div>
+    <div class="quote">
+      <p class="en">We shall respond to the meaning of this term in a specialized sense. The Ipsissimus is one who has mastered the Tree of Life and has used this mastery for negative polarization.</p>
+      <p class="zh">我们将按这个术语在专门意义上的用法回答：Ipsissimus 是这样的人——他已精通了生命之树，并把这种精通用于负面极化。</p>
+      <span class="src">—— Session 044 · (44.16)</span>
+    </div>
+    <div class="plain">注意 Ra 的限定：只在专门意义上作答。在这个用法里，Ipsissimus 特指把生命之树的精通用于负面极化的人——Ra 没有说精通者必须中立，也没有展开其他用法，多问的部分他留白了。</div>
+  </div>
+  <div class="card">
+    <h3>归类练习：这些说法对吗？</h3>
+    <p>把下面每一条，判给「正确」或「不正确」。</p>
+    <div id="treeArea"></div>
+  </div>
+  <div class="case"><b>同一把手术刀：</b>手术刀在外科医生手里缝合生命，落到另一些人手里可能伤人——工具没有立场，用它的意图决定结果。Ra 对「左手路径」的纠正是同一个结构：每条路径都提供同样的关系，极性出自使用者的意图。</div>
+  <div class="case"><b>公司报销制度的一体两面：</b>同一套报销制度，有人用来规范支出、让团队更透明，也有人拿来钻空子、把制度变成提款机。制度（工具）只是工具；它服务于人还是被人所用，取决于拿着它的人想做什么——这正是「工具只是工具」在现代组织的版本。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s7">
+  <div class="sec-head"><span class="num">07</span><h2>收官：没有错误</h2></div>
+  <p class="sec-lead">发问者在收尾时为「今天有点跑偏」道歉——他说自己只是偶尔探一探方向，看看有没有可走的路。Ra 的回应没有安慰的客套，只有一句把整场轻轻放下的话。这场低能量的短集就此收束：机制讲清了，判断权交出去了，自责也被接住了。</p>
+  <div class="saying">
+    <p class="en">There are no mistakes. Be at rest, my friend. Each of you is most conscientious. All is well.</p>
+    <p class="zh">没有错误。安心吧，我的朋友。你们每一位都非常尽责。一切都好。</p>
+    <span class="src">—— Session 044 · (44.17)</span>
+  </div>
+  <div class="card">
+    <h3>把自责换成机制</h3>
+    <div class="q">发问者道歉说今天偏离了轨道，并自认最重要的收获是学会了如何调节集会——Ra 会怎么看这场「不完美」的集会？</div>
+    <div class="quote">
+      <p class="en">I leave you in the love and the light of the One Infinite Creator. Go forth, therefore, rejoicing in the power and in the peace of the One Infinite Creator. I am Ra. Adonai.</p>
+      <p class="zh">我在太一无限造物主的爱与光中离开你们。因此，欢喜地前行吧，在太一无限造物主的大能与平安中。我是 Ra。Adonai。</p>
+      <span class="src">—— Session 044 · (44.17)</span>
+    </div>
+    <div class="plain">本集的「岔路」并不浪费：生命之树的问答划清了工具与意图的界线，与「谁来决定集会节奏」是同一个道理的两面。带去下一集的，不是哪个新术语，而是一套新的节奏安排——小组做唯一判断者，器皿从「何时集会」的决定中松开。</div>
+    <div class="analogy"><b>像项目复盘的最后一句：</b>延期之后每个人都在自责，负责人收尾只说：「流程上没有错误，大家都尽责了，下周照新节奏来。」把焦点从自责挪到机制上，团队才走得远。</div>
+  </div>
+  <div class="case"><b>跑题跑出来的收获：</b>产品评审会上，大家从需求细节扯到了架构问题，主持人正要道歉，架构师说「这一段最值钱」。发问者为「跑偏」道歉时，Ra 的回应是：没有错误——探索本身不是失误，本场最常被引用的话恰恰出自这段岔路。</div>
+  <div class="case"><b>散会前的那句定心丸：</b>艰难的一周结束，例会上人人都在检讨，最后负责人只说了一句：大家都尽责了，按新节奏来。Ra 的「没有错误，一切安好」落在一场低能量集会的末尾，起的是同一个作用——先安顿人，再谈改进。</div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+<p>基于 The Ra Contact Session 044（split/Ra_Session_044.md）英文原文制作 · 交互式学习模块</p>
+<p>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文</p>
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra044-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+  {t:'(44.0) 开场',d:'<b>致意开场。</b>Ra 在太一无限造物主的爱与光中致意，宣布通讯开始。这是一场短集，主题很快聚焦在一件事上：器皿的生命力还够不够。'},
+  {t:'(44.1) 生命力评估',d:'<span class="qa-q">问：器皿对她的生命力有疑问，我们也一直难以评估，你能评论吗？</span><b>答：</b>Ra 获许扫描评估——器皿选择了「最谨慎的评估」而非「最渴望的」。本次没有性能量转移的额外资源，是意志在驱动身体复合体；殉道未必有益，应把评判释放给支持小组。'},
+  {t:'(44.2) 终止的两难',d:'<span class="qa-q">问：请在必要时尽快终止接触，因为我们不清楚器皿的能量状况。</span><b>答：</b>Ra 说自己的手在某种程度上被绑住了：器皿已动用高价换来的内在储备，Ra 有荣幸/责任把能量用到最好，低了会明说；唯一避免不计代价之服务的方式是不举行工作——这是一个两难。'},
+  {t:'(44.3–44.6) 信号',d:'<span class="qa-q">问：开场时左耳的音调是什么？正面信号怎么听？我为什么对负面信号开放？</span><b>答：</b>左耳音调是负面导向信号；正面信号有两种——右耳的音调（无言的「聆听。留心。」）与头顶上方的音调（对想法的平衡确认）。此外还能接收思想形态、词语形态与幻象，但似乎能辨别；至于为何对负面开放，Ra 反问：你难道不是一切万有吗？'},
+  {t:'(44.7–44.9) 奉献的能量',d:'<span class="qa-q">问：先终止接触，让器皿补足能量再继续，好吗？</span><b>答：</b>能量已经流失——它被专门奉献给了这个目的，即使集会不举行也回不到日常。因此要把意志从决定集会时间中释放；发问者提议继续本场并由小组做唯一判断者，Ra 称「极为正确」，并指出器皿坚持接触已延长了低能量期。'},
+  {t:'(44.10–44.11) 化解与梦',d:'<span class="qa-q">问：怎样消除我们不想要的负面影响？器皿今早的梦来源是什么？</span><b>答：</b>与共同工作的人们以信任分享，并为发送者做爱的冥想——对发送者慈悲、对自我如铠甲；用理智或意志贬低体验反而延长影响。那个梦的感受层受猎户座影响，具体意象出自器皿自己的无意识象征联想。'},
+  {t:'(44.12–44.13) 恢复生命力',d:'<span class="qa-q">问：做什么能增加器皿的生命力？（发问者先讲了自己手臂发光的旧经验。）</span><b>答：</b>那经验来自高我、属于接触智能无限的能力，与生命力没有直接关系；直接管用的是对美的敏感、神圣音乐的歌唱、冥想与崇拜、以自由给予的爱分享自我，偏好多样体验则间接助益。'},
+  {t:'(44.14–44.17) 岔路与收官',d:'<span class="qa-q">问：生命之树的位置对应密度吗？左手路径是服务自我吗？</span><b>答：</b>基本不正确——位置是关系，混合着多种光芒与平衡；极性由实践者的意图决定，工具只是工具。Ipsissimus 在专门意义上指把这种精通用于负面极化的人。发问者为跑题道歉，Ra 回应：没有错误，一切安好。'}
+]);
+
+initSorter('signalArea',[
+  {a:'通讯开始时，左耳听到的一声音调',opts:['负面信号','正面信号','两者皆不是'],ans:'负面信号',exp:'(44.3)：Ra 直接确认——这是一个负面导向的信号。'},
+  {a:'右耳位置出现的音调',opts:['负面信号','正面信号','两者皆不是'],ans:'正面信号',exp:'(44.4)：右耳的音调表示你正被给予某种无言的信息——「聆听。留心。」'},
+  {a:'头顶上方响起的音调',opts:['负面信号','正面信号','两者皆不是'],ans:'正面信号',exp:'(44.4)：头顶上方的音调是对某个想法的平衡确认。'},
+  {a:'把一段不愉快的体验当作「错觉」，用理智把它打发掉',opts:['负面信号','正面信号','两者皆不是'],ans:'两者皆不是',exp:'(44.10)：这不是信号分类问题——用理智或意志的纪律贬低体验，反而会延长负面影响；Ra 建议以信任分享、以爱冥想。'}
+]);
+
+initSorter('treeArea',[
+  {a:'生命之树的位置与密度一一对应：Malkuth 是第一密度、Yesod 是第二……',opts:['正确','不正确'],ans:'不正确',exp:'(44.14)：Ra 说这基本不正确——每个位置都混合着复杂的能量中心数字与色调，并参与多种平衡。'},
+  {a:'每个位置都有复杂的光芒与电荷，参与较低、中间、较高与整体几种平衡',opts:['正确','不正确'],ans:'正确',exp:'(44.14)：这正是 Ra 对这些位置（stations）的描述。'},
+  {a:'左手路径代表服务自我，右手路径代表服务他人',opts:['正确','不正确'],ans:'不正确',exp:'(44.15)：位置是关系，每条路径都提供这些关系；决定极性的是实践者的意图——工具只是工具。'},
+  {a:'运用这些强大概念修行时，工作的极性由实践者的意图决定',opts:['正确','不正确'],ans:'正确',exp:'(44.15)：这正是 Ra 的原话——意图决定极性，工具只是工具。'},
+  {a:'Ipsissimus 必须既非正面也非负面，保持中立',opts:['正确','不正确'],ans:'不正确',exp:'(44.16)：在专门意义上，Ipsissimus 指已精通生命之树、并将这种精通用于负面极化的人；Ra 并未说他必须中立。'}
+]);
+
+document.querySelectorAll('.fn-card').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('open')));
+
+/* 条件模拟器：长期接触还撑得下去吗 */
+function updateSustain(){
+  const m1=document.getElementById('m1').checked;
+  const m2=document.getElementById('m2').checked;
+  const m3=document.getElementById('m3').checked;
+  const box=document.getElementById('condResult');
+  let cls='',msg='';
+  if(!m1&&!m2&&!m3){
+    cls='fail';
+    msg='<b>这正是开场时的局面：</b>器皿用意志驱动身体复合体，评判握在自己手里，帮助也进不来。Ra 的提醒是——殉道未必有益；意志这样用，可能在身体复合体中造成严重的变貌。';
+  }else if(m1&&m2&&m3){
+    msg='<b>三条都齐了：</b>能量依然会在奉献给通讯时消耗——这不是能省下的成本；但器皿不必再用意志硬撑，集会的节奏由小组谨慎判断，帮助也被允许进来。Ra 对长期接触的希望，正系于这种「通过接受帮助来服务其他自我」的成熟。';
+  }else if(!m1){
+    cls='fail';
+    msg='<b>缺了「松开意志」这一条：</b>只要器皿还渴望由自己决定接触，能量就会被聚拢并奉献出去——即使集会不举行，它也回不到日常生活里。把意志从「何时集会」上松开，是整件事的第一步。';
+  }else if(!m3){
+    cls='fail';
+    msg='<b>缺了「接受帮助」这一条：</b>Ra 把长期接触的希望，系于器皿「通过接受其他自我的帮助来服务他们」的成熟能力；把评判交还给利益更平衡的支持小组，不是失职，而是让器皿保持可用的方式。';
+  }else{
+    cls='fail';
+    msg='<b>缺了「小组做唯一判断者」这一条：</b>器皿的能量水平连她自己和发问者都难以评估——如果没有外在的谨慎监测，「要不要继续」就又会落回意志硬撑的老路。发问者的这个提议，Ra 的评价是「极为正确」。';
+  }
+  box.className=cls;
+  box.innerHTML=msg;
+}
+['m1','m2','m3'].forEach(id=>document.getElementById(id).addEventListener('change',updateSustain));
+updateSustain();
+
+renderPath();
+</script>
+</body>
+</html>

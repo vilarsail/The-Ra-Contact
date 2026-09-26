@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 096 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 096 · 交互式学习模块</h1>
+  <p class="sub">这一集处理一场魔法攻击的余波：Ra 复盘那个「开口」如何因未完成的蓝光工作而打开、又如何被沟通关上；随后给出清洁与祝福的真正要求，示范「答与不答」的界限，最后把塔罗还原工程推进到大金字塔的谜题前。</p>
+  <div class="tagline">6 个主题 · 6 个学习步骤 · 24 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 攻击的来龙去脉</a>
+<a href="#s3">③ 清洁与祝福</a>
+<a href="#s4">④ 信使与沉默</a>
+<a href="#s5">⑤ 塔罗还原工程</a>
+<a href="#s6">⑥ 收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>一次攻击的余波与一场塔罗还原，两条线怎么并行——先走一遍问答脉络</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>复盘那次攻击</b><span>「开口」是怎么打开的，又怎么被几句话关上</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>弄清清洁与祝福</b><span>擦到什么程度算数？水为什么不必把盐全打湿？拨一拨条件模拟器</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>分辨答与不答</b><span>鹰是信使，但机制必须沉默——混淆法则的界限在哪里</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>走一遍塔罗还原</b><span>逐牌删改：字母、星星、魔杖、王冠——哪些能删，哪些删不掉</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官：谜题与照料</b><span>大金字塔的谜留给它自己的时间；器皿的休养叮嘱</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ 第 1 章 · 本章地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：一次攻击的余波，一场还原工程</h2></div>
+  <p class="sec-lead">时间：1982 年 9 月 9 日。这一集承接上集末尾的事件——那位长期陪伴团体的第五密度负面同伴，借着团体即将入住的新住所发动了一次魔法攻击；本集开场先汇报器皿的能量状态，再完整复盘攻击的成因与解除。余波处理完后，对话转入两条实务线：房子的清洁与祝福，以及塔罗牌的逐张还原。最后 Ra 留下一个不解的谜题（安卡十字的尺寸），把它指向大金字塔。</p>
+
+  <div class="card">
+    <h3>本集议题一览</h3>
+    <p>全集团绕四个议题推进：<b>① 攻击复盘</b>——开口如何打开、如何关闭（96.2-96.3）；<b>② 房子的处置</b>——清洁要求、步骤顺序、祝福之水（96.4-96.5, 96.14）；<b>③ 信使与沉默</b>——鹰的确认与混淆法则的界限（96.11-96.13）；<b>④ 塔罗还原</b>——逐牌裁决删与留，收在大金字塔的谜题前（96.15-96.21）。开场与收尾各有一段器皿状态与休养叮嘱。</p>
+    <div class="quote">
+      <p class="en">I greet you in the love and in the light of the One Infinite Creator.</p>
+      <p class="zh">我在太一无限造物主的爱与光中向你们问候——每一场集会，Ra 都以同一句话开场。</p>
+      <span class="src">—— Session 096 · (96.0)</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>问答脉络推进器</h3>
+    <p>点节点或用按钮走一遍本集的问答链，看对话如何展开。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="mapTrack"></div>
+      <div class="flow-detail" id="mapDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="mapPrev">← 上一步</button>
+        <button class="tri-btn" id="mapNext">下一步 →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>本集的两条主线，像两个并行的抽屉</h3>
+    <div class="case"><b>教练的复盘课：</b>健身房里，学员上周崴了脚，教练这节课的第一件事不是排新课表，而是先问恢复情况、再一起复盘当时怎么伤的——本集正是这个顺序：先报器皿状态（96.1），再复盘攻击成因（96.2）。先处理伤口，再继续训练。</div>
+    <div class="case"><b>搬家那两周：</b>一个搬进老房子的家庭，同一时段在做两件事：白天处理「屋里总觉得不对劲」——擦洗、撒盐、把彼此的担心说开；晚上整理一批祖传旧画——逐张揭裱，去掉后人加的补笔。这两件事毫不相干，却对应本集的两大主题：净化居所与还原塔罗。</div>
+  </div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 后勤</span></summary>
+  <div class="body">
+    <p><b>(96.1) 器皿状态：</b>物理能量赤字比上次询问显著增大，生命能量也实质减少；但维持正常心智/情绪状态所需的能量程度仍然可用。</p>
+    <p><b>(96.6-96.8) 录音机异响：</b>不是负面实体的问候，也不只是随机故障——两个原因：器皿对电磁电子设备影响强烈（建议换人操作），加上磁带卡住播放键的物理干扰。</p>
+    <p><b>(96.9-96.10) Ra 怎么查知小事：</b>发问者猜的「在时间/空间中移动并检查问题」是对的；后半句补充 Ra 直说无法理解。</p>
+    <p><b>(96.22) 器皿休养：</b>少说话一至两天、避免跑步等引起急促呼吸的活动；短期小心，以免小症状滚成长期后遗症；「一切安好，排列令人满意」。</p>
+  </div></details>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 2 章 · 攻击的来龙去脉 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>攻击的来龙去脉：那个「开口」是怎么打开的</h2></div>
+  <p class="sec-lead">发问者先问能量为什么减少，Ra 给出的不是一段灵异故事，而是一份机制分析：一个惯于「把催化剂当服务来处理」的实体，如何在反常情境下没做完该做的沟通，留下一道缺口。这一章的要点不在敌人多强，而在「开口」是自己一侧打开的。</p>
+
+  <div class="card">
+    <h3>成因：服务意愿与本能反应的分裂</h3>
+    <div class="q">发问者问：物理与生命能量的减少，原因是什么？他已在怀疑和那所房子有关，想知道过程里究竟是哪一环出了问题。</div>
+    <div class="quote">
+      <p class="en">The instrument perceived those elementals and beings of astral character of which we have spoken. The instrument desired to be of service by achieving the domicile in question but found its instincts reacting to the unwelcome presences.</p>
+      <p class="zh">器皿感知到先前谈过的那些元素精灵与星光性质的存有；她想以拿下这处住所来服务，本能却对不受欢迎的临在起了反应——想往前走和想后退，同时存在。</p>
+      <span class="src">—— Session 096 · (96.2)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The division of mind configuration was increased by the continuing catalyst of lack of control.</p>
+      <p class="zh">「失控」这个持续的催化剂，把心智配置的分裂越拉越大——房子一天定不下来，裂口就一天天加宽。</p>
+      <span class="src">—— Session 096 · (96.2)</span>
+    </div>
+    <div class="plain">敌人没有撬门——缺口是「该做的沟通没做完」留下的；后面几段全是这一个机制的展开。</div>
+  </div>
+
+  <div class="card">
+    <h3>链条推演：从反常到侵入，再到关闭</h3>
+    <p>Ra 的复盘可以拆成一条七步链。注意第 4 步是唯一的转捩点：它之前全是可挽回的日常，它之后才有魔法攻击。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="atkTrack"></div>
+      <div class="flow-detail" id="atkDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="atkPrev">← 上一步</button>
+        <button class="tri-btn" id="atkNext">下一步 →</button>
+      </div>
+    </div>
+    <div class="quote">
+      <p class="en">Although this entity attempted clear communication upon this matter, and although each in the support group did likewise, the amount of blue-ray work necessary to uncover and grasp the nature of the catalyst was not effected.</p>
+      <p class="zh">器皿和支持组都试着就这件事把话说清楚，但「揭开并把握催化剂本质」所需的蓝光（沟通与表达）工作，终究没有做够。</p>
+      <span class="src">—— Session 096 · (96.2)</span>
+    </div>
+    <div class="case"><b>没说出口的那句不满：</b>小周对项目分配不满，会上全程没吭声，只回工位生闷气；憋到第三天，在一件无关小事上爆发。他跳过的正是那道「蓝光工作」——把催化剂原原本本说出来。表达没发生，开口就一直在。</div>
+    <div class="case"><b>定不下来的房子：</b>一家人看中一处二手住宅，因为邻里原因迟迟签不下合同，装修队进不去，家人天天在群里吵「到底搬不搬」。这种持续「缺乏控制」的感受，正是 Ra 指认的那个把心智分裂越拉越大的催化剂（96.2）。</div>
+  </div>
+
+  <div class="card">
+    <h3>临界点与解除：恐惧与意志的赛跑</h3>
+    <div class="quote">
+      <p class="en">Therefore, there was an opening quite rare for this mind/body/spirit complex, and into this opening the one which greets you moved and performed what may be considered to be the most potent of its purely magical manifestations to this present nexus, as you know time.</p>
+      <p class="zh">于是出现了一个对这位心/身/灵复合体而言相当罕见的开口——「向你们致意的那位」钻了进去，实施了它迄今最强的纯粹魔法显化。</p>
+      <span class="src">—— Session 096 · (96.2)</span>
+    </div>
+    <div class="quote">
+      <p class="en">It is well that this instrument is not distorted towards what you may call hysteria, for the potential of this working was such that had the instrument allowed fear to become greater than the will to persevere when it could not breathe…</p>
+      <p class="zh">幸好器皿没有滑向「歇斯底里」：只要她在无法呼吸的时刻让恐惧压过坚持的意志——（原文此处展开：每次呼吸都会更加困难，直至那实体所期望的窒息发生）。</p>
+      <span class="src">—— Session 096 · (96.2)</span>
+    </div>
+    <div class="plain">这次工作的杀伤路径是「恐惧 > 意志」；器皿没让它成立，所以攻击没能达成其目的。</div>
+    <div class="case"><b>深夜刷到的坏消息：</b>深夜刷到一条吓人的消息，越想越心慌、睡不着；第二天一早打电话给朋友，把事情原原本本讲了一遍，恐惧立刻缩了一圈。把话说出来，就是关闭开口的那个动作——对应 96.3：记录者与发问者的沟通关闭了开口。</div>
+    <div class="quote">
+      <p class="en">This threat no longer exists, if you wish to phrase this greeting in this manner. The communication which was effected by the scribe and then by the questioner did close the opening and enable the instrument to begin assimilating the catalyst it had received.</p>
+      <p class="zh">威胁已不存在——记录者、随后是发问者与器皿的那几次沟通，关上了开口，让她得以开始消化收到的催化剂。</p>
+      <span class="src">—— Session 096 · (96.3)</span>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 3 章 · 清洁与祝福 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>清洁与祝福：物理动作背后的意向</h2></div>
+  <p class="sec-lead">威胁解除后，发问者转回实务：房子还能不能要？要擦到多干净？步骤有讲究吗？水怎么洒？Ra 的回答有一个共同的底层原则——物理层面的动作只要求「意图纯净、尽力而为」，真正的工作发生在你怎么「看待」这些物质。</p>
+
+  <div class="card">
+    <h3>房子要不要：偏好是唯一的考量</h3>
+    <div class="q">器皿托发问者转问：那所房子能不能靠粉刷和清洁「转化」过来？旧地毯不换新的行不行？她特意说明：地点本身不重要，条件不行就换一处。</div>
+    <div class="quote">
+      <p class="en">It is, of course, the preference of this group which is the only consideration in the situation for contact with Ra.</p>
+      <p class="zh">在与 Ra 接触这件事上，唯一的考量就是这个团体自己的偏好——房子本身没有资格成为决定因素。</p>
+      <span class="src">—— Session 096 · (96.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The domicile in question has already been offered a small amount of blessing by this group through its presence, and, as we have previously stated, each of your days spent in love, harmony, and thanksgiving will continue transforming the dwelling.</p>
+      <p class="zh">这处住所已经因为你们的临在而得到一点祝福；而你们在爱、和谐与感恩中度过的每一天，都会继续转化它。</p>
+      <span class="src">—— Session 096 · (96.4)</span>
+    </div>
+    <div class="plain">转化房子的不是油漆和盐，而是住进去的人每天的状态——清洁只是配得上这份状态的动作。</div>
+    <div class="case"><b>二手房入住标准：</b>小李搬进二手公寓，起初执念「全屋翻新才能住」，后来改成「擦净、通风、换床品就入住」。他无师自通地靠近了 Ra 的标准：被要求的是「尽物理可能去清洁」的意图，不是一尘不染的结果。</div>
+    <div class="case"><b>家人合力收拾老屋：</b>一家人决定留下祖屋，周末全家大扫除，边干活边说笑；几周下来，原本阴沉的老屋「感觉不一样了」。对应 Ra 说的：每一天在爱与和谐与感恩中度过，居所就持续被转化（96.4）。</div>
+  </div>
+
+  <div class="card">
+    <h3>清洁到什么程度算数：意图达标即可</h3>
+    <div class="q">那么清洁的「及格线」在哪？灰尘是物理擦不光的，这算不算没完成任务？</div>
+    <div class="quote">
+      <p class="en">If the intention is to clean, as much as is physically possible, the location, the requirements for physical cleanliness are fulfilled. It is only when a lower astral entity has, shall we say, placed portions of itself in the so-called dirt that care should be taken to remove the sentient being.</p>
+      <p class="zh">只要意图是「尽物理可能去清洁」，物理清洁的要求就已经满足；唯一要当心的例外，是较低星光界实体把自身的一部分寄进了污垢——那才需要把「有知觉的住客」清走。</p>
+      <span class="src">—— Session 096 · (96.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">May we note that just as each entity strives in each moment to become more nearly one with the Creator but falls short, just so is physical spotlessness striven for but not achieved.</p>
+      <p class="zh">正如每个实体时刻努力更接近造物主却总达不到，物理上的一尘不染也是被追求而不可得的东西。</p>
+      <span class="src">—— Session 096 · (96.4)</span>
+    </div>
+    <div class="plain">及格线不在「擦得多干净」，而在「是否真心尽力擦」；差距本身不被计较。拨一拨下面的模拟器，看这条规则怎么运作。</div>
+    <div class="card" style="border-style:dashed">
+      <h3>条件模拟器：这次清洁达标了吗</h3>
+      <div id="condSim">
+        <div class="cond-row"><div class="name">意图纯净，尽物理可能去清洁<small>clean, as much as is physically possible（96.4）</small></div><label class="switch"><input type="checkbox" id="swIntent" checked><span class="slider"></span></label></div>
+        <div class="cond-row"><div class="name">清走污垢里寄居的星光存有<small>a lower astral entity … in the so-called dirt（96.4）</small></div><label class="switch"><input type="checkbox" id="swAstral" checked><span class="slider"></span></label></div>
+        <div class="cond-row"><div class="name">做到一尘不染<small>physical spotlessness — 被追求而不可得</small></div><label class="switch"><input type="checkbox" id="swSpot"><span class="slider"></span></label></div>
+        <div id="condResult"></div>
+      </div>
+    </div>
+    <div class="case"><b>手术室的「无菌」：</b>外科手术从不承诺零细菌——团队把「尽可能消毒」做到位就开台。绝对无菌做不到，而「尝试与目标之间的差距」从不被记为失败。这正是 96.4 末段的逻辑在医学里的样子。</div>
+  </div>
+
+  <div class="card">
+    <h3>步骤顺序与那条硬规定</h3>
+    <div class="q">粉刷、清洁、搬家具、撒盐加大蒜——先后顺序重要吗？发问者特意问，说明他预感这里藏着讲究。</div>
+    <div class="quote">
+      <p class="en">Any sequence which results in the cleansings is acceptable. It is to be noted that the thresholds are not to be crossed during the cleansing.</p>
+      <p class="zh">顺序无所谓，只要清洁真正发生；唯一的规定是：清洁期间不得跨越门槛。</p>
+      <span class="src">—— Session 096 · (96.5)</span>
+    </div>
+    <div class="case"><b>手术中的那扇门：</b>手术进行中，手术室的大门谁也不能随意推开——不是因为门有魔法，而是特定阶段守住边界属于规程。清洁期间「不跨门槛」是同类规定：过程开始后，入口保持关闭（96.5）。</div>
+    <div class="case"><b>搬家公司的清单：</b>搬家公司不在乎你先装箱还是先拆床——只在乎「东西都安全到位」这一个结果。Ra 对步骤顺序的态度相同：任何能产生清洁结果的顺序都行（96.5）。</div>
+  </div>
+
+  <div class="card">
+    <h3>祝福之水：意图才是活性成分</h3>
+    <div class="q">洒在盐线上的水怎么祝福？要不要把盐全部打湿？发问者自称「这很琐碎，但我想把它做对」。</div>
+    <div class="quote">
+      <p class="en">The intention of blessing is the notable feature of blessed water.</p>
+      <p class="zh">圣水的显著特征是「祝福的意图」——活性成分不是水，是那份心意。</p>
+      <span class="src">—— Session 096 · (96.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This is not a physical working. The substances need to be seen in their ideal state, so that water may be seen to be enabling the salt.</p>
+      <p class="zh">这不是一项物理工作：要在理想状态中看待这些物质——水被看作在「赋能」于盐。</p>
+      <span class="src">—— Session 096 · (96.14)</span>
+    </div>
+    <div class="plain">水不必浸透全部盐粒，润湿相当一部分即可；起作用的是你把水看作什么，而不是水量。</div>
+    <div class="case"><b>祭司的洒水：</b>寺庙仪式里，祭司用指尖蘸水洒下，滴水不多、念念有词；懂行的人从不在意水量，在意的是那份祝圣的心意。「意图是圣水的显著特征」说的就是这个（96.14）。</div>
+    <div class="case"><b>签名前的深呼吸：</b>有人在签重要文件前深呼吸一下、在纸边轻轻按一下手——动作本身不改变文件，但它把「我认真对待这件事」的状态注入了后续行为。祝福之水同理：物理动作是载体，意图是内容。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 4 章 · 信使与沉默 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>信使与沉默：哪些问题 Ra 答，哪些必须沉默</h2></div>
+  <p class="sec-lead">一只鹰落在厨房窗外，引出本集最精致的一段问答：Ra 可以确认「是的，那有意义」，却拒绝解释「消息是怎么传的」。这不是回避——96.13 给出了完整的规则宣告：确认已知可以，解谜不行。自由意志是 Ra 的红线。</p>
+
+  <div class="card">
+    <h3>鹰的确认：答案常常已在你们心里</h3>
+    <div class="q">那天有一只鹰落在厨房窗外、飞得异常地近。发问者把它和塔罗中「鸟是信使」的概念对上，先确认它的意义，然后追问机制。</div>
+    <div class="quote">
+      <p class="en">This is correct. We may note that we find it interesting that queries offered to us are often already known. We assume that our confirmation is appreciated.</p>
+      <p class="zh">是的，鹰确有意义。Ra 顺带点破：送来的问题常常是你们已经知道答案的——我们猜想，你们要的其实是这份确认。</p>
+      <span class="src">—— Session 096 · (96.11)</span>
+    </div>
+    <div class="plain">Ra 的确认不是给信息，是给「你读对了」的回执——这个区别决定了下一个问题为什么被拒。</div>
+  </div>
+
+  <div class="card">
+    <h3>两次拒绝：混淆法则的完整宣告</h3>
+    <div class="q">追问一：这类信使消息的机制是什么？——Ra 只答「No」。追问二：这和第三号牌（心智的催化剂）描绘的通信是同一类吗？——Ra 引用混淆法则。</div>
+    <div class="quote">
+      <p class="en">We may not comment due to the Law of Confusion. There is an acceptable degree of confirmation of items known, but when the recognized subjective sigil is waived and the message not clear, then it is that we must remain silent.</p>
+      <p class="zh">由于混淆法则，我们不能评论：对已知事项给一定程度的确认可以；但公认的主观印记（subjective sigil，可辨识的个人记号）一旦被放弃、消息又不清晰时，我们就必须沉默。</p>
+      <span class="src">—— Session 096 · (96.13)</span>
+    </div>
+    <p><b>术语看板：</b>主观印记（subjective sigil）——消息可被个人认出的记号或凭据；当这个凭据失效、消息含义不明时，替你解读等于替你解谜，混淆法则（Law of Confusion，保护自由意志的法则）便要求 Ra 闭嘴。</p>
+    <div class="case"><b>「眼光不错」与「评委是谁」：</b>朋友自己猜到了升职，你笑着点头「眼光不错」，没问题；他若追问「评委是谁、怎么投的票」，你就得闭嘴。确认已知与守护机制，是两回事——这正是 96.11 与 96.12 的分野。</div>
+    <div class="case"><b>魔术师与鸽子：</b>魔术师可以承认「你看到的鸽子是真的」，但绝不解释鸽子从哪里来——一旦揭秘，魔术就死了。Ra 拒绝解释信使机制，理由同构：说出机制会剥夺你自己解谜的过程。</div>
+    <div class="case"><b>被剧透的灯谜：</b>灯谜晚会上，有人凑到你耳边直接念出谜底——这个灯谜对你就废了。混淆法则护的不是「秘密」，而是「自己解开」这个过程本身。</div>
+    <div class="card" style="border-style:dashed">
+      <h3>归类练习：这一问，Ra 会答还是会沉默？</h3>
+      <p>下面五问都来自本集。判断 Ra 是给出回答，还是必须沉默——点按钮看解释。</p>
+      <div id="sorterArea"></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 5 章 · 塔罗还原工程 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>塔罗还原工程：删什么、留什么、删不掉什么</h2></div>
+  <p class="sec-lead">发问者计划重绘塔罗牌，去掉 Ra 最初给出之后别人添加的东西。他逐牌报出删改清单，Ra 用「第一至第六」逐条裁决。这一章最有分量的不是删了什么，而是那句边界宣言：不存在「纯粹牌组」——还原的目标是更好读的图，不是无变貌的图。</p>
+
+  <div class="card">
+    <h3>六条裁决：一场逐项过堂</h3>
+    <div class="q">发问者报出清单：删掉牌缘的字母（编号可留）、右上角的星星、魔法师手中的魔杖；球体保留——但该放在哪？</div>
+    <p>Ra 的裁决按序落锤：<b>其一</b>，删字母可以；<b>其二</b>，星星在所有情况下可删；<b>其三</b>，移除魔杖是合适的；<b>其四</b>，球体由拇指、食指与中指握持。真正的分量在后两条——</p>
+    <div class="quote">
+      <p class="en">Fifthly, we would note that it is not possible to offer what you may call a pure deck, if you would use this term, of tarot due to the fact that when these images were first drawn there was already distortion in various and sundry ways, mostly cultural.</p>
+      <p class="zh">第五条：不存在的「纯粹牌组」——这些图像最初被画下时，变貌就已经在了，主要是文化性的。</p>
+      <span class="src">—— Session 096 · (96.15)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Sixthly, although it is good to view the images without the astrological additions (it is to be noted that the more general positions, phases, and characteristics of each concept complex are those which are significant), the removal of all distortion is unlikely and, to a great extent, unimportant.</p>
+      <p class="zh">第六条：抛开占星附加物看图是好的——重要的是每个概念复合体更一般的位置、阶段与特征；而把所有变貌删光，既不可能，也在很大程度上不重要。</p>
+      <span class="src">—— Session 096 · (96.15)</span>
+    </div>
+    <div class="plain">删改的判据是「是否服务于概念复合体（每张牌要传达的观念整体）」，而不是「是否够古老、够干净」。</div>
+    <div class="case"><b>修复古画：</b>修复师揭掉后人补的艳色与错位笔触，但底色里的岁月痕迹原样保留——目标不是「回到没画过之前」（不可能），而是让画面本身的构图与阶段重新可读。这就是第六条裁决的日常版本。</div>
+    <div class="case"><b>重构祖传代码：</b>团队接手老系统：删掉无用的调试输出和过期注释，但核心架构说明一字不动。删与留的判据只有一条——是否服务于这个系统要传达的东西，即「概念复合体」。</div>
+  </div>
+
+  <div class="card">
+    <h3>第二号牌：补全与交还学生的王冠</h3>
+    <div class="q">第二号牌女性身前那个「看着有点像安卡十字」的图形，该不该换成真正的安卡十字？（第一次提问表述不完整，Ra 请他重问；重问后得到确认：是的，应补全。）她头上那件饰物又该怎么画？</div>
+    <div class="quote">
+      <p class="en">Therefore, we suggest, O student, that you choose whether to remove the crown or to name its meaning in such a way as to enhance the concept complex.</p>
+      <p class="zh">所以，哦学生，你来选：要么摘掉王冠，要么给它命名一个含义，让它反过来增进概念复合体。</p>
+      <span class="src">—— Session 096 · (96.18)</span>
+    </div>
+    <div class="plain">王冠虽是占星附加物，Ra 却不代决——「以某种感觉来看并非完全不可接受」：去留变成了一次留给学生的练习。</div>
+    <div class="case"><b>书法老师的那一笔：</b>学生临帖时问：这个字的装饰性笔锋到底怎么写才标准？老师答：要么去掉它，要么讲出一个保留它的道理——选择权在你。Ra 处理王冠的方式，正是把绘制权连同判断权一起交还（96.18）。</div>
+  </div>
+
+  <div class="card">
+    <h3>第三、四号牌：杯子可删，权杖两可</h3>
+    <div class="q">第三号牌：太阳光线外圈的小杯子一并删掉，对吗？——Ra 答是的。第四号牌似乎又碰到老问题：魔杖要不要拿掉、球体要不要放进手里？</div>
+    <div class="quote">
+      <p class="en">Again, this is a matter of choice. Though astrological in nature, this particular scepter has possibilities of relevancy in the originally intended concept complex.</p>
+      <p class="zh">这又是一个选择问题：这根权杖虽然本质上是占星的，却有可能与原初意图的概念复合体相关。</p>
+      <span class="src">—— Session 096 · (96.21)</span>
+    </div>
+    <div class="case"><b>老宅里那面雕花墙：</b>装修老宅时，工人问一面后加的雕花墙拆不拆——它不是原设计，但雕工与房子的气质相合。主人选择留用并说明它的来历。「本质是后加的，却可能与原初概念相关」——正是第四号牌权杖的处境。</div>
+    <div class="case"><b>教科书再版：</b>编辑再版一本旧教材：去掉过时的页边注（字母与星星），换掉误导性的插图，但保留原作者写在页眉的关键框架——因为那是全书概念的骨架，即「更一般的位置、阶段与特征」。</div>
+    <h3 style="margin-top:18px">本集塔罗术语卡（点卡片翻面）</h3>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">安卡十字</div><div class="sub">crux ansata</div><div class="tap">点看背面</div></div><div class="back">生命的符号。第二号牌女性身前那处图形应补全为此记号；Ra 只说其一般含义先前已陈述，精确尺寸不在此处给出。<em>一把人人认得的锁——开锁的钥匙被藏进了一座金字塔。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">概念复合体</div><div class="sub">concept complex</div><div class="tap">点看背面</div></div><div class="back">每张牌要传达的观念整体。删改细节的判据：是否服务于它；真正重要的是它「更一般的位置、阶段与特征」。<em>一张思维导图——边框装饰可删，主干节点不能动。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">占星附加物</div><div class="sub">astrological addition</div><div class="tap">点看背面</div></div><div class="back">后人加在牌面上的占星元素（星星、王冠、权杖等）。移除「可接受」；个别与原初概念复合体有相关可能者，可留用并命名其含义。<em>老照片上别人补画的口红——擦掉没关系，但有的补笔恰好点题。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">纯粹牌组</div><div class="sub">pure deck</div><div class="tap">点看背面</div></div><div class="back">Ra 明说不可能提供：图像最初绘制时变貌已存在，主要是文化性的。「还原」没有原点可回。<em>传世菜谱找不到「出厂原版」——第一版抄下来时就已带方言口音。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">权杖与球体</div><div class="sub">wand &amp; sphere</div><div class="tap">点看背面</div></div><div class="back">第一号牌：移除魔杖是合适的；球体保留，由拇指、食指与中指握持。第四号牌的权杖则是选择问题——有与原初概念复合体相关的可能。<em>同一类道具，在两张牌里的「戏份」不同。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">王冠</div><div class="sub">crown</div><div class="tap">点看背面</div></div><div class="back">第二号牌女性头上的饰物。Ra 拒绝代决，把它交给学生：移除，或命名其含义以增进概念复合体——去留本身成了一次修炼。<em>老师不批改你的自选题，只提醒你：无论怎么选，要能自圆其说。</em></div></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 6 章 · 收官 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>收官：不解的谜题与器皿的照料</h2></div>
+  <p class="sec-lead">集会尾声，Ra 主动补完一件未完成的事：安卡十字的尺寸。答案不是一组数字，而是一个态度——谜被设计成要在它自己的时间被破译。随后照例处理器皿的舒适与接触质量，以「在和谐、沟通、赞美与感恩中继续」收束全集。</p>
+
+  <div class="card">
+    <h3>尺寸之问：Ra 为什么说 No，又为什么主动补话</h3>
+    <div class="q">发问者顺势想要安卡十字的精确尺寸、比例与画法——一个看起来纯技术性的问题。Ra 只答了一个「No」。</div>
+    <div class="quote">
+      <p class="en">It is given in many places. There are decisions to be made as to which drawing of this image is the appropriate one. We may, of course, suggest viewing the so-called Great Pyramid if the puzzle is desired. We do not wish to work this puzzle. It was designed in order that in its own time it be deciphered.</p>
+      <p class="zh">尺寸「在许多地方都有给出」；选哪一种画法，需要你们自己决定。想解谜，可以去看那所谓的大金字塔——但 Ra 不想代解：这个谜被设计成要在它自己的时间被破译。</p>
+      <span class="src">—— Session 096 · (96.21)</span>
+    </div>
+    <div class="plain">Ra 不替你解谜，但把路标指给你：谜在金字塔里，答案在它自己的时间到来——拒绝也是一种回答。</div>
+    <div class="case"><b>博物馆的铭文：</b>博物馆里一块未破译的铭文，馆方不公布答案，只提供拓片和阅读指引——留给后来的人「在它自己的时间」解开。Ra 对大金字塔谜题正是这个态度：给线索，不给谜底（96.21）。</div>
+    <div class="case"><b>不许提前看答案的习题册：</b>老师把习题册的答案页撕下来锁进抽屉——不是刁难，而是知道提前看答案会毁掉整学期。混淆法则守护的，正是解题过程本身（呼应 96.13、96.19）。</div>
+  </div>
+
+  <div class="card">
+    <h3>器皿的照料：小症状不滚成长期伤</h3>
+    <div class="q">照例收尾：有什么能做的，让器皿更舒服、让接触更好？</div>
+    <div class="quote">
+      <p class="en">This after-effect of the greeting is not necessarily long-lasting.</p>
+      <p class="zh">这场「问候」的后遗症，不一定持续很久——前提是接下来短期内小心照料。</p>
+      <span class="src">—— Session 096 · (96.22)</span>
+    </div>
+    <div class="plain">Ra 的处方：少说话、不跑步、短期小心——让身体的小肿胀不发展成长期后遗症；照料本身就是改善接触。</div>
+    <div class="case"><b>停排两天的乐队：</b>主唱嗓子发炎，乐队当即停排两天：少说话、不跑步、多休息。看起来小题大做，其实是拦住「小症状滚成长期损伤」的坡道（96.22 的叮嘱）。</div>
+    <div class="case"><b>感冒第一周的两种过法：</b>感冒初起就早睡两天的人往往一周痊愈；硬扛着加班的，常拖成一个月的咳嗽。「最好短期小心，免得这些变貌把该实体推向更长期的后遗症」——Ra 的原话逻辑，放在任何一次生病里都成立（96.22）。</div>
+  </div>
+
+  <div class="saying">
+    <p class="en">Continue in harmony, communication, praise, and thanksgiving.</p>
+    <p class="zh">在和谐、沟通、赞美与感恩中，继续。</p>
+    <span class="src">—— Session 096 · (96.22)</span>
+  </div>
+
+  <div class="saying">
+    <p class="en">It was designed in order that in its own time it be deciphered.</p>
+    <p class="zh">它被设计出来，就是为了在它自己的时间被破译。</p>
+    <span class="src">—— Session 096 · (96.21)</span>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 096（`split/Ra_Session_096.md`）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra096-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+
+/* 术语卡翻转 */
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+/* 问答脉络推进器（本章地图） */
+initStepper('mapTrack','mapDetail','mapPrev','mapNext',[
+ {t:'开场与状态',d:'<span class="qa-q">问：器皿状态如何？(96.1)</span><b>答：</b>物理能量赤字比上次显著增大，生命能量也实质减少——但维持正常心智/情绪所需的能量仍在。这个异常的赤字，正是上一场攻击留下的伤口。'},
+ {t:'追问成因',d:'<span class="qa-q">问：能量为什么减少？(96.2)</span><b>答：</b>Ra 先查看器皿的心智配置才肯作答——不愿侵犯自由意志；确认她领会过「个人催化剂之灵性沉思」后，开始复盘那次攻击。'},
+ {t:'攻击复盘',d:'<span class="qa-q">问：那次攻击怎么发生的？(96.2)</span><b>答：</b>器皿看房时感知到元素精灵与星光存有，想服务又本能抗拒，心智分裂加剧；蓝光工作未完成，罕见「开口」打开，负面实体实施了迄今最强的魔法显化。'},
+ {t:'威胁解除',d:'<span class="qa-q">问：威胁还在吗？(96.3)</span><b>答：</b>不再——记录者与发问者的沟通关闭了开口，器皿开始吸收收到的催化剂。'},
+ {t:'房子处置',d:'<span class="qa-q">问：房子能转化吗、怎么清洁？(96.4-96.5, 96.14)</span><b>答：</b>团体偏好是唯一考量；物理清洁以意图与尽力为准；步骤顺序自由，但门槛不可跨越；祝福之水重在意图。'},
+ {t:'小事与信使',d:'<span class="qa-q">问：录音机为何响、鹰为何落窗前？(96.6-96.13)</span><b>答：</b>机器故障有两个 plainly 物理的原因；鹰确有意义——但传讯的机制属于混淆法则，Ra 必须沉默。'},
+ {t:'塔罗与收尾',d:'<span class="qa-q">问：塔罗牌怎么还原？(96.14-96.22)</span><b>答：</b>字母星星可删、「纯粹牌组」不可能；尺寸谜题指向大金字塔——要在它自己的时间被破译；最后叮嘱在和谐、沟通、赞美与感恩中继续。'}
+]);
+
+/* 攻击链条推演（第 2 章） */
+initStepper('atkTrack','atkDetail','atkPrev','atkNext',[
+ {t:'日常模式',d:'<span class="qa-q">问：器皿平时怎么处理催化剂？(96.2)</span><b>答：</b>她有一种独特的态度习惯——一旦需要行动，就「从服务的角度分析催化剂并决定行动方针」。这是一贯的、稳定的处理方式。'},
+ {t:'反常时刻',d:'<span class="qa-q">问：看房那天发生了什么？(96.2)</span><b>答：</b>她感知到先前谈过的元素精灵与星光界存有；想以获得住所来服务，本能却对不受欢迎的临在起反应——服务意愿与本能反应分裂了。'},
+ {t:'分裂加剧',d:'<span class="qa-q">问：分裂为何越拖越大？(96.2)</span><b>答：</b>持续的「缺乏控制」催化剂——房子定不下来、无法动手清洁，心智配置的分裂被不断加大。若能物理地动手清洁，这个开口本不会出现。'},
+ {t:'蓝光缺口',d:'<span class="qa-q">问：哪个环节失守了？(96.2)</span><b>答：</b>尽管她和支持组每个人都试图就此清晰沟通，揭示并把握催化剂本质所需的蓝光（沟通/表达）工作并未完成——这是唯一的转捩点。'},
+ {t:'开口与侵入',d:'<span class="qa-q">问：缺口打开之后呢？(96.2)</span><b>答：</b>出现对这个心/身/灵复合体相当罕见的开口——「向你们致意的那位」进入其中，实施了迄今最强的纯粹魔法显化。'},
+ {t:'临界点',d:'<span class="qa-q">问：危险到什么程度？(96.2)</span><b>答：</b>那次工作的目标是窒息——只要器皿在无法呼吸时让恐惧大于坚持的意志，每次呼吸都会更加困难，直至窒息；所幸她没有朝歇斯底里变貌。'},
+ {t:'开口关闭',d:'<span class="qa-q">问：怎么关上的？(96.3)</span><b>答：</b>记录者、随后发问者与她的沟通关闭了开口——被压抑的催化剂被说出来，她才能开始吸收它。答案不在防御，在表达。'}
+]);
+
+/* 归类练习：答还是不答 */
+initSorter('sorterArea',[
+ {a:'问：那天落在厨房窗外的鹰，有什么意义？',opts:['可以回答','必须沉默'],ans:'可以回答',exp:'(96.11) Ra 给出确认——对发问者已知的事项提供可接受程度的确认，是允许的。'},
+ {a:'问：这只鹰传讯的机制到底是什么？',opts:['可以回答','必须沉默'],ans:'必须沉默',exp:'(96.12) Ra 直接答 No——机制之问是要 Ra 替你解谜。'},
+ {a:'问：这与第三号牌描绘的通信是同一类吗？',opts:['可以回答','必须沉默'],ans:'必须沉默',exp:'(96.13) 混淆法则禁止评论：公认的主观印记被放弃、消息不清晰时，必须保持沉默。'},
+ {a:'问：录音机异响是不是负面实体的问候？',opts:['可以回答','必须沉默'],ans:'可以回答',exp:'(96.6-96.8) 属于可说明的物理事实：机器故障的两个原因，与混淆法则无关。'},
+ {a:'问：安卡十字精确的尺寸比例与画法？',opts:['可以回答','必须沉默'],ans:'必须沉默',exp:'(96.19) Ra 只答一个 No——这个谜被设计成要在它自己的时间被破译 (96.21)。'}
+]);
+
+/* 条件模拟器：清洁何时达标 */
+function calcClean(){
+  const intent=document.getElementById('swIntent').checked;
+  const astral=document.getElementById('swAstral').checked;
+  const spot=document.getElementById('swSpot').checked;
+  const box=document.getElementById('condResult');
+  let html;
+  if(!intent){
+    html='<b>要求未满足。</b>物理清洁的关键不是结果完美，而是意图纯净、显化彻底——「如果意图是尽可能物理地清洁，物理清洁的要求就得到了满足」(96.4)。';
+    box.classList.add('fail');
+  }else if(!astral){
+    html='<b>物理清洁达标，但有一个例外没处理。</b>Ra 指出：只有当较低星光界实体把自身一部分放进所谓的污垢时，才需特别把那「有知觉的存有」清走 (96.4)——这是唯一要额外当心的情形。';
+    box.classList.add('fail');
+  }else{
+    box.classList.remove('fail');
+    if(spot){
+      html='<b>达标，而且超额。</b>意图与例外处理都到位。不过 Ra 补了一句：一尘不染被追求而不可得——「尝试与目标之间的差距从未被留意，且可被视为不重要」(96.4)。这一项不在要求清单里。';
+    }else{
+      html='<b>达标。</b>意图纯净、尽物理可能清洁，寄居的例外也处理了——物理清洁的要求就此满足 (96.4)。至于一尘不染：像与造物主的合一一样，被追求而不可得，差距不算数。';
+    }
+  }
+  box.innerHTML=html;
+}
+document.querySelectorAll('#condSim input').forEach(cb=>cb.addEventListener('change',calcClean));
+calcClean();
+
+renderPath();
+</script>
+</body>
+</html>

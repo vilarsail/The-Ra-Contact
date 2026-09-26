@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 011 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 011 · 交互式学习模块</h1>
+  <p class="sub">这一集从一颗已经死去的行星问起：如果没有自我毁灭，马尔德克会走向哪里？由此一路问到猎户座集团在地球上的思想控制机制、社会记忆复合体的形成条件，以及核能与特斯拉背后的技术转移。</p>
+  <div class="tagline">6 个主题 · 6 个学习步骤 · 18 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 未走的那条路</a>
+<a href="#s3">③ 三个服务自我者的路径</a>
+<a href="#s4">④ 猎户座十字军</a>
+<a href="#s5">⑤ 技术转移：核能与特斯拉</a>
+<a href="#s6">⑥ 收官：服务自我即是服务一切</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>先看这一集从一颗死行星问到猎户座集团，例行问答可跳过</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>未走的那条路</b><span>马尔德克的混合收割、太阳背面那个锁在第一密度的球体</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>三个服务自我者的路径</b><span>他们凭什么进入负面第四密度，现在又在哪里</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>猎户座十字军如何运作</b><span>接触、精英、自愿的奴役，以及 Ra 为什么拒绝点名</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>技术转移：核能与特斯拉</b><span>两条取向如何在同一批技术里交错，以及「从黑暗中解放」</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官：金句与伏笔</b><span>服务自我即是服务一切，以及本集留下的未完话题</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：从一颗死行星到一个组织</h2></div>
+  <p class="sec-lead">上一集 Ra 提到马尔德克因战争而毁灭。这一集发问者顺着这条线一路追问：如果它没毁灭会怎样？宇宙里有没有已经去了「负面第四密度」的人？问题从一颗行星的命运，逐渐落到地球上一个仍在运作的组织。先看这一集的问答是怎么走过来的。</p>
+  <div class="card">
+    <h3>问答脉络：五个转折</h3>
+    <p>本集有三十多个问答块，但真正换层次的地方只有几个：从假设性的行星史，转到具体的人，再转到一套机制，最后转到技术。点击节点看每一段在做什么。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="qaTrack"></div>
+      <div class="flow-detail" id="qaDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="qaPrev">← 上一步</button> <button class="tri-btn" id="qaNext">下一步 →</button></div>
+    </div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">仪式 · 小组人数 · 器皿照料 · 集会安排</span></summary>
+  <div class="body">
+    <p><b>(11.0) 开场：</b>Ra 以「在无限造物主的爱与光中致意」开场，宣布本次通讯开始。</p>
+    <p><b>(11.1) 仪式要不要收入书中：</b>Ra 说这件事不重要——当初提出那套呼唤仪式，只是为了通过这个器皿与这个小组建立接触。</p>
+    <p><b>(11.2) 小组人数：</b>最重要的实体是发问者与 Jim；另外两位以分享物理能量复合体（你们爱的振动的一部分）的能力为器皿充能，帮助器皿的舒适。</p>
+    <p><b>(11.5) 一次重问：</b>发问者的问题表述不清，Ra 直接请他重新陈述。</p>
+    <p><b>(11.13)/(11.24) 简短确认：</b>去猎户座集团的是成吉思汗；那个「极度负面的实体」至今仍在地球上化身（Ra 不便点名）。</p>
+    <p><b>(11.30) 器皿照料：</b>最重要的是仔细校准符号；这个时间/空间当下所做的调整，有助于器皿的物理复合体朝向舒适。</p>
+    <p><b>(11.32)/(11.33) 集会安排与收尾：</b>当天晚些时候再加一场是可以的；Ra 以「在太一造物主的大能与和平中欢欣鼓舞」作结，最后一句是 Adonai。</p>
+  </div></details>
+  <div class="case"><b>要不要把「怎么布置会议室」写进对外报告：</b>团队每次开会前都按同一套流程摆桌子、调灯光，有人问「这套流程要不要收进年度报告？」——这问题其实不重要。流程的用途是让这场会开得成，不是拿来当教义的。这正对应 (11.1)：Ra 说仪式收不收进书里不重要，因为那建议的初衷只是为了让接触在这个小组里建立起来。</div>
+  <div class="case"><b>直播间里那两位不说话的同事：</b>一场两小时的直播，出镜的只有主播和导播，另外两人整场只做一件事——递水、看灯光、在主播嗓音发紧时示意暂停。内容与他们无关，但没有他们，这场撑不完。这正对应 (11.2)：Ra 点名最重要的两个实体是发问者与 Jim，另两位以分享物理能量复合体的能力为器皿充能。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>未走的那条路：马尔德克与太阳背面的球体</h2></div>
+  <p class="sec-lead">发问者先给马尔德克补一个「如果」：假如它没有因战争自毁，会不会长成一个服务自我的行星、它的实体一路升到负面第四、第五密度？Ra 的回答不是补写历史，而是先给出一个关于「假设」本身的限制。随后的问题很短：我们太阳背面有没有一颗我们不知道的行星？</p>
+  <div class="card">
+    <h3>混合收割：不是非黑即白的命运</h3>
+    <div class="q">马尔德克如果没有因战争自毁，会不会成为一个以服务自我进化的行星？它的实体会在负面意义上继续升密度吗？</div>
+    <div class="quote">
+      <p class="en">The planetary social memory complex, Maldek, had in common with your own sphere the situation of a mixture of energy direction. Thus it, though unknown, would most probably have been a mixed harvest—a few moving to fourth density, a few moving towards fourth density in service to self, the great majority repeating third density.</p>
+      <p class="zh">马尔德克这个行星社会记忆复合体，与你们自己的星球有一点是共通的：能量方向是混在一起的。所以，尽管答案无从得知，它极有可能是一次混合收割：少数移向第四密度，少数朝服务自我的第四密度移动，而绝大多数会重做第三密度。</p>
+      <span class="src">—— Session 011 · (11.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This is approximate due to the fact that parallel possibility/probability vortices cease when action occurs and new probability/possibility vortices are begun.</p>
+      <p class="zh">这个说法只是近似，因为一旦行动发生，那些平行的可能性/或然率漩涡便会终止，新的或然率/可能性漩涡则随之展开。</p>
+      <span class="src">—— Session 011 · (11.3)</span>
+    </div>
+    <div class="plain">马尔德克不是一个「注定服务自我」的星球，它和你我的世界一样是混合取向；而它「本来会怎样」根本算不出来，因为它真的自毁过——行动一旦落地，那条平行的可能路径就不存在了。</div>
+    <div class="analogy"><b>像路口，不像分叉的树枝：</b>你站在路口时可以设想四条路都走得通；但脚步一落，其余三条当场消失，新的一批岔路从你站的地方重新长出来。所以「如果当时走另一条」永远不是一道可以算的题。</div>
+  </div>
+  <div class="card">
+    <h3>太阳背面：一个不该被称为行星的球体</h3>
+    <div class="q">在我们的太阳背后、与我们轨道相对的位置，是否有一颗我们不知道的行星？</div>
+    <div class="quote">
+      <p class="en">There is a sphere in the area opposite your sun of a very, very cold nature but large enough to skew certain statistical figures. This sphere should not properly be called a planet as it is locked in first density.</p>
+      <p class="zh">在你们太阳对面的那片区域，有一个性质极其寒冷的球体，它却大到足以让某些统计数字失去准头。它不该被正当地称为行星，因为它被锁在第一密度之中。</p>
+      <span class="src">—— Session 011 · (11.4)</span>
+    </div>
+    <div class="plain">那里确实有一个球体，但它还不是「行星」——它锁在第一密度，尚未进入会演化出生命的阶段；Ra 顺带说明，它已经足以让你们的某些统计数字失真。</div>
+    <div class="case"><b>电表箱旁那个铁箱子：</b>你做了三年家庭用电统计，总有一笔说不清的损耗对不上。后来才发现是楼道里那台老变压器——它不在你的家电清单上，却让你的所有数字都偏了一档。这正对应 (11.4)：太阳对面那个极冷的球体不在你们的行星清单上，但是「大到足以扭曲某些统计数字」。</div>
+  </div>
+  <div class="case"><b>差三分的那一年：</b>高考差三分没进第一志愿，此后你常复盘「如果多考三分会怎样」。这个假设永远算不出结果——不是资料不够，而是你后来真的做了选择、真的走了另一条路，那条岔路在你迈步的那一刻就停了。这对应 (11.3)：平行的可能性/或然率漩涡在行动发生时停止，新的漩涡开始。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>三个服务自我者的路径：从亚特兰蒂斯记忆到第四密度</h2></div>
+  <p class="sec-lead">接下来发问者不再问抽象机制，而是点名问人：希特勒现在在哪？历史上有谁真的去了负面第四密度？他们凭什么做到？Ra 给出了三个名字，也给出了这条路径的技术条件——以及一处坦白：位置这种东西，我们没有词汇传给你们。</p>
+  <div class="card">
+    <h3>希特勒此刻在哪里</h3>
+    <div class="q">你能告诉我们阿道夫·希特勒发生了什么吗？</div>
+    <div class="quote">
+      <p class="en">The mind/body/spirit complex known [as] Adolf is at this time in an healing process in the middle astral planes of your spherical force field. This entity was greatly confused and, although aware of the circumstance of change in vibratory level associated with the cessation of the chemical body complex, nevertheless, needed a great deal of care.</p>
+      <p class="zh">被称作阿道夫的那个心/身/灵复合体，此刻正处在你们球形力场的中间星光层里，接受疗愈。这个实体困惑极深；它虽然明白化学身体复合体停止所伴随的振动层级变化，却仍然需要极多的照护。</p>
+      <span class="src">—— Session 011 · (11.7)</span>
+    </div>
+    <div class="plain">死亡没有自动结算一生：他正处在疗愈过程中，而且需要大量照料。Ra 没有在这里做道德宣判，只描述状态——极度困惑，仍在被照顾。</div>
+    <div class="case"><b>ICU 里不问来历的流程：</b>一个做过极恶之事的人昏迷后被送进急诊。流程不问他是谁，只评估他需要多少照料；出院之后他仍说不清自己经历了什么，需要长期陪护。这正对应 (11.7)：那个复合体意识到振动层级已经改变，却「极度困惑」，仍需要大量照料。</div>
+  </div>
+  <div class="card">
+    <h3>三个名字，以及他们凭什么</h3>
+    <div class="q">这些人里有谁是以名字为人所知的？他们是如何做到进入负面第四密度的？需要什么条件？</div>
+    <div class="quote">
+      <p class="en">The number of entities thus harvested is small. However, a few have penetrated the eighth level, which is only available from the opening up of the seventh through the sixth. Penetration into the eighth, or intelligent infinity, level allows a mind/body/spirit complex to be harvested, if it wishes, at any time/space during the cycle.</p>
+      <p class="zh">以这种方式被收割的实体数目很少。不过有少数几位已经穿透了第八层级，而要抵达那里，只能从第七层级经由第六层级打开。一旦穿透进第八层级，也就是智能无限层级，一个心/身/灵复合体便可在周期中的任何时间/空间被收割——只要它愿意。</p>
+      <span class="src">—— Session 011 · (11.8)</span>
+    </div>
+    <p>名字是：塔拉斯·布尔巴、成吉思汗、拉斯普京。他们凭什么做到？Ra 说关键在于他们「通过记忆」通晓亚特兰蒂斯式的理解——那套理解讲的是如何使用心/身/灵复合体各能量流入中心，以取得通往智能无限的门户 (11.10)。换句话说，他们手里有一套操作手册，而且按它练。</p>
+    <div class="quote">
+      <p class="en">The first two entities mentioned made little use of these abilities consciously. However, they were bent single-mindedly upon service to self, sparing no efforts in personal discipline to double, re-double, and so empower this gateway.</p>
+      <p class="zh">先提到的两个实体，很少有意地动用这些能力。可是他们一心一意地献身于服务自我，在个人修习上不遗余力，把这道门户一遍遍地加倍、再加倍。</p>
+      <span class="src">—— Session 011 · (11.11)</span>
+    </div>
+    <div class="plain">三人路径并不相同：前两个（成吉思汗、塔拉斯·布尔巴）很少有意动用这些能力，只是极端专注地把门户一遍遍加倍强化；第三个（拉斯普京）则是有意识的行家（adept）。但三者共享同一个方向——服务自我，且都不遗余力。</div>
+    <div class="analogy"><b>像两种练法：</b>一种人说不清自己在练什么，只是每天把强度翻倍、再加倍，练到身体自己会了；另一种人能画出完整方法论，每一步都讲得清楚。练法不同，练的是同一件事。</div>
+    <div class="case"><b>两位都做到第一的创业者：</b>同行业里有两位创业者都做到了第一。一位说不清自己怎么成的，只是极度自律、把训练量翻倍再加倍；另一位能画出完整方法论，随时讲清每一步。这正对应 (11.11)：前两个实体很少有意使用这些能力，第三个则是一位有意识的行家（adept）。</div>
+  </div>
+  <div class="card">
+    <h3>路径图：从一份记忆到一个落点</h3>
+    <p>把 (11.8)、(11.10)、(11.11)、(11.12) 串起来，这条服务自我的「升密度」路径其实有四步。</p>
+    <div class="timeline">
+      <div class="tl-item"><div class="t">起点 · 一份传下来的记忆</div><div class="d">他们通过记忆通晓亚特兰蒂斯式的理解：如何运用心/身/灵复合体各能量流入中心，以取得通往智能无限的门户。这不靠现场研究，靠的是记忆里已有的东西。(11.10)</div></div>
+      <div class="tl-item"><div class="t">方法 · 不遗余力地加倍</div><div class="d">在个人修习中把门户一遍遍加倍、再加倍地强化；方向是服务自我，专注到「一心一意」。前两者是本能式地练，第三个是有意识地练。(11.11)</div></div>
+      <div class="tl-item"><div class="t">关键 · 穿透第八层级</div><div class="d">第八层级只能从第七经由第六打开而抵达。一旦穿透，就等于拿到一张不受周期班次限制的通行证：只要自己愿意，在周期中的任何时间/空间都能被收割。(11.8)</div></div>
+      <div class="tl-item"><div class="t">落点 · 第四密度，一个服务自我的行星</div><div class="d">三人各自选择了一个致力于「通过服务自我来理解一的法则」的第四密度行星：一个在猎户座集团，一个在仙后座，一个在南十字座。(11.12)</div></div>
+    </div>
+    <div class="plain">这不是「变坏就能升级」，而是一条有明确技术条件的路径：一份记忆里的操作手册 + 极端专注的强化 + 穿透第八层级，然后选择一个与自己取向相符的第四密度行星。</div>
+  </div>
+  <div class="card">
+    <h3>他们现在在哪：一个诚实的空缺</h3>
+    <div class="q">这三个实体现在在哪里？他们目前在做什么？</div>
+    <div class="quote">
+      <p class="en">These entities are in the dimension known to you as fourth. … Each chose a fourth-density planet which was dedicated to the pursuit of the understanding of the Law of One through service to self: one in what you know as the Orion group, one in what you know as Cassiopeia, one in what you know as Southern Cross.</p>
+      <p class="zh">这些实体处在你们所称的第四维度里。……它们各自挑了一颗第四密度行星，那颗行星所投身的事业，就是以服务自我的方式去理解一的法则：一颗在你们所说的猎户座集团，一颗在仙后座，一颗在南十字座。</p>
+      <span class="src">—— Session 011 · (11.12)</span>
+    </div>
+    <p>发问者继续追：那成吉思汗在那里做什么？Ra 只答了一句「这个实体以它自己的方式服务造物主」(11.14)，并在被追问「你不可能精确说吗」时坦白：可以回答，但它更愿意借机会重申那个基本理解——所有存有都服务造物主 (11.15)。至于位置，Ra 说得更直接：「我们没有词汇来进行必要的几何计算，把这种理解传递给你们。」(11.12)</p>
+    <div class="plain">向 Ra 索取「具体坐标 + 具体职务」是问不到东西的：不同密度的空间/时间连续体不兼容，近似值不带来实际理解。这一段的收获不在答案里，而在那个被反复重申的框架：所有存有都在服务造物主。</div>
+    <div class="case"><b>打听前辈「现在在哪家公司」：</b>你想知道一位离开行业的前辈如今在哪家公司、什么头衔，好判断他过得如何。可如果他的取向已经换了方向，地址和头衔给不了你任何有用的理解——真正该看的是他以自己的方式在服务哪个方向。这对应 (11.12)/(11.14)：近似的位置「不会带来任何实际的理解」，而「他在做什么」的答案是「这个实体以它自己的方式服务造物主」。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>猎户座十字军：思想控制如何运作，以及 Ra 的拒答</h2></div>
+  <p class="sec-lead">从「成吉思汗现在做什么」，话题转到了一支仍在地球附近运作的力量：Ra 称他们为「十字军」，说他们的工作是传播思想控制材料。这一章回答三个问题：他们怎么做到？他们动手的时机是什么？以及——为什么 Ra 拒绝说出接收者的名字。</p>
+  <div class="card">
+    <h3>接触只发生在呼唤者身上</h3>
+    <div class="q">那么我们有来自猎户座的十字军，为了思想控制的目的来到这个行星。他们如何做到这一点？</div>
+    <div class="quote">
+      <p class="en">As all, they follow the Law of One observing free will. Contact is made with those who call. … These become the elite. Through these, the attempt begins to create a condition whereby the remainder of the planetary entities are enslaved by their own free will.</p>
+      <p class="zh">和一切存有一样，他们也遵循一的法则，尊重自由意志。接触只在有人呼唤时发生。……这些人就成了精英；借着这批精英，他们着手营造一种局面，让这颗行星上其余的实体在自己的自由意志之下沦为奴役。</p>
+      <span class="src">—— Session 011 · (11.18)</span>
+    </div>
+    <div class="plain">Ra 没有把这件事描述成入侵：自由意志这条法则连负面集团也必须遵守。他们只回应呼唤，被回应的人成为「精英」，再由精英去传播那套「服务自我」版本的法则理解；最终，其余的实体是在自己的同意下被奴役的。</div>
+    <div class="analogy"><b>像推销，不像征税：</b>征税是强制扣款；推销只能等你先对某个东西感兴趣。所以这类运作的关键从来不在力量大小，而在有没有人先开口、以及那套说辞是否让人觉得「这是我自己的选择」。</div>
+  </div>
+  <div class="card">
+    <h3>动手的时机：赶在社会记忆形成之前</h3>
+    <div class="q">十字军做什么？一个行星在什么阶段才会实现社会记忆？</div>
+    <div class="quote">
+      <p class="en">A mind/body/spirit social complex becomes a social memory complex when its entire group of entities are of one orientation or seeking.</p>
+      <p class="zh">当一个心/身/灵社会复合体里的全体实体拥有同一取向、同一寻求时，它就成为一个社会记忆复合体。</p>
+      <span class="src">—— Session 011 · (11.17)</span>
+    </div>
+    <p>Ra 描述十字军的动作是「乘坐他们的战车去征服行星心/身/灵社会复合体」，时间点很明确：在这些行星「到达实现社会记忆的阶段之前」(11.16)。原因也很清楚——社会记忆复合体一旦形成，全体共享同一取向与寻求，个体在心智之树根部丢失的那份群体记忆变得对整个社会开放，于是理解上的变貌与寻求方向上的变貌都相对更少 (11.17)。</p>
+    <div class="plain">社会记忆复合体的优势是「变貌更少」：所有理解都对社会中的实体开放。反过来说，在这道门槛之前动手，是成本最低的时候——群体还没形成统一的记忆与判断。</div>
+    <div class="case"><b>核心球员被挖走的那一年：</b>一支青年队本可以再练两年、练出整队共用的默契与战术记忆；但对手在他们成型之前的转会期就把最关键的两个人挖走了。这对应 (11.16)：十字军的战车只在行星「到达实现社会记忆的阶段之前」动手——因为那时还没有共享的群体记忆可以自我校验。</div>
+  </div>
+  <div class="card">
+    <h3>条件模拟器：一条接管链要凑齐什么</h3>
+    <p>把 (11.18)、(11.20) 的话整理成一条链，拨动下面的开关看每个环节缺了会怎样。</p>
+    <div class="cond-row">
+      <div class="name">① 有人呼唤<small>自由意志的邀请：接触只发生在先开口的人身上</small></div>
+      <label class="switch"><input type="checkbox" id="cond1" checked><span class="slider"></span></label>
+    </div>
+    <div class="cond-row">
+      <div class="name">② 门户被打开<small>靠练习与修习去寻求接触，或振动复合体本身使门户自开</small></div>
+      <label class="switch"><input type="checkbox" id="cond2" checked><span class="slider"></span></label>
+    </div>
+    <div class="cond-row">
+      <div class="name">③ 有人成为「精英」并向外传播<small>把「服务自我」版本的法则理解变成一套可传播的态度与哲学</small></div>
+      <label class="switch"><input type="checkbox" id="cond3" checked><span class="slider"></span></label>
+    </div>
+    <div id="condResult"></div>
+  </div>
+  <div class="card">
+    <h3>Ra 的拒答：这本身就是教导</h3>
+    <div class="q">你能说出十字军的任何接收者吗——今天可能为人所知的名字？</div>
+    <div class="quote">
+      <p class="en">I am desirous of being in non-violation of the Free Will Distortion. To name those involved in the future of your space/time is to infringe; thus, we withhold this information. We request your contemplation of the fruits of the actions of those entities whom you may observe enjoying the distortion towards power. In this way, you may discern for yourself this information. We shall not interfere with the, shall we say, planetary game. It is not central to the harvest.</p>
+      <p class="zh">我渴望不违反自由意志变貌。说出那些涉及你们空间/时间未来的实体就是侵犯；因此我们保留这一信息。我们请求你们沉思那些你们可观察到的、正享受朝向权力之变貌的实体们，其行动的果实。这样，你们可以自己辨别这一信息。我们将不干涉，容我们说，这场行星游戏。它并非收割的核心。</p>
+      <span class="src">—— Session 011 · (11.19)</span>
+    </div>
+    <div class="plain">Ra 拒答不是因为「不能说」，而是因为点名会构成对自由意志的侵犯——它会替你做完判断。替代方案是给了你：去看那些人行动的果实，自己辨别。最后一句同样是限定：这场行星游戏并非收割的核心。</div>
+    <div class="analogy"><b>像不划考试范围的老师：</b>他不肯告诉你考哪几题，但会提醒你去看他这学期反复强调过什么。他没有拒绝教你，他只是不肯替你完成「判断」这个动作。</div>
+  </div>
+  <div class="case"><b>诈骗电话从不群发：</b>那些电话并不是随机拨号，它们只找先在网上留下「想快速赚钱」信号的人——你先开口，它们才回应。这对应 (11.18)：如同所有存有，他们遵循一的法则并尊重自由意志，「接触只与那些呼唤者建立」。</div>
+  <div class="case"><b>没人强迫的加班：</b>团队里出现一位极有说服力的「意见领袖」，几周后大家开始自愿按他的节奏加班、自愿放弃周末。制度上每一次都是自己签的字，没有一条规章要求你留下。这对应 (11.18)：这些人成为精英，通过这些精英，开始造出一种状态，使其余实体「被他们自己的自由意志所奴役」。</div>
+  <div class="case"><b>不肯点名的人：</b>朋友问你「我们部门里到底谁在背后搞事」，你知道答案却不说——你说出来的那一刻，他就不会再自己去观察了。这对应 (11.19)：说出涉及未来者就是侵犯，Ra 因此保留信息，只请发问者沉思那些人行动的果实、自行辨别。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>技术转移：两条路、核能，与特斯拉</h2></div>
+  <p class="sec-lead">接下来发问者问的是「怎么传」：十字军把什么类型的信息传给人？Ra 说这可以是技术性的——正如星际联邦中也有人以服务他人的方式提供技术。于是同一批技术里出现了两种取向的交错：核能、以及特斯拉。这一章是全集最贴近现代史的部分。</p>
+  <div class="card">
+    <h3>通往门户的两条路，与两种信息</h3>
+    <div class="q">十字军如何把他们的概念传递给地球上的化身个体？传递的是什么类型的信息？</div>
+    <div class="quote">
+      <p class="en">There are two main ways, just as there are two main ways of, shall we say, polarizing towards service to others. There are those mind/body/spirit complexes upon your plane who do exercises and perform disciplines in order to seek contact with sources of information and power leading to the opening of the gate to intelligent infinity. … There are others whose vibratory complex is such that this gateway is opened and contact with total service to self, with its primal distortion of manipulation of others, is then afforded with little or no difficulty, no training, and no control.</p>
+      <p class="zh">有两种主要方式，正如，容我们说，朝向服务他人极化也有两种主要方式。在你们的平面上，有些心/身/灵复合体进行练习与修习，以寻求与信息和力量之源的接触，从而打开通往智能无限的门户。……还有些实体，其振动复合体使得这道门户被打开，于是与全然服务自我（及其操纵他人的原初变貌）的接触，就在很少或没有困难、无需训练、无需控制的情况下被提供。</p>
+      <span class="src">—— Session 011 · (11.20)</span>
+    </div>
+    <p>Ra 顺带说明了信息的内容：猎户座集团传递的是「服务自我」取向的一的法则理解，而且可以非常技术化——形式是各种控制或操纵他人以服务自我的手段 (11.21)。</p>
+    <div class="plain">通往门户的两条路是「练出来的」和「天生振动就开着的」；两条路都可能通向同一道门，方向由取向决定。这也解释了为什么有人不必修行就有能力——门本来就开着，只是开向哪一边不同。</div>
+    <div class="analogy"><b>同一栋楼的两部电梯：</b>一部要刷卡、要按流程、要等层层授权；另一部门一直是开的，谁都能进——它们通向同一层，区别不在于门，而在于你上去之后做什么。</div>
+  </div>
+  <div class="card">
+    <h3>核能：混合取向的接力</h3>
+    <div class="q">有些科学家以心灵感应方式接收技术信息，再把它变成可用的装置？我们就是这样获知核能的吗？</div>
+    <div class="quote">
+      <p class="en">However, very positively, as you would call this distortion, oriented so-called scientists have received information intended to unlock peaceful means of progress which redounded unto the last echoes of potential destruction due to further reception of other scientists of a negative orientation-distortion.</p>
+      <p class="zh">可是有一批被你们视为高度正面的所谓科学家，收到过旨在开启和平进步途径的信息；后来另一批负面取向变貌的科学家也接收了它，于是它最终变成了潜在毁灭的最后一声回响。</p>
+      <span class="src">—— Session 011 · (11.22)</span>
+    </div>
+    <p>Ra 确认了核能这条路：负责召集科学家的实体是混合取向，科学家们绝大多数是正面取向，而追随他们工作的那批人则取向混杂——其中有一位 Ra 称为「极度负面」的实体，并且至今仍在地球上化身 (11.23)(11.24)。发问者试着索要名字，被 Ra 以自由意志为由推回。</p>
+    <div class="plain">同一个技术信息，接收者的取向决定了它长成什么：本来要给和平进步的那份东西，被另一端的接收者接上之后，余音变成了毁灭的预兆。</div>
+    <div class="case"><b>同一份开源代码的两条去向：</b>一个团队把定位与加密工具免费开源，本意是让偏远地区的救援队能用上；半年后，同一份代码出现在某地的监控系统里。写代码的人没变，收代码的取向决定了它最后是什么。这对应 (11.22)：正面取向者收到的信息本意是开启和平进步手段，却因其他负面取向者的进一步接收，回响成潜在毁灭的余音。</div>
+  </div>
+  <div class="card">
+    <h3>特斯拉：天使般正面的流浪者，被幻象扭曲</h3>
+    <div class="q">那么尼古拉·特斯拉从哪里获得他的信息？</div>
+    <div class="quote">
+      <p class="en">The one known as Nikola received information from Confederation sources desirous of aiding this extremely, shall we say, angelically positive entity in bettering the existence of its fellow mind/body/spirit complexes. It is unfortunate, shall we say, that like many wanderers, the vibratory distortions of third-density illusion caused this entity to become extremely distorted in its perceptions of its fellow mind/body/spirit complexes so that its mission was hindered and, in the result, perverted from its purposes.</p>
+      <p class="zh">被称为尼古拉的实体，信息来自星际联邦的源头；那些源头想帮忙的对象，是一个容我们说天使般高度正面的实体，愿望是改善同胞心/身/灵复合体的处境。可惜的是，如同许多流浪者，第三密度幻象的振动变貌让这个实体对同伴的感知极度扭曲，使命因而受阻，最终偏离了原本的目的。</p>
+      <span class="src">—— Session 011 · (11.25)</span>
+    </div>
+    <p>他原本最想要的是什么？Ra 说：把行星上的所有实体从黑暗中解放出来，因此他试图把行星球体的无限能量交给这个行星，用于照明与动力 (11.26)。发问者追问「从黑暗中解放」具体指什么，录音机故障、只留下要旨——Ra 说的是<b>字面意义上的黑暗</b> (11.27)。</p>
+    <div class="plain">特斯拉不是失败者，也不是被欺骗的人：他收到的是正面来源的信息，使命也是正面的，真正让他偏离的是第三密度幻象对他感知的扭曲——这是 Ra 对「流浪者」境遇的一次具体描述。</div>
+    <div class="case"><b>被误解拖偏的天才同事：</b>团队请来一位能力极强的工程师，本意是解决能耗问题。他却因为长期误解同事的动机，把方案改成了只为证明自己正确的东西，项目最终背离了初衷。这对应 (11.25)：第三密度幻象的振动变貌让这个实体对同伴的感知极度扭曲，使命受阻、背离目的。</div>
+  </div>
+  <div class="card">
+    <h3>「从黑暗中解放」与闲暇：工业革命的位置</h3>
+    <div class="q">这种从黑暗中的解放与一的法则相合吗？它有真实的产物吗？那么工业革命呢，它是以某种方式被计划的吗？</div>
+    <div class="quote">
+      <p class="en">Secondly, the leisure afforded, thereby exemplifying the possibility and enhancing the probability of the freedom to then search the self for the beginning of seeking the Law of One.</p>
+      <p class="zh">第二件是它带来的闲暇：这让「之后得以自由地探索自我、开始寻求一的法则」这件事既被示范出来，发生的或然率也随之提高。</p>
+      <span class="src">—— Session 011 · (11.28)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Few there are working physically from daybreak to darkness, as you name them, upon your plane who can contemplate the Law of One in a conscious fashion.</p>
+      <p class="zh">在你们的平面上，那些，如你们所说，从天亮一直干到天黑的人里头，能以有意识的方式沉思一的法则的，少之又少。</p>
+      <span class="src">—— Session 011 · (11.28)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Wanderers incarnated in several waves, as you may call them, in order to bring into existence the gradual freeing from the demands of the diurnal cycles and lack of freedom of leisure.</p>
+      <p class="zh">流浪者分几波降生——你们或许会这样称呼——目的正是让一种逐步的解脱成真：从日夜循环的种种要求里解脱，也从闲暇被剥夺的状态里解脱。</p>
+      <span class="src">—— Session 011 · (11.29)</span>
+    </div>
+    <div class="plain">省下的力气本身不是终点，省下的时间才是：人不必再为能源付费、不必整天劳作，才有机会转过身去探索自我。工业革命之所以值得一说，是因为它被放进了这条因果链里——由流浪者几波化身促成。</div>
+    <div class="case"><b>通上自来水之后的那个下午：</b>一个村子原本每天要花两小时走山路挑水，通常是女孩去。自来水接通后，这些下午第一次空出来，有人开始上学。这对应 (11.28)/(11.29)：工业革命式的「从日循环的需求中解放」，其意义在于例示并增强「随后拥有自由去探索自我」的可能性。</div>
+  </div>
+  <div class="card">
+    <h3>归类练习：这是哪一条取向？</h3>
+    <p>下面每件事都出自本集，判断它属于哪种取向。注意 Ra 说过：有的局面本身就是混合的。</p>
+    <div id="sorterArea"></div>
+  </div>
+  <div class="case"><b>召集团队的那笔钱的来路：</b>一个实验室做出了一件本来很好的工具，但出资方、召集人和后续接手的人取向各不相同——成果最后长成什么样，往往由接力链上最后一个接手的人决定。这对应 (11.23)：负责召集科学家的实体是混合取向，科学家们绝大多数正面，而追随他们工作的人取向混杂。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>收官：服务自我即是服务一切</h2></div>
+  <p class="sec-lead">Ra 在结束前问有没有简短问题，发问者问的是本集最根本的一个：为什么猎户座十字军要这样做，他们的终极目标是什么？他担心这问题「太长」，Ra 说并不长。</p>
+  <div class="card">
+    <h3>那个被反复重申的框架：所有存有都服务造物主</h3>
+    <div class="q">你不可能精确地告诉我们他如何服务吗？</div>
+    <div class="quote">
+      <p class="en">It is possible for us to speak to this query. However, we use any chance we may have to reiterate the basic understanding/learning that all beings serve the Creator.</p>
+      <p class="zh">这个问题我们可以谈。只是我们不放过任何可能的机会，去重申那项基本的理解/学习：一切存有都在服务造物主。</p>
+      <span class="src">—— Session 011 · (11.15)</span>
+    </div>
+    <div class="plain">Ra 没有把负面取向的存在划到体系之外——他们也在服务造物主，只是以自己的方式。这句话在本集里出现了两次，是理解猎户座那一整段的前置条件。</div>
+    <div class="analogy"><b>像一支球队里的替补：</b>替补方向和主力相反，训练内容相反，甚至互为对手；但整场比赛仍然由他们共同构成。说「他们都在这场比赛里」不等于说「他们做的是同一件事」。</div>
+  </div>
+  <div class="card">
+    <h3>术语卡：本集的关键词</h3>
+    <p>点击卡片翻看解释。这几个词在本集里第一次承担关键角色，后面几集会反复出现。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">社会记忆复合体</div><div class="sub">social memory complex</div><span class="tap">点击展开</span></div><div class="back">当一个社会复合体的全体实体拥有同一取向或寻求时，个体在心智之树根部丢失的群体记忆便对整个社会开放，于是形成社会记忆复合体。优势是理解与寻求方向上的变貌都相对更少。<em>比喻：全队共用一套战术记忆之后，不用喊也知道彼此下一步跑哪里。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">自由意志变貌</div><div class="sub">Free Will Distortion</div><span class="tap">点击展开</span></div><div class="back">干扰他人的选择就是侵犯自由意志——连负面集团也必须遵守这条法则，Ra 自己也因它而拒绝点名涉及未来的实体。<em>案例：老师不肯划考试范围，不是没有答案，而是说出来就剥夺了你自行推演的机会。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">流浪者</div><div class="sub">wanderer</div><span class="tap">点击展开</span></div><div class="back">自愿化身到第三密度、以服务他人为使命的实体，特斯拉即被 Ra 归入其中；他们常因第三密度幻象的振动变貌而感知扭曲，以致使命受阻。<em>比喻：外派到陌生城市的同事——语言通了，水土不服却没通。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">可能性/或然率漩涡</div><div class="sub">possibility/probability vortex</div><span class="tap">点击展开</span></div><div class="back">通往某个结果的一条可能路径。行动一旦发生，平行的漩涡便停止，新的漩涡从当下开始生成——所以「本来会怎样」无法精确计算，只能给出近似。<em>案例：差三分的那一年，脚步落下之后就不再有「如果」。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">第八层级 / 智能无限</div><div class="sub">eighth level / intelligent infinity</div><span class="tap">点击展开</span></div><div class="back">只有从第七层级经由第六层级打开才能抵达的层级。穿透进入它，允许一个心/身/灵复合体在周期中的任何时间/空间、只要自己愿意就被收割。<em>比喻：一张不受班次限制的车票——不必等到收割期才能上车。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">思想控制</div><div class="sub">thought control</div><span class="tap">点击展开</span></div><div class="back">本集语境里指猎户座集团经精英传播的一套技术，形式是各种控制或操纵他人以服务自我的手段，也包括以心灵感应传给科学家的技术信息。<em>案例：推荐算法不强迫你看什么，只是持续喂养你本来就想看的东西。</em></div></div>
+    </div>
+  </div>
+  <div class="saying">
+    <p class="en">To serve the self is to serve all. The service of the self, when seen in this perspective, requires an ever-expanding use of the energies of others for manipulation to the benefit of the self with distortion towards power.</p>
+    <p class="zh">服务自我，即是服务全体。若从这一视角看，服务自我要求不断地、扩张地动用他人的能量，借着操纵为自己牟利，并带着朝向权力的变貌。</p>
+    <span class="src">—— Session 011 · (11.31)</span>
+  </div>
+  <div class="card">
+    <h3>这一集留下的位置</h3>
+    <p>本集的收束方式很特别：Ra 没有把猎户座集团讲成一个需要被消灭的敌人，而是把它讲成一条逻辑的必然——服务自我若要成立，就必须不断扩张地使用他人的能量、不断朝权力方向变貌。Ra 最后还留了口子：这个话题没有讲完。</p>
+    <div class="quote">
+      <p class="en">If there are further queries to more fully explicate this subject, we shall be with you again.</p>
+      <p class="zh">如果有进一步的问题来更充分地阐述这个主题，我们将再次与你们同在。</p>
+      <span class="src">—— Session 011 · (11.31)</span>
+    </div>
+    <div class="plain">读下一集时可以带着这个问题：猎户座集团这条线，Ra 接下来会怎么展开？</div>
+  </div>
+  <div class="case"><b>「他们图什么」：</b>某个平台不断扩张、不断占用用户时间，你问「他们图什么」。省事的答案是「坏」，更准的答案更像数学：它必须不断扩张、不断使用他人的能量为自己谋利——这是「服务自我」这条路本身的形态，不是某个人的性格缺陷。这对应 (11.31)：服务自我即是服务一切；这种服务需要不断扩展地使用他人的能量，以操纵为自我谋利，并带有朝向权力的变貌。</div>
+  <div class="case"><b>录音前把麦克风摆正：</b>每次录音前把麦克风摆到与嘴同高、把椅子调到固定高度，看起来像仪式，其实是让这条通道稳定——摆正了，声音就干净。这对应 (11.30)：最重要的是仔细校准符号；「符号」指的就是集会中那些物件与几何位置。</div>
+  <div class="case"><b>一句「我们将再次与你们同在」：</b>会议结束前主持人说「这个话题今天没讲完，下次接着聊」，于是散会后大家不是松口气，而是各自带着问题回去了。这对应 (11.31)：Ra 明确说若有进一步问题以更充分阐述这个主题，将再次同在——伏笔是留给下一集的。</div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+<p>基于 The Ra Contact Session 011（split/Ra_Session_011.md）英文原文制作 · 交互式学习模块</p>
+<p>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文</p>
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra011-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+  {t:'① 例行与仪式',d:'<span class="qa-q">问：呼唤你们的仪式要不要收进书里？我们几个人在场对器皿有帮助吗？</span><b>答：</b>仪式收不收进书里不重要，它当初是为了建立接触而提出的；真正重要的是发问者与 Jim，另两位以分享物理能量的能力帮助器皿的舒适。(11.1)(11.2)'},
+  {t:'② 马尔德克的另一种可能',d:'<span class="qa-q">问：如果马尔德克没有因战争自毁，它会成为服务自我的行星吗？</span><b>答：</b>它和你们一样是混合取向，最可能是一次混合收割；但这个判断只是近似，因为行动一发生，平行的可能性漩涡就停止，新的漩涡开始。(11.3)'},
+  {t:'③ 太阳背面',d:'<span class="qa-q">问：我们太阳背后是否有一颗我们不知道的行星？</span><b>答：</b>那里的确有一个极冷的球体，大到足以扭曲某些统计数字，但它锁在第一密度，不该被称为行星。(11.4)'},
+  {t:'④ 谁能去负面第四密度',d:'<span class="qa-q">问：本次收割中，有人能去服务自我类型的第四密度行星吗？历史上有谁做到了？</span><b>答：</b>有，但很少。少数实体穿透了第八层级——只能从第七经由第六打开而抵达；穿透它，就等于可以在周期内任何时间/空间按自己的意愿被收割。他们靠的是记忆里的亚特兰蒂斯式理解，以及不遗余力地加倍强化门户。(11.6)(11.8)(11.10)(11.11)'},
+  {t:'⑤ 三个名字与三个落点',d:'<span class="qa-q">问：这些人在历史上以名字为人所知吗？他们现在在哪？</span><b>答：</b>塔拉斯·布尔巴、成吉思汗、拉斯普京。三人现在都在第四密度，各自选择了一个以服务自我来理解一的法则的行星：猎户座集团、仙后座、南十字座。位置只能给近似值——不同密度的空间/时间连续体不兼容。(11.9)(11.12)'},
+  {t:'⑥ 十字军的运作',d:'<span class="qa-q">问：十字军如何做思想控制？一个行星在什么阶段实现社会记忆？</span><b>答：</b>他们同样遵守自由意志，只与呼唤者建立接触；被接触者成为精英，再由精英传播服务自我版本的法则理解，最终使其余实体被自己的自由意志所奴役。他们的战车只在行星形成社会记忆之前动手。(11.16)(11.17)(11.18)'},
+  {t:'⑦ 技术信息与核能',d:'<span class="qa-q">问：十字军传递什么类型的信息？我们是这样获知核能的吗？</span><b>答：</b>信息可以是技术性的，形式是控制或操纵他人以服务自我的手段。核能是混合取向的产物：召集者是混合取向，科学家绝大多数正面，而后续接手者混杂，其中有一位极度负面的实体至今仍在地球上。(11.21)(11.22)(11.23)(11.24)'},
+  {t:'⑧ 特斯拉与工业革命',d:'<span class="qa-q">问：特斯拉的信息从哪来？工业革命是被计划的吗？</span><b>答：</b>特斯拉从星际联邦的正面来源接收信息，本意是把行星的无限能量交给人类使用，却因第三密度幻象的扭曲使使命受阻、背离目的。至于工业革命：流浪者以几波化身而来，促成从日循环劳作与闲暇匮乏中的逐渐解放——因为很少有人能从黎明劳作到天黑，还以有意识的方式沉思一的法则。(11.25)(11.26)(11.28)(11.29)'},
+  {t:'⑨ 为什么他们这样做',d:'<span class="qa-q">问：为什么猎户座的十字军要这样做？他们的终极目标是什么？</span><b>答：</b>服务自我即是服务一切。从这个视角看，服务自我需要不断扩展地使用他人的能量，以操纵为自我谋利，并带有朝向权力的变貌——这不是「太长的答案」，而是一条逻辑的必然。(11.31)'}
+]);
+
+initSorter('sorterArea',[
+  {a:'一家公司让员工「自愿」接受随时在线，并把这称作「我们的文化」',opts:['服务他人','服务自我','混合取向'],ans:'服务自我',exp:'这正是「使其余实体被自己的自由意志所奴役」的现代版本：没有人被强迫，规则让每个人自己签字。'},
+  {a:'一个开源社区把工具免费公开，只希望更多偏远地区的人用得上',opts:['服务他人','服务自我','混合取向'],ans:'服务他人',exp:'Ra 说星际联邦中也有成员以服务他人的方式提供技术——把手段交出去，不附加控制。'},
+  {a:'召集那批科学家开展研究的实体们',opts:['服务他人','服务自我','混合取向'],ans:'混合取向',exp:'Ra 明确说负责召集科学家的实体们取向是混合的，而被召集的科学家绝大多数是正面取向。'},
+  {a:'核能',opts:['服务他人','服务自我','混合取向'],ans:'混合取向',exp:'正面取向者收到的信息本意是开启和平进步手段，却因负面取向者的进一步接收，回响成潜在毁灭的余音。'},
+  {a:'有人把个人修习的强度翻倍、再加倍，只为强化自己的门户',opts:['服务他人','服务自我','混合取向'],ans:'服务自我',exp:'Ra 说这几个人一心一意致力于服务自我，在个人修习中不遗余力地加倍、再加倍地强化门户——方向是服务自我。'},
+  {a:'乘坐战车去征服尚未实现社会记忆的行星',opts:['服务他人','服务自我','混合取向'],ans:'服务自我',exp:'他们传播的是他们对一的法则的特定理解，即服务自我；并且专挑社会记忆尚未形成、变貌较多的时机动手。'}
+]);
+
+function updateCond(){
+  const a=document.getElementById('cond1').checked,
+        b=document.getElementById('cond2').checked,
+        c=document.getElementById('cond3').checked;
+  const el=document.getElementById('condResult');
+  let html='',fail=true;
+  if(!a){
+    html='<b>链条没有起点。</b>Ra 的机制里，接触只与呼唤者建立。没有人先开口，猎户座集团无法越过自由意志去敲门——这一条一关，后面两步都无从发生。';
+  }else if(!b){
+    html='<b>有人呼唤，但门没开。</b>呼唤只造成吸引，信息进不来。Ra 说通往智能无限的门户有两条来路：靠练习与修习去寻求接触，或振动复合体本身使门户自开——两者都没有，接触就落空。';
+  }else if(!c){
+    html='<b>有个体层面的接触，但停在这里。</b>少了那批「精英」把它变成一套可传播的态度与哲学，它就只是一个人的私人体验，无法形成「其余实体被自己的自由意志所奴役」这种结构。';
+  }else{
+    fail=false;
+    html='<b>完整链条：</b>呼唤 → 接触 → 精英 → 传播「服务自我」版本的法则理解 → 其余实体在自己的自由意志下接受奴役。Ra 顺便把这套结构的终极逻辑交代了（见收官章）：服务自我若要成立，就必须不断扩张地使用他人的能量。同样的三个开关，换成服务他人的取向，就是另一条路。';
+  }
+  el.className=fail?'fail':'';
+  el.innerHTML=html;
+}
+['cond1','cond2','cond3'].forEach(id=>document.getElementById(id).addEventListener('change',updateCond));
+updateCond();
+
+document.querySelectorAll('.fn-card').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('open')));
+
+renderPath();
+</script>
+</body>
+</html>

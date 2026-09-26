@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css">
+<title>造物与理则 · 滚动星旅</title>
+<style>
+:root{
+  --amb:#f5efe2;          /* 当前场景氛围色，由 JS 实时插值 */
+  --ink:#efe9dd;
+  --ink-dim:rgba(239,233,221,.55);
+  --serif:"LXGW WenKai","霞鹜文楷","LXGW WenKai SC","Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:#070a12;color:var(--ink);font-family:var(--serif);
+  line-height:2;overflow-x:hidden;
+}
+canvas#sky{position:fixed;inset:0;width:100vw;height:100vh;z-index:0}
+
+/* ===== 进度轨道 ===== */
+#rail{
+  position:fixed;right:26px;top:50%;transform:translateY(-50%);z-index:8;
+  display:flex;flex-direction:column;gap:13px;align-items:flex-end;
+}
+#rail .r{display:flex;align-items:center;gap:10px;cursor:pointer}
+#rail .r i{
+  width:5px;height:5px;border-radius:50%;flex-shrink:0;
+  background:rgba(255,255,255,.16);transition:all .4s;
+}
+#rail .r.cur i{background:var(--amb);box-shadow:0 0 9px var(--amb);transform:scale(1.7)}
+#rail .lbl{
+  font-size:.72rem;letter-spacing:.12em;color:var(--ink);white-space:nowrap;
+  padding:3px 12px;border-radius:999px;background:rgba(7,10,18,.78);
+  border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(4px);
+  opacity:0;transform:translateX(10px);transition:all .35s ease;pointer-events:none;
+}
+#rail:hover .lbl{opacity:1;transform:none}
+#rail .r.cur .lbl{border-color:var(--amb);color:var(--amb)}
+
+main{position:relative;z-index:1}
+
+/* ===== 时刻场景（全屏居中） ===== */
+.scene{min-height:118vh;display:flex;align-items:center;justify-content:center;padding:14vh 22px}
+.stage{max-width:620px;text-align:center;opacity:0;transform:translateY(34px);filter:blur(6px);transition:opacity 1.6s ease,transform 1.6s ease,filter 1.6s ease}
+.scene.on .stage,.station.on .stage{opacity:1;transform:none;filter:blur(0)}
+.kicker{
+  font-size:.8rem;letter-spacing:.55em;text-indent:.55em;color:var(--amb);
+  margin-bottom:30px;opacity:.85;
+}
+.kicker::after{
+  content:"";display:block;width:34px;height:1px;margin:16px auto 0;
+  background:var(--amb);opacity:.5;
+}
+.narr{font-size:1.18rem;color:var(--ink);margin-bottom:38px;text-align:center}
+.en{
+  font-family:Georgia,"Times New Roman",serif;font-style:italic;
+  font-size:.98rem;line-height:1.9;color:var(--amb);opacity:.92;margin-bottom:16px;
+}
+.zh{font-size:.95rem;color:var(--ink-dim);margin-bottom:10px}
+.ref{font-size:.74rem;letter-spacing:.2em;color:rgba(239,233,221,.34)}
+
+/* ===== 站点（左钉住 · 右细节流） ===== */
+.station{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);align-items:stretch}
+.pin{
+  position:sticky;top:0;height:100vh;
+  display:flex;align-items:center;justify-content:center;padding:0 3vw;
+}
+.pin .stage{max-width:520px}
+.detail{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:10vh 5vw 10vh 0;
+}
+.frag{
+  min-height:60vh;display:flex;flex-direction:column;justify-content:center;
+  max-width:440px;
+  opacity:0;transform:translateY(30px);
+  transition:opacity 1.3s ease,transform 1.3s ease;
+}
+.frag.on{opacity:1;transform:none}
+.f-k{
+  font-size:.78rem;letter-spacing:.4em;color:var(--amb);opacity:.85;margin-bottom:18px;
+}
+.f-en{
+  font-family:Georgia,"Times New Roman",serif;font-style:italic;
+  font-size:.92rem;line-height:1.9;color:var(--amb);opacity:.9;
+  border-left:2px solid rgba(255,255,255,.18);padding-left:16px;margin-bottom:14px;
+}
+.f-zh{font-size:.93rem;color:var(--ink-dim);margin-bottom:8px}
+.f-ref{font-size:.72rem;letter-spacing:.2em;color:rgba(239,233,221,.32)}
+
+/* 开场 */
+#s0 .narr{font-size:1.5rem;letter-spacing:.1em;line-height:2.3}
+.hint{
+  margin-top:60px;font-size:.8rem;letter-spacing:.4em;text-indent:.4em;
+  color:var(--ink-dim);animation:drift 2.6s ease-in-out infinite;
+}
+@keyframes drift{0%,100%{transform:translateY(0);opacity:.45}50%{transform:translateY(9px);opacity:.95}}
+
+/* 可选演示区（棱镜） */
+.demo{margin:8px auto 42px}
+.prism{position:relative;height:230px;margin:8px auto 42px;width:340px;max-width:86vw}
+.beam{
+  position:absolute;left:0;top:50%;width:150px;height:3px;transform:translateY(-50%);
+  background:linear-gradient(90deg,rgba(255,255,255,0),#fff);border-radius:2px;
+  filter:drop-shadow(0 0 7px rgba(255,255,255,.8));
+}
+.tri{
+  position:absolute;left:150px;top:50%;transform:translateY(-50%);
+  width:0;height:0;border-top:52px solid transparent;border-bottom:52px solid transparent;
+  border-left:86px solid rgba(255,255,255,.13);
+}
+.ray{
+  position:absolute;left:236px;top:50%;height:2px;width:150px;border-radius:2px;
+  transform-origin:0 50%;transform:rotate(0) scaleX(.06);opacity:0;
+  transition:transform 2.2s cubic-bezier(.2,.7,.2,1) var(--d,0s),opacity 2.2s ease var(--d,0s);
+}
+.scene.on .ray{transform:rotate(var(--a)) scaleX(1);opacity:.85}
+
+/* 终章 */
+#sLast .en{font-size:1.06rem;line-height:2.2}
+#sLast .zh{font-size:1rem}
+.again{
+  margin-top:56px;font-family:var(--serif);font-size:.85rem;letter-spacing:.35em;text-indent:.35em;
+  color:var(--ink-dim);background:none;border:1px solid rgba(255,255,255,.14);
+  border-radius:999px;padding:11px 30px;cursor:pointer;transition:all .4s;
+}
+.again:hover{color:var(--ink);border-color:var(--amb)}
+
+footer{
+  position:relative;z-index:1;text-align:center;padding:40px 20px 56px;
+  font-size:.76rem;color:rgba(239,233,221,.3);letter-spacing:.08em;line-height:2.2;
+}
+@media (max-width:900px){
+  .station{display:block}
+  .pin{position:static;height:auto;padding:12vh 22px 2vh}
+  .pin .stage{margin:0 auto}
+  .detail{padding:0 22px 6vh;align-items:center}
+  .frag{min-height:auto;margin-bottom:7vh}
+}
+@media (max-width:640px){
+  .narr{font-size:1.05rem}
+  #s0 .narr{font-size:1.2rem}
+  #rail{display:none}
+}
+</style>
+</head>
+<body>
+
+<canvas id="sky"></canvas>
+<div id="rail"></div>
+
+<main>
+
+<!-- 0 开场 · 无限者不可能是众多 -->
+<section class="scene" id="s0" data-c="#f5efe2">
+  <div class="stage">
+    <p class="narr">在一切星系、一切密度、一切故事之前，<br>先有一个问题：<br>如果无限是真的，<br>它怎么可能是一堆东西？</p>
+    <p class="en">"That which is infinite cannot be many, for many-ness is a finite concept. To have infinity you must identify or define that infinity as unity; otherwise, the term does not have any referent or meaning. In an Infinite Creator there is only unity."</p>
+    <p class="zh">无限者不可能是众多——因为「众多」是一个有限的概念。要拥有无限，你必须把无限认定为统一；否则这个词没有任何指涉。在无限造物主之中，只有统一。</p>
+    <p class="ref">—— SESSION 001 · (1.7)</p>
+    <p class="hint">向下滚动 · 让光穿过棱镜 ▾</p>
+  </div>
+</section>
+
+<!-- 1 棱镜 -->
+<section class="scene" id="s1" data-c="#ffffff">
+  <div class="stage">
+    <p class="kicker">棱镜</p>
+    <div class="prism">
+      <div class="beam"></div><div class="tri"></div>
+      <div class="ray" style="--a:-46deg;--d:.1s;background:linear-gradient(90deg,#c94b3a,transparent)"></div>
+      <div class="ray" style="--a:-31deg;--d:.25s;background:linear-gradient(90deg,#d97b3f,transparent)"></div>
+      <div class="ray" style="--a:-15deg;--d:.4s;background:linear-gradient(90deg,#d9b23f,transparent)"></div>
+      <div class="ray" style="--a:0deg;--d:.55s;background:linear-gradient(90deg,#58b98a,transparent)"></div>
+      <div class="ray" style="--a:15deg;--d:.7s;background:linear-gradient(90deg,#4f8fd9,transparent)"></div>
+      <div class="ray" style="--a:31deg;--d:.85s;background:linear-gradient(90deg,#7a6fd9,transparent)"></div>
+      <div class="ray" style="--a:46deg;--d:1s;background:linear-gradient(90deg,#a86fd9,transparent)"></div>
+    </div>
+    <p class="narr">这个回答里藏着一个装置。<br>你见过它：一面棱镜，<br>让白光承认自己其实是七种颜色。<br>一，愿意成为多，<br>而不停止是一。</p>
+    <p class="en">"You have seen the prism which shows all colors stemming from the sunlight. This is a simplistic example of unity."</p>
+    <p class="zh">你们见过棱镜——所有颜色从阳光中涌出。这是统一性的一个简单例子。</p>
+    <p class="ref">—— SESSION 001 · (1.7)</p>
+  </div>
+</section>
+
+<!-- 2 太一原初思想 -->
+<section class="station" id="s2" data-c="#d9b06a">
+  <div class="pin"><div class="stage">
+    <p class="kicker">太一原初思想</p>
+    <p class="narr">旅程的第一站不在时间里，<br>在一个思想里。<br>每一个星系、每一颗恒星、每一个你，<br>都是这一个思想的一部分。</p>
+    <p class="en">"All things, all of life, all of the creation is part of One Original Thought."</p>
+    <p class="zh">万物、所有生命、整个造物，都是太一原初思想的一部分。</p>
+    <p class="ref">—— SESSION 001 · (1.0)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">无限睁开眼睛</p>
+      <p class="f-en">"Infinity became aware. This was the next step."</p>
+      <p class="f-zh">造物的第一步不是一声爆炸，而是一次觉察：无限睁开了眼睛。</p>
+      <p class="f-ref">—— SESSION 013 · (13.6)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">理则，或爱</p>
+      <p class="f-en">"Awareness led to the focus of infinity into infinite energy. You have called this by various vibrational sound complexes, the most common to your ears being “Logos” or “Love.”"</p>
+      <p class="f-zh">觉察把无限聚焦成无限的能量。你们给这个动作起过许多名字，在你们耳中最常见的是：理则，或爱。</p>
+      <p class="f-ref">—— SESSION 013 · (13.7)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">一颗伟大的心脏</p>
+      <p class="f-en">"The creation itself is a form of consciousness which is unified—the Logos being the one great heart of creation."</p>
+      <p class="f-zh">造物本身就是一种统一的意识形式，而理则，是造物那颗唯一的心脏。</p>
+      <p class="f-ref">—— SESSION 082 · (82.12)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">前一个八度的收成</p>
+      <p class="f-en">"The One Original Thought is the harvest of all previous, if you would use this term, experience of the Creator by the Creator."</p>
+      <p class="f-zh">太一原初思想并非凭空而来——它是造物主借由造物主自己、所有先前经验的收成。</p>
+      <p class="f-ref">—— SESSION 082 · (82.10)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">一切始于神秘</p>
+      <p class="f-en">"It shall be understood that any portion, no matter how small, of any density or illusory pattern contains, as in an holographic picture, the One Creator which is infinity. Thus all begins and ends in mystery."</p>
+      <p class="f-zh">任何部分，无论多小，都像一幅全息照片，装着整个作为无限的太一造物主。所以一切始于神秘，也终于神秘。</p>
+      <p class="f-ref">—— SESSION 013 · (13.13)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 3 智能无限与智能能量 -->
+<section class="station" id="s3" data-c="#c98a3a">
+  <div class="pin"><div class="stage">
+    <p class="kicker">智能无限与智能能量</p>
+    <p class="narr">那个思想有两个名字，<br>像心跳的两个节拍：<br>安静的一半叫智能无限——<br>尚未启用的一切可能；<br>跳出去的一半叫智能能量——<br>被爱使用起来的那部分。</p>
+    <p class="en">"There is unity. This unity is all that there is. This unity has a potential and kinetic. The potential is intelligent infinity. Tapping this potential will yield work. This work has been called by us, intelligent energy."</p>
+    <p class="zh">存在统一，统一就是一切万有。统一有潜能与动能：潜能是智能无限；开发利用这个潜能会产生功——这个功，我们称之为智能能量。</p>
+    <p class="ref">—— SESSION 027 · (27.5)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">从中央太阳开始的巨心</p>
+      <p class="f-en">"Intelligent infinity has a rhythm, or flow, as of a giant heart beginning with the Central Sun, as you would think or conceive of this; the presence of the flow inevitable as a tide of beingness without polarity, without finity; the vast and silent all beating outward, outward, focusing outward and inward until the focuses are complete."</p>
+      <p class="f-zh">智能无限有一种节奏：一颗从中央太阳开始的巨心，如无极性、无有限的存在之潮，浩瀚而寂静地向外搏动、向外，直到一切焦点完成。</p>
+      <p class="f-ref">—— SESSION 027 · (27.6)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">披着谜的存在本身</p>
+      <p class="f-en">"The basic rhythms of intelligent infinity are totally without distortion of any kind. The rhythms are clothed in mystery, for they are being itself."</p>
+      <p class="f-zh">智能无限的基本节奏没有任何变貌——它们披着谜，因为它们就是「存在」本身。</p>
+      <p class="f-ref">—— SESSION 027 · (27.7)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">造物主的第一个念头</p>
+      <p class="f-en">"In this distortion of the Law of One it is recognized that the Creator will know Itself."</p>
+      <p class="f-zh">一的法则的第一个变貌，只说了一句话：造物主将要认识它自己。</p>
+      <p class="f-ref">—— SESSION 027 · (27.8)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">圆满而未分化的那一个</p>
+      <p class="f-en">"The one undifferentiated intelligent infinity, unpolarized, full and whole, is the macrocosm of the mystery-clad being."</p>
+      <p class="f-zh">那个太一的、未分化的智能无限，无极性、圆满而完整——是一切谜样存在的大宇宙。</p>
+      <p class="f-ref">—— SESSION 028 · (28.1)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 4 第一变貌 · 自由意志 -->
+<section class="station" id="s4" data-c="#a86038">
+  <div class="pin"><div class="stage">
+    <p class="kicker">第一变貌 · 自由意志</p>
+    <p class="narr">为了认识自己，<br>无限做了一件最奇怪的事：<br>它认出了「有限」。<br>于是有了第一个变貌——<br>你们称之为自由意志。</p>
+    <p class="en">"The intelligent infinity discerned a concept. This concept was discerned due to freedom of will of awareness. This concept was finity. This was the first and primal paradox or distortion of the Law of One. Thus the one intelligent infinity invested itself in an exploration of many-ness."</p>
+    <p class="zh">智能无限辨识出一个概念，这个概念是「有限」。这是第一且原初的悖论或一的法则之变貌。于是，那唯一的智能无限投身于对众多性的探索。</p>
+    <p class="ref">—— SESSION 013 · (13.12)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">混淆之道</p>
+      <p class="f-en">"In your illusion all experience springs from the Law of Free Will, or the Way of Confusion."</p>
+      <p class="f-zh">在你们的幻象里，一切经验都源自自由意志法则——它还有另一个名字：混淆之道。</p>
+      <p class="f-ref">—— SESSION 027 · (27.10)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">递给子理则的火种</p>
+      <p class="f-en">"As proem let me state that the Logoi always conceived of themselves as offering free will to the sub-Logoi in their care. The sub-Logoi had freedom to experience and experiment with consciousness, the experiences of the body, and the illumination of the spirit."</p>
+      <p class="f-zh">理则始终把自己看作自由意志的给予者：子理则有自由去体验、去实验意识、身体与灵性的照亮。</p>
+      <p class="f-ref">—— SESSION 078 · (78.19)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">缺的那味关键配方</p>
+      <p class="f-en">"All the previous, if you would use this term, experiments, although resulting in many experiences, lacked what was considered the crucial ingredient: that is, polarization."</p>
+      <p class="f-zh">此前所有的实验都产出过大量经验，却缺了被认为最关键的成分：极化。</p>
+      <p class="f-ref">—— SESSION 082 · (82.21)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 5 逻各斯 · 爱的选择 -->
+<section class="station" id="s5" data-c="#cf7a55">
+  <div class="pin"><div class="stage">
+    <p class="kicker">逻各斯 · 爱的选择</p>
+    <p class="narr">无限怎么变成一个特定的宇宙？<br>靠一次聚焦、一次选择。<br>这次选择有个名字：<br>爱。<br>每个星系，都是一次爱的落笔。</p>
+    <p class="en">"The term Love then may be seen as the focus, the choice of attack, the type of energy of an extremely, shall we say, high order which causes intelligent energy to be formed from the potential of intelligent infinity in just such and such a way."</p>
+    <p class="zh">爱可以被看作焦点、攻击的选择、一种极高秩序的能量类型——它使智能能量以如此这般的方式，从智能无限的潜能中成形。</p>
+    <p class="ref">—— SESSION 027 · (27.12)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">伟大的激活者</p>
+      <p class="f-en">" … the distortion Love being the great activator and primal co-Creator of various creations using intelligent infinity; the vibration love being that density in which those who have learned to do an activity called "loving" without significant distortion, then seek the Ways of Light or Wisdom."</p>
+      <p class="f-zh">作为变貌的爱，是使用智能无限的各种造物的伟大激活者与原始共同造物主；而作为振动的爱，是另一种东西。</p>
+      <p class="f-ref">—— SESSION 027 · (27.13)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">所有爱来自同一个频率</p>
+      <p class="f-en">"Each Love, as you term the prime movers, comes from one frequency, if you wish to use this term. This frequency is unity."</p>
+      <p class="f-zh">每一个爱——你们称为原始推动者——都来自同一个频率。这个频率，就是统一。</p>
+      <p class="f-ref">—— SESSION 027 · (27.15)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">在爱的思想里凝聚成形</p>
+      <p class="f-en">"The process by which space/time comes into continuum form is a function of the careful building, shall we say, of an entire, or whole, plan of vibratory rates, densities, and potentials. When this plan has coalesced in the thought complexes of Love, then the physical manifestations begin to appear; this first manifestation stage being awareness or consciousness."</p>
+      <p class="f-zh">当振动频率、密度与潜能的整全计划在爱的思想复合体中凝聚完成，物理显化才开始出现——而显化的第一阶段，就是觉察。</p>
+      <p class="f-ref">—— SESSION 029 · (29.11)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">一个理则，几百亿颗星</p>
+      <p class="f-en">"The possibilities are infinite. Thus a Logos may create what you call a star system, or it may be the Logos creating billions of star systems."</p>
+      <p class="f-zh">一个理则可以创造一个恒星系统，也可以创造几十亿个恒星系统——「星系」这个词的混乱由此而来。</p>
+      <p class="f-ref">—— SESSION 028 · (28.7)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">两千五百亿分之一</p>
+      <p class="f-en">"This planetary Logos is a strong Logos creating approximately two hundred fifty billion [250,000,000,000] of your star systems for Its creation."</p>
+      <p class="f-zh">创造我们银河系的，是一个强大的理则：它为它的造物造了大约两千五百亿个恒星系统。</p>
+      <p class="f-ref">—— SESSION 028 · (28.8)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 6 子逻各斯 · 恒星 -->
+<section class="station" id="s6" data-c="#d98f3d">
+  <div class="pin"><div class="stage">
+    <p class="kicker">子逻各斯 · 恒星</p>
+    <p class="narr">星系有自己的理则，<br>而每颗恒星，是一个更小的理则——<br>子逻各斯。<br>你窗外的太阳，<br>正在用它的自由意志，<br>为这方宇宙上色。</p>
+    <p class="en">"The relationship is hierarchical in that the sub-Logos uses the intelligent energy in ways set forth by the Logos and uses its free will to co-create the, shall we say, full nuances of your densities as you experience them."</p>
+    <p class="zh">这种关系是层级性的：子理则以理则设定的方式运用智能能量，并用它的自由意志，共同创造你们所体验的各密度的全部细微差异。</p>
+    <p class="ref">—— SESSION 041 · (41.4)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">太阳的第一重身份</p>
+      <p class="f-en">"In relationship to intelligent infinity, the sun body is, equally with all parts of the infinite creation, part of that infinity."</p>
+      <p class="f-zh">就智能无限而言，太阳体与无限造物的所有部分一样，就是那无限的一部分。</p>
+      <p class="f-ref">—— SESSION 041 · (41.4)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">从星团向外旋转</p>
+      <p class="f-en">"In the case of the galactic systems the first manifestation of the Logos is a cluster of central systems which generate the outward swirling energies producing, in their turn, further energy centers for the Logos, or what you would call stars."</p>
+      <p class="f-zh">理则在星系中的第一个显化，是一群中心系统的星团：它们产生向外旋转的能量，再生成更多能量中心——你们称之为恒星。</p>
+      <p class="f-ref">—— SESSION 082 · (82.8)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">离原初越近的星</p>
+      <p class="f-en">"However, the closer to the, shall we say, beginning of the manifestation of the Logos the star is, the more it partakes in the One Original Thought."</p>
+      <p class="f-zh">一颗恒星越靠近理则显化的开端，它就越多地参与那个太一原初思想。</p>
+      <p class="f-ref">—— SESSION 082 · (82.9)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">看似矛盾的细分</p>
+      <p class="f-en">"It would seem that if one Logos creates the intelligent energy ways for a large system, there would not be the necessity or possibility of the further sub-Logos differentiation. However, within limits, this is precisely the case, and it is perceptive that this has been seen."</p>
+      <p class="f-zh">一个理则既已为大系统设定智能能量之道，怎么还能细分出子理则？Ra 说：在限制之内，事实恰恰如此。</p>
+      <p class="f-ref">—— SESSION 028 · (28.11)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">稍稍不同的太阳系</p>
+      <p class="f-en">"They are all part of the same Logos. Your solar system, as you would call it, is a manifestation, somewhat and slightly different, due to the presence of a sub-Logos."</p>
+      <p class="f-zh">它们都属于同一个理则；而你们这个太阳系，因一个子理则的存在，呈现得稍有不同。</p>
+      <p class="f-ref">—— SESSION 029 · (29.4)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 7 爱/光与光/爱 -->
+<section class="station" id="s7" data-c="#4f8fd9">
+  <div class="pin"><div class="stage">
+    <p class="kicker">爱/光与光/爱</p>
+    <p class="narr">爱不是光。<br>爱是那只手，光是那束材料。<br>爱把光弯成颜色、<br>弯成密度、弯成你——<br>这就是爱/光与光/爱的全部力学。</p>
+    <p class="en">"The nature of the vibratory patterns of your universe is dependent upon the configurations placed upon the original material, or Light, by the focus, or Love, using Its intelligent energy to create a certain pattern of illusions, or densities, in order to satisfy Its own intelligent estimate of a method of knowing Itself."</p>
+    <p class="zh">你们宇宙振动模式的性质，取决于焦点或爱加诸原始材料——光——之上的配置：爱用它的智能能量造出某种幻象或密度的模式，以满足它对「认识自己之方法」的智能估算。</p>
+    <p class="ref">—— SESSION 027 · (27.17)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">爱走进光</p>
+      <p class="f-en">"Thus in vibratory sense love comes into light. In the sense of the activity of unity in its free will, love uses light and has the power to direct light in its distortions."</p>
+      <p class="f-zh">在振动的意义上，爱进入光；在统一性自由意志活动的意义上，爱使用光，并有能力在光的种种变貌中引导它。</p>
+      <p class="f-ref">—— SESSION 027 · (27.13)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">最简单的显化存有</p>
+      <p class="f-en">"The simplest manifest being is light, or what you have called the photon. In relationship to energy centers it may be seen to be the center, or foundation, of all articulated energy fields."</p>
+      <p class="f-zh">最简单的显化存有是光——你们称为光子。它是一切被表达之能量场的中心与地基。</p>
+      <p class="f-ref">—— SESSION 041 · (41.9)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">爱在排序</p>
+      <p class="f-en">"It is necessary to consider the enabling function of the focus known as Love. This energy is of an ordering nature. It orders in a cumulative way from greater to lesser so that when Its universe, as you may call it, is complete, the manner of development of each detail is inherent in the living light …"</p>
+      <p class="f-zh">爱具有秩序性：它由大至小累积地排序，于是当它的宇宙完成时，每个细节的发展方式都已内在于那活生生的光中。</p>
+      <p class="f-ref">—— SESSION 028 · (28.5)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">颜色是精确的分配</p>
+      <p class="f-en">"You may understand each color, or ray, as being, as we had said, a very specific and accurate apportion of intelligent energy’s representation of intelligent infinity, each ray having been previously inspected in other regards."</p>
+      <p class="f-zh">每一种颜色、每一道光芒，都是智能能量代表智能无限所作的一次精确分配。</p>
+      <p class="f-ref">—— SESSION 028 · (28.2)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">你收到的光是谁的孩子</p>
+      <p class="f-en">"Thus you may think of portions of the light that you receive as offspring of the generative expression of sixth-density love."</p>
+      <p class="f-zh">你接收到的部分光，可以看作第六密度之爱的生成性表达所留下的后代。</p>
+      <p class="f-ref">—— SESSION 041 · (41.5)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 8 从一粒光到万有 -->
+<section class="station" id="s8" data-c="#3a66b0">
+  <div class="pin"><div class="stage">
+    <p class="kicker">从一粒光到万有</p>
+    <p class="narr">创造并不从一声大爆炸开始，<br>从一粒光开始。<br>一粒被爱弯折的光，<br>转出所有的元素、<br>所有的行星、<br>所有正在读这行字的人。</p>
+    <p class="en">"The concept of Light is instrumental in grasping this great leap of thought, as this vibrational distortion of infinity is the building block of that which is known as matter, the Light being intelligent and full of energy, thus being the first distortion of intelligent infinity which was called by the Creative Principle."</p>
+    <p class="zh">光的概念是理解这次思想飞跃的关键：这个无限的振动变貌，是你们称为物质之物的构建基石——光有智能、充满能量，是造物原则召唤出的第一个变貌。</p>
+    <p class="ref">—— SESSION 013 · (13.9)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">物质开始的地方</p>
+      <p class="f-en">"The energies moved in increasingly intelligent patterns until the individualization of various energies emanating from the Creative Principle of intelligent infinity became such as to be co-Creators. Thus the so-called physical matter began."</p>
+      <p class="f-zh">能量以愈来愈智能的模式移动，直到从智能无限造物原则中散发的诸能量个体化为共同造物主。于是，所谓的物理物质开始了。</p>
+      <p class="f-ref">—— SESSION 013 · (13.9)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">直线里藏着的无限</p>
+      <p class="f-en">"This Light of Love was made to have in its occurrences of being certain characteristics, among them the infinite whole paradoxically described by the straight line, as you would call it."</p>
+      <p class="f-zh">爱之光被赋予一种奇特的性质：无限的全体，悖论地由你们所称的一条直线来描述——太阳系、星系与行星因此全都旋转并趋向透镜状。</p>
+      <p class="f-ref">—— SESSION 013 · (13.9)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">随便往哪儿看都是全图</p>
+      <p class="f-en">"The energy moves from the intelligent infinity due, first, to the outpouring of randomized creative force, this then creating patterns which, in holographic style, appear as the entire creation no matter which direction or energy is explored."</p>
+      <p class="f-zh">能量从智能无限流出，随机创造力的倾泻造出各种模式——以全息的方式，无论朝哪个方向看，都显现为整个造物。</p>
+      <p class="f-ref">—— SESSION 013 · (13.8)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">一层套一层的螺旋</p>
+      <p class="f-en">"However, the progression is from the galaxy spiraling energy, to the solar spiraling energy, to the planetary spiraling energy, to the experiential circumstances of spiraling energy which begin the first density of awareness, or consciousness, of planetary entities."</p>
+      <p class="f-zh">进程由大到小：从银河系螺旋能量，到太阳螺旋能量，到行星螺旋能量，再到开启行星实体第一密度的体验性环境。</p>
+      <p class="f-ref">—— SESSION 013 · (13.15)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">光必向上的向量</p>
+      <p class="f-en">"The spiraling energy, which is the characteristic of what you call light, moves in straight-line spiral, thus giving spirals an inevitable vector upwards to a more comprehensive beingness with regards to intelligent infinity."</p>
+      <p class="f-zh">光特有的螺旋能量沿直线前进，却带着一个不可避免的向上向量——朝向关于智能无限的、更全面的存在性。</p>
+      <p class="f-ref">—— SESSION 013 · (13.17)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 9 八度音程 -->
+<section class="scene" id="s9" data-c="#8f6fd9">
+  <div class="stage">
+    <p class="kicker">八度音程</p>
+    <p class="narr">七种颜色走完，<br>第八度不是终点——<br>是下一个八度的第一个音。</p>
+    <p class="en">"However, it is well to perceive that the eighth density functions also as the beginning density, or first density—in its latter stages—of the next octave of densities."</p>
+    <p class="zh">最好认识到：第八密度在其后期阶段，也作为下一个密度八度的起始密度或第一密度而运作。</p>
+    <p class="ref">—— SESSION 028 · (28.15)</p>
+    <p class="en">"We know only that they are infinite. We assume an infinite number of octaves."</p>
+    <p class="zh">我们只知道造物是无限的。我们假设有无限个八度音程。</p>
+    <p class="ref">—— SESSION 028 · (28.16)</p>
+  </div>
+</section>
+
+<!-- 10 黑洞 · 归还 -->
+<section class="scene" id="s10" data-c="#52418f">
+  <div class="stage">
+    <p class="kicker">黑洞 · 归还</p>
+    <p class="narr">走到底的白光，<br>把自己一寸寸收回来。<br>黑洞不是死亡——<br>是白光排队回家。</p>
+    <p class="en">"Conversely, the blackness of the black hole, metaphysically speaking, is a concentration of white light being systematically absorbed once again into the One Creator."</p>
+    <p class="zh">相反地，黑洞的黑，从形而上学上说，是白光被系统地再次吸收回太一造物主的浓缩。</p>
+    <p class="ref">—— SESSION 040 · (40.1)</p>
+    <p class="en">"This octave density of which we have spoken is both omega and alpha, the spiritual mass of the infinite universes becoming one Central Sun, or Creator, once again. Then is born a new universe, a new infinity, a new Logos which incorporates all that the Creator has experienced of Itself."</p>
+    <p class="zh">这个八度既是终点又是起点：无限宇宙的灵性质量再次凝成一个中央太阳、一位造物主。然后，一个新的宇宙、一个新的无限、一个新的理则诞生了——它包含着造物主对自己所体验过的一切。</p>
+    <p class="ref">—— SESSION 052 · (52.11)</p>
+  </div>
+</section>
+
+<!-- 11 终章 -->
+<section class="scene" id="sLast" data-c="#f5efe2">
+  <div class="stage">
+    <p class="kicker">回到那个思想</p>
+    <p class="narr">所以造物不是造物主做出来的作品，<br>是造物主认识自己的方式。<br>光走出那么远，<br>只是为了回头时认得路。</p>
+    <p class="en">"Therefore, gradually, step by step, the Creator becomes that which may know Itself, and the portions of the Creator partake less purely in the power of the original word or thought. This is for the purpose of refinement of the One Original Thought. The Creator does not properly create as much as It experiences Itself."</p>
+    <p class="zh">渐渐地，一步一步，造物主成为那能够认识自己的，而造物主的各部分越来越少地纯粹参与原初言语或思想的力量——这是为了精炼太一原初思想。造物主与其说在创造，不如说在体验它自己。</p>
+    <p class="ref">—— SESSION 082 · (82.10)</p>
+    <p class="en">"The first known thing in the creation is infinity. The infinity is creation."</p>
+    <p class="zh">造物中第一个已知的事物是无限。无限，就是造物。</p>
+    <p class="ref">—— SESSION 013 · (13.5)</p>
+    <button class="again" id="again">回到那束光</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+造物与理则 · 滚动星旅 · 内容取自《一的法则》十次集会关于智能无限、逻各斯与光之创造的讨论<br>
+引文为英文原文逐字摘录；中文为本页面自拟 · 仅作沉浸学习实验
+</footer>
+
+<script>
+/* ===== 星空画布（固定，勿改） ===== */
+const cv=document.getElementById('sky'),cx=cv.getContext('2d');
+let W,H,stars=[];
+function size(){W=cv.width=innerWidth*devicePixelRatio;H=cv.height=innerHeight*devicePixelRatio;}
+size();addEventListener('resize',size);
+for(let i=0;i<230;i++)stars.push({x:Math.random(),y:Math.random(),z:.25+Math.random()*.75,p:Math.random()*6.28,s:Math.random()});
+
+/* ===== 氛围色插值（固定，勿改） ===== */
+function hex2rgb(h){h=h.replace('#','');if(h.length===3)h=h.split('').map(c=>c+c).join('');return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
+const scenes=[...document.querySelectorAll('.scene,.station')].map(s=>({el:s,c:hex2rgb(s.dataset.c)}));
+let amb=[245,239,226];
+function lerp(a,b,t){return a+(b-a)*t}
+function rgb2css(c,a){return `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${a})`}
+
+/* ===== 渲染循环（固定，勿改） ===== */
+let t=0;
+function frame(){
+  t+=.016;
+  const sy=scrollY,wh=innerHeight;
+  let target=scenes[0].c;
+  for(const s of scenes){
+    const r=s.el.getBoundingClientRect();
+    if(r.top<wh*.55&&r.bottom>wh*.45){target=s.c;break}
+  }
+  for(let i=0;i<3;i++)amb[i]=lerp(amb[i],target[i],.045);
+  const ac=amb;
+  document.documentElement.style.setProperty('--amb',rgb2css(ac,1));
+
+  cx.clearRect(0,0,W,H);
+  const g=cx.createRadialGradient(W/2,H*.86,0,W/2,H*.86,H*.75);
+  g.addColorStop(0,rgb2css(ac,.10));g.addColorStop(1,'rgba(0,0,0,0)');
+  cx.fillStyle=g;cx.fillRect(0,0,W,H);
+  const dark=1-Math.min(1,(Math.hypot(ac[0]-245,ac[1]-239))/200);
+  for(const st of stars){
+    const px=st.x*W,py=((st.y - sy*.00004*st.z)%1+1)%1*H;
+    const tw=.5+.5*Math.sin(t*1.3+st.p);
+    cx.globalAlpha=(0.12+0.5*tw*st.z)*(0.35+0.65*dark);
+    cx.fillStyle=rgb2css(ac,1);
+    const r=st.s*1.4*st.z*devicePixelRatio;
+    cx.beginPath();cx.arc(px,py,r,0,6.28);cx.fill();
+  }
+  const oy=H*.62+Math.sin(t*.8)*10*devicePixelRatio;
+  const og=cx.createRadialGradient(W/2,oy,0,W/2,oy,26*devicePixelRatio);
+  og.addColorStop(0,rgb2css(ac,.9));og.addColorStop(.35,rgb2css(ac,.25));og.addColorStop(1,'rgba(0,0,0,0)');
+  cx.globalAlpha=1;cx.fillStyle=og;
+  cx.beginPath();cx.arc(W/2,oy,26*devicePixelRatio,0,6.28);cx.fill();
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+/* ===== 场景显影（固定，勿改） ===== */
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>e.target.classList.toggle('on',e.isIntersecting));
+},{threshold:.01});
+document.querySelectorAll('.scene,.station').forEach(s=>io.observe(s));
+
+/* 细节片段显影（固定，勿改） */
+const ioFrag=new IntersectionObserver(es=>{
+  es.forEach(e=>e.target.classList.toggle('on',e.intersectionRatio>.15));
+},{threshold:[0,.35,.6]});
+document.querySelectorAll('.frag').forEach(f=>ioFrag.observe(f));
+
+/* ===== 进度轨道（固定，勿改） ===== */
+const rail=document.getElementById('rail');
+scenes.forEach((s,i)=>{
+  const row=document.createElement('div');row.className='r';
+  const lbl=document.createElement('span');lbl.className='lbl';
+  const k=s.el.querySelector('.kicker');
+  lbl.textContent=k?k.textContent.trim():(i===0?'开始':'终章');
+  const d=document.createElement('i');
+  row.appendChild(lbl);row.appendChild(d);
+  row.onclick=()=>s.el.scrollIntoView({behavior:'smooth'});
+  rail.appendChild(row);
+});
+setInterval(()=>{
+  const wh=innerHeight;
+  scenes.forEach((s,i)=>{
+    const r=s.el.getBoundingClientRect();
+    rail.children[i].classList.toggle('cur',r.top<wh*.55&&r.bottom>wh*.45);
+  });
+},200);
+
+/* ===== 本章定制交互 ===== */
+/* 回到开头 */
+document.getElementById('again').onclick=()=>scrollTo({top:0,behavior:'smooth'});
+</script>
+</body>
+</html>

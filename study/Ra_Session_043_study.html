@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 043 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 043 · 交互式学习模块</h1>
+  <p class="sub">这一集从一条「干扰线」开始，接上一集遗留的残割之谜，很快回到主课：与造物主重新合一，靠的是能量中心的平衡而非最大化激活；随后沿第四密度的痛苦、寿命、收割单位与「一餐饭的演化」看催化剂如何换课，最后把专注交还给意志。</p>
+  <div class="tagline">8 个主题 · 6 个学习步骤 · 17 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 恐惧的取食链</a>
+<a href="#s3">③ 平衡高于激活</a>
+<a href="#s4">④ 第四密度图景</a>
+<a href="#s5">⑤ 一餐饭的演化</a>
+<a href="#s6">⑥ 新地球与呼唤</a>
+<a href="#s7">⑦ 意志与小玩意</a>
+<a href="#s8">⑧ 收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>从一条床单褶皱开始，先把 33 个问答块看清骨架（对应第 1 章）</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>看懂恐惧的取食链</b><span>残割事件背后：大众意识的恐惧如何「创造气候」（对应第 2 章）</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>记住本集主课：平衡高于激活</b><span>重新合一的条件不是「开得亮」，而是「衡」（对应第 3 章）</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>走进第四密度</b><span>痛苦、九万年寿命、三千万年周期与「群体收割」（对应第 4 章）</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>推一遍一餐饭的演化</b><span>用推进器走：服务 → 耐心 → 慰藉 → 光（对应第 5 章）</span></span></label></div>
+<div class="step-item" data-target="#s8"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官：把要义带走</b><span>金句、开放线索与两个可上手的自我功课（对应第 8 章）</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ 第 1 章 本章地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：这一集在回答什么</h2></div>
+  <p class="sec-lead">开场就被按了暂停：Ra 感到一条「干扰线」穿过器皿头顶，源头只是床单的一道褶皱。恢复后，发问者先接上<b>上一集遗留的最后问题</b>（牲畜残割与能量中心的关联），随后全集压在一条主课上——<b>平衡的相对重要，对照每个能量中心最大化激活的相对不重要</b>。后半段沿第四密度的经验细节层层推进，直到 Ra 宣布「只能再问一个完整问题」，发问者用它问了件最务实的事：冥想的辅助手段。</p>
+
+  <div class="card">
+    <h3>主课预告：先记住这句话</h3>
+    <p class="q">发问者提出一个看似严密的命题：造物主的光为体验而分裂成颜色与能量中心，那么要重新合一，是否必须把每个中心<b>精确平衡回光起源时的原样</b>？Ra 没有给出简单的是与否，而是把整个集会的焦点摆正。</p>
+    <div class="quote">
+      <p class="en">We have, many times now, spoken about the relative importance of balancing as opposed to the relative unimportance of maximal activation of each energy center.</p>
+      <p class="zh">我们已经多次谈过：平衡具有相对的重要性，而把每个能量中心都推到最大激活，相对而言并不重要。</p>
+      <span class="src">—— Session 043 · (43.8)</span>
+    </div>
+    <div class="plain">这一集的判卷标准不是「哪道光开得最亮」，而是「各道之间是否均衡」——后面所有细节（第四密度的痛苦、吃饭、呼唤机制）都挂在这根主轴上。</div>
+  </div>
+
+  <div class="card">
+    <h3>问答脉络推进器：33 个问答怎样展开</h3>
+    <p>点节点或用左右按钮，按对话实际顺序走一遍本集骨架。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="flowTrack"></div>
+      <div class="flow-detail" id="flowDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="flowPrev">← 上一步</button>
+        <button class="tri-btn" id="flowNext">下一步 →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="case"><b>开场前的三分钟：</b>小组开会前，主持人提前到场，把共享文档的权限打开、关掉无关标签页、把水杯挪到不碍事的位置——这些动作不产生内容，却决定这场会议能不能「干净地」进行。Ra 与小组做的正是同一类事：干扰源只是头顶上方三英寸处一道两英寸宽的床单褶皱（43.0–43.2）。</div>
+  <div class="case"><b>简历打磨与复盘笔记：</b>求职者把简历的字体配色改到极致（每一项都「亮」），却从没复盘过自己适合什么；另一人经历平平，却把每场面试的问答写进笔记。Ra 本集的立场更接近后者——平衡与认识自我，比每一项的极大激活更重要，这正是 (43.8) 主课的预告。</div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">开场干扰线 · 收尾问候</span></summary>
+  <div class="body">
+    <p><b>(43.0–43.4) 开场校准：</b>Ra 请求在不触碰器皿身体的前提下调整「压着头部的东西」——结果是器皿头顶上方床单的褶皱，正形成一条穿过头顶的干扰线；小组抚平全长褶皱并拉开距离后，通讯正常开始。</p>
+    <p><b>(43.32) 收尾：</b>发问者问还能做些什么让器皿更舒适或改善连接；Ra 答一切安好，并以惯常的爱与光致意、Adonai 结束本次集会。</p>
+  </div></details>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 2 章 牲畜残割 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>牲畜残割：大众意识的恐惧如何被「取食」</h2></div>
+  <p class="sec-lead">发问者拿上一集的遗留问题开场：残割事件里被移除的部位<b>每次都相同</b>，他直觉这与能量中心有关。Ra 确认了这个方向，并给出一条冷峻的机制链：恐惧先在大众意识里「定了位」，取食者顺着象征的通道精准行动。</p>
+
+  <div class="card">
+    <h3>机制链：恐惧 → 气候 → 精准取食</h3>
+    <p class="q">发问者的直觉是：相同部位被反复移除，背后应有统一原理——它与能量中心的体系是否相连？</p>
+    <div class="quote">
+      <p class="en">Thus the fears of the mass consciousness create the climate for the concentration upon the removal of bodily parts which symbolize areas of concern or fear in the mass consciousness.</p>
+      <p class="zh">大众意识的恐惧造出一种「气候」，使行动聚焦于移除那些象征大众关切或恐惧领域的身体部位。</p>
+      <span class="src">—— Session 043 · (43.5)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The thought-form entities feed upon fear; thus they are able to do precise damage according to systems of symbology.</p>
+      <p class="zh">思想形态实体以恐惧为食；因此它们能依照象征符号系统，做出精确的破坏。</p>
+      <span class="src">—— Session 043 · (43.6)</span>
+    </div>
+    <div class="plain">不是随机作恶：恐惧先在大众意识里安家，被移除的部位是大众词典里现成的符号——取食者顺着符号下手，所以每次都一样。</div>
+    <div class="analogy"><b>比喻：</b>恐惧是它们的食物，象征系统是那套餐具——被移除的部位每次相同，因为那是大众词典里现成的「取餐口」，顺着它下手最省力。</div>
+  </div>
+
+  <div class="card">
+    <h3>本集术语卡：点开看白话定义</h3>
+    <p class="q">这一段出现的几个词容易让新读者卡住——先把词吃透，再看 Ra 为什么紧接着「泼冷水」。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">思想形态</div><div class="sub">thought-form</div><div class="tap">点击翻面</div></div>
+        <div class="back">不是血肉生物，而是被群体心智与情绪「喂」出来的存在。本集里它们以恐惧为食，并按象征符号系统做出精确破坏。<em>像一条反复被点击的热搜：投进去的注意力越多，它就越「实」。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">猎户座集团</div><div class="sub">Orion group</div><div class="tap">点击翻面</div></div>
+        <div class="back">负向极性的服务自我群体。本集指出：那些需要血液、潜伏在地表之内的第二密度生物，是它们的造物。<em>思想形态像「烟雾」，这些生物则像更实的「兽」——藏在地表之内待命。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">大众意识</div><div class="sub">mass consciousness</div><div class="tap">点击翻面</div></div>
+        <div class="back">一颗行星上所有心智汇成的共同场域；它的恐惧为特定事件「创造气候」。<em>像一个小区的舆论氛围：越怕什么，什么就越容易被放大、被「应验」。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">象征符号系统</div><div class="sub">systems of symbology</div><div class="tap">点击翻面</div></div>
+        <div class="back">群体共享的意象词典。被移除的身体部位之所以每次相同，因为它们在这本词典里指向同样的恐惧。<em>像交通标志：同一图标，所有人都读出同一个意思。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">能量中心</div><div class="sub">energy center / ray</div><div class="tap">点击翻面</div></div>
+        <div class="back">造物主之光为体验而分裂出的颜色节点，处理对应频段经验的「站点」——发问者的残割之问，正源于它与思想形态之间的联系。<em>像分光镜把白光分成七色，每一色走自己的通道。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">催化剂</div><div class="sub">catalyst</div><div class="tap">点击翻面</div></div>
+        <div class="back">促成学习发生的中介经验，不是起作用的那一方。本集后段的妙例：第四密度「必须进食」这件事，教的竟是耐心。<em>像健身的阻力：让你费力的东西，恰恰是训练本身。</em></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>一次「该不该问」的教学</h3>
+    <p class="q">发问者想知道那些生物从哪里来、怎么进出物理密度——Ra 答了，但随即做了一件更重要的事：给这份好奇心降降温。</p>
+    <div class="quote">
+      <p class="en">We, as always, remind you that it is our impression that this type of information is unimportant.</p>
+      <p class="zh">我们一如既往地提醒你：在我们看来，这类信息并不重要。</p>
+      <span class="src">—— Session 043 · (43.7)</span>
+    </div>
+    <p>发问者没有辩解，而是坦言自己的处境：<b>在调查之前，他无法预知一条线索会不会通向更好的理解</b>——这条线索只是「似乎与能量中心相关」。追问本身没有错，但注意力是有限资源，Ra 的提醒正是教人带着觉知分配它。</p>
+    <div class="plain">Ra 不拒绝回答，却标明了信息的价值等级——「如实回答 + 提醒不重要」，这本身就是一次关于优先级的教学。</div>
+  </div>
+
+  <div class="case"><b>都市传说的恐惧经济：</b>某条「食品安全」谣言刷屏的那一周，检测仪、净水器销量猛涨，直播间连夜上架「防护套装」——恐惧先在大众心里安了家，围绕它的消费与行动便精准地长出来。这与 Ra 描述的机制同构：大众意识的恐惧创造气候，行动顺着象征的通道汇聚（43.5）。</div>
+  <div class="case"><b>热搜的隐喻：</b>一个社会越是集体焦虑于某个主题，与它对应的象征性事件越容易被推上头条、被反复咀嚼——不是事件制造了恐惧，而是恐惧先为事件铺好了跑道。这正是「以恐惧为食、按象征符号系统精确行动」的现代版本（43.6）。</div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 3 章 平衡高于激活 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>平衡高于激活：与造物主重新合一的真正条件</h2></div>
+  <p class="sec-lead">残割话题收束后，发问者顺势提出本集最核心的命题，并在 Ra 提醒「这信息不重要」后表示完全同意。他要的不是奇闻，而是一条原理：光分裂成各道，重新合一的条件究竟是什么。</p>
+
+  <div class="card">
+    <h3>Ra 的回答方式：先拆问题，再立尺子</h3>
+    <p class="q">发问者的命题很漂亮：分裂成颜色与能量中心的光，要回到造物主那里，是否必须精确平衡回「出厂设置」？Ra 说这个问题几乎不可能被简单回答——然后自己动手简化：把焦点放在发问者正努力靠近的核心观念上。</p>
+    <div class="quote">
+      <p class="en">Thusly the entity is concerned, if it be upon the path of positive harvestability, with the regularizing of the various energies of experience.</p>
+      <p class="zh">于是，走在正面可收割路径上的实体，所关心的是把各种经验能量「规则化」——让它们各归其位、彼此协调。</p>
+      <span class="src">—— Session 043 · (43.8)</span>
+    </div>
+    <div class="plain">判卷标准从「每道光的亮度」换成「各道之间的均衡」：不是七个音都吹到最响，而是合成一个和弦。</div>
+    <div class="analogy"><b>比喻：</b>光经棱镜分成七色，各色本是一体——回归不是把某一色调到最艳，而是让七色重新叠成那道白光。</div>
+  </div>
+
+  <div class="card">
+    <h3>一个反直觉的推论</h3>
+    <p class="q">谁更接近「可收割」——能量充沛、服务量惊人的人，还是看似脆弱的普通人？Ra 的答案出人意料。</p>
+    <div class="quote">
+      <p class="en">The densities beyond your own give the minimally balanced individual much time/space and space/time with which to continue to refine these inner balances.</p>
+      <p class="zh">在你之上的密度，会给最低限度平衡的个体大量时间/空间与空间/时间，用来继续打磨这些内在平衡。</p>
+      <span class="src">—— Session 043 · (43.8)</span>
+    </div>
+    <p>Ra 说：<b>最脆弱的实体，可能比在服务他人上极端活跃的实体更平衡</b>——差别在于意志是否一丝不苟地聚焦于「用经验来认识自我」。而且不必赶工：更高密度还有大把「时间」供人继续精炼。这是全集最需要细品的一段。</p>
+    <div class="plain">平衡的功课做在「消化经验」上，不在「堆量」上；进度落后不必焦虑，路还很长。</div>
+  </div>
+
+  <div class="card">
+    <h3>归类练习：这两把尺子你分得清吗</h3>
+    <p>下面五个场景，请判断它更接近「激活的追求」还是「平衡的功课」——点击标签查看判定与理由。</p>
+    <div id="sortBalance"></div>
+  </div>
+
+  <div class="case"><b>健身房里的两种练法：</b>一个人把每个部位都练到力竭，肩背腿全部「拉满」，体态反而越来越歪；另一个人重量保守，却把左右、前后、深层浅层都照顾到，多年后运动能力最好。Ra 的排序同款：平衡的相对重要，高于每个中心的最大化激活（43.8）。</div>
+  <div class="case"><b>团队里的尖峰与六边形：</b>技术 100 分却把协作关系搞僵的成员，与样样 75 分却让团队顺畅运转的成员——长期看，后者更接近「可收割」的状态。极端的能量与活动，若无意志聚焦于用经验认识自我，未必带来平衡（43.8）。</div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 4 章 第四密度的经验设计 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>第四密度的经验设计：痛苦、寿命与群体收割</h2></div>
+  <p class="sec-lead">主课讲完，发问者把镜头推向下一站：第四密度的经验长什么样——用什么催化剂、活多久、怎么「毕业」？这一章的信息密度高，但都挂在同一个问题上：<b>换了一所「学校」，考试规则怎么变</b>。</p>
+
+  <div class="card">
+    <h3>痛苦的重心从身体移向心智与灵性</h3>
+    <p class="q">发问者问：第四密度也用肉体痛苦做经验性平衡的机制吗？——这个从第三密度经验出发的猜想，只对了一小半。</p>
+    <div class="quote">
+      <p class="en">The use of physical pain is minimal, having only to do with the end of the fourth-density incarnation. This physical pain would not be considered severe enough to treat, shall we say, in third density. The catalysts of mental and spiritual pain are used in fourth density.</p>
+      <p class="zh">肉体痛苦的使用是极少的，只与第四密度投生的终点有关；这种程度的痛苦在第三密度甚至不会被认作需要治疗。第四密度使用的是心智与灵性痛苦的催化剂。</p>
+      <span class="src">—— Session 043 · (43.9)</span>
+    </div>
+    <div class="plain">第四密度的功课压力主要走「心」不走「身」；那一点身体上的苦，名字叫疲倦（weariness），只是长课临近下课的铃。</div>
+  </div>
+
+  <div class="card">
+    <h3>时间尺度与收割单位</h3>
+    <p class="q">一次投生多久？一个经验周期多长？发问者接连追问具体数字，Ra 给出后立刻点出真正的重点：第四密度的收割<b>完全取决于社会记忆复合体的准备就绪</b>——它处理的是更透明的造物主变貌，结构因此与第三密度不同。</p>
+    <div class="quote">
+      <p class="en">The cycle of experience is approximately 30 million of your years if the entities are not capable of being harvested sooner. There is in this density a harvest which is completely the function of the readiness of the social memory complex.</p>
+      <p class="zh">一个经验周期约为你们的三千万年——若实体无法更早被收割；这一密度的收割，完全以社会记忆复合体的准备就绪为函数。</p>
+      <span class="src">—— Session 043 · (43.13)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This is correct although in fifth density entities may choose to learn as a social memory complex or as mind/body/spirit complexes, and may graduate to sixth density under these conditions, for the wisdom density is an extremely free density, whereas the lessons of compassion leading to wisdom necessarily have to do with other-selves.</p>
+      <p class="zh">这是正确的——尽管在第五密度，实体可选择以社会记忆复合体或以心/身/灵复合体的方式学习，并可在这些条件下毕业到第六密度；因为智慧密度是一个极其自由的密度，而导向智慧的慈悲课程必然涉及其他自我。</p>
+      <span class="src">—— Session 043 · (43.14)</span>
+    </div>
+    <p>把确认过的信息排成一张表：和谐第四密度一次空间/时间投生约 <b>九万年</b>；有多轮投生，投生之间穿插时间/空间的体验；一个经验周期约 <b>三千万年</b>。收割单位则逐级变化，见下面的对比卡。</p>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">第三密度</span><h4>个体考核</h4><p>个体按自身<b>紫罗兰光芒</b>（violet ray，呈现实体整体状态的那道光芒）被收割——成绩单是自己的。</p></div>
+      <div class="yuan-card"><span class="y-tag">第四密度</span><h4>群体考核</h4><p>整个<b>社会记忆复合体</b>（social memory complex，众多心/身/灵复合体共享心智与记忆的群体形态）须达到可收割性质才能进入第五密度。</p></div>
+      <div class="yuan-card"><span class="y-tag">第五密度</span><h4>自由选修</h4><p>可任选以社会记忆复合体或以心/身/灵复合体学习并毕业——智慧密度极其自由。</p></div>
+      <div class="yuan-card"><span class="y-tag">第六密度</span><h4>群体重归</h4><p>收割严格以社会记忆复合体进行——慈悲被重新以智慧混合回来，两条路并成一条。</p></div>
+    </div>
+    <div class="plain">第三密度交个人作业，第四密度交小组作业，第五密度自由选修，第六密度全班合并——「毕业」的单位随密度逐级变化。</div>
+  </div>
+
+  <div class="case"><b>乐团单独很好，合奏不过关：</b>六位乐手各有演奏家证书，但合奏录音不通过，整个团就不能进入下一阶段——这一级考核的对象是「整体的声音」，不是个人独奏。第四密度的收割正是这个逻辑（43.13–43.14）。</div>
+  <div class="case"><b>马拉松最后三公里：</b>那种酸胀不是伤病，而是「赛程快结束了」的感受——为它治疗反而奇怪。第四密度终点处的肉体痛苦就是这种疲倦（weariness）：在第三密度甚至不算需要治疗的程度，它的功能只是标记一段极长投生的收尾（43.9–43.10）。</div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 5 章 一餐饭的演化 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>一餐饭的密度之旅：催化剂如何一路换课</h2></div>
+  <p class="sec-lead">第四密度的身体聊到一半，发问者抓住一个最日常的细节往下钻：还要吃饭吗？吃饭算不算催化剂？这条线一口气追到了第六密度——同一件小事，在每个密度教不同的课。</p>
+
+  <div class="card">
+    <h3>第四密度：要吃，但不是你以为的那种课</h3>
+    <p class="q">发问者猜：既然第四密度还要喂饱身体，那「为了吃饭而产生的社交需要」应该也照旧运转？Ra 纠正了这个预设。</p>
+    <div class="quote">
+      <p class="en">The fourth-density being desires to serve, and the preparation of foodstuffs is extremely simple due to increased communion between entity and living foodstuff.</p>
+      <p class="zh">第四密度的存有渴望服务；由于实体与活的食物之间的交流增强了，准备食物变得极其简单。</p>
+      <span class="src">—— Session 043 · (43.18)</span>
+    </div>
+    <div class="quote">
+      <p class="en">To stop the functioning of service to others long enough to ingest foodstuffs is to invoke patience.</p>
+      <p class="zh">把服务他人的运作暂停足够长的时间去摄取食物——这就是在唤起耐心。</p>
+      <span class="src">—— Session 043 · (43.19)</span>
+    </div>
+    <div class="plain">食物在第四密度只是空间/时间体验的简单前提；真正的催化剂是「必须停下来吃」这件事本身——它教的课从「服务」换成了「耐心」。</div>
+  </div>
+
+  <div class="card">
+    <h3>推进器：一餐饭的四级演化</h3>
+    <p>从第三密度一路走到第六密度，看「吃饭」这门课怎么换教材。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="foodTrack"></div>
+      <div class="flow-detail" id="foodDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="foodPrev">← 上一步</button>
+        <button class="tri-btn" id="foodNext">下一步 →</button>
+      </div>
+    </div>
+    <p>Ra 顺带点出一个通用公式：<b>空间/时间的目的，就是增加适合该密度的催化作用</b>；而只要有某种形式的身体复合体，就必须以某种方式获得燃料——「吃」因此是各密度共有的载体，变的只是它承载的课（43.22）。</p>
+  </div>
+
+  <div class="card">
+    <h3>第五密度：一餐变成一场聚会</h3>
+    <p class="q">第五密度的身体吃什么？Ra 的答案像诗：可用思想准备的食物——甘露、神馔，或金白色调的清淡肉汤。那它还教什么吗？</p>
+    <div class="quote">
+      <p class="en">In fifth density it is comfort, for those of like mind gather together to share in this broth, thus becoming one in light and wisdom while joining hearts and hands in physical activity.</p>
+      <p class="zh">在第五密度，它是慰藉——志同道合者聚拢来分享这肉汤，在光与智慧中合而为一，又在身体活动中心手相连。</p>
+      <span class="src">—— Session 043 · (43.23)</span>
+    </div>
+    <div class="plain">到第五密度，吃饭从「催化剂」退休成「慰藉」：不再是功课，而是同类相聚、在光与智慧里合一的时刻。</div>
+  </div>
+
+  <div class="case"><b>办公室的午餐政治学：</b>谁去占座、谁帮同事带饭、谁在饭桌上听完对方的吐槽——在第三密度，吃饭从来不只是摄入热量，它制造学习服务的场景，这正是 Ra 回溯第三密度时给它的定位（43.23）。</div>
+  <div class="case"><b>值班护士的强制晚餐：</b>连续照护六小时后必须放下病人去吃饭——「不得不暂停服务」的那点不甘，恰恰是耐心的练习场。Ra 对耐心的定义句几乎是这一幕的白描（43.19）。</div>
+  <div class="case"><b>老友的每周火锅局：</b>重点从来不是锅底，而是围炉时把一周的收获与困惑摊开、彼此接住——像第五密度那餐「志同道合者分享神馔」的微缩版：慰藉，而非课程（43.23）。</div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 6 章 新地球与呼唤机制 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>新地球上的第四密度：呼唤机制与「不在场」的第五密度</h2></div>
+  <p class="sec-lead">食物线收尾后，发问者把问题落回脚下这颗星球：收割完成后，地表将住着谁？第五、第六密度的存有会来当邻居或老师吗？Ra 给出的答案里藏着本集最温柔的一处：老师不在场，但信息从不缺席。</p>
+
+  <div class="card">
+    <h3>谁住在新地表上</h3>
+    <p class="q">发问者确认：过渡彻底完成、收割结束后，第四密度存有会投生在我们如今熟悉的这个地表上吗？Ra 答：概率/可能性漩涡显示这最有可能。那更高密度的存有呢？</p>
+    <div class="quote">
+      <p class="en">It is simply that fifth-density beings will not live upon the surface of the planetary sphere until the planet reaches fifth-density vibratory level.</p>
+      <p class="zh">只是：在行星本身达到第五密度振动水平之前，第五密度存有不会居住在这颗行星球体的表面上。</p>
+      <span class="src">—— Session 043 · (43.28)</span>
+    </div>
+    <p>原因不是高冷，而是次第：第四密度存有需要与本密度实体共度教导/学习的空间/时间（43.26）。发问者进一步猜「高密度的教导新第四密度听不懂」，一次表述含混，Ra 先反问「你是否希望就这一点向我们提问」；发问者重述后，Ra 给出了修正版的肯定。</p>
+    <div class="plain">同一个星球，先住毕业生——更高密度的存有要等行星本身的振动水平到位才在场；但场子不在，课照样能上。</div>
+  </div>
+
+  <div class="card">
+    <h3>呼唤：信息永远在架上</h3>
+    <p class="q">发问者想确认「教导/学习机制在第四密度是否与第三密度相对相同」。Ra 先泼冷水：这个询问被误导了——两种经验显然不同；然后保留了真正成立的那一半。</p>
+    <div class="quote">
+      <p class="en">Although it is true that as fourth-density beings progress they have more and more need for other density teachings, it is also true that just as we speak to you due to the calling, so the information called is always available.</p>
+      <p class="zh">尽管第四密度存有随着进步确实越来越需要其他密度的教导，但同样真实的是：正如我们因呼唤而对你们说话——凡被呼唤的信息，总是可得的。</p>
+      <span class="src">—— Session 043 · (43.28)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This query is misguided, for experience in fourth density is emphatically not the same as third-density experience.</p>
+      <p class="zh">这个询问被误导了，因为第四密度的经验与第三密度的经验显然不是一回事。</p>
+      <span class="src">—— Session 043 · (43.29)</span>
+    </div>
+    <div class="analogy"><b>比喻：</b>先有检索，才有出库——你按自己的理解发问，资料按你当前学力能承受的方式被安排；这正是呼唤与自由意志的分工。</div>
+    <div class="plain">经验不同，机制相通：先有呼唤，信息才以与自由意志一致的方式被预先安排、被给予。</div>
+  </div>
+
+  <div class="case"><b>闭架书库的索书单：</b>图书馆的书一直在库里，但你不递索书单就取不到；递了单，拿到的也是你当前学力读得懂的那一层。呼唤机制同理——信息总是可用，但以与自由意志一致的方式被预先安排（43.28–43.29）。</div>
+  <div class="case"><b>新部门与外请顾问：</b>新团队成立初期，顾问不会常驻办公室——不是不愿帮，而是新人要先按自己的节奏长出问题，才谈得上听懂更高阶的建议。第五密度存有要等行星达到第五密度振动水平才在场，是同一种「时序」（43.26–43.28）。</div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 7 章 意志与小玩意 ============ -->
+<section class="chapter" id="s7">
+  <div class="sec-head"><span class="num">07</span><h2>专注的辅助：意志才是关键，其余可能是小玩意</h2></div>
+  <p class="sec-lead">集会只剩「一个完整问题」的额度时，发问者把它花在一件务实的事上：冥想的环境要不要升级？他列了一张清单请 Ra 排序，最后追问到自己最关心的工程——法拉第笼。Ra 的两句回答，一冷一暖，都是本集的收束。</p>
+
+  <div class="card">
+    <h3>清单排序题：Ra 的统一答案</h3>
+    <p class="q">安静、控温、身体舒适、法拉第笼式电磁屏蔽、可见光屏蔽、稳定气味（熏香）——这些辅助专注的手段哪个更重要？Ra 拒绝逐项打分，而是把它们一并还原到同一个源头。</p>
+    <div class="quote">
+      <p class="en">You may consider all of these aforementioned aids as those helpful to the stimulation of that which, in actuality, aids concentration—that being the will of the entity.</p>
+      <p class="zh">你可以把上述所有辅助手段，看作有助于激发那真正帮助专注的东西——也就是实体的意志。</p>
+      <span class="src">—— Session 043 · (43.30)</span>
+    </div>
+    <div class="plain">辅助不分高下，因为它们都只是「点火器」；真正帮助专注的是意志，而意志可以聚焦于任何对象或目标。</div>
+  </div>
+
+  <div class="card">
+    <h3>法拉第笼值不值得建</h3>
+    <p class="q">发问者追问实质：建一个更好的冥想场所（法拉第笼是个大工程）真有实际价值吗？Ra 在「不侵犯自由意志」的前提下给出明确判词，然后补上正面的那一半。</p>
+    <div class="quote">
+      <p class="en">Without infringing upon free will we feel it possible to state that the Faraday cage and the isolation tank are gadgets.</p>
+      <p class="zh">在不侵犯自由意志的前提下，我们觉得可以声明：法拉第笼和隔离舱，是小玩意儿。</p>
+      <span class="src">—— Session 043 · (43.31)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The surrounding of self in a sylvan atmosphere, apart from distractions, in a place of working used for no other purpose… is, shall we say, not gadgetry but the making use of the creation of the Father in second-density love and in the love and support of other-selves.</p>
+      <p class="zh">将自我置于森林般的氛围中、远离干扰、在一处不作其他用途的工作场所里……容我们说，这不是小玩意，而是利用天父在第二密度之爱中的造物，以及其他自我的爱与支持。</p>
+      <span class="src">—— Session 043 · (43.31)</span>
+    </div>
+    <p>对比的结构很清楚：花钱买来的「隔绝」是小玩意；而<b>自然的氛围 + 专用的场所 + 同伴间放下所有目标的约定</b>——只留下对无限造物主的冥想寻求——用的是造物本身与彼此的爱。前者是装备，后者是关系与场域。</p>
+    <div class="plain">升级方向不是器材，而是「场域与约定」：让那个地方只做那件事，让同伴与你同守那个约定。</div>
+  </div>
+
+  <div class="card">
+    <h3>归类练习：小玩意，还是造物与同伴</h3>
+    <p>五个做法，请按 Ra 在 (43.31) 的判词分类——点击标签查看判定。</p>
+    <div id="sortGadget"></div>
+  </div>
+
+  <div class="case"><b>民宿写作营：</b>几位作者合租山间民宿一周，进屋前约定：这七天只写作，不带家人、不看工作群。升级的从来不是设备，而是「远离干扰的专用场所 + 同伴间放下所有目标的约定」——Ra 说这恰恰不是小玩意（43.31）。</div>
+  <div class="case"><b>电竞新手的外设迷信：</b>新手反复更换鼠标、键盘、耳机以为能变强；高手明白决定胜负的是训练本身，外设只是「让你愿意坐下来练」的激发物。Ra 对那张辅助清单的处理，正是同一种思路（43.30）。</div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 8 章 收官 ============ -->
+<section class="chapter" id="s8">
+  <div class="sec-head"><span class="num">08</span><h2>收官：本集要义、金句与两个自我功课</h2></div>
+  <p class="sec-lead">把全集压成一张随身卡片：一句金句、三条要义、两条还没合上的线，以及两个今天就能做的练习。</p>
+
+  <div class="saying">
+    <p class="en">Thus the most fragile entity may be more balanced than one with extreme energy and activity in service to others due to the fastidiousness with which the will is focused upon the use of experience in knowing the self.</p>
+    <p class="zh">因此，最脆弱的实体，可能比在服务他人中能量极端、行动频密的实体更平衡——只因意志一丝不苟地聚焦于「用经验来认识自我」。</p>
+    <span class="src">—— Session 043 · (43.8)</span>
+  </div>
+
+  <div class="card">
+    <h3>三条要义带走</h3>
+    <p><b>一、平衡高于激活。</b>重新合一的条件不是把每个能量中心开到最大，而是把各种经验能量规则化；更脆弱但更自觉的实体，可能更接近可收割（43.8）。</p>
+    <p><b>二、催化剂随密度换课。</b>同一件小事——吃饭——在第三密度教服务，在第四密度教耐心，在第五密度只是慰藉，在第六密度其本质是光：空间/时间的目的，就是增加适合该密度的催化作用（43.16–43.24）。</p>
+    <p><b>三、意志是专注的本体。</b>安静、控温、屏蔽、气味都只是激发；法拉第笼与隔离舱是小玩意，专用场所与同伴的约定才是对造物与其他自我之爱的取用（43.30–43.31）。</p>
+    <div class="case"><b>年终自评换个问法：</b>不看「我在哪些方面火力全开」，而看「哪几面之间的落差在消耗我」——用本集的尺子量自己：平衡优先于激活，消化经验优先于堆量（43.8）。</div>
+    <div class="case"><b>给冥想角「降级配置」：</b>不再种草更贵的香薰与坐垫，只做两件事——让那个角落不作他用，并与家人约定那半小时互不打扰。把「小玩意」的预算，换成场域与约定（43.31）。</div>
+  </div>
+
+  <div class="card">
+    <h3>本集留下的开放线索</h3>
+    <p><b>第四密度的经验与第三密度「显著不同」</b>——Ra 只说了这一句，没有展开；差异的细节留在未来的集会。</p>
+    <p><b>「所呼唤的信息总是可用」</b>——呼唤机制被再次确认，但如何呼唤、呼唤什么，本集未及深谈。</p>
+    <div class="quote">
+      <p class="en">I leave you in the love and the light of the One Infinite Creator. Go forth, therefore, rejoicing in the power and the peace of the One Infinite Creator. Adonai.</p>
+      <p class="zh">我在太一无限造物主的爱与光中离开你们。因此，向前去吧，在太一无限造物主的力量与和平中欢欣。Adonai。</p>
+      <span class="src">—— Session 043 · (43.32)</span>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 043（<code>split/Ra_Session_043.md</code>）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra043-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+/* 问答脉络推进器（第 1 章 · 本章地图） */
+const qaFlow=[
+ {t:'开场校准',d:'<span class="qa-q">问：还没开始就先暂停——为什么？</span><b>答：</b>Ra 感到一条「干扰线」正穿过器皿头顶；小组找到源头——头顶上方床单的一道褶皱。抚平、移远之后，通讯才正式开始。准备场域的细致，本身就是这次工作的一部分。（43.0–43.4）'},
+ {t:'上集遗留：残割之谜',d:'<span class="qa-q">问：牲畜残割中被移除的部位每次都相同——这与能量中心有关吗？</span><b>答：</b>Ra 确认方向基本正确：能量中心与各种思想形态之间有联系，大众意识的恐惧为这类事件「创造气候」。（43.5）'},
+ {t:'谁在取食恐惧',d:'<span class="qa-q">问：那是谁在利用这种恐惧？</span><b>答：</b>实施残割的是思想形态实体：以恐惧为食，并按象征符号系统做出精确破坏；另一类来自猎户座集团的第二密度生物则只需要血液，潜伏在地表之内。Ra 照例补一句：这类信息并不重要。（43.6–43.7）'},
+ {t:'主课：平衡之问',d:'<span class="qa-q">问：光分裂成颜色与能量中心，要重新合一，是否必须精确平衡回原样？</span><b>答：</b>Ra 不给简单的是/否，而是把焦点摆正——平衡的相对重要，对照每个中心最大化激活的相对不重要。（43.8）'},
+ {t:'第四密度的经验',d:'<span class="qa-q">问：下一站——第四密度用什么催化剂？一次投生多久？</span><b>答：</b>肉体痛苦用得极少，只出现在投生终点的「疲倦」；心智与灵性痛苦才是主课。和谐第四密度一次投生约九万年，多轮投生之间穿插时间/空间体验。（43.9–43.13）'},
+ {t:'收割单位变了',d:'<span class="qa-q">问：第四密度怎么「毕业」？</span><b>答：</b>一个经验周期约三千万年，但收割完全取决于社会记忆复合体的准备就绪——从第三密度的个体考核，换成群体考核。（43.13–43.15）'},
+ {t:'一餐饭的演化',d:'<span class="qa-q">问：各密度都要进食吗？吃饭教什么？</span><b>答：</b>都要，但意义一路变化：第三密度学服务，第四密度学耐心，第五密度是慰藉，第六密度的食物是光。（43.16–43.24）'},
+ {t:'收束：新地球与意志',d:'<span class="qa-q">问：收割后的地球表面住着谁？专注要靠什么辅助？</span><b>答：</b>第四密度存有最可能住在我们熟悉的这个表面，第五密度暂不在场，但所呼唤的信息总是可用；至于辅助——法拉第笼与隔离舱是小玩意，真正帮助专注的是意志。（43.25–43.31）'}
+];
+initStepper('flowTrack','flowDetail','flowPrev','flowNext',qaFlow);
+
+/* 一餐饭的四级演化（第 5 章） */
+const foodFlow=[
+ {t:'第三密度 · 学服务',d:'<span class="qa-q">问：吃饭只是给身体加油吗？</span><b>答：</b>在第三密度，为身体复合体提供燃料不只是加油——它同时给出学习服务的机会：张罗、分享、照顾，都发生在饭桌上。（43.23）'},
+ {t:'第四密度 · 学耐心',d:'<span class="qa-q">问：第四密度的进食也是社会催化剂吗？</span><b>答：</b>不是。那里的存有渴望服务，食物准备因与活的食物之间交流增强而极其简单；真正的催化剂是「必须停下来进食」这件事本身。（43.18）'},
+ {t:'耐心的定义',d:'<span class="qa-q">问：「停下来」怎么就成了一门课？</span><b>答：</b>把服务他人的运作暂停足够长的时间去摄取食物——这个「不得不暂停」，就是在唤起耐心。（43.19）'},
+ {t:'第五密度 · 慰藉',d:'<span class="qa-q">问：第五密度还吃吗？</span><b>答：</b>吃，但食物可用思想准备——甘露、神馔，或金白色调的清淡肉汤；志同道合者分享它，在光与智慧中合而为一。这是一餐慰藉，不再是学习的催化剂。（43.20–43.23）'},
+ {t:'第六密度 · 光',d:'<span class="qa-q">问：第六密度呢？</span><b>答：</b>仍摄取食物，但它的本质是光——就发问的主旨而言，Ra 说无法以任何有意义的方式描述。（43.24）'}
+];
+initStepper('foodTrack','foodDetail','foodPrev','foodNext',foodFlow);
+
+/* 归类练习（第 3 章 · 平衡还是激活） */
+const balanceItems=[
+ {a:'一位追求强烈体验的静坐者：平时能看到光、浑身发热，但生活里嫉妒与慷慨之间的落差极大。',opts:['激活的追求','平衡的功课'],ans:'激活的追求',exp:'把力气花在每个中心的极大体验上，正是 Ra 相对不看重的方向；本集的尺子是各道之间的平衡。（43.8）'},
+ {a:'一位服务量惊人的志愿者，日程排满、有求必应，却从不停下来看这些经验到底教了自己什么。',opts:['激活的追求','平衡的功课'],ans:'激活的追求',exp:'「极端的能量与服务他人的活动」若无意志聚焦于用经验认识自我，未必带来平衡。（43.8）'},
+ {a:'一位体弱多病的人把每次生病当作镜子，细细检视自己的反应模式，内心逐渐安定。',opts:['激活的追求','平衡的功课'],ans:'平衡的功课',exp:'最脆弱的实体可能因意志一丝不苟地聚焦于用经验认识自我，反而比极端活跃者更平衡。（43.8）'},
+ {a:'有人着急在今生把每个中心都「开到位」，担心进度落后于别人。',opts:['激活的追求','平衡的功课'],ans:'激活的追求',exp:'更高密度给最低限度平衡的个体大量时间/空间与空间/时间继续精炼——无须赶工。（43.8）'},
+ {a:'一个人把日常的小冲突逐条消化，问的始终是「这件事让我看见了自己的什么」。',opts:['激活的追求','平衡的功课'],ans:'平衡的功课',exp:'正面可收割路径关心的是把各种经验能量「规则化」——用经验来认识自己。（43.8）'}
+];
+initSorter('sortBalance',balanceItems);
+
+/* 归类练习（第 7 章 · 小玩意还是造物与同伴） */
+const gadgetItems=[
+ {a:'给家里的冥想角整个包上法拉第笼，屏蔽电磁辐射。',opts:['小玩意','造物与同伴'],ans:'小玩意',exp:'Ra 直接点名：法拉第笼与隔离舱是小玩意。（43.31）'},
+ {a:'在远离干扰的林间小屋冥想，这间屋子不作任何其他用途。',opts:['小玩意','造物与同伴'],ans:'造物与同伴',exp:'森林般的氛围、专用的场所——这是利用天父在第二密度之爱中的造物。（43.31）'},
+ {a:'与同伴约定：进这个空间只为冥想寻求无限造物主，放下所有其他目标。',opts:['小玩意','造物与同伴'],ans:'造物与同伴',exp:'同伴之间放下所有目标的约定，属于其他自我的爱与支持。（43.31）'},
+ {a:'购入一台高端隔离舱，漂浮其中隔绝一切感官输入。',opts:['小玩意','造物与同伴'],ans:'小玩意',exp:'隔离舱同样被 Ra 归入小玩意。（43.31）'},
+ {a:'一小群人共同维护一间远离干扰、专用于静默的小屋。',opts:['小玩意','造物与同伴'],ans:'造物与同伴',exp:'专用场所加上同伴的支持，正是 Ra 对照「小玩意」给出的正面例子。（43.31）'}
+];
+initSorter('sortGadget',gadgetItems);
+
+/* 术语卡翻面 */
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+renderPath();
+</script>
+</body>
+</html>

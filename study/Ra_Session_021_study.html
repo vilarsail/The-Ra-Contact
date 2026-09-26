@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 021 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 021 · 交互式学习模块</h1>
+  <p class="sub">这一集把 75,000 年周期的早期历史补齐：Maldek 的实体如何在五十万年里从「结」走到投生，投生又如何从自动变成自选；而联邦的园丁始终只做一件事——等到有人呼求，才送出爱与光。</p>
+  <div class="tagline">8 个主题 · 6 个学习步骤 · 28 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 器皿与讯息</a>
+<a href="#s3">③ 自由意志的边界</a>
+<a href="#s4">④ Maldek 的结</a>
+<a href="#s5">⑤ 遗忘与投生</a>
+<a href="#s6">⑥ 园丁法则</a>
+<a href="#s7">⑦ 第二个大周期</a>
+<a href="#s8">⑧ 收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>先弄清这一集从哪里接上、谈了哪些议题，例行问答可以跳过</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>器皿与讯息</b><span>通讯为什么不受器皿影响，用的又是谁的词汇</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>自由意志的边界</b><span>能让谁读材料、能不能删掉一句话，Ra 把判断交还给谁</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>Maldek 的结</b><span>五十万年、四个阶段：从结成结到选择投生</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>遗忘与投生</b><span>遗忘为何是设计的一部分，投生又如何从自动变成自选</span></span></label></div>
+<div class="step-item" data-target="#s7"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>园丁法则与收官</b><span>先看联邦为何必须等到呼求（第 6 章），再走第二周期的时间线，最后收在本集金句与伏笔（第 8 章）</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：这一集在补一张时间表</h2></div>
+  <p class="sec-lead">这是一次「为了写书」而做的历史总账。发问者说前面梳理 75,000 年周期时「数字有些变貌」，所以这一集他先补问两个关于通讯本身的问题，再从 Maldek 实体的转移一路核对到第二个 25,000 年周期。全集的教导集中在三处：讯息为何不受器皿影响、投生如何从自动变成自选、以及联邦为何必须等到「呼求」才行动。</p>
+  <div class="card">
+    <h3>本集的位置与议题清单</h3>
+    <p><b>承接：</b>发问者说「现在回到手头的工作——写这本书」，并要求往回退到 75,000 年周期之前，重新核对 Maldek 实体转移的年份，因为他担心早期给出的数字被扭曲过。</p>
+    <p><b>开启：</b>收尾时 Ra 宣布这是完成本次集会的最后一个问题，同时同意当天晚些时候再举行一次集会——前提是先对器皿的身体复合体做适当的运用与操作。续篇就接在这里。</p>
+    <p style="margin-top:10px"><b>本集议题：</b></p>
+    <ul style="margin:6px 0 0 20px">
+      <li><b>通讯机制：</b>器皿的显意识被移出，讯息与它无关；用词来自语言，不来自器皿（21.1–21.2）</li>
+      <li><b>自由意志的边界：</b>让人读材料无妨，参与工作需先预备；要不要删掉一句会暴露身份的话，Ra 交还给发问者裁量（21.3–21.4）</li>
+      <li><b>Maldek 的转移：</b>50 万年前变成「结」→ 20 万年前开始松结 → 内在层面疗愈 → 4.6 万年前选择投生（21.5–21.7）</li>
+      <li><b>遗忘与投生：</b>第三密度是唯一的遗忘层面；绿光激活后投生不再自动，约 54% 的投生者自己做选择（21.9–21.11）</li>
+      <li><b>园丁法则：</b>光之隔离因一次好意干预而被加强；联邦不行动，只保持觉察，直到有人呼求（21.8、21.12–21.20）</li>
+      <li><b>第二周期：</b>猎户座的两次尝试、利莫里亚的毁灭时点、南美洲朝向爱的变貌可收割（21.21–21.28）</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>问答推进器：本集的对话怎么走</h3>
+    <p>七个节点按顺序点开，可以看到发问者如何从「写书的技术问题」一路追到时间线的最末端。每个节点是一段问答的提要。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="qaTrack"></div>
+      <div class="flow-detail" id="qaDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="qaPrev">← 上一步</button> <button class="tri-btn" id="qaNext">下一步 →</button></div>
+    </div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">来访者 · 录音带 · 器皿照料</span></summary>
+  <div class="body">
+    <p><b>(21.0) 开场：</b>Ra 以「在无限造物主的爱与光中致意」开场，宣布通讯开始。</p>
+    <p><b>(21.3) 来访者与预备：</b>研究者 Andrija Puharich 本月晚些时候来访。Ra 允许他熟悉尚未发表的疗愈材料，但请求心/身/灵复合体 Henry 在进入这些工作之前，先以冥想、沉思或祈祷做好充分预备，并指出他目前还不具备适当的振动变貌。</p>
+    <p><b>(21.4) 要不要删改材料：</b>发问者自问是否该把材料中那句会让来访者推算出 Spectra 身份的话从他的知识里移除。Ra 只回一句：这属于你自行裁量的事。</p>
+    <p><b>(21.24) 录音带：</b>Ra 讲到「你们称之为俄罗斯的地方」时，录音带结束。</p>
+    <p><b>(21.26) 用词纠正：</b>发问者问「你是想说 master 还是 major cycle」，Ra 答：适当的声音振动复合体是 major cycle。</p>
+    <p><b>(21.28) 收尾预告：</b>Ra 说这将是完成本次集会的最后一个问题，并说器皿有些耗尽了。</p>
+    <p><b>(21.29) 器皿照料：</b>Ra 指出书、蜡烛与香炉垂直度之间略有未对齐，虽不重要，但累积效应对器皿不利；并同意在对器皿的身体复合体做适当运用与操作之后，当天再次举行集会。</p>
+  </div></details>
+  <div class="case"><b>口述史采访前先给对方看稿：</b>你在做一档口述史，受访者问：「我先把你们整理好的前几期访谈读一遍，会不会影响我后面讲的内容？」记录者的回答是：不会——我们记录的是你此刻的理解，不是你读到的字句。这正是 (21.1) 的意思：Ra 说未来透过器皿提供的通讯与器皿的心智复合体没有关联。</div>
+  <div class="case"><b>开会前先复述上次结论：</b>周一例会上你不直接抛方案，而是先说「我理解上次定的是 A，账要对到第二个季度，对吗？」——本集发问者就是这么开场的：先把「75,000 年周期」「早期数字有变貌」这些前提摆出来请 Ra 校准，再问新问题。</div>
+  <div class="case"><b>带着自己的猜测去看医生：</b>你进门就说「我猜是五十万年前那件事，对不对？」医生答：「方向对，但顺序和年份要重排。」——本集多次出现这种「部分正确」的回应，例如 (21.8) 说他「有一部分不正确」，然后给出真正的原因。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>器皿与讯息：内容为何不受影响</h2></div>
+  <p class="sec-lead">动笔写书之前，发问者先问两个技术问题：如果器皿自己读了我们已经拿到的材料，未来的内容会不会被污染？Ra 讲的词，是 Ra 的词，还是器皿的词？这两个问题看起来只是好奇，答案却揭开了整套通讯是怎么运作的。</p>
+  <div class="card">
+    <h3>关键不在器皿读了什么，而在显意识被移出了</h3>
+    <div class="q">如果器皿阅读我们已经获得的材料，这本书未来的内容会以任何方式受到影响吗？</div>
+    <div class="quote">
+      <p class="en">The future, as you measure in time/space, communications which we offer through this instrument have no connection with the instrument's mind complex.</p>
+      <p class="zh">按你们以时间/空间所做的那种度量，我们透过这个器皿所提供的通讯，与器皿的心智复合体没有任何关联。</p>
+      <span class="src">—— Session 021 · (21.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">is to remove the conscious mind complex from the spirit/mind/body complex so that we may communicate without reference to any instrument orientation.</p>
+      <p class="zh">（最有效的做法）是把意识心智复合体从灵/心/身复合体中移出，好让我们通讯时不参照器皿的任何取向。</p>
+      <span class="src">—— Session 021 · (21.1)</span>
+    </div>
+    <p>Ra 给出两个理由：一是器皿把自身意志奉献于服务无限造物主的忠诚；二是一种变貌/理解——既然必须借助声音振动复合体，那么把意识心智复合体移出，就是「变貌尽可能少」的做法。换句话说，读过的材料留在器皿的记忆里，而 Ra 的讯息走的是另一条路。</p>
+    <div class="plain">讯息不经过器皿的显意识，所以器皿读过什么，都渗不进 Ra 说的话里。</div>
+    <div class="analogy"><b>像录音棚的两路信号：</b>棚里另有一路独立音源直接进母带，主播在隔壁看稿、喝水、走神，都不会改变那一轨录下来的声音。</div>
+    <div class="case"><b>直播的提词器：</b>新闻主播戴着耳机念稿，稿子由导播台从另一路送来；主播自己刷了什么新闻、有什么立场，都不会改写播出的那条稿。这就是「通讯与器皿的心智复合体没有关联」。</div>
+  </div>
+  <div class="card">
+    <h3>用的是「语言的词汇」，不是器皿的词汇</h3>
+    <div class="q">你们是用你们自己的词汇，还是器皿的词汇来跟我们通讯？</div>
+    <div class="quote">
+      <p class="en">We use the vocabulary of the language with which you are familiar. This is not the instrument's vocabulary.</p>
+      <p class="zh">我们使用的是你们所熟悉的这门语言里的词汇。这不是器皿的词汇。</p>
+      <span class="src">—— Session 021 · (21.2)</span>
+    </div>
+    <p>Ra 补充：这个特定的心/身/灵复合体掌握的声音振动复合体足够多，所以「这是谁的词」这种区分往往不重要。这句话同时解释了一件事——为什么读这些讯息时总觉得用词有点古怪：词取自英语本身，而不是某个人平常的说话习惯。</p>
+    <div class="plain">词来自语言这个公共库存；器皿只是恰好掌握的词汇量够大，使这个区别常常变得没有意义。</div>
+    <div class="analogy"><b>像公用的调色盘：</b>颜色属于颜料本身，不属于画笔。换一支画笔，取的是同一盘颜色，只是取法略有不同。</div>
+    <div class="case"><b>同传译员的行话：</b>译员替外宾发言，用的是中文听众都懂的通用说法，而不是外宾的个人口头禅——所以他讲得再像那个人，用的仍是这门语言的词。对应 Ra 所说：用的是你们所熟悉语言的词汇。</div>
+  </div>
+  <div class="card">
+    <h3>术语卡：本章的关键词</h3>
+    <p>点击卡片翻看解释。这几个词在全书反复出现，先在这里建立准确的直觉。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">社会记忆复合体</div><div class="sub">social memory complex</div><span class="tap">点击展开</span></div><div class="back">Ra 对自己所属群体的称呼：每个成员的心智彼此可及、记忆共通，因此整体像一个「我们」而不是许多个「我」。本集用它解释通讯的做法为何如此讲究。<em>比喻：不是各带一本私人日记，而是共用一份随时可查的公共档案。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">显意识心智的移除</div><div class="sub">removal of the conscious mind complex</div><span class="tap">点击展开</span></div><div class="back">本集中 Ra 说明通讯方式时给出的关键动作：把意识心智复合体从灵/心/身复合体中移出，使讯息不必参照器皿的任何取向。这就是为什么器皿读过的材料不会混入讯息。<em>案例：直播时把主持人那一路麦克风拉掉，只留另一路音源。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">变貌</div><div class="sub">distortion</div><span class="tap">点击展开</span></div><div class="back">对统一性的任何偏离状态，本身不含贬义。本集里 Ra 说自己对社会记忆复合体的「变貌/理解」，指的就是一种仍带有偏移、但已足够可用的判断。<em>比喻：白光透过棱镜分成七色——颜色不是错，只是分开了。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">声音振动复合体</div><div class="sub">sound vibration complex</div><span class="tap">点击展开</span></div><div class="back">Ra 对「词、名称、发音」的称谓——每个词都是一组振动。本集说器皿掌握的这类复合体足够多，所以「用谁的词」常不重要。<em>案例：同一个音高差一点，和弦就从和谐变成刺耳。</em></div></div>
+    </div>
+  </div>
+  <div class="case"><b>换乐手，同一份谱：</b>一支乐团换了小提琴手，观众听来仍是那首曲子，因为乐谱是共有的，不是某位乐手私有的。器皿的词汇量与 Ra 的表达方式之间，就是乐手与乐谱的关系。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>自由意志的边界：谁来决定他知道多少</h2></div>
+  <p class="sec-lead">接着是两个实务问题。一位颇有来头的研究者即将来访：他能读那些还没发表的疗愈材料吗？还有，材料里有一句话会让读者推出发问者心中的某个身份，要不要把它拿走？Ra 的回答一边给出门槛，一边把决定权还了回去——这两件事都很小，却是整集最见分寸的地方。</p>
+  <div class="card">
+    <h3>读，无害；参与这些工作，要先预备</h3>
+    <div class="q">Andrija Puharich 本月晚些时候要来。他能阅读尚未发表的疗愈材料吗？</div>
+    <div class="quote">
+      <p class="en">it is harmless to allow this entity to become acquainted with this material.</p>
+      <p class="zh">让这个实体熟悉这些材料是无害的。</p>
+      <span class="src">—— Session 021 · (21.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">we request the mind/body/spirit complex, Henry, be sufficiently prepared by means of meditation, contemplation, or prayer before entering these workings.</p>
+      <p class="zh">我们请求心/身/灵复合体 Henry，在进入这些工作之前，透过冥想、沉思或祈祷做好充分的预备。</p>
+      <span class="src">—— Session 021 · (21.3)</span>
+    </div>
+    <p>Ra 先确认这位实体在显意识记忆中已对该材料有某种形式的认识，所以让他读没有害处；紧接着补上条件：真正动手参与这类工作之前，需要先做内在的预备。Ra 也明说，这个人目前的振动变貌还不合适。</p>
+    <div class="plain">读材料是参观，参与工作是上手——Ra 只对「上手」设了门槛，而门槛不是资格，是振动状态的预备。</div>
+    <div class="analogy"><b>手术室的观察窗与刷手台：</b>你可以站在观察窗后面看完整台手术，但要真正上台，得先刷手消毒。Ra 也是这么分的：读，无害；参与，先预备。</div>
+    <div class="case"><b>旁听战略会与接手预算表：</b>新同事可以先旁听一整季的战略会（读材料），但要把预算表交给他维护，公司会先安排两周交接与演练（预备）。对应 Ra 的两个层次：acquainted 与 entering these workings。</div>
+  </div>
+  <div class="card">
+    <h3>要不要删掉那句话：判断被完整地还了回来</h3>
+    <div class="q">材料里有一句话会让来访者推算出我认为 Spectra 真正是谁。为保护自由意志，我该把它从他的知识里移除吗？我正确吗？</div>
+    <div class="quote">
+      <p class="en">This is a matter for your discretion.</p>
+      <p class="zh">这属于你自行裁量的事。</p>
+      <span class="src">—— Session 021 · (21.4)</span>
+    </div>
+    <p>注意 Ra 没有做两件事：它没有确认「当初不定义 Spectra 的起源是为了保护自由意志」这个推论，也没有回答「该不该删」。它只把决定权原样交回给发问者。这与本集后半段 (21.14) 讲的分寸一致——联邦关切的是维护有利于学习的条件，而不是替人做选择。</p>
+    <div class="plain">凡牵涉到第三方自由意志的取舍，Ra 不替人下判断——因为一下判断，就等于替发问者做了本该由他做的选择。</div>
+    <div class="analogy"><b>像一位不接「该不该」的教练：</b>你问教练「我要不要跟队友摊牌？」他只回你训练要点——因为那一下摊牌只能由你拍板，教练替你拍板，你就学不到这一步。</div>
+    <div class="case"><b>管理员的请示：</b>论坛管理员问上级「要不要删掉这条会暴露某位用户身份的帖子？」上级回：「你们自己判断。」责任留在最了解情境的人手上——这正是 (21.4) 那句答复的结构。</div>
+  </div>
+  <div class="case"><b>新员工手册上的两句话：</b>「产品的全部资料你可以随便看（acquainted）；但任何一句对外发布前，先完成合规培训（prepared）。」——前半句对应「让这个实体熟悉这些材料是无害的」，后半句对应「进入这些工作之前先预备」。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>Maldek 的结：五十万年、四个阶段</h2></div>
+  <p class="sec-lead">发问者担心早期的年份被扭曲，要求重新核对 Maldek 实体转移的时间。Ra 给出一条由三个时刻串起来的线索：50 万年前、20 万年前、4.6 万年前。他还顺手纠正了一个容易混淆的点——那批实体在投生之前所在的，是第三密度的时间/空间（内在层面），不是第二密度。</p>
+  <div class="card">
+    <h3>时间线：从「结」到投生</h3>
+    <div class="timeline">
+      <div class="tl-item"><div class="t">约 50 万年前 · 被转变为一个「结」</div><div class="d">这些实体经历数次转变，第一次发生在大约 50 万年前，那时它们被转变为一个结。这个状态持续了你们会称为永世的时间，而援助它们的实体反复尝试，都无法接触到它们。</div></div>
+      <div class="tl-item"><div class="t">约 20 万年前 · 开始松结</div><div class="d">一个星际联邦实体得以开始松开这个结——在行星毁灭期间，没有任何实体从这个结里逃脱过。</div></div>
+      <div class="tl-item"><div class="t">其后 · 进入内在维度的疗愈</div><div class="d">这些实体再次被转变进内在的、也就是时间/空间的维度，经历一个漫长的疗愈过程。</div></div>
+      <div class="tl-item"><div class="t">疗愈完成后 · 决定「适当的移动」</div><div class="d">疗愈完成之后，它们才有能力决定适当的移动——用来建立条件，减轻自己行为所造成的后果。</div></div>
+      <div class="tl-item"><div class="t">约 4.6 万年前 · 选择投生</div><div class="d">Ra 说这是近似值：这些实体选择在该行星领域内投生。</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>一次毁灭，换来五十万年的修复期</h3>
+    <div class="q">这些来自 Maldek 的实体，是多少年前转移的？</div>
+    <div class="quote">
+      <p class="en">The entities of which you speak underwent several transitions, the first occurring five zero zero thousand [500,000] of your years, approximately, in your past, as you measure time. At this time, the entities were transformed into a knot.</p>
+      <p class="zh">你们所谈的这些实体经历了数次转变。第一次大约发生在你们的 50 万年前（按你们度量时间的方式）。那时，这些实体被转变为一个结。</p>
+      <span class="src">—— Session 021 · (21.5)</span>
+    </div>
+    <div class="quote">
+      <p class="en">a Confederation entity was able to begin to relax this knot from which none had escaped during planetary annihilation.</p>
+      <p class="zh">一个星际联邦实体得以开始松开这个结——在行星毁灭期间，没有任何实体从这个结里逃脱过。</p>
+      <span class="src">—— Session 021 · (21.5)</span>
+    </div>
+    <div class="plain">一颗行星的毁灭不是终点，而是一段长达数十万年的修复：先冻结成结，再被慢慢松开，再进入漫长的疗愈，最后才谈得上重返人间。</div>
+    <div class="analogy"><b>像马拉松式的复健：</b>先固定（结）→ 康复师反复尝试唤起反应却不被接收（援助者无法接触）→ 开始长期疗养（内在层面）→ 出院后才谈得上重新规划生活（决定适当的移动）。</div>
+    <div class="case"><b>公司的破产重整：</b>一家公司轰然破产（行星毁灭），先进入冻结般的清算保护（结），债权人反复沟通都进不去（援助者无法接触），几年后债务重组完成（疗愈），管理层才重新规划业务、弥补当年对客户与员工的亏欠（建立条件以减轻后果）。</div>
+  </div>
+  <div class="card">
+    <h3>纠正：不是第二密度，而是第三密度的时间/空间</h3>
+    <div class="q">那么在这个主要的 75,000 年周期之前，这些实体没有投生；它们有没有在 75,000 年周期之前投生于第二密度？</div>
+    <div class="quote">
+      <p class="en">These particular entities were incarnate in time/space third density, that is, the so-called inner planes, undergoing the process of healing and approaching realization of their action.</p>
+      <p class="zh">这些特定的实体，是投生于时间/空间的第三密度，也就是所谓的内在层面，正在经历疗愈的过程，并逐渐趋近于对自己行为的领悟。</p>
+      <span class="src">—— Session 021 · (21.7)</span>
+    </div>
+    <p>发问者在 (21.6) 问「75,000 年周期之前没有 Maldek 实体投生，对吗」，Ra 答：就「第三密度时间/空间中的投生」而言正确。紧接着 (21.7) 把「第二密度」这个猜测直接否掉了——它们的下落不是降级为动植物，而是在内在层面疗愈，同时一步步接近对自己行为的领悟。</p>
+    <div class="plain">第二密度是错的方向：它们不在「降级」，而在内在层面疗愈，并逐渐理解自己做过的事。</div>
+    <div class="analogy"><b>不是留级，是停课疗养：</b>学生出事之后被安排休学一年做心理疗愈，学籍仍在原年级；把他理解成「被降回小学」就错位了。</div>
+    <div class="case"><b>项目里的「小黑屋」不是实习岗：</b>有人搞砸了项目，被暂时移出团队做复盘与调整（内在层面的疗愈）。新来的同事以为这等于降级去实习（第二密度），主管纠正：他还是原职级，只是暂时不在场上。</div>
+  </div>
+  <div class="case"><b>家族旧账的十年：</b>兄弟俩因为一笔遗产十年不说话（结）。长辈反复传话都传不进去（援助者无法接触）。后来其中一人先去做心理咨询，把情绪松动之后，两人才谈得上和解（疗愈完成才有适当的移动）。顺序反了，和解只会变成第二次冲突。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>遗忘的面纱：投生如何从自动变成自选</h2></div>
+  <p class="sec-lead">这是本集最完整的一段教导。发问者问：75,000 年周期开始时人均寿命约九百年，那时的投生是怎么安排、怎么运作的？投生之间的时间又如何作用于心/身/灵复合体的成长？Ra 从「遗忘」讲起，一路讲到绿色光芒能量中心被激活、投生不再自动。</p>
+  <div class="card">
+    <h3>遗忘是设计的一部分，不是缺陷</h3>
+    <div class="q">那时轮回的机制与安排是怎样的？投生之间的时间如何作用于心/身/灵复合体的成长？</div>
+    <div class="quote">
+      <p class="en">It is necessary for the third-density entity to forget so that the mechanisms of confusion, or free will, may operate upon the newly individuated consciousness complex.</p>
+      <p class="zh">第三密度实体必须遗忘，好让「混淆」——也就是自由意志——的机制能够作用于这个新近个体化的意识复合体。</p>
+      <span class="src">—— Session 021 · (21.9)</span>
+    </div>
+    <div class="quote">
+      <p class="en">for you may think, or consider, of your density as one of, as you may say, a sleep and a forgetting. This is the only plane of forgetting.</p>
+      <p class="zh">因为你们可以把你们的密度想成——如你们所说——一场沉睡与一场遗忘。这是唯一的遗忘层面。</p>
+      <span class="src">—— Session 021 · (21.9)</span>
+    </div>
+    <div class="plain">遗忘是功能，不是故障：只有先忘记，选择才可能是真的选择。</div>
+    <div class="analogy"><b>盲评比赛：</b>评委被要求不知道参赛者是谁，打出来的分才反映作品本身。名单一旦公开，选择就被过去的印象接管了——遗忘相当于蒙住那层「我已经知道」。</div>
+    <div class="case"><b>不告诉你哪条路会升迁：</b>新人入职时，公司刻意不透露「哪个部门将来升得快」，他才会按自己的兴趣与真实的工作感受去选。若一开始就把答案贴在墙上，他选的就不是自己，而是墙。</div>
+  </div>
+  <div class="card">
+    <h3>需求阶梯：从「只为生存」到「对生存无用」</h3>
+    <div class="q">那么最初的实体，是怎样开始具备成长的条件的？</div>
+    <div class="quote">
+      <p class="en">These needs include: the need for companionship, the need for laughter, the need for beauty, the need to know the universe about it. These are the beginning needs.</p>
+      <p class="zh">这些需求包括：对陪伴的需求、对笑声的需求、对美的需求、对了解周围宇宙的需求。这些是最初的需求。</p>
+      <span class="src">—— Session 021 · (21.9)</span>
+    </div>
+    <p>Ra 描述了一条阶梯：最初的实体完全天真地朝向动物性行为，只把其他自我当成自我的延伸，用来保全「全我」；然后它慢慢发现自己有对生存毫无用处的需求；随着投生一次次累积，又出现交易、去爱、被爱，以及把动物性行为提升到更普遍视角的需求。</p>
+    <div class="table-wrap">
+      <table class="nine">
+        <tr><th>需求</th><th>英文</th><th>通俗理解</th></tr>
+        <tr><td>陪伴</td><td>companionship</td><td>需要有人在，且不为了交换什么</td></tr>
+        <tr><td>笑声</td><td>laughter</td><td>会笑，而且需要与人一起笑</td></tr>
+        <tr><td>美</td><td>beauty</td><td>会为「没用」的东西停下来</td></tr>
+        <tr><td>了解周围宇宙</td><td>to know the universe about it</td><td>想知道天为什么这么高、星为什么会走</td></tr>
+        <tr><td>交易</td><td>trade</td><td>需求开始必须靠与他人交换才能满足</td></tr>
+        <tr><td>去爱</td><td>to love</td><td>主动朝向他人，而不只是使用他人</td></tr>
+        <tr><td>被爱</td><td>to be loved</td><td>需要被接住，而不只是被需要</td></tr>
+        <tr><td>提升动物性行为</td><td>to elevate animalistic behaviors to a more universal perspective</td><td>把「为我活」扩写成「为我们活」</td></tr>
+      </table>
+    </div>
+    <div class="plain">成长不是把动物性磨掉，而是从「只为保存自己」出发，一步步被那些对生存无用的需求拉出去。</div>
+    <div class="case"><b>通勤路上的一眼晚霞：</b>下班的地铁里你累到只想坐下，却在出口停住，为一片云拍了张照——这个动作对生存毫无帮助，正是 Ra 所说的「对生存无用」的需求开始运作。</div>
+  </div>
+  <div class="card">
+    <h3>投生机制的次第</h3>
+    <p>七个节点连起来，就是 Ra 在 (21.9) 里给出的整条链：从遗忘开始，到绿光激活结束。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="lifeTrack"></div>
+      <div class="flow-detail" id="lifeDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="lifePrev">← 上一步</button> <button class="tri-btn" id="lifeNext">下一步 →</button></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>绿光一亮，投生不再自动</h3>
+    <div class="q">当投生不再是自动的，实体能决定何时需要再次投生。他也选择自己的父母吗？如今大约多少比例的投生者是自己做选择？</div>
+    <div class="quote">
+      <p class="en">At some point in third density, the green-ray energy center becomes activated, and at that point incarnation ceases to be automatic.</p>
+      <p class="zh">在第三密度的某个时刻，绿色光芒能量中心被激活；从那一刻起，投生不再是自动发生的。</p>
+      <span class="src">—— Session 021 · (21.9)</span>
+    </div>
+    <p>Ra 在 (21.10) 直接确认：实体既能决定何时投生，也选择自己的父母。到了 (21.11)，发问者问在周期接近尾声的此时有多少比例的投生者是自己做选择，Ra 给的近似数字是 54%。</p>
+    <div class="plain">绿光一开，「什么时候回来」与「回到谁家」开始由自己决定；Ra 说在你们周期的此时，约 54% 的投生者是自己选的。</div>
+    <div class="analogy"><b>从系统排班到自己投简历：</b>早期是被排到哪算哪；绿光激活之后，你开始看城市、看团队、看自己能学到什么——选择权从系统交到了自己手上。</div>
+    <div class="case"><b>第一次租房与第三次租房：</b>刚毕业时你只看「哪间有空」（自动投生）；工作三年后你会比较通勤、朝向、邻居，再决定搬去哪个区（自选投生，还包括「选房东」）。</div>
+  </div>
+  <div class="card">
+    <h3>术语卡：本章的关键词</h3>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">遗忘的面纱</div><div class="sub">the plane of forgetting</div><span class="tap">点击展开</span></div><div class="back">Ra 说第三密度是「唯一的遗忘层面」——投生时对自己真正的来处与前世的功课都记不得。这不是惩罚，而是让自由意志真正能运作的条件。<em>比喻：盲评——不知道作者是谁，评价才属于你自己。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">绿色光芒能量中心</div><div class="sub">green-ray energy center</div><span class="tap">点击展开</span></div><div class="back">Ra 用来描述人体能量中心的说法之一，绿光对应爱/理解的层次。本集的关键作用是：它一旦被激活，投生就由自动变为自选。<em>比喻：从「系统自动分配」升级为「自己选志愿」的那道门槛。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">时间/空间与内在层面</div><div class="sub">time/space, the inner planes</div><span class="tap">点击展开</span></div><div class="back">本集用它指称物质世界之外的居所：Maldek 的实体在毁灭后就是进入这里疗愈，而不是投生为动植物。Ra 明确说那是「第三密度的时间/空间」。<em>比喻：同一个年级的另一个教室，不是留级换学校。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">心/身/灵复合体</div><div class="sub">mind/body/spirit complex</div><span class="tap">点击展开</span></div><div class="back">Ra 对人类存在的标准称谓：心智、身体、灵性三者构成的统一结构，本集中投生、疗愈、成长都发生在它身上。<em>比喻：同一栋房子的三个系统，分开讲，但住的是一个人。</em></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>归类练习：这是哪一类需求？</h3>
+    <p>Ra 说最初的需求分两类：一类是保存自身的动物性需求，一类是「对生存无用」的初始需求。判断下面每一件事属于哪一类。</p>
+    <div id="needsArea"></div>
+  </div>
+  <div class="case"><b>幼儿园的分组游戏：</b>老师从不提前告诉孩子「今天哪组会赢」，孩子才会真的按自己的想法去玩；一旦说了，所有人都朝那一组靠。这就是遗忘的用意：让选择属于选择者。</div>
+  <div class="case"><b>半夜的盲盒：</b>盒子上没贴标签时，你挑的是自己那一眼的直觉；贴上标签后，你挑的是标签。前者是遗忘状态下的自由意志，后者是「已经知道」之后的选择。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>园丁法则：隔离、呼求与「需要平衡的是机会」</h2></div>
+  <p class="sec-lead">这是本集的核心教导。发问者先猜：隔离该是为了防止自由意志被侵犯才设立的。Ra 说这个猜测「有一部分不正确」——顺序反了：隔离本来就在，是因为一次出于好意的基因援助被视为侵犯自由意志，它才被加强。接着发问者一路追问：守护者发现第一周期没有收割时做了什么？联邦怎么送出爱与光？为什么不必给服务自我的一方「同等时间」？</p>
+  <div class="card">
+    <h3>隔离为何被加强：一次好意如何成了侵犯</h3>
+    <div class="q">我认为守护者当时意识到，如果不建立隔离，就会发生对自由意志的侵犯，所以才这么做。这正确吗？</div>
+    <div class="quote">
+      <p class="en">those entities whose third-density experience upon your Red Planet was brought to a close prematurely were aided genetically while being transferred to this third density. This, although done in a desire to aid, was seen as infringement upon free will. The light quarantine, which consists of the Guardians, or gardeners, as you may call them, which would have been in effect thus was intensified.</p>
+      <p class="zh">那些在你们红色星球上的第三密度体验被过早终止的实体，在被转移到这个第三密度时接受了基因上的援助。这件事虽然出于援助的愿望，却被视为对自由意志的侵犯。由守护者——或你们可以称之为园丁们——所构成、原本就会生效的光之隔离，因此被加强。</p>
+      <span class="src">—— Session 021 · (21.8)</span>
+    </div>
+    <div class="plain">隔离不是「预判危险才设的」，它本来就存在；是那次「好心帮忙」把它加强了。</div>
+    <div class="analogy"><b>家长替孩子写作业：</b>出发点是想帮，但孩子的选择权被拿走了。于是家里从此多了一条规矩：先问，再帮——这就是被加强的隔离。</div>
+    <div class="case"><b>教练的手：</b>老教练看学员动作不对，伸手把他的姿势摆正（基因援助）。那一次动作确实对了，学员却学不会自己找感觉。此后训练规则改成：只给提示，不动手。对应「出于援助愿望的干预被视为侵犯自由意志」。</div>
+  </div>
+  <div class="card">
+    <h3>园丁的第一周期：不行动，只保持觉察</h3>
+    <div class="q">第一个 25,000 年周期里有工业或机械吗？周期结束时有没有像 75,000 年周期那样突然的物理变化？当守护者发现既没有正向也没有负向的实体被收割时，他们采取了什么行动？</div>
+    <div class="quote">
+      <p class="en">There was no action taken except to remain aware of the possibility of a calling for help or understanding among the entities of this density.</p>
+      <p class="zh">除了保持觉察、看这个密度的实体中是否可能出现求助或求理解的呼求之外，没有采取任何行动。</p>
+      <span class="src">—— Session 021 · (21.14)</span>
+    </div>
+    <p>Ra 先把那个周期的底子交代清楚：以发问者所理解的「机器」而言，答案是「没有」，只有各种木制与石制的工具，用来获取食物，也用来侵略（21.12）；周期结束也没有跃变，只是按智能能量（也就是你们可称为物理进化的东西）让身体适应环境——肤色随所居球体区域而变，人口因食物摄取改善而渐渐增长（21.13）。面对「没有收割」，Ra 说联邦没有行动，因为它在意的不是结果，而是<b>有利于学习的条件</b>，而这在很大程度上围绕着自由意志这个首要变貌（21.14）。发问者在 (21.15) 用园丁比喻追问「园丁什么都没做，直到花园里有些植物向他们呼求帮助」，Ra 答：正确。</p>
+    <div class="plain">联邦要维护的不是「好的结果」，而是「有利于学习的条件」；在没人呼求之前，它能做的只有保持觉察。</div>
+    <div class="analogy"><b>园丁不替植物生长：</b>园丁负责阳光、水土与除虫（条件），不负责把苗往上拔。拔苗助长的园丁，恰恰是最坏的园丁。</div>
+    <div class="case"><b>家长群里不主动私聊：</b>孩子班上的家长群，你看到有人用错的学习方法也不主动私聊纠正；直到有人来问「你们家怎么复习的」，你才给建议。前者是多管闲事，后者是维护条件——对应「只保持觉察，直到出现呼求」。</div>
+  </div>
+  <div class="card">
+    <h3>第一次呼求，与「需要平衡的是机会」</h3>
+    <div class="q">第一次呼求发生在什么时候、如何发生？联邦具体做了什么？既然援助未被感知，就不需要平衡它吗？一的法则的第一变貌是否要求给服务自我导向的团体同等的时间？</div>
+    <p>Ra 说第一次呼求大约在 4.6 万年前，来自 Maldek 的实体：它们知道自己需要纠正行为的后果，却在投生状态下对自己的处境相当困惑——潜意识是觉察的，显意识则非常混乱，这个落差本身就构成了一次呼求（21.16）。至于做法，Ra 说联邦里有一类行星实体，从自己的行星球体上除了向呼求者送出纯粹的爱与光之流以外什么都不做；那不是概念性的思想，而是纯粹且不加区分的爱（21.17）。</p>
+    <p>关于「同等时间」，Ra 在 (21.18) 说：在这种情况下，由于这些实体当时的导向，在一段时间里并不需要。原因在 (21.19) 揭晓——它们的导向使联邦的援助根本没有被感知到。发问者追问「既然未被感知，就不需要平衡，对吗」，Ra 答：正确，并把原则讲全：</p>
+    <div class="quote">
+      <p class="en">What is necessary to balance is opportunity. When there is ignorance, there is no opportunity.</p>
+      <p class="zh">需要被平衡的是「机会」。当存在无知时，就没有机会。</p>
+      <span class="src">—— Session 021 · (21.20)</span>
+    </div>
+    <div class="plain">要平衡的不是善意、也不是功劳，而是「机会」；对方如果全然不知道，那就还没有机会可供平衡。</div>
+    <div class="analogy"><b>广播电台的载波：</b>电台不挑对象、不问你为什么收听，只是持续发射；能不能收到，取决于你有没有把收音机调到那个频率。呼求就是调频这个动作。</div>
+    <div class="case"><b>24 小时公益热线：</b>接线员不判断你是谁、为什么打来，只是在通话里持续回应；能不能受益，取决于你有没有拨出那通电话。它不挨个外呼问「你要不要帮忙」——那已不是回应呼求，而是推销。</div>
+  </div>
+  <div class="card">
+    <h3>条件模拟器：一次干预何时需要被「平衡」？</h3>
+    <p>Ra 在 (21.20) 补完了最后一句：当存在潜能时，每一个机会都会被平衡，而这种平衡不仅由提供援助者的正/负导向造成，也由请求援助者的导向造成。拨动下面三个开关，看四种组合的结果。</p>
+    <div class="cond-row"><div class="name">受援方存在觉察的潜能<small>对方至少隐约知道自己缺什么</small></div><label class="switch"><input type="checkbox" id="condA" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">援助被对方感知到<small>他知道有人在帮他</small></div><label class="switch"><input type="checkbox" id="condB" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">双方都有明确的极性导向<small>施援者与受援者的正/负倾向都清楚可辨</small></div><label class="switch"><input type="checkbox" id="condC" checked><span class="slider"></span></label></div>
+    <div id="condResult"></div>
+  </div>
+  <div class="card">
+    <h3>术语卡：本集的法则词汇</h3>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">光之隔离</div><div class="sub">light quarantine</div><span class="tap">点击展开</span></div><div class="back">围绕这个行星的一道「光」的界限，由守护者维持，本来就在生效；本集说它因为一次基因援助被视为侵犯自由意志而被<b>加强</b>。<em>比喻：不是后来才上的锁，而是原本就有的门被换成了更厚的。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">守护者（园丁）</div><div class="sub">Guardians, gardeners</div><span class="tap">点击展开</span></div><div class="back">Ra 对本集里维持隔离、照料地球学习条件的那批实体的称呼。本集用「园丁」这个比喻讲清了它们的职责边界：管阳光水土，不管植物长多快。<em>案例：不替孩子写作业的家教。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">呼求</div><div class="sub">calling</div><span class="tap">点击展开</span></div><div class="back">有意或无意发出的求助或求理解。本集说第一次呼求约在 4.6 万年前，由 Maldek 的实体发出——它们显意识困惑、潜意识觉察，这个落差本身就是呼求。没有呼求，联邦就不行动。<em>比喻：热线只接来电，不外呼。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">自由意志（首要变貌）</div><div class="sub">Free Will, the primal distortion</div><span class="tap">点击展开</span></div><div class="back">Ra 说联邦关切维护有利于学习的条件，「这在很大程度上围绕着自由意志这个首要变貌」。本集里隔离被加强、Ra 拒答、园丁不行动，都是同一条原则的不同表现。<em>案例：教练不替你决定要不要摊牌。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">不加区分的爱</div><div class="sub">pure and undifferentiated love</div><span class="tap">点击展开</span></div><div class="back">本集描述联邦回应呼求的方式：不是概念性的思想，而是纯粹、不加区别的爱与光之流。它不评估「你值不值得」，因此也不需要平衡。注意原文同时也说这是爱与光，不只是爱。<em>比喻：阳光不挑对象。</em></div></div>
+    </div>
+  </div>
+  <div class="case"><b>连夜替同事改完 PPT：</b>同事第二天要汇报，你替他重做了整套幻灯片（好心动手）。他上台讲不出所以然，反而更难堪。此后你们约定：只给建议，不动手。对应「出于援助愿望的干预被视为侵犯自由意志，于是隔离被加强」。</div>
+  <div class="case"><b>家族群里的养生谣言：</b>没人问你的时候，你在群里纠正长辈只会让关系紧张（援助未被感知）。等有人私信问你「这个靠谱吗」，你的信息来源才进得去——那一问，就是机会成立。</div>
+  <div class="case"><b>不请自来的教练：</b>健身房里有人硬拉动作明显会伤腰，你没直接上手纠正他的姿势（那等于替他动作），而是在他休息时问一句「要不要我帮你看一眼」。他点头的那一秒，援助被感知，机会成立——从那之后，你的每一句话都会被平衡，也才真的起作用。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s7">
+  <div class="sec-head"><span class="num">07</span><h2>第二个大周期：猎户座、利莫里亚与「朝向爱的变貌」</h2></div>
+  <p class="sec-lead">时间线推进到第二个 25,000 年周期。发问者先确认猎户座集团两次尝试接触的年份，接着试图把利莫里亚放进这个周期——Ra 纠正：利莫里亚在第一周期末尾就毁于自然灾难。而第二周期真正值得一提的成果，不是技术，也不是社会规模，而是南美洲长出来的「朝向爱的伟大振动变貌」。</p>
+  <div class="card">
+    <h3>时间线：第二个大周期前后</h3>
+    <div class="timeline">
+      <div class="tl-item"><div class="t">约 6 万年前 · 猎户座集团首次尝试接触</div><div class="d">Ra 说这是在更早的年代、把你们的时间当作度量给出的。</div></div>
+      <div class="tl-item"><div class="t">约 5.3 万年前 · 利莫里亚的起源</div><div class="d">Ra 给的起源年份，同一次回答里也给出了破坏完成的时点。</div></div>
+      <div class="tl-item"><div class="t">约 5 万年前 · 利莫里亚毁于自然灾难</div><div class="d">破坏在第一个大周期的最后一个小周期中完成。发问者追问该说 master 还是 major cycle，Ra 答：适当的声音振动复合体是 major cycle（21.25–21.26）。</div></div>
+      <div class="tl-item"><div class="t">约 4.6 万年前 · 第一次呼求出现</div><div class="d">Maldek 的实体在此投生并发出呼求；同一时期猎户座集团并没有尝试接触——发问者确认过这一点（21.16、21.23）。</div></div>
+      <div class="tl-item"><div class="t">约 3,600 年前 · 猎户座集团再次尝试</div><div class="d">Ra 说它这一次转往「更肥沃的领域」。</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>利莫里亚：位置错了一格</h3>
+    <div class="q">我们进入第二个 25,000 年周期时，这是利莫里亚的时期吗？利莫里亚遭受灾难是多少年前？它的毁灭与第一个大周期的结束有关吗？</div>
+    <p>Ra 直接说「不正确」：利莫里亚不在第二个周期，它在第一个周期的末尾就已经毁灭。活下来的人带着利莫里亚的背景，在南美洲及你们所知的美洲各地继续学习/教导，还越过当时存在、如今已不存在的一座陆桥；Ra 正要提到你们称之为俄罗斯的地方时，录音带结束了（21.24）。</p>
+    <div class="quote">
+      <p class="en">This was approximately fifty thousand [50,000] of your years ago. The origins being approximately five three, fifty-three thousand [53,000] of your years ago, the damage being completed in that last small cycle of the first master cycle.</p>
+      <p class="zh">这大约是在你们的 5 万年前。起源大约在 5.3 万年前，而破坏在第一个大周期的最后一个小周期中完成。</p>
+      <span class="src">—— Session 021 · (21.25)</span>
+    </div>
+    <p>至于那份巧合，Ra 在 (21.27) 说：大周期结束时会有一股能量的汇聚。</p>
+    <div class="quote">
+      <p class="en">There is a confluence of energies at the ending of a major cycle. This encouraged what was already an inevitable adjustment in the movement of the surfaces of your planetary sphere.</p>
+      <p class="zh">在一个大周期结束之时，会有能量的汇聚。它促成了你们行星球体表面运动中那项本已不可避免的调整。</p>
+      <span class="src">—— Session 021 · (21.27)</span>
+    </div>
+    <div class="plain">不是周期结束引发了灾难：地表的那次调整本来就不可避免，周期结束的能量汇聚只是让它发生得更早、更顺。</div>
+    <div class="analogy"><b>汛期与裂缝：</b>河堤的裂缝早就存在（不可避免的调整），汛期一到（能量汇聚）它顺势就崩了。把账全算在汛期头上，就漏掉了那条裂缝。</div>
+    <div class="case"><b>商场年底调铺：</b>商圈里一家小店早就撑不住了（不可避免的调整），商场年底的调铺期一到（能量汇聚），它顺势撤柜。撤柜这件事既不是调铺造成的，也和调铺脱不了关系。</div>
+  </div>
+  <div class="card">
+    <h3>第二周期的成果：不是技术，是爱的变貌</h3>
+    <div class="q">第二个 25,000 年大周期里，有没有什么伟大的文明发展起来？</div>
+    <p>Ra 先划定标准：「伟大」若指技术，那么答案是没有。有一批来自天津四（Deneb）、选择以团体形式投生于你们称为中国之地的实体有一些进步；在美洲、非洲、澳大利亚、印度以及许多分散的民族当中，也都出现了激活绿色光芒能量复合体的适当正向步骤。但这些都没有达到利莫里亚或亚特兰蒂斯那种「伟大」——后者的名声来自强大的社会复合体，亚特兰蒂斯还加上极发达的技术理解（21.28）。</p>
+    <div class="quote">
+      <p class="en">These entities were harvestable at the end of the second major cycle without ever having formed strong social or technological complexes.</p>
+      <p class="zh">这些实体在第二个大周期结束时已经是可收割的，尽管它们从未形成强大的社会或技术复合体。</p>
+      <span class="src">—— Session 021 · (21.28)</span>
+    </div>
+    <div class="plain">这一周期的「成绩」不在技术与规模，而在极性：南美洲那些实体从未组成强盛的社会或技术复合体，却在第二周期结束时已经可以收割。</div>
+    <div class="analogy"><b>作坊与工厂：</b>小作坊没有流水线和品牌，但师傅带出的学徒个个拿得出活儿（可收割）；大工厂产能惊人（技术意义上的伟大），却未必有人在内在功课上过关。</div>
+    <div class="case"><b>不出名的补习班：</b>一家从没投过广告的小补习班（没有强社会复合体），十年里学生一个个考出了自己真正想要的分数（朝向爱的变貌）。它没成为「伟大的机构」，但它的学生是可收割的——收割看成熟度，不看规模。</div>
+  </div>
+  <div class="case"><b>平台迁移：</b>一个小论坛关站之前，最活跃的那批人各自散到别处继续写、继续教（逃离灾难的人在别处继续学习/教导）。内容没有随平台一起消失，只是换了地方落脚——这正是 (21.24) 里利莫里亚幸存者的处境。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s8">
+  <div class="sec-head"><span class="num">08</span><h2>收官：金句与伏笔</h2></div>
+  <p class="sec-lead">本集从头到尾都在做两件事：把时间线核准，和把「不干涉」讲透。若只带走一句，是 Ra 在 (21.20) 对「平衡」的界定——它决定了后面几集里联邦与猎户座集团的一切动作该怎么理解。</p>
+  <div class="saying">
+    <p class="en">What is necessary to balance is opportunity. When there is ignorance, there is no opportunity.</p>
+    <p class="zh">需要被平衡的是机会。当存在无知时，就没有机会。</p>
+    <span class="src">—— Session 021 · (21.20)</span>
+  </div>
+  <div class="card">
+    <h3>这一集留下的位置</h3>
+    <p><b>伏笔一 · 当天还会有第二次集会。</b>Ra 在 (21.28) 宣布这是完成本次集会的最后一个问题，发问者随即问器皿的舒适（21.29），Ra 指出书、蜡烛与香炉垂直度之间略有未对齐，虽不重要但累积效应不利，并同意在对器皿的身体复合体做适当运用后再次举行集会。下一集的议题由此接续。</p>
+    <div class="quote">
+      <p class="en">This will be the final question in completion of this session.</p>
+      <p class="zh">这将是完成本次集会的最后一个问题。</p>
+      <span class="src">—— Session 021 · (21.28)</span>
+    </div>
+    <p><b>伏笔二 · 断在半句上的线索。</b>Ra 讲到「你们称之为俄罗斯的地方」时录音带结束（21.24）——利莫里亚幸存者后来散布到哪些地方，这条线在本集只说了半句。</p>
+    <p><b>伏笔三 · 第三周期之前的底子。</b>第二周期南美洲那批「朝向爱的变貌」的实体已是可收割的（21.28）；而利莫里亚幸存者继续在美洲大陆学习/教导（21.24）。地球在进入下一个周期之前，已经有了这两层积累。</p>
+  </div>
+  <div class="card">
+    <h3>本集最容易被读错的三个地方</h3>
+    <p>这一集的信息以时间和机制为主，也最容易在转述时走形。复盘时先盯这三条：</p>
+    <div class="plain">一、隔离不是「预判危险才设的」，而是本来就在生效，因一次基因援助被视为侵犯自由意志而被加强（21.8）。</div>
+    <div class="plain">二、需要平衡的是「机会」，不是善意或功劳；无知即无机会（21.20）。也正因如此，Maldek 实体当时不必给服务自我一方同等时间（21.18–21.19）。</div>
+    <div class="plain">三、利莫里亚不属于第二个周期；它在第一个大周期最后一个小周期里毁于自然灾难（21.24–21.25），而周期结束时的能量汇聚只是「鼓励」了本已不可避免的地表调整（21.27）。</div>
+  </div>
+  <div class="case"><b>项目复盘的三行结论：</b>团队原以为「客户退单是因为我们报价高」，复盘后发现真正的节点是「客户根本不知道我们在做什么」——也就是机会从未成立。把反直觉的结论写成三行贴在墙上，是避免重复误解的最低成本办法。</div>
+  <div class="case"><b>会后那五分钟：</b>主持人说「这是最后一个议题」，散会前却补了五分钟的下次准备事项。本集的 (21.28) 与 (21.29) 就是这个结构：先宣告收官，再留下器皿照料与下一次集会的约定。</div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+<p>基于 The Ra Contact Session 021（split/Ra_Session_021.md）英文原文制作 · 交互式学习模块</p>
+<p>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文</p>
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra021-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+
+/* 问答推进器：本集问答脉络 */
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+  {t:'(21.1–21.2) 通讯机制',d:'<span class="qa-q">问：器皿读了已有材料，会影响书的内容吗？你们用的是谁的词汇？</span><b>答：</b>通讯与器皿的心智复合体没有关联，因为意识心智被移出灵/心/身复合体；用的是你们所熟悉语言的词汇，不是器皿的词汇。'},
+  {t:'(21.3–21.4) 谁能读，谁能删',d:'<span class="qa-q">问：来访者能读尚未发表的疗愈材料吗？要不要删掉那句会暴露 Spectra 身份的话？</span><b>答：</b>读是无害的，但进入这些工作之前要先以冥想、沉思或祈祷预备；至于删不删——这属于你自行裁量的事。'},
+  {t:'(21.5–21.7) Maldek 的时间',d:'<span class="qa-q">问：来自 Maldek 的实体是多少年前转移的？它们曾投生于第二密度吗？</span><b>答：</b>50 万年前被转变为一个结，20 万年前联邦开始松结，之后进入内在维度疗愈，4.6 万年前选择投生；此前它们是在第三密度的时间/空间，也就是内在层面，不是第二密度。'},
+  {t:'(21.8) 隔离为何加强',d:'<span class="qa-q">问：守护者是预见自由意志会被侵犯才建立隔离的吗？</span><b>答：</b>部分不正确。那些过早结束红色星球体验的实体被基因援助，这被视为对自由意志的侵犯；原本就在生效的光之隔离因此被加强。'},
+  {t:'(21.9–21.11) 投生机制',d:'<span class="qa-q">问：九百年寿命的时代，轮回的机制与安排是怎样的？</span><b>答：</b>第三密度是唯一的遗忘层面；需求从动物性扩展到陪伴、笑声、美、了解宇宙，再到交易、去爱、被爱；绿光能量中心激活后投生不再自动，实体能自选父母，如今约 54% 的投生者自己做选择。'},
+  {t:'(21.12–21.20) 园丁与呼求',d:'<span class="qa-q">问：第一周期有机械吗？发现没有收割时守护者做了什么？联邦怎么送出爱与光？</span><b>答：</b>只有木石工具，周期结束也无跃变；联邦不行动，只保持觉察，直到 4.6 万年前 Maldek 的呼求出现，它便送出纯粹不加区分的爱与光。需要平衡的是机会，无知即无机会。'},
+  {t:'(21.21–21.28) 第二周期',d:'<span class="qa-q">问：猎户座何时接触？第二周期有伟大文明吗？</span><b>答：</b>猎户座 6 万年前首次尝试，3,600 年前转向更肥沃的领域；利莫里亚 5.3 万年前起源、5 万年前毁于自然灾难；第二周期没有技术意义上的伟大社会，但南美洲长出朝向爱的伟大振动变貌，那些实体在周期结束时是可收割的。'}
+]);
+
+/* 投生机制的次第 */
+initStepper('lifeTrack','lifeDetail','lifePrev','lifeNext',[
+  {t:'一 · 遗忘',d:'<b>先忘记。</b>第三密度是唯一的遗忘层面，你们可以把你们的密度想成一场沉睡与一场遗忘。遗忘是必要的：只有如此，混淆——也就是自由意志——的机制才能作用于新近个体化的意识复合体。'},
+  {t:'二 · 全然天真的动物性',d:'<b>起点是动物性的。</b>最初的实体完全天真地朝向动物性行为，把其他自我只当成自我的延伸，用来保全「全我」——这个阶段没有对错，只有起点。'},
+  {t:'三 · 对生存无用的需求浮现',d:'<b>转折从这里开始。</b>实体慢慢察觉自己有一些对生存毫无用处的需求：陪伴、笑声、美、了解周围的宇宙。Ra 说，这些是最初的需求。'},
+  {t:'四 · 需求继续累积',d:'<b>需求被一项项发现。</b>随着投生累积，出现了交易、去爱、被爱，以及把动物性行为提升到更普遍视角的需求——从「为我活」扩向「为我们活」。'},
+  {t:'五 · 自动投生',d:'<b>前期几乎不需要回顾。</b>在第三密度周期的第一阶段，投生在物理载具的能量复合体停止后迅速自动发生，几乎没有回顾或疗愈投生体验的需要。'},
+  {t:'六 · 投生之间的时间被拉长',d:'<b>能量中心被更高程度激活后</b>，投生期间体验的更多内容涉及爱的课程，于是投生之间的时间被延长，用来回顾并疗愈前一次投生的体验。'},
+  {t:'七 · 绿光激活，投生不再自动',d:'<b>关键的一刻。</b>在第三密度的某个时刻，绿色光芒能量中心被激活；从那一刻起，投生不再是自动的——实体可以决定何时投生，也选择自己的父母。'}
+]);
+
+/* 归类练习：动物性生存需求 vs 对生存无用的初始需求 */
+initSorter('needsArea',[
+  {a:'加班到深夜，只想找个人说说话',opts:['初始需求','生存需求'],ans:'初始需求',exp:'陪伴——Ra 说这类需求对生存毫无用处，却是实体开始脱离纯动物性行为的转折点之一。'},
+  {a:'通勤路上买份早饭垫肚子',opts:['初始需求','生存需求'],ans:'生存需求',exp:'这属于保存自身的动物性层面的需求，不在 Ra 列出的「最初的需求」里。'},
+  {a:'看到晚霞，停下来拍了张照',opts:['初始需求','生存需求'],ans:'初始需求',exp:'美——不为生存，也不为交换，正对应「对生存无用」的需求。'},
+  {a:'项目结束那天，全组笑作一团',opts:['初始需求','生存需求'],ans:'初始需求',exp:'笑声——Ra 把「对笑声的需求」明确列为最初的需求之一。'},
+  {a:'给孩子买保险、报安全课程',opts:['初始需求','生存需求'],ans:'生存需求',exp:'仍然是保存自身与后代的安全安排，属于动物性层面的行为。'},
+  {a:'半夜刷天文视频，想知道宇宙到底有多大',opts:['初始需求','生存需求'],ans:'初始需求',exp:'了解周围宇宙的需求，是 Ra 这项清单里的最后一项，也是最纯粹「无用」的一项。'}
+]);
+
+/* 条件模拟器：干预何时需要被平衡 */
+function updateCond(){
+  const a=document.getElementById('condA').checked,
+        b=document.getElementById('condB').checked,
+        c=document.getElementById('condC').checked;
+  const el=document.getElementById('condResult');
+  let html='',fail=false;
+  if(!a){
+    fail=true;
+    html='<b>无知即无机会。</b>Ra 的原则是：需要被平衡的是机会，而当存在无知时就没有机会。对方连自己缺什么都还没有觉察，就不存在一个可供平衡的机会；联邦在这种情况下也只是保持觉察、不采取行动。';
+  }else if(!b){
+    fail=true;
+    html='<b>援助未被感知，等同于无知。</b>本集里 Maldek 实体的导向使联邦的援助根本没有被感知，因此在一段时间里不必给服务自我导向的一方「同等时间」。没被感知的援助，等于没有机会。';
+  }else if(!c){
+    html='<b>机会成立：必须被平衡，但导向未明。</b>Ra 强调这种平衡不仅由提供援助者的正/负导向造成，也由请求援助者的导向造成——所以真正的难点是辨认双方的导向，而不是计算「谁帮了几次」。';
+  }else{
+    html='<b>机会成立，并由双方导向共同平衡。</b>对方有觉察（存在潜能），援助也被感知到（机会成立），双方导向清楚——于是这个「机会」会按双方的极性被平衡。这也解释了为什么 Ra 说需要平衡的是机会，而不是善意或功劳。';
+  }
+  el.className=fail?'fail':'';
+  el.innerHTML=html;
+}
+['condA','condB','condC'].forEach(id=>document.getElementById(id).addEventListener('change',updateCond));
+updateCond();
+
+document.querySelectorAll('.fn-card').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('open')));
+
+renderPath();
+</script>
+</body>
+</html>

@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 065 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 065 · 交互式学习模块</h1>
+  <p class="sub">发问者想为未来的活动定一份计划，Ra 却先递给他一间杂货店：所有可能的未来都摆在货架上——地球的「分娩」近乎确定，点哪份菜单却由意识的自由意志决定。随后是流浪者的三重功能、失忆的两重原因，以及金字塔共振室里那场「埋葬与复活」。</p>
+  <div class="tagline">8 个主题 · 6 个学习步骤 · 34 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 寻求的浪潮</a>
+<a href="#s3">③ 战争情景</a>
+<a href="#s4">④ 预言的机制</a>
+<a href="#s5">⑤ 流浪者的使命</a>
+<a href="#s6">⑥ 混合收割与行星实体</a>
+<a href="#s7">⑦ 遗忘与共振室</a>
+<a href="#s8">⑧ 收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>用问答推进器走一遍 24 段对话的骨架，顺手收下 6 张术语卡</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>寻求的浪潮：催化剂还是能力展现</b><span>「帘幕上的洞」是什么，超自然现象为何不算催化剂，做完归类练习再走</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>战争情景：自由与控制的极化课</b><span>一场假想中的常规战争如何变成课堂，以及已在试验的「改天气」武器</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>预言的机制：杂货店与菜单</b><span>Cayce 的预言为什么只值一货架麦片，哪部分近乎确定、哪部分别当真</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>混合收割与分娩中的地球</b><span>收割的三种统计、联邦为何不数人头；可先翻第⑤章看流浪者的三重功能</span></span></label></div>
+<div class="step-item" data-target="#s8"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官：一个小容器与一句「永远可能」</b><span>先在第⑦章弄懂流浪者为何失忆、共振室如何「活埋」行家，再回来收金句</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ ① 本章地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：这一集 Ra 与发问者到底谈了什么</h2></div>
+  <p class="sec-lead">1981 年 8 月 8 日的这场集会，是同一天工作的延续——发问者开场便自陈「可能在重复今天早些时候的提问中已涉及的内容」，但他目的明确：把没懂的事弄清楚，为未来的活动定一份自己的计划。于是整集成了一场「战前复盘」：收割前的最后几年会发生什么、哪些是催化剂、预言能信几分、流浪者来干什么、地球这个「待产的实体」正经历什么。集会末尾 Ra 宣布「这是本次工作的最后一个完整询问」，在器皿照料的叮嘱中收束。</p>
+
+  <div class="card">
+    <h3>本集议题清单</h3>
+    <p>这场集会共 24 段问答，围绕六条主线展开，外加例行问答：</p>
+    <div class="table-wrap"><table class="nine">
+      <tr><th>主线</th><th>问答区间</th><th>一句话概括</th></tr>
+      <tr><td>寻求的浪潮</td><td>(65.2) (65.5) (65.6)</td><td>帘幕上的洞：什么把人推向根本问题，什么不算</td></tr>
+      <tr><td>战争情景</td><td>(65.7)–(65.8)</td><td>自由与控制的对极如何成为一堂极化课</td></tr>
+      <tr><td>预言的机制</td><td>(65.9)–(65.10)</td><td>杂货店、冷麦片与菜单：预言只报货单，不替你下单</td></tr>
+      <tr><td>流浪者的使命</td><td>(65.3) (65.11)–(65.12)</td><td>灯塔、电池与那个装满和平的小容器</td></tr>
+      <tr><td>混合收割与行星实体</td><td>(65.13)–(65.17)</td><td>收割的三种统计；地球是子宫中待产的实体</td></tr>
+      <tr><td>遗忘与共振室</td><td>(65.18)–(65.22)</td><td>流浪者为何失忆；行家如何在「活埋」中遇见自我</td></tr>
+    </table></div>
+    <div class="case"><b>为明年做计划的部门主管：</b>年底复盘会上，主管不听「明年会更好」的套话，而是追问「哪几类变化会真实发生、我们该怎么布岗」——发问者开场自陈要「为未来的活动制定自己的计划」，问的正是这类问题，而不是猎奇。</div>
+    <div class="case"><b>货架前的犹豫：</b>深夜的购物软件里，同一件商品有三家店、五种价——「有哪些货」是平台给的，「买哪家」是你定的；Ra 用来解释未来的一整套比喻（商店、罐头、麦片），说的就是这层区别。</div>
+  </div>
+
+  <div class="card">
+    <h3>问答脉络推进器</h3>
+    <p>按顺序点一遍，看看 24 段对话是怎么一步步展开的。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="mapTrack"></div>
+      <div class="flow-detail" id="mapDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="mapPrev">← 上一问</button>
+        <button class="tri-btn" id="mapNext">下一问 →</button>
+      </div>
+    </div>
+    <div class="quote">
+      <p class="en">I greet you in the love and in the light of the One Infinite Creator. We communicate now.</p>
+      <p class="zh">我在太一无限造物主的爱与光中向你们致意。我们现在开始通讯。</p>
+      <span class="src">—— Session 065 · (65.0)</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>本集术语预览（点击卡片翻面）</h3>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">可能性/或然率漩涡</div><div class="sub">possibility/probability vortex</div><div class="tap">点击翻面</div></div><div class="back">时间/空间里并存的多种潜在未来情景；Ra 被问到时只「报货单」，去哪家店买、买不买，由人的意识自己决定。<em>像购物 App 的「猜你喜欢」：清单真实存在，下单的手是你的。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">流浪者</div><div class="sub">wanderer</div><div class="tap">点击翻面</div></div><div class="back">从第四、五、六等更高密度自愿投生到第三密度的实体，趁收割前的特殊时期提供服务；投生时自愿接受「遗忘」。<em>像签了失忆条款的外派志愿者：入职前知道会忘，仍报名前来。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">遗忘过程</div><div class="sub">forgetting process</div><div class="tap">点击翻面</div></div><div class="back">投生带来的记忆断开；可以穿透到「记得自己是谁、为何在此」，再往深走就会侵犯第三密度的自由意志。<em>像签证条款：允许你想起使命，不允许你开挂。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">悲伤的兄弟姐妹</div><div class="sub">Brothers and Sisters of Sorrow</div><div class="tap">点击翻面</div></div><div class="back">本集提到的服务者群体：记得自己在这个星球上的使命，在人们无处公开表达对自由之爱时，助其对内在知识的寻求扎根。<em>像深夜热线那头的倾听者：世界越吵，他们越安静地在。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">逻各斯</div><div class="sub">Logos</div><div class="tap">点击翻面</div></div><div class="back">太一无限造物主在造物中的次级创造者，与行星最密切关联的太阳即是一例；Ra 说每个心/身/灵复合体自身也「作为逻各斯」，与它的关系是造物主对造物主。<em>不是「总部与分部」，而是两位相认的创造者。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">混合收割</div><div class="sub">mixed harvest</div><div class="tap">点击翻面</div></div><div class="back">同一行星同时收上正面与负面极化实体的收割；约占全部收割的三成，且其中几乎全数收割为正面——多数为负面的混合收割几乎未知。<em>像一届毕业班同时有人升学、有人复读：全班都复读的情形几乎不存在。</em></div></div>
+    </div>
+  </div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 传讯节奏 · 收尾</span></summary>
+  <div class="body">
+    <p><b>(65.1) 器皿状态：</b>生命能如前所述；物理能量因关节炎症状极大变貌朝向虚弱；通灵攻击持续，但被器皿与支持团体的忠诚化解，未酿成严重困难。</p>
+    <p><b>(65.4) Ra 为何说得更慢：</b>器皿虚弱、比平日更脆弱且持续承受疼痛——为在不伤害她的前提下用足可观的可用能量，Ra 改用比惯常更窄的频带传讯。</p>
+    <p><b>(65.23) 收尾叮嘱：</b>器皿得到很好支持，一切都在校准中；留意她不喜欢分享疼痛的表达，但她潜意识里接受每个人的帮助；Ra 致谢小组的尽责并道别。</p>
+  </div></details>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ ② 寻求的浪潮 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>寻求的浪潮：帘幕上的洞与两类催化剂之辨</h2></div>
+  <p class="sec-lead">发问者的第一件正事，是确认一个印象：不久的将来，投生在地球上的人寻求会普遍增加——被一种「独特性质的催化剂」推向更基本的思考。Ra 先给这句概括打了个折扣，又递来一幅极有画面感的图景；随后发问者把「临近第四密度的变化」统统算作催化剂，Ra 只接收了一半。</p>
+
+  <div class="card">
+    <h3>帘幕上的洞：概括永远不完全正确，但倾向是或然的</h3>
+    <div class="q">发问者描述自己的直觉：更多人将意识到「造物本来的样子」（相对于人的造物），思维被重新导向更基本的概念——这判断对吗？</div>
+    <div class="quote">
+      <p class="en">The generalities of expression can never be completely correct. However, we may note that when faced with a hole in the curtain, an entity's eyes may well peer for the first time through the window beyond.</p>
+      <p class="zh">概括性的表达永远不可能完全正确。然而我们可以指出：当面对帘幕上的一个洞时，一个实体的眼睛很可能第一次透过那扇窗向外窥视。</p>
+      <span class="src">—— Session 065 · (65.2)</span>
+    </div>
+    <div class="plain">Ra 不给「全称判断」，只给一幅图：环境裂开一道缝，人才有机会第一次往外看——在当下的可能性/或然率漩涡格局里，这种倾向是或然的。</div>
+    <div class="case"><b>停电之夜的星空：</b>城市停电，满城灯火熄灭，有人抬头第一次看清银河——「帘幕上的洞」不是礼物本身，而是让眼睛第一次有机会望向窗外的那道缝。</div>
+    <div class="case"><b>被热搜推了一把的人：</b>一条关于极端天气的热搜，让一位上班族从刷新闻切换到查「气候到底怎么了」——后续章节会展开：变化带来的困难与看似的不幸，正把许多人推向「寻求理解」。</div>
+  </div>
+
+  <div class="card">
+    <h3>两个因素获确认：老灵魂与流浪者的涌入</h3>
+    <div class="q">发问者把自己的分析拆成两条请 Ra 核对：地表人群已被「投生振动的资历」极大极化；流浪者的涌入又增加了朝向灵性事物的心智配置——这是否构成更好的服务氛围？</div>
+    <div class="quote">
+      <p class="en">seniority by vibration of incarnation has greatly polarized those upon the surface now, and the influx of wanderers has greatly increased the mental configuration, I might say, toward things of a more spiritual nature.</p>
+      <p class="zh">投生振动的资历已极大极化了如今地表上的人群，而流浪者的涌入又极大增加了——容我说——朝向更灵性性质事物的心智配置。</p>
+      <span class="src">—— Session 065 · (65.5)</span>
+    </div>
+    <div class="plain">Ra 简短答「这是正确的」——发问者这次的拆解原样通过：一拨「老生」带高年级的整体基调，另一拨「插班生」添灵性的氛围。</div>
+    <div class="case"><b>老校友聚会：</b>二十年后的同学会上，当年最闹的人谈起了养生与生死——年级越高，整体议题越成熟；「投生振动的资历」像一届届老生把全班带向更根本的问题。</div>
+  </div>
+
+  <div class="card">
+    <h3>两类变化都是催化剂吗：Ra 只收一半</h3>
+    <div class="q">发问者把临近第四密度的变化打包成催化剂：行星内热等物理变化，加上人们开始展现的超自然能力——两者都会带来更大的寻求？</div>
+    <div class="quote">
+      <p class="en">The paranormal events occurring are not designed to increase seeking but are manifestations of those whose vibratory configuration enables these entities to contact the gateway to intelligent infinity.</p>
+      <p class="zh">正在发生的超自然事件并非旨在增加寻求，而是那些振动配置足以接触智能无限之门户的实体的显现。</p>
+      <span class="src">—— Session 065 · (65.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The correct portion of your statements is the greater opportunity for service due to the many changes which will offer many challenges, difficulties, and seeming distresses within your illusion to many who then will seek to understand…</p>
+      <p class="zh">你陈述中正确的部分是：诸多变化将在幻象中带来许多挑战、困难与看似的不幸，使许多人随后会寻求去理解……</p>
+      <span class="src">—— Session 065 · (65.6)</span>
+    </div>
+    <div class="plain">催化剂是「困难与失序」本身；超自然能力只是某些人振动配置的自然显象——用它来服务与否，是该实体自由意志里的决定，不是能力自带的功能。此外 Ra 另报一类新漩涡：向好战行动发展的或然率——多非核战，而是更漫长、毁灭性较低的所谓常规战争。</div>
+    <div class="case"><b>把魔术当教材的人：</b>看了「意念移物」视频立刻报班学特异功能——Ra 的纠偏正对着这类人：能力本身不制造寻求；是否借此服务，是那个实体意识层面的选择。</div>
+  </div>
+
+  <div class="card">
+    <h3>归类练习：哪些是催化剂，哪些只是能力的展现</h3>
+    <p>把下面五个场景按 Ra 在本集的标准分一分类。</p>
+    <div id="sortArea2"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ ③ 战争情景 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>战争情景：自由与控制如何变成一堂极化课</h2></div>
+  <p class="sec-lead">顺着上一章末尾「战争漩涡」的话头，发问者追问：常规战争凭什么提供寻求与服务的机会？Ra 描绘了一个正被此时/空节点考虑的情景，并给出一个令人不安的细节：这个情景里的主要武器，已经有人在试验了。</p>
+
+  <div class="card">
+    <h3>游击战式的情景：自由与控制的对极被摆上台面</h3>
+    <div class="q">常规战争既不「正义」也不新鲜，Ra 为什么说它能带来大量寻求？</div>
+    <div class="quote">
+      <p class="en">The ideal of freedom from the so-called invading force of either the controlled fascism or the equally controlled social common ownership of all things would stimulate great quantities of contemplation upon the great polarization implicit in the contrast between freedom and control.</p>
+      <p class="zh">从所谓入侵力量——无论是受控的法西斯主义，还是同样受控的社会公有制——中求自由的理想，将激发对自由与控制对比中隐含的巨大极化的大量思考。</p>
+      <span class="src">—— Session 065 · (65.7)</span>
+    </div>
+    <div class="plain">关键不在战争的形态，而在它逼人面对的那对极：自由与控制。日常被悬念掩住的问题，被入侵的阴影一照，人人都得掂量自己的立场。</div>
+    <div class="case"><b>小区业委会之争：</b>物业宣布「为安全统一管理」，业主群里一夜刷出几百条反对——「自由与控制」这对极化一旦被摆上台面，平时不关心的居民也被迫思考立场，正是 Ra 说的「激发大量思考」。</div>
+    <div class="case"><b>历史课上的两难：</b>老师让学生辩论「教室该不该装监控」——没有标准答案的争论逼着每个人在秩序与自由之间掂量，像一场小型极化练习。</div>
+  </div>
+
+  <div class="card">
+    <h3>情景的边界与暗处的寻求</h3>
+    <div class="q">这场假想战争会像核战那样抹平一切吗？被压制的人怎么办？</div>
+    <div class="quote">
+      <p class="en">In this ongoing struggle the light of freedom would burn within the mind/body/spirit complexes capable of such polarization. Lacking the opportunity for overt expression of the love of freedom, the seeking for inner knowledge would take root, aided by those of the Brothers and Sisters of Sorrow which remember their calling upon this sphere.</p>
+      <p class="zh">在这场持续的斗争中，自由之光将在能够如此极化的心/身/灵复合体内燃烧。由于缺乏公开表达对自由之爱的机会，对内在知识的寻求将扎根——并得到那些记得自己在这个星球上的使命的「悲伤的兄弟姐妹」们的帮助。</p>
+      <span class="src">—— Session 065 · (65.7)</span>
+    </div>
+    <div class="plain">情景本身有边界：摧毁有价值地点与人员的想法「不会被考虑是有用的」，武器也不像核武那样毁灭；而无法公开言说的自由之爱，会转成向内的寻求——还有一群记得使命的服务者在暗处相助。</div>
+    <div class="case"><b>地下读书会：</b>某地收紧言论后，几个年轻人每周在地下室轮流朗读被禁的书——「无法公开表达对自由之爱」时，对内在知识的寻求在暗处扎根；那个默默带书来的人，像极了本集说的「悲伤的兄弟姐妹」。</div>
+  </div>
+
+  <div class="card">
+    <h3>已经在试验的武器：改风改雨以致饥荒</h3>
+    <div class="q">发问者追问：这场可能的战争会比过去任何战争更广地蔓延全球、触及更大比例人口吗？Ra 答「正确」，并交了一个底。</div>
+    <div class="quote">
+      <p class="en">There are those now experimenting with one of the major weapons of this scenario, that is the so-called psychotronic group of devices, which are being experimentally used to cause such alterations in wind and weather as will result in eventual famine.</p>
+      <p class="zh">现在有一些人正在试验这个情景中的一种主要武器，即所谓的心理电子装置组——它们正被实验性地用于制造风与天气的改变，终将导致饥荒。</p>
+      <span class="src">—— Session 065 · (65.8)</span>
+    </div>
+    <div class="plain">心理电子装置（psychotronic devices）若不被抵制且试验满意，方法将被公开，随后是「不流血入侵」的期望——但 Ra 补了一句观察：你们文化的人民几乎无不流血投降的倾向。</div>
+    <div class="case"><b>改天气的专利：</b>现实中确有人工影响天气的作业（如人工增雨）——「技术能翻云覆雨」的直觉并不荒诞；Ra 在本集把它点名为一项真实在试的武器，也提醒读者：预言与情景不是科幻，而是正在做的实验。</div>
+    <div class="case"><b>不流血的接管：</b>「我们不动一枪，只要你们配合」——不少控制以「不流血」的形式推进；Ra 那句「你们文化的人民几乎无不流血投降的倾向」，恰恰说明：硬控与硬抗之外的第三条路，得去意识里找。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ ④ 预言的机制 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>预言的机制：杂货店、冷麦片与菜单</h2></div>
+  <p class="sec-lead">地球变化与战争，两台催化剂谁先启动？发问者借此抛出真正的困惑：Ra 不属于时间，为何能谈「未来」；Edgar Cayce 那些关于地球变化的预言，价值到底在哪里。Ra 的回答是全书最著名的比喻之一：一间杂货店。</p>
+
+  <div class="card">
+    <h3>商店里的漩涡：只报货单，不替你下单</h3>
+    <div class="q">预言到底怎么「看到」未来？既然或然率有分支，说出来的还算数吗？</div>
+    <div class="quote">
+      <p class="en">Consider the shopper entering the store to purchase food with which to furnish the table for the time period you call a week.</p>
+      <p class="zh">想象一位购物者走进商店，为你们称为「一周」的时间段采购食物来布置餐桌。</p>
+      <span class="src">—— Session 065 · (65.9)</span>
+    </div>
+    <div class="plain">可能性/或然率漩涡就像商店里的罐头与商品：Ra 被问到时只能报出「有哪些货」；你们会去哪家店买、买不买，连 Ra 也无从知晓。</div>
+    <div class="case"><b>一周的买菜清单：</b>周末进门前你只知道「店里有哪些货」，买不买打折品、走哪家收银台都是临场决定——把「报货单」当成「替你下单」，是读预言最常见的错位。</div>
+    <div class="case"><b>降水概率 60%：</b>天气预报从不说「明天一定下雨」，只给概率与量级——把具体日期当铁律的人常被放鸽子；Ra 同样提醒：任何时间/空间观察，都极难表达时间度量值。</div>
+  </div>
+
+  <div class="card">
+    <h3>早餐近乎确定，菜单自己点</h3>
+    <div class="q">那 Edgar 读到的「阿卡西记录」在杂货店里算什么？</div>
+    <div class="quote">
+      <p class="en">Edgar's material could be likened unto one hundred boxes of your cold cereal, another vortex likened unto three, or six, or fifty of another product which is eaten by your peoples for breakfast. That you will breakfast is close to certain. The menu is your own choosing.</p>
+      <p class="zh">Edgar 的材料可以比作一百盒你们的冷麦片，另一个漩涡则像三盒、六盒或五十盒的另一种早餐食品。你们会吃早餐，这件事近乎确定；菜单是你们自己的选择。</p>
+      <span class="src">—— Session 065 · (65.9)</span>
+    </div>
+    <div class="plain">Edgar 的记录对最强漩涡（地球变化）关注最多、对其他漩涡着墨少——所以那「一百盒麦片」显得格外多；但「会吃早餐」与「点什么菜单」是两件事：前者近乎确定，后者由意识自选。</div>
+    <div class="case"><b>毕业典礼一定开，流程表仅供参考：</b>学校通知「典礼如期举行」，但你的上台顺序、领奖时刻以当天安排为准——「你们会吃早餐」近乎确定；菜单是自己的选择。</div>
+  </div>
+
+  <div class="card">
+    <h3>为什么预言纷纷，且互相打架</h3>
+    <div class="q">关于地球变化的预测满天飞、理由五花八门，这种「混乱」会不会让催化剂失效？</div>
+    <div class="quote">
+      <p class="en">Each which prophesies does so from an unique level, position, or vibratory configuration. Thus biases and distortions will accompany much prophecy.</p>
+      <p class="zh">每一个做出预言的人，都是从一个独特的层次、位置或振动配置出发的。因此，偏见与变貌将伴随多数预言。</p>
+      <span class="src">—— Session 065 · (65.10)</span>
+    </div>
+    <div class="plain">预言多，恰恰因为行星艰难诞生进入第四密度的那个漩涡强到「若无人感知到它才令人惊讶」；各人站在自己的位置看同一个漩涡，偏差自然难免——混乱不否定催化剂，反而是读预言时该有的常识。</div>
+    <div class="case"><b>十种「内部消息」：</b>同一个楼盘，十个群给出十个「必涨」的理由——每个消息源都站在自己的位置上看同一个盘子；读预言和读荐股群一样，先问「他站在哪」。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ ⑤ 流浪者的使命 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>流浪者的使命：灯塔、电池与和平的容器</h2></div>
+  <p class="sec-lead">接下来二十年「寻求增加、困惑也增加」，那流浪者是不是带着「减少困惑」的 KPI 来的？发问者替他们设计了一份任务书，Ra 逐一退回，最后把流浪者真正的三重功能摊开——并在章末留下一句全篇最温柔的话。这一章也顺带回答了第②章开头被搁置的问题 (65.3)。</p>
+
+  <div class="card">
+    <h3>意图与困境：不是每个流浪者都能完成任务</h3>
+    <div class="q">流浪者觉得此刻投生是「特权」，是因为寻求增加给了更充分服务的机会——这个假设对吗？</div>
+    <div class="quote">
+      <p class="en">There are many wanderers whose dysfunction with regard to the planetary ways of your peoples have caused, to some extent, a condition of being caught up in a configuration of mind complex activity which, to the corresponding extent, may prohibit the intended service.</p>
+      <p class="zh">有许多流浪者，由于对你们人类的行星方式感到不适应，在某种程度上陷入了一种被卷入心智复合体活动配置的状况——在相应的程度上，这可能阻碍他们原本打算进行的服务。</p>
+      <span class="src">—— Session 065 · (65.3)</span>
+    </div>
+    <div class="plain">「服务的机会更多」只是投生前的意图；现实里不少流浪者被自己的「水土不服」缠住，陷入心智的内耗，本打算做的事反而做不成。</div>
+    <div class="case"><b>水土不服的外派高管：</b>总部派来的高管满腔蓝图，却因看不惯本地办事节奏而陷入内耗，三年没推动一件事——不是不想干，是被「卷入心智活动配置」卡住了。</div>
+  </div>
+
+  <div class="card">
+    <h3>目标不是预定剧本</h3>
+    <div class="q">那流浪者投生前到底定了什么目标？是「减少困惑」这种具体任务吗？</div>
+    <div class="quote">
+      <p class="en">Light and love go where they are sought and needed, and their direction is not planned aforetimes.</p>
+      <p class="zh">爱与光去往它们被寻求和需要的地方，它们的方向并非预先计划好的。</p>
+      <span class="src">—— Session 065 · (65.11)</span>
+    </div>
+    <div class="plain">目标是两重的：以任何被请求的方式服务；让自身振动模式整体上减轻行星振动、改善并缓和行星不和谐的后果。「援助尚未显现的局面」这类具体意图，并不在目标清单里。</div>
+    <div class="case"><b>被写进班表的志愿者：</b>公益组织给志愿者排好「第 3 个月去 A 点」的班表，老志愿者却总被临场需求拉走——爱与光的流向看的是「哪里被寻求」，不是计划书。</div>
+  </div>
+
+  <div class="card">
+    <h3>「充电」是真的：三重功能一次讲清</h3>
+    <div class="q">发问者追问一个「更物质」的机制：流浪者的振动，是否像电极性或给电池充电那样，实实在在地帮到行星？</div>
+    <div class="quote">
+      <p class="en">Thus wanderers have three basic functions once the forgetting is penetrated, the first two being basic, the tertiary one being unique to that particular mind/body/spirit complex.</p>
+      <p class="zh">因此，一旦穿透遗忘，流浪者有三重基本功能：前两重是基本的，第三重则独属于那个特定的心/身/灵复合体。</p>
+      <span class="src">—— Session 065 · (65.12)</span>
+    </div>
+    <div class="plain">Ra 确认机制正如发问者所说——这是上一答第二部分的含义。三重功能：作灯塔或牧羊人；以振动「加倍」行星的爱与光（即「充电」）；再加上各自独特的才能——第五密度带来智慧的表达，第四、六密度像爱与爱/光的被动辐射器或广播者。</div>
+    <div class="case"><b>充电宝式的朋友：</b>有的人一坐进会议室，紧绷的气氛就松下来——「振动是否像给电池充电」，Ra 答复机制正是如此：存在本身就在供能。</div>
+    <div class="case"><b>各展所长的支援团：</b>救灾现场里医护、翻译、厨师各干各的——「每个流浪者都有独特的能力、偏见与特长」，第三重功能因人而异，但都在穿透遗忘之后才谈得上。</div>
+  </div>
+
+  <div class="card">
+    <h3>商店里那个装满和平的容器</h3>
+    <div class="q">讲了满货架的「痛苦与机会」，Ra 主动补了一句——杂货店里还剩最后一件货。</div>
+    <div class="quote">
+      <p class="en">although you have many, many items which cause distress and thus offer seeking and service opportunities, there is always one container in that store of peace, love, light, and joy.</p>
+      <p class="zh">尽管你们有许多许多造成痛苦的货品——它们也提供寻求与服务的机会——在那家商店里，总有一个容器装着和平、爱、光与喜悦。</p>
+      <span class="src">—— Session 065 · (65.12)</span>
+    </div>
+    <div class="plain">这个漩涡可能非常小，但背转身去，就是忘记当下时刻的无限可能性——行星能否在一个美好而强烈的灵感瞬间朝和谐极化？Ra 的回答收进第⑧章金句。</div>
+    <div class="case"><b>崩溃那晚的一条消息：</b>深夜情绪见底时，手机亮起一条「我在，你还好吗」——那个容器可能小得只有一条消息的大小，转身看见它，货架的全部意义就变了。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ ⑥ 混合收割与行星实体 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>混合收割与行星实体：分娩中的地球</h2></div>
+  <p class="sec-lead">视野从个人放大到行星：宇宙里混合收割常见吗？收割前最后阶段的催化剂从哪来？发问者一路把地球推想成「一个实体」，Ra 不但确认，还领他把视野再推远两级——直到太阳，直到「造物主对造物主」。</p>
+
+  <div class="card">
+    <h3>收割的三种统计</h3>
+    <div class="q">一个行星同时收上正面与负面实体的「混合收割」，在宇宙里多常见？</div>
+    <div class="quote">
+      <p class="en">Among planetary harvests which yield an harvest of mind/body/spirit complexes: approximately 10% are negative; approximately 60% are positive; and approximately 30% are mixed with nearly all harvest being positive.</p>
+      <p class="zh">在产生心/身/灵复合体收割的行星收割中：约 10% 为负面；约 60% 为正面；约 30% 为混合——其中几乎全部收割为正面。</p>
+      <span class="src">—— Session 065 · (65.13)</span>
+    </div>
+    <div class="plain">混合收割中多数为负面几乎未知：当一个行星强烈朝负面移动，几乎没有机会产生可收割的正面极化——单一极化的环境最先挤走的，恰是反向选项。</div>
+    <div class="case"><b>两种班级画风：</b>一个班全班卷生卷死、容不下异见；另一个班有人卷有人躺、各有出路——「强烈朝负面移动的行星几乎没有可收割的正面极化」，说的就是前一种班级。</div>
+  </div>
+
+  <div class="card">
+    <h3>为什么负向行星几乎收不到正面</h3>
+    <div class="q">「几乎没有机会」的原因是什么？</div>
+    <div class="quote">
+      <p class="en">The ability to polarize positively requires a certain degree of self-determination.</p>
+      <p class="zh">朝正面极化的能力，需要一定程度的自我决定。</p>
+      <span class="src">—— Session 065 · (65.14)</span>
+    </div>
+    <div class="plain">正面极化要靠「自己选」：连正向选择都被剥夺的环境里，正向也无从收割——自我决定是正面道路的入场券。</div>
+    <div class="case"><b>被包办的孩子：</b>从小到大一切被安排的孩子，很难长出「为自己选」的肌肉——正面极化需要一定程度的自我决定，包办得越彻底，正向的收成越难。</div>
+  </div>
+
+  <div class="card">
+    <h3>地球变化=额外催化剂；联邦不数人头</h3>
+    <div class="q">发问者假设：收割前最后阶段的催化剂会增加可收割实体——其他行星也是如此吗？联邦会不会顺便预测一下人数？</div>
+    <div class="quote">
+      <p class="en">We are servants. If we are called, we shall serve with all our strength. To count the numbers is without virtue.</p>
+      <p class="zh">我们是仆人。若我们被呼唤，我们将以全部力量服务。计算数字是没有价值的。</p>
+      <span class="src">—— Session 065 · (65.15)</span>
+    </div>
+    <div class="plain">假设成立：混合收割几乎总伴不和谐，于是出现所谓「地球变化」形式的额外催化剂；但联邦拒绝预测新增收割人数——只承诺服务。拨一拨下面的开关，看这套机制何时成立。</div>
+    <div class="cond-row"><div class="name">收割是混合型<small>同一行星同时收上正面与负面实体</small></div><label class="switch"><input type="checkbox" id="earthMix" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">周期已到最后阶段<small>收割临近，催化剂进入加时赛</small></div><label class="switch"><input type="checkbox" id="earthLate" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">导向由居民自己的思维构成<small>意识以自身取向作用于自身</small></div><label class="switch"><input type="checkbox" id="earthSelf" checked><span class="slider"></span></label></div>
+    <div id="condResult"></div>
+    <div class="case"><b>不数 KPI 的救援队：</b>救援队出发时从不立「这次必须救出多少人」的军令状——被呼唤就全力去，救到多少不是出发的理由；「计算数字没有价值」是服务者的姿态，不是管理者的口径。</div>
+  </div>
+
+  <div class="card">
+    <h3>行星=一个由亿万人组成的实体</h3>
+    <div class="q">发问者重提一个旧类比：周期末的额外催化剂，是行星意识的导向「自己提供给自己」的——如病痛作用于单个心/身/灵复合体；行星就是数十亿心/身/灵复合体组成的单一实体。这样看对吗？</div>
+    <div class="quote">
+      <p class="en">The consciousness has provided the catalyst for itself in orienting its thinking in the way it has oriented it, thus acting upon itself the same as catalyst of bodily pain and disease act upon the single mind/body/spirit complex.</p>
+      <p class="zh">意识通过以它已采取的方式导向自己的思维，为自己提供了催化剂——从而作用于自身，正如身体疼痛与疾病的催化剂作用于单个的心/身/灵复合体。</p>
+      <span class="src">—— Session 065 · (65.16)</span>
+    </div>
+    <div class="plain">Ra 答复「你完全正确」：地球变化的账，最终记在行星自己的意识导向名下——没人从外面塞进惩罚，功课是自己给自己出的。</div>
+    <div class="case"><b>一艘船的全体乘客：</b>每个人各自选自己的航向之外，全体乘客其实共乘一条船、共担一场风暴——「数十亿心/身/灵复合体组成的单一实体」就是这个意思。</div>
+  </div>
+
+  <div class="card">
+    <h3>视野拉远：从子宫里的实体到造物主对造物主</h3>
+    <div class="q">这个「实体」还能继续外推吗——太阳算一个实体？星系算吗？Ra 领着发问者走了五步。</div>
+    <div class="quote">
+      <p class="en">In your space/time you and your peoples are the parents of that which is in the womb. The earth, as you call it, is ready to be born, and the delivery is not going smoothly.</p>
+      <p class="zh">在你们的空间/时间中，你们和你们的人民，是子宫中那个正在孕育的实体的父母。你们所称的地球已准备好出生，而分娩并不顺利。</p>
+      <span class="src">—— Session 065 · (65.17)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This is not the relationship of parent to child but of Creator (that is Logos) to Creator (that is the mind/body/spirit complex as Logos).</p>
+      <p class="zh">这不是父母与孩子的关系，而是造物主（即逻各斯）对造物主（即作为逻各斯的心/身/灵复合体）的关系。</p>
+      <span class="src">—— Session 065 · (65.17)</span>
+    </div>
+    <div class="plain">外推可以，但不在第三密度空间/时间的框架内。地球是待产的实体，出生后将充满其第四密度正面父母的社会记忆复合体；而你们与逻各斯（太阳）的关系，是两个创造者相认——领悟到此，视野便能无限拉宽。</div>
+    <div class="demo-area">
+      <div class="flow-track" id="wombTrack"></div>
+      <div class="flow-detail" id="wombDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="wombPrev">← 上一步</button>
+        <button class="tri-btn" id="wombNext">下一步 →</button>
+      </div>
+    </div>
+    <div class="case"><b>难产的最后一程：</b>产科走廊里，家人能做的只是陪产与接生——「分娩并不顺利」；而这个「婴儿」出生后，将带着第四密度正面父母的社会记忆复合体。</div>
+    <div class="case"><b>两位创始人握手：</b>子公司总经理与集团创始人相见，不是上级见下级，而是两个都能「从零创造」的人互相致意——Ra 说你们与逻各斯的关系正是如此。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ ⑦ 遗忘与共振室 ============ -->
+<section class="chapter" id="s7">
+  <div class="sec-head"><span class="num">07</span><h2>遗忘与共振室：流浪者为何失忆，行家为何「活埋」自己</h2></div>
+  <p class="sec-lead">本集最后一段完整问答回到「遗忘」：发问者提出一个精巧的分段恢复模型，被 Ra 一个字否决；随后才有了真正的答案——两重原因、一条边界。问答顺势滑向金字塔的共振室：一个让人「遇见自我」的房间，凭什么靠「活埋」起效。</p>
+
+  <div class="card">
+    <h3>分段恢复记忆？Ra：No</h3>
+    <div class="q">发问者设想：第六密度流浪者若激活第四密度身体，就恢复一部分第四密度记忆，逐层解锁直到全部想起——这模型说得通吗？</div>
+    <div class="quote">
+      <p class="en">would he have gone through a forgetting that was in sections, shall I say, with a forgetting of fourth, fifth, and sixth densities?</p>
+      <p class="zh">他是否会经历一种分段的——容我说——遗忘，把第四、第五、第六密度分别忘掉？</p>
+      <span class="src">—— Session 065 · (65.18)</span>
+    </div>
+    <div class="plain">Ra 只答一个字：No。遗忘不是分层打包的档案，别把它想象成逐卷解锁的游戏存档。</div>
+    <div class="case"><b>想分卷追更的读者：</b>有人以为高密度记忆像分卷小说，激活一层身体就解锁一卷——Ra 的否决提醒我们：机制的真相往往比精巧的模型更简单，也更不容易讨价还价。</div>
+  </div>
+
+  <div class="card">
+    <h3>失忆的两重原因，与一条不可越过的边界</h3>
+    <div class="q">那流浪者到底为什么失去记忆？</div>
+    <div class="quote">
+      <p class="en">Secondly, the free will of third-density entities needs be preserved. Thus wanderers volunteer for third-density genetic, or DNA, connections to the mind/body/spirit complex.</p>
+      <p class="zh">其二，第三密度实体的自由意志必须被保留。因此流浪者自愿接受第三密度的遗传或 DNA 连接，接于心/身/灵复合体。</p>
+      <span class="src">—— Session 065 · (65.19)</span>
+    </div>
+    <div class="quote">
+      <p class="en">However, it would be an infringement if wanderers penetrated the forgetting so far as to activate the more dense bodies and, thus, be able to live, shall we say, in a god-like manner.</p>
+      <p class="zh">然而，若流浪者把遗忘穿透到激活更稠密身体的程度、从而能以神一般的方式生活，那将是一种侵犯。</p>
+      <span class="src">—— Session 065 · (65.19)</span>
+    </div>
+    <div class="plain">两重原因：一是遗传层面——第三密度与第三/第四密度在「心/身/灵复合体与细胞结构之连接」的属性上本就不同；二是自由意志必须被保留。遗忘可以穿透到「记得自己是什么、为何在此」，再往前一步就是侵犯。另外，新的第四密度实体展现新能力，靠的是当下经验，不是记忆——Ra 还自请原谅持续不断的过度概括。</div>
+    <div class="case"><b>自愿降级的志愿者：</b>资深工程师下基层支教育，主动交出管理员权限、只用最普通的账号——流浪者自愿接上第三密度的 DNA 连接，正是为了保住这一层「孩子们」的自由意志。</div>
+    <div class="case"><b>开挂的诱惑：</b>游戏里用外挂的玩家赢了每一局，也毁掉了所有局——「以神一般的方式生活」对选择服务者并不合适，边界就在这里。</div>
+  </div>
+
+  <div class="card">
+    <h3>共振室：一场设计好的「埋葬与复活」</h3>
+    <div class="q">金字塔的共振室，据说能让行家「遇见自我」——那到底是什么意思？房间对里面的人做了什么？</div>
+    <div class="quote">
+      <p class="en">One meets the self in the center, or deeps, of the being. The so-called resonating chamber may be likened unto the symbology of the burial and resurrection of the body wherein the entity dies to self, and, through this confrontation of apparent loss and realization of essential gain, is transmuted into a new and risen being.</p>
+      <p class="zh">人在存有的中心，或深处，遇见自我。所谓的共振室可以比作身体埋葬与复活的象征：实体向自我死去，并通过这场对表面失落与本质获得的面对，被转化为一个崭新而复活的存在。</p>
+      <span class="src">—— Session 065 · (65.20)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The mind was affected by sensory deprivation and the archetypical reactions to being buried alive with no possibility of extricating the self.</p>
+      <p class="zh">心智受到感觉剥夺的影响，以及对被活埋且无从自救这一处境的原型反应的影响。</p>
+      <span class="src">—— Session 065 · (65.22)</span>
+    </div>
+    <div class="plain">发问者的类比获赞「你有洞察力」：表面死亡中失去的，是第三密度幻象的普通欲望；获得的是全然服务他人的渴望——这正是此室的目的与意图，也构成国王密室位置有效性的必要部分。机制上它同时作用于心智（感觉剥夺＋活埋的原型反应）与身体（心智配置，加上建材的电性与压电特性）。</div>
+    <div class="case"><b>漂浮舱里的一小时：</b>感官剥夺舱切断光与声，浮在里面的人被迫面对自己——共振室对心智的作用正是「感觉剥夺」加上「被活埋且无从自救」的原型反应。</div>
+    <div class="case"><b>手表里的石英片：</b>石英受压生电——共振室的建材带着电性与压电特性，身体层面的作用有真实的物理成分，不是纯粹的信念戏法。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ ⑧ 收官 ============ -->
+<section class="chapter" id="s8">
+  <div class="sec-head"><span class="num">08</span><h2>收官：一个很小的容器，与一句「永远可能」</h2></div>
+  <p class="sec-lead">整集讲的可能/或然率、战争与收割，都容易读成宿命论。Ra 特意在 (65.12) 留了一道门缝，收官章把它打开：概率再悬殊，也撤不掉「当下的无限可能性」——这正是本集最该带走的东西。</p>
+
+  <div class="saying">
+    <p class="en">Could your planet polarize towards harmony in one fine, strong moment of inspiration? Yes, my friends. It is not probable; but it is ever possible.</p>
+    <p class="zh">你们的行星能否在一个美好、强烈的灵感瞬间朝向和谐极化？是的，我的朋友们。这并非或然；但它永远是可能的。</p>
+    <span class="src">—— Session 065 · (65.12)</span>
+  </div>
+
+  <div class="card">
+    <h3>别背对那个容器</h3>
+    <div class="q">「宿命」读起来很沉重——Ra 自己怎么给这套概率论收尾？</div>
+    <div class="quote">
+      <p class="en">This vortex may be very small, but to turn one's back upon it is to forget the infinite possibilities of the present moment.</p>
+      <p class="zh">这个漩涡可能非常小，但对它背转身去，就是忘记当下时刻的无限可能性。</p>
+      <span class="src">—— Session 065 · (65.12)</span>
+    </div>
+    <div class="plain">「并非或然，但永远可能」不是安慰，而是自由意志的底牌：概率描述的是货架，不是判决书——转身的自由始终在你手里。</div>
+    <div class="case"><b>冰面下的救援：</b>事故现场人人都在传视频，只有一个人跪下去做心肺复苏——那个「和平、爱、光与喜悦」的容器，常常小到只有一个人转身的大小，而局面往往由这个转身改写。</div>
+    <div class="case"><b>散会前的最后一票：</b>吵了整天的会议眼看要不欢而散，有人提议「先各自说一条对方的优点」——一个很小的重新定向，把整间屋子的极性拨向和谐；行星级别的「一瞬间极化」在原理上与此相同。</div>
+  </div>
+
+  <div class="card">
+    <h3>收尾叮嘱与告别</h3>
+    <div class="q">最后一个简短问题：还能做什么让器皿更舒适、让通讯更好？</div>
+    <div class="quote">
+      <p class="en">I leave you, my friends, rejoicing in the love and the light of the One Infinite Creator. Go forth, therefore, glorying in the power and in the peace of the One Infinite Creator.</p>
+      <p class="zh">我离开你们了，我的朋友们，在太一无限造物主的爱与光中欢欣鼓舞。因此，出发吧，在太一无限造物主的大能与和平中荣耀前行。</p>
+      <span class="src">—— Session 065 · (65.23)</span>
+    </div>
+    <div class="plain">Ra 说一切都在校准中，只叮嘱小组留意：器皿不喜欢分享疼痛的表达，但她潜意识里接受每个人的帮助——随后以惯常的爱与光告别。</div>
+    <div class="case"><b>陪护守则：</b>家属陪护病人，最难的是「她不喊疼就不追问」——Ra 的叮嘱正是这条分寸：不逼她把疼痛说出口，同时确知她潜意识里收得下每个人的帮助；体贴的分寸感本身就是支持。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 065（`split/Ra_Session_065.md`）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra065-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本集定制交互 ===== */
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+/* ① 本章地图：问答脉络推进器 */
+initStepper('mapTrack','mapDetail','mapPrev','mapNext',[
+  {t:'开场',d:'<span class="qa-q">(65.0) Ra 致意</span><b>答：</b>「我在太一无限造物主的爱与光中向你们致意。」本次通讯开始。'},
+  {t:'器皿状态',d:'<span class="qa-q">(65.1) 例行询问</span><b>答：</b>生命能如前；物理能量因关节炎症状极大变貌朝向虚弱；通灵攻击持续，但被器皿与支持团体的忠诚化解。'},
+  {t:'帘幕上的洞',d:'<span class="qa-q">(65.2) 未来寻求会增加吗</span><b>答：</b>概括性表达永不完全正确；但面对帘幕上的洞，实体很可能第一次透过那扇窗向外窥视——在当下的漩涡格局里，这一倾向是或然的。'},
+  {t:'流浪者的好运？',d:'<span class="qa-q">(65.3) 此刻投生是特权吗</span><b>答：</b>这是流浪者投生前的意图；但许多流浪者对行星方式不适应，被卷入心智复合体活动配置，在相应程度上可能妨碍原本打算的服务。'},
+  {t:'Ra 为何变慢',d:'<span class="qa-q">(65.4) 关于传讯节奏</span><b>答：</b>器皿虚弱、更脆弱且持续承受疼痛；为在不伤害她的前提下用足可用能量，我们尝试用更窄的频带传讯。'},
+  {t:'两因素获确认',d:'<span class="qa-q">(65.5) 更好服务氛围的条件</span><b>答：</b>「这是正确的」——投生振动的资历已极化地表人群，流浪者的涌入又增加了朝向灵性事物的心智配置。'},
+  {t:'催化剂之辨',d:'<span class="qa-q">(65.6) 临近第四密度的变化都是催化剂吗</span><b>答：</b>部分正确：超自然事件是能力的显现而非寻求的设计；变化带来的困难才是催化剂；另有一类战争漩涡正在成形。'},
+  {t:'战争情景',d:'<span class="qa-q">(65.7–65.8) 常规战争如何成为课堂</span><b>答：</b>自由与控制的对极激发大量思考；该情景不摧毁有价值地点与人员；心理电子装置改风改雨以致饥荒的试验已在进行。'},
+  {t:'预言的杂货店',d:'<span class="qa-q">(65.9–65.10) 预言如何运作</span><b>答：</b>或然率漩涡像商店里的货品；Edgar 读的是最强漩涡（一百盒冷麦片）；早餐近乎确定，菜单自己点；每个预言者都带着自己的偏差。'},
+  {t:'流浪者的使命',d:'<span class="qa-q">(65.11–65.12) 目标与三重功能</span><b>答：</b>以任何被请求的方式服务，让振动整体减轻行星不和谐；穿透遗忘后有三重功能——灯塔/牧羊人、加倍行星爱与光、各人独特的才能；商店里总有那个装着和平的容器。'},
+  {t:'混合收割',d:'<span class="qa-q">(65.13–65.15) 收割的统计与联邦的姿态</span><b>答：</b>约六成正面、一成负面、三成混合（其中几乎全为正面）；混合收割几乎总伴地球变化式的额外催化剂；联邦只服务，不数人头。'},
+  {t:'行星即实体',d:'<span class="qa-q">(65.16–65.17) 能把行星看成一个实体吗</span><b>答：</b>完全正确；还可外推到太阳与星系——但要在第三密度空间/时间框架之外：地球是子宫中待产的实体，与逻各斯的关系是造物主对造物主。'},
+  {t:'遗忘之谜',d:'<span class="qa-q">(65.18–65.19) 流浪者为何失忆</span><b>答：</b>分段恢复记忆的猜想被否决；真正原因有两重：遗传连接的属性不同，加上必须保住第三密度的自由意志。'},
+  {t:'共振室',d:'<span class="qa-q">(65.20–65.22) 行家如何「遇见自我」</span><b>答：</b>在存有的中心遇见自我；共振室如埋葬与复活的象征——向自我死去，经表面失落与本质获得而重生；它同时作用于心智（感觉剥夺）与身体（电性与压电特性）。'},
+  {t:'收官',d:'<span class="qa-q">(65.23) 收尾</span><b>答：</b>器皿得到很好支持；留意她不喜欢分享疼痛，但她潜意识里接受每个人的帮助；一切都在校准中。'}
+]);
+
+/* ② 归类练习：催化剂还是能力的展现 */
+initSorter('sortArea2',[
+  {a:'极端天气让小区停水停电三天，邻居在楼道里第一次认真讨论「为什么会这样」',opts:['是催化剂','是能力的展现'],ans:'是催化剂',exp:'Ra 确认：诸多变化带来挑战、困难与看似的不幸，正为许多人创造更大的寻求与服务机会。(65.6)'},
+  {a:'短视频里有人演示「意念移物」，评论区吵成一团',opts:['是催化剂','是能力的展现'],ans:'是能力的展现',exp:'超自然事件并非为增加寻求而设计，而是振动配置足以接触智能无限之门户者的显现。(65.6)'},
+  {a:'战争阴云之下，一个年轻人放下游戏机，开始读历史与哲学',opts:['是催化剂','是能力的展现'],ans:'是催化剂',exp:'自由与控制的对比被摆上台面，将激发对这一巨大极化的大量思考。(65.7)'},
+  {a:'朋友自称开了「天眼」，劝你花钱跟他学「开脉」',opts:['是催化剂','是能力的展现'],ans:'是能力的展现',exp:'是否以此服务，是该实体与其自由意志的功能，不是能力本身的功能。(65.6)'},
+  {a:'失眠的深夜，你盯着天花板第一次认真想「人为什么活着」',opts:['是催化剂','是能力的展现'],ans:'是催化剂',exp:'面对帘幕上的洞，实体的眼睛很可能第一次透过那扇窗向外窥视。(65.2)'}
+]);
+
+/* ⑥ 视野拉远五步 */
+initStepper('wombTrack','wombDetail','wombPrev','wombNext',[
+  {t:'亿万人的实体',d:'<b>起点：</b>发问者把行星看成数十亿心/身/灵复合体组成的单一实体——Ra 答复「你完全正确」。(65.16)'},
+  {t:'尚未形成社会记忆',d:'<b>限定：</b>这个实体还未形成社会记忆复合体（social memory complex，群体意识合一的形态），但它的确是一个实体，正如我们每个个体。(65.17)'},
+  {t:'子宫中的分娩',d:'<b>图像：</b>你们和你们的人民是子宫中那实体的父母；地球已准备好出生，而分娩并不顺利。(65.17)'},
+  {t:'出生之后',d:'<b>前景：</b>这个实体出生后，将充满其父母——已成为第四密度正面的社会记忆复合体——的社会记忆复合体；在那个密度里，视野更广阔。(65.17)'},
+  {t:'造物主对造物主',d:'<b>关系：</b>你们与最密切关联的逻各斯（太阳）的关系，不是父母对孩子，而是造物主对造物主——作为逻各斯的心/身/灵复合体。(65.17)'},
+  {t:'无限拉宽的视野',d:'<b>推远：</b>领悟发生后，「视野」可以无限拉宽，认出太一无限造物中逻各斯的各个部分——这个过程在造物整体的进化中发生许多许多次。(65.17)'}
+]);
+
+/* ⑥ 条件模拟器：地球变化式的额外催化剂何时出现 */
+function updateEarth(){
+  const m=document.getElementById('earthMix').checked;
+  const l=document.getElementById('earthLate').checked;
+  const s=document.getElementById('earthSelf').checked;
+  const box=document.getElementById('condResult');
+  let cls='ok',txt='';
+  if(!m){
+    cls='fail';
+    txt='前提先撤了：Ra 说的是「混合收割几乎总有不和谐」——若收割几乎单一，这条规律用不上，「额外催化剂」的框架先不成立。(65.15)';
+  }else if(!l){
+    cls='fail';
+    txt='不和谐已在累积，但「周期末的额外催化剂」还没到登场时间——Ra 把这一机制锁定在收割前的最后阶段。(65.15)';
+  }else if(!s){
+    cls='fail';
+    txt='机制失去作用点：额外催化剂「具体是居住在该行星上的意识之导向的功能」——意识以自己的思维取向作用于自身，如同病痛作用于单个心/身/灵复合体。(65.16)';
+  }else{
+    txt='几乎必然成立：混合收割几乎总伴不和谐，于是出现所谓「地球变化」形式的额外催化剂——这是意识为自己出的功课。联邦的回应是服务那些因此更强烈寻求的人，但拒绝预测新增收割人数：「计算数字没有价值」。(65.15–65.16)';
+  }
+  box.className=cls==='fail'?'fail':'';
+  box.textContent=txt;
+}
+document.getElementById('earthMix').addEventListener('change',updateEarth);
+document.getElementById('earthLate').addEventListener('change',updateEarth);
+document.getElementById('earthSelf').addEventListener('change',updateEarth);
+updateEarth();
+
+renderPath();
+</script>
+</body>
+</html>

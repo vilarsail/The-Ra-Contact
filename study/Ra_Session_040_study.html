@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 040 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 040 · 交互式学习模块</h1>
+  <p class="sub">这一集从「整个宇宙怎么循环」讲到「此刻我们站在哪里」：发问者搭出一个八度模型请 Ra 校准，Ra 补上了光的黑暗起点与那段无时间性的过渡，再把密度、颜色、能量中心、时间表与「思想变成事物」串成一条线。</p>
+  <div class="tagline">6 个主题 · 6 个学习步骤 · 17 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 光与黑洞</a>
+<a href="#s3">③ 密度即颜色</a>
+<a href="#s4">④ 过渡与当下</a>
+<a href="#s5">⑤ 思想变成事物</a>
+<a href="#s6">⑥ 绿色光芒与收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>先看这一集六个问答段各自在做什么，例行问答可以跳过</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>光与黑洞</b><span>八度怎么循环：光的起点是黑暗，黑洞是回收口</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>密度即颜色</b><span>真色阶梯、量子式的跃迁，以及能量中心的平衡门槛</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>过渡与当下</b><span>上一次过渡用了多久、这一次的估算，以及现在的位置</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>思想变成事物</b><span>机制、自愈的三个条件，以及饮食为什么是链接</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>绿色光芒与收官</b><span>谁会被绿色真色冲击、Ra 的纠正，以及本集的伏笔</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：这一集在问什么</h2></div>
+  <p class="sec-lead">上一集收束在一张光芒配置图上：负面实体走红/橙/黄直上蓝，正面实体则是七道光芒的水晶般清澈配置。本集发问者把镜头从「个体内部的能量中心」一下子拉到「整个宇宙」——他想为自己所处的这部分宇宙搭一个从理则到八度的模型，请 Ra 逐条校准。校准之后，问题落回脚下：这些振动此刻正在发生什么，我们处在什么位置，以及为什么「思想」忽然开始变成「事物」。</p>
+  <div class="card">
+    <h3>问答脉络：一次模型校准，一路问到当下</h3>
+    <p>本集十七个问答块（含开场与收尾）可以收成七段。点击节点，看每一段在做什么。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="qaTrack"></div>
+      <div class="flow-detail" id="qaDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="qaPrev">← 上一步</button> <button class="tri-btn" id="qaNext">下一步 →</button></div>
+    </div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">开场 · 器皿状态 · 收束提醒</span></summary>
+  <div class="body">
+    <p><b>(40.0) 开场：</b>Ra 以「在无限造物主的爱与光中致意」开场，宣布本次通讯开始。</p>
+    <p><b>(40.17) 器皿状态与后勤：</b>Ra 说器皿状态良好、发问者尽责；这些附属物品在身体复合体「温暖的变貌」中为器皿带来更大的舒适。随后以 Adonai 作结。</p>
+    <p><b>(40.15) 收束提醒：</b>Ra 在回答绿色光芒那个问题后宣布「这将是本次工作的最后一个完整询问」，只接受简短提问——所以 (40.16)(40.17) 都是一问一答的短句。</p>
+  </div></details>
+  <div class="case"><b>把模型讲出来让人校准：</b>你写了一周的方案，没有直接开工，而是先在评审会上完整讲一遍「我理解整件事是这样运转的」，请资深同事逐条挑错。本集 (40.1) 发问者正是这么开场的：先摆出自己搭的宇宙模型，请 Ra 校准，再往下问。</div>
+  <div class="case"><b>统计对不上的那七分之六：</b>团队发现后台统计的活跃量只有实际用户数的七分之一，工程师第一反应是「埋点漏了吧」。天文学家面对的是同一个缺口——螺旋星系发出的光，比按质量算出来的少很多。(40.2) 发问者就带着这个缺口，问 Ra 是不是「灵性质量」造成的。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>光与黑洞：整个八度是一场转化与回收</h2></div>
+  <p class="sec-lead">发问者带来的模型相当完整：白光从理则发出，被棱镜式地分成从红到紫的频率，贯穿所有密度；到第八密度进入黑洞，在另一端成为另一个理则，开始新的八度。Ra 说「基本上正确」——但真正的重点，藏在被漏掉的那一段里。</p>
+  <div class="card">
+    <h3>校准：方向对了，精妙处不止语义</h3>
+    <div class="q">我搭了个模型：白光被棱镜式地分成各色频率、贯穿所有密度，进入第八密度后穿过黑洞成为新的理则，开始下一个八度。这样对吗？</div>
+    <div class="quote">
+      <p class="en">The concept of the white light of the sub-Logos being prismatically separated and later, at the final chapter, being absorbed again is basically correct.</p>
+      <p class="zh">子理则的白光被棱镜式地分离、又在最终篇章里被重新吸收——这个概念基本上是正确的。</p>
+      <span class="src">—— Session 040 · (40.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">However, there are subtleties involved which are more than semantic.</p>
+      <p class="zh">然而其中涉及的精妙之处，并不只是语义层面的差别。</p>
+      <span class="src">—— Session 040 · (40.1)</span>
+    </div>
+    <div class="plain">骨架是对的：光被分开，最后又被收回。但「怎么收回」这件事，比用词准不准重要得多。</div>
+    <div class="analogy"><b>像看一部电影的散场：</b>你知道故事会收束，但如果你以为「字幕一出，下一部马上开演」，就漏掉了幕间那段什么都没发生、却必不可少的时间。</div>
+  </div>
+  <div class="card">
+    <h3>光的起点不是光，是黑暗</h3>
+    <div class="q">发问者的模型里，白光一开始就在那里。那么这道光从哪里来？</div>
+    <div class="quote">
+      <p class="en">The white light which emanates and forms the articulated sub-Logos has its beginning in what may be metaphysically seen as darkness.</p>
+      <p class="zh">那散发出来、并形成被表达的子理则的白光，它的开端在于一种从形而上学角度可被视为黑暗的东西。</p>
+      <span class="src">—— Session 040 · (40.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The light comes into that darkness and transfigures it, causing the chaos to organize and become reflective or radiant. Thus the dimensions come into being.</p>
+      <p class="zh">光进入那片黑暗并转化它，使混沌得以组织起来、变得能反射或能辐射。维度就此产生。</p>
+      <span class="src">—— Session 040 · (40.1)</span>
+    </div>
+    <div class="plain">黑暗不是光的敌人，而是光的原料：光进去，混沌才被组织成能反射、能辐射的结构，维度这件事才成立。</div>
+    <div class="analogy"><b>像把毛坯房变成有窗的屋子：</b>没有遮挡，光就无所谓「照进来」；正因为先有一片暗，光进入后才显出明暗的分界——空间感就是这么长出来的。</div>
+  </div>
+  <div class="card">
+    <h3>黑洞不是出口，是回收口</h3>
+    <div class="q">那黑洞算什么？它是不是通往下一个八度的门？</div>
+    <div class="quote">
+      <p class="en">Conversely, the blackness of the black hole, metaphysically speaking, is a concentration of white light being systematically absorbed once again into the One Creator.</p>
+      <p class="zh">相反地，从形而上学来讲，黑洞的黑暗是白光正被系统地再次吸收回太一造物主的一种浓缩。</p>
+      <span class="src">—— Session 040 · (40.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Finally, this absorption into the One Creator continues until all the infinity of creations have attained sufficient spiritual mass in order that all form, once again, the Great Central Sun, if you would so imagine it, of the intelligent infinity awaiting potentiation by Free Will.</p>
+      <p class="zh">最终，这种向太一造物主的吸收会持续下去，直到所有无限的造物都获得了足够的灵性质量，使一切形式再一次聚成——如果你愿意这样想象——那颗属于智能无限的「大中心太阳」，等待着被自由意志潜能化。</p>
+      <span class="src">—— Session 040 · (40.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Therefore, the concept of moving through the black hole of the ultimate spiritual gravity well and coming immediately into the next octave misses the sub-concept, or corollary, of the portion of this process which is timeless.</p>
+      <p class="zh">因此，「穿过终极灵性引力井的黑洞、立刻进入下一个八度」这个概念，漏掉了这一过程中那段无时间性的部分——也就是它遗漏的子概念或推论。</p>
+      <span class="src">—— Session 040 · (40.1)</span>
+    </div>
+    <div class="plain">黑洞在形而上层面是「白光被系统地吸回太一造物主」的浓缩点；等所有无限造物攒够了灵性质量，一切形式会重新聚成大中心太阳。用时间来量这段过程，是量不出来的。</div>
+    <div class="analogy"><b>像水循环里的蒸发与降雨：</b>湖面蒸发不是「湖没了、新湖马上出现」，中间隔着一段在大气里漫长而不显形的运输。黑洞就是那道蒸发口，下一个八度要等这场运输完成。</div>
+  </div>
+  <div class="card">
+    <h3>四个关键画面</h3>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">起点</span><h4>光进入黑暗</h4><p>白光的开端是形而上意义的黑暗；光转化混沌，使其变得能反射、能辐射，<b>维度由此产生</b>。</p></div>
+      <div class="yuan-card"><span class="y-tag">回收</span><h4>黑洞即浓缩</h4><p>黑洞的黑暗是白光被<b>系统地吸回太一造物主</b>的浓缩——不是去往他处的出口，而是回收口。</p></div>
+      <div class="yuan-card"><span class="y-tag">终点</span><h4>大中心太阳</h4><p>当无限造物都攒够<b>灵性质量</b>，一切形式重新聚成智能无限的大中心太阳，等待<b>自由意志</b>把它潜能化。</p></div>
+      <div class="yuan-card"><span class="y-tag">关键补充</span><h4>无时间性</h4><p>两个八度之间有一段用时间无法度量的过程；以为「穿过黑洞就立刻进入下一个八度」，<b>漏掉的正是这一段</b>。</p></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>天文观测的旁证：缺掉的那七分之六</h3>
+    <div class="q">我们的天文学家发现，螺旋星系发出的光只有按质量算出的约七分之一，这是不是星系中白矮星里灵性质量增加造成的？</div>
+    <div class="quote">
+      <p class="en">This is basically correct and is a portion of the way, or process, of creation's cycle.</p>
+      <p class="zh">这基本上是正确，并且是造物循环之方式或过程的一部分。</p>
+      <span class="src">—— Session 040 · (40.2)</span>
+    </div>
+    <div class="plain">缺掉的光不是仪器坏了，而是造物循环里的一段过程：质量的一部分，正以「灵性质量」的形式存在着。</div>
+  </div>
+  <div class="case"><b>拆迁与封顶之间的那一两年：</b>老厂房拆完到新楼交付，中间有一两年工地只是空着，什么也看不见。本集说八度之间的转换也有一段「用你们的时间量不出来」的过程——以为拆完就能入住，正是发问者模型里被 Ra 指出的那个漏洞。</div>
+  <div class="case"><b>以为「关机就是关机」：</b>长按关机后你以为立刻断电，其实系统还在后台写缓存、断电、校验，需要一段时间。黑洞不是换台按钮，而是一场有始有终的吸收。</div>
+  <div class="case"><b>审计时对不上的那笔钱：</b>账面金额和现金流对不上，差的不是记错账，而是有一大笔钱记在另一本账上（应收账款）。天文学家看到螺旋星系只发出预期的七分之一的光，Ra 说这份直觉「基本上是正确」——因为有一部分的「质量」并不以看得见的光的形式存在。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>密度即颜色：真色阶梯与能量中心的平衡</h2></div>
+  <p class="sec-lead">发问者接着猜「第一密度对应红色、第二密度橙色、第三密度黄色」，并推测构成原子的光子，其基本振动也随所在密度的颜色而提升。Ra 说「这比你陈述的更正确」，然后补上一层他没问到的关键；紧接着发问者把话题接到身体上的能量中心：如果一路进化到第八密度，每个中心是不是都会满格？Ra 把重点从「满格」挪到了「平衡」。</p>
+  <div class="card">
+    <h3>比你陈述的更正确</h3>
+    <div class="q">我猜第一密度对应红色、第二密度橙色、第三密度黄色，以此类推；构成所有原子核心的光子，其基本振动也与该密度的颜色相关，并会随颜色一起提升——对吗？</div>
+    <div class="quote">
+      <p class="en">This is more correct than you have stated.</p>
+      <p class="zh">这比你所说的还要更正确。</p>
+      <span class="src">—— Session 040 · (40.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Firstly, you are correct in positing a quantum, if you will, as the nature of each density and further correct in assuming that these quanta may be seen to be of vibratory natures corresponding to color, as you grasp this word.</p>
+      <p class="zh">首先，你把「量子」——如果你愿意这样称呼——设为每个密度的本质，这是正确的；你进一步假设这些量子可被视为具有与颜色相对应的振动性质（按你对「颜色」一词的理解），也是正确的。</p>
+      <span class="src">—— Session 040 · (40.3)</span>
+    </div>
+    <div class="plain">密度确实是一种「量子」，它的振动性质与颜色相应；但还有一层你没问到的：每个密度同时是它那道光芒的形而上特性复合体。</div>
+    <div class="analogy"><b>像地铁每一站都有自己的线路色：</b>站台配色不只是装饰，它规定了这一站能换乘什么、往哪个方向延伸；而且每一站还始终被下一个方向牵着走——这正是 Ra 说的「下一道光芒的吸引力」。</div>
+  </div>
+  <div class="card">
+    <h3>每道光芒各自在做什么</h3>
+    <div class="q">那么这几道光芒，分别对应什么样的存在状态？</div>
+    <div class="quote">
+      <p class="en">Thus, in first density the red ray is the foundation for all that is to come.</p>
+      <p class="zh">因此，在第一密度中，红色光芒是一切即将到来之物的基础。</p>
+      <span class="src">—— Session 040 · (40.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">In second density the orange ray is that of movement and growth of the individual, this ray striving towards the yellow ray of self-conscious manifestations of a social nature as well as individual</p>
+      <p class="zh">在第二密度中，橙色光芒是个体运动与成长的光芒，而这道光芒正努力朝向黄色光芒——即兼具社会性与个体性的自我意识显化。</p>
+      <span class="src">—— Session 040 · (40.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">each density being primarily its ray plus the attractions of the following ray pulling it forward in evolution and, to some extent, coloring, or shading, the chief color of that density.</p>
+      <p class="zh">每个密度主要是它自己的光芒，再加上下一道光芒的吸引力——后者在进化中把它向前拉动，并在某种程度上为该密度的主色调着色或晕染。</p>
+      <span class="src">—— Session 040 · (40.3)</span>
+    </div>
+    <div class="plain">第一密度：红色是一切的根基。第二密度：橙色是个体的运动与成长，它努力朝黄色而去——那是兼具社会性与个体性的自我意识显化。第三密度依此类推。每个密度＝自己的光芒＋下一道光芒的牵引与染色。</div>
+    <div class="case"><b>换了城市，连作息都换了：</b>同一个人，在县城生活时的节律（移动与成长）与在大城市时完全不同——环境一换，底色就换。Ra 说每个密度主要是自己的光芒，再被下一道光芒的吸引染上颜色；生活里也常能看到「下一站」已经把这一站染了色。</div>
+  </div>
+  <div class="card">
+    <h3>能量中心：满格罕见，平衡才是门槛</h3>
+    <div class="q">假设个体从第一密度一路直线进化到第八密度，如果一切都照应有的方式运作，这些脉轮会不会在每个密度结束时都完全激活、达到最大强度？</div>
+    <div class="quote">
+      <p class="en">Hypothetically speaking, this is correct. However, the fully activated being is rare.</p>
+      <p class="zh">假设性地说，这是正确的。然而，完全激活的存有是罕见的。</p>
+      <span class="src">—— Session 040 · (40.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">However, to fully activate each energy center is the mastery of few, for each center has a variable speed of rotation or activity.</p>
+      <p class="zh">然而，要把每个能量中心完全激活，是少数人才有的精通——因为每个中心都有可变的旋转或活动速度。</p>
+      <span class="src">—— Session 040 · (40.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">It is necessary for graduation across densities for the primary energy centers to be functioning in such a way as to communicate with intelligent infinity and to appreciate and bask in this light in all of its purity.</p>
+      <p class="zh">为了跨密度毕业，主要能量中心必须以这样一种方式运作：能与智能无限沟通，并欣赏、沐浴在这光的全部纯粹之中。</p>
+      <span class="src">—— Session 040 · (40.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The important observation to be made, once all necessary centers are activated to the minimal necessary degree, is the harmony and balance between these energy centers.</p>
+      <p class="zh">一旦所有必要的中心都被激活到最低必要程度，需要做出的重要观察，是这些能量中心之间的和谐与平衡。</p>
+      <span class="src">—— Session 040 · (40.4)</span>
+    </div>
+    <div class="plain">理论上会满格，实际上满格的人极少；每个中心的转速可快可慢。真正的门槛是：所有必要中心都达到「最低必要程度」之后，看它们彼此和不和谐、平不平衡。</div>
+    <div class="analogy"><b>像一支乐队的混音：</b>不是把每一轨都推到最大音量，而是让每件乐器都待在「听得到」的最低门槛之上，再调它们之间的关系——全部开满只会得到一团噪音。</div>
+  </div>
+  <div class="card">
+    <h3>真色为什么算不出来</h3>
+    <div class="q">那频率是从「平均橙色」升到「平均黄色」吗？我想给这个过程定个准数。</div>
+    <div class="quote">
+      <p class="en">This query is indeterminate.</p>
+      <p class="zh">这个询问是不确定的。</p>
+      <span class="src">—— Session 040 · (40.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">However, the frequency that is the basis of each density is what may be called a true color.</p>
+      <p class="zh">然而，作为每个密度之基础的频率，是可以被称为「真色」的东西。</p>
+      <span class="src">—— Session 040 · (40.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This term is impossible to define given your system of sensibilities and scientific measurements, for color has vibratory characteristics both in space/time and in time/space.</p>
+      <p class="zh">这个术语在你们的感觉系统与科学测量体系下是无法定义的，因为颜色在空间/时间与时间/空间中都具有振动特性。</p>
+      <span class="src">—— Session 040 · (40.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The true color is then overlaid and tinged by the rainbow of the various vibratory levels within that density and the attraction vibrations of the next true-color density.</p>
+      <p class="zh">随后，真色会被该密度内各种振动水平所形成的彩虹、以及下一个真色密度的吸引力振动所覆盖与渲染。</p>
+      <span class="src">—— Session 040 · (40.6)</span>
+    </div>
+    <div class="plain">Ra 直接说这个问题「不确定」：真色在你们的感觉与测量体系里无法定义，因为它同时具有空间/时间与时间/空间的振动特性；而你在任何地方看到的，都是被叠过好几层之后的颜色。</div>
+    <div class="analogy"><b>像从未见过原片的人讨论色调：</b>你看到的每一张图都经过了屏幕、压缩和滤镜；你可以比较两张图的差别，却没法据此算出「原图」的数值。Ra 说的是同一件事。</div>
+  </div>
+  <div class="card">
+    <h3>术语卡：本集的关键词</h3>
+    <p>点击卡片翻看解释。这几个词在全书反复出现，先在这里建立准确的直觉。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">真色</div><div class="sub">true color</div><span class="tap">点击展开</span></div><div class="back">Ra 给的定义：作为每个密度之基础的频率。它无法在人类的感觉系统与科学测量体系下定义，因为颜色在空间/时间与时间/空间中都有振动特性。真色之上还会被本密度内的各种振动水平与下一道真色的吸引力覆盖、渲染。<em>比喻：像底片的本色——你看到的永远是被多层滤镜叠过之后的样子。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">量子</div><div class="sub">quantum</div><span class="tap">点击展开</span></div><div class="back">本集用它指「每个密度的本质单位」：密度的振动不是平滑滑过去的，跨越边界时是振动水平的离散定位，一次落一格。<em>案例：坡道可以停在任意高度，楼梯只能一格一格上。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">子理则</div><div class="sub">sub-Logos</div><span class="tap">点击展开</span></div><div class="back">从更大的理则中分化出来的造物者层级，我们的太阳即其一。本集说白光从子理则散发出来，而它的开端是形而上意义的黑暗。<em>比喻：整个电网之下的一台区域变压器——同一套电，落到你这一区。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">灵性质量</div><div class="sub">spiritual mass</div><span class="tap">点击展开</span></div><div class="back">无限造物在被吸回太一造物主的过程中逐渐累积的量；攒够了，一切形式才会重新聚成大中心太阳。本集还把它与螺旋星系「少掉的光」联系起来。<em>比喻：像储蓄——不到额度，账户不会被结清。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">能量中心</div><div class="sub">energy center / chakra</div><span class="tap">点击展开</span></div><div class="back">心/身/灵复合体上逐层排列的中心，各有可变的旋转或活动速度。跨密度毕业的要求不是每个都满格，而是主要中心都能与智能无限沟通、沐浴于至纯之光，且彼此和谐平衡。<em>比喻：健康不是每个指标都爆表，而是各项之间不打架。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">思想形态</div><div class="sub">thought-form</div><span class="tap">点击展开</span></div><div class="back">由思想与情绪形成的、具有实际影响力的结构，也可以是毒害性的。(40.14) 说需要清除毒害性思想形态或情绪复合体的人，可以谨慎地做一段禁食，直到它被清除。<em>比喻：像长期不清理的缓存——不占地方，却让系统越来越慢。</em></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>归类练习：这段话在说哪一道光芒？</h3>
+    <p>把下面每一段描述，对到它所属的真色光芒上。</p>
+    <div id="sorterArea"></div>
+  </div>
+  <div class="case"><b>把每门课都刷到满分的人反而卡住了：</b>有人为了转专业，把每门课都刷到接近满分，结果因为精力耗散、状态起伏，整体评估被打了问号；另一个人各科都在合格线上，却协调稳定、状态在线。Ra 说的正是后者：门槛是主要中心都达到最低必要程度，然后看和谐与平衡。</div>
+  <div class="case"><b>聚会上那个只开到七成音量的人：</b>部门聚会，有人非要把自己的观点讲到最大声；也有人一直保持在「听得见」的程度，却在关键时刻把大家的话接成一条线。混音师会选后者——能量中心也一样，转速不是越高越好。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>过渡与当下：我们正站在量子的边界上</h2></div>
+  <p class="sec-lead">有了「密度即颜色、跨越是量子式的」这套框架，发问者立刻问时间：这个星球上一次从第二密度到第三密度用了多久？这一次从第三到第四呢？现在又走到哪里了？Ra 的时间表给得很干脆——上一次约 1,350 年；这一次只给了一个很宽的区间，并且明确说这不可能准确。</p>
+  <div class="card">
+    <h3>上一次过渡：约 1,350 年</h3>
+    <div class="q">这个星球上第二到第三密度的过渡期有多长？我印象里是一代半，对吗？</div>
+    <div class="quote">
+      <p class="en">This is correct, the time measured in your years being approximately one thousand three hundred and fifty [1,350].</p>
+      <p class="zh">这是正确的，以你们的年份衡量，时间大约是一千三百五十年。</p>
+      <span class="src">—— Session 040 · (40.7)</span>
+    </div>
+    <div class="plain">Ra 确认了「一代半」的说法，折合约为 1,350 年。</div>
+    <div class="analogy"><b>像方言的自然更替：</b>一门方言变成另一种语言，不会发生在某个早晨，而是几代人之间慢慢滑过去；但放到地质尺度上看，这一千多年又只是一瞬。</div>
+  </div>
+  <div class="card">
+    <h3>这一次：100 到 700 年，而且 Ra 拒绝给准数</h3>
+    <div class="q">那么从第三密度到第四密度的过渡期会是多少年？</div>
+    <div class="quote">
+      <p class="en">This is difficult to estimate due to the uncharacteristic anomalies of this transition.</p>
+      <p class="zh">由于这次过渡具有非典型的异常，这很难估算。</p>
+      <span class="src">—— Session 040 · (40.8)</span>
+    </div>
+    <div class="quote">
+      <p class="en">However, the third-density climate of planetary consciousness is retarding the process.</p>
+      <p class="zh">然而，第三密度的行星意识气候正在延迟这一进程。</p>
+      <span class="src">—— Session 040 · (40.8)</span>
+    </div>
+    <div class="quote">
+      <p class="en">At this particular nexus the possibility/probability vortices indicate somewhere between one hundred [100] and seven hundred [700] of your years as transition period. This cannot be accurate due to the volatility of your peoples at this space/time.</p>
+      <p class="zh">在这个特定节点，可能性/概率漩涡指出过渡期大约在你们的一百年到七百年之间。由于你们人群在这个空间/时间的波动性，这不可能准确。</p>
+      <span class="src">—— Session 040 · (40.8)</span>
+    </div>
+    <div class="plain">这次情况异常，所以难估：已经有化身存有开始了第四密度的工作，但第三密度的行星意识气候正在拖慢进程。可能性/概率漩涡给出 100 到 700 年这个区间——Ra 紧跟着说，由于你们人群的波动性，这个数字不可能准确。</div>
+    <div class="analogy"><b>像开发排期里的估时：</b>需求方问「多久能上线」，你只能说「三到六个月——但如果中途需求又改，这数就不算数了」。Ra 给区间时，附的是同一份免责声明：变量在你们这边。</div>
+  </div>
+  <div class="card">
+    <h3>已经开始了：45 年前的最初征兆</h3>
+    <div class="q">我们这些粒子的振动频率，是不是已经提高了？</div>
+    <div class="quote">
+      <p class="en">This is correct. It is this influence which has begun to cause thoughts to become things.</p>
+      <p class="zh">这是正确的。正是这股影响，已经开始让思想变成事物。</p>
+      <span class="src">—— Session 040 · (40.9)</span>
+    </div>
+    <div class="q">我猜这个振动大约是二三十年前开始增加的，对吗？</div>
+    <div class="quote">
+      <p class="en">The first harbingers of this were approximately forty-five of your years ago, the energies vibrating more intensely through the forty-year period preceding the final movement of vibratory matter, shall we say, through the quantum leap, as you would call it.</p>
+      <p class="zh">此事的最初征兆大约在你们四十五年前；在振动物质的最终运动之前——容我们说，通过你们所称的量子跃迁——的那四十年期间，能量振动得更为强烈。</p>
+      <span class="src">—— Session 040 · (40.10)</span>
+    </div>
+    <div class="plain">是，已经提高了；而正是这股影响，开始让「思想变成事物」。Ra 把起点定在约四十五年前（本集发生于 1981 年），此后那四十年，是振动物质在「量子跃迁」之前的加剧期。</div>
+  </div>
+  <div class="card">
+    <h3>此刻的位置：真色绿，被橙色覆盖</h3>
+    <div class="q">那么从四十五年前算起，我们走到了这场振动增加的第几个百分点？</div>
+    <div class="quote">
+      <p class="en">The vibratory nature of your environment is true-color green. This is at this time heavily over-woven with the orange ray of planetary consciousness.</p>
+      <p class="zh">你们环境的振动本质是真色之绿色。此刻它被行星意识的橙色光芒严重覆盖交织着。</p>
+      <span class="src">—— Session 040 · (40.11)</span>
+    </div>
+    <div class="quote">
+      <p class="en">However, the nature of quanta is such that the movement over the boundary is that of discrete placement of vibratory level.</p>
+      <p class="zh">然而，量子的本质使得跨越边界的运动是振动水平的离散定位。</p>
+      <span class="src">—— Session 040 · (40.11)</span>
+    </div>
+    <div class="plain">Ra 没有给百分比，而是给了「颜色」：环境的振动本质已经是真色绿（第四密度），此刻被行星意识的橙色严重编织覆盖。至于跨越，量子的性质决定了它不是渐变滑过，而是一次次离散地落位。</div>
+    <div class="analogy"><b>像换挡的那一声「咔」：</b>车速可以慢慢加，但变速箱是干脆地落进下一挡，不会停在两挡之间。Ra 的意思是：边界的跨越就是这种落位。</div>
+    <div class="timeline">
+      <div class="tl-item"><div class="t">约 1,350 年</div><div class="d">上一次过渡（第二→第三密度）的时长。Ra 确认发问者「一代半」的说法，以我们的年份计约为一千三百五十年。</div></div>
+      <div class="tl-item"><div class="t">约 45 年前</div><div class="d">这一次振动提升的最初征兆（以本集 1981 年为基准）。注意 Ra 用的词是「最初征兆」——它早于任何大规模可观察的现象。</div></div>
+      <div class="tl-item"><div class="t">随后的 40 年</div><div class="d">能量在「振动物质的最终运动」之前振动得更为强烈；Ra 用「你们所称的量子跃迁」来指称那一幕。</div></div>
+      <div class="tl-item"><div class="t">此刻</div><div class="d">环境的振动本质已是真色绿（第四密度），却被行星意识的橙色光芒严重覆盖交织；可能性/概率漩涡指示过渡期为 100 到 700 年，且 Ra 声明这个数字不可能准确。</div></div>
+      <div class="tl-item"><div class="t">边界</div><div class="d">量子的本质使跨越边界的运动成为振动水平的「离散定位」——不是滑过去，而是一次落位。</div></div>
+    </div>
+  </div>
+  <div class="case"><b>公司搬家不是一天搬完的：</b>公告写着「下季度搬进新园区」，实际要经历选址、装修、分批搬运、旧场地清退，前后一年多。从外面只看得到一个「搬没搬」的状态，内部却是一整段过程——这正是第二到第三密度那约 1,350 年过渡期的样子。</div>
+  <div class="case"><b>已经有人在用新系统了：</b>公司还没宣布全面切换，但已经有几个小组在新平台上干活，而旧平台的流程还在拖大家后腿。Ra 说这次过渡也是这个局面：已有化身存有开始了第四密度的工作，而第三密度的行星意识气候仍在延迟进程。</div>
+  <div class="case"><b>感冒的前三天：</b>身体早就在打仗了，你只是三天后才开始嗓子疼——病毒载量在症状出现之前就已经爬升。Ra 把振动提升的最初征兆定在约四十五年前，而大规模现象要到很晚才被人看见，是同一个道理。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>思想变成事物：机制、自愈与饮食的链接</h2></div>
+  <p class="sec-lead">「思想变成事物」这句话，Ra 用癌症作了例子。发问者立刻追问机制，Ra 的解释把重点放在第四密度的性质上：那是一个「信息被揭示」的密度，自我不再对自己和他人隐藏，于是破坏性的不平衡会以更明显的方式显形——疾病因此成了教具。接着是本集最实用的一段：怎样才算真的疗愈，以及饮食在其中扮演什么角色。</p>
+  <div class="card">
+    <h3>为什么是现在显形：被揭示的密度</h3>
+    <div class="q">你说愤怒的思想正在导致癌症——能展开讲讲这个机制、它作为催化剂的作用和完整目的吗？</div>
+    <div class="quote">
+      <p class="en">The fourth density is one of revealed information. Selves are not hidden to self or other-selves.</p>
+      <p class="zh">第四密度是一个信息被揭示的密度。自我对自我、以及对其他自我，都不再隐藏。</p>
+      <span class="src">—— Session 040 · (40.12)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The imbalances or distortions which are of a destructive nature show, therefore, in more obvious ways, the vehicle of the mind/body/spirit complex thus acting as a teaching resource for self-revelation.</p>
+      <p class="zh">因此，具有破坏性质的不平衡或变貌会以更明显的方式显现；心/身/灵复合体的载具于是充当「自我揭示」的教学资源。</p>
+      <span class="src">—— Session 040 · (40.12)</span>
+    </div>
+    <div class="plain">第四密度是「信息被揭示」的密度：自我对自我、对其他自我都不再隐藏。所以破坏性的不平衡会以更明显的方式显形，而身体载具成了供自我揭示用的教学资源。</div>
+    <div class="analogy"><b>像把房间的灯全部打开：</b>以前有阴影可以藏东西，灯一亮，角落里的杂物一眼就被看见。疾病不是新的惩罚方式，而是那盏灯。</div>
+  </div>
+  <div class="card">
+    <h3>自愈的门槛：机制一旦被掌握</h3>
+    <div class="q">那这类疾病好治吗？</div>
+    <div class="quote">
+      <p class="en">These illnesses such as cancer are correspondingly very amenable to self-healing once the mechanism of the destructive influence has been grasped by the individual.</p>
+      <p class="zh">相应地，诸如癌症这类疾病非常容易经由自我疗愈而好转——只要那破坏性影响的机制已被个体掌握。</p>
+      <span class="src">—— Session 040 · (40.12)</span>
+    </div>
+    <div class="plain">注意这句话是有条件的：条件在前半句——「机制已被个体掌握」。Ra 没有说这类病会自己好，而是说一旦机制被看透，它「非常容易」被自我疗愈消化掉。</div>
+    <div class="case"><b>把怒气记在备忘录里：</b>有人在备忘录里写下「谁惹了我、我当时想骂什么」，一周后回看，发现自己气的其实是同一件事——不被认可。Ra 说的「掌握破坏性影响的机制」，在日常里往往就是这种把情绪拆开看清楚的动作。</div>
+  </div>
+  <div class="card">
+    <h3>条件模拟器：自愈需要哪几样</h3>
+    <div class="q">发问者把它总结成「原谅那个你愤怒的对象，癌症就会消失」，Ra 的回答是「部分正确」。</div>
+    <div class="quote">
+      <p class="en">This is partially correct. The other portion of healing has to do with forgiveness of self and a greatly heightened respect for the self.</p>
+      <p class="zh">这是部分正确。疗愈的另一部分，与对自我的原谅、以及对自我极大提升的尊重有关。</p>
+      <span class="src">—— Session 040 · (40.13)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This may conveniently be expressed by taking care in dietary matters.</p>
+      <p class="zh">这件事可以方便地通过对饮食的注意来表达。</p>
+      <span class="src">—— Session 040 · (40.13)</span>
+    </div>
+    <div class="plain">对他人原谅只是一半；另一半是对自我的原谅，以及把对自我的尊重大幅提起来——Ra 说饮食上的照顾，就是这件事的一个方便表达。</div>
+    <p style="margin:14px 0 0;font-size:.93rem">拨动下面三个开关，看 Ra 的说法会有什么变化：</p>
+    <div class="demo-area" style="text-align:left">
+      <div class="cond-row"><div class="name">掌握了破坏性影响的机制<small>看清这份不平衡究竟怎么在自己身上运作</small></div><label class="switch"><input type="checkbox" id="c1"><span class="slider"></span></label></div>
+      <div class="cond-row"><div class="name">原谅了那个被愤怒指向的其他自我<small>发问者以为这就是全部条件</small></div><label class="switch"><input type="checkbox" id="c2"><span class="slider"></span></label></div>
+      <div class="cond-row"><div class="name">原谅自己，并把对自我的尊重提起来<small>Ra 说这常常通过照顾饮食来表达</small></div><label class="switch"><input type="checkbox" id="c3"><span class="slider"></span></label></div>
+      <div id="condResult"></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>饮食不是戒律，是链接</h3>
+    <div class="q">那么具体该吃哪些、避开哪些？</div>
+    <div class="quote">
+      <p class="en">Firstly, we underline and emphasize that this information is not to be understood literally but as a link, or psychological nudge, for the body and the mind and spirit.</p>
+      <p class="zh">首先，我们强调并着重指出：这个信息不应被字面理解，而应被看作对身体、心智与灵性的一个链接，或者说心理上的推动。</p>
+      <span class="src">—— Session 040 · (40.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The vegetables, the fruits, the grains, and to the extent necessary for the individual metabolism, the animal products. These are those substances showing respect for the self.</p>
+      <p class="zh">蔬菜、水果、谷物，以及按个体新陈代谢所需程度的动物产品。这些是那种表达「对自我之尊重」的物质。</p>
+      <span class="src">—— Session 040 · (40.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">In addition, though this has not been mentioned, for this instrument is not in need of purification, those entities in need of purging the self of a poison thought-form or emotion complex do well to take care in following a program of careful fasting until the destructive thought-form has been purged analogously with the by-products of ridding the physical vehicle of excess material.</p>
+      <p class="zh">此外，虽然这一点此前未被提及——因为这个器皿并不需要净化——那些需要把自身从毒害性思想形态或情绪复合体中清除出去的实体，宜谨慎地遵循一段小心安排的禁食，直到那破坏性的思想形态被清除，这与清除身体载具多余物质时的附带产物是类似的。</p>
+      <span class="src">—— Session 040 · (40.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Again you see the value not to the body complex, but used as a link for the mind and spirit. Thus self reveals self to self.</p>
+      <p class="zh">你再一次看到，其价值不在于身体复合体，而是被用作心智与灵性的链接。于是，自我向自我揭示自我。</p>
+      <span class="src">—— Session 040 · (40.14)</span>
+    </div>
+    <div class="plain">Ra 先声明这不是字面教条，而是给身、心、灵的链接与心理推动：蔬菜、水果、谷物，加上按个体代谢所需的动物产品，这些是「表达对自我之尊重」的食物。需要清除毒害性思想形态的人可以做一段谨慎的禁食——它的价值同样不在身体，而在于让自我向自我揭示自我。</div>
+    <div class="analogy"><b>像换盆前先清根：</b>园艺师换盆时会先摘掉烂根、清掉旧土，这不是为了土，而是为了让根能重新呼吸。禁食在这段教导里的位置也是这样——对象不是身体，而是被身体承载的那个模式。</div>
+  </div>
+  <div class="case"><b>体检报告上的那个结节：</b>一位四十岁的项目经理连着半年赶项目、天天跟人较劲，体检查出甲状腺结节，医生只说「先观察」。他后来做了两件事：把「我到底在跟谁较劲」想明白，以及开始认真吃早饭、按时睡觉。这正是本集的两条——破坏性影响一旦被理解，载具就会开始把它当作自我揭示的教学资源用掉。</div>
+  <div class="case"><b>戒糖不是因为糖有罪：</b>有人「养生」时列了一长串禁忌食物，越忌越焦虑；也有人把饮食当成每天提醒自己「我值得被好好对待」的一个动作。同样是忌口，前者的对象是食物，后者的对象是自己——Ra 特意说这段信息不该被字面理解，而要当作身心灵的链接。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>绿色光芒的两面：谁受冲击，以及本集的收官</h2></div>
+  <p class="sec-lead">最后一个完整问题把前面的线索收成一句：既然基本振动已经是真色绿，那么「心智影响物质」这类现象——比如用意志弯金属——为什么会第一次以大规模方式出现？Ra 不只确认，还把结论推得更远；随后又纠正了发问者紧接着的一个推测。</p>
+  <div class="card">
+    <h3>大规模的心智影响物质，只是这件事的一面</h3>
+    <div class="q">我们现在体验到的基本振动既然是绿色真色（第四密度），这能解释为什么如今第一次大规模地观察到心智对物质的影响，比如用意志弯曲金属吗？</div>
+    <div class="quote">
+      <p class="en">This is not only correct but we suggest you take this concept further and understand the great number of entities with the so-called mental diseases being due to the effect of this green-ray true color upon the mental configurations of those unready, mentally, to face the self for the first time.</p>
+      <p class="zh">这不仅正确，而且我们建议你把这个概念再推下去：大量所谓患有精神疾病的实体，正是由于这种绿色光芒真色，作用于那些在心智上尚未准备好第一次面对自我的实体的心智配置上。</p>
+      <span class="src">—— Session 040 · (40.15)</span>
+    </div>
+    <div class="plain">弯金属与所谓的精神疾病，是同一件事的两面：绿色真色让人第一次无法对自己隐藏，准备好的能借力发挥，没准备好的则被照得站不住。</div>
+    <div class="analogy"><b>像突然打开的两盏探照灯：</b>舞台灯一亮，准备好的演员能借光表演，还没准备好的人只会被照得睁不开眼。光是一样的，差别在被照的人身上。</div>
+  </div>
+  <div class="card">
+    <h3>Ra 的纠正：不是「资历高的服务自我者」</h3>
+    <div class="q">那些按振动资历、为服务自我之路投生到这里的人，是不是会在心智上对这种绿色光芒振动特别困难？</div>
+    <div class="quote">
+      <p class="en">This is incorrect. It is rather the numbers who have distracted themselves and failed to prepare for this transition, yet who are somewhat susceptible to its influence, who may be affected.</p>
+      <p class="zh">这是不正确的。更确切地说，是那些分散了自己的注意力、未能为这次过渡做好准备、却又对它的影响有些易感的大量人群，可能会受到影响。</p>
+      <span class="src">—— Session 040 · (40.16)</span>
+    </div>
+    <div class="plain">不是。受冲击的不是「走负向极性、按资历投生」的少数人，而是数量众多的另一类：注意力被分散掉、没为这次过渡做准备，却又对它的影响有些易感的人。</div>
+    <div class="case"><b>换工作前没做功课的那批人：</b>公司架构调整，受影响最大的往往不是那些早就铺好别的路的人，而是「被日常琐事填满、从没抬头看过方向」的人——Ra 描述的正是后者：分散了注意力、没做准备，却又对变化有些敏感。</div>
+  </div>
+  <div class="saying">
+    <p class="en">This is correct. It is this influence which has begun to cause thoughts to become things.</p>
+    <p class="zh">这是正确的。正是这股影响，已经开始让思想变成事物。</p>
+    <span class="src">—— Session 040 · (40.9)</span>
+  </div>
+  <div class="card">
+    <h3>这一集留下的位置</h3>
+    <p>本集在 (40.15) 明确收口：Ra 宣布那将是「本次工作的最后一个完整询问」，之后只接简短提问；(40.16) 纠正了关于谁会受绿色光芒影响的推测，(40.17) 确认器皿状态良好、附属物品让她更舒适，随后以 Adonai 作结。</p>
+    <div class="quote">
+      <p class="en">This shall be the final query, in total, of this working.</p>
+      <p class="zh">这将是本次工作的最后一个完整询问。</p>
+      <span class="src">—— Session 040 · (40.15)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This instrument is well. You are conscientious.</p>
+      <p class="zh">这个器皿状态良好。你们是尽责的。</p>
+      <span class="src">—— Session 040 · (40.17)</span>
+    </div>
+    <div class="plain">读下一集时可以带着两个问题：被 Ra 当作例子的「思想变成事物」，还会有哪些其他显形方式；以及那些「没做准备却有些易感」的人，出路在哪里——本集只说了他们可能受影响，没有说该怎么办。</div>
+  </div>
+  <div class="case"><b>办公室里换上的透明玻璃隔断：</b>公司把工位隔板全换成透明玻璃，所有人第一次能看见彼此在做什么。有人效率更高，也有人一周都坐立不安——同一面玻璃，不同的反应。Ra 说的绿色真色就是这面玻璃：它让自我第一次无法对自己隐藏。</div>
+  <div class="case"><b>被抽查的往往不是绩效最差的人：</b>质检抽查挑中的，常常不是表现最差的那个，而是流程走得最随意、留档最乱的人。Ra 在 (40.16) 的纠正也是这个意思：会碰上困难的不是「按资历投生的负向实体」，而是那些分心、没准备、却又对它有些敏感的人。</div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+<p>基于 The Ra Contact Session 040（split/Ra_Session_040.md）英文原文制作 · 交互式学习模块</p>
+<p>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文</p>
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra040-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+  {t:'(40.0) 开场',d:'<b>致意与开场。</b>Ra 以「在无限造物主的爱与光中致意」开场，宣布本次通讯开始。'},
+  {t:'(40.1–40.2) 宇宙模型',d:'<span class="qa-q">问：白光被棱镜式地分成各色频率、贯穿所有密度，进入第八密度穿过黑洞成为新的理则——这样对吗？</span><b>答：</b>基本上正确，但精妙处不止语义：白光开端于形而上意义的黑暗，黑洞是白光被系统吸回太一造物主的浓缩；两个八度之间有一段用时间量不出来的过程。至于螺旋星系只发出预期七分之一的光，那也属于造物循环的一部分。'},
+  {t:'(40.3) 密度即颜色',d:'<span class="qa-q">问：第一密度对应红、第二密度橙、第三密度黄，光子的基本振动也随之提升，对吗？</span><b>答：</b>这比你陈述的更正确；每个密度是它那道光芒的形而上特性复合体，红色是一切的基础，橙色是个体的运动与成长并朝黄色而去，而每个密度还会被下一道光芒的吸引染色。'},
+  {t:'(40.4) 能量中心',d:'<span class="qa-q">问：一路进化到第八密度，每个能量中心都会满格吗？</span><b>答：</b>理论上会，但完全激活者罕见；每个中心转速可变。门槛是所有必要中心达到最低必要程度，然后看它们之间的和谐与平衡。'},
+  {t:'(40.5–40.11) 过渡与当下',d:'<span class="qa-q">问：上一次密度过渡用了多久？这一次呢？我们现在走到哪里了？</span><b>答：</b>上一次约 1,350 年；这一次因异常而难估，可能性/概率漩涡给出 100 至 700 年，且不可能准确。振动已开始提升（最初征兆约在四十五年前），环境的振动本质是真色绿、被行星意识的橙色严重覆盖；跨越边界是振动水平的离散定位。'},
+  {t:'(40.12–40.14) 思想变成事物',d:'<span class="qa-q">问：愤怒的思想导致癌症，机制是什么？饮食上又该怎么办？</span><b>答：</b>第四密度是信息被揭示的密度，破坏性的不平衡显形更明显，载具因此成为自我揭示的教具；一旦机制被个体掌握，这类病非常容易自我疗愈。疗愈不只是原谅他人，还包括原谅自己与大幅提升对自我的尊重——饮食上的照顾就是它的方便表达。'},
+  {t:'(40.15–40.17) 绿色光芒与收尾',d:'<span class="qa-q">问：真色绿能解释大规模的心智影响物质吗？受影响的是资历高的服务自我者吗？</span><b>答：</b>不仅正确，Ra 还让发问者把结论推得更远：大量所谓精神疾病源于绿色真色作用于尚未准备好面对自我的心智配置；受影响的不是负向极性的资历者，而是分心、未做准备却有些易感的人群。随后确认器皿安好，以 Adonai 作结。'}
+]);
+
+initSorter('sorterArea',[
+  {a:'「一切即将到来之物的基础」——最底层的存在状态',opts:['红','橙','黄','绿'],ans:'红',exp:'(40.3)：在第一密度中，红色光芒是一切即将到来之物的基础。'},
+  {a:'「个体开始移动与成长」，并努力朝自我意识的显化而去',opts:['红','橙','黄','绿'],ans:'橙',exp:'(40.3)：第二密度的橙色光芒是个体的运动与成长。'},
+  {a:'「兼具社会性与个体性的自我意识显化」——橙色努力朝向的那道光芒',opts:['红','橙','黄','绿'],ans:'黄',exp:'(40.3)：橙色光芒努力朝向的正是黄色光芒，即自我意识的社会性显化。'},
+  {a:'「你们环境的振动本质」，此刻却被行星意识的橙色严重覆盖交织',opts:['红','橙','黄','绿'],ans:'绿',exp:'(40.11)：环境的振动本质是真色之绿色，此刻被行星意识的橙色光芒严重覆盖交织。'},
+  {a:'「自我对自我与其他自我都不再隐藏」，是信息被揭示的密度',opts:['红','橙','黄','绿'],ans:'绿',exp:'(40.12)：第四密度是信息被揭示的密度，破坏性的不平衡以更明显的方式显现。'}
+]);
+
+document.querySelectorAll('.fn-card').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('open')));
+
+/* 条件模拟器：自我疗愈的三个条件 */
+function updateHeal(){
+  const c1=document.getElementById('c1').checked;
+  const c2=document.getElementById('c2').checked;
+  const c3=document.getElementById('c3').checked;
+  const box=document.getElementById('condResult');
+  let cls='',msg='';
+  if(!c1){
+    cls='fail';
+    msg='<b>缺了「掌握机制」这一条：</b>Ra 把那句「非常容易自我疗愈」系在一个条件上——破坏性影响的机制已被个体掌握。机制没看清，其余动作都还是在暗处摸索。';
+  }else if(!c2&&!c3){
+    cls='fail';
+    msg='<b>只停在「知道」这一层：</b>机制看懂了，但疗愈的两条线（对他人、对自己）都还没解开。Ra 说疗愈的另一半与对自我的原谅、以及对自我极大提升的尊重有关。';
+  }else if(c2&&!c3){
+    cls='fail';
+    msg='<b>这正是发问者的版本：</b>Ra 的评价是「部分正确」——原谅他人算一条，但不是全部；还缺对自我的原谅与尊重，而 Ra 说这件事常通过对饮食的注意来表达。';
+  }else if(!c2&&c3){
+    cls='fail';
+    msg='<b>方向调转了一半：</b>已经转向对自我的原谅与尊重，但那条指向他人的线还挂着。Ra 把两者并列为疗愈的组成部分，并没有说其中一条可以替代另一条。';
+  }else{
+    msg='<b>三条齐了：</b>机制被掌握、对他人的线解开、对自我的尊重被提起来——此时 Ra 说这类疾病「非常容易经由自我疗愈而好转」。注意 Ra 给的是条件与走向，不是保证；载具此时才开始把这场病当作自我揭示的教学资源用掉。';
+  }
+  box.className=cls;
+  box.innerHTML=msg;
+}
+['c1','c2','c3'].forEach(id=>document.getElementById(id).addEventListener('change',updateHeal));
+updateHeal();
+
+renderPath();
+</script>
+</body>
+</html>

@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 084 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 084 · 交互式学习模块</h1>
+  <p class="sub">这一集前半程回答器皿的一个问题——殉道何时才分有智慧；主体则把上一集的性能量转移画成一张完整电路：从红色底盘出发，在橙色首遇阻塞，沿绿、蓝、靛、紫拾级而上，直到 Ra 为守护自由意志两次沉默之处，最后以逻各斯留下的「偏向」收尾。</p>
+  <div class="tagline">「8 个主题 · 6 个学习步骤 · 34 组案例」</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 殉道与意志</a>
+<a href="#s3">③ 转移的电路</a>
+<a href="#s4">④ 一次释放</a>
+<a href="#s5">⑤ 橙色阻塞</a>
+<a href="#s6">⑥ 光芒阶梯</a>
+<a href="#s7">⑦ 主观的尺度</a>
+<a href="#s8">⑧ 收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>全集骨架：例行问答、殉道之问与性能量转移的推进链（第 1 章）</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>殉道与意志</b><span>Jehoshua 的例子：计划里没有智慧，理解与慈悲却到了圆满（第 2 章）</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>转移的电路</b><span>红→橙→黄→绿的路径，与「电压」的差别（第 3 章）</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>一次释放的机制</b><span>不是绿对绿的跳跃，而是自红向上的双向分享（第 4 章）</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>面纱与橙色阻塞</b><span>面纱前后的关键差异、两种阻塞剧本与「魔鬼」雕像（第 5 章）</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>光芒阶梯与收官</b><span>无条件之爱的钥匙、主观的尺度、逻各斯的偏向（第 6–8 章）</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ 第 1 章 · 本章地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：这一集在讲什么</h2></div>
+  <p class="sec-lead">这是「面纱」长卷的一站：上一集末尾留下「面纱之前，每次性活动都是一次转移」这句话，本集从它出发，把性能量转移画成一张完整的电路图。开场先处理器皿健康与一次关于殉道的追问；主体从 (84.9) 起一路推进到面纱前后的差异、各道光芒的转移，最后以逻各斯对伴侣关系的安排收束。</p>
+
+  <div class="card">
+    <h3>本集在全书中的位置</h3>
+    <p><b>承接：</b>上一集讲到面纱的降临遮住了「彼此是造物主」的觉知，并提到面纱之前的每一次性活动都是一次能量转移——发问者本集正是接着这个「每一次」往下问：面纱之后呢？电路怎么走？</p>
+    <p><b>开启：</b>本集末尾 Ra 宣布这是本次工作的最后一个完整问题，一次性给出逻各斯对配对安排的答案；而对器皿病情潜能的预警，则变成留给支持小组的收尾叮嘱。</p>
+    <p><b>本集议题清单：</b>① 殉道与意志；② 转移的电路：红→绿；③ 一次释放的机制；④ 面纱前后的差异与橙色阻塞；⑤ 蓝、靛、紫的钥匙与 Ra 的沉默；⑥ 分辨的主观尺度；⑦ 逻各斯的偏向。</p>
+    <div class="case"><b>接手项目的第一小时：</b>接手别人写了半年的代码库，聪明人不会从第一行读起，而是先请老成员画出「今天讲到哪、分几大块、和昨天什么关系」。本页的学习路径与下面的问答推进器就是这张架构图：先看清骨架（殉道之问 → 电路 → 阻塞 → 阶梯 → 偏向），再进各章细读就不迷路。</div>
+  </div>
+
+  <div class="card">
+    <h3>顺带的一般性教导：接触经验是怎么被记住的</h3>
+    <p class="q">发问者替别人转来两个问题：今年夏天会有什么物理变化？还有那份「被带上飞船」的报告是怎么回事？他自己先承认，这已经碰到第一变貌（自由意志）的边界，而且多半「没有持久价值」。</p>
+    <p>Ra 对预言式的一问不给预测，只把它变成每个人的选择；对「上船」的报告，则给出一段对所有接触经验都成立的一般教导：</p>
+    <div class="quote">
+      <p class="en">it is a grand choice that each may make to, by desire, collect the details of the day or, by desire, to seek the keys to unknowing.</p>
+      <p class="zh">这是每个人都能做出的伟大选择：凭渴望去收集当日的细节，或凭渴望去寻求未知之钥。</p>
+      <span class="src">—— Session 084 · (84.7)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The nature of contact is such that—in order for the deep portion of the trunk of the tree of mind affected to be able to accept the contact—some symbology which may rise to the conscious mind is necessary as a framework for the explanation of the fruits of the contact.</p>
+      <p class="zh">接触的性质是这样的：为了受影响的心智之树的深层树干能够接受接触，需要一些可升至显意识心智的象征符号，作为解释接触果实的框架。</p>
+      <span class="src">—— Session 084 · (84.8)</span>
+    </div>
+    <p>Ra 接着说：在这种情况下，实体自己的期望会塑造出它最易接受的故事；这份「看似记忆」在梦境或出神中被写入所谓潜意识的高层与显意识的低层，之后便像任何记忆一样浮现——于是经历过接触的器皿可以继续运作，而不失去平衡或理智。</p>
+    <div class="case"><b>照着电影梦外星人的人：</b>有人自称梦到被带上飞碟，他描述的舱内布局总带着这几十年科幻片的影子。Ra 的机制正好解释：深层心智接受了接触，但把果实带上来需要「象征」作包装，而包装材料取自此人自己的期望库——经验是真实的，细节是他自己的剪裁。</div>
+    <div class="case"><b>不肯报天气的顾问：</b>客户追问「下季度行情怎么走」，老顾问只回「你可以继续盯每日的细节，也可以学着看懂盘面之外的东西」——他不给预测，因为预测会替你做选择。Ra 面对预言式提问的分寸与此相同：不给细节，只指出选择本身的价值。</div>
+  </div>
+
+  <div class="card">
+    <h3>问答脉络推进器：本集对话怎么走</h3>
+    <div class="demo-area">
+      <div class="flow-track" id="qaTrack"></div>
+      <div class="flow-detail" id="qaDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="qaPrev">← 上一问</button>
+        <button class="tri-btn" id="qaNext">下一问 →</button>
+      </div>
+    </div>
+  </div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 后勤</span></summary>
+  <div class="body">
+    <p><b>(84.1) 器皿状态：</b>物理复合体能量水平处于相当大的亏缺，生命能量良好。</p>
+    <p><b>(84.2–84.3) 饮食与病情：</b>先前的蛋白质警示指屠宰后加防腐剂的动物蛋白——宜选新鲜优质的食物；所指向的疾病是关节炎与红斑狼疮的复合体，根源在投生之前；Ra 为保全小组的自由意志，拒绝断言其他病情潜能，并提到肯定语句或可使困难自行化解。</p>
+    <p><b>(84.5) 脚部护理：</b>交替穿鞋有效；踝套宜用更软更贴合的材料；温水浸泡有益；右足跖骨伤需短时冰敷足弓、随后温水浸泡，持续一段时间。</p>
+    <p><b>(84.6) 出版安排：</b>第一册中受限的疗愈资料，「到时候」收入第四册是合适的——中间还有别的材料要先出。</p>
+    <p><b>(84.23) 收尾叮嘱：</b>因器皿存在向疾病方向增加变貌的严重潜能，Ra 请支持小组在近期特别警惕。</p>
+  </div></details>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 2 章 · 殉道与意志 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>殉道与意志：什么样的死才算奉献</h2></div>
+  <p class="sec-lead">器皿托发问者转达了自己的问题：Ra 曾暗示她走在殉道之路上——可既然人人终有一死，谁不是对某样东西的殉道？殉道何时才分有智慧？Ra 请出那位被称为 Jehoshua 的实体作例，把辨析落在三个词上：计划、时机、意志。</p>
+
+  <div class="card">
+    <h3>先拆前提：死亡人人有份，殉道不是</h3>
+    <div class="q">发问者的推理是：所有人都会死，所以所有人都算「对某样东西殉道」——这个词是不是被用得太宽了？</div>
+    <div class="quote">
+      <p class="en">It is a misnomer to, for this reason alone, call each mind/body/spirit complex a martyr, for this term is reserved for those who lay down their lives for the service they may provide to others.</p>
+      <p class="zh">仅因「人人都会死」这一点就把每个心/身/灵复合体称为殉道者，是用词不当——这个词是留给那些为了自己可能提供给他人之服务而献出生命的人的。</p>
+      <span class="src">—— Session 084 · (84.4)</span>
+    </div>
+    <div class="plain">死亡是所有第三密度身体的共同结局；殉道只留给另一种死——为能提供给他人之服务而献出生命。区别不在死法，在死所服务的东西。</div>
+    <div class="case"><b>火场里的两种人：</b>同一场火灾里，消防员冲进去是为了里面被困的住户，住户中也有没能逃出来的人——只有前者会被叫作「为救人而牺牲」。Ra 的界定正是如此：殉道者（martyr，为能提供给他人之服务而献出生命者）这个词衡量的是死亡的方向，不是死亡这件事本身。</div>
+    <div class="case"><b>疫线上的选择：</b>疫情最重的那个冬天，一位护士明知防护不足仍申请调入重症病房，后来倒在了岗位上；另一位同事年资相同，却病故于与工作无关的疾病。两人都「死了」，讣告的措辞却不同——因为一个把生命放在了他人的服务里，另一个没有。</div>
+  </div>
+
+  <div class="card">
+    <h3>Jehoshua：计划里没有智慧，理解却到了圆满</h3>
+    <div class="q">那么殉道的「计划」本身有智慧吗？Ra 的回答出乎意料地干脆。</div>
+    <div class="quote">
+      <p class="en">This entity incarnated with the plan of martyrdom. There is no wisdom in this plan, but rather understanding and compassion extended to its fullest perfection.</p>
+      <p class="zh">这个实体带着殉道的计划投生。这个计划里没有智慧，有的是理解与慈悲被延伸到其最充分的完美。</p>
+      <span class="src">—— Session 084 · (84.4)</span>
+    </div>
+    <p>Ra 随后补上关键一笔：这位实体若在教导期间的任何时刻选择跟随自己的意志，它对自身道路的理解就不那么完全。它有好几次机会可以提前走向耶路撒冷——那座对这位殉道者而言的殉道之城——却在冥想中一次又一次地说：</p>
+    <div class="quote">
+      <p class="en">Yet in meditation this entity stated, time and again, “It is not yet the hour.”</p>
+      <p class="zh">然而在冥想中，这个实体一次又一次地声明：「时候还没有到。」</p>
+      <span class="src">—— Session 084 · (84.4)</span>
+    </div>
+    <p>当时辰真的到来，它本也可以走另一条路：投生会被延长，但它为此次投生要走的路会有些混乱。Ra 说，最大量的理解，恰恰发生在它在冥想中感到、并知道时辰已到、那要被完成之物即将完成之时。</p>
+    <div class="case"><b>谈判桌上的「还不到时候」：</b>老代表在对方步步紧逼时几次按住不反击，回到房间反复推演，直到对方主动递来台阶才一锤定音。早出手三次，合同可能都签不成——「时辰」的分辨靠静默中的觉知，不靠冲动，这正是 Jehoshua 在耶路撒冷城外一次次做的功课。</div>
+    <div class="case"><b>知道为什么退赛的运动员：</b>带伤的接力选手如果勉强起跑，可能毁掉整队一年的准备；他选择退出，并把原因向队友讲清。Ra 没有说「另一条路」是错的——只是它会让原本要走的路「有些混乱」；权衡的坐标，是这个人对自己投生目的的理解程度。</div>
+  </div>
+
+  <div class="card">
+    <h3>Ra 留下的功课：冥想意志</h3>
+    <div class="quote">
+      <p class="en">We may encourage meditation upon the functions of the will.</p>
+      <p class="zh">我们可以鼓励对意志之功能的冥想。</p>
+      <span class="src">—— Session 084 · (84.4)</span>
+    </div>
+    <div class="plain">整段辨析最后落在一个词上：意志——时辰是它认出的，道路是它走完的，殉道与否则看它把生命交给了什么。</div>
+    <div class="case"><b>捐与不捐之间：</b>亲属配型成功后，有人一周内就签字，有人犹豫再三、与家人深谈后才决定。医学上两种决定都可以，但「为什么而给」的清晓程度不同——意志的功能之一，正是把「被推着走」变成「认了路再走」。Ra 请这一小组成员冥想的，就是这道工序。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 3 章 · 转移的电路 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>转移的电路：从红色底盘到绿色光芒</h2></div>
+  <p class="sec-lead">回到上一集的尾巴——「面纱之前，每次性活动都是一次转移」。发问者从这句话里读出对照，请 Ra 追溯被转移的能量的流动：他的目标很工程学——画出电路图，好理解面纱之后的阻塞。</p>
+
+  <div class="card">
+    <h3>面纱之前：绿灯常亮，转移却微弱</h3>
+    <div class="q">发问者抓住「每一次」这个措辞：既然面纱前每次都算转移，是不是意味着面纱后并非每次都发生？他请 Ra 以面纱前为例追溯能量的流向，并问：那是逻各斯计划好的活动吗？</div>
+    <div class="quote">
+      <p class="en">The awareness of all as Creator is that which opens the green energy center. Thusly there was no possibility of blockage due to the sure knowledge of each by each that each was the Creator.</p>
+      <p class="zh">对「一切皆造物主」的觉知，正是开启绿色能量中心的东西。因此阻塞没有可能——因为每个实体都确知每个实体都是造物主。</p>
+      <span class="src">—— Session 084 · (84.9)</span>
+    </div>
+    <div class="plain">面纱前不是「不会阻塞」，而是「没有东西可阻塞」——绿灯常亮的代价是转移微弱：Ra 紧接着说，这样的转移在任何两个极化实体的性交中都能轻易发生，所以是弱的。</div>
+    <div class="case"><b>不设防的交接班：</b>共事十年的两名工程师交接工作，从不设防：密码直接给、文档全开放。他们的信息流动毫无阻力——像面纱前「确知彼此是造物主」的两人，绿色中心想不开都难。但也正因为对谁都如此，这种流动不构成深刻的个别交换。</div>
+    <div class="case"><b>顺手递来的矿泉水：</b>朋友顺手递来一瓶水，你道声谢就放进了包里；发烧那晚他跑三条街买来的那瓶，你记了很多年。转移的「弱」与「强」不在东西本身，在它花掉的功夫——面纱前的转移弱，正因它太容易。</div>
+  </div>
+
+  <div class="card">
+    <h3>电路图：总从红色出发，在橙色首停</h3>
+    <div class="q">发问者想画一张示意图：转移是不是发生在两个心轮之间？他自比沿着导线追踪电流的工程师，还预留了退路——「如果我走错了，我们就放弃这个方向」。</div>
+    <div class="quote">
+      <p class="en">In such a drawing or schematic representation of the circuitry of two mind/body/spirits, or mind/body/spirit complexes, in sexual or other energy transfer, the circuit opens always at the red or base center and moves as possible through the intervening energy centers. If baffled, it will stop at orange. If not, it shall proceed to yellow. If still unbaffled, it shall proceed to green.</p>
+      <p class="zh">在这样一张图上——两个心/身/灵（复合体）在性或其他能量转移中的电路图——电路总在红色或基础中心打开，并尽可能穿过中间的能量中心：若受阻，停在橙色；若无阻，进到黄色；若仍无阻，进到绿色。</p>
+      <span class="src">—— Session 084 · (84.10)</span>
+    </div>
+    <p>Ra 又补了一句提醒：在心/身/灵的情形里，脉轮（chakra，即能量中心）可以运作着而并未结晶化——「通不通」与「通得多好」是两回事。</p>
+    <div class="plain">转移不是心轮对心轮的隔空跳线，而是一台从红色底盘逐级向上的梯子——每一级都可能被卡住，卡在哪一级，电路就停在哪一级。</div>
+    <div class="case"><b>早高峰的地铁：</b>从始发站（红）上车的人随线逐站前行，但在某个换乘大站（橙）被人潮卡死，后面几站再顺畅也到不了终点。「 baffled」（受阻）这个词在 Ra 的电路里是物理动作：不是没电，是通道被堵。</div>
+    <div class="case"><b>体检表上的「未见异常」：</b>报告写着各项「正常」，人却总觉得使不上劲——功能在，品质不够。能量中心可以「运作着而未结晶化」：灯是亮的，亮度不够；体检表量的是前者，Ra 谈的是后者。</div>
+  </div>
+
+  <div class="card">
+    <h3>电压：结晶化才决定功率</h3>
+    <div class="q">发问者用电学接话：中心都通、但能量少，是不是相当于电路里有高电阻？Ra 换了一个更贴切的词。</div>
+    <div class="quote">
+      <p class="en">The uncrystallized, lower centers cannot deliver the higher voltage. The crystallized centers may become quite remarkable in the high voltage characteristics of the energy transfer as it reaches green ray.</p>
+      <p class="zh">未结晶化的较低中心无法传递较高的电压。结晶化的中心在能量转移到达绿色光芒时，其高电压特性可以变得相当可观。</p>
+      <span class="src">—— Session 084 · (84.11)</span>
+    </div>
+    <p>Ra 还追了一层：绿光芒结晶化之后，这同样适用于更高的能量中心——直到这样的转移成为「对造物主的一种尊荣」（honestation）。</p>
+    <div class="case"><b>细电源线拖不动好音箱：</b>喇叭与功放都是顶配，却配了一根细如发丝的电源线——推不出动态；换上粗壮的线材，同一套设备立刻「醒」了。未结晶化的中心送不出高电压，问题不在有没有电，在通道的品质。</div>
+    <div class="case"><b>学生的琴与大师的琴：</b>同一首曲子，学生琴上音是准的（在运作），大师琴上却有穿透音乐厅的亮度（结晶化）。电路完整只保证「能响」；结晶化才决定这台转移能把能量送到多高、多亮。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 4 章 · 一次释放 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>一次释放：转移到底怎么发生</h2></div>
+  <p class="sec-lead">电路图画到「绿」，发问者开始猜电流怎么过河：能量是不是从一个人的绿色中心跳到另一个人的绿色中心？Ra 先答了一个字，被追问后才把机制摊开——而机制的要点，恰恰是「不跳跃」。</p>
+
+  <div class="card">
+    <h3>不是绿对绿的跳跃，而是自红向上的分享</h3>
+    <div class="q">发问者的猜想：光能量从脚底进入，电位差从红色中心开始、到绿色中心收束，然后「跳」到对方的绿色中心——你能澄清我的想法吗？Ra 答：「能。」发问者只好再追一句：那就请你澄清一下吧。</div>
+    <div class="quote">
+      <p class="en">The energy transfer occurs in one releasing of the potential difference. This does not leap between green and green energy centers but is the sharing of the energies of each from red ray upwards. In this context it may be seen to be at its most efficient when both entities have orgasm simultaneously.</p>
+      <p class="zh">能量转移发生在电位差的一次释放之中。它并非在绿色与绿色能量中心之间跳跃，而是每个实体自红色光芒向上的各级能量的彼此分享。在这种背景下，当两个实体同时达到高潮时，它可被视为最有效率。</p>
+      <span class="src">—— Session 084 · (84.13)</span>
+    </div>
+    <div class="plain">转移不是把我的心「空投」到你的心，而是两个人在同一刻打开了从井底到井口的闸——水漫过界，双向分享，一次完成。</div>
+    <div class="case"><b>二重唱：</b>两位歌手合唱时，不是「把高音抛给对方」，而是各自从最低音到最高音同时唱出，两个声部在整条音域上交融。Ra 的纠正正落在这里：分享的是「自红向上的全部」，不是只把绿色的那一段递过去。</div>
+    <div class="case"><b>并网的两台发电机：</b>电网工程里，两台发电机并网不是「A 把电扔给 B」，而是两者调到同一电位，能量沿整条母线重新分配——「一次释放电位差」，比点对点投递的图像准确得多。</div>
+  </div>
+
+  <div class="card">
+    <h3>没有高潮，也算转移吗</h3>
+    <div class="q">发问者追问方向问题：A 高潮时，能量是不是更多地转给了 B？Ra 先答「你的问题不完整，请重述」；重述之后，答案来了。而更意外的是 Ra 主动补充的一种情形——没有高潮结局的爱。</div>
+    <div class="quote">
+      <p class="en">If both entities are well polarized and vibrating in green-ray love, any orgasm shall offer equal energy to both.</p>
+      <p class="zh">如果两个实体都极化良好、并在绿光芒之爱中振动，任何高潮都会给双方相等的能量。</p>
+      <span class="src">—— Session 084 · (84.16)</span>
+    </div>
+    <div class="quote">
+      <p class="en">And, indeed, in the case of the physically expressed love between a mated pair which does not have the conclusion you call orgasm, there is nonetheless a considerable amount of energy transferred due to the potential difference which has been raised, as long as both entities are aware of this potential and release its strength to each other by desire of the will in a mental or mind complex dedication.</p>
+      <p class="zh">而且，实际上，在一对伴侣之间以身体表达、却没有你们称为高潮之结局的爱里，仍然有相当数量的能量被转移——因为电位差已被抬升——只要双方都意识到这份潜能，并凭意志的渴望、在心智或心智复合体的奉献中把它的力量释放给彼此。</p>
+      <span class="src">—— Session 084 · (84.13)</span>
+    </div>
+    <div class="plain">转移的开关不在生理结局，而在双方的觉知与意志：「意识到潜能」加「凭意志交付」，缺一个就不完整。</div>
+
+    <div class="cond-row"><div class="name">双方都意识到这份潜能<small>「aware of this potential」——不是一个人心里有数</small></div><label class="switch"><input type="checkbox" id="tfA" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">凭意志的渴望释放力量<small>「release its strength … by desire of the will」——交付是主动的</small></div><label class="switch"><input type="checkbox" id="tfB" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">带着心智层面的奉献<small>「in a mental or mind complex dedication」——不止是身体的事</small></div><label class="switch"><input type="checkbox" id="tfC" checked><span class="slider"></span></label></div>
+    <div id="condResult">先拨一拨上面的开关。</div>
+
+    <div class="case"><b>四十年婚姻的晚安握手：</b>老两睡前握手道晚安，没有所谓「结局」，却都觉得有什么流过了一遍。按本集的条件，若这份温暖是彼此意识到、并愿意交付的，它就是一次转移；若只是几十年不变的习惯动作，那就只是身体的接触——差别全在觉知与意志。</div>
+    <div class="case"><b>都市里的谭崔工作坊：</b>广告写着「不追求终点、在呼吸与专注中停留」。Ra 本集举的例子正是谭崔瑜伽（tantric yoga），而且先打了预防针：每个体系都相当扭曲，其教导总是一半失落——形式不能作保证，条件本身才算数。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 5 章 · 橙色阻塞 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>面纱的代价：橙色阻塞与「魔鬼」雕像</h2></div>
+  <p class="sec-lead">发问者先为「问到讲过的材料」道歉，再把话题推进面纱之后：第一道阻塞出现在橙色，阻塞的双方各发生什么？顺着这个问题，本章还接到一个突兀的观察——许多「魔鬼」的雕像都被雕成勃起。Ra 的两次回应，把面纱的代价讲得最具体。</p>
+
+  <div class="card">
+    <h3>面纱前后最关键的差异：实质在时间/空间</h3>
+    <div class="q">面纱之前还有什么不同？Ra 指出的这条，是理解全章的底座。</div>
+    <div class="quote">
+      <p class="en">Perhaps the most critical difference of the veiling, before and after, was that before the mind, body, and spirit were veiled, entities were aware that each energy transfer—and, indeed, very nearly all that proceeds from any intercourse, social or sexual, between two entities—has its character and substance in time/space rather than space/time.</p>
+      <p class="zh">或许面纱前后最关键的差异是：在心智、身体、灵性被遮蔽之前，实体们知道每一次能量转移——实际上，几乎任何两个实体之间的任何交往（社交的或性交的）所产生的几乎所有东西——其特征与实质都在时间/空间，而非空间/时间。</p>
+      <span class="src">—— Session 084 · (84.17)</span>
+    </div>
+    <p>由此Ra 点出面纱后的一个重大误解：人们假设这个叫作身体的物理显化只受物理刺激——Ra 的评语毫不含糊：这绝不是事实。</p>
+    <div class="plain">身体不是只有物理开关的机器——它每时每刻也在进行形而上的能量收支；面纱遮住的正是这份觉知。</div>
+
+    <div class="yuan-grid">
+      <div class="yuan-card"><h4>觉知：实质在时间/空间</h4><span class="y-tag">面纱前</span><p>实体们<b>知道</b>每次转移——几乎一切交往——的实质在时间/空间；形而上收支是常识。</p></div>
+      <div class="yuan-card"><h4>误解：身体只吃「物理饭」</h4><span class="y-tag">面纱后</span><p>默认身体只受物理刺激；Ra 说这<b>绝不是事实</b>——身体复合体因此被极大地误解。</p></div>
+      <div class="yuan-card"><h4>电路：无阻塞可能</h4><span class="y-tag">面纱前</span><p>因确知彼此是造物主，绿灯常开；但转移微弱，因为<b>太容易</b>。</p></div>
+      <div class="yuan-card"><h4>电路：橙色首遇阻塞</h4><span class="y-tag">面纱后</span><p>阻塞制造饥渴、驱动重复；「在爱中振动」的一方也只能给出<b>出发时那份能量</b>。</p></div>
+    </div>
+    <div class="case"><b>体检单上没有的一栏：</b>年度体检列满血压、血糖、骨密度，却没有一栏叫「今年你与人交换了什么」。面纱后的默认假设正是「身体只吃物理饭」——而按 Ra 的说法，这本该是身体账本里最大的一栏。</div>
+    <div class="case"><b>被一顿闲聊掏空的人：</b>只是赴了一场饭局，说的全是场面话，回家却莫名疲惫；另一晚与老友深谈，反而神清气爽。若交往的实质真在时间/空间，那么「聊了什么」之外，「交换了什么」才是真正的账目。</div>
+  </div>
+
+  <div class="card">
+    <h3>橙色阻塞的两种剧本</h3>
+    <div class="q">面纱之后，电路第一道闸在橙色。Ra 提醒这段材料先前讲过，但补全了两种剧本的后果：两人都被阻塞？还是一人阻塞、一人在爱中振动？</div>
+    <div class="quote">
+      <p class="en">If both entities are blocked, both will have an increased hunger for the same activity, seeking to unblock the baffled flow of energy.</p>
+      <p class="zh">如果两个实体都被阻塞，双方都会对同一活动生出更强的饥渴，寻求疏通那受阻的能量流。</p>
+      <span class="src">—— Session 084 · (84.18)</span>
+    </div>
+    <p>若一人阻塞、另一人在绿光芒中振动：被阻塞的一方仍然饥渴，并倾向于继续找那位「在爱中振动」的伴侣来解渴——因为他有一种印象，觉得对方也许帮得上忙。而被阻塞的饥渴推不动能量，Ra 给出在爱中一方的账目：</p>
+    <div class="quote">
+      <p class="en">The green-ray active individual shall polarize slightly in the direction of service to others but have only the energy with which it began.</p>
+      <p class="zh">绿光芒活跃的个体将朝服务他人的方向轻微极化，但只拥有它开始时带着的那份能量。</p>
+      <span class="src">—— Session 084 · (84.18)</span>
+    </div>
+    <div class="plain">阻塞制造饥渴，饥渴驱动重复；而在爱中振动的那一方，不因对方的饥渴而增产——它能给的就是出发时那份。</div>
+    <div class="case"><b>越刷越空的深夜手机：</b>明明不困，却一遍遍刷新短视频——想填的正是那道被卡住的口；越填越饿。这就是「以重复活动疏通受阻能量流」的日常版本：重复指向的是阻塞本身，不是满足。</div>
+    <div class="case"><b>倾诉者与倾听者：</b>小蒋每次崩溃都找老林，老林次次接住。老林在爱中振动，朝服务他人轻微极化——但每次倾谈结束，他手里的能量只是出发时的那份。Ra 没说这是错的，只把这条账目的方向标了出来。</div>
+    <div class="case"><b>「再买一件就免运费」：</b>购物 App 把这个按钮做成暖色，利用的正是「渴了就再喝一口」的回路——饥渴要的是疏通阻塞，重复却只让回路更粗。同样的结构，Ra 描写的是面纱后被卡在橙色的两个人。</div>
+  </div>
+
+  <div class="card">
+    <h3>「魔鬼」雕像的勃起：一个被肯定的大胆观察</h3>
+    <div class="q">发问者突然问：许多路西法或「魔鬼」的雕像与图画都被雕成勃起——这是橙色阻塞的功能吗？设计这些造像的人，多少知道这一点吗？</div>
+    <p>Ra 先划了范围：讨论任何神话原型形式都牵涉许多其他扭曲。但随后给了明确的回答——可以肯定地作答，并称赞发问者颇有洞察力。Ra 没有展开更多：这个「是」字本身，就是本段教导的全部。</p>
+    <div class="plain">被卡在橙色的能量，在面纱后的文化想象里留下过痕迹——古老的造像者把这道「永不餍足的闸」雕进了「魔鬼」的身体里。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 6 章 · 光芒阶梯 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>无条件之爱：蓝靛紫的钥匙与两次沉默</h2></div>
+  <p class="sec-lead">发问者为「问了重复的问题」道歉，Ra 先郑重回应这句道歉，再进入正题：绿之上的转移靠什么成立？这一章有一把钥匙、两级台阶，和两次著名的沉默——沉默不是回避，而是自由意志法则在起作用。</p>
+
+  <div class="card">
+    <h3>先回应道歉：回答本身就是一条电路</h3>
+    <div class="quote">
+      <p class="en">We would take a moment to state in reply to a previous comment that we shall answer each query, whether or not it has been previously covered, for not to do so would be to baffle the flow of quite another transfer of energy.</p>
+      <p class="zh">我们想花一点时间回应先前的评论：无论是否讲过，我们都将回答每一个问题——因为不这样做，会阻塞另一种相当不同的能量转移的流动。</p>
+      <span class="src">—— Session 084 · (84.20)</span>
+    </div>
+    <div class="plain">在这张能量图里，连「一问一答」也是一次转移：这个小组与 Ra 之间的电路，靠「有问必答」来维护——是否重复，无关紧要。</div>
+    <div class="case"><b>敷衍的客服回复：</b>你认真写了三段问题描述，对方回一句「好的」。问题没有被回答，这条关系的电路就暗了一格。Ra 把「是否回答」当作会让流动受阻的事来对待，而不是当作礼貌问题。</div>
+  </div>
+
+  <div class="card">
+    <h3>一把钥匙：无条件之爱</h3>
+    <div class="q">绿、蓝、靛、紫——这些更高处的转移，机制与橙色有何不同？发问者自知这问题很难措辞，连问了两遍、还为此道歉。Ra 先确认：这个主题很大——它是一整套开启智能无限之门的系统；为保全行家（adept，熟练的寻求者）的自由意志，有些信息必然笼罩在神秘之中。然后，钥匙只说了一次：</div>
+    <div class="quote">
+      <p class="en">The great key to blue, indigo, and finally that great capital of the column of sexual energy transfer, violet energy transfers, is the metaphysical bond or distortion which has the name among your peoples of unconditional love.</p>
+      <p class="zh">蓝色、靛蓝色，以及最终——性能量转移之柱的伟大柱顶——紫色能量转移的伟大钥匙，是那个在你们人民中名为「无条件之爱」的形而上纽带或变貌。</p>
+      <span class="src">—— Session 084 · (84.20)</span>
+    </div>
+    <p>蓝光芒处的图景：这份爱的品质在诚实沟通与清晰的火中被精炼——通常要花你们空间/时间中的相当一部分才能完成；也有前世已精炼、且被记得的伴侣，蓝光芒可以立即穿透。它的益处是：这个寻求者的一切沟通由此得到精炼，诚实的、清晰的眼睛看见一个新世界。</p>
+    <div class="case"><b>吵完架反而更近的一对：</b>把话说穿的情侣，吵完当晚往往比冷战一周更近——爱在「诚实沟通与清晰」的火里被精炼了一次。几年里反复穿过这把火的伴侣，沟通的质量就长在了彼此身上：这就是蓝光芒处的机制，慢火，不是烈焰。</div>
+    <div class="case"><b>换部门的老搭档：</b>合作十年的两人转去新部门，第一次开会就直奔要害，无需寒暄试探——像「前世精炼、此生记得」的缩小版。被长期诚实打磨过的关系，穿透蓝光芒几乎不需要热身。</div>
+  </div>
+
+  <div class="card">
+    <h3>两次沉默：阴影地带与不可言说</h3>
+    <div class="quote">
+      <p class="en">As we approach indigo-ray transfer we find ourselves in a shadowland where we cannot give you information straight out or plain, for this is seen by us to be an infringement. … We cannot speak at all of violet-ray transfer as we do not, again, desire to break the Law of Confusion.</p>
+      <p class="zh">当我们接近靛蓝光芒转移，我们发现自己身处一片阴影地带：我们不能直白或明了地给你信息，因为这被我们视为一种侵犯。……我们完全不能谈论紫色光芒转移，因为我们同样不愿打破混淆法则。</p>
+      <span class="src">—— Session 084 · (84.20)</span>
+    </div>
+    <p>Ra 对靛蓝只留下一句方向：这些珠宝虽然代价高昂，对寻求者却无价；正如每种觉知经由分析、综合与灵感而达成，寻求者也当这样接近其伴侣，评估每一次体验，寻找珠宝。</p>
+    <div class="plain">教科书到绿光芒为止是明文，到靛蓝变成暗示，到紫只剩沉默——不是 Ra 保守，是自由意志（混淆法则）的边界画在那里。</div>
+
+    <div class="demo-area">
+      <div class="flow-track" id="rayTrack"></div>
+      <div class="flow-detail" id="rayDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="rayPrev">← 上一级</button>
+        <button class="tri-btn" id="rayNext">下一级 →</button>
+      </div>
+    </div>
+
+    <div class="case"><b>不给答案的高数老师：</b>学生问「下一章怎么解」，老师说「我只能给你工具，路要自己走」——不是刁难，是替你保住「自己想通」的可能。Ra 的第一次沉默（靛蓝只给暗示）正是这种边界：直说即是侵犯。</div>
+    <div class="case"><b>坚持不剧透的朋友：</b>「说了结尾，你就失去了自己走到的那个瞬间。」紫色处的完全沉默，保护的正是行家「自己抵达」的自由意志——剧本写好的开悟，不是他的开悟。</div>
+  </div>
+
+  <div class="card">
+    <h3>术语卡：转移的八个坐标（点击翻面）</h3>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">绿光芒转移</div><div class="sub">green-ray transfer</div><span class="tap">点击翻面</span></div><div class="back">无条件之爱的最低台阶：能量流动使爱变得完整。面纱前人人绿灯常开，转移却微弱——因为太容易。<em>像人人都能及格的课——通过了，也没什么分量。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">蓝光芒转移</div><div class="sub">blue-ray transfer</div><span class="tap">点击翻面</span></div><div class="back">爱在诚实沟通与清晰的火中被精炼；益处是此人的一切沟通被精炼，以诚实清晰之眼看见新世界。通常需要很长时间，前世精炼过的伴侣可立即穿透。<em>像慢火炼蜜——火候到了，沟通自带透明度。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">靛蓝光芒转移</div><div class="sub">indigo-ray transfer</div><span class="tap">点击翻面</span></div><div class="back">阴影地带：Ra 不能直说，以免侵犯行家的自由意志。体验后的标志是意志与信仰的能力被激发、且持续长久；它也是向智能无限之门的开启——只是面纱尚未揭开。<em>像只发地图不发攻略的远行——路要自己认。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">紫色光芒转移</div><div class="sub">violet-ray transfer</div><span class="tap">点击翻面</span></div><div class="back">性能量转移之柱的伟大柱顶：向智能无限之门的开启。Ra 完全不谈——以免打破混淆法则。<em>像门后的房间——门牌写得出，房间进不去。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">无条件之爱</div><div class="sub">unconditional love</div><span class="tap">点击翻面</span></div><div class="back">蓝、靛、紫转移共同的伟大钥匙：一种形而上的纽带或变貌。蓝处在其中被火精炼，靛紫处以其为门槛。<em>像不设条件的信用额度——额度多高，取决于纽带本身。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">结晶化</div><div class="sub">crystallization</div><span class="tap">点击翻面</span></div><div class="back">能量中心「运作」之上的品质：未结晶化的低阶中心送不出高电压；结晶化的中心到绿光芒时高电压特性可观。<em>像喇叭线——通了不代表推得动。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">混淆法则</div><div class="sub">Law of Confusion · 第一变貌</div><span class="tap">点击翻面</span></div><div class="back">自由意志的法则：Ra 两次沉默（靛蓝暗示、紫色不谈）与拒绝断言器皿病情潜能，都是它在执行。<em>像考官只划范围不给答案——替你答题就是作弊。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">时间/空间</div><div class="sub">time/space</div><span class="tap">点击翻面</span></div><div class="back">每次转移（几乎一切交往）的特征与实质所在之处，而非空间/时间；面纱前实体们知道这一点，面纱后误以为身体只受物理刺激。<em>像 Wi-Fi——你看见的是屏幕，走的是另一层介质。</em></div></div>
+    </div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 7 章 · 主观的尺度 ============ -->
+<section class="chapter" id="s7">
+  <div class="sec-head"><span class="num">07</span><h2>主观的尺度：怎么知道哪道光芒流过</h2></div>
+  <p class="sec-lead">体验过后，当事人如何分辨刚才发生的是哪一级转移？Ra 的答案从「客观测量」移开：只有主观的尺度——而且它量的不是当时的高潮，是体验在你身上留下的长效改变。</p>
+
+  <div class="card">
+    <h3>三道可辨认的光芒</h3>
+    <div class="q">有没有办法在体验之后判断转移发生在哪道光？Ra 逐级给出标志：</div>
+    <div class="quote">
+      <p class="en">There is only a subjective yardstick or measure of such. If the energies have flowed so that love is made whole, green-ray transfer has taken place. … If, by the same entities’ exchange, greater ease in communication and greater sight has been experienced, the energy has been refined to the blue-ray energy center. … If the polarized entities, by this same energy transfer experience, find that the faculties of will and faith have been stimulated, not for a brief while but for a great duration of what you call time, you may perceive the indigo-ray transfer.</p>
+      <p class="zh">对此只有主观的尺度或衡量。若能量已流动、使爱得以完整，绿光芒转移便已发生。……若经由这两个实体的交换，体验到沟通的更大便利与更大的视野，能量便已被精炼至蓝光芒能量中心。……若极化的实体经由同一次能量转移体验，发现意志与信仰的能力被激发——不是短暂片刻，而是在你们所谓的时间中持续长久——你便可感知靛蓝光芒转移。</p>
+      <span class="src">—— Session 084 · (84.21)</span>
+    </div>
+    <div class="table-wrap">
+      <table class="nine">
+        <tr><th>光芒</th><th>英文</th><th>体验之后的标志（主观尺度）</th></tr>
+        <tr><td>绿光芒</td><td>green-ray</td><td>爱得以完整——「love is made whole」</td></tr>
+        <tr><td>蓝光芒</td><td>blue-ray</td><td>沟通更顺畅、看得更清楚</td></tr>
+        <tr><td>靛蓝光芒</td><td>indigo-ray</td><td>意志与信仰被激发，且持续长久</td></tr>
+        <tr><td>紫光芒</td><td>violet-ray</td><td>向智能无限之门的开启——Ra 不再多说</td></tr>
+      </table>
+    </div>
+    <div class="quote">
+      <p class="en">We may not speak of the violet-ray transfer except to note that it is an opening to the gateway of intelligent infinity. Indeed, the indigo-ray transfer is also this, but, shall we say, the veil has not yet been lifted.</p>
+      <p class="zh">紫色光芒转移我们不能谈论，只能指出：它是向智能无限之门的开启。实际上，靛蓝光芒转移也是这个——但，容我们说，面纱尚未被揭开。</p>
+      <span class="src">—— Session 084 · (84.21)</span>
+    </div>
+    <div class="plain">别问「刚才哪道光」，问「之后的几周里我有什么不一样」——爱完整了吗？沟通更容易了吗？意志与信仰更长久地亮着吗？量的是长效改变，不是当时的浓度。</div>
+    <div class="case"><b>复盘「两周后的自己」：</b>两个合伙人在一次艰难长谈后，各自写下「接下来两周我哪里不一样」。写得出沟通变顺、意志更定的，是转移留下的痕；写不出、只剩情绪余波的，多半只是过山车。主观尺度的用法正在于回头量。</div>
+    <div class="case"><b>退潮后的沙滩寻珠：</b>有人每次退潮都沿着海滩走一遍，不为捡满口袋，只为找那颗珠子。Ra 给寻求者的建议正是这个姿态：像对待觉知一样（分析、综合、灵感）对待每一次相处的体验——评估它，寻找珠宝。</div>
+  </div>
+
+  <div class="card">
+    <h3>归类练习：这次交换留下了什么</h3>
+    <p>标注说明：<b>A</b>＝绿光芒转移，<b>B</b>＝蓝光芒转移，<b>C</b>＝靛蓝光芒转移，<b>D</b>＝橙色阻塞的信号。点击你认定的选项。</p>
+    <div id="sorterArea"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 8 章 · 收官 ============ -->
+<section class="chapter" id="s8">
+  <div class="sec-head"><span class="num">08</span><h2>收官：逻各斯的偏向与自由意志</h2></div>
+  <p class="sec-lead">本集最后一个完整问题，交给了「设计层面」：当初的逻各斯们，为面纱之前的性活动定过什么目标？Ra 的答案只有一段，却是全本电路讨论的总开关——随后，是一次给支持小组的郑重叮嘱。</p>
+
+  <div class="saying">
+    <p class="en">The free will of each entity, however, was always paramount, and a bias only could be offered.</p>
+    <p class="zh">然而，每个实体的自由意志始终至高无上——所能提供的，只是一个偏向。</p>
+    <span class="src">—— Session 084 · (84.22)</span>
+  </div>
+
+  <div class="card">
+    <h3>逻各斯的观察：不滥交，极化倍增</h3>
+    <div class="q">面纱之前，逻各斯（Logos，星系尺度的造物智能）们计划的是随机性活动，还是把实体配对一段时间？还是说，他们在这方面有一个目标？</div>
+    <div class="quote">
+      <p class="en">It was determined, after observation of the process of many Logoi, that polarization increased manyfold if the mating were not indiscriminate.</p>
+      <p class="zh">在观察了许多逻各斯的过程之后，确定了这样一件事：如果交配不是不加选择的，极化会增加许多倍。</p>
+      <span class="src">—— Session 084 · (84.22)</span>
+    </div>
+    <p>Ra 交代了来龙去脉：上一轮造物的收割本就包含了男性与女性的心/身/灵；最初逻各斯的意图，是让实体们以任何能造成更大极化的方式结合。观察之后，后续的逻各斯们保留了对伴侣关系的偏向——这种关系更属于自律的人格与你们所谓更高的密度。而偏向之外的一切，交还给自由意志。</p>
+    <div class="plain">逻各斯能做的是把路标立好，不能替任何人走路——偏向被提供，选择仍归你。</div>
+    <div class="case"><b>菜单上的「主厨推荐」：</b>餐厅可以把你最可能满意的菜排在第一行，却不能替你下单。「偏向被提供、自由意志至高」——这正是 Ra 给面纱前配对安排的最终定位：不是命令，是被保留下来的倾向。</div>
+    <div class="case"><b>深耕与广撒的两种职业生涯：</b>有人十年只钻一个领域成了专家，有人年年换赛道样样浅尝。前者的深度积累像「不滥交的配对」，回报率是倍增的；但两条路都开着——逻各斯只是把各自的回报率摆在了明面上。</div>
+  </div>
+
+  <div class="card">
+    <h3>伏笔与叮嘱</h3>
+    <div class="quote">
+      <p class="en">We would ask that each of the support group be especially vigilant in the, what you would call, immediate future due to this instrument’s unbidden but serious potential for increased distortion towards illness/health.</p>
+      <p class="zh">我们请求支持小组的每一位，在你们所谓的近期内特别警惕——因为这个器皿存在一种未被请求、却严重的、向疾病方向增加变貌的潜能。</p>
+      <span class="src">—— Session 084 · (84.23)</span>
+    </div>
+    <ul>
+      <li><b>通往后续：</b>第一册中受限的疗愈资料被允诺「适时」收入第四册——但中间还有别的材料（84.6）；面纱与转移的探讨在本集收束于逻各斯的偏向。</li>
+      <li><b>器皿照料：</b>身体能量相当亏缺（84.1）、病情潜能严重（84.3、84.23）——小组的近期警觉被写进收尾。</li>
+      <li><b>本集的收束方式：</b>Ra 宣布「这是本次工作的最后一个完整问题」后，把最重量级的答案一次性给出，随即致谢告别（84.22–84.23）。</li>
+    </ul>
+    <div class="case"><b>值班表上的红圈：</b>护士交接班时，把「这位今晚可能波动」用红笔圈出来——不是吓唬人，是让每个人都带着警觉上岗。Ra 的收尾叮嘱正是这个红圈：把已知的潜能说在前面，让照顾者自己选择如何应对。</div>
+    <div class="case"><b>「最后一个议题」效应：</b>主持人宣布「这是今天最后一项」后，与会者的注意力反而收得更拢。Ra 同样把最重的一段（逻各斯的偏向）放在宣布收尾之后——一问答尽，不再延展。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 084（`split/Ra_Session_084.md`）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra084-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+/* ===== 本集定制交互 ===== */
+const byId084=function(id){return document.getElementById(id)};
+
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+  {t:'开场与器皿状态',d:'<span class="qa-q">开场（84.0–84.1）</span><b>答：</b>Ra 在爱与光中致意。器皿的物理复合体能量<b>相当亏缺</b>，但生命能量良好——为随后的病情讨论埋下伏笔。'},
+  {t:'饮食与病情',d:'<span class="qa-q">问：先前说的「复杂蛋白质」指什么？变貌朝哪个方向？（84.2–84.3）</span><b>答：</b>指屠宰后加防腐剂的动物蛋白，宜选新鲜优质食物；所指疾病是关节炎与红斑狼疮的复合体，根源<b>在投生之前</b>；Ra 为保全小组自由意志拒绝断言其他潜能，并寄望肯定语句使困难自行化解。'},
+  {t:'殉道之问',d:'<span class="qa-q">问：既然人人都死，谁不是殉道者？殉道何时分有智慧？（84.4）</span><b>答：</b>这个只留给「为能提供给他人之服务而献出生命」的人；Jehoshua 的殉道计划里没有智慧，有的是<b>理解与慈悲的圆满</b>——时辰由冥想认出，功课是冥想意志的功能。'},
+  {t:'脚部与后勤',d:'<span class="qa-q">问：脚怎么办？交替穿鞋有用吗？（84.5–84.8）</span><b>答：</b>交替穿鞋有效、踝套宜软、冰敷加温水浸泡；疗愈资料「到时候」收入第四册；转述他人的两问——预言不给，只谈<b>接触经验如何被记住</b>的一般教导。'},
+  {t:'转移的电路',d:'<span class="qa-q">问：请追溯面纱前转移的能量流动；转移是不是在两个心轮之间？（84.9–84.11）</span><b>答：</b>面纱前两人都有绿光芒能力、确知彼此是造物主，故<b>无阻塞可能</b>，但转移微弱——太容易。电路总从红色底盘打开，受阻停在橙色，否则到黄、到绿；中心可运作而未结晶化，未结晶化者送不出高电压。'},
+  {t:'一次释放',d:'<span class="qa-q">问：能量是不是从我的绿中心跳到你的绿中心？（84.12–84.16）</span><b>答：</b>不是——转移发生在电位差的<b>一次释放</b>中，是双方自红向上的分享；同时高潮最有效率，任一方高潮即运作，无高潮时凭双方的觉知与意志的奉献亦有相当转移；双方都在绿光芒之爱中振动时，能量对等。'},
+  {t:'面纱与阻塞',d:'<span class="qa-q">问：面纱前后的关键差异？橙色阻塞后各自如何？（84.17–84.19）</span><b>答：</b>面纱前实体们知道转移的实质在<b>时间/空间</b>；面纱后误以为身体只受物理刺激。阻塞制造饥渴与重复；在爱中振动者轻微极化向服务他人，但只有出发时那份能量。「魔鬼」雕像的勃起被 Ra 肯定与橙色阻塞有关。'},
+  {t:'阶梯与偏向',d:'<span class="qa-q">问：绿之上靠什么成立？逻各斯对配对有过什么计划？（84.20–84.23）</span><b>答：</b>伟大钥匙是<b>无条件之爱</b>：蓝在诚实沟通的火中精炼，靛蓝只可暗示，紫完全沉默——混淆法则。分辨只有主观尺度。最后 Ra 给出总开关：不滥交则极化倍增，逻各斯保留对伴侣关系的偏向，但<b>自由意志至高，偏向只被提供</b>；收尾叮嘱小组近期特别警惕。'}
+]);
+
+initStepper('rayTrack','rayDetail','rayPrev','rayNext',[
+  {t:'绿：爱得以完整',d:'<b>钥匙已进门：</b>无条件之爱在此已是门槛。体验后的标志——能量流动使<b>爱变得完整</b>。面纱前这是常态：人人确知彼此是造物主，绿灯常开。'},
+  {t:'蓝：火中精炼',d:'<b>机制：</b>爱的品质在<b>诚实沟通与清晰</b>的火中被精炼，通常需相当长的时间；前世精炼且被记得的伴侣可立即穿透。益处：此人的一切沟通被精炼，以诚实清晰之眼看见新世界。'},
+  {t:'靛蓝：阴影地带',d:'<b>第一次沉默：</b>Ra 不能直白给出信息——那是<b>侵犯</b>。体验后的标志：意志与信仰的能力被激发，且在很长时间里持续。它也是向智能无限之门的开启，只是面纱尚未揭开。'},
+  {t:'紫：不可言说',d:'<b>第二次沉默：</b>Ra 完全不谈——以免打破<b>混淆法则</b>。只指出一句：它是性能量转移之柱的柱顶，是向智能无限之门的开启。'}
+]);
+
+initSorter('sorterArea',[
+  {a:'几次相处之后，两人都觉得「爱变得完整了」',opts:['A','B','C','D'],ans:'A',exp:'「爱得以完整」是 Ra 给绿光芒转移的标志（84.21）。'},
+  {a:'交换之后，沟通明显变得更顺畅，看事情也看得更清楚',opts:['A','B','C','D'],ans:'B',exp:'沟通的更大便利与更大的视野——能量已被精炼至蓝光芒中心（84.21）。'},
+  {a:'意志与信仰的能力被激发，而且不是几天，是很长时间',opts:['A','B','C','D'],ans:'C',exp:'「不是短暂片刻，而是持续长久」——靛蓝光芒转移的标志（84.21）。'},
+  {a:'双方对同一种活动都生出越来越强的渴求，想靠重复来填补',opts:['A','B','C','D'],ans:'D',exp:'双方都被阻塞时，饥渴俱增、以重复疏通受阻之流——橙色阻塞的信号（84.18）。'},
+  {a:'一方在爱中振动，另一方仍饥渴并想继续靠对方解渴',opts:['A','B','C','D'],ans:'D',exp:'被阻塞者仍饥渴、倾向继续向在爱中振动者寻求——同样是橙色剧本（84.18）；在爱中一方只轻微极化、能量不增。'}
+]);
+
+function updateTransferSim(){
+  const a=byId084('tfA').checked,b=byId084('tfB').checked,c=byId084('tfC').checked;
+  const off=[];
+  if(!a)off.push('双方未都意识到这份潜能——潜能虽在，却无人认领（84.13）。');
+  if(!b)off.push('没有凭意志的渴望释放力量——交付不是自动发生的（84.13）。');
+  if(!c)off.push('缺少心智层面的奉献——只剩身体层面的接触（84.13）。');
+  const el=byId084('condResult');
+  if(off.length===0){el.classList.remove('fail');el.innerHTML='<b>三关全过：</b>即便没有你们称为高潮的结局，仍有相当数量的能量被转移——因为电位差已被抬升，而双方以觉知认领、以意志交付、在心智奉献中把它给出去（84.13）。这正是一些古老体系借以产生能量转移的做法。';}
+  else if(off.length===3){el.classList.add('fail');el.innerHTML='<b>三关全缺：</b>按本集的条件，这只是一次身体的接触，不构成那种转移。Ra 还留了一条快路备忘：若任一方高潮，转移即运作；双方同时则最有效率（84.13）。';}
+  else{el.classList.add('fail');el.innerHTML='<b>缺 '+off.length+' 条，还差一步：</b>'+off.join('');}
+}
+['tfA','tfB','tfC'].forEach(function(id){byId084(id).addEventListener('change',updateTransferSim);});
+updateTransferSim();
+
+document.querySelectorAll('.fn-card').forEach(function(c){c.onclick=function(){c.classList.toggle('open');};});
+
+renderPath();
+</script>
+</body>
+</html>

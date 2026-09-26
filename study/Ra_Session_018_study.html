@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 018 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 018 · 交互式学习模块</h1>
+  <p class="sub">这一集先交代通讯误差与器皿照料，接着正面否定了「开悟就得消灭自我」这条修行路线，把服务准则收束为自由意志之外的两条指引，最后摊开耶和华的基因实验与猎户座的精英诱惑。</p>
+  <div class="tagline">8 个主题 · 6 个学习步骤 · 23 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 误差与器皿照料</a>
+<a href="#s3">③ 修炼不是消灭自我</a>
+<a href="#s4">④ 自由意志之外</a>
+<a href="#s5">⑤ 责任、向导与走偏的求道者</a>
+<a href="#s6">⑥ 宽恕与联邦</a>
+<a href="#s7">⑦ 耶和华的实验</a>
+<a href="#s8">⑧ 收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>本集十段问答各在做什么，哪些例行内容可以直接跳过</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>误差从何而来</b><span>通讯误差的机制、一种物质的急剧衰减，以及食物这件小事</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>修炼不是消灭自我</b><span>体验、分析、理解、接纳，以及为什么「克服」是一条捷径</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>自由意志之外还有什么</b><span>两条简单的指引，加上一组无限精微且多样的变貌</span></span></label></div>
+<div class="step-item" data-target="#s7"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>耶和华的实验</b><span>三次通讯、七万五千年前的克隆，以及精英的诱惑</span></span></label></div>
+<div class="step-item" data-target="#s8"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官</b><span>本集金句、第二次集会的叮嘱与留下的伏笔</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：这一集在问什么</h2></div>
+  <p class="sec-lead">本集从一句接续的话开始——发问者提到「你昨天说宽恕是业力的消除者」，可见它紧接上一次工作。开头的三问还在处理上一次留下的后遗症（通讯中出现的误差），从 (18.5) 起才完全转入教导：先否定「消灭自我」的修行路线，再把服务准则收束成可操作的指引，然后一路问到责任年龄、宽恕、联邦的分工，最后进入耶和华与猎户座的一段古史。Ra 在倒数第二段宣布「这将是最后一个完整的问题」，因此本集也留下了「当晚能否再来一次集会」的伏笔。</p>
+  <div class="card">
+    <h3>问答脉络：十段推进</h3>
+    <p>本集的问答链很清楚：先修问题，再立准则，最后讲古史。点击节点看每一段在做什么。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="qaTrack"></div>
+      <div class="flow-detail" id="qaDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="qaPrev">← 上一步</button> <button class="tri-btn" id="qaNext">下一步 →</button></div>
+    </div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 食物 · 集会安排</span></summary>
+  <div class="body">
+    <p><b>(18.0) 开场：</b>Ra 以「我在无限造物主的爱与光中向你们致意」开场，宣布本次通讯开始；结尾以「我以爱与光离开你们……Adonai」作结。</p>
+    <p><b>(18.1)–(18.3) 器皿状态：</b>Ra 说已发生的误差源于器皿摄入一种化学物质后振动复合体的变化；该物质配合接触使用并不会导致不良接触，但它的效力有一个非常急剧的衰减——集会中途强度不足时，必须先出现断断续续的接触，然后突然切断通讯，以保护并滋养器皿（详见第 2 章）。</p>
+    <p><b>(18.4) 器皿的食物：</b>谷物与蔬菜类食物最宜，偶尔摄入肉类可减轻朝向低生命能的变貌；不过与「态度」这类辅助相比，饮食极其不重要（详见第 2 章）。</p>
+    <p><b>(18.10)–(18.11) 某位历史人物的去向：</b>Ra 用两段回答说明他此刻位于内在层面、正在经历一个疗愈过程；人物细节归在这里，其中的普遍性教导写进第 5 章。</p>
+    <p><b>(18.26)–(18.27) 后勤与集会安排：</b>Ra 说器皿因缺乏生命能而有些虚弱；要再开一次集会，需注意食物、减轻身体疼痛、并有一定量的运动，还要特别仔细检查「象征符号」的校准（详见第 8 章）。</p>
+  </div></details>
+  <div class="case"><b>速记员的那杯浓咖啡：</b>你请同事帮你记会议，她中途灌了一大杯浓咖啡，后半段的笔记开始含糊、漏项。事后你问她是不是故意写错，她说「当然不是，我只是状态变了」——这正是 (18.1)–(18.3) 里 Ra 的说法：误差不是有意掺入的，而是器皿的振动复合体出现了变化。</div>
+  <div class="case"><b>先看目录再读报告：</b>面对一份八十页的行业报告，你会先翻到目录，标出「这几节是核心，附录可以跳过」。第 1 章就等于这份目录：它告诉你这一集十段问答各在做什么，以及哪些例行内容可以折叠起来。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>误差与器皿照料：错误不是有意掺入的</h2></div>
+  <p class="sec-lead">发问者一开头就问了一个很诚实的问题：如果换成我坐在你的位置，一的法则的第一个变貌说不定会让我在真实信息里掺一点假——你们会这样做吗？Ra 的回答给出「通讯误差」的机制，随后自然带出器皿照料的三件事：物质、食物，以及什么时候必须切断通讯。</p>
+  <div class="card">
+    <h3>不是有意，但混淆会发生</h3>
+    <div class="q">如果换我处在你的位置，第一变貌也许会让我在真实信息里混入错误数据。你们会这样做吗？</div>
+    <div class="quote">
+      <p class="en">We do not intentionally do this. However, there will be confusion.</p>
+      <p class="zh">我们并非有意这样做。然而，混淆是会发生的。</p>
+      <span class="src">—— Session 018 · (18.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">It is not our intent in this particular project to create erroneous information but to express in the confining ambiance of your language system the feeling of the infinite mystery of the One Creation in its infinite and intelligent unity.</p>
+      <p class="zh">在这个特定项目中，我们的意图不是制造错误的信息，而是要在你们语言系统那种受限的氛围里，表达太一造物在其无限而智能的合一中的无限奥秘之感。</p>
+      <span class="src">—— Session 018 · (18.1)</span>
+    </div>
+    <div class="plain">Ra 不制造假信息，但混淆仍会发生；已发生的误差来自器皿身体状态的变化，而不是 Ra 的意图。Ra 在这里同时说出了这个项目的真正目的：不是给资料，而是让语言尽量承载一种「无限奥秘之感」。</div>
+    <div class="analogy"><b>像老式电台：</b>播音员说的每句话都是真的，但发射机电压波动的时候，听众会听到杂音、漏掉几个字。杂音不是播音员说的内容，却真实地出现在节目里。</div>
+  </div>
+  <div class="card">
+    <h3>一种物质：有帮助，也有不利</h3>
+    <div class="q">那到底是什么物质？它会导致不良接触吗？</div>
+    <div class="quote">
+      <p class="en">The substance of which we speak is called vibratory sound complex LSD.</p>
+      <p class="zh">我们所说的那种物质，被称为声音振动复合体 LSD。</p>
+      <span class="src">—— Session 018 · (18.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The difficulty of this particular substance is that there is, shall we say, a very dramatic drop-off of the effect of this substance.</p>
+      <p class="zh">这种特定物质的困难在于，容我们说，它的效力有一个非常急剧的衰减。</p>
+      <span class="src">—— Session 018 · (18.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">first the phenomenon of, shall we say, a spotty contact, and then, as the instrument relies again upon its own vibrational complexes of vital energy, the vital energy being in this case very low, it became necessary to abruptly cut off communication in order to preserve and nurture the instrument.</p>
+      <p class="zh">首先出现的是，容我们说，断断续续的接触现象；然后，当器皿再次依赖它自身的生命能振动复合体——而在此情况下生命能非常低——便有必要突然切断通讯，以保护和滋养这个器皿。</p>
+      <span class="src">—— Session 018 · (18.3)</span>
+    </div>
+    <div class="plain">这种物质「既有帮助，也有不利」：它把器皿的生命能暂时抬高，但抬得越高，跌得越快。集会恰好处在效力退去、器皿只能靠自身（而自身的生命能很低）的节点上，于是接触先变得断续，然后必须被切断——这是一种保护动作，不是失败。</div>
+    <div class="analogy"><b>像能量饮料的峰值：</b>骑手靠一罐能量饮料跑完前半程，状态远超平时；三小时后效力退了，他反而比不喝时更慢、更不稳。差别只在于——饮料不会自己知道该在什么时候收工，而 Ra 会。</div>
+    <div class="case"><b>教练在第六组喊停：</b>你练到第六组时动作开始变形，教练直接叫停今天的训练：「不是练得不好，是再练下去要伤到你。」这正对应 (18.3) 的顺序：先出现断断续续的接触，然后通讯被突然切断，目的是保护与滋养器皿。</div>
+    <div class="case"><b>连夜写的方案在凌晨崩了：</b>你靠咖啡因连写六小时，凌晨两点思路还很顺，三点突然连一句话都组织不起来，只能关电脑。效力衰退不是意志问题——这正是 Ra 所说的「急剧衰减」，也是集会必须在那个节点之前收尾的原因。</div>
+  </div>
+  <div class="card">
+    <h3>食物：有帮助，但极其不重要</h3>
+    <div class="q">有没有哪些食物对器皿有帮助或有害？</div>
+    <div class="quote">
+      <p class="en">However, this is extremely unimportant when regarded as an aid with equality to other aids such as attitude which this instrument has in abundance.</p>
+      <p class="zh">然而，如果把它看作与「态度」这类辅助同等的辅助——而这个器皿大量具备的正是态度——那么这一点极其不重要。</p>
+      <span class="src">—— Session 018 · (18.4)</span>
+    </div>
+    <div class="plain">Ra 的排序很值得注意：谷物与蔬菜（偶尔肉食，因器皿需要减轻低生命能的变貌）是有效的调整，但在所有辅助手段里排在后面。Ra 特意把「态度」抬到与饮食同等甚至更重要的位置上，而器皿在这件事上「大量具备」。</div>
+    <div class="case"><b>医生说「饮食其次，心态第一」：</b>体检之后，医生给了你一份「多谷物蔬菜、偶尔吃肉」的食谱，却补了一句：「比起这份单子，你那种遇事不慌的态度对你帮助更大。」——这正是 (18.4) 的顺序：饮食真的有用，只是远没有你以为的那么关键。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>修炼不是消灭自我：体验—分析—理解—接纳</h2></div>
+  <p class="sec-lead">这一章是本集的转折点。发问者带来一个流传很广的修行前提（来自 Jim 的逐字提问）：许多神秘传统认为，要到达所谓的「涅槃」或开悟，个体自我必须被抹除，物质世界必须被忽略。Ra 的回答没有含糊——它否定了「克服」这条路线，并给出了另一条链。</p>
+  <div class="card">
+    <h3>正确角色：体验一切，然后提炼</h3>
+    <div class="q">在帮助一个实体成长进入一的法则这件事上，个体自我与它的世俗活动，该扮演什么角色？</div>
+    <div class="quote">
+      <p class="en">The proper role of the entity is, in this density, to experience all things desired, to then analyze, understand, and accept these experiences, distilling from them the love/light within them. Nothing shall be overcome. That which is not needed falls away.</p>
+      <p class="zh">在这个密度里，实体的恰当角色是去体验一切所渴望的事物，然后分析、理解并接纳这些体验，从中提炼出它们内在的爱/光。没有什么应当被克服。不需要的会自然脱落。</p>
+      <span class="src">—— Session 018 · (18.5)</span>
+    </div>
+    <div class="plain">自我不是要被消灭的障碍，而是要被使用的工具：先完整地体验（包括世俗活动），再分析、理解、接纳，最后从中提炼出爱/光。Ra 的落点是一句反直觉的话——「没有什么应当被克服」，因为需要的会留下，不需要的会自己掉下去。</div>
+    <div class="analogy"><b>像整理一间堆满东西的房间：</b>把东西全扔出去不是整理，因为过一阵你还会再买回来。真正的整理是逐件看清、归类、留下真正用得上的；剩下的自然不再堆在那里。这里的关键是「看清」，而不是「扔掉」。</div>
+  </div>
+  <div class="card">
+    <h3>为什么「克服」是一条捷径</h3>
+    <div class="q">那如果我干脆压下这些渴望、直接忽略它们呢？</div>
+    <div class="quote">
+      <p class="en">The reason it is unwise to overcome is that overcoming is an unbalanced action creating difficulties in balancing in the time/space continuum.</p>
+      <p class="zh">克服之所以不明智，是因为克服是一种不平衡的行动，会在时间/空间连续体中造成平衡的困难。</p>
+      <span class="src">—— Session 018 · (18.5)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Overcoming thus creates the further environment for holding onto that which apparently has been overcome.</p>
+      <p class="zh">因此，克服会进一步造出一种环境，使人执着于那看似已被克服的事物。</p>
+      <span class="src">—— Session 018 · (18.5)</span>
+    </div>
+    <div class="quote">
+      <p class="en">It is, shall we say, a shortcut to simply ignore or overcome any desire. It must instead be understood and accepted.</p>
+      <p class="zh">容我们说，简单地忽略或克服任何渴望，是一条捷径。它必须被理解并接纳。</p>
+      <span class="src">—— Session 018 · (18.5)</span>
+    </div>
+    <div class="plain">「克服」看起来快，其实把问题压进了时间/空间里：被压下去的东西没有消失，反而因为那份不平衡，让你更牢牢地抓着它。Ra 说这需要耐心和经验，而且要以关怀、以对自己和对其他自我的慈悲去分析。</div>
+    <div class="analogy"><b>像用手按住弹簧：</b>你按住的时候它确实不动，但你的手一刻也不能松；松手那一刻，它弹得比原来更高。不加压的做法是看清这根弹簧为什么在那里。</div>
+    <div class="case"><b>戒糖第三天的暴食：</b>你发誓彻底戒掉甜食，靠意志硬撑三天，第四天晚上吃掉一整盒蛋糕。(18.5) 把这条路径写得很清楚：克服是不平衡的行动，它会「进一步造出让人执着于那看似已被克服之物的环境」——那盒蛋糕就是被压下去又弹回来的东西。</div>
+  </div>
+  <div class="card">
+    <h3>这条链的六个环节</h3>
+    <p>Ra 在 (18.5) 里给的是一套流程，不是一个态度。点开每一步看它在做什么。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="chainTrack"></div>
+      <div class="flow-detail" id="chainDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="chainPrev">← 上一步</button> <button class="tri-btn" id="chainNext">下一步 →</button></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>唯一的例外：以想象代替执行</h3>
+    <div class="q">难道什么渴望都只该接纳，没有一点该被拦下的吗？</div>
+    <div class="quote">
+      <p class="en">We have found it to be inappropriate in the extreme to encourage the overcoming of any desires, except to suggest the imagination rather than the carrying out in the physical plane, as you call it, of those desires not consonant with the Law of One—this preserving the primal distortion of Free Will.</p>
+      <p class="zh">我们发现，鼓励去克服任何渴望都是极其不恰当的；唯一的例外是建议：对那些不与一的法则和谐的渴望，以想象的方式满足，而不是在你们所称的物质层面去执行它——这样就保全了自由意志这个首要变貌。</p>
+      <span class="src">—— Session 018 · (18.5)</span>
+    </div>
+    <div class="plain">Ra 给出的唯一处理办法不是「压住它」，而是「让它在想象里发生」。这样既没有欺骗自己（渴望被看见了），也没有在物质层面改变别人的世界（自由意志被保全）。这里也第一次出现了「自由意志」与「侵犯」之间的关联，第 4 章会接着讲。</div>
+    <div class="analogy"><b>想砸桌子的那一秒：</b>在脑子里把整场戏演一遍——拍桌、走人、所有人都看着你——和真的拍下去，中间差的是别人的世界被改动了。前者只发生在你的想象里，后者会发生在他人的时间里。</div>
+    <div class="case"><b>想当众辞职的那一夜：</b>你在会上被抢功，回家后把辞职信的每一句话都在脑子里说了一遍，甚至想象了同事的表情；第二天你照常上班，但那口气已经顺了。这不是压抑——这是 (18.5) 说的「以想象代替在物质层面执行」。</div>
+  </div>
+  <div class="card">
+    <h3>条件模拟器：这条链缺了哪一环？</h3>
+    <p>拨动开关，看一个渴望在缺少某一步时会走到哪里去。</p>
+    <div class="cond-row"><div class="name">承认并接纳这个渴望<small>而不是忽略它、直接压下去</small></div><label class="switch"><input type="checkbox" id="c1" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">分析它，并从中提炼爱/光<small>导向因对渴望的分析而发展</small></div><label class="switch"><input type="checkbox" id="c2" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">不与一的法则和谐的渴望，只在想象中满足<small>保全自由意志这个首要变貌</small></div><label class="switch"><input type="checkbox" id="c3" checked><span class="slider"></span></label></div>
+    <div id="condResult"></div>
+  </div>
+  <div class="case"><b>每次训练后的十分钟复盘：</b>一位长跑者不要求自己「再也不崩」，而是每次跑完都花十分钟写下：哪一公里开始烦、为什么、那份烦里藏着什么想要的（也许是「想被人看见」）。这就是把体验分析、理解、接纳，再提炼出驱动力——对应 Ra 说的「导向因对渴望的分析而发展」。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>自由意志之外：两条指引与一组精微变貌</h2></div>
+  <p class="sec-lead">发问者把上一章末尾出现的那条线索接了上来，并提出一个很强的假设：侵犯其他自我的自由意志，就是一的法则下唯一绝不该做的事——除此之外，还有别的违背吗？Ra 没有给出新的禁令，而是把「禁令」换成了「指引」：两条简单的，加一组无限精微的。</p>
+  <div class="card">
+    <h3>从自由意志往下走，会遇到什么</h3>
+    <div class="q">除了「不要侵犯自由意志」这条基本规则，还有别的违背一的法则的方式吗？</div>
+    <div class="quote">
+      <p class="en">As one proceeds from the primal distortion of Free Will, one proceeds to the understanding of the focal points of intelligent energy which have created the intelligences or the ways of a particular mind/body/spirit complex in its environment, both what you would call natural and what you would call man-made.</p>
+      <p class="zh">当一个人从自由意志这个首要变貌出发往前推，便会进到对智能能量之焦点的理解——正是这些焦点，造就了一个特定的心/身/灵复合体在其环境中的种种智能或行事方式，包括你们所称的自然环境与人造环境。</p>
+      <span class="src">—— Session 018 · (18.6)</span>
+    </div>
+    <div class="plain">所谓「违背」并不是一张更长的罪名清单：从自由意志出发，下一步是去理解智能能量（intelligent energy）在自然与人造环境里形成的那些「焦点」。要避免的，是那些不考虑这些焦点之需求的行动。</div>
+    <div class="quote">
+      <p class="en">Thus, the distortions to be avoided are those which do not take into consideration the distortions of the focus of energy of love/light, or shall we say, the Logos of this particular sphere, or density.</p>
+      <p class="zh">因此，要避免的变貌，是那些不考虑爱/光之能量焦点的变貌——容我们说，即这个特定领域或密度的理则。</p>
+      <span class="src">—— Session 018 · (18.6)</span>
+    </div>
+    <div class="plain">Ra 具体点名了两类：不理解自然环境的需求，以及不理解其他自我的心/身/灵复合体的需求。这两句话在本集里并不是泛泛之谈——十五年后，它们会成为「不干涉星球自由意志」这条原则的同一条根。</div>
+  </div>
+  <div class="card">
+    <h3>同一个行为，对不同实体意义不同</h3>
+    <div class="q">那我怎么知道什么做法是对的？</div>
+    <div class="quote">
+      <p class="en">Thus, what would be an improper distortion with one entity is proper with another.</p>
+      <p class="zh">因此，对一个实体而言不恰当的变貌，对另一个实体可能是恰当的。</p>
+      <span class="src">—— Session 018 · (18.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">However, it is a delicate matter to be of service, and compassion, sensitivity, and an ability to empathize are helpful in avoiding the distortions of man-made intelligence and awareness.</p>
+      <p class="zh">然而，服务是一件微妙的事；慈悲、敏感，以及共情的能力，有助于避开人造智能与觉知的种种变貌。</p>
+      <span class="src">—— Session 018 · (18.6)</span>
+    </div>
+    <div class="plain">Ra 给的判据不是「我做的事好不好」，而是「这件事对这个实体是不是他真正需要的」：试着把其他自我当作自我来觉知，从他的智能与觉知出发去理解。Ra 也说明，做到这一点并不必然构成侵犯，但它「是一件微妙的事」。</div>
+    <div class="analogy"><b>同一杯水：</b>给刚跑完步的人递一杯水是帮忙，给正要上台的人灌一大杯水就是添乱。动作一样，接收的人不同，意义就不同。</div>
+    <div class="case"><b>「自愿参加」的团建：</b>通知里写着自愿，组织者却在群里点名统计谁没报名，没去的同事第二天被问了三次「为什么不来」。(18.6) 里被称作「侵犯」的，就是这种把自由意志的变貌打碎成碎裂的做法。</div>
+    <div class="case"><b>医生和保健品推销员的区别：</b>推销员拿着你的检测报告说「你的指标很危险，赶紧买这个疗程」；医生则先问你最近睡几个小时、工作压力多大、愿不愿意先调整作息试试。前者用的正是「人造智能与觉知的变貌」，后者则试图把其他自我当作自我来理解——这就是 (18.6) 说的「服务是一件微妙的事」。</div>
+    <div class="case"><b>路口想扶她过马路的三十秒：</b>你看到一位老太太在路口犹豫，伸手要扶，她轻轻摆手说「我自己可以」。你收回手，陪她等到绿灯。同一个行为，对一个人恰当、对另一个人不恰当——Ra 说这正是为什么不能套用统一规则。</div>
+  </div>
+  <div class="card">
+    <h3>两条指引，加一组无限精微的变貌</h3>
+    <div class="quote">
+      <p class="en">Thus, you have two simple directives: awareness of the intelligent energy expressed in nature; awareness of the intelligent energy expressed in self to be shared, when it seems appropriate, by the entity with the social complex.</p>
+      <p class="zh">因此，你们有两条简单的指引：觉知自然中表达的智能能量；觉知自我中表达的智能能量，以便在看似适当时，由该实体与社会复合体分享。</p>
+      <span class="src">—— Session 018 · (18.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The area, or arena, called the societal complex is an arena in which there are no particular needs for care, for it is the prerogative honor/duty of those in the particular planetary sphere to act according to its free will for the attempted aid of the social complex.</p>
+      <p class="zh">那个被称为社会复合体的领域或竞技场，是一个不需要特别谨慎对待的领域；因为对身处这个特定行星领域中的实体而言，按照自身自由意志去尝试援助社会复合体，是他们的特权/荣誉/义务。</p>
+      <span class="src">—— Session 018 · (18.6)</span>
+    </div>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">指引一</span><h4>觉知自然中的智能能量</h4><p>自然环境有它自己的需求；不理解这些需求，就是 Ra 点名要避免的变貌之一。这是从<b>自然</b>这一侧读出的智能能量。</p></div>
+      <div class="yuan-card"><span class="y-tag">指引二</span><h4>觉知自我中的智能能量</h4><p>自我这一侧也有智能能量在表达；关键动作是「在看似适当时」与社会复合体<b>分享</b>——注意条件是「看似适当」，不是「一律要说」。</p></div>
+      <div class="yuan-card"><span class="y-tag">一个特殊领域</span><h4>社会复合体：不需特别谨慎</h4><p>行星上的实体有按其自由意志行动、尝试援助整体的<b>特权/荣誉/义务</b>；换句话说，这个层面上的选择属于他们自己，外人无法代劳。</p></div>
+      <div class="yuan-card"><span class="y-tag">无限精微的一组</span><h4>自我与其他自我之间</h4><p>这一组变貌<b>不涉及</b>自由意志，而涉及和谐关系，以及「以其他自我最能受益的方式」服务他人——它无限精微且多样，需要用慈悲与敏感去辨。</p></div>
+    </div>
+    <div class="plain">Ra 在此把「服务」拆成三层：对自然环境要保持觉知；对自己的能量要适时分享；而对他人，真正要小心的是「怎样才是对他最好的方式」。社会复合体这个层面反而放手——它有它自己的自由意志。</div>
+  </div>
+  <div class="card">
+    <h3>术语卡：本集的概念骨架</h3>
+    <p>点击卡片翻看解释。这几个词决定了本集后面所有问题的说法方式。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">自由意志</div><div class="sub">Free Will</div><span class="tap">点击展开</span></div><div class="back">一的法则的「首要变貌」：每个实体选择自己道路的权利。本集把「侵犯」定义为把自由意志的变貌打碎成一种碎裂。<em>案例：替别人做决定，哪怕出于好意，也是在削减他的选择空间。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">爱/光</div><div class="sub">love/light</div><span class="tap">点击展开</span></div><div class="back">造物借以显化自身的能量—形态。本集说渴望的功课就是「从中提炼出它们内在的爱/光」，并把它有意识地应用出来。<em>比喻：同一股水流，既推得动水车，也浇得活庄稼。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">理则</div><div class="sub">Logos</div><span class="tap">点击展开</span></div><div class="back">一个特定领域或密度里「爱/光的能量焦点」，它规定了这一层里智能能量如何运作。本集说：不考虑这个焦点之需求的变貌，就是要避免的变貌。<em>比喻：一栋楼的设计规范——你可以自由装修，但不能拆承重墙。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">智能能量</div><div class="sub">intelligent energy</div><span class="tap">点击展开</span></div><div class="back">由智能无限聚焦而成的、可用以创造与运作的能量。本集要求觉知两处：自然中表达的，与自我中表达的（后者要适时分享）。<em>案例：同一片阳光，落在森林里是生态，落在屋顶上可以发电。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">其他自我</div><div class="sub">other-self</div><span class="tap">点击展开</span></div><div class="back">Ra 对「他人」的称谓：与你同源的另一份自我。本集给出的核心操作是「尝试把其他自我觉知为自我」，再从他的智能与觉知出发去理解他需要什么。<em>比喻：同一棵树上的另一根枝条。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">社会复合体</div><div class="sub">societal complex</div><span class="tap">点击展开</span></div><div class="back">一群心/身/灵复合体组成的集体（家庭、族群、公司、国家都算）。本集说这个领域「不需特别谨慎」，因为其中的实体有按其自由意志行动、尝试援助整体的特权/荣誉/义务。<em>案例：一个族群选择自己的制度，外人无权代选。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">侵犯</div><div class="sub">infringement</div><span class="tap">点击展开</span></div><div class="back">不是所有援助都算服务：当行为不顾对方的智能与觉知、把他的自由意志打碎时，它就叫侵犯。本集强调这是「微妙的事」，慈悲、敏感、共情是避开的办法。<em>案例：以「为你好」为名的替人决定。</em></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>归类练习：这属于哪一类议题？</h3>
+    <p>(18.6) 把「要小心的事」分成两类：一类涉及自由意志（是否构成侵犯），另一类不涉及自由意志，只涉及和谐关系与「对他最好的服务方式」。判断下面每件事属于哪一类。</p>
+    <div id="sorterArea"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>责任、向导与一个走偏的求道者</h2></div>
+  <p class="sec-lead">话题从「准则」转向「责任」：一个实体从什么时候开始为自己的行为负责？Ra 给了一个出乎意料地早的数字，并顺手交代了「向导」的身份。随后发问者把问题带到一个具体的人身上——一位写下「行汝之意志即为全部律法」的历史人物。</p>
+  <div class="card">
+    <h3>责任从自我意识那一刻起，向后追溯</h3>
+    <div class="q">实体在这个密度里从童年长大，越来越意识到自己的责任。是否存在一个年龄界限，低于它的实体不必负责？还是从出生起就要负责？</div>
+    <div class="quote">
+      <p class="en">An entity incarnating upon the earth plane becomes conscious of self at a varying point in its time/space progress through the continuum.</p>
+      <p class="zh">一个投生到地球层面的实体，在它穿越连续体的时间/空间进程中，会在不同时点变得具有自我意识。</p>
+      <span class="src">—— Session 018 · (18.7)</span>
+    </div>
+    <div class="quote">
+      <p class="en">In all cases responsibility then becomes retroactive from that point backwards in the continuum so that distortions are to be understood by the entity and dissolved as the entity learns.</p>
+      <p class="zh">在所有情况中，责任从那一刻起在连续体里向「更早」追溯生效，因此各种变貌有待该实体去理解，并随着它学习而消解。</p>
+      <span class="src">—— Session 018 · (18.7)</span>
+    </div>
+    <div class="plain">自我意识出现的时点因人而异，Ra 说大约有一个中位数——你们月份的十五个月左右。而责任的方向是往回的：从自我意识亮起的那一点，向更早的时间追溯生效。也就是说，你成年后才看懂的那些童年模式，也记在你的账上，并随你的学习被消解。</div>
+    <div class="analogy"><b>像一份会补上历史数据的体检报告：</b>医生一旦能解读你现在的指标，就会把更早的旧化验单一并算进你的健康账里。不是新增了病，而是终于有人为它负责了。</div>
+    <div class="case"><b>三十岁那年重看的旧化验单：</b>你翻出十年前的报告，忽然看懂了当年几个异常指标，也第一次为自己那时候的生活方式负责——虽然那些事发生在你「看得懂」之前。(18.7) 说的正是这种回溯：责任从自我意识出现的那一刻，向更早的时间追溯生效。</div>
+  </div>
+  <div class="card">
+    <h3>四岁就完全负责——以及谁在带这些新来的</h3>
+    <div class="q">那么一个四岁的孩子，就要对任何违反或与一的法则不和谐的行为完全负责了？</div>
+    <div class="quote">
+      <p class="en">It may be noted that it has been arranged by your social complex structures that the newer entities to incarnation are to be provided with guides of a physical mind/body/spirit complex, thus being able to learn quickly what is consonant with the Law of One.</p>
+      <p class="zh">可以注意到，你们的社会复合体结构已经安排好了：新近投生的实体们会被提供物质性心/身/灵复合体的向导，从而能够快速学会什么与一的法则和谐一致。</p>
+      <span class="src">—— Session 018 · (18.8)</span>
+    </div>
+    <div class="quote">
+      <p class="en">These guides are what you call parents, teachers, and friends.</p>
+      <p class="zh">这些向导就是你们所称的父母、老师和朋友。</p>
+      <span class="src">—— Session 018 · (18.9)</span>
+    </div>
+    <div class="plain">Ra 确认「四岁完全负责」是正确的，同时给出配套安排：新来的实体有向导。值得注意的是「向导」的范围——不是只指父母，还包括老师与朋友，也就是那些活出可模仿样子的身边人。</div>
+    <div class="case"><b>幼儿园老师蹲下来的那一下：</b>孩子抢玩具时，老师没有说「不许抢」，而是蹲下来示范：「我可以先玩五分钟吗？」——(18.9) 把向导指认为父母、老师与朋友：不是发号施令的人，而是可以被模仿的人。</div>
+    <div class="case"><b>公司给新人配的带教导师：</b>新工程师入职第一周只做一件事——看着老员工怎么开需求评审会、怎么写提交信息。(18.8) 说这正是社会复合体结构的安排：新来的实体被提供「物质性心/身/灵复合体的向导」，以便快速学会什么与一的法则和谐一致。</div>
+  </div>
+  <div class="card">
+    <h3>一个走偏的求道者：过度兴奋与疏离</h3>
+    <div class="q">写下「行汝之意志即为全部律法」的那位实体，显然在某种程度上理解了一的法则。他现在在哪里？</div>
+    <div class="quote">
+      <p class="en">This entity is within your inner planes. This entity is in an healing process.</p>
+      <p class="zh">这个实体在你们的内在层面之中。这个实体正在经历一个疗愈过程。</p>
+      <span class="src">—— Session 018 · (18.10)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This entity became, may we use the vibration sound complex, overstimulated with the true nature of things.</p>
+      <p class="zh">这个实体变得——容我们使用这个声音振动复合体——对事物的真实本质过度兴奋。</p>
+      <span class="src">—— Session 018 · (18.11)</span>
+    </div>
+    <div class="quote">
+      <p class="en">However, its journey was difficult due to the inability to use, synthesize, and harmonize the understandings of the desires of self so that it might have shared, in full compassion, with other-selves.</p>
+      <p class="zh">然而，它的旅程是艰难的，因为它无法使用、综合并协调对自我之渴望的理解，因而无法以全然的慈悲与其他自我分享。</p>
+      <span class="src">—— Session 018 · (18.11)</span>
+    </div>
+    <div class="plain">Ra 的诊断与第 3 章正好形成一个对照：这位实体理智上抓到了「一的法则」，却没能把渴望的功课走完。他过度兴奋于事物的真实本质，行为超出了意识控制，进而沉迷于能量中心的平衡过程（从红色光芒向上），反而与其他自我疏离。Ra 明确说他是正向的，只是灵性复合体变得很不健康，需要在内在层面被滋养，直到能不带痛苦变貌地重看那些经验。</div>
+    <div class="analogy"><b>像只吃补剂不去训练的人：</b>他读遍了所有训练理论，研究每一块肌肉的名称，最后连健身房都不去了。知识是对的，路却走窄了——因为训练本来要在与人的互动里发生。</div>
+    <div class="case"><b>那次「开悟」之后他退了所有群：</b>朋友在冥想营后有强烈体验，回来后开始每天练六小时，退出了所有群聊，家人的电话也不太接。他不是不真诚——(18.11) 说的正是这种状况：把全部力气投进平衡过程，反而与其他自我疏离。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>宽恕与联邦：账要两边一起销，服务有各种变貌</h2></div>
+  <p class="sec-lead">发问者回到上一次工作里 Ra 说过的一句结论——「宽恕是业力的消除者」——追问一个容易被漏掉的半边：要完全消除业力，宽恕是不是也得包括自己？随后，话题转向「许多个联邦」的分工。</p>
+  <div class="card">
+    <h3>宽恕的两半：其他自我，与自我</h3>
+    <div class="q">你昨天说宽恕是业力的消除者。我猜，为了完全消除业力，平衡的宽恕不仅需要宽恕其他自我，也需要宽恕自我。我说得对吗？</div>
+    <div class="quote">
+      <p class="en">Forgiveness of other-self is forgiveness of self.</p>
+      <p class="zh">宽恕其他自我，就是宽恕自我。</p>
+      <span class="src">—— Session 018 · (18.12)</span>
+    </div>
+    <div class="quote">
+      <p class="en">An understanding of this insists upon full forgiveness upon the conscious level of self and other-self, for they are one.</p>
+      <p class="zh">对这件事的理解，要求在自我与其他自我的意识层面都做到完全的宽恕，因为他们是一体的。</p>
+      <span class="src">—— Session 018 · (18.12)</span>
+    </div>
+    <div class="quote">
+      <p class="en">A full forgiveness is thus impossible without the inclusion of self.</p>
+      <p class="zh">因此，若不把自我包含进来，完全的宽恕是不可能的。</p>
+      <span class="src">—— Session 018 · (18.12)</span>
+    </div>
+    <div class="plain">Ra 先确认发问者说得对，然后只补了一句就收住：宽恕不是一件「对别人做」的事。既然其他自我与自我是一，那笔账就必须两边一起销——只宽恕对方、却继续审判自己，那本账仍然是开着的。</div>
+    <div class="analogy"><b>一笔双人签署的账：</b>你和合伙人的账目只有一个户头。你签了「已清」，却在心里给自己记下「当初怎么那么蠢」——户头其实没清，因为两边是同一个人。</div>
+    <div class="case"><b>和好之后的自我责备：</b>你和朋友当面把话讲开了，握手言和，可当晚躺在床上你还在反复想「当时我为什么说那句蠢话」——(18.12) 说得很直接：若不包含自我，完全的宽恕是不可能的。这笔记在自己名下的账，也得一起销掉。</div>
+  </div>
+  <div class="card">
+    <h3>联邦的分工：不可能不服务造物主</h3>
+    <div class="q">你提到有许多个联邦。它们都以基本相同的方式服务无限造物主，还是有些专门从事某些特定类型的服务？</div>
+    <div class="quote">
+      <p class="en">All serve the One Creator. There is nothing else to serve, for the Creator is all that there is. It is impossible not to serve the Creator. There are simply various distortions of this service.</p>
+      <p class="zh">所有一切都服务太一造物主。没有别的东西可以服务，因为造物主就是一切万有。不服务造物主是不可能的。只是这份服务有各种变貌。</p>
+      <span class="src">—— Session 018 · (18.13)</span>
+    </div>
+    <div class="quote">
+      <p class="en">each Confederation is a group of specialized individual social memory complexes, each doing that which it expresses to bring into manifestation.</p>
+      <p class="zh">每个联邦都是一组专门化的个体社会记忆复合体，各自做它所要表达并显化的事。</p>
+      <span class="src">—— Session 018 · (18.13)</span>
+    </div>
+    <div class="plain">Ra 的回答把「分工」这个问题降了一级：不是「服务谁」不同（那不可能不同），而是「服务的方式」不同。各联邦像不同的专门团队，但目标只有一个。</div>
+    <div class="table-wrap">
+      <table class="nine">
+        <tr><th>术语</th><th>英文</th><th>通俗理解</th></tr>
+        <tr><td>变貌</td><td>distortion</td><td>对统一性的任何偏离状态，本身不含贬义——本集说「服务的变貌」就是指服务方式各不相同。</td></tr>
+        <tr><td>业力</td><td>karma</td><td>未能平衡的行动在时间里留下的待办事项；本集说宽恕是它的消除者。</td></tr>
+        <tr><td>宽恕</td><td>forgiveness</td><td>不是放过别人，而是把「自我／其他自我」这本账一起销掉——因为两者是一。</td></tr>
+        <tr><td>社会记忆复合体</td><td>social memory complex</td><td>一群共享记忆与认同的个体所构成的集体存在；每个联邦都由这样的专门化群体组成。</td></tr>
+        <tr><td>星际联邦</td><td>Confederation</td><td>本集出现的多个联邦；它们都服务同一个太一造物主，只是服务的变貌不同（耶和华也属于其中一个）。</td></tr>
+      </table>
+    </div>
+    <div class="case"><b>救援队里的三个人：</b>一支志愿救援队里，有人负责搜索、有人负责翻译当地语言、有人负责筹钱买装备。没有人「什么都做」，也没人觉得自己服务得更少——(18.13) 说每个联邦都是一组专门化的个体社会记忆复合体，各做它所要表达并显化的事；而所有服务最终都指向同一个造物主。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s7">
+  <div class="sec-head"><span class="num">07</span><h2>耶和华的实验：三次通讯与精英的诱惑</h2></div>
+  <p class="sec-lead">本集最后一大段是历史叙事：耶和华如何与地球人通讯、做了怎样的基因改动、为什么这场实验从期望的变貌看是明确的失败，以及猎户座团体如何把「我们不一样」变成圣战。这一段也包含了本集最值得注意的几次拒答。</p>
+  <div class="card">
+    <h3>三次通讯，三种手段</h3>
+    <div class="quote">
+      <p class="en">The first communication was what you would call genetic. The second communication was the walking among your peoples to produce further genetic changes in consciousness. The third was a series of dialogues with chosen channels.</p>
+      <p class="zh">第一次通讯是你们所称的基因方式。第二次通讯是在你们人群中行走，以在意识中产生进一步的基因改变。第三次是与选定的管道进行的一系列对话。</p>
+      <span class="src">—— Session 018 · (18.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Some of these genetic changes were in a form similar to what you call the cloning process.</p>
+      <p class="zh">其中一些基因改变的形式，类似于你们所称的克隆过程。</p>
+      <span class="src">—— Session 018 · (18.15)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The second was a contact of the nature you know as sexual, changing the mind/body/spirit complex through the natural means of the patterns of reproduction devised by the intelligent energy of your physical complex.</p>
+      <p class="zh">第二种是你们所知的性接触，通过你们物质复合体的智能能量所设计的生殖模式这种自然手段，来改变心/身/灵复合体。</p>
+      <span class="src">—— Session 018 · (18.15)</span>
+    </div>
+    <div class="timeline">
+      <div class="tl-item"><div class="t">第一次通讯 · 基因方式</div><div class="d">以类似克隆过程的形式进行，因此有实体「以耶和华实体的形象」投生到地球上。</div></div>
+      <div class="tl-item"><div class="t">第二次通讯 · 行走在人群中</div><div class="d">以性接触的方式，借由物质复合体本有的生殖模式，改变心/身/灵复合体——不是外加技术，而是走自然那条路。</div></div>
+      <div class="tl-item"><div class="t">第三次通讯 · 与选定的管道对话</div><div class="d">一系列对话，发生在特定的、被选中的管道身上。</div></div>
+      <div class="tl-item"><div class="t">约七万五千年前 · 与火星的实体合作</div><div class="d">耶和华团体以克隆过程与「你们称为火星的行星」上的实体合作；Ra 说差异存在于你们时间/空间连续体的未来，因此不能打破自由意志的混淆法则。</div></div>
+      <div class="tl-item"><div class="t">约三千六百年前 · Anak 被植入新编码</div><div class="d">猎户座团体在这个文化复合体期间的尝试：一系列相遇中，被称为 Anak 的实体们通过物质复合体的方式被植入新的基因编码，使生物体变得更大更强。</div></div>
+    </div>
+    <div class="quote">
+      <p class="en">The Yahweh group worked with those of the planet you call Mars seven five, seventy-five thousand [75,000] years ago in what you would call the cloning process.</p>
+      <p class="zh">耶和华团体在七万五千年前，以你们所称的克隆过程，与你们称为火星的行星上的那些实体们合作。</p>
+      <span class="src">—— Session 018 · (18.20)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This was a series of encounters in which the ones called Anak were impregnated with the new genetic coding by your physical complex means so that the organisms would be larger and stronger.</p>
+      <p class="zh">这是一系列相遇，其中那些被称为 Anak 的实体们，通过你们物质复合体的方式被植入新的基因编码，以使生物体变得更大、更强。</p>
+      <span class="src">—— Session 018 · (18.20)</span>
+    </div>
+    <div class="case"><b>读古代神话时的另一种读法：</b>你常会在史书里看到「神与人结合，生出身形高大的英雄」这类叙述。(18.15) 与 (18.20) 给出的正是这类记载的一种读法：以克隆方式让实体「以耶和华实体的形象」投生，或以性接触改变心/身/灵复合体，以及 Anak 被植入新编码而变得更大更强。</div>
+  </div>
+  <div class="card">
+    <h3>Ra 的两次拒答与一条通则</h3>
+    <p>追问到「他们具体做了什么」时，Ra 停住了。这一处停顿本身就是教导——它与本章后面「不能打破混淆法则」是同一件事。</p>
+    <div class="quote">
+      <p class="en">We have answered this question.</p>
+      <p class="zh">我们已经回答了这个问题。</p>
+      <span class="src">—— Session 018 · (18.16)</span>
+    </div>
+    <div class="quote">
+      <p class="en">intervention by genetic means is the same no matter what the source of this change.</p>
+      <p class="zh">通过基因手段进行的干预，无论这种改变的来源是什么，都是相同的。</p>
+      <span class="src">—— Session 018 · (18.17)</span>
+    </div>
+    <div class="plain">发问者连追三问（具体做了什么、干预前后的「性编程」有何不同、目的是什么），Ra 只答了第三问，并且把前一问压成一条通则：来源不论（耶和华或猎户座），基因干预这件事本身是同一回事。这种拒答并非不耐烦，而是 Ra 一贯的边界——不给会造成混淆、又超出请求范围的细节。</div>
+    <div class="analogy"><b>工程师不肯凭想象画图：</b>你追问「下个月的服务器配置到底是多少」，他只回「等参数定了再给你」。不是藏私，而是现在给的任何数字都会被当成事实用。</div>
+  </div>
+  <div class="card">
+    <h3>改动的目的：让灵性更快发展</h3>
+    <div class="q">这些基因改动的目的到底是什么？它们又是怎么导向更灵性的发展的？</div>
+    <div class="quote">
+      <p class="en">that to express in the mind/body complex those characteristics which would lead to further and more speedy development of the spiritual complex.</p>
+      <p class="zh">目的只有一个：在心/身复合体中表达出那些将会导致灵性复合体进一步且更快速发展的特征。</p>
+      <span class="src">—— Session 018 · (18.18)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The characteristics which were encouraged included sensitivity of all the physical senses to sharpen the experiences and the strengthening of the mind complex in order to promote the ability to analyze these experiences.</p>
+      <p class="zh">被鼓励的特征包括：所有物质感官的敏感性，用来锐化经验；以及心智复合体的强化，用来提升分析这些经验的能力。</p>
+      <span class="src">—— Session 018 · (18.19)</span>
+    </div>
+    <div class="plain">这套改动正好合上第 3 章那条链：感官更敏感负责「体验得更清楚」，心智更强负责「分析得更透彻」。Ra 说的目的不是让人更聪明，而是让「体验—分析」这条通道更顺畅，从而加快灵性的发展。这也解释了为什么同一批改动会被误用——能力本身不带方向。</div>
+    <div class="analogy"><b>同时升级镜头与处理器：</b>感光元件更灵敏，拍到的细节更多；处理器更强，才处理得动这些细节。只升级其中一半，照片要么糊、要么卡住。</div>
+  </div>
+  <div class="card">
+    <h3>实验为什么失败：精英的诱惑</h3>
+    <div class="quote">
+      <p class="en">The ones of Yahweh were attempting to create an understanding of the Law of One by creating mind/body complexes capable of grasping the Law of One.</p>
+      <p class="zh">耶和华的实体们试图创造能够领会一的法则的心/身复合体，以此建立对一的法则的理解。</p>
+      <span class="src">—— Session 018 · (18.21)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The experiment was a decided failure from the view of the desired distortions due to the fact that rather than assimilating the Law of One, it was a great temptation to consider the so-called social complex, or sub-complex, as elite or different, and better, than other-selves, this one of the techniques of service to self.</p>
+      <p class="zh">从所期望的变貌来看，这场实验是一个明确的失败：因为与其说吸收了一的法则，不如说出现了一个巨大的诱惑——把所谓的社会复合体或子复合体视为精英、与众不同、优于其他自我；而这正是服务自我的技巧之一。</p>
+      <span class="src">—— Session 018 · (18.21)</span>
+    </div>
+    <div class="plain">失败不在技术，而在结果的方向：能力被提升了，但被提升的一群人开始觉得自己「不一样、更好」。Ra 把这个诱惑直接归为服务自我的技巧之一。</div>
+    <div class="case"><b>重点班的副作用：</b>一所中学把成绩最好的学生编成一个班，配最好的老师，本意是让他们学得更好。两年后，这个班的学生开始说「普通班的人根本不会思考」——这正是 (18.21) 描述的失败：产出不是领会一的法则，而是把自己所属的群体看作精英、与众不同、优于其他自我。</div>
+  </div>
+  <div class="card">
+    <h3>谁该负责：耶和华做了，猎户座利用了</h3>
+    <div class="q">那这是猎户座团体为了造出一个精英阶层而做的吗？</div>
+    <div class="quote">
+      <p class="en">The entities of Yahweh were responsible for this procedure in isolated cases as experiments in combating the Orion group.</p>
+      <p class="zh">耶和华的实体们对这一程序负责，它是在孤立案例中实行的、用以对抗猎户座团体的实验。</p>
+      <span class="src">—— Session 018 · (18.22)</span>
+    </div>
+    <div class="quote">
+      <p class="en">However, the Orion group were able to use this distortion of mind/body complex to inculcate the thoughts of the elite rather than concentrations upon the learning/teaching of oneness.</p>
+      <p class="zh">然而，猎户座团体能够利用这种心/身复合体的变貌，去灌输精英的思想，而不是让人专注于合一的学习/教导。</p>
+      <span class="src">—— Session 018 · (18.22)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Yahweh was of the Confederation but was mistaken in its attempts to aid.</p>
+      <p class="zh">耶和华是星际联邦的成员，但在它的援助尝试中犯了错误。</p>
+      <span class="src">—— Session 018 · (18.23)</span>
+    </div>
+    <div class="plain">Ra 纠正了发问者的因果：这不是猎户座的阴谋，而是耶和华（星际联邦成员）援助方式的错误。它做了实验，猎户座团体则捡走了实验的副产品——「我们更优越」这个念头。这一段是全书里「善意也会走偏」最清楚的例子之一。</div>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">耶和华</span><h4>星际联邦成员，援助有误</h4><p>它想造出能领会一的法则的心/身复合体，也真的做了；Ra 的评语是四个字：<b>犯了错误</b>。善意不等于正确的方式。</p></div>
+      <div class="yuan-card"><span class="y-tag">猎户座团体</span><h4>利用现成的变貌</h4><p>它没有创造这个变貌，只是<b>利用</b>它，把「精英思想」灌进去，取代了对合一的学习与教导。</p></div>
+      <div class="yuan-card"><span class="y-tag">拥抱合一的实体</span><h4>操控非常有用</h4><p>对于那些振动总和特征拥抱合一性的实体来说，耶和华的操控确实带来了帮助——结果因人而异。</p></div>
+      <div class="yuan-card"><span class="y-tag">选择另一条路的实体</span><h4>门被打开了</h4><p>自由意志选择了较不正向导向的配置；猎户座团体因此<b>第一次</b>得以对行星复合体的意识进行严重渗透。</p></div>
+    </div>
+    <div class="quote">
+      <p class="en">Where the entities were of a vibrational sum characteristic which embraced oneness, the manipulations of Yahweh were very useful.</p>
+      <p class="zh">在那些振动总和特征拥抱合一性的实体身上，耶和华的操控非常有用。</p>
+      <span class="src">—— Session 018 · (18.24)</span>
+    </div>
+    <div class="quote">
+      <p class="en">those of the Orion group were able, for the first time, to make serious inroads upon the consciousness of the planetary complex.</p>
+      <p class="zh">猎户座团体的那些实体首次得以对行星复合体的意识进行严重的渗透。</p>
+      <span class="src">—— Session 018 · (18.24)</span>
+    </div>
+  </div>
+  <div class="card">
+    <h3>最严重的那次渗透：圣战</h3>
+    <div class="q">究竟是什么让猎户座团体得以进行最严重的那一次渗透？</div>
+    <div class="quote">
+      <p class="en">Specifically, those who are strong, intelligent, etc., have a temptation to feel different from those who are less intelligent and less strong. This is a distorted perception of oneness with other-selves. It allowed the Orion group to form the concept of the holy war, as you may call it.</p>
+      <p class="zh">具体来说，那些强壮、聪明等等的人，会有一种诱惑：觉得自己与那些不那么聪明、不那么强壮的人不同。这是一种关于「与其他自我合一」的扭曲感知。它让猎户座团体得以形成你们所称的圣战概念。</p>
+      <span class="src">—— Session 018 · (18.25)</span>
+    </div>
+    <div class="plain">Ra 把整条因果链收在一个念头上：「我与他不同」。这不是道德判断，而是感知的扭曲——从它出发，才有了圣战这种严重扭曲的感知，以及许多具毁灭性的战争。Ra 随即宣布这是本集最后一个完整的问题。</div>
+    <div class="case"><b>从「我们更强」到互相拆台：</b>公司两个小组原本共享数据，一次「谁更强」的评比之后，A 组开始隐藏进度，B 组开始拖延交接，最后互相破坏对方的项目。这正是 (18.25) 的路径：觉得自己与他人不同，是「与其他自我合一的扭曲感知」。</div>
+    <div class="case"><b>健身房里的「优等生」叙事：</b>一位教练先用基因天赋的说法让学员相信自己天生更强，再让他们相信外面的人更弱。同一套「更大更强」的说辞，可以变成陪伴，也可以变成灌输——(18.22) 划出的差别正在于此：耶和华做了这件事，猎户座团体利用了这件事。</div>
+  </div>
+  <details class="dict"><summary>本节问答清单（可跳过）<span class="hint">(18.14)–(18.25) 逐块一句话</span></summary>
+  <div class="body">
+    <p><b>(18.14)：</b>耶和华的三次通讯——基因方式、在人群中行走、与选定管道的一系列对话。</p>
+    <p><b>(18.15)：</b>基因改变的两种形式——类似克隆过程；以及性接触，经由本有的生殖模式。</p>
+    <p><b>(18.16)：</b>发问者追问「具体做了什么」，Ra 只答「我们已经回答了这个问题」。</p>
+    <p><b>(18.17)：</b>干预前后的性编程有何不同？Ra 只给通则：基因手段的干预，无论来源为何，都是相同的。</p>
+    <p><b>(18.18)：</b>目的只有一个：在心/身复合体中表达出能导致灵性复合体更快速发展的特征。</p>
+    <p><b>(18.19)：</b>这些特征是物质感官更敏感（锐化经验）与心智复合体更强化（提升分析能力）。</p>
+    <p><b>(18.20)：</b>七万五千年前与火星的实体合作（克隆）；约三千六百年前猎户座团体的尝试，Anak 被植入新编码而更大更强。</p>
+    <p><b>(18.21)：</b>为何要更大更强：造出能领会一的法则的心/身复合体；实验明确失败，因为出现了「精英优于其他自我」的诱惑。</p>
+    <p><b>(18.22)：</b>纠正因果：程序由耶和华负责（孤立案例的对抗实验），猎户座只是利用了它来灌输精英思想。</p>
+    <p><b>(18.23)：</b>耶和华属于星际联邦，但在援助尝试中犯了错误。</p>
+    <p><b>(18.24)：</b>结果混杂：拥抱合一的实体获益；选择另一条路的实体处，猎户座首次严重渗透行星意识。</p>
+    <p><b>(18.25)：</b>最严重的渗透源于「我与他不同」的扭曲感知，由此形成圣战概念与许多毁灭性战争。Ra 宣布这是最后一个完整的问题。</p>
+  </div></details>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s8">
+  <div class="sec-head"><span class="num">08</span><h2>收官：金句、第二次集会的叮嘱与伏笔</h2></div>
+  <p class="sec-lead">最后两段不再是教导，而是照料与安排。Ra 说明器皿为何虚弱、要怎样才算准备好再开一次集会，并特别提醒检查「象征符号」的校准——顺带承认器皿此刻与正确配置有轻微偏差。本集因此留下一个明确的伏笔：当晚的第二场集会。</p>
+  <div class="saying">
+    <p class="en">All serve the One Creator. There is nothing else to serve, for the Creator is all that there is. It is impossible not to serve the Creator. There are simply various distortions of this service.</p>
+    <p class="zh">万事万物都在服务太一造物主。没有别的东西可以服务，因为造物主就是一切万有。不服务造物主是不可能的，只是这份服务有各种变貌。</p>
+    <span class="src">—— Session 018 · (18.13)</span>
+  </div>
+  <div class="card">
+    <h3>器皿为什么虚弱，以及三个条件</h3>
+    <div class="q">我接下来三天必须工作，今晚有可能再开一次集会吗？</div>
+    <div class="quote">
+      <p class="en">This instrument is somewhat weak. This is a distortion caused by lack of vital energy.</p>
+      <p class="zh">这个器皿有些虚弱。这是一种由缺乏生命能所引起的变貌。</p>
+      <span class="src">—— Session 018 · (18.26)</span>
+    </div>
+    <div class="quote">
+      <p class="en">One: take care with the foodstuffs. Two: manipulate the physical complex to alleviate the distortion towards physical complex pain. Three: encourage a certain amount of what you would call your exercise.</p>
+      <p class="zh">第一，注意食物。第二，调理物质复合体，以减轻朝向身体复合体疼痛的变貌。第三，鼓励一定量的你们所称的运动。</p>
+      <span class="src">—— Session 018 · (18.27)</span>
+    </div>
+    <div class="plain">Ra 的条件不是「更用力」，而正是第 2 章的那件排序：先照料身体（吃、减痛、动一动），再谈通讯。它还追加了一条与第 2 章呼应的要求——「第二场集会时要特别注意校准，要非常仔细地检查这些象征符号」。</div>
+    <div class="case"><b>连轴一周还排第二场会：</b>你连续加班七天，还打算当晚再开一场三小时的会。主管说：「先把饭吃了、肩颈放松、下楼走十分钟，再决定开不开。」——这正是 (18.26)–(18.27) 的三项物质性平衡，做完才谈得上「再来一次集会」。</div>
+  </div>
+  <div class="card">
+    <h3>校准：此时不重要，下次才重要</h3>
+    <div class="quote">
+      <p class="en">This entity is slightly misplaced from the proper configuration. Not important at this time.</p>
+      <p class="zh">这个实体与正确的配置有轻微偏差。此时并不重要。</p>
+      <span class="src">—— Session 018 · (18.27)</span>
+    </div>
+    <div class="plain">Ra 的判准很精确：偏差此刻不重要，但安排第二次集会时就更重要了——因为器皿要从这些「象征符号」中获得尽可能多的帮助。换句话说，校准不是仪式洁癖，而是效率问题。</div>
+    <div class="case"><b>上台前的最后一分钟：</b>演讲者上台前会蹲下看一眼话筒的角度、调一下提词器的亮度——不是因为上一场出了错，而是因为这些「象征符号」会影响听众接收到的状态。Ra 在 (18.27) 要求的就是这件事：第二次集会前「非常仔细地检查这些象征符号」。</div>
+  </div>
+  <div class="card">
+    <h3>这一集留下的位置</h3>
+    <p>本集的结构是「先修漏、再立则、后讲史」：前三问处理上一次工作留下的误差与器皿状态，中段确立了「不消灭自我」与「自由意志之外的服务准则」，后段把责任、宽恕、联邦分工一路问到耶和华与猎户座的古史。Ra 用「这将是最后一个完整的问题」为本集的教导画了句号，之后只留下照料与安排——并预告当晚可能还有一次工作。</p>
+    <div class="plain">读下一次集会时可以带着两个问题：器皿的校准改好了吗？耶和华那段古史里「差异存在于你们的未来」这句话，Ra 会怎么展开？</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+<p>基于 The Ra Contact Session 018（split/Ra_Session_018.md）英文原文制作 · 交互式学习模块</p>
+<p>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文</p>
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra018-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+  {t:'(18.1) 误差从何而来',d:'<span class="qa-q">问：如果换我在你的位置，第一变貌说不定会让我掺进错误数据——你们会这样做吗？</span><b>答：</b>并非有意。混淆仍会发生；已发生的误差来自器皿摄入了化学物质，导致它的振动复合体偶尔变化。这个项目的意图不是制造错误信息，而是在你们语言的有限氛围里表达太一造物的无限奥秘之感。'},
+  {t:'(18.2)–(18.3) 那种物质',d:'<span class="qa-q">问：那是什么物质？会导致不良接触吗？</span><b>答：</b>你们称它为 LSD。配合接触使用并不会导致不良接触，但它的效力有一个非常急剧的衰减：集会恰好处在强度不足的节点上，于是先出现断断续续的接触，之后再依赖器皿自身（而自身生命能很低），就必须突然切断通讯，以保护并滋养器皿。'},
+  {t:'(18.4) 器皿的食物',d:'<span class="qa-q">问：有没有哪些食物对器皿有帮助或有害？</span><b>答：</b>谷物与蔬菜最宜，偶尔摄入肉类可减轻朝向低生命能的变貌；但若与「态度」这类辅助相比，饮食极其不重要。'},
+  {t:'(18.5) 要不要消灭自我',d:'<span class="qa-q">问：许多神秘传统说，个体自我必须被抹除、物质世界必须被忽略，才能开悟。个体自我的恰当角色是什么？</span><b>答：</b>体验一切所渴望的，然后分析、理解、接纳，从中提炼爱/光。没有什么应当被克服，不需要的会自然脱落。克服是不平衡的行动，会造出让人更执着于它的环境；唯一的例外建议是「以想象代替在物质层面执行」，以保全自由意志。'},
+  {t:'(18.6) 自由意志之外',d:'<span class="qa-q">问：侵犯自由意志是绝不该做的事——除此之外还有别的违背吗？</span><b>答：</b>从自由意志出发，要进而理解智能能量的焦点（自然与人造）；要避免的是不考虑爱/光之焦点需求的变貌。Ra 给出两条简单指引（觉知自然中的、觉知自我中的并适时分享），加上一组无限精微的变貌：不涉及自由意志，而涉及和谐关系与「以其他自我最能受益的方式」服务。'},
+  {t:'(18.7)–(18.9) 责任从几岁开始',d:'<span class="qa-q">问：是否存在一个年龄，低于它就不必负责？</span><b>答：</b>自我意识出现的时点因人而异，中位数约在你们的十五个月；责任从那一刻起向更早的时间追溯生效，随学习而消解。四岁即完全负责。社会复合体结构还为新人安排了向导——就是你们所称的父母、老师和朋友。'},
+  {t:'(18.10)–(18.11) 一个走偏的求道者',d:'<span class="qa-q">问：写下「行汝之意志即为全部律法」的那位实体，现在在哪里？</span><b>答：</b>在你们的内在层面，正在经历疗愈过程。他对事物的真实本质过度兴奋，行为超出意识控制，又在能量中心的平衡过程中过度投入，反而与其他自我疏离。他是正向的，但需要在内在层面被滋养。'},
+  {t:'(18.12)–(18.13) 宽恕与联邦',d:'<span class="qa-q">问：宽恕其他自我之外，是否也要宽恕自我？许多联邦的服务方式有分工吗？</span><b>答：</b>宽恕其他自我即是宽恕自我，不包含自我的完全宽恕是不可能的。至于联邦：一切都服务太一造物主，不可能不服务，只是服务的变貌不同；每个联邦都是一组专门化的个体社会记忆复合体。'},
+  {t:'(18.14)–(18.25) 耶和华的实验',d:'<span class="qa-q">问：耶和华如何与地球人通讯？做了哪些基因改变？为什么失败？</span><b>答：</b>三次通讯：基因方式、在人群中行走（性接触）、与选定管道的对话。改动意在让感官更敏感、心智更强，以加快灵性发展。七万五千年前与火星的实体合作（克隆）；约三千六百年前猎户座团体让 Anak 变得更大更强。实验明确失败，因为它造出了「精英优于其他自我」的诱惑；耶和华属星际联邦但援助有误，猎户座只是利用了它，最终形成圣战的概念。'},
+  {t:'(18.26)–(18.27) 收尾叮嘱',d:'<span class="qa-q">问：今晚能再开一次集会吗？我们具体该做什么？</span><b>答：</b>器皿因缺乏生命能而有些虚弱。三项物质性平衡：注意食物、减轻身体疼痛、一定量的运动。并特别仔细检查象征符号的校准——此刻的轻微偏差不重要，安排第二次集会时就重要了。'}
+]);
+
+initStepper('chainTrack','chainDetail','chainPrev','chainNext',[
+  {t:'① 体验',d:'<b>先体验一切所渴望的。</b>Ra 在 (18.5) 把「体验」放在第一位，包括你们所称的世俗活动——因为自我与它的世俗活动不是要被绕过的障碍。注意限定：「在这个密度里」。'},
+  {t:'② 分析',d:'<b>然后分析这些体验。</b>原文：「The orientation develops due to analysis of desire.」导向不是天生的，是因为对渴望的分析而逐渐发展出来。'},
+  {t:'③ 理解',d:'<b>理解它们。</b>Ra 说这「需要耐心和经验」，而且要以关怀、以对自己和对其他自我的慈悲来加以分析——理解不是冷眼旁观。'},
+  {t:'④ 接纳',d:'<b>接纳，而不是克服。</b>「没有什么应当被克服」；忽略或克服只是一条捷径。被压下去的东西没有消失，反而因为那份不平衡而被抓得更紧。'},
+  {t:'⑤ 提炼爱/光',d:'<b>从中提炼出它们内在的爱/光。</b>随着实体以提炼后的经验充实自身，这些渴望才会越来越朝向有意识地应用爱/光的方向转变。'},
+  {t:'⑥ 分享',d:'<b>然后与其他自我分享。</b>原文把整条链收在这句上：合适的描述是「从一种变貌转向另一种可能与一的法则更为和谐的变貌」——过程没有终点，只有转向。'}
+]);
+
+document.querySelectorAll('.fn-card').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('open')));
+
+initSorter('sorterArea',[
+  {a:'未经同意，替朋友回复了他前女友发来的消息',opts:['自由意志','和谐关系与服务'],ans:'自由意志',exp:'直接替对方做了他的选择，把自由意志的变貌打碎成碎裂——这正是 (18.6) 所说的侵犯。'},
+  {a:'朋友失恋，你陪他走一段路，但不劝他复合或分手',opts:['自由意志','和谐关系与服务'],ans:'和谐关系与服务',exp:'方向由他自己决定；你要处理的是「怎样才是对他最好的方式」，属于那一组无限精微的变貌。'},
+  {a:'公司把用户数据拿去出售，事前没有告知使用者',opts:['自由意志','和谐关系与服务'],ans:'自由意志',exp:'使用者在不知道的情况下被决定了他们的信息去向，选择的空间被取消了。'},
+  {a:'同事加班到很晚，你按他说的方式默默帮他把会议纪要整理好',opts:['自由意志','和谐关系与服务'],ans:'和谐关系与服务',exp:'他表达了需要、你照他的方式做；这里的问题是服务的质量与方式，而非是否侵犯自由。'},
+  {a:'父母替已经成年的子女决定读什么专业、去哪个城市',opts:['自由意志','和谐关系与服务'],ans:'自由意志',exp:'善意不能替代同意。(18.6) 说：对一个实体不恰当的变貌，对另一个实体可能是恰当的——但决定权仍在他自己手上。'},
+  {a:'邻居搬家时问你能不能帮忙搬重物，你说「好」，并按他要的位置放',opts:['自由意志','和谐关系与服务'],ans:'和谐关系与服务',exp:'他提出了请求、你尊重他的安排；Ra 说服务是微妙的事，慈悲、敏感与共情正是这里的工具。'}
+]);
+
+const condMsgs={
+  c1:'缺少「承认与接纳」：简单地忽略或克服任何渴望，容我们说，是一条捷径。Ra 说克服是不平衡的行动，会在时间/空间连续体中造成平衡的困难，并进一步造出使人执着于那看似已被克服之物的环境。',
+  c2:'缺少「分析」：导向不会发展。Ra 说导向因对渴望的分析而发展——渴望要越来越朝向有意识地应用爱/光，靠的正是这一步，而它需要耐心与经验。',
+  c3:'缺少「只在想象中满足」：对那些不与一的法则和谐的渴望，若直接在物质层面执行，就没有保全自由意志这个首要变貌。'
+};
+function renderCond(){
+  const box=document.getElementById('condResult');
+  const miss=Object.keys(condMsgs).filter(id=>!document.getElementById(id).checked);
+  if(!miss.length){
+    box.className='';
+    box.innerHTML='<b>这条链是完整的。</b>体验 → 分析 → 理解 → 接纳 → 提炼爱/光 → 与其他自我分享。Ra 说不需要的会自然脱落，而不是被你消灭。';
+  }else{
+    box.className='fail';
+    box.innerHTML='<b>有 '+miss.length+' 处缺口：</b><ul style="margin:8px 0 0 20px">'+miss.map(id=>'<li>'+condMsgs[id]+'</li>').join('')+'</ul>';
+  }
+}
+['c1','c2','c3'].forEach(id=>document.getElementById(id).addEventListener('change',renderCond));
+renderCond();
+
+renderPath();
+</script>
+</body>
+</html>

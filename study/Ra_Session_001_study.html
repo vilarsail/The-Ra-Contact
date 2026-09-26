@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 001 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 001 · 交互式学习模块</h1>
+  <p class="sub">这是 Ra 与小组的第一次接触：从「为什么等这么久才开口」讲到「你就是每一个事物」的一的法则，最后以滋养器皿的四步叮嘱收尾。</p>
+  <div class="tagline">6 个主题 · 6 个学习步骤 · 22 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 目的之问</a>
+<a href="#s3">③ 埃及往事</a>
+<a href="#s4">④ 一的法则</a>
+<a href="#s5">⑤ 教导即学习</a>
+<a href="#s6">⑥ 离场之前</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>Ra 为什么现在才来、本集六段对话怎么展开——先在第一章把骨架看清</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>听懂 Ra 的自我介绍</b><span>「我们属于一的法则」是什么意思，以及一次窄带接触需要哪些条件</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>复盘埃及传法的失败</b><span>一段历史叙事，讲清讯息如何被扭曲、Ra 又为何撤离</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>吃透「一的法则」这句话</b><span>无限即统一、扭曲是选的、你就是每一个事物——加上一次对预言的礼貌拒绝</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>想明白「教导即学习」</b><span>为什么自己与他人的区别不可见，服务一为何即是服务一切</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官：滋养器皿与金句</b><span>出神之后如何温和地回来，以及本集最核心的那句宣告</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：第一次接触为何姗姗来迟</h2></div>
+  <p class="sec-lead">1981 年 1 月 15 日，Ra 第一次通过这个小组开口——而且一开场就在几个管道之间来回转移。这一章先把整集问答的脉络走一遍：Ra 为什么现在才来、本集一共谈了哪几件事；例行与后勤的部分收进折叠区，可以跳过。</p>
+
+  <div class="card">
+    <h3>本集在全书中的位置：一条窄带，一次握手</h3>
+    <p>Ra 开宗明义：他们此前从未通过这个器皿说话，因为发送的是「窄带振动」，必须等器皿被精确调频；又说明是小组自己「需要传讯体验的多样性」，才把这种更进阶的取径交给了这条更窄的管道——研究的对象正是身体、心智与灵性的幻象模式，也就是你们所称的「寻求真理」。</p>
+    <div class="quote">
+      <p class="en">We have watched your group. We have been called to your group, for you have a need for the diversity of experiences in channeling…</p>
+      <p class="zh">我们观察你们的小组已久；我们被呼唤到你们这里，因为你们需要传讯体验的多样性……——不是随便找一群人，而是这个小组自己的需要，把 Ra 呼唤了过来。</p>
+      <span class="src">—— Session 001 · (1.0)</span>
+    </div>
+    <div class="quote">
+      <p class="en">All things, all of life, all of the creation is part of One Original Thought.</p>
+      <p class="zh">所有事物、所有生命、所有造物，都是太一原初思想的一部分。——Ra 说，星际联邦「只有一个重要声明」，就是这一句。</p>
+      <span class="src">—— Session 001 · (1.0)</span>
+    </div>
+    <div class="plain">一句话：本集是全书的开机画面——先立起「万有同属一个思想」的总纲，再完整示范这个接触如何开场、如何收尾。</div>
+    <div class="case"><b>专用频段的对讲机：</b>普通收音机拧到哪个台都能听到点声音，但一对必须对准同一频点的专用设备，只要有一方没调准就完全静默——Ra 说的窄带振动正是如此：器皿未被「精确调频」，他们宁可一直等，也不强启接触。</div>
+    <div class="case"><b>入职不再发群公告：</b>新同事报到，主管不让他自己翻知识库，而是配一位资深导师单独带教——小组「需要多样性的体验」，想要更深一层的内容，于是被交给这条更窄、更进阶的管道。</div>
+  </div>
+
+  <div class="card">
+    <h3>问答脉络推进器：本集六段对话怎么展开</h3>
+    <p>点节点或用按钮推进，先看清整集的骨架。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="flowTrack1"></div>
+      <div class="flow-detail" id="flowDetail1"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="flowPrev1">← 上一问</button>
+        <button class="tri-btn" id="flowNext1">下一问 →</button>
+      </div>
+    </div>
+  </div>
+
+  <details class="dict"><summary>本章例行与后勤问答（可跳过）<span class="hint">换管道 · 录音损耗 · 器皿疲惫</span></summary>
+  <div class="body">
+    <p><b>(1.0) 换管道的波折：</b>Ra 先尝试把接触转移到 Don——穿不透他的心理紧张与分心；再转向 Leonard——该器皿在抗拒接触；最终回到原本的器皿才接通。Ra 还描述了振动进入的位置：头顶后方、以微小角度进入的一个窄而强的区域。</p>
+    <p><b>(1.2)(1.6)(1.8) 录音损耗：</b>发问者有几次回应未被录上（记录标注「听不清」），Ra 多次以「还有其他询问吗」衔接——本集有几个话题因此悬置，其中就包括对一的法则的进一步展开。</p>
+    <p><b>(1.13) 器皿疲惫与离场：</b>器皿此时相当疲惫，但心仍保持开放；Ra 叮嘱在她回应名字之前绝不可触碰她，随后因她的身体能量渐低而离场。</p>
+  </div></details>
+
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>目的之问：我们属于一的法则，而不是爱或光的实体</h2></div>
+  <p class="sec-lead">第一个正题问题：星际联邦成员各有目的，Ra 的目的是什么？发问者默认 Ra 只是联邦的普通一员，Ra 的回答却先划出一条差异线，再交代为什么偏偏是他们在地球上待了那么久。</p>
+
+  <div class="card">
+    <h3>自我定位：不是又一个联邦成员</h3>
+    <div class="q">发问者把 Ra 当作星际联邦的普通成员来问「你们的目的是什么」——Ra 的第一反应是纠正这个默认印象。</div>
+    <div class="quote">
+      <p class="en">We are not those of the Love [density] or of the Light [density].[2] We are those who are of the Law of One.</p>
+      <p class="zh">我们不是「爱[密度]」或「光[密度]」的实体；我们是属于一的法则的实体。——先说明自己不在联邦的常见序列里，这个身份本身就是回答。</p>
+      <span class="src">—— Session 001 · (1.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">In our vibration the polarities are harmonized, the complexities are simplified, and the paradoxes have their solution. We are one. That is our nature and our purpose.</p>
+      <p class="zh">在我们的振动中，极性被调和，复杂性被简化，悖论得其解答。我们是一。那是我们的本质，也是我们的目的。</p>
+      <span class="src">—— Session 001 · (1.1)</span>
+    </div>
+    <div class="plain">一句话：Ra 的「目的」不是某件要去做成的事，而是他们所是的状态本身——把一切对立调回「一」的那个振动。</div>
+    <div class="analogy"><b>比喻：</b>合唱团里有人唱高声部、有人唱低声部，各自执着自己的旋律；而 Ra 像负责和声的那一轨——他们的工作与他们的音色是一回事，不存在「唱完这首歌之外还有一个任务」。</div>
+  </div>
+
+  <div class="card">
+    <h3>为什么留下，为什么不走</h3>
+    <div class="quote">
+      <p class="en">We are old upon your planet and have served with varying degrees of success in transmitting the Law of One, of Unity, of Singleness to your peoples. We have walked your earth. We have seen the faces of your peoples.</p>
+      <p class="zh">我们在你们的行星上很古老，曾以不同程度的成功传递一的法则——统一、单一的法则。我们走过你们的大地，见过你们民族的面孔。</p>
+      <span class="src">—— Session 001 · (1.1)</span>
+    </div>
+    <p>Ra 点明：联邦的许多实体没有这样走过，他们也发现那样做并不奏效。而 Ra 留下来的理由，是一种责任感。</p>
+    <div class="quote">
+      <p class="en">However, we then felt the great responsibility of staying in the capacity of removing the distortions and powers that had been given to the Law of One. We will continue in this until your, shall we say, cycle is appropriately ended.</p>
+      <p class="zh">然而，我们随后感到一种巨大的责任：以「移除那些被加在一的法则上的变貌与力量」的身份留下来。我们将继续这样做，直到你们的周期恰当地结束。</p>
+      <span class="src">—— Session 001 · (1.1)</span>
+    </div>
+    <div class="plain">一句话：讯息被扭曲之后，总得有人留下来做减法——Ra 的长期任务不是添加新内容，而是不断移除被嫁接到一的法则上的东西。</div>
+    <div class="case"><b>返聘的老医生：</b>一位退休老医生被医院返聘，不再出门诊，只做一件事——听年轻医生报病例，指出哪个判断是被一层层带教以讹传讹带偏的；Ra 留下来的身份正是「移除被加在一的法则上的变貌与力量」。</div>
+    <div class="case"><b>守着旧片的字幕组：</b>新番人人抢着翻，有个老牌字幕组却多年守着一部旧片反复修订字幕——原意被转译层不断磨损，得有人留下一版一版改回去。</div>
+    <div class="quote">
+      <p class="en">We are not a part of time, and thus are able to be with you in any of your times.</p>
+      <p class="zh">我们不是时间的一部分，因此能够在你们的任何时间里与你们同在。——这一句解释了为什么一个「古老」的群体可以此刻正对你说话。</p>
+      <span class="src">—— Session 001 · (1.1)</span>
+    </div>
+    <div class="case"><b>早已写好的信：</b>同一封信可以投进 1981 年的邮筒，也可以投进任何一个年份的邮筒，信本身不变——「不是时间的一部分」意味着 Ra 的临在不挑日期，只挑能否被接收。</div>
+  </div>
+
+  <div class="card">
+    <h3>条件模拟器：一次窄带接触怎么才算接上</h3>
+    <p>本集开场，接触在三个管道之间来回转移——正好把「接上需要什么」演示了一遍。拨动开关试试。</p>
+    <div class="cond-row"><div class="name">器皿已被精确调频<small>Ra 只发窄带振动：频点不准，信号根本进不了场——这正是他们等到此刻才开口的原因（1.0）</small></div><label class="switch"><input type="checkbox" id="condTuned" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">管道没有紧张与分心<small>Ra 自述难以穿透某种心理紧张和注意力分散——Don 的管道就卡在这里（1.0）</small></div><label class="switch"><input type="checkbox" id="condCalm" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">器皿不抗拒接触<small>Ra 说那个器皿正在抗拒接触，随即转向下一位——从不强求（1.0）</small></div><label class="switch"><input type="checkbox" id="condOpen" checked><span class="slider"></span></label></div>
+    <div id="condResult"></div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>埃及往事：一次传法如何走样，Ra 又为何撤离</h2></div>
+  <p class="sec-lead">发问者抓住「Ra」这个埃及名字追问。有意思的是 Ra 的反应：先只答「关联是一致性」，反问「你不理解什么」，直到对方继续要细节才展开——于是有了本集唯一一段历史叙事，也是全书里「教导为何失败」的第一个标本。</p>
+
+  <div class="card">
+    <h3>五个节点：从接触到撤离</h3>
+    <div class="timeline">
+      <div class="tl-item"><div class="t">接触</div><div class="d">Ra 作为一个群体——你们所称的社会记忆复合体（social memory complex）——接触了你们称为埃及人的种族；同密度的其他实体同期在南美接触，所谓「失落的城市」就是他们为一的法则所做的尝试。</div></div>
+      <div class="tl-item"><div class="t">颁布</div><div class="d">他们向一位听见、理解、且地位足以颁布一之法则的人讲述——传法的入口是干净的。</div></div>
+      <div class="tl-item"><div class="t">走样</div><div class="d">那个时代的祭司与民众迅速扭曲了讯息，剥去了统一性因其本质而蕴含的悲悯——既然它包含一切，它便不可能憎恶任何。</div></div>
+      <div class="tl-item"><div class="t">撤离</div><div class="d">当不再有合适的管道来阐述一的法则，Ra 从那个「我们允许自己被置入、如今已变得虚伪」的立场中退出。</div></div>
+      <div class="tl-item"><div class="t">接管</div><div class="d">其他神话——更多与极性以及你们振动复合体相关的事物——重新接管了那个社会复合体。</div></div>
+    </div>
+    <div class="q">发问者原本只是想「认个亲」：这个 Ra 是不是神话里的那个 Ra？Ra 的回答把话题从名字引向了一次完整的传法失败史。</div>
+    <div class="quote">
+      <p class="en">However, the priests and peoples of that era quickly distorted our message, robbing it of the, shall we say, compassion with which unity is informed by its very nature. Since it contains all, it cannot abhor any.</p>
+      <p class="zh">然而那个时代的祭司与民众迅速扭曲了我们的讯息，剥去了它——容我们说——统一性因其本质而自然蕴含的悲悯。既然它包含一切，它便不可能憎恶任何。</p>
+      <span class="src">—— Session 001 · (1.5)</span>
+    </div>
+    <div class="plain">一句话：一的法则走到人间，败点不在教义太高深，而在人们把它从「包含一切」裁剪成「憎恶某些人」的那一刻。</div>
+    <div class="case"><b>价值观的三层加码：</b>创始人写下一页「顾客至上」，中层加成「投诉两小时内必须响应」，一线主管执行成「接到投诉先扣绩效」——半年后全组开始憎恶投诉的客户；「包含一切」的理念被逐层裁剪出了憎恶，正是 Ra 说的「剥去悲悯」。</div>
+    <div class="case"><b>退休教师不再补课：</b>老教师教「先理解题意再动笔」，学生传成「先套模板」，家长传成「先刷题」；她想再讲原意，却发现没有人想听原意了，于是不再补课——「不再拥有能阐述原意的管道」，正是 Ra 撤离的同构一步。</div>
+    <div class="quote">
+      <p class="en">When we were no longer able to have appropriate channels through which to enunciate the Law of One, we removed ourselves from the now hypocritical position which we had allowed ourselves to be placed in.</p>
+      <p class="zh">当我们不再拥有合适的管道来阐述一的法则，我们便把自己从那个——由我们允许他人把自己放进去的——如今已然虚伪的位置上撤了出来。</p>
+      <span class="src">—— Session 001 · (1.5)</span>
+    </div>
+    <p>注意 Ra 的措辞：那个虚伪的位置是「我们允许自己被置于其中的」——他们不把账全算在扭曲者头上。撤离之后，更多与极性相关的理解接管了那个社会；Ra 不追赶，也不补救到底，这是本段最「冷酷」也最诚实的一笔。</p>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>一的法则：无限即统一，你就是每一个事物</h2></div>
+  <p class="sec-lead">本集有一段问题没能被录音机录上，Ra 却就着这个「缺席的问题」给出了全书第一次对一的法则的总纲阐述；紧接着发问者问到行星变化，被 Ra 轻轻挡回。一收一放，恰好量出 Ra 关心什么、不关心什么。</p>
+
+  <div class="card">
+    <h3>无限只能是「一」</h3>
+    <div class="q">问题已经丢失，只能从回答反推：发问者问的大概与无限、与创造者的本质有关。Ra 没有拒绝，直接给了论证。</div>
+    <div class="quote">
+      <p class="en">That which is infinite cannot be many, for many-ness is a finite concept. To have infinity you must identify or define that infinity as unity; otherwise, the term does not have any referent or meaning. In an Infinite Creator there is only unity.</p>
+      <p class="zh">无限者不可能是众多，因为众多性是一个有限的概念。要拥有无限，你必须把这个无限认定为、或定义为统一性；否则这个词就没有任何指称与意义。在无限造物主中，只有统一性。</p>
+      <span class="src">—— Session 001 · (1.7)</span>
+    </div>
+    <div class="plain">一句话：「无限」与「众多」不能同时成立——无限只能是「一」，所以万有的底色是统一，不是分裂。</div>
+    <div class="analogy"><b>比喻：</b>Ra 自己举的例子是一枚棱镜——一束阳光穿过它分出所有颜色；颜色再多，源头是同一束光。他随即自嘲这只是个「简单的例子」，但方向是对的。</div>
+    <div class="quote">
+      <p class="en">we can assure you that there is no end to your selves, your understanding, what you would call your journey of seeking, or your perceptions of the creation.</p>
+      <p class="zh">我们可以向你保证：你们的自我、你们的理解、你们所谓的寻求旅程、你们对造物的感知，都没有尽头。</p>
+      <span class="src">—— Session 001 · (1.7)</span>
+    </div>
+    <div class="case"><b>一千个信息房间：</b>深夜刷短视频，算法给你切出一千个互不相识的「信息房间」，你几乎忘了所有人连的是同一个互联网——「众多感」是界面，不是底层；这正是「众多性是有限概念」的日常版本。</div>
+    <div class="case"><b>同一副牌局：</b>一局桌游里每人抽到的身份牌各不相同，但所有人都在同一副牌、同一张桌面上玩——Ra 说你的自性与寻求没有尽头，因为你从未离开过那个无限，只是把牌桌当成了全世界。</div>
+  </div>
+
+  <div class="card">
+    <h3>没有对错：扭曲是选出来的</h3>
+    <div class="q">如果只有统一，那我们天天经历的「对与错」「好与坏」算什么？Ra 的回答把道德判断变成了视角问题。</div>
+    <div class="quote">
+      <p class="en">In truth there is no right or wrong. There is no polarity, for all will be, as you would say, reconciled at some point in your dance through the mind/body/spirit complex which you amuse yourself by distorting in various ways at this time.</p>
+      <p class="zh">在真理中没有对与错。没有极性，因为一切——如你们会说的——将在你们穿越心/身/灵复合体之舞的某个点上被调和，而你们此刻正以各种方式扭曲这个复合体来取乐。</p>
+      <span class="src">—— Session 001 · (1.7)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This distortion is not in any case necessary. It is chosen by each of you as an alternative to understanding the complete unity of thought which binds all things.</p>
+      <p class="zh">这种变貌在任何情况下都不是必要的。它是你们每个人选择的——用来替代对那束缚万物的思想之完全统一的理解。</p>
+      <span class="src">—— Session 001 · (1.7)</span>
+    </div>
+    <div class="plain">一句话：对错与极性是自选的滤镜，不是世界的构造；拿掉滤镜靠的是理解，不是更用力地站队。</div>
+    <div class="case"><b>被改乱的共享文档：</b>同事把共享文档改成自己的格式，你火冒三丈；半小时后你也在别人的表格里随手乱改——「对错」随着位置互换。Ra 说的是更根本的一层：舞步各自古怪，舞池只有一个。</div>
+    <div class="case"><b>家长群的半张地图：</b>家长群里为「该不该报班」吵成两派，两派引用的是同一份研究——极性让双方各自举着半张地图宣战。理解「一切将被调和」不是和稀泥，而是先看见对方手里拿的也是真地图。</div>
+  </div>
+
+  <div class="card">
+    <h3>核心宣告：你就是每一个事物</h3>
+    <div class="quote">
+      <p class="en">You are every thing, every being, every emotion, every event, every situation.</p>
+      <p class="zh">你们是每一个事物、每一个存有、每一个情绪、每一个事件、每一个情境。</p>
+      <span class="src">—— Session 001 · (1.7)</span>
+    </div>
+    <div class="plain">一句话：一的法则不是一条要求你遵守的规范，而是一句关于你身份的陈述——完整版本见收官章的金句卡。</div>
+    <div class="case"><b>跳出屏幕看服务器：</b>游戏里你操纵的角色被人围攻，你会心疼那个角色；但跳出屏幕看，攻击者与被攻击者都是同一台服务器上的进程——Ra 的宣告是把视角从「角色」拉到「服务器」：每一个事件、每一个情境，都发生在「你」之中。</div>
+    <p>说完这些，Ra 主动提出：可以更详细地阐述这一法则。但发问者的回应未被录上——这个展开在本集就此悬置，成为开场留下的第一根线头。</p>
+  </div>
+
+  <div class="card">
+    <h3>行星变化：一次礼貌的不接话</h3>
+    <div class="q">「能否谈谈即将到来的行星变化？」——这类问题在任何问答里都最受欢迎，也最能测试回答者是否在迎合。</div>
+    <p>Ra 开口前先补了一句：他特意等到器皿重新达到「单一性／专一性」的适当深度才说话——连拒答都讲究时机。然后：</p>
+    <div class="quote">
+      <p class="en">The changes are very, very trivial. We do not concern ourselves with the conditions which bring about harvest.</p>
+      <p class="zh">这些变化非常、非常琐碎。我们并不关心那些带来收割的状况。</p>
+      <span class="src">—— Session 001 · (1.9)</span>
+    </div>
+    <div class="plain">一句话：Ra 拒绝当预言机——收割何时来、以什么景象来，在他们看来琐碎而不值得关心；值得关心的是此刻的寻求。</div>
+    <div class="case"><b>「明年房价会涨吗」：</b>饭桌上亲戚追问明年房价涨跌，你发现无论怎么答，都在帮他拿未来当借口、逃避眼前该做的决定——Ra 对行星变化的处理正是这个结构：判词「非常琐碎」，然后不接话。</div>
+    <div class="case"><b>考前查考纲的人：</b>考试前夜，有人反复打听「考纲会不会变」，而真正决定成绩的，是他此前做过的那些题——「带来收割的条件」不是用来打听的，是用来达成的。</div>
+  </div>
+
+  <div class="card">
+    <h3>本集术语一览：八个词撑起整个骨架</h3>
+    <p>点击卡片翻面。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">窄带振动</div><div class="sub">narrow-band vibration</div><div class="tap">点击翻面</div></div><div class="back">Ra 发送讯号的方式：频段极窄，器皿必须被「精确调频」才能接收；比其他联邦成员为初级、中级工作开启的宽频管道更进阶。<em>像一对必须对准同一频点的专用对讲机——差一点都不响。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">波束</div><div class="sub">beam</div><div class="tap">点击翻面</div></div><div class="back">Ra 发出的信号本身。Ra 自述：接收这道波束是一项更进阶的技艺，它进入的位置在头顶后方一个窄而强的区域。<em>不是漫射的广播，而是一束要对准才能收到的定向光。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">星际联邦</div><div class="sub">Confederation of Planets</div><div class="tap">点击翻面</div></div><div class="back">全称「服务无限造物主的星际联邦」。Ra 属于它，但自陈与多数成员不同：他们曾行走地球、直接传法；联邦则只有「一个重要声明」。<em>一个庞大协作网络里，最有历史的那位老成员。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">社会记忆复合体</div><div class="sub">social memory complex</div><div class="tap">点击翻面</div></div><div class="back">Ra 的群体形态：许多存有共享记忆与觉知，以「我们」为单位行动与言说——所以每句话都以「我是 Ra」开头。<em>不是一群人开会共享文档，而是记忆本身连成了一体。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">太一原初思想</div><div class="sub">One Original Thought</div><div class="tap">点击翻面</div></div><div class="back">星际联邦唯一重要声明的核心：所有事物、所有生命、所有造物都是它的一部分。你不是物质宇宙的一部分——你是一个思想的一部分。<em>万有不是一堆东西，而是一个念头里展开的万花筒。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">心/身/灵复合体</div><div class="sub">mind/body/spirit complex</div><div class="tap">点击翻面</div></div><div class="back">你此刻的存在结构：心智、身体、灵性合成的统一体。Ra 说你们正「以各种方式扭曲它来取乐」——它在本集里既是舞步也是舞池。<em>一个人有三件乐器，演奏的却是同一首曲子。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">变貌</div><div class="sub">distortion</div><div class="tap">点击翻面</div></div><div class="back">对统一性的任何偏离。本集的关键判词：它「在任何情况下都不是必要的」——是你选择的，用来替代理解完全的统一。<em>不是世界出了错，而是你主动戴上的一副滤镜。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">收割</div><div class="sub">harvest</div><div class="tap">点击翻面</div></div><div class="back">一个周期尽头的关口，意识在此被收成。Ra 被问到「带来收割的状况」时只说：我们不关心——收割不是用来预测的，是用来达成的。<em>农民不天天猜霜降哪天来，只管把该长的长好。</em></div></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>教导即学习：服务一即是服务一切</h2></div>
+  <p class="sec-lead">讲完宏大的法则，发问者问了个很「会计学」的问题：我努力去启发别人，到底作用在别人身上，还是只作用在我自己身上？Ra 分两部分作答，并强调两部分同等重要——先拆掉问题里的前提，再回答「为什么仍然值得做」。</p>
+
+  <div class="card">
+    <h3>第一部分：先拆掉「你」和「他」的分界线</h3>
+    <div class="q">发问者的问题预设了两个独立账户：我的努力记在我的账上，别人的成长记在别人的账上。Ra 说：这种区分，我们看不见。</div>
+    <div class="quote">
+      <p class="en">Firstly, you must understand that the distinction between yourself and others is not visible to us. … Thus, to learn is the same as to teach unless you are not teaching what you are learning; in which case you have done you/they little or no good.</p>
+      <p class="zh">首先，你必须理解：你自己与他人之间的区别，在我们是不可见的。……因此，学习与教导是同一件事——除非你并没有教导你所学的东西；那样的话，你对你/他们几乎没有或全无益处。</p>
+      <span class="src">—— Session 001 · (1.10)</span>
+    </div>
+    <div class="plain">一句话：教别人的那一刻，被教的首先是你自己——这笔账从头到尾只有一个账户。</div>
+    <div class="case"><b>讲递归讲到自己通了：</b>为了给新同事讲明白「递归」，你被迫把自己的模糊理解从头推一遍，讲到一半自己先透了——「学习即教导」最便宜的验证现场。</div>
+    <div class="case"><b>纠正朋友才发现自己踮脚：</b>健身房里你给朋友纠正深蹲：「重心压脚跟」说到一半，忽然意识到自己上周一直踮着脚——Ra 说的反例也在这里：教的若不是你学的，你/他们都白费。</div>
+  </div>
+
+  <div class="card">
+    <h3>第二部分：Ra 为什么开口——群体-个体化意识</h3>
+    <div class="quote">
+      <p class="en">Group-individuated consciousness is that state of sharing understanding with the other distortions of mind/body/spirit complexes, which are within the evident reach of the mind/body/spirit complex individual or group.</p>
+      <p class="zh">群体-个体化意识，是与「该个体或群体明显可及范围内的其他心/身/灵复合体变貌」共享理解的状态。</p>
+      <span class="src">—— Session 001 · (1.10)</span>
+    </div>
+    <p>Ra 用这个词解释自己为何而来：他们向你们说话，并接受双方的变貌，以阐述造物的法则——尤其是一的法则。他们也坦白教导的处境：这种沟通方式不易被理解，「我们不为你们许多人所用」。</p>
+    <div class="quote">
+      <p class="en">However, our very being is hopefully a poignant example of both the necessity and the near-hopelessness of attempting to teach.</p>
+      <p class="zh">然而，我们的存有本身，希望是一个深刻的例证——说明尝试教导这件事，既必要，又近乎无望。</p>
+      <span class="src">—— Session 001 · (1.10)</span>
+    </div>
+    <div class="plain">一句话：连 Ra 都自认「近乎无望」，却仍然开口——教导的价值从来不以成功率计。</div>
+    <div class="case"><b>社区图书馆的退休志愿者：</b>每周只影响三五个孩子，有人劝她「这么少，图什么」——按 Ra 的算法，这几个人已是「竭尽最大努力」的全部理由，账不需要更多条目。</div>
+  </div>
+
+  <div class="card">
+    <h3>结论：唯一值得做的活动</h3>
+    <div class="quote">
+      <p class="en">The few whom you will illuminate by sharing your light are far more than enough reason for the greatest possible effort. To serve one is to serve all.</p>
+      <p class="zh">你们通过分享光所照亮的少数人，已远远足以成为竭尽最大努力的理由。服务一，即是服务一切。</p>
+      <span class="src">—— Session 001 · (1.10)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Therefore, we offer the question back to you to state that indeed it is the only activity worth doing: to learn/teach or teach/learn.</p>
+      <p class="zh">因此，我们把问题回赠给你们，并声明：这确实是唯一值得从事的活动——学习/教导，或教导/学习。</p>
+      <span class="src">—— Session 001 · (1.10)</span>
+    </div>
+    <div class="plain">一句话：不必用「改变了多少人」来论证努力的价值——照亮一个，账就平了；因为服务一即是服务一切。</div>
+    <div class="case"><b>一年只答疑的开源维护者：</b>项目答疑一年，star 数几乎不涨；但某个被点通的后来者写出了整个团队如今在用的工具链——「服务一即是服务一切」的账面，从来不止一个人。</div>
+    <div class="case"><b>默默修按钮的邻居：</b>Ra 还补了一句：除了你的存有本身，没有任何东西有助于展示太一原初思想——一位从不在业主群里辩论、只是顺手修好电梯按钮的邻居，可能比所有倡议书加起来更能「展示」。</div>
+  </div>
+
+  <div class="card">
+    <h3>归类练习：这句话在做什么？</h3>
+    <p>Ra 的回应有好几种「动作」：正面教导、纠正前提、拒答不关心、反问引导、说明限制。看看你能不能分清——它们全部出现在本集。</p>
+    <div id="sorterArea"></div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>离场之前：如何滋养一个出神中的器皿</h2></div>
+  <p class="sec-lead">最后一问很朴素：以后还能呼唤你们吗？Ra 给出承诺，并顺势教了一整套滋养出神器皿的流程——这既是本集的收尾，也是这个接触能长久进行下去的前提。</p>
+
+  <div class="card">
+    <h3>承诺与前提</h3>
+    <div class="q">「你们将来可以进行通讯吗？我们能呼唤你们吗？」——问的是未来，答的却是当下的照料。</div>
+    <div class="quote">
+      <p class="en">We have good contact with this instrument because of her recent experiences with trance. She is to be able to communicate our thoughts in your future.</p>
+      <p class="zh">我们与这个器皿有良好的接触，因为她近来的出神经验。她将能够在你们的未来传递我们的思想。</p>
+      <span class="src">—— Session 001 · (1.11)</span>
+    </div>
+    <div class="plain">一句话：接触质量不是玄学，它与器皿的训练状态直接挂钩——而训练状态需要被小心对待。</div>
+    <div class="case"><b>唱完高音不能马上喝冰水：</b>声乐老师会拦住刚唱完高音部的学生——声带此刻是打开的，一杯冰水下去就毁了；Ra 说「在打扰该管道时要小心片刻」，是同一种保养常识。</div>
+  </div>
+
+  <div class="card">
+    <h3>滋养四步：从出神里温和地出来</h3>
+    <div class="demo-area">
+      <div class="flow-track" id="flowTrack2"></div>
+      <div class="flow-detail" id="flowDetail2"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="flowPrev2">← 上一步</button>
+        <button class="tri-btn" id="flowNext2">下一步 →</button>
+      </div>
+    </div>
+    <div class="quote">
+      <p class="en">Under no circumstances should this instrument be touched until she has responded to her name.</p>
+      <p class="zh">在这个器皿回应她的名字之前，任何情况下都不应触碰她。</p>
+      <span class="src">—— Session 001 · (1.13)</span>
+    </div>
+    <div class="plain">一句话：出神不是拔插头——重新进入身体有一套温和的启动程序，尊重它，器皿才能长久可用。</div>
+    <div class="case"><b>分段上浮的潜水员：</b>从深处上浮必须按深度分段停留，直接冲出水面会得减压病；从深度出神里出来的器皿也一样——静默、唤名、手置、充能之水，每一步都是一次「减压停留」。</div>
+    <div class="case"><b>电量 1% 还硬刷的手机：</b>电量见底还连着充电器硬刷，电池健康度直线下降——Ra 明说不愿使这个器皿超出她身体能量的承受力，滋养流程就是那条「先退出后台、再接电源」的正确姿势。</div>
+    <p>流程里还藏着一个温柔的细节：Ra 从发问者的心智里搜寻到的名字振动是「Alrac」——Carla 的倒拼。Ra 说，来自他的这个振动包含的爱最多；其他人叫她 Carla。名字在这里不是标签，而是调用爱的方式。</p>
+  </div>
+
+  <div class="card">
+    <h3>本集留下的线头</h3>
+    <p>本集收在一句祝福里，同时留了两根线头：一是 Ra 在阐述一的法则后主动问「可以更详细阐述吗」，回应却未被录上；二是这套滋养流程与「未来可以呼唤我们」的承诺——它们都指向同一件事：这个接触，还要继续下去。</p>
+    <div class="quote">
+      <p class="en">I leave you in the glory and peace of unity. Go forth in peace, rejoicing in the power of the One Creator.</p>
+      <p class="zh">我在统一性的荣耀与平安中离开你们。在平安中前行吧，在太一造物主的力量中欢庆。</p>
+      <span class="src">—— Session 001 · (1.13)</span>
+    </div>
+    <div class="saying">
+      <p class="en">You are every thing, every being, every emotion, every event, every situation. You are unity. You are infinity. You are love/light, light/love. You are. This is the Law of One.</p>
+      <p class="zh">你们是每一个事物、每一个存有、每一个情绪、每一个事件、每一个情境。你们是统一。你们是无限。你们是爱/光、光/爱。你们是。这就是一的法则。</p>
+      <span class="src">—— SESSION 001 · (1.7)</span>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 001（<code>split/Ra_Session_001.md</code>）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra001-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+/* ===== 问答脉络推进器（第 1 章） ===== */
+initStepper('flowTrack1','flowDetail1','flowPrev1','flowNext1',[
+  {t:'开场',d:'<span class="qa-q">（无发问）Ra 自报家门：为什么现在才开口？</span><b>答：</b>我们发送的是窄带振动，必须等器皿被精确调频；我们观察你们已久，是应小组对更进阶传讯体验的需要而来。开场还留下一句总纲：万有都是太一原初思想的一部分。'},
+  {t:'你们的目的（1.1）',d:'<span class="qa-q">问：星际联邦成员各有目的，你们的目的是什么？</span><b>答：</b>我们不是爱[密度]或光[密度]的实体，我们属于一的法则——在我们的振动里极性被调和、复杂被简化、悖论得解。我们是一，那就是我们的本质与目的。'},
+  {t:'埃及的 Ra（1.3–1.5）',d:'<span class="qa-q">问：你们和埃及人叫的那个 Ra 有关系吗？</span><b>答：</b>关联是一致性。我们曾接触埃及人，讯息很快被祭司与民众扭曲；当我们不再有合适管道阐述一的法则，便从那个已变得虚伪的立场中撤离。'},
+  {t:'一的法则（1.7）',d:'<span class="qa-q">问：（问题未被录上，Ra 仍给出总纲）</span><b>答：</b>无限只能是统一，不可能是众多；真理中没有对错、没有极性；你们是每一个事物、每一个存有——这就是一的法则。说完 Ra 主动问：可以更详细阐述吗？'},
+  {t:'行星变化（1.9）',d:'<span class="qa-q">问：能否谈谈即将到来的行星变化？</span><b>答：</b>这些变化非常、非常琐碎。我们不关心带来收割的状况——一次客气而干脆的不接话。'},
+  {t:'教导他人（1.10）',d:'<span class="qa-q">问：努力提升他人觉知，究竟作用在别人身上，还是只作用在自己身上？</span><b>答：</b>自己与他人的区别对我们不可见；学习与教导是同一件事。照亮少数人已足以成为竭尽全力的理由——服务一即是服务一切。'},
+  {t:'收尾（1.11–1.13）',d:'<span class="qa-q">问：以后还能呼唤你们吗？</span><b>答：</b>可以。这个器皿因近来的出神经验而接触良好；随后 Ra 教了滋养她的四步：静默、唤名、颈部手置、注入爱之水，并叮嘱在她应名之前不可触碰。'}
+]);
+
+/* ===== 滋养四步推进器（第 6 章） ===== */
+initStepper('flowTrack2','flowDetail2','flowPrev2','flowNext2',[
+  {t:'第一步 · 静默',d:'<b>先有一段短暂的静默期。</b>不要急着说话或触碰——刚从深度出神里回来的器皿，需要一个缓冲带。'},
+  {t:'第二步 · 唤名',d:'<b>反复呼唤器皿的名字，直到获得回应。</b>名字在这里是「声音振动复合体」——一个用爱调准的振动。Ra 从发问者的心智里找到的是「Alrac」（Carla 的倒拼），并说来自他的这个振动包含的爱最多。'},
+  {t:'第三步 · 颈部手置',d:'<b>把手放在颈部区域片刻。</b>Ra 的说法是：让器皿重新充电那些尚未充满特定场域精华的「电池」——一个具体到部位的保养动作。'},
+  {t:'第四步 · 充能之水',d:'<b>赠予一杯注入在场众人之爱的水。</b>做法：把手放在杯子上方，观想爱的力量进入水中。这个器皿对爱的振动极为敏感，充能的水会带来舒适。'},
+  {t:'底线 · 不可触碰',d:'<b>在她回应名字之前，任何情况下都不应触碰她。</b>Ra 明说不愿使器皿超出她身体能量的承受力——能量渐低，于是离场，并留下那句在统一之荣耀与平安中的祝福。'}
+]);
+
+/* ===== 术语卡翻面 ===== */
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+/* ===== 条件模拟器：一次窄带接触的达成 ===== */
+function updateContact(){
+  const tuned=document.getElementById('condTuned').checked;
+  const calm=document.getElementById('condCalm').checked;
+  const open=document.getElementById('condOpen').checked;
+  const box=document.getElementById('condResult');
+  const misses=[];
+  if(!tuned)misses.push('器皿尚未被精确调频——Ra 发送的是窄带振动，频点对不上，信号根本进不了场（这正是他们等了很久才开口的原因）');
+  if(!calm)misses.push('管道带着紧张与分心——Ra 明说当时难以穿透某种心理紧张和注意力分散，Don 的管道正是卡在这里');
+  if(!open)misses.push('器皿在抗拒接触——Ra 便转向下一位，从不强求');
+  if(misses.length===0){
+    box.classList.remove('fail');
+    box.innerHTML='<b>接触达成。</b>三条齐备，正如最后回到原本器皿时那样。但请记住 Ra 同时交代的底线：由于他们自身的传输限制，无法提供任何调节——这三条没有一条是 Ra 能替小组完成的。';
+  }else{
+    box.classList.add('fail');
+    box.innerHTML='<b>接触未达成。</b><br>'+misses.map(m=>'· '+m).join('<br>')+'<br><span style="font-size:.86rem;opacity:.8">无论怎么拨，底线不变：Ra 无法提供任何调节（conditioning）——门槛只能由器皿与小组自己迈过。</span>';
+  }
+}
+['condTuned','condCalm','condOpen'].forEach(id=>document.getElementById(id).addEventListener('change',updateContact));
+updateContact();
+
+/* ===== 归类练习：这句话在做什么？ ===== */
+initSorter('sorterArea',[
+  {a:'「这些变化非常、非常琐碎。我们并不关心那些带来收割的状况。」',opts:['正面教导','纠正前提','拒答不关心','反问引导','说明限制'],ans:'拒答不关心',exp:'预测未来的问题不被接话——关心此刻的寻求才是正题。'},
+  {a:'「你自己与他人之间的区别，在我们是不可见的。」',opts:['正面教导','纠正前提','拒答不关心','反问引导','说明限制'],ans:'纠正前提',exp:'发问者预设了「自己／他人」两个账户，Ra 先拆掉分界线，再作答。'},
+  {a:'「这种关联是一致的。我们可以阐明吗？」随后又问：「你不理解什么？」',opts:['正面教导','纠正前提','拒答不关心','反问引导','说明限制'],ans:'反问引导',exp:'不急着灌信息，先确认对方缺的是哪一块——问比答先行。'},
+  {a:'「学习与教导是同一件事，除非你并未教导你所学之物。」',opts:['正面教导','纠正前提','拒答不关心','反问引导','说明限制'],ans:'正面教导',exp:'对发问之问的核心正面回答。'},
+  {a:'「由于我们自身的传输限制，我们无法提供任何调节。」',opts:['正面教导','纠正前提','拒答不关心','反问引导','说明限制'],ans:'说明限制',exp:'如实交代接触的物理边界——限制本身就是讯息的一部分。'}
+]);
+
+renderPath();
+</script>
+</body>
+</html>

@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 038 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 038 · 交互式学习模块</h1>
+  <p class="sub">这一集像一次密集的补课：从谁能接替器皿、核能究竟是怎么「被吸引」来的，到七道光芒的平衡长什么样、第三密度能否形成社会记忆复合体，最后落在负面第四密度星球的斗争图景上——中间夹着两处 Ra 明确的拒绝与纠正。</p>
+  <div class="tagline">6 个主题 · 6 个学习步骤 · 16 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 谁能接替器皿</a>
+<a href="#s3">③ 核能与灵感</a>
+<a href="#s4">④ 七道光芒的平衡</a>
+<a href="#s5">⑤ 社会记忆复合体与狗星实体</a>
+<a href="#s6">⑥ 收官：第四密度负面</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>先看这一集的七个问答节点各自在做什么，例行问答可跳过</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>谁能接替器皿</b><span>自由意志的边界，以及「成为管道」为什么没有捷径</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>核能与灵感</b><span>把因果顺序倒过来读：是渴望把资料吸引过来</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>七道光芒的平衡</b><span>Ra 为什么拒绝给出一张标准图，改用什么说法替代</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>社会记忆复合体与「狗」星实体</b><span>第三密度的罕见时间窗，以及一个近于树的样本</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官：第四密度负面的星球</b><span>斗争、权力结构、金句，以及本集留下的三个线头</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：这一集在问什么</h2></div>
+  <p class="sec-lead">前一次集会收在「灵性质量」那个题目上，Ra 当时表明那已是该次集会的最后一个完整问题。本集没有沿着那个题目走，而是转向一连串更具体的问题：谁有资格接替器皿、核能到底是怎么「来」的、七道光芒的平衡长什么样、第三密度能不能形成社会记忆复合体——最后落到负面第四密度的星球上。中间夹着两处 Ra 明确的拒绝或纠正，它们本身就是本集最值得读的地方。</p>
+  <div class="card">
+    <h3>问答脉络：一次集会里的七个节点</h3>
+    <p>本集是一份「拼盘」：议题之间没有一条单一主线，但每一段都收得很干净。点击节点看每一段在做什么。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="qaTrack"></div>
+      <div class="flow-detail" id="qaDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="qaPrev">← 上一步</button> <button class="tri-btn" id="qaNext">下一步 →</button></div>
+    </div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 个人评估 · 开场收尾</span></summary>
+  <div class="body">
+    <p><b>(38.0) 开场：</b>Ra 以「在太一无限造物主的爱与光中向你们致意，我们现在开始通讯」开场。</p>
+    <p><b>(38.1) 关于个人的评估：</b>Ra 明说在这个空间/时间连接点上，Don 与 Jim 目前都无法进行这项出神工作——Don 若经由练习，在你们时间的某一长度之后可能做到；Jim 则需要更多练习与更长的时间；两者练出的谐波都还要经过实验。</p>
+    <p><b>(38.13) 器皿状态：</b>Ra 指出器皿在此空间/时间生命力能量偏低，因此请发问者在结束前只再提一个完整问题——本集的长度是被器皿状态裁短的。</p>
+    <p><b>(38.15) 后勤询问：</b>发问者照例问还能为器皿做什么、如何改善接触，Ra 只答「一切都好」，未提出新的照料要求，随即以此收尾。</p>
+  </div></details>
+  <div class="case"><b>一场议题很杂的例会：</b>两小时的会里，先谈谁能顶岗，再回溯当年那个技术决策是怎么来的，接着看一份画像式的评估，最后问起对手公司的状况——本集的追问次序就是这样：六个看似无关的题目各占一段，读的时候不必硬找一条主线。</div>
+  <div class="case"><b>访谈里最动人的是「这个我不谈」：</b>你听一档访谈，嘉宾答得最完整的段落反而平淡；让人记住的是他停下来那句「这个我先不说」。本集有两处这样的时刻——(38.5) 拒绝给出通例、(38.11) 只回一句「有一部分不正确」——那不是回避，而是内容本身。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>谁能接替器皿：自由意志的边界，与练出来的「谐波」</h2></div>
+  <p class="sec-lead">发问者开门见山问了一件很具体的事：如果 Jim 或他自己在集会开始时替下 Carla、自己尝试出神工作，有没有希望或意义。Ra 的回答分两层：先说这条信息已经踩在自由意志的边界上，再给出关于「能力从哪来」的判断。</p>
+  <div class="card">
+    <h3>一场越界的回答</h3>
+    <div class="q">如果 Jim 或我在集会开始时替下器皿、自己尝试做出神工作，会有任何希望或意义吗？</div>
+    <div class="quote">
+      <p class="en">This information is on the borderline of infringement upon free will. We shall, however, assume your desire to constitute permission to speak slightly beyond limits set by Confederation guidelines, shall we say.</p>
+      <p class="zh">这条信息处在侵犯自由意志的边界线上。不过我们会把你们的渴望视为一种许可，允许我们稍微越过星际联邦指导方针所设的界限，容我们这么说。</p>
+      <span class="src">—— Session 038 · (38.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">At this space/time nexus neither the one known as Don nor the one known as Jim is available for this working.</p>
+      <p class="zh">在这个空间/时间连接点上，被称为 Don 的实体与被称为 Jim 的实体，都无法进行这项工作。</p>
+      <span class="src">—— Session 038 · (38.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Then we should have to experiment with the harmonics developed by this practice. This is true in both cases.</p>
+      <p class="zh">到那时候，我们还得去实验由这种练习所发展出来的谐波。两种情况都是如此。</p>
+      <span class="src">—— Session 038 · (38.1)</span>
+    </div>
+    <div class="plain">成为这类管道没有捷径：要靠长期的练习与时间，而且练出来的「谐波」得先被实验过才算数。至于「能不能说」——Ra 把发问者主动提出请求这件事本身，当成了越过边界的许可。</div>
+    <div class="analogy"><b>像换主唱：</b>把麦克风递过去不等于能唱，得先练到音准站得住；而且换了人之后，整支乐队的和声配比（谐波）要重新调过一遍，才算合得上。</div>
+  </div>
+  <div class="case"><b>接力赛的换棒区：</b>田径接力必须在指定区域内完成换棒，接棒的人要提前练到能配合速度——不是「有腿就能跑」。Ra 说的正是这件事：出神工作有它的机制，得先练够时间。</div>
+  <div class="case"><b>医院里的资质门槛：</b>实习生想独立做一台穿刺，主治医生摇头：「方向没错，但你得先在模型上练够次数；而且你和这套器械的配合，我们要重新试。」Ra 对 Don 与 Jim 的判断就是这个模子——热情换不来能力。</div>
+  <div class="case"><b>被征求意见时先问一句：</b>朋友来问你一件事的看法，你察觉自己的回答会影响他的选择，于是先问：「你是真的想听吗？」Ra 在 (38.1) 开头的动作完全一样：先把这条信息标为「自由意志的边界」，再确认你们的请求构成许可。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>核能与灵感：顺序要反过来</h2></div>
+  <p class="sec-lead">发问者想给核能的出现找一个理由——是不是为了补偿那些曾导致马尔德克毁灭的实体，给他们一次和平使用核能的机会？Ra 说这想法「本末倒置」，但并非全错：错的是因果方向，对的是那份渴望确实存在。</p>
+  <div class="card">
+    <h3>谁在吸引谁</h3>
+    <div class="q">大约四十年前核能被带入这个密度，是否与给那些曾导致马尔德克毁灭的实体第二次机会、让他们和平而非破坏性地使用核能有关？</div>
+    <div class="quote">
+      <p class="en">This is incorrect in that it places cart before horse, as your people say. The desire for this type of information attracted this data to your people.</p>
+      <p class="zh">这是不正确的，因为按你们的话说，它把马放到了车前面。是对这类信息的渴望，把这份资料吸引到了你们人群之中。</p>
+      <span class="src">—— Session 038 · (38.2)</span>
+    </div>
+    <div class="quote">
+      <p class="en">It was not given for a reason from outside influences; rather, it was desired by your peoples.</p>
+      <p class="zh">它并非出于外部影响的理由而被给予；相反，是你们的人群渴望了它。</p>
+      <span class="src">—— Session 038 · (38.2)</span>
+    </div>
+    <div class="plain">因果要倒过来读：不是有人先把核能「送」下来好给谁一个机会，而是人群先有了强烈的渴望，这份资料才被吸引过来；「第二次机会」是渴望的内容，不是馈赠的理由。</div>
+    <div class="analogy"><b>像推荐流：</b>不是平台决定给你看什么，而是你反复搜、反复点的那件事最后出现在首页上——你的渴望本身就是那道筛子。</div>
+  </div>
+  <div class="card">
+    <h3>灵感的机制：三样同时在场</h3>
+    <div class="q">那么满足这份渴望的机制是什么？是不是某个实体会把思想印在想要它的人身上？</div>
+    <div class="quote">
+      <p class="en">As we understand your query, the mechanism was what you may call inspiration.</p>
+      <p class="zh">按我们对你的询问的理解，机制就是你们可以称之为灵感的东西。</p>
+      <span class="src">—— Session 038 · (38.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The mechanism of inspiration involves an extraordinary faculty of desire, or will, to know or to receive in a certain area accompanied by the ability to open to and trust in what you may call intuition.</p>
+      <p class="zh">灵感的机制涉及一种非凡的渴望，或者说意志——在某个领域去知晓或接收；它同时伴随着一种能力：向你们称之为直觉的东西敞开，并信任它。</p>
+      <span class="src">—— Session 038 · (38.4)</span>
+    </div>
+    <div class="plain">灵感不是一个外来实体往你脑子里塞东西，而是三件事同时在场：强烈想知道的意志、愿意向直觉敞开、以及信任它。</div>
+    <p style="margin-top:14px;font-size:.93rem;color:var(--ink-soft)">拨动下面的开关，看看缺掉哪一样会怎样（Ra 把这三样并列写在同一句里）。</p>
+    <div class="cond-row"><div class="name">非凡的渴望 / 意志<small>在某个领域强烈地想知晓、想接收</small></div><label class="switch"><input type="checkbox" id="cA" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">向直觉敞开<small>给直觉留出入口，而不是只要「理性答案」</small></div><label class="switch"><input type="checkbox" id="cB" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">信任直觉<small>收到之后肯认它、肯照着去试</small></div><label class="switch"><input type="checkbox" id="cC" checked><span class="slider"></span></label></div>
+    <div id="condResult"></div>
+  </div>
+  <div class="case"><b>研究三个月后的「恰好」：</b>创业团队为电池散热问题连轴转了三个月，某个周五深夜，有人在播客里「恰好」听到一个解法。不是谁偷偷给了答案，而是这份近乎偏执的持续关注，把相关信息吸引到了他们眼前。</div>
+  <div class="case"><b>洗澡时想通了：</b>实验卡了两周，某天洗澡时突然明白对照组哪里错了。他此前一直在想，也肯听自己那些没头没尾的念头，并且真的照着去试了——渴望、敞开、信任，三样都在场。</div>
+  <div class="case"><b>二战期间的核研究：</b>Ra 说核能进入这个密度大约是四十年前的事（1981 年往回数，正是二战期间）。按本集的说法，那不是被塞到人类手里的礼物，而是一个群体拼命想知道的渴望，把这份资料吸引了过来。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>七道光芒的平衡：Ra 为什么不肯给你一张标准图</h2></div>
+  <p class="sec-lead">发问者想要的是一张标准答案：一个完美平衡、无变貌的实体，从红色到紫罗兰的每一道光芒各是什么样。Ra 先给了拒绝——没有通例可给。然后他破例，拿本集集会里的这个器皿当样本，描述了「一次」具体的光谱。</p>
+  <div class="card">
+    <h3>拒绝在前，个案在后</h3>
+    <div class="q">你能否告诉我，红到紫罗兰的每一道光芒，在一个完美平衡、无变貌的实体身上会怎样显现？</div>
+    <div class="quote">
+      <p class="en">We cannot tell you this for each balance is perfect and each unique. We do not mean to be obscure.</p>
+      <p class="zh">我们无法告诉你这一点，因为每一种平衡都是完美的，而每一种都是独特的。我们并非有意含糊其辞。</p>
+      <span class="src">—— Session 038 · (38.5)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Between these two the point of balance resides, the blue ray of the communicator sparkling in strength above the ordinary.</p>
+      <p class="zh">平衡点就坐落在这两者之间，而沟通者的蓝色光芒以超越寻常的强度闪耀着。</p>
+      <span class="src">—— Session 038 · (38.5)</span>
+    </div>
+    <p style="font-size:.95rem;margin:10px 0">这段个案描述大致是这样的：这个器皿的红色、橙色、黄色极其均匀；绿色极其明亮，而它由一道较暗淡的靛蓝色来平衡；平衡点落在绿与靛之间，那里的蓝光（沟通者的光芒）比寻常更强。往外看，紫罗兰光芒里是这实体独特的一张「光谱图」，同时纯净的紫罗兰环绕着整体；再外面是混合了红与紫的那一层，指示心智、身体与灵性的整合；最外层则是这实体真实密度的振动模式。Ra 特意补了一句：这幅描述既是「不平衡的」，又处在完美平衡之中。</p>
+    <div class="plain">Ra 拒绝的不是问题，而是「通例」这个前提：平衡没有可复制的模板，所以只能给个案。关键的读法在最后那句——同一次描述可以同时是「不平衡的」与「完美平衡的」，取决于你从哪个层次看。</div>
+    <div class="analogy"><b>像体检报告：</b>两个人都被说成「各项正常」，但具体数值的组合从来不会一样。医生能告诉你「这份报告是健康的」，却没办法给你一张「健康的标准数字表」。</div>
+  </div>
+  <div class="card">
+    <h3>两把尺子：谁有资格感觉阻塞，谁有资格评判</h3>
+    <div class="quote">
+      <p class="en">The ability to feel blockages is useful only to the healer. There is not properly a tiny fraction of judgment when viewing a balance in colors.</p>
+      <p class="zh">感受阻塞的能力只对疗愈者有用；而在观看颜色中的平衡时，严格来说不该有丝毫评判。</p>
+      <span class="src">—— Session 038 · (38.5)</span>
+    </div>
+    <div class="plain">看别人的光谱不是用来打分的——感受阻塞是疗愈者的工具，不是评判的资格。当你看到一片削弱与阻塞时，正确的读法是「他还没接过接力棒起跑」，而不是「他不行」，因为潜能一直都在：Ra 说所有完全平衡的光芒都在那里，等待被激活。</div>
+    <div class="analogy"><b>像接力棒与起跑：</b>看到别人还站在原地，你读到的是「还没开始」，不是「跑不动」。手上的棒一直在，只是还没被交出去。</div>
+  </div>
+  <div class="card">
+    <h3>白色的赋能平衡</h3>
+    <div class="quote">
+      <p class="en">In the fully potentiated entity, the rays mount one upon the other with equal vibratory brilliance and scintillating sheen until the surrounding color is white.</p>
+      <p class="zh">在完全赋能的实体中，光芒一层层彼此叠加，带着同等的振动光辉与闪烁的光泽，直到环绕的颜色成为白色。</p>
+      <span class="src">—— Session 038 · (38.5)</span>
+    </div>
+    <div class="plain">这是 Ra 给「完美平衡」的另一种说法：第三密度里的赋能平衡——不是哪一道特别亮，而是所有光芒以同等亮度叠上去，外围最终成了白色。</div>
+    <div class="analogy"><b>像七色叠成白：</b>白光不是因为少了颜色，而是因为每一色都在，且分量相当。</div>
+  </div>
+  <div class="case"><b>健身房的体测报告：</b>两个人身高体重一样、都被说成「标准身材」，但一个核心强、一个下肢强。教练看的是「这份报告本身平不平衡」，而不是「有没有达到某个标准值」——正对应 Ra 说每种平衡都是完美且独特的。</div>
+  <div class="case"><b>老中医搭脉：</b>有经验的大夫能从脉象里说「你这条经络堵着」，这不代表他有资格评判你这个人；而对我们自己来说，「有些地方堵着」的正确含义是「还没开始跑」，不是「我不行」。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>社会记忆复合体，与来自「狗」星的植被实体</h2></div>
+  <p class="sec-lead">发问者问：第三密度的行星，能不能形成一个在第三密度运作的社会记忆复合体？Ra 给了一个很窄的时间窗，并举出一个真实样本——来自天狼星行星体的实体。接下来的六个问题全都围绕这个样本：他们是不是从树进化来的？不会打仗是不是占了便宜？他们怎么移动？</p>
+  <div class="card">
+    <h3>时间窗：只可能在密度的后段</h3>
+    <div class="q">一个第三密度行星，有可能形成在第三密度运作的社会记忆复合体吗？能给我正面与负面各一个例子吗？</div>
+    <div class="quote">
+      <p class="en">It is possible only in the latter, or seventh, portion of such a density when entities are harmoniously readying for graduation.</p>
+      <p class="zh">这只有在这样一个密度的后段、也就是第七个部分才有可能，那时实体们正和谐地为毕业做准备。</p>
+      <span class="src">—— Session 038 · (38.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">As far as we are aware, there are no negatively oriented third-density social memory complexes.</p>
+      <p class="zh">就我们所知，不存在负面导向的第三密度社会记忆复合体。</p>
+      <span class="src">—— Session 038 · (38.7)</span>
+    </div>
+    <p style="font-size:.95rem;margin:10px 0">发问者要的是正面、负面各一个例子。Ra 的回答是：正面导向的第三密度社会记忆复合体「并非闻所未闻，但相当罕见」；负面的一个都没有。唯一提到的样本是一个来自天狼星行星体的实体——它曾两次接近这个行星体，属于第三密度后期，并且是某个第三密度社会记忆复合体的一部分；Ra 说这在此前的资料中已提过。最后一句是给整件事定性：社会记忆复合体严格来说是一种第四密度的现象。</p>
+    <div class="plain">第三密度要形成社会记忆复合体，只能等到这个密度的最后一段（第七部分）、且实体们正和谐地为毕业做准备；而已知样本清一色是正面导向——因为社会记忆复合体本质上是第四密度的事。</div>
+    <div class="analogy"><b>像一支乐队走到即兴：</b>从「各弹各的、靠指挥对齐」走到「即兴时谁都不用看就知道对方要往哪走」——后者不是练习量的问题，而是另一种存在层次的事。这就是 Ra 说它「严格来说是第四密度的现象」的意思。</div>
+  </div>
+  <div class="card">
+    <h3>「狗星」实体画像：五个节点</h3>
+    <p>Ra 从这颗名唤「狗」（Dog）的行星讲起，把这种实体的来历、优势、必须补的功课、以及移动方式依次交代了一遍。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="dogTrack"></div>
+      <div class="flow-detail" id="dogDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="dogPrev">← 上一步</button> <button class="tri-btn" id="dogNext">下一步 →</button></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>出身与必补的功课</h3>
+    <div class="q">那个社会记忆复合体，是从树木进化来的吗？植物不可能有好战行为，他们不带着好战的种族记忆，是不是就占了优势、能更快发展出和谐的社会？</div>
+    <div class="quote">
+      <p class="en">This is correct. However, to become balanced and begin to polarize properly it is then necessary to investigate movements of all kinds, especially bellicosity.</p>
+      <p class="zh">这是正确的。然而，为了变得平衡并开始正确地极化，他们就有必要去研究各种运动，尤其是好战性。</p>
+      <span class="src">—— Session 038 · (38.9)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Entities of this heritage would find it nearly impossible to fight.</p>
+      <p class="zh">具有这种传承的实体几乎不可能战斗。</p>
+      <span class="src">—— Session 038 · (38.10)</span>
+    </div>
+    <p style="font-size:.95rem;margin:10px 0">关于出身，Ra 说发问者的猜测「接近于正确」：那颗名为「狗」的行星上，从第二密度毕业进入第三密度的植被形态，接近于我们所知的树木。至于那些好战的样本从哪来——不是彼此打仗：发问者猜是从 Hickson 的记忆中提取的，Ra 答「正确」。</p>
+    <div class="plain">没有好战的种族记忆确实是优势，但平衡的功课躲不掉：他们的「活动」本身就发生在冥想的层面，所以必须反着补——去研究运动的一切形态，包括好战。Ra 说，研究就是他们的冥想；正如我们的实体需要持续的冥想时刻，来平衡自己的活动。</div>
+    <div class="analogy"><b>天生脾气极好的人：</b>他得专门去研究「愤怒」长什么样——不是因为需要发火，而是因为不认识愤怒，就谈不上平衡。</div>
+  </div>
+  <div class="card">
+    <h3>移动与载具：先「一部分不正确」，再「大致正确」</h3>
+    <div class="q">他们移动时腿不动，是不是用类似你们水晶铃铛的原理？或者说，他们的移动不是机械杠杆，而是心智与行星磁力相连的直接功能——对吗？</div>
+    <div class="quote">
+      <p class="en">This is partially incorrect.</p>
+      <p class="zh">这有一部分是不正确的。</p>
+      <span class="src">—— Session 038 · (38.11)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This is largely correct. It is an electromagnetic phenomenon which is controlled by thought impulses of a weak electrical nature.</p>
+      <p class="zh">这在很大程度上是正确的。它是一种电磁现象，由带有微弱电性质的思想脉冲所控制。</p>
+      <span class="src">—— Session 038 · (38.12)</span>
+    </div>
+    <div class="plain">Ra 先只回一句「有一部分不正确」；等发问者换一种说法重新问清楚，才给出「大致正确」。精度就在这里：移动是电磁现象，由微弱的思维脉冲控制，不是机械杠杆。载具也不神秘——Ra 确认他们的飞船是第三密度物质，我们这个密度的人在当下就能看见它。</div>
+  </div>
+  <div class="card">
+    <h3>归类练习：这是服务他人，还是服务自我？</h3>
+    <p>发问者在 (38.7) 要的是「第三密度服务他人型」与「服务自我型」两种例子，本集后面又描述了负面第四密度如何靠结盟运作。判断下面这些日常场景偏向哪一侧。</p>
+    <div id="sorterArea"></div>
+  </div>
+  <div class="case"><b>零冲突的团队为什么卡住：</b>某个团队从不吵架、人人都温和，半年后项目却卡住了——没人肯扮演指出问题的角色，「和谐」变成了钝。他们要补的，正是对冲突的研究。</div>
+  <div class="case"><b>长期待在家里的人：</b>几乎不出门、日常活动接近静止，于是必须刻意加入运动、社交，甚至刻意去看新闻里的冲突场面——只练一侧，人就会失衡。这正对应 Ra 说的：狗星实体的活动在冥想层面，所以必须以研究各种运动来平衡。</div>
+  <div class="case"><b>导师那句「有一小部分不对」：</b>你交上方案，导师说「有一小部分不对」；你追问「那到底哪里对？」他才说「大方向对，只有这一点错」。Ra 在 (38.11) 与 (38.12) 的两次回应正是这个节奏——你不把问题问准，它就只给你一句「有一部分不正确」。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>收官：第四密度负面的星球，与这一集留下的线头</h2></div>
+  <p class="sec-lead">器皿生命力偏低，Ra 只允许再问一个完整问题。发问者把它用在最重的一个题目上：第四密度负面——也就是服务自我——的星球，是什么光景？Ra 给出了整集最密集的一段描述：斗争、权力结构，以及一个反直觉的结论——思想透明反而妨碍极化。随后本集收尾。</p>
+  <div class="card">
+    <h3>入口与第一课：最激烈的斗争</h3>
+    <div class="q">你能否给我一些概念，一个第四密度负面、也就是服务自我的星球上，状况是什么样的？</div>
+    <div class="quote">
+      <p class="en">The graduation into fourth-density negative is achieved by those beings who have consciously contacted intelligent infinity through the use of red, orange, and yellow rays of energy.</p>
+      <p class="zh">毕业进入负面第四密度，是那些通过使用红色、橙色与黄色光芒能量、有意识地接触智能无限的存有所达成的。</p>
+      <span class="src">—— Session 038 · (38.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The early fourth density is one of the most intensive struggle.</p>
+      <p class="zh">早期第四密度是最激烈的斗争之一。</p>
+      <span class="src">—— Session 038 · (38.14)</span>
+    </div>
+    <p style="font-size:.95rem;margin:10px 0">Ra 接着交代了这种斗争的收束条件：当权威的秩序被建立起来、所有人都战斗到确信自己处在权力结构中的适当位置时，社会记忆复合体才开始形成。</p>
+    <div class="plain">负面第四密度的入口是红、橙、黄三道光——用这三层能量有意识地接触智能无限。进去之后第一件事不是安宁，而是最激烈的斗争：持续地结盟与重新结盟，直到权威秩序定下、人人都认了自己的座次，社会记忆复合体才由此开始。</div>
+    <div class="analogy"><b>像一场没有裁判的抢椅子：</b>音乐不停，你就得一直换位置、一直重新结盟；只有当所有人都坐定、并且都认了这个座次，游戏才算结束。</div>
+  </div>
+  <div class="card">
+    <h3>反直觉的一点：思想透明妨碍极化</h3>
+    <div class="quote">
+      <p class="en">Always the fourth-density effects of telepathy and the transparency of thought are attempted to be used for the sake of those at the apex of the power structure.</p>
+      <p class="zh">第四密度的心灵感应与思想透明这两种效应，总是被试图用来服务权力结构顶端的那批人。</p>
+      <span class="src">—— Session 038 · (38.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This, as you may see, is often quite damaging to the further polarization of fourth-density negative entities, for the further negative polarization can only come about through group effort.</p>
+      <p class="zh">正如你们可能看到的，这往往对第四密度负面实体的进一步极化相当有害——因为进一步的负面极化只能通过群体努力才能达成。</p>
+      <span class="src">—— Session 038 · (38.14)</span>
+    </div>
+    <p style="font-size:.95rem;margin:10px 0">那么他们靠什么继续极化？Ra 说：当第四密度实体们终于设法结合起来时，他们便通过「服务自我」来极化——举的例子是猎户座十字军所提供的这类服务。本集到此为止，没有再展开。</p>
+    <div class="plain">在负面第四密度里，人人心思透明，这份透明却被顶端的少数人拿去服务自己；而负面极化偏偏只能靠群体合力——顶端独占得越彻底，群体就越合不起来，进一步极化反而越难。</div>
+    <div class="analogy"><b>像一群互相能读心的合伙人：</b>谁都看得见谁在算计，于是谁都不敢把后背交出去；越是想独占，越凑不成能一起做成事的圈子。</div>
+  </div>
+  <div class="saying">
+    <p class="en">All the rays fully balanced are there in waiting to be activated.</p>
+    <p class="zh">所有完全平衡的光芒都在那里，等待被激活。</p>
+    <span class="src">—— Session 038 · (38.5)</span>
+  </div>
+  <div class="card">
+    <h3>术语盘点：带走这一集的八个词</h3>
+    <p>点击卡片翻看解释。每个词都给出一句白话定义，没读过前文的读者也能直接看懂。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">自由意志</div><div class="sub">free will</div><span class="tap">点击展开</span></div><div class="back">每个实体自行选择与知晓的权利，也是 Ra 说话时的一条硬边界。本集 Ra 说这条信息「处在侵犯自由意志的边界线上」，并把发问者主动提出请求当成越过边界的许可。<em>案例：心理咨询师不会替你做决定，只会把选项摆在你面前。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">灵感</div><div class="sub">inspiration</div><span class="tap">点击展开</span></div><div class="back">Ra 在本集给出的机制定义：非凡的渴望或意志（想在某个领域知晓或接收），加上向直觉敞开、并信任直觉——三样同时在场才有灵感。<em>比喻：先一直朝那个方向看（意志），再打开镜筒（敞开），最后得相信那团光斑确实是你要找的星（信任）。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">谐波</div><div class="sub">harmonics</div><span class="tap">点击展开</span></div><div class="back">管道经过长期练习后形成的振动配合。本集说 Don 与 Jim 若要走这条路，练出来的谐波还得先被实验过——换人不是换一个「接口」那么简单。<em>比喻：同一首歌换了主唱，和声配比要重新调过。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">光芒 / 能量丛</div><div class="sub">rays / energy plexi</div><span class="tap">点击展开</span></div><div class="back">Ra 用颜色序列来描述实体的能量状态：红、橙、黄、绿、蓝、靛、紫罗兰。本集说它们可以被削弱、被阻塞，也可以「完全平衡地在那里，等待被激活」。<em>比喻：像一组亮度各异的灯，要看的是整片灯光的配比，不是某一只灯亮不亮。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">赋能平衡</div><div class="sub">potentiated balance</div><span class="tap">点击展开</span></div><div class="back">本集给「完美平衡」的说法：各道光芒以同等的振动光辉彼此叠加，直到环绕的颜色变成白色——这是第三密度里的赋能平衡。<em>比喻：七色叠成白，不是少了颜色，而是全都在。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">社会记忆复合体</div><div class="sub">social memory complex</div><span class="tap">点击展开</span></div><div class="back">一群实体形成共享记忆、思想彼此透明的整体。本集明确说它「严格来说是第四密度的现象」；第三密度只可能在密度的后段形成，而且已知样本都是正面导向。<em>比喻：从「各自开会汇报」变成「不用开口就知道彼此要往哪走」。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">好战性</div><div class="sub">bellicosity</div><span class="tap">点击展开</span></div><div class="back">好斗、争战的倾向。本集用了一个很有意思的对照：来自「狗」星的实体几乎不可能战斗、也不带着好战的种族记忆，却必须去研究各种运动、尤其是好战性，才能变得平衡并正确地极化。<em>比喻：天生脾气好的人要专门研究愤怒，否则缺一半。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">猎户座十字军</div><div class="sub">crusaders of Orion</div><span class="tap">点击展开</span></div><div class="back">本集在结尾提到的服务自我群体：当第四密度负面实体终于能结合起来时，便通过这类服务自我来极化。Ra 只给了这个名字与它的作用，没有更多细节，并说可以在下一次集会问更具体的问题。</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>这一集留下的线头</h3>
+    <p>本集的收尾很干净，但留了三处没走完的地方。</p>
+    <div class="quote">
+      <p class="en">You may ask more specific questions in the next session of working.</p>
+      <p class="zh">你们可以在下一次工作集会中提出更具体的问题。</p>
+      <span class="src">—— Session 038 · (38.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">We leave you in the love and light of the One Infinite Creator. Go forth rejoicing in the power and in the peace of the One Creator. Adonai.</p>
+      <p class="zh">我们在太一无限造物主的爱与光中离开你们。在太一造物主的大能与和平中欢欣前行吧。Adonai。</p>
+      <span class="src">—— Session 038 · (38.15)</span>
+    </div>
+    <p style="font-size:.95rem;margin:10px 0"><b>其一</b>，负面第四密度的细节刚刚开头，Ra 自己把门留到了下一次。本集末尾这段话是在器皿生命力偏低的压力下说出的——Ra 在 (38.13) 就请发问者只再提一个完整问题，所以这个题目只铺了框架，没有展开。读下一集时可以带着这个问题：负面第四密度具体会怎么运作？<br><b>其二</b>，那个来自天狼星行星体的实体曾两次接近这个行星体，Ra 说这在此前的资料中已提过，本集没有在这一点上继续展开。<br><b>其三</b>，本集第一次让「谁可以当管道」这个问题摆上台面：Ra 没有否定两位男性成员的可能性，只说需要练习与时间，练出的谐波还要经过实验——这条线也没有收。</p>
+  </div>
+  <div class="case"><b>小组作业里的权力斗争：</b>五个人做一个项目，谁都想当组长；每个人都看得见别人在拉票（相当于「思想透明」），于是谁都不肯先出力，项目反而推不动——正对应 Ra 说的：透明被用来服务上位者，反而损害了群体的进一步极化。</div>
+  <div class="case"><b>合并后的两个部门：</b>公司收购之后，两个部门先是你跟我结盟、两个月后又换边站，直到新的职位表定下来、大家都认了组织图上的位置，真正的协作才开始。这就是 Ra 说的「权威秩序建立之后，社会记忆复合体才开始」。</div>
+  <div class="case"><b>群聊里的「正在输入」：</b>你能看到对方正在打字、又删掉，于是措辞越来越谨慎，谁也不敢先说真话。这是「思想透明」最日常的版本——能看见彼此的想法，并不自动让合作变好。</div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+<p>基于 The Ra Contact Session 038（split/Ra_Session_038.md）英文原文制作 · 交互式学习模块</p>
+<p>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文</p>
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra038-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+
+/* 问答脉络推进器：本集七个节点 */
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+  {t:'(38.0) 开场',d:'<b>致意。</b>Ra 以「在太一无限造物主的爱与光中向你们致意」开场，宣布本次通讯开始——这一集几乎没有例行事务，从第一个问题起就是实质内容。'},
+  {t:'(38.1) 谁能接替器皿',d:'<span class="qa-q">问：如果 Jim 或我替下器皿、自己尝试出神工作，有没有希望或意义？</span><b>答：</b>这条信息已在自由意志的边界线上；在这个连接点上两人都还不具备条件——成为这类管道需要长期的练习与更长的时间，练出的「谐波」还得经过实验。'},
+  {t:'(38.2–38.4) 核能的来路',d:'<span class="qa-q">问：四十年前核能进入这个密度，是不是给马尔德克旧人一次和平使用核能的机会？</span><b>答：</b>本末倒置了——不是外部的理由把资料「给」下来，而是人群的渴望把这份资料吸引过来；传递机制是灵感，即非凡的求知意志，加上向直觉敞开并信任它。'},
+  {t:'(38.5) 七道光芒的平衡',d:'<span class="qa-q">问：一个完美平衡、无变貌的实体，红到紫罗兰各道光芒是什么样？</span><b>答：</b>我们无法告诉你——每一种平衡都是完美的、独特的。Ra 只以本集器皿为例描述了一次，并强调观看颜色中的平衡时不该有丝毫评判，感受阻塞的能力只对疗愈者有用。'},
+  {t:'(38.6–38.7) 第三密度的社会记忆复合体',d:'<span class="qa-q">问：第三密度行星可能形成在第三密度运作的社会记忆复合体吗？有例子吗？</span><b>答：</b>只可能在这个密度的后段（第七部分）、实体们和谐地为毕业做准备时；已知负面例子为零，正面也相当罕见；社会记忆复合体严格来说是第四密度的现象。'},
+  {t:'(38.8–38.13) 「狗」星的植被实体',d:'<span class="qa-q">问：那个社会记忆复合体是从树进化来的吗？不带着好战记忆是不是占便宜？他们怎么移动？</span><b>答：</b>接近于树。不带着好战记忆是优势，但必须以研究各种运动（尤其好战）来平衡——研究就是他们的冥想；好战样本取自 Hickson 的记忆而非彼此争战；移动是由微弱电性思维脉冲控制的电磁现象，飞船是第三密度物质、我们密度可见。'},
+  {t:'(38.14–38.15) 收尾',d:'<span class="qa-q">问：第四密度负面、服务自我的星球上是什么状况？</span><b>答：</b>早期是最激烈的斗争，直到权威秩序建立、人人都认了自己在权力结构中的位置，社会记忆复合体才开始；思想透明被用来服务权力顶端那批人，反而妨碍进一步极化。器皿生命力偏低，Ra 只许这一个完整问题，随后以 Adonai 作结。'}
+]);
+
+/* 灵感条件模拟器 */
+function renderCond(){
+  const a=document.getElementById('cA').checked,
+        b=document.getElementById('cB').checked,
+        c=document.getElementById('cC').checked;
+  const box=document.getElementById('condResult');
+  const miss=[];
+  if(!a){
+    miss.push({tag:'渴望 / 意志',txt:'<b>缺了渴望或意志：</b>没有方向。Ra 说得很清楚——是「渴望」把这份资料吸引过来的；没有渴望，就没有东西会被吸引过来。'});
+  }
+  if(!b){
+    miss.push({tag:'向直觉敞开',txt:'<b>缺了敞开：</b>接收端关着。你可能一直在「想要」，却从没给直觉留出入口，这份渴望并没有真正指向接收。'});
+  }
+  if(!c){
+    miss.push({tag:'信任直觉',txt:'<b>缺了信任：</b>收到了却不认。灵感到了，你把它当成杂念、巧合或自己的错觉——Ra 特意把「信任」写进机制里，因为它最容易断。'});
+  }
+  if(miss.length===0){
+    box.classList.remove('fail');
+    box.innerHTML='<b>三样齐备——灵感发生。</b>Ra 描述的机制完整在场：非凡的求知意志把相关资料吸引过来，再经由向直觉敞开、并信任它，而真正抵达你。';
+  }else{
+    box.classList.add('fail');
+    box.innerHTML='<b>还差 '+miss.length+' 样，灵感不会按 Ra 说的方式发生：</b>'+
+      '<div class="obstacle-tags">'+miss.map(m=>'<span>'+m.tag+'</span>').join('')+'</div>'+
+      '<div style="margin-top:12px">'+miss.map(m=>m.txt).join('<br>')+'</div>';
+  }
+}
+['cA','cB','cC'].forEach(id=>document.getElementById(id).addEventListener('change',renderCond));
+renderCond();
+
+/* 「狗星」实体画像 */
+initStepper('dogTrack','dogDetail','dogPrev','dogNext',[
+  {t:'出身',d:'<b>从植被毕业。</b>那些在这颗名为「狗」（Dog）的行星上、从第二密度毕业进入第三密度的植被形态，接近于我们所知的树木——Ra 说发问者的猜测「接近于正确」。'},
+  {t:'优势',d:'<b>不带着好战的种族记忆。</b>植被不可能有好战行为，所以他们进入第三密度时并不带着一份好战的种族记忆；Ra 确认这是一种优势，他们也因此不容易发展出好战的社会。'},
+  {t:'必补的功课',d:'<b>研究各种运动，尤其是好战。</b>他们的「活动」本身就处在你们称之为冥想的层面，所以必须反向平衡：去研究运动的一切形态。Ra 说，研究就是他们的冥想形式。'},
+  {t:'好战的样本从哪来',d:'<b>不靠彼此争战。</b>发问者猜是从 Hickson 的记忆中提取的，Ra 答「正确」——具有这种传承的实体几乎不可能战斗。'},
+  {t:'移动与载具',d:'<b>电磁现象。</b>Ra 先只回一句「有一部分不正确」；等发问者换成「心智与行星磁力相连的直接功能」这种说法，才确认「大致正确」：移动是由带有微弱电性质的思维脉冲所控制的电磁现象，飞船是第三密度物质，我们这个密度的人能看见。'}
+]);
+
+/* 归类练习：服务他人 / 服务自我 */
+initSorter('sorterArea',[
+  {a:'你把自己摸索出来的客户名单整理成一份文档，交给整个团队使用',opts:['服务他人导向','服务自我导向'],ans:'服务他人导向',exp:'把资源变成公共的，让群体一起受益——这是本集所说的正面导向那一侧在办公室里的样子。'},
+  {a:'你在两个派系之间同时示好，确保无论谁上位你都在圈子里',opts:['服务他人导向','服务自我导向'],ans:'服务自我导向',exp:'这正是 Ra 描述第四密度负面时说的一句：持续不断地结盟与重新结盟，以努力形成组合能量的主导模式。'},
+  {a:'你发现同事的方案比自己的更好，就当众撤回提案、支持他',opts:['服务他人导向','服务自我导向'],ans:'服务他人导向',exp:'把「事情做对」放在「我的位置」之前——重点不在自己是否被看见。'},
+  {a:'你把关键流程记在私人笔记里，别人问起只给一部分',opts:['服务他人导向','服务自我导向'],ans:'服务自我导向',exp:'信息成了维持位置的工具。它是本集说的「思想透明被用来服务权力顶端者」的相反镜像：越是独占，越是在服务自己。'},
+  {a:'邻居家深夜漏水，你带上工具过去帮忙，第二天上班迟到也没提',opts:['服务他人导向','服务自我导向'],ans:'服务他人导向',exp:'把别人的需要当作真实的需要来处理，而不是当成交换筹码。'}
+]);
+
+/* 术语卡翻面 */
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+renderPath();
+</script>
+</body>
+</html>

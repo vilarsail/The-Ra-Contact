@@ -8,8 +8,11 @@ OUTPUT_FILE="output/The_Ra_Contact.epub"
 TITLE="The Ra Contact (一的法则)"
 AUTHOR="Ra / L/L Research"
 
-# 按顺序生成文件列表：guide_001, source_001, guide_002, source_002, ...
+# 按顺序生成文件列表：前言, guide_001, source_001, guide_002, source_002, ...
 FILES=()
+if [[ -f "output/0.md" ]]; then
+  FILES+=("output/0.md")
+fi
 for i in $(seq -w 1 106); do
   guide="output/Ra_Session_${i}_guide.md"
   source="split/Ra_Session_${i}.md"

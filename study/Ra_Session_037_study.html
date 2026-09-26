@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 037 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 037 · 交互式学习模块</h1>
+  <p class="sub">这一集前半谈「怎么把一的法则传出去」——Ra 给出的定律是：接触的纯度取决于所问信息的纯度；后半揭开高我的来历：它是第七密度存有在跨过最后一道门前，送给第六密度自我的礼物，与你本是同一个存有。</p>
+  <div class="tagline">5 个主题 · 5 个学习步骤 · 16 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 牺牲与托付</a>
+<a href="#s3">③ 提问的纯度</a>
+<a href="#s4">④ 高我之谜</a>
+<a href="#s5">⑤ 超灵与灵性质量</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>十二个问答块分成两半：出版与传播，以及高我的来历</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>牺牲与托付</b><span>Ra 说这份接触凭什么条件而来，以及它不替你们做什么</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>提问的纯度</b><span>所问即所得：为什么「为传播而加料」是有害的</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>高我之谜</b><span>一份来自未来的礼物，以及圆上三个点的关系</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>超灵与灵性质量</b><span>「倍增」怎么运作，以及本集留下的两条线头</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：出版的努力与高我的追问</h2></div>
+  <p class="sec-lead">发问者自己交代得很清楚：「我们继续上次集会的问题。」上一次留下的线头是「高我」；而本集的前半段是一个全新的、非常现实的话题——已经记录下来的材料要怎么出版、怎么送到想要它的人手里。于是这一集分成两半：前半谈传播的压力与提问的纯度，后半把高我、心/身/灵复合体全体、灵性质量一次讲清。除了开场、一句确认和收尾，本集从头到尾都是教导内容。</p>
+  <div class="card">
+    <h3>问答脉络：两半加一次收尾</h3>
+    <p>十二个问答块，按话题分成两半。点击节点看每一段在做什么。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="qaTrack"></div>
+      <div class="flow-detail" id="qaDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="qaPrev">← 上一步</button> <button class="tri-btn" id="qaNext">下一步 →</button></div>
+    </div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">开场致意 · 出版进度确认 · 器皿状态</span></summary>
+  <div class="body">
+    <p><b>(37.0) 开场致意：</b>Ra 以「在太一无限造物主的爱与光中向你们致意」开场，宣布本次通讯开始。</p>
+    <p><b>(37.1) 出版进度确认：</b>发问者问 Ra 是否知道他们当天为出版第一本书所做的努力；Ra 只答一句「这是正确的」——确认知情，不作评价，也不给建议。</p>
+    <p><b>(37.9) 器皿状态与收尾：</b>发问者不愿让器皿疲劳，只问有没有什么能让器皿更舒适或改善接触；Ra 答「一切安好」，在爱与光中离开，以 Adonai 作结。</p>
+  </div></details>
+  <div class="case"><b>一本临床笔记的出版：</b>一位内科医生把自己十年的门诊笔记整理成书稿，编辑看完说「内容太硬，得加些热搜病例和医生日常，读者才买账」。他卡住了——这正是 (37.4) 发问者的处境：为了让信息真的到达读者，是不是必须先掺进一些价值不高的具体内容。</div>
+  <div class="case"><b>翻译一本哲学书：</b>译者坚持保留原文里「在某种意义上」「据我们所知」这类限定词，出版方却说这些词读起来啰嗦、建议删掉。这对应 (37.4) 中 Ra 说的：批评者想要 simple, lucid prose，而 Ra 必须优先保住细微差别的准确性。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>牺牲与托付：最贵的代价与「不讨价还价」</h2></div>
+  <p class="sec-lead">发问者问的是很实际的事：我们传播这份材料会遇到困难，你们能说点什么吗？Ra 先答「这是可能的」，再答「我们会的」——然后把话题从「怎么传播」拉回到「这份接触是凭什么条件来的」。Ra 用「首先／其次」两段话给出立场：一段讲牺牲，一段讲放手。这部分不是交代背景，而是本集第一条教导。</p>
+  <div class="card">
+    <h3>首先：牺牲的顶点不是钱</h3>
+    <div class="q">我们传播这份材料时会遇到的困难，你们能评论吗？</div>
+    <div class="quote">
+      <p class="en">Firstly, the choosing of this group to do some work to serve others was of an intensive nature.</p>
+      <p class="zh">首先，选中这个团体来从事某项服务他人的工作，其性质是强烈的。</p>
+      <span class="src">—— Session 037 · (37.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Each present sacrificed much for no tangible result. Each may search its heart for the type of sacrifice, knowing that the material sacrifices are the least; the intensive commitment to blending into an harmonious group at the apex of sacrifice.</p>
+      <p class="zh">在场的每个人都为一件没有具体成果的事付出了许多。每个人都可以在自己心里辨认那牺牲的类型：物质上的牺牲其实是最小的，真正的顶点，是为了融入一个和谐团体而投入的那份强烈承诺。</p>
+      <span class="src">—— Session 037 · (37.3)</span>
+    </div>
+    <div class="plain">在这套体系里，最贵的牺牲不是钱，而是把自己融进一个和谐的整体。</div>
+    <div class="analogy"><b>像一支合唱团：</b>真正难的不是排练时间和没有报酬的演出，而是每个人都得把自己的音色修到能与别人合成一个和声。</div>
+    <div class="case"><b>五人乐队排练半年：</b>只为一台没有报酬的小演出，最难的一直不是少赚的那点钱，而是把自己惯用的弹法改到能与其他人合拍——这就是 Ra 所说的「牺牲的顶点」在日常里的样子。</div>
+  </div>
+  <div class="card">
+    <h3>其次：Ra 不讨价还价，也不指挥</h3>
+    <div class="q">那你们对这些条件是什么态度？我们该怎么使用这些材料？</div>
+    <div class="quote">
+      <p class="en">We do not wish to puff up the pride, but we shall not chaffer with the circumstances necessary for our particular contact.</p>
+      <p class="zh">我们无意助长骄傲，但我们不会就这次特定接触所必需的条件讨价还价。</p>
+      <span class="src">—— Session 037 · (37.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Secondly, the use you make of these transmissions is completely at your discretion.</p>
+      <p class="zh">其次，你们如何使用这些传输，完全由你们自行斟酌决定。</p>
+      <span class="src">—— Session 037 · (37.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Whatever efforts you make cannot disappoint us, for that number already exceeds one.</p>
+      <p class="zh">无论你们做出什么样的努力，都不可能让我们失望——因为这个数字已经超过了一。</p>
+      <span class="src">—— Session 037 · (37.3)</span>
+    </div>
+    <div class="plain">只要有一个生命因这份材料受益，这次接触就已经达到目的；所以 Ra 把「怎么用」完全交还给人，「失败」这个词在这里不成立。</div>
+    <div class="analogy"><b>像教练交计划：</b>他把训练表写完就交给你，不会因为你少练一次而失望，但也绝不会替你去练。</div>
+    <div class="case"><b>开源项目的维护者：</b>一群工程师多年维护一个没有任何收入的库，不指挥谁怎么用、也不因别人的用法而失望，只要有人真的把它用起来了就已经足够——对应「不讨价还价」与「由你们自行决定」。</div>
+    <div class="case"><b>街头卖唱：</b>唱了两小时只有一个人停下来听完，最后回头说了句谢谢——对这一晚来说，这就不是白唱。这正是「那个数字已经超过了一」的意思。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>提问的纯度：所问即所得</h2></div>
+  <p class="sec-lead">这是本集前半最锋利的一段。发问者坦白了自己的犹豫：他很怕自己问的问题「不重要或过于具体」，会拉低接触的品质；可他同时又看到，在他们的社会里要把重要内容送出去，似乎非得掺一点价值不高的东西不可。Ra 没有安慰他，而是给出一条定律，并顺手解释了这套材料为什么那么难读。</p>
+  <div class="card">
+    <h3>定律：接触的纯度由所问的纯度决定</h3>
+    <div class="q">为了传播，我是不是该问一些更具体、更好用的东西？这类问题会不会拉低我们的接触？</div>
+    <div class="quote">
+      <p class="en">It is quite precisely correct that the level and purity of this contact is dependent upon the level and purity of information sought.</p>
+      <p class="zh">这次接触的层次与纯度，取决于所寻求信息的层次与纯度——这一点是相当精确地成立的。</p>
+      <span class="src">—— Session 037 · (37.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Thusly, the continued requests for specific information, from this particular source, is deleterious to the substance of your purpose.</p>
+      <p class="zh">因此，持续从这个特定来源索取具体信息，会损害你们目标的实质。</p>
+      <span class="src">—— Session 037 · (37.4)</span>
+    </div>
+    <div class="plain">接触的品质不是 Ra 单方面给的，而是由提问的层次决定——问得越琐碎具体，这条管道就越细。</div>
+    <div class="analogy"><b>像水管口径：</b>流量由管径决定。你先决定问什么，其实等于先决定了这条管道能通过多少。</div>
+    <div class="case"><b>播客采访：</b>主持人为了点击率，一开场就追问嘉宾的圈内八卦，半小时下来，整场对话的深度被拖走了，嘉宾也再没说出真正重要的话——对应「持续索取具体信息会损害目标的实质」。</div>
+    <div class="case"><b>门诊里的两种问法：</b>病人进门就问「这个药一天吃几片」，医生只能回答片数；如果他改问「我这个情况长期该怎么走」，同一场对话立刻换了层次。</div>
+  </div>
+  <div class="card">
+    <h3>为什么这套材料「不好读」</h3>
+    <div class="q">有人批评我们的行文太绕，为什么不写得简单明白一点？</div>
+    <div class="quote">
+      <p class="en">Moreover, as we scanned your mind to grasp your situation as regards the typescript of some of our words, we found that you had been criticized for the type of language construction used to convey data.</p>
+      <p class="zh">此外，当我们扫描你们的心智、以了解你们在「我们某些话语的打字稿」上的处境时，我们发现你们因为传达数据所使用的语言构造方式而受到了批评。</p>
+      <span class="src">—— Session 037 · (37.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">even the most specifically answered question would be worded by our group in such a way as to maximize the accuracy of the nuances of the answer. This, however, mitigates against what your critic desires in the way of simple, lucid prose.</p>
+      <p class="zh">即使是回答得最具体的问题，我们的团体也会以「最大化答案细微含意之准确度」的方式来措辞。然而，这恰恰与你们的批评者所期望的简单、明晰的行文相抵触。</p>
+      <span class="src">—— Session 037 · (37.4)</span>
+    </div>
+    <div class="plain">Ra 选择了准确性而不是好读——这就是这套材料读起来绕的原因，它不是记录或翻译造成的瑕疵。</div>
+    <div class="analogy"><b>像合同条款：</b>一份只求好读的合同会删掉所有限定语，最后在争议里付出更大代价；精确的写法天生拗口。</div>
+    <div class="case"><b>代码评审：</b>同事说「你这注释写得太啰嗦」，可删掉「当缓存失效时」「仅限 v2 接口」这些限定后，接口行为就变成了没有边界的承诺——保留限定词恰恰是负责。</div>
+  </div>
+  <div class="card">
+    <h3>四种立场对照</h3>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">发问者的观察</span><h4>传播的现实压力</h4><p>在他看来，要在这个社会的分发系统里把内容送到读者手上，似乎<b>必须先掺入一些价值不高的具体信息</b>。</p></div>
+      <div class="yuan-card"><span class="y-tag">Ra 的定律</span><h4>所问即所得</h4><p>接触的层次与纯度取决于所寻求信息的层次与纯度；<b>持续索取具体信息会损害目标的实质</b>。</p></div>
+      <div class="yuan-card"><span class="y-tag">Ra 的行文选择</span><h4>准确优先于简明</h4><p>措辞以「最大化细微差别的准确性」为目标，这与批评者想要的 <b>simple, lucid prose</b> 相悖。</p></div>
+      <div class="yuan-card"><span class="y-tag">Ra 守住的边界</span><h4>决定权在你们</h4><p>「你们想做什么完全由你们自己决定」；Ra 只在<b>不打破混淆法则</b>的前提下继续为你们服务。</p></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>UFO 书：一个「宇宙玩笑」</h3>
+    <div class="q">我打算写一本以 UFO 为入口的书，把一的法则材料以未变貌的形式嵌进去，当作最容易入手的传播切入点——你们怎么看？</div>
+    <div class="quote">
+      <p class="en">using the Ra material in undistorted form just as it has been recorded here…</p>
+      <p class="zh">以未变貌的形式使用 Ra 材料，就像它被记录在这里的那样……</p>
+      <span class="src">—— Session 037 · (37.5) 发问者的计划</span>
+    </div>
+    <div class="quote">
+      <p class="en">We hope that your Ra plans materialize. This is a cosmic joke.</p>
+      <p class="zh">我们希望你们的「Ra 计划」能够实现。这是一个宇宙玩笑。</p>
+      <span class="src">—— Session 037 · (37.5)</span>
+    </div>
+    <div class="quote">
+      <p class="en">You were asking for such an example of humor, and we feel this is a rather appropriate nexus in which one may be inserted. Continue with your intentions to the best of your natures and abilities. What more can be done, my friends?</p>
+      <p class="zh">你们此前曾要求一个幽默的例子，我们觉得这里是一个相当恰当的节点，可以把它插进来。以你们本性与能力所能达到的最佳状态，继续你们的意图吧。还能做什么呢，我的朋友们？</p>
+      <span class="src">—— Session 037 · (37.5)</span>
+    </div>
+    <div class="plain">Ra 既不否决也不指导这个计划，只给了祝福——顺带用一个双关开了个玩笑；发问者此前要的「幽默的例子」，答案就在这里。</div>
+    <div class="case"><b>年会上的双关：</b>一家名字就叫「未来」的公司，老板在年会上说「明年我们要让『未来』真的到来」，全场会心一笑——同一个词承担了两层意思，这就是 Ra 借「your Ra plans」开的玩笑（既是「你们的计划」，也是「关于 Ra 的计划」）。</div>
+  </div>
+  <div class="card">
+    <h3>归类练习：这是「保持未变貌」还是「为传播加工」？</h3>
+    <p>判断下面每种做法更接近哪一类，注意 (37.4)–(37.5) 里 Ra 与发问者的立场。</p>
+    <div id="sorterArea"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>高我之谜：一份来自未来的礼物，圆上的三个点</h2></div>
+  <p class="sec-lead">后半段回到上次集会留下的问题。发问者想知道：我的高我是从第一密度一路进化上来的吗？它上面还有高我吗？Ra 说「简化这个概念是我们的意图」——然后用一份「礼物」、一个「荣誉/职责」和一张「圆上三点」的图，把高我、超灵、全体三者的关系一次讲完。这里要特别注意方向：礼物不是从下往上送，而是从「未来」往回送。</p>
+  <div class="card">
+    <h3>礼物的方向是反的</h3>
+    <div class="q">我的高我是从第一密度一路进化上来的吗？它上面是否还有一个更高级的高我？</div>
+    <div class="quote">
+      <p class="en">The higher self is a manifestation given to the late sixth-density mind/body/spirit complex as a gift from its future selfness.</p>
+      <p class="zh">高我是一个显化，被赠予晚期第六密度的心/身/灵复合体，来自它自己的「未来自我性」——是一份礼物。</p>
+      <span class="src">—— Session 037 · (37.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The mid-seventh density’s last action before turning towards the allness of the Creator and gaining spiritual mass is to give this resource to the sixth-density self, moving, as you measure time, in the stream of time.</p>
+      <p class="zh">第七密度中期，在转向造物主之全部、并取得灵性质量之前的最后一个行动，就是把这份资源交给第六密度的自我——按你们衡量时间的方式，它是在时间之流中移动的。</p>
+      <span class="src">—— Session 037 · (37.6)</span>
+    </div>
+    <div class="plain">高我不是「另一个更高的你」在别处进化；它是「未来的你」在跨过最后那道门前，回身送出的一份礼物。</div>
+    <div class="case"><b>退休前的老工程师：</b>他把自己三十年攒下的调试笔记整理成一个文件夹，交给刚入职的新人。这份东西不是新人自己摸索出来的，却完全出自同一条技术脉络的「未来」——正对应「来自未来自我性的礼物」。</div>
+    <div class="case"><b>翻出上学期的笔记：</b>期末复习时你找出上学期自己整理的笔记，上面还写着「下次记得先看第二章」。写字的人和读字的人是同一个，只是处在不同的时间点——这就是高我与你的关系在时间轴上的样子。</div>
+  </div>
+  <div class="card">
+    <h3>传下来的是什么：三个点，一个存有</h3>
+    <p>要把三者的关系看清，先看这份礼物在链条上怎么走。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="hsTrack"></div>
+      <div class="flow-detail" id="hsDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="hsPrev">← 上一步</button> <button class="tri-btn" id="hsNext">下一步 →</button></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>高我手里的两份资源，与圆上的三个点</h3>
+    <div class="q">那么我的自我、我的高我、我的全体，是三个不同的东西吗？</div>
+    <div class="quote">
+      <p class="en">This self, the mind/body/spirit complex of late sixth density, has then the honor/duty of using both the experiences of its total living bank or memory of experienced thoughts and actions and using the resource of the mind/body/spirit complex totality left behind as a type of infinitely complex thought-form.</p>
+      <p class="zh">这个自我——晚期第六密度的心/身/灵复合体——于是承担起一份荣誉/职责：既要运用它全部「活着的经验库」、即已体验过的思想与行动的记忆，也要运用那被留下的心/身/灵复合体全体，把它作为一种无限复杂的思想形态来使用。</p>
+      <span class="src">—— Session 037 · (37.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">In this way you may see your self, your higher self or oversoul, and your mind/body/spirit complex totality as three points in a circle. The only distinction is that of your time/space continuum. All are the same being.</p>
+      <p class="zh">这样，你就可以把你的自我、你的高我（或称超灵）、以及你的心/身/灵复合体全体，看作同一个圆上的三个点。唯一的区别，只在于你们所处的时间/空间连续体。它们全都是同一个存有。</p>
+      <span class="src">—— Session 037 · (37.6)</span>
+    </div>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">当下这一点</span><h4>自我</h4><p>正在第三密度中体验的你。Ra 说高我会在<b>有需要时</b>向这个心/身/灵复合体移动。</p></div>
+      <div class="yuan-card"><span class="y-tag">未来的那一点</span><h4>高我 / 超灵</h4><p>晚期第六密度的你。它收到来自「未来自我性」的礼物，并承担起使用两份资源的<b>荣誉/职责</b>。</p></div>
+      <div class="yuan-card"><span class="y-tag">被留下的资源</span><h4>心/身/灵复合体全体</h4><p>以一种<b>无限复杂的思想形态</b>被留下，成为高我使用的资源；Ra 说每个实体都有自己的全体。</p></div>
+    </div>
+    <div class="plain">三者不是三个不同的存在，而是同一个存有在不同时间位点上的三个刻度。</div>
+    <div class="case"><b>同一份工作的三个时间点：</b>你手头正在改的文件、一年前的旧版本、以及整个项目的版本历史——点开「历史版本」时，你看到的不是别人，而是处在不同时间的同一份工作。这正对应「圆上三点、同一个存有」。</div>
+  </div>
+  <div class="card">
+    <h3>术语卡：本集的关键词</h3>
+    <p>点击卡片翻看解释。这几个词在全书反复出现，先在这里建立准确的直觉。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">高我</div><div class="sub">higher self</div><span class="tap">点击展开</span></div><div class="back">Ra 体系中，每个第三密度实体都有一个位于第六密度的高我。本集给出它的来历：它是晚期第六密度实体从自己的「未来自我性」获得的一份礼物，会按需要向该实体的心/身/灵复合体移动。<em>比喻：退休前的老工程师，把自己三十年的调试笔记交给刚入职的新人——不是新人摸索出来的，却出自同一条脉络的未来。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">超灵</div><div class="sub">oversoul</div><span class="tap">点击展开</span></div><div class="back">Ra 用来指称高我的另一个词（原文是 your higher self or oversoul）。本集还说：一个社会记忆复合体也有属于它自己的超灵。<em>比喻：一个人有高我，一群人合起来也会长出一个属于整体自己的「高我」。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">心/身/灵复合体全体</div><div class="sub">mind/body/spirit complex totality</div><span class="tap">点击展开</span></div><div class="back">一个实体全部的心/身/灵复合体总体。本集说它以「无限复杂的思想形态」被留下，成为高我使用的资源；而且每个实体都有属于自己的全体。<em>比喻：一份完整、还在持续更新的个人档案——不是另一人，是你全部的总账。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">社会记忆复合体</div><div class="sub">social memory complex</div><span class="tap">点击展开</span></div><div class="back">Ra 体系中，一群实体融为一个共享记忆与身份的更大存在。本集说当一个行星实体走到这一步，这个联合体也有它自己的超灵与全体作为资源。<em>比喻：一支乐队长出了自己的「乐风」——它不属于任何单个成员，也不是几个人的相加。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">灵性质量</div><div class="sub">spiritual mass</div><span class="tap">点击展开</span></div><div class="back">本集给出的定义：那开始把向外移动、持续不断的存在性振动振荡，吸引进「伟大中央太阳（核心、无限宇宙造物主）之重力井」的东西。第七密度中期转向造物主之全部前的最后一个行动，就是取得灵性质量。<em>比喻：像引力——有质量，才能把四散的尘埃收向中心。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">混淆法则</div><div class="sub">the Way of Confusion</div><span class="tap">点击展开</span></div><div class="back">Ra 反复守住的一条边界：不打破受造物的自由意志与混淆状态。本集里 Ra 即使拒答、即使只说「我们只能说这么多」，或把决定权交还给人，都是为了不打破它。<em>比喻：教练不替你上场——他给计划，不替你练。</em></div></div>
+    </div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>超灵与灵性质量：倍增，以及被引向中心</h2></div>
+  <p class="sec-lead">上一章的最后一步是「每个实体都有自己的全体」，发问者紧接着追问：那会不会多个实体共用一个全体？Ra 说两种说法都成立，并顺带讲了社会记忆复合体的超灵是怎么来的。之后发问者要求定义「灵性质量」——Ra 宣布这是本集最后一个完整问题，答完就收尾了。</p>
+  <div class="card">
+    <h3>超灵靠「倍增」，不靠相加</h3>
+    <div class="q">每个实体都有各自的全体，还是多个实体共享同一个全体？</div>
+    <div class="quote">
+      <p class="en">Both of these statements are correct, given the appropriate time/space conditions.</p>
+      <p class="zh">在适当的时间/空间条件下，这两种说法都成立。</p>
+      <span class="src">—— Session 037 · (37.7)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Each entity has its totality, and at the point at which a planetary entity becomes a social memory complex, the totality of this union of entities also has its oversoul and its social memory complex totality as resource.</p>
+      <p class="zh">每个实体都有自己的全体；而当行星实体成为一个社会记忆复合体时，这个实体联合体的全体，也拥有它的超灵与它的社会记忆复合体全体作为资源。</p>
+      <span class="src">—— Session 037 · (37.7)</span>
+    </div>
+    <div class="quote">
+      <p class="en">the oversoul of a social memory complex is not the sum of the oversouls of its member entities but operates upon the way of what we have called squares and what we grasp you prefer to call doubling.</p>
+      <p class="zh">社会记忆复合体的超灵，并不是其成员实体诸超灵的「总和」，而是以我们称为「平方」、并理解为你们更愿意称为「倍增」的方式在运作。</p>
+      <span class="src">—— Session 037 · (37.7)</span>
+    </div>
+    <div class="plain">一群人联合成一个更大的存在时，会生出一个属于这个联合体自己的超灵——它不是成员超灵的相加，而是「倍增」。</div>
+    <div class="analogy"><b>像化学反应，不像堆料：</b>把两种原料堆在一起只是「和」，让它们反应才生成一种新物质——联合体的超灵属于后者，不多不少是「新的那一份」。</div>
+    <div class="case"><b>两个小队合并成一个组：</b>半年后慢慢长出一种谁都没设计过的工作文化。它不属于任何一个人，也不是各人习惯的相加——这就是「联合体也有自己的超灵」在日常里的样子。</div>
+    <div class="case"><b>乐队合奏两年后的「乐风」：</b>乐评人评价他们时会说「这是这四个人的乐风，但又不只是他们四个人」——这句话说的正是「不是总和，而是倍增」。</div>
+  </div>
+  <div class="card">
+    <h3>灵性质量：灵性的「引力」</h3>
+    <div class="q">你前面提到第七密度中期会「取得灵性质量」——那灵性质量到底是什么？</div>
+    <div class="quote">
+      <p class="en">Spiritual mass is that which begins to attract the out-moving and ongoing vibratory oscillations of beingness into the gravity, speaking in a spiritual sense, well of the Great Central Sun, core, or Creator of the infinite universes.</p>
+      <p class="zh">灵性质量是那样一种东西：它开始把向外移动、持续不断的存在性振动振荡，吸引进——以灵性的意义来说——伟大中央太阳、核心，或无限宇宙造物主的重力井之中。</p>
+      <span class="src">—— Session 037 · (37.8)</span>
+    </div>
+    <div class="plain">灵性质量是一种「灵性引力」：存在的振荡本来向外发散；有了它，就开始被收回造物主的中心。</div>
+    <div class="analogy"><b>像引力与逃逸速度：</b>一个天体越有质量，就越能把周边的尘埃拉向自己，聚成更大的整体。灵性上也是如此——走到某一步的存在，不再向外散逸，而开始被中心拉回。</div>
+    <div class="case"><b>兴趣终于收拢的人：</b>二十多岁时你到处试、学什么都三分钟热度，兴趣不断向外发散；到了某个阶段，所有经历开始朝一个方向聚拢，变成一件真正在做的事——这就是 Ra 说的「振荡被吸引进重力井」在个人尺度上的样子。</div>
+  </div>
+  <div class="card">
+    <h3>收官：最后一个完整问题</h3>
+    <div class="q">你能否定义灵性质量？（以及：还有什么能让器皿更舒适？）</div>
+    <div class="quote">
+      <p class="en">This will be the last full question of this session.</p>
+      <p class="zh">这将是本次集会的最后一个完整问题。</p>
+      <span class="src">—— Session 037 · (37.8)</span>
+    </div>
+    <div class="quote">
+      <p class="en">All is well. We leave you now in the love and the light of the One Infinite Creator. Go forth, then, rejoicing in the power and the peace of the One Infinite Creator. Adonai.</p>
+      <p class="zh">一切安好。我们现在在太一无限造物主的爱与光中离开你们。那么，向前去吧，在太一无限造物主的力量与和平中欢欣鼓舞。Adonai。</p>
+      <span class="src">—— Session 037 · (37.9)</span>
+    </div>
+    <div class="plain">Ra 先声明「这是最后一个完整问题」，随后只留一个简短的器皿照料问题，就以 Adonai 收尾——本集的结构是「一个宣告 + 一句告别」。</div>
+    <div class="case"><b>季终集的编剧：</b>这一季只解释了一个悬念（灵性质量是什么），另一个（它怎么积累、倍增怎么发生）明说要留到下一季。看完这一集，你带着的就是这两条线头。</div>
+    <div class="plain">读下一集时可以带着这两个问题：灵性质量如何积累，以及「倍增」究竟是怎么发生的。</div>
+  </div>
+  <div class="saying">
+    <p class="en">In this way you may see your self, your higher self or oversoul, and your mind/body/spirit complex totality as three points in a circle. The only distinction is that of your time/space continuum. All are the same being.</p>
+    <p class="zh">这样看，你的自我、你的高我（或超灵）、你的心/身/灵复合体全体，就是同一个圆上的三个点；唯一的区别只在于你们所处的时间/空间连续体。它们全都是同一个存有。</p>
+    <span class="src">—— Session 037 · (37.6)</span>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+<p>基于 The Ra Contact Session 037（split/Ra_Session_037.md）英文原文制作 · 交互式学习模块</p>
+<p>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文</p>
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra037-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+  {t:'(37.1) 出版确认',d:'<span class="qa-q">问：你们知道我们今天为出书做的努力吗？</span><b>答：</b>「这是正确的」——Ra 确认自己知情，但不作评价、不给建议。'},
+  {t:'(37.2)–(37.3) 传播的困难',d:'<span class="qa-q">问：能否评论我们把一的法则送到需要它的人手里时会遇到的困难？</span><b>答：</b>先答「这是可能的」「我们会的」，随后讲了两件事：这支团体为此付出的牺牲（物质牺牲最小，融入和谐团体的承诺才是顶点），以及 Ra 自己承担的那份荣誉/职责。'},
+  {t:'(37.4) 加料的诱惑',d:'<span class="qa-q">问：我一直在犹豫——为了传播，是不是必须加入一些价值不高的具体内容？</span><b>答：</b>接触的层次与纯度取决于所寻求信息的层次与纯度；持续从这一来源索取具体信息，会损害目标的实质。Ra 还顺手解释了这套材料为什么「不好读」。'},
+  {t:'(37.5) UFO 书计划',d:'<span class="qa-q">问：我想写一本以 UFO 为入口的书，把 Ra 材料以未变貌的形式嵌进去，可行吗？</span><b>答：</b>「我们希望你们的 Ra 计划能够实现」——这是一个宇宙玩笑（Ra plans 一语双关）；继续做下去，决定权在你们。'},
+  {t:'(37.6)–(37.7) 高我',d:'<span class="qa-q">问：高我也是从第一密度进化上来的吗？它有更高一级的高我吗？每个实体的全体是各自独有还是共享？</span><b>答：</b>高我是晚期第六密度实体从「未来自我性」获得的礼物；自我、高我（超灵）、全体是圆上三点，同一个存有。社会记忆复合体的超灵则按「倍增」而非相加运作。'},
+  {t:'(37.8)–(37.9) 灵性质量与收尾',d:'<span class="qa-q">问：你能否定义灵性质量？</span><b>答：</b>这是本集最后一个完整问题：灵性质量是把向外振荡吸引进造物主之重力井的东西。随后 Ra 只接受一个简短的器皿照料问题，便以 Adonai 收尾。'}
+]);
+
+initStepper('hsTrack','hsDetail','hsPrev','hsNext',[
+  {t:'第七密度中期',d:'<b>送出礼物的那一端。</b>它在「转向造物主之全部、取得灵性质量」之前的最后一个行动，就是把这份资源交给第六密度的自我——按我们衡量时间的方式，资源在时间之流中移动。'},
+  {t:'晚期第六密度',d:'<b>收到礼物的那一端，也就是你的高我。</b>它从自己的「未来自我性」获得这份显化作为礼物；对第三密度的你来说，这个第六密度的存有就是你的高我（超灵），会在有需要时向你移动。'},
+  {t:'两份资源',d:'<b>高我手里有什么。</b>① 它自己全部「活着的经验库」——已体验过的思想与行动的记忆；② 被留下的心/身/灵复合体全体，一种无限复杂的思想形态。'},
+  {t:'圆上的三个点',d:'<b>同一个存有。</b>你的自我、你的高我（超灵）、你的心/身/灵复合体全体，是同一个圆上的三个点；唯一的区别是你们所处的时间/空间连续体。Ra 的原话是「All are the same being」。'}
+]);
+
+document.querySelectorAll('.fn-card').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('open')));
+
+initSorter('sorterArea',[
+  {a:'把客户的原话、连同他的犹豫与不确定，一并转述给开发团队',opts:['保持未变貌','为传播加工'],ans:'保持未变貌',exp:'(37.5) 发问者说他会以未变貌的形式使用 Ra 材料；完整转述才不会丢掉限定条件。'},
+  {a:'为了让短视频更吸睛，把复杂的结论压成一句斩钉截铁的断言',opts:['保持未变貌','为传播加工'],ans:'为传播加工',exp:'Ra 说措辞要最大化细微差别的准确性；压成断言，限定就消失了。'},
+  {a:'写一本以 UFO 为入口的科普书，但引用的原始材料一字不改',opts:['保持未变貌','为传播加工'],ans:'保持未变貌',exp:'这正是 (37.5) 的计划：用大众熟悉的入口，材料本身保持未变貌。'},
+  {a:'担心读者看不懂，把「我们只能说这么多」这类拒答段落删掉',opts:['保持未变貌','为传播加工'],ans:'为传播加工',exp:'Ra 的拒答与限定本身就是教导，删掉等于改变了材料的性质。'},
+  {a:'出版方要求删掉「在某种意义上」「据我们的理解」这类限定词',opts:['保持未变貌','为传播加工'],ans:'为传播加工',exp:'(37.4) 里批评者想要的正是 simple, lucid prose，而这与准确性相抵触。'},
+  {a:'为了让内容更好卖，刻意补一些价值不高但吸引眼球的具体细节',opts:['保持未变貌','为传播加工'],ans:'为传播加工',exp:'发问者担心会被要求这么做；Ra 的回答是：持续索取具体信息会损害目标的实质。'}
+]);
+
+renderPath();
+</script>
+</body>
+</html>

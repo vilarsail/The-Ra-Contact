@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css">
+<title>流浪者 · 滚动星旅</title>
+<style>
+:root{
+  --amb:#f5efe2;          /* 当前场景氛围色，由 JS 实时插值 */
+  --ink:#efe9dd;
+  --ink-dim:rgba(239,233,221,.55);
+  --serif:"LXGW WenKai","霞鹜文楷","LXGW WenKai SC","Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:#070a12;color:var(--ink);font-family:var(--serif);
+  line-height:2;overflow-x:hidden;
+}
+canvas#sky{position:fixed;inset:0;width:100vw;height:100vh;z-index:0}
+
+/* ===== 进度轨道 ===== */
+#rail{
+  position:fixed;right:26px;top:50%;transform:translateY(-50%);z-index:8;
+  display:flex;flex-direction:column;gap:13px;align-items:flex-end;
+}
+#rail .r{display:flex;align-items:center;gap:10px;cursor:pointer}
+#rail .r i{
+  width:5px;height:5px;border-radius:50%;flex-shrink:0;
+  background:rgba(255,255,255,.16);transition:all .4s;
+}
+#rail .r.cur i{background:var(--amb);box-shadow:0 0 9px var(--amb);transform:scale(1.7)}
+#rail .lbl{
+  font-size:.72rem;letter-spacing:.12em;color:var(--ink);white-space:nowrap;
+  padding:3px 12px;border-radius:999px;background:rgba(7,10,18,.78);
+  border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(4px);
+  opacity:0;transform:translateX(10px);transition:all .35s ease;pointer-events:none;
+}
+#rail:hover .lbl{opacity:1;transform:none}
+#rail .r.cur .lbl{border-color:var(--amb);color:var(--amb)}
+
+main{position:relative;z-index:1}
+
+/* ===== 时刻场景（全屏居中） ===== */
+.scene{min-height:118vh;display:flex;align-items:center;justify-content:center;padding:14vh 22px}
+.stage{max-width:620px;text-align:center;opacity:0;transform:translateY(34px);filter:blur(6px);transition:opacity 1.6s ease,transform 1.6s ease,filter 1.6s ease}
+.scene.on .stage,.station.on .stage{opacity:1;transform:none;filter:blur(0)}
+.kicker{
+  font-size:.8rem;letter-spacing:.55em;text-indent:.55em;color:var(--amb);
+  margin-bottom:30px;opacity:.85;
+}
+.kicker::after{
+  content:"";display:block;width:34px;height:1px;margin:16px auto 0;
+  background:var(--amb);opacity:.5;
+}
+.narr{font-size:1.18rem;color:var(--ink);margin-bottom:38px;text-align:center}
+.en{
+  font-family:Georgia,"Times New Roman",serif;font-style:italic;
+  font-size:.98rem;line-height:1.9;color:var(--amb);opacity:.92;margin-bottom:16px;
+}
+.zh{font-size:.95rem;color:var(--ink-dim);margin-bottom:10px}
+.ref{font-size:.74rem;letter-spacing:.2em;color:rgba(239,233,221,.34)}
+
+/* ===== 站点（左钉住 · 右细节流） ===== */
+.station{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);align-items:stretch}
+.pin{
+  position:sticky;top:0;height:100vh;
+  display:flex;align-items:center;justify-content:center;padding:0 3vw;
+}
+.pin .stage{max-width:520px}
+.detail{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:10vh 5vw 10vh 0;
+}
+.frag{
+  min-height:60vh;display:flex;flex-direction:column;justify-content:center;
+  max-width:440px;
+  opacity:0;transform:translateY(30px);
+  transition:opacity 1.3s ease,transform 1.3s ease;
+}
+.frag.on{opacity:1;transform:none}
+.f-k{
+  font-size:.78rem;letter-spacing:.4em;color:var(--amb);opacity:.85;margin-bottom:18px;
+}
+.f-en{
+  font-family:Georgia,"Times New Roman",serif;font-style:italic;
+  font-size:.92rem;line-height:1.9;color:var(--amb);opacity:.9;
+  border-left:2px solid rgba(255,255,255,.18);padding-left:16px;margin-bottom:14px;
+}
+.f-zh{font-size:.93rem;color:var(--ink-dim);margin-bottom:8px}
+.f-ref{font-size:.72rem;letter-spacing:.2em;color:rgba(239,233,221,.32)}
+
+/* 开场 */
+#s0 .narr{font-size:1.5rem;letter-spacing:.1em;line-height:2.3}
+.hint{
+  margin-top:60px;font-size:.8rem;letter-spacing:.4em;text-indent:.4em;
+  color:var(--ink-dim);animation:drift 2.6s ease-in-out infinite;
+}
+@keyframes drift{0%,100%{transform:translateY(0);opacity:.45}50%{transform:translateY(9px);opacity:.95}}
+
+/* 可选演示区（如棱镜 / 时间线 / 对比路径） */
+.demo{margin:8px auto 42px}
+.timeline{position:relative;max-width:460px;margin:0 auto 42px;text-align:left;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:rgba(255,255,255,.14)}
+.tl-item{position:relative;padding:2px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:11px;height:11px;border-radius:50%;
+  background:#070a12;border:3px solid var(--amb)}
+.tl-item .t{font-weight:700;color:var(--amb);letter-spacing:.1em}
+.tl-item .d{font-size:.9rem;color:var(--ink-dim)}
+.paths{display:flex;gap:26px;justify-content:center;margin-top:46px;flex-wrap:wrap}
+.path{
+  width:210px;padding:30px 22px 26px;border-radius:16px;cursor:pointer;
+  border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.02);
+  transition:all .7s ease;
+}
+.path h3{font-size:1.05rem;letter-spacing:.3em;text-indent:.3em;margin-bottom:12px}
+.path p{font-size:.86rem;color:var(--ink-dim);line-height:1.9}
+.paths.p-a .path:not(.a),.paths.p-b .path:not(.b){opacity:.28;transform:scale(.96)}
+.paths.p-a .path.a,.paths.p-b .path.b{transform:scale(1.04)}
+
+/* 面纱：模糊显影 */
+.veiled{transition:filter 3.4s ease,opacity 3.4s ease}
+#s4 .stage .veiled{filter:blur(14px);opacity:.12}
+#s4.on .stage .veiled{filter:blur(0);opacity:1}
+
+/* 终章 */
+#sLast .en{font-size:1.06rem;line-height:2.2}
+#sLast .zh{font-size:1rem}
+.again{
+  margin-top:56px;font-family:var(--serif);font-size:.85rem;letter-spacing:.35em;text-indent:.35em;
+  color:var(--ink-dim);background:none;border:1px solid rgba(255,255,255,.14);
+  border-radius:999px;padding:11px 30px;cursor:pointer;transition:all .4s;
+}
+.again:hover{color:var(--ink);border-color:var(--amb)}
+
+footer{
+  position:relative;z-index:1;text-align:center;padding:40px 20px 56px;
+  font-size:.76rem;color:rgba(239,233,221,.3);letter-spacing:.08em;line-height:2.2;
+}
+@media (max-width:900px){
+  .station{display:block}
+  .pin{position:static;height:auto;padding:12vh 22px 2vh}
+  .pin .stage{margin:0 auto}
+  .detail{padding:0 22px 6vh;align-items:center}
+  .frag{min-height:auto;margin-bottom:7vh}
+}
+@media (max-width:640px){
+  .narr{font-size:1.05rem}
+  #s0 .narr{font-size:1.2rem}
+  #rail{display:none}
+}
+</style>
+</head>
+<body>
+
+<canvas id="sky"></canvas>
+<div id="rail"></div>
+
+<main>
+
+<!-- 0 人海里的陌生人 -->
+<section class="scene" id="s0" data-c="#f5efe2">
+  <div class="stage">
+    <p class="narr">人群里总有一些人，<br>说不出为什么，<br>总觉得这里不是家。<br>他们是谁？</p>
+    <p class="en">"Imagine, if you will, the sands of your shores. As countless as the grains of sand are the sources of intelligent infinity."</p>
+    <p class="zh">智能无限的源头，多如你们海边沙滩上的沙粒。</p>
+    <p class="ref">—— SESSION 012 · (12.26)</p>
+    <p class="hint">向下滚动 · 认出那个格格不入的人 ▾</p>
+  </div>
+</section>
+
+<!-- 1 悲伤的兄弟姐妹 -->
+<section class="scene" id="s1" data-c="#d8dce9">
+  <div class="stage">
+    <p class="kicker">悲伤的兄弟姐妹</p>
+    <p class="narr">他们从沙粒般的造物各处走来，<br>听见一颗行星的哭声，<br>便朝哭声的方向去。<br>Ra 给了他们一个名字。</p>
+    <p class="en">"These entities, whom you may call the Brothers and Sisters of Sorrow, move towards this calling of sorrow."</p>
+    <p class="zh">他们自称——悲伤的兄弟姐妹：哪里有哀哭的呼唤，他们就朝哪里走去。</p>
+    <p class="ref">—— SESSION 012 · (12.26)</p>
+    <p class="en">"The number approaches sixty-five million."</p>
+    <p class="zh">此刻投生在地球上的，接近六千五百万人。</p>
+    <p class="ref">—— SESSION 012 · (12.27)</p>
+  </div>
+</section>
+
+<!-- 2 他们从哪颗星来 -->
+<section class="station" id="s2" data-c="#9db3d6">
+  <div class="pin"><div class="stage">
+    <p class="kicker">他们从哪颗星来</p>
+    <p class="narr">出发的港口不止一个。<br>第四密度的寥寥，<br>最大的一群，来自第六密度——<br>那里离合一最近，<br>离这里最远。</p>
+    <p class="en">"Few there are of fourth density. The largest number of wanderers, as you call them, are of the sixth density."</p>
+    <p class="zh">第四密度的寥寥可数；最大的一群，来自第六密度。</p>
+    <p class="ref">—— SESSION 012 · (12.28)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">两种来处</p>
+      <p class="f-en">"The wanderers in this working are of two densities: one the density of five, that is, of light; one the density of love/light, or unity."</p>
+      <p class="f-zh">在这间屋子里，两位流浪者来自两个密度：一位来自光（第五），一位来自爱/光与合一（第六）。Ra 不肯说谁是谁——那是每个人的自由意志。</p>
+      <p class="f-ref">—— SESSION 015 · (15.25)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">一波又一波</p>
+      <p class="f-en">"There have been a few. There have been many more which chose to join this last cycle of 25,000 years and many, many more which have come for harvest."</p>
+      <p class="f-zh">五万年来只有零星几位；更多的人选择加入这最后两万五千年的周期，还有许许多多，是专为收割而来的。</p>
+      <p class="f-ref">—— SESSION 070 · (70.16)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">Ra 的老同学</p>
+      <p class="f-en">"A significant portion of sixth-density wanderers are those of our social memory complex."</p>
+      <p class="f-zh">第六密度流浪者中，有相当一部分来自 Ra 自己的社会记忆复合体。</p>
+      <p class="f-ref">—— SESSION 045 · (45.4)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">无名的教师</p>
+      <p class="f-en">"This entity was then a wanderer of no name, of Confederation origins, of fifth density, representing the fifth-density understanding of the vibration of understanding or love."</p>
+      <p class="f-zh">你们称为耶稣的那位实体，当时是一位没有名字的流浪者：星际联邦出身，第五密度，代表着第五密度对理解或爱之振动的领悟。</p>
+      <p class="f-ref">—— SESSION 017 · (17.11)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">跨星系的应答</p>
+      <p class="f-en">"There are wanderers from other major galaxies drawn to the specific needs of a single call."</p>
+      <p class="f-zh">甚至有来自其他主要星系的流浪者，被一次召唤的特定需要吸引而来——宇宙虽大，召唤所至，必有应答。</p>
+      <p class="f-ref">—— SESSION 081 · (81.27)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 3 为什么往回跳 -->
+<section class="station" id="s3" data-c="#74a892">
+  <div class="pin"><div class="stage">
+    <p class="kicker">为什么往回跳</p>
+    <p class="narr">已经走到家门口的人，<br>又转身跳回第三密度。<br>这不是坠落——<br>是一次爱里签下的志愿书。</p>
+    <p class="en">"These are planetary entities harvested—wanderers only in the sense that they chose, in fourth-density love, to immediately reincarnate in third density rather than proceeding towards fourth density."</p>
+    <p class="zh">他们原是被收割的行星存有；之所以也算流浪者，是因为他们在第四密度的爱里，选择立即转回第三密度投生，而不继续走向第四密度。</p>
+    <p class="ref">—— SESSION 015 · (15.20)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">为了收成</p>
+      <p class="f-en">"The energies of your wanderers, your teachers, and your adepts at this time are all bent upon increasing the harvest. However, there are few to harvest."</p>
+      <p class="f-zh">流浪者、教师与行家们的能量，此刻全都倾注在同一个目的上：增加收割。然而可收割者，寥寥无几。</p>
+      <p class="f-ref">—— SESSION 013 · (13.23)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">要多纯的心</p>
+      <p class="f-en">"The desire to serve must be distorted towards a great deal of purity of mind and what you may call foolhardiness or bravery, depending upon your distortion complex judgment."</p>
+      <p class="f-zh">服务的渴望必须带有极高的心智纯洁，以及你们或可称为鲁莽、或可称为勇敢的东西——取决于你的判断。</p>
+      <p class="f-ref">—— SESSION 012 · (12.28)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">明知会忘</p>
+      <p class="f-en">"Thusly the positively oriented wanderer chooses to hazard the danger of the forgetting in order to be of service to others by radiating love of others."</p>
+      <p class="f-zh">正向极化的流浪者，选择拿「遗忘」的危险去冒险——只为向他人散发对他人的爱。</p>
+      <p class="f-ref">—— SESSION 036 · (36.17)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">高压的教室</p>
+      <p class="f-en">"If the forgetting is penetrated the amount of catalyst in third density will polarize the wanderer with much greater efficiency than shall be expected in the higher and more harmonious densities."</p>
+      <p class="f-zh">一旦穿透遗忘，第三密度浓烈的催化剂，极化一个流浪者的效率，远高于那些更高、更和谐的密度。</p>
+      <p class="f-ref">—— SESSION 036 · (36.17)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">爱与光不导航</p>
+      <p class="f-en">"Light and love go where they are sought and needed, and their direction is not planned aforetimes."</p>
+      <p class="f-zh">爱与光去往被寻求、被需要的地方，方向并不预先规划。流浪者带着目标而来，却不带剧本。</p>
+      <p class="f-ref">—— SESSION 065 · (65.11)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">三重任务</p>
+      <p class="f-en">"Thus wanderers have three basic functions once the forgetting is penetrated, the first two being basic, the tertiary one being unique to that particular mind/body/spirit complex."</p>
+      <p class="f-zh">一旦穿透遗忘，流浪者有三个功能：前两个是共同的基本功能，第三个，属于每个心/身/灵复合体独有的一份礼物。</p>
+      <p class="f-ref">—— SESSION 065 · (65.12)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 4 面纱 -->
+<section class="scene" id="s4" data-c="#c9b587">
+  <div class="stage">
+    <p class="kicker">面纱</p>
+    <p class="narr veiled">于是他们喝下那杯水。<br>忘掉光，忘掉家，<br>忘掉自己为什么来——<br>连「忘」本身，也忘了。</p>
+    <p class="en">"As we have said before, wanderers become completely the creature of third density in mind/body complex."</p>
+    <p class="zh">正如我们说过的：流浪者在心/身复合体中，成为彻头彻尾的第三密度造物。</p>
+    <p class="ref">—— SESSION 016 · (16.59)</p>
+    <p class="en">"Thus wanderers volunteer for third-density genetic, or DNA, connections to the mind/body/spirit complex."</p>
+    <p class="zh">为了守住第三密度的自由意志，流浪者们自愿接上第三密度的遗传连接——DNA。</p>
+    <p class="ref">—— SESSION 065 · (65.19)</p>
+  </div>
+</section>
+
+<!-- 5 漩涡 -->
+<section class="station" id="s5" data-c="#b26a3e">
+  <div class="pin"><div class="stage">
+    <p class="kicker">漩涡</p>
+    <p class="narr">代价写在出发的通知上：<br>你可能忘记使命，<br>卷入业力，<br>被卷回你本来要来平息的漩涡。</p>
+    <p class="en">"The challenge/danger of the wanderer is that it will forget its mission, become karmically involved, and thus be swept into the maelstrom from which it had incarnated to aid the destruction."</p>
+    <p class="zh">出发前就写明的风险：忘记使命、卷入业力——最后被卷回那个你本来要来帮忙平息的漩涡。</p>
+    <p class="ref">—— SESSION 012 · (12.28)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">一个有意识的不爱</p>
+      <p class="f-en">"An entity which acts in a consciously unloving manner in action with other beings can become karmically involved."</p>
+      <p class="f-zh">业力牵涉的门槛并不高：只要在与其他存有的互动中，有意识地做出不爱的举动。</p>
+      <p class="f-ref">—— SESSION 012 · (12.29)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">被行星振动收编</p>
+      <p class="f-en">"If the wanderer entity demonstrated, through action, a negative orientation towards other-selves it would be, as we have said before, caught into the planetary vibration and, when harvested, possibly repeat again the master cycle of third density as a planetary entity."</p>
+      <p class="f-zh">只要用行动表现出对他我的负面导向，流浪者就会被这颗行星的振动收编——收割时，可能得作为行星实体，把第三密度主周期再走一遍。</p>
+      <p class="f-ref">—— SESSION 016 · (16.61)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">被扭曲的礼物</p>
+      <p class="f-en">"It is unfortunate, shall we say, that like many wanderers, the vibratory distortions of third-density illusion caused this entity to become extremely distorted in its perceptions of its fellow mind/body/spirit complexes so that its mission was hindered and, in the result, perverted from its purposes."</p>
+      <p class="f-zh">像许多流浪者一样，那位带来方程的实体被第三密度幻象扭曲了对同伴的感知——使命受阻，最终背离了初衷。</p>
+      <p class="f-ref">—— SESSION 011 · (11.25)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">慈悲的失足</p>
+      <p class="f-en">"The end of this was the graduation into fourth-density negative of the wanderers, which had much power of personality, and some small deepening of the negatively polarized element of those not polarizing positively. There was no negative harvest as such."</p>
+      <p class="f-zh">两位来自早期正面第五密度的流浪者，想用更智慧的方式去打动黑暗中的人——结局却是双双毕业进负面第四密度。</p>
+      <p class="f-ref">—— SESSION 089 · (89.35)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">唯一的一例</p>
+      <p class="f-en">"We can note the number of such occurrences. There has been only one. We cannot, due to the Law of Confusion, discuss the entity."</p>
+      <p class="f-zh">有多少流浪者被负面力量移置进了负面时间/空间？有记录的只有一例——而出于困惑法则，Ra 不能谈论那个实体。</p>
+      <p class="f-ref">—— SESSION 069 · (69.12)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">Ra 的沉默</p>
+      <p class="f-en">"This information could be harmful. We withhold it. Please attempt to view the entities about you as part of the Creator. We can explain no further."</p>
+      <p class="f-zh">问：历史上有过第六密度负面流浪者吗？这信息可能有害，我们保留它。请试着把身边的实体都看作造物主的一部分。</p>
+      <p class="f-ref">—— SESSION 036 · (36.18)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 6 如何认出他们 -->
+<section class="station" id="s6" data-c="#a08a94">
+  <div class="pin"><div class="stage">
+    <p class="kicker">如何认出他们</p>
+    <p class="narr">没有徽章，没有名册。<br>只有一些细微的证词：<br>严重的疏离感，<br>一场说不清的过敏，<br>和一种深夜的乡愁。</p>
+    <p class="en">"Due to the extreme variance between the vibratory distortions of third density and those of the more dense densities, if you will, wanderers have, as a general rule, some form of handicap, difficulty, or feeling of alienation which is severe."</p>
+    <p class="zh">第三密度与更高密度的振动相差太远，所以流浪者几乎个个带着某种障碍、困难，或一种严重的疏离感。</p>
+    <p class="ref">—— SESSION 012 · (12.30)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">过敏与失眠</p>
+      <p class="f-en">"The most common of these difficulties are alienation, the reaction against the planetary vibration by personality disorders, as you would call them, and body complex ailments indicating difficulty in adjustment to the planetary vibrations such as allergies, as you would call them."</p>
+      <p class="f-zh">最常见的困难是疏离感、以人格障碍回应行星振动，以及身体对行星振动的不适应——比如你们所谓的过敏。</p>
+      <p class="f-ref">—— SESSION 012 · (12.30)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">模糊的乡愁</p>
+      <p class="f-en">"There are, in the case of those you call wanderers, not only a congenital difficulty in dealing with the third-density vibratory patterns, but also a recollection, however dim, that these distortions are not necessary or usual in the home vibration."</p>
+      <p class="f-zh">流浪者不仅有天生应对第三密度振动模式的困难，还有一种无论多么模糊的回忆：这些扭曲，在家乡的振动里既不必要、也不寻常。</p>
+      <p class="f-ref">—— SESSION 066 · (66.34)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">婴儿学话</p>
+      <p class="f-en">"You may see the wanderer as the infant attempting to verbalize the sound complexes of your peoples."</p>
+      <p class="f-zh">流浪者像一个试图开口说话的婴儿：沟通的记忆还在心里，嘴却还不听使唤。</p>
+      <p class="f-ref">—— SESSION 066 · (66.6)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">对婚姻的迟疑</p>
+      <p class="f-en">"Such entities are not likely to engage in the, shall we say, custom of your peoples called marriage and are very likely to feel an aversion to childbearing and child-raising due to the awareness of the impropriety of the planetary vibrations relative to the harmonious vibrations of the density of light."</p>
+      <p class="f-zh">第五密度的流浪者往往不愿进入你们称为婚姻的习俗，对生育与抚养孩子也多半感到迟疑——因为他们清楚：行星的振动，与光之密度的和谐并不相称。</p>
+      <p class="f-ref">—— SESSION 032 · (32.9)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">困在心智里的服务</p>
+      <p class="f-en">"There are many wanderers whose dysfunction with regard to the planetary ways of your peoples have caused, to some extent, a condition of being caught up in a configuration of mind complex activity which, to the corresponding extent, may prohibit the intended service."</p>
+      <p class="f-zh">许多流浪者对这颗行星人群的行事方式感到失灵，一时被卷进心智复合体的活动配置里——原本打算进行的服务，也因此受阻。</p>
+      <p class="f-ref">—— SESSION 065 · (65.3)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 7 唤醒 -->
+<section class="station" id="s7" data-c="#6c6fa5">
+  <div class="pin"><div class="stage">
+    <p class="kicker">唤醒</p>
+    <p class="narr">有谁会来叫醒他们？<br>星际联邦的办法千变万化，<br>唯一的规矩是：不许吓着，<br>并且要让那体验对这个人有意义。</p>
+    <p class="en">"The methods used to awaken wanderers are varied. The center of each approach is the entrance into the conscious and subconscious in such a way as to avoid causing fear and to maximize the potential for an understandable subjective experience which has meaning for the entity."</p>
+    <p class="zh">唤醒流浪者的方法各不相同。每种方法的核心，是以不引起恐惧的方式进入意识与潜意识，并把一次可理解的主观体验的可能性放到最大——那体验要对这个实体有意义。</p>
+    <p class="ref">—— SESSION 053 · (53.12)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">光之铠甲</p>
+      <p class="f-en">"The only difference occurs in the spirit complex which, if it wishes, has an armor of light, if you will, which enables it to recognize more clearly that which is not as it would appropriately be desired by the mind/body/spirit complex."</p>
+      <p class="f-zh">流浪者与地球人受影响的机会一样多。唯一的不同在灵复合体：如果它愿意，那里有一件光的铠甲，让它更清楚地认出「事情本不该如此」的时刻。</p>
+      <p class="f-ref">—— SESSION 016 · (16.59)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">睡眠中的课堂</p>
+      <p class="f-en">"Many such occur in sleep, others in the midst of many activities during the waking hours."</p>
+      <p class="f-zh">许多次唤醒发生在睡梦里；另一些，就发生在白天无数活动之中。</p>
+      <p class="f-ref">—— SESSION 053 · (53.12)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">被唤醒的感觉</p>
+      <p class="f-en">"The feeling of being awakened or activated is the goal of this type of contact."</p>
+      <p class="f-zh">这种接触的目标，正是那种「被唤醒、被激活」的感觉本身。</p>
+      <p class="f-ref">—— SESSION 053 · (53.8)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">能记起多少</p>
+      <p class="f-en">"The forgetting process can be penetrated to the extent of the wanderer remembering what it is, and why it is upon the planetary sphere."</p>
+      <p class="f-zh">遗忘可以被穿透到这个程度：记得自己是什么，以及为什么在这颗行星上——再多一步，便是对自由意志的侵犯。</p>
+      <p class="f-ref">—— SESSION 065 · (65.19)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">眼睛转向球</p>
+      <p class="f-en">"One may be a fine catcher of your game sphere, but if the eye is not turned as this sphere is tossed, then perchance it will pass the entity by."</p>
+      <p class="f-zh">许多流浪者本是行家，今生却未做有意识的工作——这只是注意力的问题：球投过来时，眼睛若不转过去，就会错过；若转过去，接住很容易。</p>
+      <p class="f-ref">—— SESSION 075 · (75.24)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">九个百分点的觉醒</p>
+      <p class="f-en">"We can approximate the percentage of those penetrating intelligently their status. This is between eight and one-half and nine and three-quarters percent."</p>
+      <p class="f-zh">今天地球的流浪者里，智能地穿透自身身份的，大约在百分之八点五到九点七五之间；另有略过半数的人，带着相当明确的「我不属于这场疯狂」的症状。</p>
+      <p class="f-ref">—— SESSION 036 · (36.24)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 8 回家 -->
+<section class="scene" id="sLast" data-c="#f5efe2">
+  <div class="stage">
+    <p class="kicker">回家</p>
+    <p class="narr">死亡不是失散。<br>约定好的使命一完成，<br>他们就顺着来路，<br>回到自己的振动里去。</p>
+    <p class="en">"If the agreed-upon mission is complete the wanderer’s mind/body/spirit complex will go to the home vibration."</p>
+    <p class="zh">无论来自第四、第五还是第六密度，使命如约完成的那一刻，他们便回到各自家园的振动。</p>
+    <p class="ref">—— SESSION 070 · (70.15)</p>
+    <p class="en">"All wanderers come to be of assistance in serving the Creator, each in its own way."</p>
+    <p class="zh">每一位流浪者，都是为了协助造物主的服务而来——方式，各不相同。</p>
+    <p class="ref">—— SESSION 089 · (89.36)</p>
+    <button class="again" id="again">回到人海</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+流浪者 · 滚动星旅 · 内容取自《一的法则》十余次集会中关于流浪者的讨论<br>
+引文为英文原文逐字摘录；中文为本页面自拟 · 仅作沉浸学习实验
+</footer>
+
+<script>
+/* ===== 星空画布（固定，勿改） ===== */
+const cv=document.getElementById('sky'),cx=cv.getContext('2d');
+let W,H,stars=[];
+function size(){W=cv.width=innerWidth*devicePixelRatio;H=cv.height=innerHeight*devicePixelRatio;}
+size();addEventListener('resize',size);
+for(let i=0;i<230;i++)stars.push({x:Math.random(),y:Math.random(),z:.25+Math.random()*.75,p:Math.random()*6.28,s:Math.random()});
+
+/* ===== 氛围色插值（固定，勿改） ===== */
+function hex2rgb(h){h=h.replace('#','');if(h.length===3)h=h.split('').map(c=>c+c).join('');return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
+const scenes=[...document.querySelectorAll('.scene,.station')].map(s=>({el:s,c:hex2rgb(s.dataset.c)}));
+let amb=[245,239,226];
+function lerp(a,b,t){return a+(b-a)*t}
+function rgb2css(c,a){return `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${a})`}
+
+/* ===== 渲染循环（固定，勿改） ===== */
+let t=0;
+function frame(){
+  t+=.016;
+  const sy=scrollY,wh=innerHeight;
+  let target=scenes[0].c;
+  for(const s of scenes){
+    const r=s.el.getBoundingClientRect();
+    if(r.top<wh*.55&&r.bottom>wh*.45){target=s.c;break}
+  }
+  for(let i=0;i<3;i++)amb[i]=lerp(amb[i],target[i],.045);
+  const ac=amb;
+  document.documentElement.style.setProperty('--amb',rgb2css(ac,1));
+
+  cx.clearRect(0,0,W,H);
+  const g=cx.createRadialGradient(W/2,H*.86,0,W/2,H*.86,H*.75);
+  g.addColorStop(0,rgb2css(ac,.10));g.addColorStop(1,'rgba(0,0,0,0)');
+  cx.fillStyle=g;cx.fillRect(0,0,W,H);
+  const dark=1-Math.min(1,(Math.hypot(ac[0]-245,ac[1]-239))/200);
+  for(const st of stars){
+    const px=st.x*W,py=((st.y - sy*.00004*st.z)%1+1)%1*H;
+    const tw=.5+.5*Math.sin(t*1.3+st.p);
+    cx.globalAlpha=(0.12+0.5*tw*st.z)*(0.35+0.65*dark);
+    cx.fillStyle=rgb2css(ac,1);
+    const r=st.s*1.4*st.z*devicePixelRatio;
+    cx.beginPath();cx.arc(px,py,r,0,6.28);cx.fill();
+  }
+  const oy=H*.62+Math.sin(t*.8)*10*devicePixelRatio;
+  const og=cx.createRadialGradient(W/2,oy,0,W/2,oy,26*devicePixelRatio);
+  og.addColorStop(0,rgb2css(ac,.9));og.addColorStop(.35,rgb2css(ac,.25));og.addColorStop(1,'rgba(0,0,0,0)');
+  cx.globalAlpha=1;cx.fillStyle=og;
+  cx.beginPath();cx.arc(W/2,oy,26*devicePixelRatio,0,6.28);cx.fill();
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+/* ===== 场景显影（固定，勿改） ===== */
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>e.target.classList.toggle('on',e.isIntersecting));
+},{threshold:.01});
+document.querySelectorAll('.scene,.station').forEach(s=>io.observe(s));
+
+/* 细节片段显影（固定，勿改） */
+const ioFrag=new IntersectionObserver(es=>{
+  es.forEach(e=>e.target.classList.toggle('on',e.intersectionRatio>.15));
+},{threshold:[0,.35,.6]});
+document.querySelectorAll('.frag').forEach(f=>ioFrag.observe(f));
+
+/* ===== 进度轨道（固定，勿改） ===== */
+const rail=document.getElementById('rail');
+scenes.forEach((s,i)=>{
+  const row=document.createElement('div');row.className='r';
+  const lbl=document.createElement('span');lbl.className='lbl';
+  const k=s.el.querySelector('.kicker');
+  lbl.textContent=k?k.textContent.trim():(i===0?'开始':'终章');
+  const d=document.createElement('i');
+  row.appendChild(lbl);row.appendChild(d);
+  row.onclick=()=>s.el.scrollIntoView({behavior:'smooth'});
+  rail.appendChild(row);
+});
+setInterval(()=>{
+  const wh=innerHeight;
+  scenes.forEach((s,i)=>{
+    const r=s.el.getBoundingClientRect();
+    rail.children[i].classList.toggle('cur',r.top<wh*.55&&r.bottom>wh*.45);
+  });
+},200);
+
+/* ===== 本章定制交互 ===== */
+/* 回到人海 */
+document.getElementById('again').onclick=()=>scrollTo({top:0,behavior:'smooth'});
+</script>
+</body>
+</html>

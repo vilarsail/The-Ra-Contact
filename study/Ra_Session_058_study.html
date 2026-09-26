@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 058 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 058 · 交互式学习模块</h1>
+  <p class="sub">这一集从「怎么用水晶给器皿的手腕做疗愈」的操作问题出发，一路追问到金字塔如何聚焦光、钻石为何是冻结之光、意念弯金属的原理，最后由 Ra 给出三股光能螺旋的总纲，并以「显化不如存在」收束。</p>
+  <div class="tagline">6 个主题 · 6 个学习步骤 · 13 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a><a href="#s2">② 摆锤与界线</a><a href="#s3">③ 金字塔聚焦</a><a href="#s4">④ 光与冻结之光</a><a href="#s5">⑤ 弯金属与靛蓝</a><a href="#s6">⑥ 三股螺旋收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>走一遍问答推进器：这一集如何从疗愈操作问到光的机制</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>学摆锤练习</b><span>工具、手法、校准次第，以及 Ra 划下的那条界线</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>拆金字塔聚焦</b><span>朝向、能量的来路、实心与框架之别——光认场不认墙</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>理解光（第三变貌）</b><span>Don 的真实目的，与「冻结之光」的三个开关</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>读弯金属现象</b><span>第二螺旋、靛蓝接触、忆起的纪律与它的用途边界</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官：三股螺旋与真路标</b><span>全集总纲，以及「显化不如存在」这句压轴的话</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ 第 1 章 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：从疗愈操作一路问到光的机制</h2></div>
+  <p class="sec-lead">第 58 集（1981 年 6 月 16 日）是一个「由术入道」的典型样本：发问者 Don 先问怎么用水晶帮器皿 Carla 的手腕做疗愈，Ra 却把话题一级级抬升——先谈练习的次第，再谈金字塔如何聚焦光，最后给出三股光能螺旋的总纲。本集体量不大，但链条完整，适合先走一遍问答路线图。</p>
+  <div class="card">
+    <h3>本集五块议题</h3>
+    <div class="q">这一集的对话是按什么线索推进的？为什么前半段像操作手册，后半段像物理课？</div>
+    <div class="case"><b>交接班式的开场：</b>1981 年 6 月 16 日上午的工作室里，Don 像病房交接班一样先询问 Carla 的身体状态（58.1-58.2），随后所有问题都围绕「手与手腕的疗愈」展开——这一集本身就是一次从护理操作问到底层机制的会诊。</div>
+    <ul>
+      <li><b>摆锤与水晶</b>：初学者为什么不该先拿强力水晶，以及 Ra 划下的界线（58.3-58.7）</li>
+      <li><b>金字塔聚焦</b>：朝向、能量的来路、实心与框架之别（58.8-58.16）</li>
+      <li><b>光与钻石</b>：Don 亮出真实目的——理解第三变貌（Light）；钻石是「冻结之光」（58.17-58.18）</li>
+      <li><b>弯曲金属</b>：意念致动的机制——第二螺旋与靛蓝接触（58.19-58.22）</li>
+      <li><b>三股螺旋与路标</b>：全集总纲，「显化不如存在」（58.23-58.24）</li>
+    </ul>
+    <div class="quote">
+      <p class="en">I greet you in the love and in the light of the One Infinite Creator.</p>
+      <p class="zh">我在太一无限造物主的爱与光中向你们致意。</p>
+      <span class="src">—— Session 058 · (58.0)</span>
+    </div>
+    <p class="plain">一句话概括本集：水晶与金字塔只是形状和焦点，真正起作用的是感知的修炼与光的本身——而能力显化与否，远不如存在状态重要。</p>
+  </div>
+  <div class="card">
+    <h3>问答脉络推进器：这一集是怎么一步步问下来的</h3>
+    <p>点击节点或用按钮，按原集顺序走一遍九个关键问答。</p>
+    <div class="flow-track" id="qaTrack"></div>
+    <div class="flow-detail" id="qaDetail"></div>
+    <div class="flow-ctrl"><button class="tri-btn" id="qaPrev">← 上一问</button> <button class="tri-btn" id="qaNext">下一问 →</button></div>
+    <div class="case"><b>从「怎么摆」到「为什么」：</b>就像新手先问教练「哑铃怎么举」，练了一个月才开始问「肌肉到底怎么生长」——Don 在本集先问操作（水晶怎么挂、金字塔怎么摆），问到一半自己亮出底牌：我要理解的是光本身（58.17）。</div>
+    <div class="case"><b>一本只讲到一半的教材：</b>本集收尾时 Ra 说「第三螺旋」可以下次集会再细问——这次对话在总纲刚立起来时就停住了，留下一条明确的伏笔给第 59 集。</div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 后勤</span></summary>
+    <div class="body">
+      <p><b>(58.1) 器皿状态：</b>如前所述，只是身体上的物理变貌有所增加。</p>
+      <p><b>(58.2) 增加的原因：</b>源于关节炎这种变貌本身的性质——一旦开始，便不可预测地持续、恶化或减轻。</p>
+      <p><b>(58.7 之后) 82 秒停顿：</b>Ra 拒答之后，双方静默了近一分半钟。</p>
+      <p><b>(58.24) 集会收尾：</b>Ra 确认器皿平衡良好、装备对齐妥当、团队尽责；「第三螺旋」的话题留待下次集会。</p>
+    </div>
+  </details>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 2 章 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>摆锤与水晶：初学者为何不该先拿强力水晶</h2></div>
+  <p class="sec-lead">开场的水晶话题看似琐碎，却藏着本集第一个普遍教训：工具的效力不等于使用者的功力。Ra 没有直接回答「水晶挂在哪最好」，而是把问题改写成「你该先练什么」——并且顺手划出一条什么都不能说的界线。</p>
+  <div class="card">
+    <h3>强力水晶与梵蒂冈</h3>
+    <div class="q">Don 想用水晶钻（diamond crystal）帮 Carla 的手腕做疗愈：是挂在脖子上，还是垂在右手下方一两厘米、正对手腕？哪种摆法最好？</div>
+    <div class="quote">
+      <p class="en">This would be appropriate if you were practiced at your healing art. To work with a powerful crystal such as you have, while unable to perceive the magnetic flux of the subtle bodies, is perhaps the same as recommending that the beginner, with saw and nail, create the Vatican.</p>
+      <p class="zh">若你已在疗愈技艺上有所修习，这样做才合适。使用如此强大的水晶，却还感知不到精微身体的磁通量，就好比建议一个初学者拿锯子和钉子去造一座梵蒂冈。</p>
+      <span class="src">—— Session 058 · (58.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">At this point in your development, you would do well to work with the unpowerful crystals in ascertaining, not only the physical major energy centers, but also the physical secondary and tertiary energy centers, and then begin to find the corresponding subtle body energy centers. In this way, you may activate your own inner vision.</p>
+      <p class="zh">在你们发展的这个阶段，你们最好使用不强大的水晶去确认——不只是物理的主要能量中心，还有物理的次要与第三级能量中心——然后开始寻找与之对应的精微身体能量中心。如此，你们可以激活自己的内在视觉。</p>
+      <span class="src">—— Session 058 · (58.3)</span>
+    </div>
+    <p class="plain">工具越强，越要求感知先行——先练「看得见」，再谈「做得到」。</p>
+    <div class="analogy"><b>延伸比喻：</b>Ra 的「锯子和钉子造梵蒂冈」放到今天，就像让一个刚读完说明书的人去操作精密手术激光：设备本身没问题，问题是操作者还「看不见」需要看见的东西。</div>
+    <div class="case"><b>木工课的第一天：</b>学员想用电圆锯在胡桃木上直接切燕尾榫，老师递给他软木和铅笔：先画线、先练直。Ra 让 Don 改用「不强大的水晶」去定位能量中心，正是同一个次第——先练感知，再碰利器（58.3）。</div>
+    <div class="case"><b>先对表再出门：</b>两只机械表走时不同，先把其中一只与电台报时对准，再去校第三只——摆锤练习的第一课也是校准：先悬在自己手上方测出「正常螺旋」，再去看别人（58.5-58.6）。</div>
+  </div>
+  <div class="card">
+    <h3>摆锤练习四步</h3>
+    <div class="q">既然不该用强力水晶，那用什么练、怎么练？摆锤转与不转分别说明什么？</div>
+    <div class="flow-track" id="pendTrack"></div>
+    <div class="flow-detail" id="pendDetail"></div>
+    <div class="quote">
+      <p class="en">You may use any dangling weight of symmetrical form, for your purpose is not to disturb or manipulate these energy centers but merely to locate them and become aware of what they feel like when in a balanced state and when in an unbalanced, or blocked, state.</p>
+      <p class="zh">任何对称形状的悬挂重物都可以用——因为你的目的不是扰乱或操纵这些能量中心，而只是定位它们，并觉察它们在平衡状态下、以及在不平衡或阻塞状态下各自是什么感觉。</p>
+      <span class="src">—— Session 058 · (58.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The circular motion shows an unblocked energy center. However, some entities are polarized the reverse of others, and, therefore, it is well to test the form of normal energy spirals before beginning the procedure.</p>
+      <p class="zh">圆周运动显示能量中心未被阻塞。然而有些实体的极化方向与他人相反，因此开始这一程序之前，最好先测出正常能量螺旋的形态。</p>
+      <span class="src">—— Session 058 · (58.5)</span>
+    </div>
+    <p class="plain">摆锤是「读数仪」不是「治疗仪」：它只帮你定位与感知，不替你疗愈。</p>
+    <div class="case"><b>血压计与降压药：</b>血压计能告诉你血压高不高，却不能替你降压——把摆锤悬在同事手腕上方观察旋转，是「测量」，合于 Ra 说的目的；想借它的转动去「搅开」淤堵的中心，就越界成了「操纵」。</div>
+    <div class="case"><b>数字万用表先调零：</b>电工测电路前先把表笔短接、确认读数为零——不调零就测，读数全是错的。摆锤练习的「先在自己手上观察你特有的构型」，就是这一次调零（58.6）。</div>
+  </div>
+  <div class="card">
+    <h3>一条界线：Ra 为什么拒答</h3>
+    <div class="q">Don 顺势追问：既然要疗愈 Carla 的手腕，那要不要直接测她手腕区域的能量中心？——这次 Ra 没有给「对/错」，而是给了拒绝。</div>
+    <div class="quote">
+      <p class="en">There is a line beyond which information is an intrusion upon the Law of Confusion.</p>
+      <p class="zh">有一条界线，越过它，信息就成了对混淆法则的侵犯。</p>
+      <span class="src">—— Session 058 · (58.7)</span>
+    </div>
+    <p class="plain">方法可以教，针对具体个人的那扇门，得本人自己走过去敲——拒答本身就是这堂课的内容。</p>
+    <div class="case"><b>导师不替你填志愿：</b>新人问部门前辈「我该不该跳槽」，前辈可以讲行业规律、讲判断框架，却不会替他做决定——针对那个人的答案是对方自由选择的领地，Ra 在 58.7 守住的正是这条界线。</div>
+    <div class="case"><b>药师的分寸：</b>药店药师能讲解一种药的原理与一般用法，却不会隔着柜台替你确诊开方——「一般信息」与「针对你的答案」之间，隔着一道职业伦理的线。</div>
+  </div>
+  <div class="card">
+    <h3>归类练习：哪类动作合于摆锤练习？</h3>
+    <p>判断下面每个场景属于哪一类：<b>A</b>＝定位与感知（合于练习目的）；<b>B</b>＝操纵或误用工具；<b>C</b>＝越过混淆法则的界线。</p>
+    <div id="pendSorter"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 3 章 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>金字塔如何聚焦能量：朝向、来路与「场」</h2></div>
+  <p class="sec-lead">放下水晶，Don 换了个对象：形状本身。他不再问「怎么用」，而是一连串「我陈述、你来纠正」，把金字塔的聚焦条件逐条试出来。这一段是全集中最像物理实验的部分，Ra 也用「基本正确，补充一点」的节奏逐条校准。</p>
+  <div class="card">
+    <h3>朝向与倒置</h3>
+    <div class="q">金字塔怎么摆聚焦最强？侧面要平行磁北吗？反过来摆（尖朝下）行不行？</div>
+    <div class="quote">
+      <p class="en">This is substantially correct, with one addition. If one corner is oriented to the magnetic north, the energy will be enhanced in its focus also.</p>
+      <p class="zh">这基本上正确，另有一点补充：若把一个角朝向磁北，能量的聚焦也会得到增强。</p>
+      <span class="src">—— Session 058 · (58.8)</span>
+    </div>
+    <ul>
+      <li><b>侧面平行磁北</b>——聚焦最强的基准配置（58.8）；</li>
+      <li><b>对角线对磁北</b>（与侧面朝向相差 45°）——比完全不对照好得多，但不及侧面平行（58.9）；</li>
+      <li><b>倒置（尖朝下）</b>——效果随之颠倒；只有当某个实体的极性出于某种原因被颠倒时，它才会那样运作（58.10-58.11）。</li>
+    </ul>
+    <div class="case"><b>路由器的天线：</b>随手扔在墙角也有信号，但把天线转向书房，视频会议立刻不卡——朝向决定聚焦效率。Don 的金字塔同样以磁北为基准取「对齐增益」，差别只是这里的「信号」是螺旋的光。</div>
+    <div class="case"><b>倒过来的漏斗：</b>漏斗口朝上才接得住水，倒过来水就四散——Ra 说倒置的金字塔效果随之颠倒，只有极性本身颠倒的实体才会从倒置中得利（58.11）。</div>
+  </div>
+  <div class="card">
+    <h3>能量的来路：不是地心，是无处不在的光</h3>
+    <div class="q">这些螺旋的光线，是从地心向外辐射出来的吗？</div>
+    <div class="quote">
+      <p class="en">The pyramid shape is a collector which draws the instreaming energy from what you would term the bottom, or base, and allows this energy to spiral upward in a line with the apex of this shape.</p>
+      <p class="zh">金字塔这个形状是一个收集器：它从你们所说的底部、基底汲取流入的能量，并让这股能量沿着与顶点一致的线向上螺旋。</p>
+      <span class="src">—— Session 058 · (58.12)</span>
+    </div>
+    <p>Ra 顺手纠正了问题里的预设：这能量不是「地球能量」，而是无处不在的光；倒置的金字塔同样照此运作。</p>
+    <p class="plain">金字塔不「发电」，只「汇流」：光本来就在，形状只是把它拢成一股。</p>
+    <div class="case"><b>屋檐接雨：</b>雨水不是屋檐造出来的，但一段斜出的屋檐能把散落的雨引进水桶——金字塔从基底收入「流入的能量」并引向顶点，屋檐的角度与桶的位置（形状与朝向）决定你接得到多少。</div>
+  </div>
+  <div class="card">
+    <h3>实心还是框架：光认「场」，不认「墙」</h3>
+    <div class="q">四根木棍搭的空心框架，和实心的塔效果一样吗？为什么几根棍子就能聚焦？</div>
+    <div class="quote">
+      <p class="en">If you pictured light in the metaphysical sense as water, and the pyramid shape as a funnel, this concept might become self-evident.</p>
+      <p class="zh">若你把形而上意义上的光想象成水，把金字塔的形状想象成漏斗，这个概念也许就不言自明了。</p>
+      <span class="src">—— Session 058 · (58.15)</span>
+    </div>
+    <div class="quote">
+      <p class="en">However, in time/space one is concerned with the electromagnetic field produced by the shape. An equivalent field is produced by the solid and the open shape. Light is influenced metaphysically by this field rather than by visible shapes.</p>
+      <p class="zh">然而在时间/空间中，所关切的是这个形状产生的电磁场。实体形状与开放形状产生的是等效的场。光在形而上层面受的是这个场的影响，而非可见形状的影响。</p>
+      <span class="src">—— Session 058 · (58.16)</span>
+    </div>
+    <ul>
+      <li>在<b>空间/时间</b>（我们熟悉的物理世界）里，实心与框架并不等同：若要住进塔里，实心面能挡住噪音、风雨等对冥想的干扰（58.13、58.16）；</li>
+      <li>在<b>时间/空间</b>里，起作用的是形状产生的电磁场——实心与开放框架等效；</li>
+      <li>材料上，冥想用的金字塔多不推荐金属；推荐的是昂贵金属，或木材、其他天然材料、人造塑料棒（58.14）。</li>
+    </ul>
+    <p class="plain">墙是给身体的，场是给光的：光认场不认墙，墙只是替身体挡干扰。</p>
+    <div class="case"><b>磁铁隔着纱窗：</b>磁铁隔着纱窗照样吸住铁钉——纱窗这层「可见形状」改变不了磁场；实心塔与四根棍在可见层差别巨大，在「场」的层面却是同一件事（58.16）。</div>
+    <div class="case"><b>图书馆隔间与 Wi-Fi：</b>自习室用实心隔间挡噪音，是因为身体需要安静；而无线信号穿墙而过，不受隔间影响——「给身体用的墙」与「给场用的敞开」可以同时成立（58.13-58.16）。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+<!-- ============ 第 4 章 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>光=第三变貌：漏斗与冻结之光</h2></div>
+  <p class="sec-lead">问了一整段金字塔的「工程参数」之后，Don 先道歉，然后亮出真实目的：他不是想盖金字塔，是想借它理解光的运作方式——第三变貌（Light）。Ra 不仅不以为忤，还逐条确认了这条理解路线。</p>
+  <div class="card">
+    <h3>Don 的真实目的</h3>
+    <div class="q">我这些金字塔问题会不会跑题了？——Don 先道歉，再解释：我是想借金字塔理解「光」本身。</div>
+    <div class="quote">
+      <p class="en">I am trying to understand the way light works, and trying to get a grasp of how everything works together, and I was hoping that questions in this area on the pyramid would help me understand the Third Distortion, I’ll say, which is Light.</p>
+      <p class="zh">我试图理解光如何运作，试图把握万物如何协同运作；我希望金字塔这一领域的问题，能帮助我理解第三变貌——我将之称作光。</p>
+      <span class="src">—— Session 058 · (58.17)</span>
+    </div>
+    <p>于是前面的「工程问题」全部接回主线：金字塔如漏斗般提高能量的密度，让个体获得更强的第三变貌强度——Ra 的评语是「大体上正确」（58.17）。</p>
+    <p class="plain">问「装置的参数」其实是问「光的性质」：Don 不是在攒设备，是在借装置研究它背后的那个东西。</p>
+    <div class="case"><b>为了学光学而拆收音机：</b>少年拆开旧收音机不是为了装回一台收音机，而是想弄懂「电波到底是什么」——Don 追问金字塔的每个参数，动机也是借一件「装置」去看它背后的光。</div>
+    <div class="case"><b>课堂上「愚蠢」的问题：</b>物理课上举手问「为什么光速不变」的学生常先道歉，老师却告诉他这正是好问题——Ra 对 Don 这段致歉的回应，是确认而非纠正。</div>
+  </div>
+  <div class="card">
+    <h3>钻石：冻结的光，以及它的「开关」</h3>
+    <div class="q">钻石这样的纯净结晶，是不是第三变貌（光）在第三密度里的一个窗口、一种聚焦机制？</div>
+    <div class="quote">
+      <p class="en">However, it may be noted that only the will of the crystallized entity may cause interdimensional light to flow through this material. The more regularized the entity and the more regularized the crystal, the more profound the effect.</p>
+      <p class="zh">然而可以指出：唯有结晶化实体的意志，才能令跨维度的光流经这种材料。实体越规律化、水晶越规律化，效果就越深远。</p>
+      <span class="src">—— Session 058 · (58.18)</span>
+    </div>
+    <p class="plain">水晶是窗口不是光源；让光穿窗而过的，是使用者的意志，加上人与水晶双方的规律化程度。</p>
+    <div class="analogy"><b>望远镜观星：</b>望远镜本身不会看见星星——观测者的课题（意志）加镜片的研磨精度（规律化），共同决定你能看到多深的天光。</div>
+    <div class="case"><b>老茶师与同一把壶：</b>同一把紫砂壶，新手泡出涩茶，茶艺师泡出回甘——壶（水晶/形状）提供条件，人的功夫（意志与规律化）决定效果。Ra 在 58.18 把权重明确放在「人」的那一侧。</div>
+    <div class="case"><b>同一副杠铃：</b>健身房里同一副杠铃，有人练出背肌，有人只拿它占着器械——「第三密度里光的物理显现」是中性的，把重量变成训练的，从来是使用者的意图与状态。</div>
+  </div>
+  <div class="card">
+    <h3>条件模拟器：跨维度的光何时流经水晶？</h3>
+    <p>按 58.18，拨动下面三个开关，看光过不过得去。</p>
+    <div class="cond-row"><div class="name">结晶化实体的意志<small>唯有意志能让光流动（58.18）</small></div><label class="switch"><input type="checkbox" id="swWill" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">实体已规律化<small>实体越规律化，效果越深远</small></div><label class="switch"><input type="checkbox" id="swEnt" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">水晶已规律化<small>水晶越规律化，效果越深远</small></div><label class="switch"><input type="checkbox" id="swCry" checked><span class="slider"></span></label></div>
+    <div id="condResult"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 5 章 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>弯曲金属：被忆起的纪律与靛蓝接触</h2></div>
+  <p class="sec-lead">从水晶与金字塔，话题自然滑向当时街头的「意念弯勺」现象：这些人没受过训练，凭什么能弯金属？Ra 用金字塔的第二螺旋给出解释，也顺手给这能力定了位——它属于建造，不属于疗愈。</p>
+  <div class="card">
+    <h3>他们在做什么：体外的第二螺旋</h3>
+    <div class="q">那些用意念请求弯曲金属的人，实际发生的是什么？他们接入的是什么能量？</div>
+    <div class="quote">
+      <p class="en">As this second spiral ends at the apex, the light may be likened unto a laser beam in the metaphysical sense; and when intelligently directed may cause bending not only in the pyramid, but this is the type of energy which is tapped into by those capable of this focusing of the upward spiraling light. This is made possible through contact in indigo ray with intelligent energy.</p>
+      <p class="zh">当这第二螺旋在顶点终结，光在形而上意义上可比作激光束；当它被智能地引导，便能造成弯曲——不仅在金字塔之内，这正是那些能够聚焦向上螺旋之光者所接入的能量类型。它经由靛蓝色光芒与智能能量的接触而成为可能。</p>
+      <span class="src">—— Session 058 · (58.19)</span>
+    </div>
+    <p class="plain">弯金属＝把金字塔第二螺旋的效果在体外复现：通道是靛蓝光芒（indigo ray），源头是智能能量（intelligent energy）。</p>
+    <div class="case"><b>放大镜点纸：</b>放大镜把摊开的阳光聚成一个小点，纸就烫着了——阳光一直在，聚焦让它「成束」。第二螺旋在顶点处正是这束「形而上的激光」，弯金属者是把这束光引到了体外的目标上。</div>
+  </div>
+  <div class="card">
+    <h3>为什么无师自通：忆起，而非新学</h3>
+    <div class="q">这些人似乎没受过任何训练，为什么会？这本事值不值得专门去练、又该用在哪？</div>
+    <div class="quote">
+      <p class="en">They remember the disciplines necessary for this activity which is merely useful upon other true-color vibratory experiential nexi.</p>
+      <p class="zh">他们忆起了这项活动所需的纪律——而这活动仅仅在其他真实颜色振动的体验联结中才有用。</p>
+      <span class="src">—— Session 058 · (58.20)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The end of such energy focusing is to build, not to destroy, and it does become quite useful as, shall we say, an alternative to third-density building methods.</p>
+      <p class="zh">这种能量聚焦的终点是建造，而非摧毁；它确实会变得相当有用——不妨说，是第三密度建造方式的一种替代。</p>
+      <span class="src">—— Session 058 · (58.21)</span>
+    </div>
+    <p>能力来自「忆起」：这些纪律是在其他真实颜色（true color）的振动体验联结中习得的。至于用途——在本行星临近的第四密度，它将作为第三密度建造方式的替代而有用；而「能用来疗愈吗」——Ra 的回答是一个干脆的 No（58.22）。</p>
+    <p class="plain">不是新能力，是旧记忆：而在本密度它用处有限，它的正途是建造，不是表演，也不是疗愈。</p>
+    <div class="case"><b>爷爷下水就会游：</b>多年没下水的老人陪孙子进泳池，扑腾两下就游起来了——不是新学的，是身体忆起了几十年前的纪律。Ra 说弯金属者「忆起」训练，正是这种「我记得怎么做」，只是记忆来自别处的体验（58.20）。</div>
+    <div class="case"><b>新工具进工地：</b>工地上从手锯换成台锯，是为了又快又直地把楼盖起来，不是为了展示能拆什么——「终点是建造，不是摧毁」；至于拿它疗愈，Ra 摇头：No（58.21-58.22）。</div>
+  </div>
+  <div class="card">
+    <h3>术语卡：本集的六个关键词</h3>
+    <p>点击卡片展开背面的白话释义。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">靛蓝色光芒</div><div class="sub">indigo ray</div><span class="tap">点击展开</span></div><div class="back">能量中心序列中的高阶通道；本集中，与智能能量的接触经由它发生，弯金属的能力因此成为可能（58.19、58.23）。<em>像高层频段的权限：信号一直在，能不能连上取决于你在哪个频段。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">智能能量</div><div class="sub">intelligent energy</div><span class="tap">点击展开</span></div><div class="back">有组织、可被智能引导的能量形态；第二螺旋那道「形而上的激光束」正是它（58.19）。<em>像电已经送进楼里的插座：电源不决定你拿它做什么。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">真实颜色</div><div class="sub">true color</div><span class="tap">点击展开</span></div><div class="back">58.20 原文作 other true-color vibratory experiential nexi——在其他「颜色」（密度）里的振动体验联结；弯金属的纪律是从那里忆起的。<em>像在几个国家生活过的履历：有些本事是在别处学会的。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">混淆法则</div><div class="sub">Law of Confusion</div><span class="tap">点击展开</span></div><div class="back">Ra 在 58.7 划出的界线：越过它，信息就成了侵扰——因此拒答本身也是一种回答。<em>导师肯讲行业规律，却不替你填志愿。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">精微身体</div><div class="sub">subtle body</div><span class="tap">点击展开</span></div><div class="back">物理身体之外的能量构型，其能量中心与物理的能量中心一一对应；摆锤练习的进阶目标就是感知它（58.3）。<em>身体的「信号层」：先学会读信号，才谈得上调整。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">空间/时间 · 时间/空间</div><div class="sub">space/time · time/space</div><span class="tap">点击展开</span></div><div class="back">我们熟悉的一面是空间/时间；时间/空间是另一面，那里起作用的是形状产生的电磁场，而非可见形状（58.16）。<em>硬币的两面：正面看是墙，背面看是场。</em></div></div>
+    </div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 6 章 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>三股螺旋与真路标：显化不如存在</h2></div>
+  <p class="sec-lead">收官处，Ra 主动宣布「这是本次工作的最后一个完整询问」，给出全集总纲——金字塔所展示的三股光能螺旋；然后回答那个真正要紧的问题：能力显化，算不算一个实体发展的路标？</p>
+  <div class="card">
+    <h3>三股螺旋总纲</h3>
+    <div class="q">这些螺旋光能到底有几股、各管什么？前面谈的疗愈、建造、充能怎么各归各位？</div>
+    <div class="quote">
+      <p class="en">Let us specify the three spirals of light energy which the pyramid exemplifies. Firstly, the fundamental spiral which is used for study and for healing. Second, the spiral to the apex which is used for building. Thirdly, the spiral spreading from the apex which is used for energizing.</p>
+      <p class="zh">让我们明确金字塔所展示的三股光能螺旋。第一，基本螺旋——用于学习与疗愈。第二，通向顶点的螺旋——用于建造。第三，自顶点散开的螺旋——用于充能。</p>
+      <span class="src">—— Session 058 · (58.23)</span>
+    </div>
+    <div class="flow-track" id="spiralTrack"></div>
+    <div class="flow-detail" id="spiralDetail"></div>
+    <div class="case"><b>三件事问三股螺旋：</b>学生用摆锤找能量中心（第一股·学习与疗愈）、工人畅想「将来用光盖房子」（第二股·建造）、有人把水晶摆在窗台「充一充」（第三股·充能）——本集谈到的所有用途，各归各的螺旋，不混用（58.23）。</div>
+    <div class="case"><b>烛火旁的收尾：</b>那次集会结束前，Don 问「第三螺旋是什么意思」，Ra 只给了一个意象：去想象蜡烛的火焰——那从火苗顶端摇曳散出的光（58.24）。</div>
+  </div>
+  <div class="card">
+    <h3>路标之辨：显化是次要的路标</h3>
+    <div class="q">那要不要专门去练弯金属？它是不是一个实体靛蓝发展的路标？</div>
+    <p>Ra 的回答分三层：与靛蓝光芒的接触<b>不必然</b>以任何特定天赋或路标显现；有的实体靛蓝能量是纯粹存在、从未显化，却人尽可知其进展；有人以教导与分享显化与智能能量的接触，也有人保持未显化、寻求智能无限。显化是较次要的路标。</p>
+    <div class="quote">
+      <p class="en">If you picture the candle flame, you may see the third spiral.</p>
+      <p class="zh">若你想象那蜡烛的火焰，你便可以看见第三螺旋。</p>
+      <span class="src">—— Session 058 · (58.24)</span>
+    </div>
+    <p class="plain">别用「会什么」衡量进度：Ra 给的尺子是存在状态，不是技能清单。</p>
+    <div class="case"><b>办公室里的两种靠谱：</b>一位天天在群里晒加班战绩，另一位从不声张、项目到他那总能落地——真正让人托付的是后者身上那种「说不上来但感觉得到」的存在感。</div>
+    <div class="case"><b>急救课的安静学员：</b>考官不评谁嗓门大，而看心跳骤停模拟人前谁的动作最稳——三种靛蓝形态（纯粹存在者、以教导分享者、静默寻求者）在 Ra 眼里各有其路，显化与否不进评分表（58.23）。</div>
+  </div>
+  <div class="saying">
+    <p class="en">Thus the manifestation is a lesser signpost than that which is sensed, or intuited, about a mind/body/spirit complex. This violet-ray beingness is far more indicative of true self.</p>
+    <p class="zh">对于心/身/灵复合体，显化是比被感知到、被直觉到的东西更次要的路标。这种紫罗兰光芒的存在状态，远更能指示真我。</p>
+    <span class="src">—— Session 058 · (58.23)</span>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 058（split/Ra_Session_058.md）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra058-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本集定制交互 ===== */
+const qaChain=[
+ {t:'器皿状况',d:'<span class="qa-q">问：器皿今天的身体状况如何？</span><b>答：</b>如前所述，只是物理变貌有所增加；这类变貌（关节炎）一旦开始，便不可预测地持续、恶化或减轻（58.1-58.2）。'},
+ {t:'水晶摆法',d:'<span class="qa-q">问：水晶钻怎么摆，才能最好地作用于手腕？</span><b>答：</b>先别急着摆——感知未成而用强力水晶，如同让初学者拿锯子和钉子去造梵蒂冈；该先用不强大的水晶练定位（58.3）。'},
+ {t:'摆锤练习',d:'<span class="qa-q">问：那用什么练、怎么练？</span><b>答：</b>任何对称重物即可，目的只是定位能量中心、感知平衡与阻塞；圆周运动＝未阻塞，且要先在自己手上测出正常螺旋方向（58.4-58.6）。'},
+ {t:'划下界线',d:'<span class="qa-q">问：要不要直接测器皿手腕区域的能量中心？</span><b>答：</b>Ra 拒绝——越过界线，信息就侵犯混淆法则；其后是 82 秒的停顿（58.7）。'},
+ {t:'金字塔朝向',d:'<span class="qa-q">问：金字塔怎么摆，聚焦最强？</span><b>答：</b>侧面平行磁北最佳，一角对磁北也增强；倒置则效果颠倒（58.8-58.11）。'},
+ {t:'能量的来路',d:'<span class="qa-q">问：能量从哪来？实心塔和空心框架一样吗？</span><b>答：</b>塔是收集器，能量是无处不在的光；实心与框架在时间/空间中产生等效电磁场——光受场而非可见形状影响（58.12-58.16）。'},
+ {t:'光与钻石',d:'<span class="qa-q">问：这些问题到底为了什么？</span><b>答：</b>Don 点明真实目的——理解第三变貌（光）；钻石是冻结之光，唯有结晶化实体的意志能让跨维度的光流过（58.17-58.18）。'},
+ {t:'弯曲金属',d:'<span class="qa-q">问：意念弯金属的人在做什么？</span><b>答：</b>相当于在体外调用金字塔第二螺旋，经靛蓝光芒与智能能量的接触而成；这是忆起的纪律，终点是建造而非摧毁（58.19-58.22）。'},
+ {t:'三股螺旋收官',d:'<span class="qa-q">问：显化是不是发展的路标？</span><b>答：</b>Ra 总结三股螺旋，并指出紫罗兰光芒的存在状态远比显化更能指示真我；至于第三螺旋——去看蜡烛的火焰（58.23-58.24）。'}
+];
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',qaChain);
+
+const pendSteps=[
+ {t:'选一件重物',d:'任何对称形状的悬挂重物都可以（螺母、戒指、小砝码）。目的不是扰乱或操纵能量中心，只是定位并感知它们平衡与阻塞时各自的状态（58.4）。'},
+ {t:'悬于部位上方',d:'手到重物的距离无关紧要，自行决定；把重物悬在要查看的部位上方（58.5）。'},
+ {t:'读运动形态',d:'圆周运动＝能量中心未被阻塞。但有的实体极化方向与他人相反，所以还不能急着下结论（58.5）。'},
+ {t:'先校准再使用',d:'先悬在自己手上方，观察你自己的正常螺旋构型；再换到其他自我的手上重复——先立基准，再读他人（58.6）。'}
+];
+initStepper('pendTrack','pendDetail',null,null,pendSteps);
+
+const spiralSteps=[
+ {t:'第一螺旋·基本',d:'自基底向上运行的基本螺旋——用于学习（study）与疗愈（healing）（58.23）。'},
+ {t:'第二螺旋·通向顶点',d:'汇聚至顶点的螺旋——形而上意义上如激光束；被智能引导时造成弯曲，用于建造（58.19、58.23）。'},
+ {t:'第三螺旋·自顶点散开',d:'从顶点向外扩散的螺旋——用于充能（energizing）。它的样子？去想象蜡烛的火焰（58.23-58.24）。'},
+ {t:'靛蓝与真路标',d:'靛蓝接触不必然以特定天赋显现；显化是较次要的路标，紫罗兰光芒的存在状态更指示真我（58.23）。'}
+];
+initStepper('spiralTrack','spiralDetail',null,null,spiralSteps);
+
+initSorter('pendSorter',[
+ {a:'把一枚对称的黄铜螺母悬在自己手上方，观察它自然转动的方向',opts:['A','B','C'],ans:'A',exp:'先在自己身上测出「正常螺旋」，是 Ra 建议的第一步校准（58.6）。'},
+ {a:'把摆锤悬在同事手腕上方，看它是否画圆，判断能量中心通不通',opts:['A','B','C'],ans:'A',exp:'圆周运动显示未阻塞的能量中心——定位与感知正是练习目的（58.5）。'},
+ {a:'试图用摆锤的旋转把某个「堵住」的能量中心搅开',opts:['A','B','C'],ans:'B',exp:'Ra 明说：目的不是扰乱或操纵这些能量中心（58.4）。'},
+ {a:'追问「器皿手腕区域的能量中心在哪，好治好她的关节炎」',opts:['A','B','C'],ans:'C',exp:'针对具体个人的疗愈信息一旦给出就越过界线，侵犯混淆法则（58.7）。'},
+ {a:'把强力水晶钻悬在患处上方一两厘米，指望它替你完成疗愈',opts:['A','B','C'],ans:'B',exp:'感知未成而动用强力水晶，正是 Ra 说的「初学者拿锯子造梵蒂冈」——工具不替人工作（58.3）。'}
+]);
+
+function updateLight(){
+  const will=document.getElementById('swWill').checked;
+  const ent=document.getElementById('swEnt').checked;
+  const cry=document.getElementById('swCry').checked;
+  const box=document.getElementById('condResult');
+  if(will&&ent&&cry){
+    box.classList.remove('fail');
+    box.innerHTML='<b>光流过去了。</b>结晶化实体的意志推动跨维度之光，穿过规律化的实体与规律化的水晶——「实体越规律化、水晶越规律化，效果越深远」（58.18）。';
+  }else{
+    const miss=[];
+    if(!will)miss.push('缺意志：唯有结晶化实体的意志能让光流动——没有它，再纯净的窗口也只是一块玻璃（58.18）');
+    if(!ent)miss.push('实体未规律化：窗口边缘还有毛刺，效果大打折扣（58.18）');
+    if(!cry)miss.push('水晶未规律化：打磨未完成，光过得去也走不远（58.18）');
+    box.classList.add('fail');
+    box.innerHTML='<b>光过不去，或走不远。</b>'+miss.join('；');
+  }
+}
+['swWill','swEnt','swCry'].forEach(id=>document.getElementById(id).addEventListener('change',updateLight));
+updateLight();
+
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+renderPath();
+</script>
+</body>
+</html>

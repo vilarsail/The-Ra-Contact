@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 080 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 080 · 交互式学习模块</h1>
+  <p class="sub">这一集 Ra 先勘误——原型五「教皇」实为心智复合体的意指者；随后借那位第五密度访客，把「灵性力量」的来路与危险讲透：月光既照真影也照幻象，而正面与负面行家在同一个夜里走出两种极性。</p>
+  <div class="tagline">「7 个主题 · 6 个学习步骤 · 20 组案例」</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 访客的杠杆</a>
+<a href="#s3">③ 月光下的力量</a>
+<a href="#s4">④ 「魔鬼」之名</a>
+<a href="#s5">⑤ 两种走法</a>
+<a href="#s6">⑥ 原型巡礼</a>
+<a href="#s7">⑦ 收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>全集骨架：勘误、访客之问、原型巡礼与例行问答一览（第 1 章）</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>访客的杠杆与动机</b><span>它借什么下手、又图什么：变貌、恐惧与光的得失（第 2 章）</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>月光下的灵性力量</b><span>力量的真身：真影与幻象并存的黑夜（第 3 章）</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>「魔鬼」之名与行家的自由</b><span>双层误会，以及「必要的分离」（第 4 章）</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>同一夜晚的两种走法</b><span>穿梭器、相同的入口，极化在体验处分岔（第 5 章）</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>原型巡礼与收官</b><span>意指者、石棺、两种接触，以及 Ra 的自陈（第 6–7 章）</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ 第 1 章 · 本章地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：这一集在讲什么</h2></div>
+  <p class="sec-lead">这是「原型」长卷中的一站：先前材料里的一处编号错误由 Ra 亲自更正，本集主体分两大块——先拆解那位第五密度访客的杠杆与动机，再顺着发问者的猜测逐一确认灵性的几个原型位置。先用下面的问答推进器走一遍全集骨架，再进各章细读。</p>
+
+  <div class="card">
+    <h3>本集在全书中的位置</h3>
+    <p><b>承接：</b>对原型（archetype，以塔罗 21 张标记心智、身体、灵性各层结构的体系）的逐一定义进行到灵性部分之际，Ra 开场先做勘误——这套体系靠「位置」定位，一格错位，后面的推演会连环跟着错。</p>
+    <p><b>开启：</b>本集末尾 Ra 明确发出邀请，就「两种接触」在另一次工作中细问——一条通往下一集的线头。</p>
+    <p><b>本集议题清单：</b>① 访客的杠杆：变貌与恐惧；② 访客的动机：纯净如光，光吸引注意；③ 灵性力量的真身：月光的真影与幻象；④ 「魔鬼」之名与行家的自由；⑤ 穿梭器与极化分岔；⑥ 灵性原型的确认（第十九、二十、二十一）。</p>
+    <div class="quote">
+      <p class="en">That archetype, Five, which you have called the Hierophant, is the Significator of the Mind complex.</p>
+      <p class="zh">那个你们称为「教皇」的原型五，是心智复合体的意指者。</p>
+      <span class="src">—— Session 080 · (80.0)</span>
+    </div>
+    <div class="case"><b>勘误邮件：</b>项目组周五发布前，技术负责人发现接口文档里有一个组件被标到了错误的模块层——他没有悄悄改掉，而是把全员勘误排在周一站会的第一件事，因为下游同事已按旧编号引用。Ra 的处理一模一样：工作开始前先更正「教皇」的归属，把错位摆上台面而不是埋进脚注。</div>
+    <div class="case"><b>新同事的第一天：</b>刚加入一个庞大项目的人，最不该做的是从第一行代码读起；有效做法是先看架构图——今天讲到哪个模块、分几大块、和昨天什么关系。本页的学习路径与问答推进器就是这张架构图：本集两大板块（访客的力量与动机 → 灵性原型的确认）先看清，细读就不迷路。</div>
+  </div>
+
+  <div class="card">
+    <h3>问答脉络推进器：本集对话怎么走</h3>
+    <div class="demo-area">
+      <div class="flow-track" id="qaTrack"></div>
+      <div class="flow-detail" id="qaDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="qaPrev">← 上一问</button>
+        <button class="tri-btn" id="qaNext">下一问 →</button>
+      </div>
+    </div>
+  </div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 后勤</span></summary>
+  <div class="body">
+    <p><b>(80.0) 疼痛预警：</b>器皿易向疼痛这一变貌突发，通讯可能瞬间混乱——Ra 请小组对任何看似混乱的信息提问核实。</p>
+    <p><b>(80.1) 器皿状态：</b>身体能量复合体轻微波动、骤降骤升；多方的祈祷与肯定被那位第五密度实体的持续致意所抵消。</p>
+    <p><b>(80.2) 离房插曲：</b>驱逐仪式后发问者离房取物——因工作场所有保护性残余能量，此失误虽不受推荐但未破坏保护。</p>
+    <p><b>(80.23) 收尾：</b>对齐尽责获致谢；器皿背部僵硬，建议推拿。</p>
+  </div></details>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 2 章 · 访客的杠杆 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>访客的杠杆：它借什么下手，又图什么</h2></div>
+  <p class="sec-lead">例行确认之后，发问者把焦点对准那位常客：它最近是否难得手？为何总能借「已有的变貌」起作用？一场只有极少数人能懂的通讯，为何值得一个第五密度实体死磕？Ra 逐一作答，答案拼出一幅完整的侵蚀机制图。</p>
+
+  <div class="card">
+    <h3>机制：放大已有的裂缝</h3>
+    <div class="q">发问者先问「它是不是更难得手了」，再追问机制：为什么它能借<b>已经存在的变貌</b>起作用，而不是去对付一个没有变貌的人？</div>
+    <div class="quote">
+      <p class="en">Any distortion—be it physical, mental, or spiritual in complex nature—may be accentuated by the suggestion of one able to work magically; that is, to cause changes in consciousness.</p>
+      <p class="zh">任何变貌（distortion，对太一性的偏离，通俗说即「缺口」）——无论其复合体性质是身体、心智还是灵性——都可能被一个能够做魔法工作（即能造成意识改变）的存在，用暗示加以强化。</p>
+      <span class="src">—— Session 080 · (80.4)</span>
+    </div>
+    <div class="plain">它不制造问题，只放大你已有的裂缝——而被自我知识看清过的裂缝，最不容易被放大。</div>
+  </div>
+
+  <div class="card">
+    <h3>动机：光与它的觊觎者</h3>
+    <div class="q">发问者算了一笔账：这通讯只照亮极少数人，能懂的人多半已近收割（harvest，一个密度结束时的毕业）——它为何还如此坚决反对？得手又能得到什么？</div>
+    <div class="quote">
+      <p class="en">Such purity is as a light. Such an intensity of light attracts attention.</p>
+      <p class="zh">这样的纯净如同一道光。而这光的强度，会吸引注意。</p>
+      <span class="src">—— Session 080 · (80.5)</span>
+    </div>
+    <div class="quote">
+      <p class="en">As we have previously stated, the entity hopes to gain a portion of that light; that is, the mind/body/spirit complex of the instrument. Barring this, the entity intends to put out the light.</p>
+      <p class="zh">正如我们先前所说，该实体希望得到那光的一部分——也就是器皿的心/身/灵复合体（mind/body/spirit complex，一个存有的三层一体结构）。若不能如此，它就打算熄灭这光。</p>
+      <span class="src">—— Session 080 · (80.6)</span>
+    </div>
+    <p>Ra 补上了得手的账本：胜利的收益是<b>负面极性的增加</b>——移除一道光芒的来源，等于在曾有光处为这个空间/时间奉上黑暗的机会；若能奴役器皿这个相当强大的存有，更直接为它的力量添码（80.7）。至于恐惧，Ra 在 (80.3) 点明：器皿在心智与灵性上更能以爱迎接它，削减了恐惧——那正是它视为重要武器的元素。</p>
+    <div class="case"><b>茶水间的挑拨者：</b>某团队有位老员工，从不编造谣言，只在茶水间「顺口」补一句「上次方案被打回，主管好像是特意点你吧」。每个人心里本来就有的那点不安，经他一放大就成了隔阂。负面实体的手法正是如此：变貌越少被自我知识平衡，越容易被它娴熟地放大，以削弱小组的顺畅运作与和谐（80.4）。</div>
+    <div class="case"><b>亮灯的窗户：</b>深夜的写字楼里，哪扇窗亮着灯，路人的眼睛就会先看向哪里——灯不会喊叫，亮本身就是引力。「极少人能懂」的通讯之所以值得死磕，恰因纯净不随第三密度的收割而结束，而光亮到一定程度，自己会招来注意（80.5）。</div>
+    <div class="case"><b>抢招牌还是灭灯：</b>商业竞争里，对手对一家口碑老店的选择无非两种——把店连同招牌整体并购归为己有，或者想方设法让它关门熄灯。Ra 对访客目标的描述严丝合缝：夺得那光的一部分，否则就熄灭这光；而无论哪种得手，都是负面极性与力量的进账（80.6–80.7）。</div>
+  </div>
+
+  <div class="card">
+    <h3>条件模拟器：它的杠杆何时断</h3>
+    <div class="q">发问者的深层关切其实是防卫。把 Ra 点出的要素逐条拨动，看看这条杠杆靠什么立住、又在哪一格断掉。</div>
+    <div class="cond-row"><div class="name">存在变貌<small>身体、心智或灵性上「已有的缺口」</small></div><label class="switch"><input type="checkbox" id="vsimA" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">缺口未被自我知识平衡<small>没有被自己看清、接住的变貌</small></div><label class="switch"><input type="checkbox" id="vsimB" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">以恐惧回应<small>把恐惧递给对方当武器用</small></div><label class="switch"><input type="checkbox" id="vsimC" checked><span class="slider"></span></label></div>
+    <div id="condResult">先拨一拨上面的开关。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 3 章 · 月光下的力量 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>月光下的力量：灵性力量与虚假的诱惑</h2></div>
+  <p class="sec-lead">发问者先为「几乎不可接受的愚蠢问题」道歉，仍坚持要问这股力量的本质——他自觉这是理解心智进化的核心。这一问把讨论从「防它」推进到「懂它」，Ra 给出了本集最著名的意象：月光。</p>
+
+  <div class="card">
+    <h3>定性：这是灵性力量，不是心智的聪明</h3>
+    <div class="q">访客通过这些工作增加的「力量」，究竟是什么？能描述吗？</div>
+    <div class="quote">
+      <p class="en">The power of which you speak is a spiritual power. The powers of the mind, as such, do not encompass such works as these.</p>
+      <p class="zh">你所说的这股力量是灵性力量。心智的力量，就其本身而言，并不涵盖这类工作。</p>
+      <span class="src">—— Session 080 · (80.8)</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>月光的比喻：一个夜里，两种照见</h3>
+    <div class="quote">
+      <p class="en">You are aware that we have described the Matrix of the Spirit as a night. The moonlight, then, offers either a true picture seen in shadow, or chimera and falsity. The power of falsity is deep, as is the power to discern truth from shadow. The shadow of hidden things is an infinite depth in which is stored the power of the One Infinite Creator.</p>
+      <p class="zh">你知道我们曾把灵性的矩阵（Matrix of the Spirit，灵性工作在其上发生的「黑夜」底片）描述为夜。那么，月光提供的，要么是阴影中看见的真实图景，要么是幻象与虚假。虚假的力量是深的，从阴影中辨认真理的力量同样深。隐藏事物的阴影是一个无限的深度，太一无限造物主的力量就储存在其中。</p>
+      <span class="src">—— Session 080 · (80.8)</span>
+    </div>
+    <div class="quote">
+      <p class="en">To embrace falsity, to know it, to seek it, and to use it gives a power that is most great. This is the nature of the power of your visitor and may shed some light upon the power of one who seeks in order to serve others as well, for the missteps in the night are oh! so easy.</p>
+      <p class="zh">拥抱虚假、认识它、寻求它并使用它，会给出一种极大的力量。这就是你们访客之力量的本质，也可能为那个为服务他人而寻求者的力量投下一些光——因为夜里的失足，哦！是如此容易。</p>
+      <span class="src">—— Session 080 · (80.8)</span>
+    </div>
+    <div class="plain">力量不在脑子的聪明程度里，而在灵性的夜里：同一个「照见」既出真知也出幻象，敢拥抱幻象的人拿到的力量最大，也最容易走偏。</div>
+    <div class="case"><b>拿不稳镊子的学徒：</b>想修复古董座钟的年轻人，若连齿轮结构都没学过、镊子都拿不稳，直接上手「凭感觉」调试，多半把机芯拆坏。Ra 随后补上前提：行家的工作以先前对心智与身体的工作为基础，否则灵性工作不可能可靠进行（80.9）——底层功夫没练成，高层功夫是空中楼阁。</div>
+    <div class="case"><b>夜航的两双眼睛：</b>同一片没有月亮的海上，老水手借微光辨认出真实的礁石轮廓，新手却把浪沫看成航道灯火——同一束光，既照出真相也造出海市蜃楼。月光之喻的要点正在这里：能辨真伪是深功夫，甘愿拥抱虚假同样是「深功夫」，只是方向相反。</div>
+    <div class="case"><b>研究骗术的人：</b>一位深谙心理学的诈骗犯比老实人更懂「相信是怎么形成的」——正因为他把幻觉的构造研究透了，他的骗术才有力量。「拥抱虚假」给极大的力量，这就是访客的力量本质；而同一种「懂幻觉」的深功夫，本可以反过来帮人识破幻觉——区别只在拥抱什么。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 4 章 · 「魔鬼」之名 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>「魔鬼」之名：第十五原型的双重误会</h2></div>
+  <p class="sec-lead">顺着「月光的黑暗面」，发问者抛出塔罗史上最扎眼的标签：第十五原型——灵性的矩阵——为什么被叫作「魔鬼」？Ra 给出双层回答，再顺着「分离」往下挖，一直挖到行家之路的必要代价。</p>
+
+  <div class="card">
+    <h3>双层误会：暗处更显眼，自由被读作邪恶</h3>
+    <div class="q">第十五原型在牌里被称为魔鬼。为什么会这样？</div>
+    <div class="quote">
+      <p class="en">the nature of the spirit is so infinitely subtle that the fructifying influence of light upon the great darkness of the spirit is very often not as apparent as the darkness itself.</p>
+      <p class="zh">灵性的本质如此无限精微，以至于光对灵性之伟大黑暗的丰饶影响，常常不如黑暗本身显眼。</p>
+      <span class="src">—— Session 080 · (80.10)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This freedom is seen by those not free as what you would call evil or black. The magic is recognized; the nature is often not.</p>
+      <p class="zh">这种自由被那些不自由的人视为你们所谓的邪恶或黑暗。魔法被认出；其本质常常不被认出。</p>
+      <span class="src">—— Session 080 · (80.10)</span>
+    </div>
+    <div class="plain">「魔鬼」是两层误会叠出来的：一层是「暗处更显眼」的知觉偏差——少数行家抓住太阳之光，多数仍在月光中摸索，而这光能启迪也能欺骗；另一层是「不自由者看自由者」的价值反转。</div>
+    <div class="case"><b>只拍夜景的相机：</b>一台总在暗处对焦的相机，拍出来的世界永远阴森——不是世界只有黑夜，是暗处更容易被拍下。灵性的光对那伟大黑暗的丰饶影响常不如黑暗本身显眼，于是这张牌的旋律常被听成负面而邪恶（80.10）。</div>
+    <div class="case"><b>辞职创业的同事：</b>小周辞掉稳定工作去创业，老同事的评语是「疯了」「不合群」——他们看见的只是他脱离了集体节奏；至于他内心与什么联合、为什么而做，外人无从看见。行家越来越摆脱其他自我的思想、观点与束缚，无论这为着服务他人还是服务自我，都是觉醒的必要部分（80.10）。</div>
+  </div>
+
+  <div class="card">
+    <h3>追问：分离是绊脚石吗</h3>
+    <div class="q">发问者连追两问：成为行家是否隐含着朝向服务自我（service-to-self）的部分极化——因为行家总显得与同类疏离？这种疏离对服务他人的行家，是不是达成目标的绊脚石？</div>
+    <div class="quote">
+      <p class="en">The apparent happening is disassociation: whether the truth is service to self and thus true disassociation from other-selves, or service to others and thus true association with the heart of all other-selves and disassociation only from the illusory husks which prevent the adept from correctly perceiving the self and other-self as one.</p>
+      <p class="zh">表面上发生的是分离（disassociation）：真相要么是服务自我，因而与其他自我真正分离；要么是服务他人，因而与所有其他自我的核心真正联合，只与那层妨碍行家正确感知「自我与其他自我本为一体」的虚幻外壳分离。</p>
+      <span class="src">—— Session 080 · (80.11)</span>
+    </div>
+    <p>Ra 干脆地否决了「绊脚石」的猜法：从幻象迷雾与每个变貌的失真呈现中脱离，是行家道途相当必要的部分——它只是「可能被他人视为不幸」（80.12）。这种偏移与脱离的过程，最常与一张牌相连：</p>
+    <div class="quote">
+      <p class="en">The excursion of which you speak and the process of disassociation is most usually linked with that archetype you call Hope—which we would prefer to call Faith. This archetype is the Catalyst of the Spirit and, because of the illuminations of the Potentiator of the Spirit, will begin to cause these changes in the adept’s viewpoint.</p>
+      <p class="zh">你所说的这种偏移与脱离的过程，最常与你们称为「希望」的原型相连——我们更愿称之为「信心」。这个原型是灵性的催化剂（Catalyst of the Spirit，灵性层推动转变的经历素材），并且由于灵性赋能者的照亮，将开始在行家的视角中引发这些改变。</p>
+      <span class="src">—— Session 080 · (80.13)</span>
+    </div>
+    <div class="case"><b>搬出合租屋的姑娘：</b>小真从六人合租屋搬走独居，旧室友背后说她「清高、疏远」。她其实是离开了一套让她无法诚实生活的相互评判，和真正同频的朋友反而更近了——表面是分离，内里是更真的联合。Ra 的区分正落在这条线上：分清「离开的是人，还是幻象的外壳」。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 5 章 · 同一夜晚，两种走法 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>同一夜晚，两种走法：穿梭器与极化的分岔</h2></div>
+  <p class="sec-lead">发问者想给正负行家各分配一张原型——正面走第十六、负面走第十五？Ra 先纠正这个前提：入口完全相同；再纠正一个措辞：灵性不是力量的源头。那么分岔发生在哪？答案落在「体验」这一格。</p>
+
+  <div class="card">
+    <h3>通道相同：灵性是穿梭器</h3>
+    <div class="q">行家是不是在「建立潜能，直接向灵性汲取力量」？正面与负面行家是不是各走各的原型——比如正面借第十六、负面借第十五？</div>
+    <div class="quote">
+      <p class="en">It would be more proper to say that the adept is calling directly through the spirit to the universe for its power, for the spirit is a shuttle.</p>
+      <p class="zh">更恰当的说法是：行家正直接通过灵性向宇宙呼唤其力量——因为灵性是一个穿梭器（shuttle，通道而非源头的传递者）。</p>
+      <span class="src">—— Session 080 · (80.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The adept, whether positive or negative, has the same Matrix. The Potentiator is also identical.</p>
+      <p class="zh">行家——无论正面还是负面——拥有相同的矩阵。赋能者（Potentiator，照亮潜能的那一方）也是同一张。</p>
+      <span class="src">—— Session 080 · (80.15)</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>分岔在体验：正午之光与偏爱的黑暗</h3>
+    <div class="quote">
+      <p class="en">Even the most unhappy of experiences, shall we say, which seem to occur in the Catalyst of the adept, seen from the viewpoint of the spirit, may, with the discrimination possible in shadow, be worked with until light equaling the light of brightest noon descends upon the adept and positive or service-to-others illumination has occurred. The service-to-self adept will satisfy itself with the shadows and, grasping the light of day, will toss back the head in grim laughter, preferring the darkness.</p>
+      <p class="zh">即便是最不快乐的、看似发生在行家催化剂（catalyst，推动成长的经历素材）里的体验，从灵性的视角看，也可以凭阴影中可能的辨别力去加工，直到等同最明亮正午之光的亮光降临行家，正面即服务他人的照亮发生。而服务自我的行家将以阴影为满足，并在抓住白昼之光时仰头发出冷酷的笑，偏爱黑暗。</p>
+      <span class="src">—— Session 080 · (80.15)</span>
+    </div>
+    <div class="plain">通道人人相同，方向各人自选：灵性的体验——你们称为月亮的那张——是对行家极性远为显眼的影响；同一场夜与月光，有人炼到正午，有人偏爱阴影。</div>
+    <div class="case"><b>同一栋楼的两家健身房：</b>两家店共用同样的场地与器械——矩阵与赋能者无异——一家把学员每次挫折都拆成改进方案，越练越亮堂；另一家专门教「怎么练壮去压人」。分岔不在器械，也不在入口，而在之后的每一格体验里怎么用。</div>
+    <div class="case"><b>同一天被裁的两个人：</b>老周和老吴同一天收到裁员通知。老周把这最不快乐的催化剂当材料，从更高的视角反复端详、加工，两年后成了愿意带人的导师；老吴把怨恨攒成算计，专门琢磨怎么报复前东家，越走越暗。同一场夜雨浇出两种极性——差别不在雨，在接雨的人。</div>
+    <div class="case"><b>一只转换插头：</b>出国旅行的人都知道，转换插头自己并不发电，电来自墙里的电网。行家取力同理：灵性只负责「接通」，力量来自它另一端所连的宇宙——所以 Ra 说行家是「通过灵性」向宇宙呼唤，而非「向灵性」索取。</div>
+  </div>
+
+  <div class="card">
+    <h3>归类练习：这句话属于谁</h3>
+    <p>标注说明：<b>A</b>＝服务他人的行家，<b>B</b>＝服务自我的行家，<b>C</b>＝两者相同或共有（本集 Ra 明说「无论谁」或「都」之处）。点击你认定的选项。</p>
+    <div id="sorterArea"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 6 章 · 灵性原型巡礼 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>灵性原型巡礼：从意指者到与智能无限接触</h2></div>
+  <p class="sec-lead">机制讲清后，发问者回到编号本身，把灵性篇章的最后几个位置逐个钉牢——猜对一个（第十九）、猜错一个（第二十）、确认一个（第二十一）。Ra 只答了一个字的「不」，随后给出石棺的真义。</p>
+
+  <div class="card">
+    <h3>意指者与通量：力量的度量</h3>
+    <div class="q">第十九原型是灵性的意指者吗？它是什么？辐射或吸收的「通量率」，是否就是行家力量的度量？</div>
+    <p>Ra 先确认编号（80.16），再给定义；对通量之问，Ra 认可这是「相当恰当的陈述」（80.18）。</p>
+    <div class="quote">
+      <p class="en">The Significator of the Spirit is that living entity which either radiates or absorbs the love and the light of the One Infinite Creator: radiates it to others or absorbs it for the self.</p>
+      <p class="zh">灵性的意指者（Significator of the Spirit，第十九原型）是那个活生生的实体：它要么辐射、要么吸收太一无限造物主的爱与光——向他人辐射，或为自己吸收。</p>
+      <span class="src">—— Session 080 · (80.17)</span>
+    </div>
+    <div class="case"><b>辐射者与黑洞：</b>宇宙里有的天体向外辐射光与热，有的天体只把经过的一切吸进去。意指者的定义恰是这两个方向：你怎么处理流经你的光——送出去，还是囤进来——就是你的意指者画像。</div>
+    <div class="case"><b>看电表不看房子：</b>供电局评估一户用电，看的是电表读数，不是房子大小或户主的自我介绍。力量的度量同理：量的是流经你的速率，不是身份排场。</div>
+  </div>
+
+  <div class="card">
+    <h3>石棺与两种接触</h3>
+    <div class="q">第二十原型是「灵性的转化」、类似第六密度两条道途的融合吗？——Ra 只答了一个字：不。那它究竟是什么？第二十一原型又是什么？</div>
+    <div class="quote">
+      <p class="en">That which you call the Sarcophagus in your system may be seen to be the material world, if you will. This material world is transformed by the spirit into that which is infinite and eternal.</p>
+      <p class="zh">你们系统中称为「石棺」的那张，可以看作物质世界。这个物质世界被灵性转化为那无限而永恒的东西。</p>
+      <span class="src">—— Session 080 · (80.20)</span>
+    </div>
+    <p>Ra 再递进一层：灵性的无限比意识的无限更伟大——经意志与信心训练的意识，可以直接接触智能无限（Intelligent Infinity，万物源头的无限智能）（80.20）。第二十一原型正代表与智能无限的接触；其反映则是与智能能量——理则（Logos，星系尺度的造物智能）的能量——的接触，你们称为「宇宙」，或略嫌乡土地称的「世界」（80.21）。</p>
+    <div class="quote">
+      <p class="en">The contact with intelligent infinity is most likely to produce an unspeakable joy in the entity experiencing such contact.</p>
+      <p class="zh">与智能无限的接触，最可能在体验这种接触的实体内产生一种无法言喻的喜悦。</p>
+      <span class="src">—— Session 080 · (80.22)</span>
+    </div>
+    <div class="case"><b>邮路与落笔的欢喜：</b>一封信能寄达，靠的是分拣、运输、投递的整张邮路——这像智能能量，理则的能量，能疗愈、建造、移除、摧毁并转变自我与所有其他自我；而写信人落笔那一刻说不出的欢喜，像与智能无限的接触。两种接触，Ra 分开回答（80.22）。</div>
+  </div>
+
+  <div class="card">
+    <h3>术语卡：灵性原型的八个坐标（点击翻面）</h3>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">灵性的矩阵</div><div class="sub">Matrix of the Spirit · 第十五原型</div><span class="tap">点击翻面</span></div><div class="back">灵性工作的「黑夜」：一切灵性探索在其上发生的深暗底片，塔罗里被叫作「魔鬼」。本集的两层解释：黑暗显眼而光隐微；行家的自由被不自由者读作邪恶。<em>像未显影的底片——潜能全在其中，没有光就只剩黑。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">灵性的赋能者</div><div class="sub">Potentiator of the Spirit · 第十六原型</div><span class="tap">点击翻面</span></div><div class="back">照亮矩阵之黑夜的那一方：行家视角的转变「因灵性赋能者的照亮」而起；且无论正负行家，赋能者完全相同。<em>像夜里升起的光源——先有照亮，底片上才谈得上显影。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">灵性的催化剂</div><div class="sub">Catalyst of the Spirit · 你们称 Hope，Ra 更愿称 Faith</div><span class="tap">点击翻面</span></div><div class="back">行家的偏移与脱离由此开始，视角由此被改变——它是灵性层推动转变的经历素材。<em>像一封不得不拆的信——内容未知，怎么拆决定收获什么。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">灵性的体验</div><div class="sub">Experience of the Spirit · 你们称月亮的那张</div><span class="tap">点击翻面</span></div><div class="back">对行家极性远为显眼的影响所在：同样的月光，有人炼出正午之光，有人满足于阴影。<em>像同一片月夜的海——既照真礁，也现海市蜃楼。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">灵性的意指者</div><div class="sub">Significator of the Spirit · 第十九原型</div><span class="tap">点击翻面</span></div><div class="back">活生生的实体：或把太一无限造物主的爱与光辐射给他人，或为自己吸收；辐射与吸收的通量率被 Ra 认可为行家力量的合理度量。<em>像电表——量的不是房子大小，是流经的速率。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">灵性的转化</div><div class="sub">Transformation of the Spirit · 第二十原型「石棺」</div><span class="tap">点击翻面</span></div><div class="back">不是第六密度两道融合，而是物质世界被灵性转化为无限与永恒之物。<em>像蝉蜕——旧壳留在原地，飞出去的东西不再受它限制。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">与智能无限的接触</div><div class="sub">intelligent infinity / intelligent energy · 第二十一原型</div><span class="tap">点击翻面</span></div><div class="back">与智能无限的接触最可能结出无法言喻的喜悦；其反映即与智能能量——理则的能量，能疗愈、建造、移除、摧毁并转变——的接触，你们称为「宇宙」或「世界」。<em>像收信的欢喜不同于邮路本身——喜悦是接触，邮路是能量的运转。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">穿梭器</div><div class="sub">shuttle · 灵性的定位</div><span class="tap">点击翻面</span></div><div class="back">行家不是向灵性要力量，而是通过灵性直接向宇宙呼唤力量——灵性是通道，不是源头。<em>像转换插头——自己不发电，只负责把墙里的电接进来。</em></div></div>
+    </div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 7 章 · 收官 ============ -->
+<section class="chapter" id="s7">
+  <div class="sec-head"><span class="num">07</span><h2>收官：仍在路上的谦卑，与留给下次的线头</h2></div>
+  <p class="sec-lead">本集没有豪言。Ra 把最重的宣告说成一句自陈：连 Ra 自己也仍在走这些步骤——然后准点收工，把更细的体验留给下一次工作。</p>
+
+  <div class="saying">
+    <p class="en">There are many things which fall away in the many, many steps of adepthood. We, of Ra, still walk these steps and praise the One Infinite Creator at each transformation.</p>
+    <p class="zh">在行家之途的许多、许多步骤里，有许多东西会脱落。我们 Ra，仍在走这些步骤，并在每一次转变中赞美太一无限造物主。</p>
+    <span class="src">—— Session 080 · (80.20)</span>
+  </div>
+
+  <div class="card">
+    <h3>伏笔与叮嘱</h3>
+    <div class="quote">
+      <p class="en">If you wish to query in more detail upon this subject, we invite you to do so in another working.</p>
+      <p class="zh">若你想就此题更详细地询问，我们邀请你在另一次工作中进行。</p>
+      <span class="src">—— Session 080 · (80.22)</span>
+    </div>
+    <ul>
+      <li><b>通往下一集：</b>两种接触（智能能量 / 智能无限）的更细体验，被明确列入下次工作的议程（80.22）。</li>
+      <li><b>器皿照料：</b>背部僵硬，推拿会有帮助；疼痛突发时通讯可能瞬间混乱——对存疑信息要提问核实（80.0、80.23）。</li>
+      <li><b>勘误的余波：</b>原型五归位后，此前按旧编号理解的原型讨论，需要按修正后的体系重排（80.0）。</li>
+    </ul>
+    <div class="case"><b>完赛者的复盘：</b>跑完马拉松的人不会当场宣布「我到达了」，他会说「配速还有空间，下一场再练」。Ra 的自陈与此同调——连这个古老的社会记忆复合体（social memory complex，许多个体意识合一而成的群体存有）也把自己放在「仍在路上」的位置。</div>
+    <div class="case"><b>「列入下次议程」：</b>高效的项目会不会在最后一个议题上硬拖？不会——主持人说「这个问题超出今天议程，下次专题讨论」，然后准时散会。Ra 同样在本次全长工作的最后一问上收住：议题的深度由器皿的体力与通讯的质量共同决定。</div>
+    <div class="case"><b>带伤开播的主播：</b>一位带着旧伤开播的主播，开场先跟观众约定「画面若卡顿请刷新重连」——把事故预案变成默契，而不是等事故发生再解释。Ra 在本集开场也做了同样的事：把「可能混乱」说在前面，恰是为了保持通讯尽可能不失真（80.0）。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 080（`split/Ra_Session_080.md`）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra080-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本集定制交互 ===== */
+const byId080=function(id){return document.getElementById(id)};
+
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+  {t:'更正与预警',d:'<span class="qa-q">开场（80.0）</span><b>答：</b>Ra 先做两件事——更正先前材料里的错误：原型五「教皇」是心智复合体的<b>意指者</b>；并预警器皿易突发疼痛，通讯可能瞬间混乱，任何看似混乱的信息都应被质疑。'},
+  {t:'访客还能得手吗',d:'<span class="qa-q">问：最近几次工作里，第五密度访客是不是更难影响器皿了？它为何能借已有的变貌起作用？（80.3–80.4）</span><b>答：</b>集会期间它确实被大幅抑制；日常里它对身体的侵扰如旧，但器皿已更能<b>以爱迎接它</b>，使它最依赖的武器——恐惧——失效。它的杠杆是「放大已有变貌」：缺口越少被自我知识平衡，越易被放大。'},
+  {t:'它到底图什么',d:'<span class="qa-q">问：这通讯影响的人极少，它为何死磕？得手又图什么？（80.5–80.7）</span><b>答：</b>纯净并不随第三密度的收割而结束——纯净如光，光的强度吸引注意。它想要的是<b>那光的一部分</b>（器皿的心/身/灵复合体），夺不走就熄灯；得手的收益是负面极性的增加与力量的扩充。'},
+  {t:'力量的真身',d:'<span class="qa-q">问：它拼命增加的「力量」到底是什么？（80.8–80.9）</span><b>答：</b>那是<b>灵性力量</b>，不是心智的聪明。灵性的矩阵是黑夜，月光照出的可能是真影也可能是幻象；拥抱虚假能获得极大力量——但夜路失足也最容易。而灵性工作必须以先前的心智与身体工作为基础。'},
+  {t:'「魔鬼」之名',d:'<span class="qa-q">问：为何第十五原型（灵性的矩阵）被称为魔鬼？分离是绊脚石吗？（80.10–80.13）</span><b>答：</b>光对灵性黑暗的丰饶影响常不如黑暗显眼；行家挣脱他人思想束缚的自由，在不自由者眼里就是「邪恶」。这种分离是道途上必要的部分，与「希望/信心」——灵性的催化剂——相连。'},
+  {t:'穿梭器与原型巡礼',d:'<span class="qa-q">问：行家如何取力？第十九至二十一原型是什么？（80.14–80.22）</span><b>答：</b>灵性是<b>穿梭器</b>——行家借它向宇宙呼唤力量；正负行家的矩阵与赋能者完全相同，分岔发生在「体验」。随后逐一确认：意指者＝辐射或吸收爱与光的实体；第二十原型（石棺）＝物质世界被灵性转化为无限与永恒；第二十一原型＝与智能无限的接触，其果效是「无法言喻的喜悦」。Ra 宣布这是本次全长工作的最后一问，余题留给下次工作。'}
+]);
+
+initSorter('sorterArea',[
+  {a:'拥有完全相同的矩阵与赋能者',opts:['A','B','C'],ans:'C',exp:'Ra 明说无论正面还是负面，矩阵相同、赋能者也无二致（80.15）——差别不在入口。'},
+  {a:'把最不快乐的催化剂当作材料，从灵性的视角端详加工，直到正午之光降临',opts:['A','B','C'],ans:'A',exp:'凭阴影中可能的辨别力加工体验，直至正面即服务他人的照亮发生（80.15）。'},
+  {a:'满足于阴影，抓住白昼之光反而仰头发出冷酷的笑，偏爱黑暗',opts:['A','B','C'],ans:'B',exp:'这是 Ra 对服务自我行家的白描（80.15）。'},
+  {a:'通过灵性这个穿梭器，直接向宇宙呼唤力量',opts:['A','B','C'],ans:'C',exp:'这是正负行家共同的取力方式（80.14）——差别不在通道，而在方向。'},
+  {a:'越来越摆脱其他自我的思想、观点与束缚',opts:['A','B','C'],ans:'C',exp:'无论服务他人还是服务自我，这都是行家觉醒的必要部分（80.10）。'},
+  {a:'表面看是脱离人群，内里与所有其他自我的核心真正联合，只与虚幻外壳分离',opts:['A','B','C'],ans:'A',exp:'服务他人的「分离」只是表象——真联合藏在里面（80.11）。'}
+]);
+
+function updateVisitorSim(){
+  const a=byId080('vsimA').checked,b=byId080('vsimB').checked,c=byId080('vsimC').checked;
+  const off=[];
+  if(!a)off.push('没有可放大的变貌：它的手法是放大「已有的」缺口，没有裂缝就没有着力点（80.4）。');
+  if(!b)off.push('缺口被自我知识平衡：越被看清的变貌越难被放大，小组的顺畅运作与和谐得以保住（80.4）。');
+  if(!c)off.push('不以恐惧回应：恐惧是它视为重要武器的元素；器皿学着以爱迎接它，武器就钝了（80.3）。');
+  const el=byId080('condResult');
+  if(off.length===0){el.classList.remove('fail');el.innerHTML='<b>三条全中：</b>变貌在、缺口未被看清、恐惧被递了出去——这正是 Ra 描述的得手剧本：暗示放大缺口，恐惧当武器，削弱小组的和谐与顺畅运作。';}
+  else if(off.length===3){el.classList.add('fail');el.innerHTML='<b>三条全缺：</b>按本集的机制，它几乎没有杠杆可借。不过 Ra 只说「越不平衡越易被放大」，从未许诺谁无懈可击——功课始终在自我知识的平衡里。';}
+  else{el.classList.add('fail');el.innerHTML='<b>缺 '+off.length+' 条，杠杆断了一截：</b>'+off.join('');}
+}
+['vsimA','vsimB','vsimC'].forEach(function(id){byId080(id).addEventListener('change',updateVisitorSim);});
+updateVisitorSim();
+
+document.querySelectorAll('.fn-card').forEach(function(c){c.onclick=function(){c.classList.toggle('open');};});
+
+renderPath();
+</script>
+</body>
+</html>

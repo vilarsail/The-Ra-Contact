@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 086 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 086 · 交互式学习模块</h1>
+  <p class="sub">上一集 Ra 列出面纱在心智上沉淀出的属性，本集从第一项「远见」讲起：把「做梦」拆成定义、三层阶梯与另两种功能，再用性能量转移这一个例子，看身体的面纱如何把「总是可能」变成「值得渴求」。</p>
+  <div class="tagline">6 个主题 · 6 个学习步骤 · 17 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 远见：概念的语言</a>
+<a href="#s3">③ 做梦的阶梯</a>
+<a href="#s4">④ 疗愈·异象·REM</a>
+<a href="#s5">⑤ 身体的面纱</a>
+<a href="#s6">⑥ 性能量转移·收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>全集骨架：器皿状态、远见、做梦、身体面纱与性能量转移一览（第 1 章）</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>听懂潜意识的语言</b><span>为什么描述它只能用「远见」这类风格化的词（第 2 章）</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>走完做梦的四层阶梯</b><span>从阻塞者的线索，到熟练者的睡眠工作（第 3 章）</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>分清梦的四种用处</b><span>线索、疗愈、异象、睡眠工作：做完归类练习（第 4 章）</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>想明白无知的价值</b><span>Ra 的拒答是一课：渴望如何生出力量（第 5 章）</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>对照面纱前后的得失</b><span>性能量转移的例子、效率的例外与收官金句（第 6 章）</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ 第 1 章 · 本章地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：这一集在讲什么</h2></div>
+  <p class="sec-lead">这是「面纱」长卷中的一站：上一集 Ra 列出了面纱在心智上沉淀出的属性清单，本集从第一项「远见」开始逐项展开，随后把同一套追问推进到身体——先讲清「失去对身体的知识为何有帮助」，再用性能量转移举一个完整的例子。先用下面的问答推进器走一遍全集骨架，再进各章细读。</p>
+
+  <div class="card">
+    <h3>本集在全书中的位置</h3>
+    <p><b>承接：</b>上一集 Ra 提到面纱的心智属性里第一项是「观想、展望或远见」（visioning、envisioning、far-seeing）——发问者本集开口就要求解释它；而「做梦若能为有意识心智所用，将极大助益极化」这句上集的预告，也在本集被完整展开。</p>
+    <p><b>开启：</b>对身体面纱的枚举被 Ra 特意按下暂停——他要求发问者先自己察觉缺失的中间材料再来问。这条没推开的门，留给了之后的集会。</p>
+    <p><b>本集议题清单：</b>① 远见的含义；② 做梦的定义与四层阶梯；③ 谁写梦的剧本、如何记住梦；④ 梦的另两种功能与 REM 节律；⑤ 身体面纱为何有用；⑥ 性能量转移：面纱前后对照。</p>
+    <div class="quote">
+      <p class="en">Dreaming is an activity of communication through the veil of the unconscious mind and the conscious mind.</p>
+      <p class="zh">做梦是一种穿越面纱的活动——在潜意识心智与有意识心智之间进行通信。</p>
+      <span class="src">—— Session 086 · (86.7)</span>
+    </div>
+    <div class="case"><b>接手老项目的新人：</b>小李接手一个跑了三年的系统，师傅只给两样东西——一张架构图和上次的会议纪要：现在做到哪、卡在哪。他没急着改代码，先照图走完一遍全局，之后每一处修改都有了坐标。本页的问答推进器就是这张图：上一集列出的属性清单从「远见」讲起，讲到身体，再落到一个具体功能的例子。</div>
+    <div class="case"><b>复诊的第一分钟：</b>每次复诊，医生都先翻上周的血检单、问一句「这几天感觉如何」，然后才开新的检查——例行信息是一切判断的地基。这个小组的每次集会也一样：先问器皿状态与那位第五密度访客的动向，再进正题。这些内容一句话收纳在本章末尾的折叠区里，可以跳过。</div>
+  </div>
+
+  <div class="card">
+    <h3>问答脉络推进器：本集对话怎么走</h3>
+    <div class="demo-area">
+      <div class="flow-track" id="qaTrack"></div>
+      <div class="flow-detail" id="qaDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="qaPrev">← 上一问</button>
+        <button class="tri-btn" id="qaNext">下一问 →</button>
+      </div>
+    </div>
+  </div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 后勤</span></summary>
+  <div class="body">
+    <p><b>(86.1) 器皿状态：</b>器皿朝向肉体能量亏缺的变貌较上次略增；生命能量也因显著消耗而有所减少。</p>
+    <p><b>(86.2–86.3) 消耗的来源：</b>一群投生的第三密度实体抱着「她该为其他自我消除一切变貌」的想法与她密切接触；她愿意提供任何可能的服务，却未察觉生命能量受到的侵蚀。</p>
+    <p><b>(86.4–86.5) 第五密度同伴：</b>危机期仍在——其极性正逼近临界点：要么暂时撤退、把问候留给第四密度仆从，要么失去极性；唯一的另一种可能是这个小组自己失去极性，那样它就能继续问候。</p>
+    <p><b>(86.23) 收尾：</b>器皿以祈祷准备接触的尽责让通道免于上次的变貌；Ra 建议鼓励滋养生命能量的活动，并提醒留意香炉的物理对齐——香的散发模式变化带来了一点小困难。</p>
+  </div></details>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 2 章 · 远见 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>远见：潜意识说的是概念，不是词语</h2></div>
+  <p class="sec-lead">例行问答过后，发问者回到上一集的清单：面纱在心智上沉淀出的第一项属性——「观想、展望或远见」——到底是什么意思？Ra 先解释为什么这个问题只能「风格化地」回答，再给出一个旋律的例子，最后才落到「远见」这个名字本身。</p>
+
+  <div class="card">
+    <h3>为什么只能说「远见」</h3>
+    <div class="q">发问者想要一个解释：上一集提到的<b>「观想、展望或远见」</b>究竟指什么？Ra 却先说：你们的语言里几乎没有描述这些功能的词。</div>
+    <div class="quote">
+      <p class="en">The nature of the unconscious is of the nature of concept rather than word. Consequently, before the veiling the use of the deeper mind was that of the use of unspoken concept.</p>
+      <p class="zh">潜意识的本性是概念，而非词语。因此，在面纱之前，对深层心智的使用，就是对无声概念的使用。</p>
+      <span class="src">—— Session 086 · (86.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">One could say, “a quarter note A, a quarter note A, a quarter note A, whole note F.” This bears little resemblance to the beginning of the melody of one of your composers’ most influential melodies, that known to you as a symbol of victory.</p>
+      <p class="zh">你可以用某种程式化的方式念出一段旋律：「四分音符 A、四分音符 A、四分音符 A、全音符 F。」这与你们某位作曲家最有影响力的旋律的开头几乎没有相似之处——那旋律被你们称为胜利的象征。</p>
+      <span class="src">—— Session 086 · (86.6)</span>
+    </div>
+    <div class="plain">潜意识不用词语思考，它像旋律一样直接给出整体——所以描述它的功能只能用「远见」这样的风格化标签，而不是精确术语。</div>
+    <div class="case"><b>给朋友「报谱」：</b>你深爱一段被你们称为「胜利象征」的旋律，想分享给朋友，方式却是照着谱子念：「四分音符 A、四分音符 A、四分音符 A、全音符 F。」对方礼貌地点头，脑子里什么也没响起。Ra 用这个例子说明：把音符（词语）一个个报出来，与旋律（概念）本身几乎毫无相似之处——潜意识的本性是旋律那一层。</div>
+    <div class="case"><b>风味笔记的挫败：</b>咖啡馆的风味轮上写着「茉莉花香、柑橘酸质」，新手把这八个字抄进笔记，回家冲完还是喝不出「茉莉」。词语只能传递标签，传递不了概念本身——Ra 点明语言里几乎没有非情绪化的词能直接描述潜意识的功能特质，这不是词汇贫乏，而是两类东西根本不同层。</div>
+  </div>
+
+  <div class="card">
+    <h3>「远见」是个路标</h3>
+    <div class="q">那「远见」这个名字本身，Ra 是怎么解释的？——它不是定义，而是提示：有些旅程没法被塞进词语。</div>
+    <div class="quote">
+      <p class="en">Thusly our descriptions of this portion of the mind, as well as the same portions of body and spirit, were given terms such as "far-seeing," indicating that the nature of penetration of the veiled portion of the mind may be likened unto the journey too rich and exotic to contemplate adequate describing thereof.</p>
+      <p class="zh">因此，我们给心智的这一部分、以及身体与灵的同一部分，起了「远见」这样的名字——意思是：穿透心智被遮蔽部分的旅程，丰盛而奇异到无法被充分描述。</p>
+      <span class="src">—— Session 086 · (86.6)</span>
+    </div>
+    <div class="case"><b>指南上的一行字：</b>旅行指南写「日落时分，此处风景极美」——十二个字装不下你亲眼看到的那片天空。Ra 说穿透面纱的旅程丰盛而奇异到「无法被充分描述」；「远见」只是路标，别把路标当成风景本身。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 3 章 · 做梦的阶梯 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>做梦的阶梯：穿越面纱的通信，按能量中心分层</h2></div>
+  <p class="sec-lead">接着发问者抛出本集的核心问题：上一集 Ra 说过「做梦若能为有意识心智所用，将极大助益极化」——那做梦到底是什么？Ra 的回答分四步：它是什么、它按什么分层、谁在写它的剧本、以及怎么把它记住。</p>
+
+  <div class="card">
+    <h3>定义：隔着面纱的通信</h3>
+    <div class="q">做梦是什么？它为什么能帮人极化？——Ra 先给定义，再指出它的样子取决于每个人能量中心的状态。</div>
+    <div class="quote">
+      <p class="en">The nature of this activity is wholly dependent upon the situation regarding the energy center blockages, activations, and crystallizations of a given mind/body/spirit complex.</p>
+      <p class="zh">这个活动的性质，完全取决于特定心/身/灵复合体的能量中心阻塞、激活与结晶的状况。</p>
+      <span class="src">—— Session 086 · (86.7)</span>
+    </div>
+    <div class="plain">做梦就是潜意识与有意识心智之间隔着面纱开的会——开成什么样，全看你能量中心的阻塞、激活与结晶状态。</div>
+    <div class="analogy"><b>一堵带小窗的墙：</b>潜意识与有意识心智之间隔着一堵墙，梦是小窗里透出的光——墙的厚度与窗的大小，由能量中心的状态决定；所以同一个「梦」，在不同人身上做的事完全不同。</div>
+  </div>
+
+  <div class="card">
+    <h3>本集术语卡（点开看白话解释）</h3>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">面纱</div><div class="sub">veil</div><span class="tap">点击展开</span></div><div class="back">第三密度被刻意设置的遮蔽：把心智深层与有意识心智隔开、把身体的潜能遮在意识之外。正因为看不见，选择与渴望才得以生长。<em>像密码箱：不知道密码，你才会真的去猜。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">潜意识心智</div><div class="sub">unconscious mind</div><span class="tap">点击展开</span></div><div class="back">面纱之下的深层心智，用概念而非词语工作——如旋律的情感与内涵，而非一个个音符。梦是它与有意识心智之间穿过面纱的通信。<em>像一位不识字却极会作曲的乐手。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">时间/空间</div><div class="sub">time/space</div><span class="tap">点击展开</span></div><div class="back">与我们日常所在的空间/时间（space/time，物理世界）相对的形而上一侧；那里现在、过去、未来没有意义。梦中有助于极化与异象的部分发生在这里。<em>像后台机房：前台几分钟的演出，后台排练了很久。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">魔法人格</div><div class="sub">magical personality</div><span class="tap">点击展开</span></div><div class="back">熟练者在空间/时间类比中的高我（higher self）；入睡前可被呼求，让睡眠中的意识工作有方向、有助力。<em>像睡前的「交接班」：白班的你下班前，把工作正式移交给深层的你。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">熟练者</div><div class="sub">adept</div><span class="tap">点击展开</span></div><div class="back">有意识选择修炼之路的人：把每个能量中心至少平衡到最低限度，并开始打开靛色光芒能量中心。对其而言，做梦成为极化最有效的工具。</div></div>
+      <div class="fn-card"><div class="front"><div class="cn">绿芒 / 靛芒</div><div class="sub">green-ray / indigo-ray</div><span class="tap">点击展开</span></div><div class="back">能量中心的光芒分层：绿色光芒与爱之激活相关；靛色光芒更高一层，与工作于意识的行家相连。梦中的「预知」出现在绿芒已开者身上，而靛芒的打开把梦变成行家的工具。</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>四层阶梯：同一个官能，四种用法</h3>
+    <div class="q">同样是做梦，为什么有人梦到的是「旧伤重播」，有人梦到的是「预知」，还有人干脆在睡眠里继续修行？——台阶是能量中心的状态。</div>
+    <div class="demo-area">
+      <div class="flow-track" id="tierTrack"></div>
+      <div class="flow-detail" id="tierDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="tierPrev">← 上一层</button>
+        <button class="tri-btn" id="tierNext">下一层 →</button>
+      </div>
+    </div>
+    <div class="quote">
+      <p class="en">for if it is known by the adept that work may be done in consciousness while the so-called conscious mind rests, this adept may call upon those which guide it, those presences which surround it, and, most of all, the magical personality (which is the higher self in space/time analog) as it moves into the sleeping mode of consciousness.</p>
+      <p class="zh">因为，若熟练者知道「有意识心智休息时，工作仍可在意识中进行」，那么他在进入睡眠意识模式时，可以呼求引导他的存有、环绕他的临在，以及最重要的——魔法人格（即高我在空间/时间中的类比）。</p>
+      <span class="src">—— Session 086 · (86.7)</span>
+    </div>
+    <div class="plain">从「重播旧伤」到「睡眠中修行」，不是梦变魔术，是你站的位置变了——阻塞越少、中心越开，梦能做的事越深。</div>
+    <div class="case"><b>反复梦见旧办公室：</b>换工作两个月的人，接连梦见自己在旧公司赶一班永远迟到的班车。近期的催化剂（新环境的压力）与更深处的阻塞（「怕被落下」的旧伤）在梦里被一遍遍重播——白天把这些梦记下来、想明白，才看清自己真正怕的是什么。这正是第一层做梦的功能：给清醒的心智线索，与改变感知的提示。</div>
+    <div class="case"><b>至亲住院的那几周：</b>家里有人梦见从未发生过、后来却一一应验的场景。Ra 提到，当极端催化剂——比如自我或所爱之人的肉体死亡临近——给绿色光芒中心带来不寻常的疏通时，做梦会呈现「预知」；而它真正的用处不在猎奇：善用它的人更能进入对每一个境况的全然悲悯之爱，包括那些让人强烈不快的境况。</div>
+  </div>
+
+  <div class="card">
+    <h3>谁写剧本，怎么记住</h3>
+    <div class="q">梦是高我编的程序吗？为什么醒来总是记不住？——发问者把「设计者」猜成高我，Ra 纠正：是做梦者自己。</div>
+    <div class="quote">
+      <p class="en">In all cases the mind/body/spirit complex makes what use it can of the faculty of the dreaming. It, itself, is responsible for this activity.</p>
+      <p class="zh">在所有情况下，都是心/身/灵复合体自己尽其所能地运用做梦这一官能。它自己为此活动负责。</p>
+      <span class="src">—— Session 086 · (86.8)</span>
+    </div>
+    <p>发问者随即换了个词确认：是<b>潜意识</b>负责梦的「设计与编剧」——Ra 确认（86.9）。至于回忆，Ra 坦言只有受过训练与自律的观察者才有相当好的梦回忆；训练法朴素得惊人——醒来立刻记录每一个能记起的细节（86.10）。发问者最后确认了用途：记住梦，能找到能量中心阻塞的具体线索，从而减少或消除阻塞（86.11）。</p>
+    <div class="plain">剧本是你自己写的（潜意识编剧），记住它的办法也朴素：睁眼就写，别让梦「模糊、混乱、迅速丢失」。</div>
+
+    <div class="q">模拟器：为什么你的梦总是记不住？——把 Ra 给出的三个条件逐个拨动。</div>
+    <div class="cond-row"><div class="name">睁眼立刻记录<small>醒来先不动身体，写下每个能记起的细节</small></div><label class="switch"><input type="checkbox" id="rsimA" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">长期训练与自律<small>成为「受过训练与自律的观察者」</small></div><label class="switch"><input type="checkbox" id="rsimB" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">醒后思索<small>沉思梦的内容与情感共鸣</small></div><label class="switch"><input type="checkbox" id="rsimC" checked><span class="slider"></span></label></div>
+    <div id="condResult">先拨一拨上面的开关。</div>
+
+    <div class="case"><b>床头的笔记本：</b>一位想弄懂自己梦境的读者照「醒来立刻记录」的自律练习：睡前把本子和笔放在枕边，睁眼后先不动身子、不刷手机，立刻写下每一个能记起的细节。两周后，梦从醒来只剩一团情绪，变成有场景有对白的段落——Ra 说这种能力是可以练出来的，而「最常见的情况」是模糊、混乱、迅速丢失。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 4 章 · 疗愈·异象·REM ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>梦的另两种功能：疗愈与异象，以及 REM 的节律</h2></div>
+  <p class="sec-lead">讲完极化，发问者追问：做梦还有没有别的、对进化有价值的用途？Ra 挑了两个「不助极化、却有更普遍价值」的功能，随后又被问到一个生理学细节——REM（快速眼动）的节律为什么是一段一段的。</p>
+
+  <div class="card">
+    <h3>功能一：修桥的工人——能量网的疗愈</h3>
+    <div class="q">做梦除了帮极化，还有别的价值吗？——Ra 选的第一个答案与身体有关：那座桥还兼着修桥工的活。</div>
+    <div class="quote">
+      <p class="en">The activity of dreaming is an activity in which there is made a finely wrought and excellently fashioned bridge from conscious to unconscious.</p>
+      <p class="zh">做梦这项活动，会架起一座精心打造、构造精妙的桥——从有意识通往潜意识。</p>
+      <span class="src">—— Session 086 · (86.12)</span>
+    </div>
+    <div class="plain">睡眠里这座「意识—潜意识之桥」兼修桥工：身体能量网因能量流入接收不精确而产生的种种变貌，在梦中被修复；持续缺觉的人，扭曲会一路累积。</div>
+    <div class="case"><b>冲刺三周之后：</b>项目上线前连轴转三周，每天只睡五小时，喉咙发炎、一点就炸；上线后强迫自己睡了三天好觉，身体的紧绷和心里的火气一起松了。Ra 描述的正是这个机制：适量的做梦带来身体能量网变貌的疗愈；持续缺乏这种可能，会造成严重扭曲的心/身/灵复合体。</div>
+  </div>
+
+  <div class="card">
+    <h3>功能二：先知的管道——面向世界的异象</h3>
+    <div class="q">先知与神秘主义者的梦，和普通人的梦是一回事吗？——Ra 说那是另一种功能：不为个人极化，却对世界说话。</div>
+    <div class="quote">
+      <p class="en">The other function of the dreaming which is of aid is that type of dream which is visionary and which prophets and mystics have experienced from days of old. Their visions come through the roots of mind and speak to a hungry world.</p>
+      <p class="zh">做梦另一种有益的功能，是那类异象之梦——先知与神秘主义者自古经历的那种。他们的异象穿过心智之根，对一个饥渴的世界说话。</p>
+      <span class="src">—— Session 086 · (86.12)</span>
+    </div>
+    <div class="plain">异象之梦本身不为个人极化服务——但渴望服务的先知借此服务，极性仍会增加。</div>
+    <div class="case"><b>凌晨四点的诗行：</b>一位诗人从一场异常逼真的梦里醒来，抓起纸笔写下那首后来被无数读者转发的诗。这就是先知与神秘主义者自古经历的那类梦——异象穿过心智之根，对一个饥渴的世界说话；它本身不为个人极化，但渴望服务的先知借此服务，极性仍会增加。</div>
+  </div>
+
+  <div class="card">
+    <h3>REM 的节律：短窗口，长等价</h3>
+    <div class="q">生理学发现 REM（快速眼动）每晚只分几小段出现、中间有空隙——这有什么讲究？Ra 确认 REM 就是做梦状态，然后解释了节律的来由。</div>
+    <div class="quote">
+      <p class="en">The portions of the dreaming process which are helpful for polarization and also for the vision of the mystic take place in time/space and, consequently, use the bridge from metaphysical to physical for what seems to be a brief period of your space/time. The time/space equivalent is far greater.</p>
+      <p class="zh">做梦过程中有助于极化、也有助于神秘主义者异象的部分，发生在时间/空间中，因而借用这条从形而上通往物理的桥——在你们的空间/时间里似乎只是短暂一瞬，而时间/空间中的等价时长要长得多。</p>
+      <span class="src">—— Session 086 · (86.15)</span>
+    </div>
+    <div class="plain">梦的极化与异象部分发生在时间/空间——那里的一段时间，在这里只占几分钟的窗口；疗愈则不与快速眼动同时发生，它主要在空间/时间一侧借同一座桥完成。</div>
+    <div class="case"><b>冰面上的洞与冰下的河：</b>冬夜封冻的河面只有几个凿开的洞，每个洞口露水不过几分钟——洞下却是整条流动的暗河。REM 正像那几个洞：每晚分几小段出现、中间有空隙，因为梦中用于极化与异象的部分发生在时间/空间，那里的一段等价于这里长得多的时间；而疗愈在空间/时间一侧借桥进行，不与快速眼动同时发生。</div>
+  </div>
+
+  <div class="card">
+    <h3>归类练习：这场梦算哪种用处？</h3>
+    <p>把下面六个日常场景归到 Ra 本集讲过的四种梦的用处里：A 疏通阻塞的线索 / B 修复能量网的疗愈 / C 面向世界的异象 / D 熟练者的睡眠工作。</p>
+    <div id="sorterArea"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 5 章 · 身体的面纱 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>身体的面纱：无知为何是礼物</h2></div>
+  <p class="sec-lead">话题从心智转到身体。发问者请求 Ra 枚举「因面纱而失去的身体知识与控制」——Ra 却罕见地按下了暂停键，这段「拒答」本身是一课；随后的回答则给出面纱对身体的核心账目：全知换不来极化，无知反而生出渴望与力量。</p>
+
+  <div class="card">
+    <h3>先别急着问：一段值得逐字读的拒答</h3>
+    <div class="q">发问者请 Ra 列举身体失去的重要知识与控制——为什么 Ra 不直接给清单？</div>
+    <div class="quote">
+      <p class="en">This query contains some portions which would be more helpfully answered were some intervening material requested.</p>
+      <p class="zh">这个问题里有些部分，如果先请求一些中间材料，会得到更有帮助的回答。</p>
+      <span class="src">—— Session 086 · (86.16)</span>
+    </div>
+    <div class="quote">
+      <p class="en">No. However, we shall be happy to answer the original query if it is still desired if you first perceive that there is information lacking.</p>
+      <p class="zh">不能。不过，如果你先察觉到有信息缺失、而原先的问题仍然是你想要的，我们将乐于回答。</p>
+      <span class="src">—— Session 086 · (86.17)</span>
+    </div>
+    <div class="plain">Ra 的拒答也是教导：他不代替发问者察觉「缺了什么」——自由意志与自由学习/教导的经验，Ra 不越过。</div>
+    <div class="case"><b>不给答案的教练：</b>学员请教练「把我可能会问的所有问题连答案都列给我」，教练摇头：「有几部分，你得先自己发现缺了什么，才问得出来。」Ra 的两次回应正是这个结构：先说原问题里有些部分需要先请求中间材料才有帮助，再明确拒绝提示该请求什么——但承诺：一旦发问者自己察觉到信息缺失，原问题仍会被回答。这不是刁难，而是不代替对方做察觉的功课。</div>
+  </div>
+
+  <div class="card">
+    <h3>无知的账目：自由选择换不来极化</h3>
+    <div class="q">那换个问法——发问者改问「为什么」：失去对身体的知识与控制，为什么反而对进化有帮助？</div>
+    <div class="quote">
+      <p class="en">The knowledge of the potentials of the physical vehicle before the veiling offered the mind/body/spirit a free range of choices with regard to activities and manifestations of the body but offered little in the way of the development of polarity.[84]</p>
+      <p class="zh">面纱之前，对物理载具潜能的了解，给了心/身/灵在身体活动与显化上的自由选择范围，却几乎无助于极性的发展。[84]</p>
+      <span class="src">—— Session 086 · (86.18)</span>
+    </div>
+    <p>Ra 接着补上面纱后的另一半账目：知识被遮蔽后，心/身/灵复合体常常几乎不知道该如何最好地展现自己的存在性——但正是这种匮乏，给了<b>渴望</b>在心智复合体中生长的机会：一种想要弄清身体可能性的渴望；而每种可能性的分支、以及由此建立的最终偏向，内含一种只有渴望或求知意志才能生成的力量（86.18）。</p>
+    <div class="plain">面纱前：全知带来自由，却不带来极性；面纱后：无知制造渴望，而渴望自带力量。</div>
+    <div class="case"><b>两辆不一样的自行车：</b>朋友甲收到一辆组装好的整车，骑了两天便再没碰过；朋友乙收到的是零件包，没有说明书，折腾了一下午装反了前轮，却从此成了小区里最懂车的人，后来干脆开了修车铺。Ra 的账目与此同构：面纱前知道身体的一切潜能——选择自由，极性却几乎不生长；面纱后近乎无知——无知生出渴望，渴望自带力量。</div>
+    <div class="case"><b>精确到克的菜谱：</b>照着精确到克、精确到分钟的菜谱做菜，第一次就能端上桌，但你永远学不会火候；另一个没有菜谱的人烧糊了三条鱼之后，反而长出了对火候的直觉——每一次试错沉淀下来的偏向，都带着「非要弄明白不可」的劲。Ra 说：每种可能性的分支与最终建立的偏向，内含一种只能由渴望或求知意志生成的力量。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 6 章 · 性能量转移·收官 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>性能量转移：一个例子看尽面纱前后的得失</h2></div>
+  <p class="sec-lead">要看懂「失去知识为何有用」，最好的办法是看一个具体功能的前后对照。Ra 主动选了性能量转移——身体功能的核心例子；收尾前，发问者还推出一个关于「效率」的假设，Ra 大体认同，但补了一个冷峻的例外。</p>
+
+  <div class="card">
+    <h3>面纱之前 vs 面纱之后</h3>
+    <div class="q">同一个功能，面纱前后有什么不同？——发问者请求举一个「同一方面、前后对照」的例子。</div>
+    <div class="quote">
+      <p class="en">Before the veiling such a transfer was always possible due to there being no shadow upon the grasp of the nature of the body and its relationship to other mind/body/spirits in this particular manifestation.</p>
+      <p class="zh">面纱之前，这种转移始终可能——因为对身体本性、以及它在此显化中与其他心/身/灵的关系，没有任何阴影。</p>
+      <span class="src">—— Session 086 · (86.20)</span>
+    </div>
+    <div class="quote">
+      <p class="en">After the veiling process it became infinitely more difficult to achieve green-ray energy transfer due to the great areas of mystery and unknowing concerning the body complex and its manifestations.</p>
+      <p class="zh">面纱之后，由于关乎身体复合体及其显化的巨大神秘与未知，达成绿色光芒能量转移变得无限困难。</p>
+      <span class="src">—— Session 086 · (86.20)</span>
+    </div>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">面纱前</span><h4>转移总是可能</h4><p>对身体本性及其与其他心/身/灵的关系没有任何阴影，性能量转移「始终可能」——却<b>几乎无人使用</b>超越绿色光芒的部分。</p></div>
+      <div class="yuan-card"><span class="y-tag">面纱后</span><h4>无限困难，却值得</h4><p>达成绿芒转移变得<b>无限困难</b>；但一旦体验，更可能提供催化剂，让自我与其他自我以适当极化的配置结合。</p></div>
+      <div class="yuan-card"><span class="y-tag">面纱前</span><h4>交配看不见目的</h4><p>每个其他自我都被视为造物主，没有谁比另一个更是造物主——在这种无阴影的知识之下，更深入的结伴关系<b>几乎看不到目的</b>。</p></div>
+      <div class="yuan-card"><span class="y-tag">面纱后</span><h4>寻求更高的转移</h4><p>结合的双方远更可能走向更高的能量转移——触及智能无限，双方在<b>极化与服务能力</b>上都大增。</p></div>
+    </div>
+    <div class="plain">面纱把「总可能的」变成「难得的」——难得，才被渴望；被渴望，才有力量。</div>
+    <div class="case"><b>一扇不用钥匙的门：</b>游戏里有一扇从不锁的门，谁都随便进出，也正因如此，没有谁把它当回事——直到某个版本更新，门上了锁，第一个认真找到钥匙组合的队伍，才第一次体验到门后真正的宝藏。性能量转移正是这扇门：面纱前「始终可能」，于是几乎无人使用超越绿芒的部分；面纱后变得无限困难，却让真正打开它的人得到结合的催化剂与更高的能量转移。</div>
+    <div class="case"><b>结伴的长跑者：</b>两个人各自训练时都停在同样的配速上；结伴备战后互相校准呼吸与步频，配速和意志一起上了台阶。Ra 描述的面纱后的结合正是如此：能量转移提供催化剂，让自我与其他自我以适当极化的配置结合，双方更可能继续寻求更高的转移——触及智能无限，极化与服务能力大增。</div>
+  </div>
+
+  <div class="card">
+    <h3>效率的边界：一个冷峻的例外</h3>
+    <div class="q">发问者推出一个假设：涉及「与其他自我互动」的面纱效率最高，只涉及自我的效率较低——对吗？Ra 认可了大方向，随后补上例外。</div>
+    <div class="quote">
+      <p class="en">There are those entities upon the negative path which take great care in the preservation of the distortion your peoples perceive as fairness/ugliness. This fairness of form is, of course, then used in order to manipulate other-selves.</p>
+      <p class="zh">走负面道路的实体中，有一些会极其小心地维护你们人类感知为美/丑的那种变貌。这种形貌之美，当然随后就被用来操纵其他自我。</p>
+      <span class="src">—— Session 086 · (86.22)</span>
+    </div>
+    <div class="plain">「与其他自我互动」的面纱效率最高——发问者的假设大体成立；例外是负面路径：美可以被当作操纵的工具。</div>
+    <div class="case"><b>把「好看」当工具的人：</b>办公室里有人对形象的打理近乎苛刻——不是为了美，而是深知一副好皮相能让别人更愿意配合他、更难拒绝他。Ra 在收尾处点出这个例外：已经强烈负面极化的实体会极端小心地维护「美/丑」这个变貌，并把形貌之美用作操纵其他自我的工具——与外表相关的面纱，同样能被负向路径利用。</div>
+  </div>
+
+  <div class="card">
+    <h3>收官：金句与伏笔</h3>
+    <div class="saying">
+      <p class="en">From this point it was far more likely that higher energy transfers would be sought by this mated pair of mind/body/spirit complexes, thus allowing the Creator to know Itself with great beauty, solemnity, and wonder.</p>
+      <p class="zh">从这一点起，这对结合的心/身/灵复合体远更可能去寻求更高的能量转移——从而让造物主以极大的美、庄严与惊奇，认识它自己。</p>
+      <span class="src">—— Session 086 · (86.20)</span>
+    </div>
+    <p><b>本集留下的线头：</b>Ra 请发问者先自己察觉「缺失的信息」再回来问身体面纱的枚举（86.16–86.17）——这扇没推开的门，留给了之后的集会。</p>
+    <p><b>例行叮嘱：</b>器皿能量偏低，Ra 在 (86.21) 请求只再答一个完整的问题；结尾处感谢器皿以祈祷准备接触，并建议小组鼓励滋养生命能量的活动（86.23）。</p>
+    <div class="case"><b>合上笔记本之前：</b>睡前把手机放到够不着的地方、笔和本子放在枕边——今晚这一个动作，同时用上了本集的三件事：给疗愈留出桥的时间（86.12）、给回忆一个机会（86.10）、给阻塞的线索留一扇小窗（86.11）。</div>
+    <div class="case"><b>下一集的路标：</b>发问者在 (86.16) 要的清单没有拿到——Ra 只承诺「当你察觉缺了什么，我再答」。读到后续集会时，可以回头看看他最终「察觉」到了什么，再对照本集的账目：面纱前自由而静止，面纱后无知而有力。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 086（`split/Ra_Session_086.md`）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra086-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本集定制交互 ===== */
+const byId086=function(id){return document.getElementById(id)};
+
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+  {t:'器皿状态',d:'<span class="qa-q">问：请先告诉我器皿的状况。（86.1–86.3）</span><b>答：</b>肉体能量亏缺较上次略有增加，生命能量也被显著消耗。消耗来自一群投生的第三密度实体——他们抱着「她该为我们消除一切变貌」的想法与她密切接触；她愿意提供任何可能的服务，却未察觉生命能量受到的侵蚀。'},
+  {t:'老访客的临界点',d:'<span class="qa-q">问：第五密度服务自我的同伴现在如何？（86.4–86.5）</span><b>答：</b>危机期仍在——它的极性正逼近临界点：要么暂时撤退，把问候留给第四密度仆从；要么失去极性。唯一的另一种可能是这个小组自己失去极性，那样它就能继续问候。'},
+  {t:'远见',d:'<span class="qa-q">问：上一集说面纱沉淀出的第一项属性是「观想、展望或远见」——什么意思？（86.6）</span><b>答：</b>潜意识的本性是概念而非词语，语言里几乎没有能描述它的非情绪化术语，只能用「远见」这类风格化的名字——那是一段丰盛到无法被充分描述的旅程。'},
+  {t:'做梦是什么',d:'<span class="qa-q">问：做梦是什么？它如何帮助极化？（86.7）</span><b>答：</b>做梦是穿越潜意识与有意识心智之间面纱的通信；其性质完全取决于能量中心的阻塞、激活与结晶状况——由此分出从「重播阻塞」到「睡眠中修行」的阶梯。'},
+  {t:'谁写梦的剧本',d:'<span class="qa-q">问：梦由谁设计？醒来记不住怎么办？（86.8–86.11）</span><b>答：</b>不是高我——是做梦者自己的潜意识负责编剧；梦的回忆可以训练（醒来立刻记录每个细节），而记住梦能找到能量中心阻塞的具体线索。'},
+  {t:'梦的另两种功能',d:'<span class="qa-q">问：做梦还有别的进化价值吗？（86.12–86.15）</span><b>答：</b>有：一是疗愈——身体能量网的变貌在梦中被修复；二是异象——先知的梦对饥渴的世界说话。REM 分段出现的节律，源于梦中极化与异象的部分发生在时间/空间，那里的一段时间等价于此处更长的时间。'},
+  {t:'身体的面纱',d:'<span class="qa-q">问：请列举因面纱而失去的身体知识与控制。（86.16–86.18）</span><b>答：</b>Ra 请发问者先察觉缺失的中间材料，拒绝代做功课；随后回答「为什么有帮助」：面纱前知道身体的一切潜能却几乎不生极性，面纱后的无知生出渴望——渴望自带力量。'},
+  {t:'性能量转移',d:'<span class="qa-q">问：能否举例说明身体使用的面纱前后变化？（86.19–86.23）</span><b>答：</b>Ra 选了性能量转移：面纱前转移总是可能、却几乎无人超越绿芒；面纱后无限困难，却让真正的结合带来更高的转移与极化。收尾确认：涉及与其他自我互动的面纱效率最高，负面路径是个例外。'}
+]);
+
+initStepper('tierTrack','tierDetail','tierPrev','tierNext',[
+  {t:'层一 · 阻塞未通',d:'<span class="qa-q">下三个能量中心有两个受阻的人</span><b>答：</b>梦会重播近期催化剂的片段与更深处的阻塞，给清醒的心智线索——这些阻塞是什么性质、可以改变哪些感知来疏通。'},
+  {t:'层二 · 通行中的再阻塞',d:'<span class="qa-q">绿芒及以上、阻塞很少的人</span><b>答：</b>平时流动顺畅，但遇到新催化剂暂时再阻塞、困惑或扭曲能量流入时，同样的穿越面纱通信也会发生——所以「在所有情况下」，沉思梦的内容与情感共鸣都有益。'},
+  {t:'层三 · 极端催化剂与预知',d:'<span class="qa-q">绿芒已开者，或因极端催化剂获得不寻常疏通者</span><b>答：</b>梦呈现「预知」——先于物理显化的知晓；因为心智大部分位于时间/空间，那里过去、现在、未来没有意义。善用之，能更充分进入对每一个境况的全然悲悯之爱。'},
+  {t:'层四 · 熟练者的睡眠工作',d:'<span class="qa-q">有意识选择行家之路、开始打开靛芒的人</span><b>答：</b>梦成为极化最有效的工具——知道「有意识心智休息时可在意识中工作」，便可在入睡前呼求引导者、临在，以及最重要的魔法人格；学习/教导的潜能被推到最高。'}
+]);
+
+initSorter('sorterArea',[
+  {a:'连续一周梦见与家人争吵，醒来意识到自己一直压着没说的话',opts:['A','B','C','D'],ans:'A',exp:'近期催化剂与阻塞在梦中重播，给清醒心智线索与疏通的提示（86.7）。'},
+  {a:'连续三周每天只睡五小时，浑身紧绷；补了三天好觉后身体松了下来',opts:['A','B','C','D'],ans:'B',exp:'做梦修复身体能量网因能量流入接收不精确而产生的变貌（86.12）。'},
+  {a:'一位诗人从逼真的梦里醒来写下诗行，成千上万读者被打动',opts:['A','B','C','D'],ans:'C',exp:'异象之梦穿过心智之根，对饥渴的世界说话——它本身不助极化，但渴望服务者借此服务（86.12）。'},
+  {a:'修行者睡前呼求引导者与魔法人格，然后进入睡眠',opts:['A','B','C','D'],ans:'D',exp:'熟练者知道有意识心智休息时可在意识中工作，梦成为其极化最有效的工具（86.7）。'},
+  {a:'长期失眠的人几乎无梦，整个人状态明显垮掉',opts:['A','B','C','D'],ans:'B',exp:'持续缺乏做梦的可能，会造成严重扭曲的心/身/灵复合体——疗愈功能缺位（86.12）。'},
+  {a:'醒来立刻把梦里每个能记起的细节写进本子',opts:['A','B','C','D'],ans:'A',exp:'这是训练梦回忆的自律；练出好回忆，是为了抓住指向能量中心阻塞的线索（86.10–86.11）。'}
+]);
+
+function updateRecallSim(){
+  const a=byId086('rsimA').checked,b=byId086('rsimB').checked,c=byId086('rsimC').checked;
+  const miss=[];
+  if(!a)miss.push('醒来立刻动笔：Ra 说的自律是「醒来后立即记录每一个能回忆起的细节」，缺了这一步，梦最常见的下场是模糊、混乱、迅速遗忘（86.10）。');
+  if(!b)miss.push('训练与自律：只有受过训练与自律的观察者才能有相当好的回忆——但 Ra 明说这能力可以学（86.10）。');
+  if(!c)miss.push('醒后思索：沉思梦的内容与情感共鸣，在所有情况下都有益——记下来只是第一步，用起来才算数（86.7）。');
+  const el=byId086('condResult');
+  if(miss.length===0){el.classList.remove('fail');el.innerHTML='<b>三条全开：</b>这正是 Ra 给出的路径——训练与自律带来「相当好的回忆」，记录与思索让梦变成通向阻塞的线索；梦于是从每晚散场的小剧，变成一本可以翻阅的工作日志。';}
+  else if(miss.length===3){el.classList.add('fail');el.innerHTML='<b>三条全关：</b>这是大多数人的默认状态——对梦的感知「模糊、混乱、且迅速丢失」。好消息是：这能力可以学，就从今晚床头放一支笔开始。';}
+  else{el.classList.add('fail');el.innerHTML='<b>缺 '+miss.length+' 条：</b>'+miss.join('');}
+}
+['rsimA','rsimB','rsimC'].forEach(function(id){byId086(id).addEventListener('change',updateRecallSim);});
+updateRecallSim();
+
+document.querySelectorAll('.fn-card').forEach(function(c){c.onclick=function(){c.classList.toggle('open');};});
+
+renderPath();
+</script>
+</body>
+</html>

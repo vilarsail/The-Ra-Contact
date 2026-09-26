@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 009 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 009 · 交互式学习模块</h1>
+  <p class="sub">这一集把镜头从个人修炼拉回到行星史：Ra 讲出 25,000 年周期与「门户」的机制、地球第三密度人口的火星来源、那次移居如何换来地球的隔离，以及两族用第二密度形态行走的存有。</p>
+  <div class="tagline">6 个主题 · 6 个学习步骤 · 20 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② Ra 的边界</a>
+<a href="#s3">③ 行星的时钟</a>
+<a href="#s4">④ 火星与隔离</a>
+<a href="#s5">⑤ 第二密度与「大脚」</a>
+<a href="#s6">⑥ 收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>先看这一集分成哪两块：立边界，然后讲行星史</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>Ra 的边界</b><span>哪些问题只回一句「不能」，为什么不替你决定未来</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>行星的时钟</b><span>25,000 年周期不是谁定的规章，而是一段节拍</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>火星移民与隔离</b><span>地球第三密度人口的火星来历，以及干预的代价</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>第二密度与「大脚」</b><span>两类在用第二密度形态的存有，以及为什么「大脚」有三种</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官：术语与自测</b><span>把本集的关键词收成卡片，再用归类练习过一遍</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：这一集在问什么</h2></div>
+  <p class="sec-lead">这是最早期的集会之一（1981 年 1 月 27 日），发问者本人还在为「这本书该往哪走」摸索，他在开场就为此致歉。所以本集有两块质地完全不同的内容：前一小段是在立边界——哪些问题 Ra 不答、为什么不答；从 (9.4) 起话题转向行星尺度——周期从哪来、人从哪来、那次移居留下了什么后果。</p>
+  <div class="card">
+    <h3>本集的位置与议题清单</h3>
+    <p>本集承接的是发问者「为整本书找方向」的阶段：他手里已经有先前给出的疗愈练习计划，却不知道该先练哪一个（(9.3)），于是先问了几个私人问题来清路。Ra 用一句「这将是最后一个问题」收束全篇，答案是本集最出人意料的说法：第三种「大脚」是思想形态——而这一点本集没有展开。</p>
+    <p>本集的主要议题：① Ra 的三条界线（不推荐、不揭旧账、不指导未来）；② 25,000 年周期与 75,000 年日程从何而来、门户何时开启；③ 地球第三密度人口的火星来源与转移方式；④ 干预如何换来地球的隔离；⑤ 第二密度、核战后备用的基因库，以及三种「大脚」。</p>
+  </div>
+  <div class="card">
+    <h3>问答脉络：从清路到行星史</h3>
+    <p>本集有 23 个问答块，但走向很清楚：先处理三个私人问题，再从「周期是谁定的」一路问到「地球上第一批人从哪来」，最后落到「现在谁还在用第二密度形态」。点击节点看每一段在做什么。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="qaTrack"></div>
+      <div class="flow-detail" id="qaDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="qaPrev">← 上一步</button> <button class="tri-btn" id="qaNext">下一步 →</button></div>
+    </div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">书的定位 · 本群体往事 · 器皿照料</span></summary>
+  <div class="body">
+    <p><b>(9.0) 开场：</b>Ra 以「在我们无限造物主的爱与光中向你们致意」开场，宣布本次通讯开始。</p>
+    <p><b>(9.1) 书的定位：</b>发问者宣布会把「一的法则」作为这本书的主要部分，并为早期几轮提问偏离方向致歉，说自己正在摸索书的走向，往后会越来越熟练。</p>
+    <p><b>(9.1) 出版商：</b>发问者问 Ra 能否为这本书推荐一个出版商，Ra 只答「不能」，没有给理由。这条界线见第二章。</p>
+    <p><b>(9.2) 本群体的往事：</b>Ra 先扫描「对存有而言无害的材料」，给出的是：这个群体曾数次一起工作和居住，关系各不相同；存在所谓平衡的业力，每个人都是彼此的导师；这些工作涉及疗愈、地球能量的运用，以及援助那些发出呼求的文明。说完 Ra 便主动划界停止。</p>
+    <p><b>(9.23) 第二场集会：</b>发问者说若器皿有能力，计划当天稍晚再开一场，并询问可以为器皿的舒适做些什么。</p>
+    <p><b>(9.23) 器皿状态：</b>Ra 说器皿身体复合体的脆弱部位需要一些调整，这些变貌来自你们称为松果体的能量中心阻塞。随后以「在太一无限造物者的爱与光中离开你们……Adonai」收尾。</p>
+  </div></details>
+  <div class="case"><b>新项目的前两次会：</b>启动会上你有点急——团队连着两次会都在「不做哪些方向」上打转，一件事都没落地。第三周回头才发现，正是那两次会定下了后面所有决策的边界。这正对应发问者在 (9.1) 里说的：早期这些看似无关紧要的问题，是为了先弄清这本书往哪走。</div>
+  <div class="case"><b>医院导诊台：</b>你进门先被问「挂哪个科」，而不是直接被开药。本集前三个问题就是挂号——先确认这段谈话的边界在哪里，才进入真正的议题。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>Ra 的边界：不推荐、不揭旧账、不指导</h2></div>
+  <p class="sec-lead">发问者带着两件私事和一件后勤事来：能不能推荐出版商、能不能讲他们过去的转世、今晚该练哪个练习。Ra 的回答全是否定或限定。但否定本身是教导——它把 Ra 愿意介入与不愿介入的界线画了出来：未来的判断、被守护的记忆、替人做选择。</p>
+  <div class="card">
+    <h3>出版商：一句「不能」</h3>
+    <div class="q">你们能不能为这本书推荐一个出版商？</div>
+    <div class="quote">
+      <p class="en">I am Ra. No.</p>
+      <p class="zh">我是 Ra。不能。</p>
+      <span class="src">—— Session 009 · (9.1)</span>
+    </div>
+    <div class="plain">有些问题 Ra 一句「不能」就结束——不解释、不给替代方案。</div>
+    <div class="analogy"><b>像医生不替你选药厂：</b>他能判断成分与剂量，但不该替你挑品牌——那属于你的判断领域。</div>
+    <div class="case"><b>问健身教练「帮我挑哪款哑铃」：</b>他回你「这该你自己定」。Ra 对「推荐出版商」的处理方式就是这样：不在他的判断领域里的事，直接关门，连解释都省下。</div>
+  </div>
+  <div class="card">
+    <h3>过去转世：被守护的记忆</h3>
+    <div class="q">你们能不能告诉我们一些过去转世的事，也就是这次转世之前的经历？</div>
+    <div class="quote">
+      <p class="en">It is possible. However, such information as this is carefully guarded by your mind/body/spirit being totality so that your present space/time experiences will be undiluted.</p>
+      <p class="zh">这是可能的。然而，这类信息被你们的心/身/灵全体存有精心守护着，好让你们当下的空间/时间体验不被稀释。</p>
+      <span class="src">—— Session 009 · (9.2)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Let us scan for harmless material for your beingness. … This ends the material which we consider harmless.</p>
+      <p class="zh">让我们为你们的存有扫描一些无害的材料。……我们视为无害的材料到此为止。</p>
+      <span class="src">—— Session 009 · (9.2)</span>
+    </div>
+    <div class="plain">信息存在，但被你们自己的存有封存了——为的是让这一世的体验保持浓度；Ra 能做的只是折中：只给「无害」的那一段，然后主动划界停止。</div>
+    <div class="analogy"><b>像游戏不给你看上一周目的存档：</b>不是系统小气，而是看了这一周目就不算数了。</div>
+    <div class="case"><b>医院只先告诉你「这项没问题」：</b>检查做完了，但完整结果要由专科医生解读。Ra 的做法是先扫描出「无害材料」，讲完立刻划线——不是不真诚，是分级。</div>
+  </div>
+  <div class="card">
+    <h3>该练哪个练习：不指导，只给方法</h3>
+    <div class="q">你们给的疗愈练习最好一次专注一个，那么今晚我该专注哪一个？</div>
+    <div class="quote">
+      <p class="en">Again, to direct your judgment is an intrusion upon your space/time-continuum distortion called future. To speak of past or present within our distortion/judgment limits is acceptable. To guide rather than teach/learn is not acceptable to our distortion in regards to teach/learning.</p>
+      <p class="zh">再说一次：指导你们的判断，是对你们称为「未来」的空间/时间连续体变貌的侵扰。在我们的变貌/判断限度内谈论过去或现在是可以接受的；但「指导」而非「教导/学习」，就教导/学习而言，不符合我们的变貌。</p>
+      <span class="src">—— Session 009 · (9.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">We instead can suggest a process whereby each chooses the first of the exercises given in the order in which we gave them, which you, in your discernment, feel is not fully appreciated by your mind/body/spirit complex.</p>
+      <p class="zh">作为替代，我们可以建议一个过程：每个人从我们按序给出的练习里，挑那个凭自己的辨识力觉得尚未被心/身/灵复合体充分领会的练习。</p>
+      <span class="src">—— Session 009 · (9.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This is the proper choice—building from the foundation, making sure the ground is good for the building. We have assessed for you the intensity of this effort in terms of energy expended. You will take this in mind and be patient, for we have not given a short or easy program of consciousness learn/teaching.</p>
+      <p class="zh">这是正确的选择——从地基开始建造，确保地面适合这栋楼。我们已经为你们评估了这项努力在能量消耗上的强度。你们要把这一点放在心上并保持耐心，因为我们给出的并不是一个简短、容易的意识学习/教导计划。</p>
+      <span class="src">—— Session 009 · (9.3)</span>
+    </div>
+    <div class="plain">谈过去和现在可以，替你做关于未来的决定不行——那是侵扰，不是帮助；Ra 给的是自选规则，把选择权留回给练习者。</div>
+    <div class="analogy"><b>像教练不指定你练哪块肌肉：</b>他只给一条规则——「从最基础的第一个动作开始，挑你觉得自己做得最不到位的那个」。</div>
+    <div class="case"><b>论文选题：</b>导师不告诉你选哪个题目，只给标准——「从最前面的几个方向里，挑一个你还没吃透的」。这正对应 (9.3)：Ra 拒绝导引，只提供过程。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>行星的时钟：周期是谁设的，门户为何到点就开</h2></div>
+  <p class="sec-lead">发问者带着一套现成的模型来：一个种群有三个 25,000 年的周期，走完 75,000 年行星就前进一次；他想知道的是「是谁一开始设定了这些年份」。Ra 没有回答「谁」，而是把周期还原成一件事：智能能量的节拍。</p>
+  <div class="card">
+    <h3>不是谁设的规章，是一段节拍</h3>
+    <div class="q">行星人口的进化分成三个 25,000 年周期，走完 75,000 年行星就进步一次。这些精确的年份，一开始是谁设定的？</div>
+    <div class="quote">
+      <p class="en">Visualize, if you will, the particular energy which, outward flowing and inward coagulating, formed the tiny realm of the creation governed by your Council of Saturn.</p>
+      <p class="zh">请观想那股特定的能量：它向外流动、向内凝聚，形成了由你们土星议会所辖的、造物中的这个微小领域。</p>
+      <span class="src">—— Session 009 · (9.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The timing of these cycles is a measurement equal to a portion of intelligent energy.</p>
+      <p class="zh">这些周期的计时，是一种量度，等同于智能能量的一部分。</p>
+      <span class="src">—— Session 009 · (9.4)</span>
+    </div>
+    <div class="plain">周期不是被谁「设」出来的规章，而是智能能量自身的一段节拍——它像计时器一样准。</div>
+    <div class="analogy"><b>不是有人在敲钟，而是这股流动本身就是钟：</b>水车的转速不由谁规定，它由水流本身决定。</div>
+    <div class="case"><b>「谁规定了每层楼必须 3 米高？」</b>答案往往不是某个立法者，而是砖块尺寸、人体尺度这一整套约束自然收敛出的结果。Ra 把「精确的年份」还原为智能能量自身的量度，是同一个思路：先问机制，再问立法者。</div>
+  </div>
+  <div class="card">
+    <h3>各自的时钟：为什么各行星进度不同步</h3>
+    <div class="q">那为什么每颗行星的进度不一样？</div>
+    <div class="quote">
+      <p class="en">Each of your planetary entities began the first cycle when the energy nexus was able in that environment to support such mind/body experiences.</p>
+      <p class="zh">你们每一个行星实体，都是在那个环境中的能量核心能够支持这类心/身体验之时，才开始第一个周期。</p>
+      <span class="src">—— Session 009 · (9.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Thus, each of your planetary entities is on a different cyclical schedule, as you might call it.</p>
+      <p class="zh">因此，你们的每一个行星实体都处在不同的循环时间表上——如你们会说的那样。</p>
+      <span class="src">—— Session 009 · (9.4)</span>
+    </div>
+    <div class="plain">起点由「环境是否支持心/身在彼处体验」决定，所以各行星各按各的表走。</div>
+    <div class="analogy"><b>像不同时区的学校：</b>每个学校按自己的开学日算学期，学期长度相同，但进度表不一样。</div>
+    <div class="case"><b>同一批入职的同事：</b>有人上手快、有人要先补培训，但三个月后的考核节点还是同一天——起点不同、节奏各异，节点由制度而非心情决定。对应「各行星处于不同的循环时间表」。</div>
+  </div>
+  <div class="card">
+    <h3>门户：到点就开，不管你在不在</h3>
+    <div class="q">那这个周期的终点是什么？</div>
+    <div class="quote">
+      <p class="en">This intelligent energy offers a type of clock. The cycles move as precisely as a clock strikes your hour. Thus, the gateway from intelligent energy to intelligent infinity opens regardless of circumstance on the striking of the hour.</p>
+      <p class="zh">这种智能能量提供了一种时钟。这些循环运转得如同时钟报时一样精确。因此，从智能能量通往智能无限的门户，会在时钟敲响时开启——无论当时的情形如何。</p>
+      <span class="src">—— Session 009 · (9.4)</span>
+    </div>
+    <div class="plain">门户的开合由时钟决定，不由当事人的准备程度决定——到点就开，错过就是错过。</div>
+    <div class="analogy"><b>像末班地铁：</b>不管你有没有赶到站台，到点它就发车。</div>
+    <div class="case"><b>论文的提交截止时间：</b>系统 23:59 自动关闸，你差两百字也交不上去。这正对应「无论当时的情形如何」——窗口按时刻表开合，不因个人状态调整。</div>
+  </div>
+  <div class="card">
+    <h3>访客不改表</h3>
+    <div class="q">那四百万年来到地球的那些「访客」，会不会推动或拖慢这个周期？</div>
+    <div class="quote">
+      <p class="en">There have been visitors to your sphere at various times for the last four million of your years, speaking approximately. These visitors do not effect the cycling of the planetary sphere.</p>
+      <p class="zh">在你们时间的最近大约四百万年里，曾有过访客在不同时期来到你们的星球。这些访客并不影响行星球的循环。</p>
+      <span class="src">—— Session 009 · (9.13)</span>
+    </div>
+    <div class="plain">访客能来能走，但改不了时刻表——周期的运行不由外力接管。</div>
+    <div class="case"><b>租客换了好几拨：</b>房子住过不同的人，但房租到期日从来没变。对应「访客不影响行星球的循环」——外部临时事件不改合同周期。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>火星移民与隔离的由来：一次好意怎么换来一道界线</h2></div>
+  <p class="sec-lead">从 (9.5) 起，话题落到地球上「人」的来历。Ra 先说这星球最早的实体是水、火、风、土；再说第三密度的人来自太阳系另一颗行星——火星。这条移民线走到 (9.9) 出现转折：它换来了地球的隔离。本集真正要讲的教训就在这里。</p>
+  <div class="card">
+    <h3>最早的实体，与最早「像我们的人」</h3>
+    <div class="q">这个星球上第一批实体是什么？我们这样的人从哪来？</div>
+    <div class="quote">
+      <p class="en">The first entities upon this planet were water, fire, air and earth.</p>
+      <p class="zh">这个星球上最初的实体是水、火、风与土。</p>
+      <span class="src">—— Session 009 · (9.5)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The first of those to come here were brought from another planet in your solar system called by you the Red Planet, Mars. This planet's environment became inhospitable to third-density beings.</p>
+      <p class="zh">最早来到这里的那些，是被从你们太阳系中另一颗行星带来的——你们称之为红色星球，火星。这颗行星的环境变得不适合第三密度存有居住。</p>
+      <span class="src">—— Session 009 · (9.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The first entities, therefore, were of this race, as you may call it, manipulated somewhat by those who were Guardians at that time.</p>
+      <p class="zh">因此，最初的实体属于这个种族——如你们会说的——在当时被那些守护者们做了一定程度的操控。</p>
+      <span class="src">—— Session 009 · (9.6)</span>
+    </div>
+    <div class="plain">元素是这个星球最早的「实体」；而与我们同形的第三密度人，源头在火星，且来的时候被守护者「做了一定程度的操控」。</div>
+    <div class="analogy"><b>一座城市的「第一批居民」往往是移民：</b>不是本地自然长出来的，而是别处待不下去之后迁来的。这条火星叙事就是这个结构。</div>
+    <div class="case"><b>家谱追到最后一页：</b>你查族谱，发现家族在这座城的起点是一次逃难迁徙——你今天的生活形态，起点是别人的一场灾难。这正对应「火星环境变得不适合居住，所以我们在这里」。</div>
+  </div>
+  <div class="card">
+    <h3>怎么来的：一种非生殖性的诞生</h3>
+    <div class="q">他们是怎么从火星到这里的？</div>
+    <div class="quote">
+      <p class="en">The race is a combination of the mind/body/spirit complexes of those of your so-called Red Planet and a careful series of genetical adjustments made by the Guardians of that time.</p>
+      <p class="zh">这个种族，是你们所谓红色星球上的那些心/身/灵复合体，与当时守护者们所做的一系列精心基因调整的结合。</p>
+      <span class="src">—— Session 009 · (9.7)</span>
+    </div>
+    <div class="quote">
+      <p class="en">These entities arrived, or were preserved, for the experience upon your sphere by a type of birthing which is non-reproductive, but consists of preparing genetic material for the incarnation of the mind/body/spirit complexes of those entities from the Red Planet.</p>
+      <p class="zh">这些实体是为了在你们星球上体验，而通过一种非生殖性的诞生方式到来——或说被保存下来；这种方式包括：为来自红色星球那些实体的心/身/灵复合体投生，准备基因材料。</p>
+      <span class="src">—— Session 009 · (9.7)</span>
+    </div>
+    <div class="quote">
+      <p class="en">In your time this transfer occurred approximately seven five zero zero zero [75,000] years ago.</p>
+      <p class="zh">在你们的时间中，这次转移发生在大约七五零零零 [75,000] 年前。</p>
+      <span class="src">—— Session 009 · (9.11)</span>
+    </div>
+    <div class="plain">不是「生孩子」生出来的：是准备基因材料，让火星的心/身/灵复合体在这里投生；时间大约在 75,000 年前。</div>
+    <div class="analogy"><b>像异地育苗：</b>不是让植物自己走过去，而是把材料在另一块土地上准备好，再让它在这里长起来。</div>
+    <div class="case"><b>异地备灾的种子库：</b>真正被搬到安全地方的不是一整片森林，而是一批可用的「材料」，条件合适时再让它在这里重新长出来。这正对应「为非生殖性的诞生准备基因材料」。</div>
+  </div>
+  <div class="card">
+    <h3>一条时间线</h3>
+    <p>把本集散落各处的年代按顺序摆好，因果链就清楚了：环境先失守，然后才有转移，转移之后才有隔离。</p>
+    <div class="timeline">
+      <div class="tl-item"><div class="t">约四百万年前起 · 访客往来</div><div class="d">多批访客在不同时期来到地球；Ra 特意说明这些访客不影响行星的循环。此时地球环境还不是第三密度。</div></div>
+      <div class="tl-item"><div class="t">火星 · 学习爱的法则</div><div class="d">红色星球的第三密度实体正在学「爱的法则」——它是一的法则的原初变貌之一。</div></div>
+      <div class="tl-item"><div class="t">周期未满 · 环境失守</div><div class="d">这些人的好战倾向在行星的大气环境中造成困难，以致它在自身周期结束之前就变得不适合第三密度体验。</div></div>
+      <div class="tl-item"><div class="t">未收割 · 带着同一门功课离开</div><div class="d">这批实体未被收割，继续在「幻象」中尝试学习爱的法则。</div></div>
+      <div class="tl-item"><div class="t">约 75,000 年前 · 转移</div><div class="d">守护者用非生殖性的诞生方式把他们带到地球：准备基因材料，让心/身/灵复合体在此投生。</div></div>
+      <div class="tl-item"><div class="t">之后 · 隔离建立</div><div class="d">正是从这次初始行动起，地球的隔离被建立了起来——因为当时认为，红色星球那些实体的自由意志被缩减了。</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>代价：好意如何累积成隔离</h3>
+    <div class="q">守护者显然是在理解一的法则的前提下这么做的，那为什么还会出问题？</div>
+    <div class="quote">
+      <p class="en">The Law of One was named by these Guardians as the bringing of the wisdom of the Guardians in contact with the entities from the Red Planet, thus melding the social memory complex of the Guardian race and the Red Planet race.</p>
+      <p class="zh">这些守护者把「一的法则」命名为此事：把守护者的智慧与来自红色星球的实体接触，从而把守护者种族与红色星球种族的社会记忆复合体融合在一起。</p>
+      <span class="src">—— Session 009 · (9.9)</span>
+    </div>
+    <div class="quote">
+      <p class="en">It, however, took an increasing amount of distortion into the application of the Law of One from the viewpoint of other Guardians, and it is from this beginning action that the quarantine of this planet was instituted, for it was felt that the free will of those of the Red Planet had been abridged.</p>
+      <p class="zh">然而，从其他守护者的观点看，这一对一的法则的应用引入了越来越多的变貌；正是从这个初始行动起，这个行星的隔离被建立了起来——因为当时认为，红色星球上那些实体的自由意志被缩减了。</p>
+      <span class="src">—— Session 009 · (9.9)</span>
+    </div>
+    <div class="plain">一次出于善意的干预，累积出越来越多变貌，最后换来了地球的隔离——判据只有一条：自由意志是否被缩减。</div>
+    <div class="analogy"><b>像把一株快旱死的植物移进屋：</b>救它是好事，但你替它决定了它该在哪儿活——这就是「自由意志被缩减」发生的地方。</div>
+    <div class="case"><b>支教队替村里定好「最适合」的作物：</b>头两年收成确实好，但村里没人再练自己判断。第三年队伍撤走，项目全停。这正对应 (9.9)：干预越多，变貌累积越多，最后不得不建立一道「不干涉」的界线。</div>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">守护者的做法</span><h4>接触与融合</h4><p>把守护者的智慧与火星实体接触，从而把两个种族的社会记忆复合体<b>融为一体</b>；他们自己把这件事命名为「一的法则」的应用。</p></div>
+      <div class="yuan-card"><span class="y-tag">其他守护者的视角</span><h4>变貌累积</h4><p>从他们的观点看，这一应用引入了<b>越来越多的变貌</b>——同一件事，两个视角给出不同评价。</p></div>
+      <div class="yuan-card"><span class="y-tag">判据</span><h4>自由意志被缩减</h4><p>争议最后收敛到一条线上：火星实体的<b>自由意志是否被缩减</b>。这条线也是全书反复出现的界线。</p></div>
+      <div class="yuan-card"><span class="y-tag">后果</span><h4>行星隔离</h4><p>正是从这次初始行动起，<b>地球的隔离被建立</b>——不是惩罚，而是防止再次越界的保护措施。</p></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>火星自己那一段：好战与未收割</h3>
+    <div class="q">火星人在离开之前，遵循一的法则吗？</div>
+    <div class="quote">
+      <p class="en">The entities of the Red Planet were attempting to learn the Laws of Love which form one of the primal distortions of the Law of One.</p>
+      <p class="zh">红色星球的那些实体，当时正试图学习爱的法则——它构成一的法则的原初变貌之一。</p>
+      <span class="src">—— Session 009 · (9.10)</span>
+    </div>
+    <div class="quote">
+      <p class="en">However, the tendencies of these people towards bellicose actions caused such difficulties in the atmospheric environment of their planet that it became inhospitable for third-density experience before the end of its cycle. Thus, the Red Planet entities were unharvested and continued in your illusion to attempt to learn the Law of Love.</p>
+      <p class="zh">然而，这些人倾向于好战的行为，在他们行星的大气环境中造成了如此大的困难，以致它在自身周期结束之前就变得不适合第三密度体验。因此，红色星球的实体未被收割，并继续在你们的幻象中尝试学习爱的法则。</p>
+      <span class="src">—— Session 009 · (9.10)</span>
+    </div>
+    <div class="plain">他们不是坏学生，是没考成：考场在周期结束前先塌了，于是整批人带着同一门功课转到新的教室继续学。</div>
+    <div class="analogy"><b>像考期未到学校先塌了：</b>不是学生不及格，是考场没了；于是整届转学，但课还是那门课。</div>
+    <div class="case"><b>军备竞赛拖垮本国的生态：</b>还没走到发展节点，环境先撑不住了。这正对应「好战倾向在大气环境中造成困难，周期结束前已不适合居住」。</div>
+  </div>
+  <div class="card">
+    <h3>条件模拟器：地球的隔离是怎么成立的？</h3>
+    <p>按本集 (9.9) 的说法，把下面三条拨一拨，看「隔离建立」这个结果依赖什么。</p>
+    <div class="cond-row"><div class="name">① 接触与融合<small>守护者把自身的智慧与红色星球实体接触，融合两个社会记忆复合体</small></div><label class="switch"><input type="checkbox" id="c1" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">② 转移的必要性<small>红色星球的环境在周期结束前已不适合第三密度居住</small></div><label class="switch"><input type="checkbox" id="c2" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">③ 自由意志被缩减<small>其他守护者认为红色星球实体的自由意志被缩减</small></div><label class="switch"><input type="checkbox" id="c3" checked><span class="slider"></span></label></div>
+    <div id="condResult"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>第二密度：形态、基因库与三种「大脚」</h2></div>
+  <p class="sec-lead">把镜头再往前推：在火星移民之前，地球上有过什么？答案是第二密度——高等植物与动物。发问者接着追问它们的形态、起源与去向，最后问「现在有没有谁还在用第二密度形态」，于是得到本集最出乎意料的回答：有两个种族在用，而且「大脚」有三种。</p>
+  <div class="card">
+    <h3>第二密度：活的，但不往上走</h3>
+    <div class="q">大约 75,000 年前地球上就有第二密度实体了，它们是什么样的？</div>
+    <div class="quote">
+      <p class="en">The second density is the density of the higher plant life and animal life which exists without the upward drive towards the infinite.</p>
+      <p class="zh">第二密度是高等植物生命与动物生命的密度——它们的存在不带朝向无限的上升驱动力。</p>
+      <span class="src">—— Session 009 · (9.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The two higher of the sub-vibrational levels of second-density beings had the configuration of the biped, as you mentioned. However, the erectile movement which you experience was not totally effected in these beings who were tending towards the leaning forward, barely leaving the quadrupedal position.</p>
+      <p class="zh">第二密度存有中两个较高的子振动层次，具有你们提到的双足形态。然而，你们所体验的那种直立运动，在这些存有身上并未完全实现——它们倾向于前倾，勉强才离开四足姿态。</p>
+      <span class="src">—— Session 009 · (9.15)</span>
+    </div>
+    <div class="plain">第二密度是「活着，但不朝向无限上升」的那一层；它内部也有层次，最高的两个层次已经有了双足形态，只是还没真正站直。</div>
+    <div class="analogy"><b>像乐队里的低音声部：</b>不是不重要，而是不负责主旋律——那门功课要从「自我意识」才开始。</div>
+    <div class="case"><b>你家的猫：</b>有情绪、有偏好、会怕生，但它不会在某天突然开始问「我是谁」。这就是「存在，但没有朝向无限的上升驱动力」——对应本集对第二密度的定义。</div>
+  </div>
+  <div class="card">
+    <h3>从第二密度到第三密度：方向确定，时间不定</h3>
+    <div class="q">那这些存有会从第二密度进化到第三密度吗？</div>
+    <div class="quote">
+      <p class="en">This is correct, although no guarantee can be made of the number of cycles it will take an entity to learn the lessons of consciousness of self which are the prerequisite for transition to third density.</p>
+      <p class="zh">这是正确的；不过，无法保证一个实体需要多少个周期，才能学会「自我意识」的课程——那是过渡到第三密度的先决条件。</p>
+      <span class="src">—— Session 009 · (9.17)</span>
+    </div>
+    <div class="plain">方向确定（二→三），时间不确定：功课是「自我意识」，要学几轮没人能打包票。</div>
+    <div class="case"><b>学游泳：</b>从「不怕水」到「能换气」这两个层次之间没有时间表，有人一个夏天，有人三年。Ra 说的是同一件事：门槛是某项能力，不是年份。</div>
+  </div>
+  <div class="card">
+    <h3>此刻还在用第二密度形态的两族</h3>
+    <div class="q">现在我们星球上，有没有哪个种族是从第二密度投生到这里的？</div>
+    <div class="quote">
+      <p class="en">There are no second-density consciousness complexes here on your sphere at this time. However, there are two races which use the second-density form.</p>
+      <p class="zh">此刻在你们的星球上没有第二密度意识复合体；不过，有两个种族在使用第二密度的形态。</p>
+      <span class="src">—— Session 009 · (9.18)</span>
+    </div>
+    <div class="quote">
+      <p class="en">One is the entities of the planetary sphere you call Maldek. These entities are working their understanding complexes through a series of what you would call karmic restitutions. They dwell within your deeper underground passageways and are known to you as "Bigfoot."</p>
+      <p class="zh">其中之一，是你们称为马尔德克的那颗行星上的实体。这些实体正在通过一系列你们会称为「业力偿还」的过程，来处理他们的理解复合体。他们居住在你们更深的地下通道中，被你们称为「大脚」。</p>
+      <span class="src">—— Session 009 · (9.18)</span>
+    </div>
+    <div class="quote">
+      <p class="en">These are beings which exist as instinctual second-density beings which are being held in reserve to form what you would call a gene pool in case these body complexes are needed. These body complexes are greatly able to withstand the rigors of radiation which the body complexes you now inhabit could not do.</p>
+      <p class="zh">这些是作为本能性的第二密度存有而存在的存有，它们被保留作储备，以便在需要这些身体复合体时形成你们所谓的基因库。这些身体复合体能够极大地承受辐射的严酷，而你们现在居住的身体复合体则做不到。</p>
+      <span class="src">—— Session 009 · (9.19)</span>
+    </div>
+    <div class="plain">眼下没有「第二密度意识」在这里；但有两个种族用的是第二密度「身体」——一支在做业力偿还（马尔德克），一支被留作后备载具，用来应对核战争之后的处境。</div>
+    <div class="analogy"><b>老房子换了住户：</b>户型还是那套老户型（第二密度形态），住进去的却另有其人。</div>
+    <div class="case"><b>灾备机房里备着一批旧型号服务器：</b>平时不参与业务，只为在主系统崩溃时能顶上——而且这批机器能扛住主系统扛不住的环境。这正对应「被保留作基因库、能极大承受辐射的身体复合体」。</div>
+  </div>
+  <div class="card">
+    <h3>三种「大脚」</h3>
+    <div class="q">那是有两种不同类型的大脚，对吗？</div>
+    <div class="quote">
+      <p class="en">There are three types of Bigfoot, if you will accept that vibratory sound complex used for three such different races of mind/body/spirit complexes. The first two we have described.</p>
+      <p class="zh">有三种类型的「大脚」——如果你们愿意接受这个声音振动复合体被用来指代三种如此不同的心/身/灵复合体种族的话。前两种我们已经描述过了。</p>
+      <span class="src">—— Session 009 · (9.22)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The third is a thought-form.</p>
+      <p class="zh">第三种是一种思想形态。</p>
+      <span class="src">—— Session 009 · (9.22)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This is correct although we would not call these Bigfoot, as they are scarce and are very able to escape detection. … These entities of the glowing eyes are those most familiar to your peoples.</p>
+      <p class="zh">这是正确的，尽管我们不会称这些为「大脚」，因为它们稀少，而且非常善于逃避探测。……这些眼睛发光的实体，是你们人类最熟悉的类型。</p>
+      <span class="src">—— Session 009 · (9.21)</span>
+    </div>
+    <div class="plain">前两种是实打实的存有（地下通道的马尔德克实体、深林里被保留的身体复合体），第三种不是生物，是思想形态；而人们最常「见到」的，是那种眼睛发光的类型。</div>
+    <div class="analogy"><b>像一条被反复讲述的都市传说：</b>讲的人越多，那个形象就越容易被「看见」——它长得像动物，但它不是动物。</div>
+    <div class="case"><b>网上的「某地怪影」照片：</b>年年有人拍、张张长得不一样，但大家嘴里描述的总是一个模板。反复「被目击」的形象，可以是被人造出来的形态，而不是一种生物——对应「第三种是思想形态」。</div>
+    <div class="case"><b>深林里的「一闪而过」：</b>徒步时有人说看见灌木后有个高大的影子，你回头只看到树。Ra 说这类存有稀少且非常善于逃避探测——所以「看不见」本身不构成反证。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>收官：术语、练习与伏笔</h2></div>
+  <p class="sec-lead">本集术语密度高、因果链长。这里把关键词收成卡片，再用一组归类练习把「第二密度/第三密度」的分界过一遍，最后是 Ra 在本集里最核心的一句话。</p>
+  <div class="card">
+    <h3>术语卡：本集的关键词</h3>
+    <p>点击卡片翻看解释。每个词都给了白话定义，没读过前文的读者也能看懂。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">社会记忆复合体</div><div class="sub">social memory complex</div><span class="tap">点击展开</span></div><div class="back">一个群体共享同一套记忆与认同、如同一个「人」那样行动的心/身/灵复合体。本集里，守护者种族与火星种族的社会记忆复合体被「融合」在一起——这次融合正是后来争议的起点。<em>比喻：不是两个人交换名片，而是两家公司的全部档案并成了一份。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">收割 / 未收割</div><div class="sub">harvest / unharvested</div><span class="tap">点击展开</span></div><div class="back">一个周期结束时，实体凭是否学会该密度的功课，决定能否进入下一密度；没学会的留在原处继续。本集说火星实体因为周期提前中断而「未被收割」。<em>案例：届考没参加，不算及格也不算被淘汰——这门课重修。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">第二密度</div><div class="sub">second density</div><span class="tap">点击展开</span></div><div class="back">高等植物与动物生命的密度：活着、有意识，但没有朝向无限的上升驱动力。本集说地球曾有第二密度实体，它们会进化到第三密度，但要几轮不保证。<em>案例：同一栋楼里的猫和楼里的人——都是住户，功课不同。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">思想形态</div><div class="sub">thought-form</div><span class="tap">点击展开</span></div><div class="back">由思想（而非生物繁殖）形成的形态。本集说三种「大脚」里的第三种就是思想形态——它不是生物，但会被「看见」。<em>比喻：一个被足够多人反复讲述的形象，会在现实里出现。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">智能能量</div><div class="sub">intelligent energy</div><span class="tap">点击展开</span></div><div class="back">介于智能无限与具体造物之间的能量层。本集说周期是它的量度，它「提供了一种时钟」，门户按它的节拍开合。<em>比喻：电网里的频率——不是谁按的开关，而是系统自身的节拍。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">隔离</div><div class="sub">quarantine</div><span class="tap">点击展开</span></div><div class="back">本集说：从火星实体被转移这件事起，地球的隔离被建立，理由是那些实体的自由意志被缩减。隔离是一道界线——不干涉原则被违反，保护措施就启动。<em>比喻：群里的禁言——不是惩罚，是防止再次越界替别人做决定。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">业力偿还</div><div class="sub">karmic restitutions</div><span class="tap">点击展开</span></div><div class="back">通过一连串经验，把还没平衡的理解「还回去」的过程。本集说马尔德克实体正在以这种方式处理他们的理解复合体。<em>案例：欠了账分期还——不是为了受苦，是为了把账平掉。</em></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>归类练习：这属于哪一密度？</h3>
+    <p>下列描述全部出自本集，判断 Ra 说的是第二密度还是第三密度。</p>
+    <div id="sorterArea"></div>
+  </div>
+  <div class="saying">
+    <p class="en">Thus, the gateway from intelligent energy to intelligent infinity opens regardless of circumstance on the striking of the hour.</p>
+    <p class="zh">因此，从智能能量通往智能无限的门户，会在时钟敲响时开启——无论当时的情形如何。</p>
+    <span class="src">—— Session 009 · (9.4)</span>
+  </div>
+  <div class="card">
+    <h3>这一集留下的位置</h3>
+    <p>本集以 Ra 的一句预告结束：发问者问「有两种大脚，对吗」，Ra 答「这将是最后一个问题」，然后给出三种。随后 (9.23) 器皿的脆弱部位需要调整，变貌来自松果体能量中心的阻塞，Ra 便离开。留下的线索有几条，都可以带进后续的阅读：</p>
+    <ul>
+      <li>「第三种是思想形态」——本集只说了一句，没有展开它是什么、由谁形成。</li>
+      <li>隔离是被建立起来了，但本集只讲了它的起因，没讲它如何解除。</li>
+      <li>火星那批未被收割的实体，此刻仍在这颗行星的幻象里继续学同一门功课：爱的法则。</li>
+    </ul>
+    <div class="quote">
+      <p class="en">I am Ra. This will be the final question.</p>
+      <p class="zh">我是 Ra。这将是最后一个问题。</p>
+      <span class="src">—— Session 009 · (9.22)</span>
+    </div>
+    <div class="plain">读本集时最该记住的不是「大脚有三种」这个结论，而是它前面那条因果链：环境失守 → 转移 → 干预 → 自由意志被缩减 → 隔离。</div>
+  </div>
+  <div class="case"><b>公司提前做灾备演练：</b>一切正常的时候就把备用系统架好，只为真出事那天还有人能上线。这正对应守护者保留那批能承受辐射的身体复合体——不是预期灾难必然发生，而是让最坏情况仍有下一步。</div>
+  <div class="case"><b>班里转来一个留级生：</b>同学只当他是「新面孔」，没人知道他上一所学校出了什么事，也不知道他带来的还是同一门没过的功课。这正对应火星实体转来地球继续学爱的法则。</div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+<p>基于 The Ra Contact Session 009（split/Ra_Session_009.md）英文原文制作 · 交互式学习模块</p>
+<p>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文</p>
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra009-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+  {t:'(9.1) 出版商',d:'<span class="qa-q">问：能不能为这本书推荐一个出版商？</span><b>答：</b>「不能。」——没有理由，也没有替代方案。这是本集第一道界线。'},
+  {t:'(9.2) 过去转世',d:'<span class="qa-q">问：能不能讲我们过去的转世经历？</span><b>答：</b>可能，但这类信息被你们的心/身/灵全体存有守护着，为的是让当下的体验不被稀释。Ra 只扫描出「无害材料」（这个群体曾数次一起工作居住、彼此互为导师、工作涉及疗愈与援助呼求的文明），讲完立即划界停止。'},
+  {t:'(9.3) 该练哪个练习',d:'<span class="qa-q">问：今晚我该专注哪个练习？</span><b>答：</b>指导你的判断是对「未来」变貌的侵扰——谈过去与现在可以，替你决定未来不行。替代方案是一条自选规则：从按序给出的练习里，挑那个你凭辨识力觉得尚未被充分领会的。'},
+  {t:'(9.4) 周期从何而来',d:'<span class="qa-q">问：三个 25,000 年周期、75,000 年日程，是谁设定的？</span><b>答：</b>不是谁设的规章。周期的计时是智能能量的一部分量度；它像时钟一样报时，各行星按各自的表走，门户到点就开。'},
+  {t:'(9.5)–(9.12) 人从哪来',d:'<span class="qa-q">问：这星球上第一批实体是什么？我们这样的人从哪来？</span><b>答：</b>最早的实体是水、火、风、土；第三密度的人来自火星——环境变得不适合居住后，守护者用非生殖性的诞生方式把他们带到这里，时间约在 75,000 年前。'},
+  {t:'(9.9)–(9.10) 干预的代价',d:'<span class="qa-q">问：守护者理解一的法则，为什么还会出问题？</span><b>答：</b>他们把这次接触命名为「一的法则」的应用；但从其他守护者视角，这一应用引入了越来越多的变貌——因为火星实体的自由意志被认为被缩减了。于是地球的隔离被建立。而火星自身：好战倾向拖垮了大气环境，整批实体未被收割。'},
+  {t:'(9.13)–(9.22) 第二密度与「大脚」',d:'<span class="qa-q">问：移民之前地球上有什么？现在还有谁用第二密度形态？</span><b>答：</b>第二密度是高等植物与动物的密度，会进化到第三密度但周期数不保证；此刻没有第二密度意识复合体，却有两个种族在用第二密度形态——马尔德克实体（业力偿还）与守护者保留的后备载具。最后：大脚有三种，第三种是思想形态。'},
+  {t:'(9.23) 器皿与收尾',d:'<span class="qa-q">问：今天稍晚能否再开一场？怎样让器皿更舒适？</span><b>答：</b>器皿身体复合体的脆弱部位需要调整，变貌来自松果体能量中心的阻塞。Ra 以爱与光离开，Adonai。'}
+]);
+
+document.querySelectorAll('.fn-card').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('open')));
+
+initSorter('sorterArea',[
+  {a:'高等植物与动物生命——活着，但没有朝向无限的上升驱动力',opts:['第二密度','第三密度'],ans:'第二密度',exp:'这正是本集对第二密度的定义 (9.14)。'},
+  {a:'双足形态，但行走时身体前倾、勉强才离开四足姿态',opts:['第二密度','第三密度'],ans:'第二密度',exp:'第二密度中最高的两个子振动层次已有双足形态，但直立运动尚未完全实现 (9.15)。'},
+  {a:'必须先学会「自我意识」这门课程，才谈得上过渡进来',opts:['第二密度','第三密度'],ans:'第三密度',exp:'Ra 说自我意识是过渡到第三密度的先决条件，而且不保证需要几个周期 (9.17)。'},
+  {a:'由守护者做过基因调整、从红色星球被带来投生的心/身/灵复合体',opts:['第二密度','第三密度'],ans:'第三密度',exp:'发问者问的正是第三密度体验，Ra 说最早来到这里的来自火星 (9.6)(9.7)。'},
+  {a:'本能性地存在、被保留作基因库、能极大承受辐射的存有',opts:['第二密度','第三密度'],ans:'第二密度',exp:'它们被保留作储备，以备现有的身体复合体无法承受辐射时使用 (9.19)。'}
+]);
+
+function updateCond(){
+  const c1=document.getElementById('c1').checked,
+        c2=document.getElementById('c2').checked,
+        c3=document.getElementById('c3').checked;
+  const box=document.getElementById('condResult');
+  let html,fail=false;
+  if(c1&&c2&&c3){
+    html='<b>隔离建立。</b>本集说：正是从这个初始行动起，这个行星的隔离被建立了起来——因为当时认为，红色星球上那些实体的自由意志被缩减了。';
+  }else if(!c1){
+    fail=true;
+    html='<b>链条断在第一步。</b>本集的因果起点就是这次接触：守护者把自身的智慧与红色星球实体接触，融合两个社会记忆复合体。没有它，后面从其他守护者视角累积的变貌就无从谈起。';
+  }else if(!c2){
+    fail=true;
+    html='<b>转移失去了前提。</b>Ra 说红色星球的环境变得不适合第三密度存有居住，这批实体才被带来（或说被保存）。这一条不成立，前面那串事件就不会发生。';
+  }else{
+    fail=true;
+    html='<b>争议消失，隔离不会由此产生。</b>干预确实发生了，但本集说隔离被建立是因为「当时认为」自由意志被缩减——这个判断若不存在，就没有从这次行动生出的隔离。';
+  }
+  box.className=fail?'fail':'';
+  box.innerHTML=html;
+}
+['c1','c2','c3'].forEach(id=>document.getElementById(id).addEventListener('change',updateCond));
+updateCond();
+
+renderPath();
+</script>
+</body>
+</html>

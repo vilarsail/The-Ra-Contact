@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 007 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 007 · 交互式学习模块</h1>
+  <p class="sub">这一集从「联邦能提供什么服务」问起：呼唤如何被连续平方地放大、公开降临要经过怎样的共识与批准、UFO 接触为何只能以神秘和思想形态出现，最后落在猎户座集团与一句反转的宣告——服务自己与服务他人，是同一件事的两种说法。</p>
+  <div class="tagline">6 个主题 · 6 个学习步骤 · 19 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 呼唤的平方法则</a>
+<a href="#s3">③ 议会与隔离</a>
+<a href="#s4">④ UFO 接触的真相</a>
+<a href="#s5">⑤ 猎户座集团</a>
+<a href="#s6">⑥ 收官：两种说法</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>先看清这一集从「联邦能提供什么服务」到「服务自己等于服务他人」的整条线，例行问答可跳过</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>呼唤的平方法则</b><span>回应的大小由呼唤决定，而呼唤是连续平方地放大的</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>议会与隔离</b><span>公开降临不看人数看共识，提案要经土星议会批准</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>UFO 接触的真相</b><span>隔离并未被打破；获准的是思想形态的显现与「制造神秘」</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>猎户座集团</b><span>精英/非精英/帝国的意图骨架，以及同等力量背后的分离代价</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官：两种说法</b><span>收割看的是能否看见光/爱，而服务自己与服务他人本是一件事</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：这一集在问什么</h2></div>
+  <p class="sec-lead">上一集提到 Ra 是星际联邦（Confederation）的成员，这一集发问者顺着这条线索一路追问：联邦能提供哪些服务、服务的大小由什么决定、公开来到地球为什么这么难、那些 UFO 接触到底是谁在做。Ra 的回答把四件事串成一条线——呼唤的数学、议会的程序、接触的真相、猎户座集团——最后收在一句反转上。</p>
+  <div class="card">
+    <h3>问答脉络：从「联邦能做什么」到「两种说法」</h3>
+    <p>本集共 19 个问答块，主线却只有一条：发问者每追问一步，Ra 就把问题背后的机制摊开一层。点击节点，看这条线怎么推进。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="qaTrack"></div>
+      <div class="flow-detail" id="qaDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="qaPrev">← 上一步</button> <button class="tri-btn" id="qaNext">下一步 →</button></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>一条主线：呼唤</h3>
+    <div class="q">把平方法则套到那些呼唤的人数上，结果是多少？</div>
+    <div class="quote">
+      <p class="en">It, however, constitutes a great calling which we of all creation feel and hear as if our own entities were distorted towards a great and overwhelming sorrow. It demands our service.</p>
+      <p class="zh">然而，它构成了一次伟大的呼唤——我们这些属于整个造物的存在都感受到、也听见它，仿佛我们自己的实体都朝向一种巨大而压倒性的悲伤而变貌。它要求我们提供服务。</p>
+      <span class="src">—— Session 007 · (7.7)</span>
+    </div>
+    <div class="plain">本集的主线不是「外星人会不会来」，而是「呼唤怎样被听见、回应又受什么限制」——后面所有具体问题都挂在这条线上。</div>
+    <div class="analogy"><b>像深夜的急救热线：</b>值班的人真正在意的不是电话响了几次，而是那一头有多少真实的求救声，以及值班的人被允许做什么。</div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿照料 · 集会节奏 · 名字确认</span></summary>
+  <div class="body">
+    <p><b>(7.0)/(7.19) 开场与收尾：</b>以「在我们无限造物主的爱与光中向你们致意」开场；收尾时 Ra 说「我将你们留在太一无限造物主的爱与光中」，并以 Adonai 作结。</p>
+    <p><b>(7.18) 器皿照料：</b>发问者问还能做什么让器皿更舒适；Ra 说有些小调整可以做，但现在已能以最小变貌使用这个器皿，不会在任何显著程度上耗尽她。</p>
+    <p><b>(7.19) 集会节奏：</b>发问者不想让器皿过度疲惫，表示下一场集会继续这个话题。Ra 随即收尾。</p>
+    <p><b>(7.11) 名字确认：</b>发问者追问 Ra 提到的两个名字是否为 Mark Probert 与 Henry Puharich，Ra 答「This is correct.」——这属于个人性细节，正文只取 (7.10) 的教导部分。</p>
+  </div></details>
+  <div class="case"><b>群里的捐款接龙：</b>小区业主群里发起一场重病捐款，只有 12 个人接龙，但每人不仅转账，还整夜转发、拉群、联系媒体——最后募到的钱远超「12 个人」给人的预期。本集紧接着要讲的平方法则（Law of Squares），说的正是这种效应：起作用的不是人数的算术，而是同一方向上呼唤的强度与统一程度。</div>
+  <div class="case"><b>拿到教材先看目录：</b>一本 600 页的医学教材，你先把目录和每章提要读一遍，再决定按什么顺序啃。这一章就是本集的目录：先知道后面五件事各在讲什么，读到「灵性熵」「思想形态」这类词时就不会卡住。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>呼唤与回应：服务如何被「平方」放大</h2></div>
+  <p class="sec-lead">发问者问的是联邦有哪些服务途径，Ra 先做了一个方向上的纠正：你该问的是「我们能给出去什么」，而不是「我们自己使用什么」。接着他给出一个不寻常的算法——回应的大小由呼唤决定，而呼唤是被连续平方地放大的。发问者一步步追问，才把这个算法问清楚。</p>
+  <div class="card">
+    <h3>服务不是菜单，而是回应呼唤</h3>
+    <div class="q">你提到你是星际联邦的成员。联邦成员可用的服务途径或服务类型有哪些？</div>
+    <div class="quote">
+      <p class="en">I am assuming that you intend the service which we of the Confederation can offer, rather than the service which is available to our use.</p>
+      <p class="zh">我假设你的意思是我们联邦能够提供的服务，而不是可供我们自己使用的服务。</p>
+      <span class="src">—— Session 007 · (7.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The service available for our offering to those who call us is equivalent to the square of the distortion/need of that calling divided by, or integrated with, the basic Law of One in its distortion indicating the free will of those who are not aware of the unity of creation.</p>
+      <p class="zh">我们可供向那些呼唤我们者的服务，等同于该呼唤的变貌/需求的平方，除以——或整合于——一的法则那个指向「尚未觉察造物一体性者之自由意志」的变貌。</p>
+      <span class="src">—— Session 007 · (7.1)</span>
+    </div>
+    <div class="plain">联邦没有一份「服务清单」：它所能提供的服务大小，等于呼唤的变貌/需求的平方，并受「尚未觉察造物一体性者的自由意志」这一项限定。</div>
+    <div class="analogy"><b>像灯塔不去接你上岸：</b>灯塔能做的是持续发光，让看得见的人看见；它不能把你拖上岸——「自由意志」就是那一项限定。</div>
+  </div>
+  <div class="card">
+    <h3>服务的上限：不是「不愿意」，而是「不可能更多」</h3>
+    <div class="q">我推测，你们此时难以接触这个星球，是因为这里的人群混杂——有些人觉察一体性，有些人没有；因此你们不能公开到来，也不能给出任何证据。对吗？</div>
+    <div class="quote">
+      <p class="en">we must integrate all of the portions of your social memory complex in its illusory disintegration form. Then the product of this can be seen as the limit of our ability to serve.</p>
+      <p class="zh">我们必须整合你们社会记忆复合体在其幻象解体形式中的所有部分；然后这个产物可以看作是我们服务能力的限度。</p>
+      <span class="src">—— Session 007 · (7.2)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The thought of not being able is not a part of our basic thought-form complex towards your peoples, but rather is a maximal consideration of what is possible.</p>
+      <p class="zh">「不能」这个想法并不属于我们对待你们人类的基本思想形态复合体；它更接近于对「什么是可能的」所做出的最大化考量。</p>
+      <span class="src">—— Session 007 · (7.2)</span>
+    </div>
+    <div class="plain">发问者基本说对了。但「不能公开来」不是意愿里的一个念头，而是对可能性的上限估算——上限由你们整个社会记忆复合体的状态决定。</div>
+    <div class="analogy"><b>像给全年级补课：</b>老师愿意来，但能讲多深取决于有多少人真的到齐、坐到同一个教室里，而不取决于老师的心情。</div>
+  </div>
+  <div class="card">
+    <h3>平方不是「自乘一次」</h3>
+    <div class="q">你说的平方，是指如果有十个人呼唤，在与行星人口比例比较时就可以算作一百个人吗？</div>
+    <div class="quote">
+      <p class="en">This is incorrect. The square is sequential — one, two, three, four, each squared by the next number.</p>
+      <p class="zh">这是不正确的。平方是连续的——一、二、三、四，每一个都被下一个数平方。</p>
+      <span class="src">—— Session 007 · (7.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">We would square one ten sequential times, raising the number to the tenth square.</p>
+      <p class="zh">我们会把「一」连续平方十次，把这个数提升到第十次平方。</p>
+      <span class="src">—— Session 007 · (7.4)</span>
+    </div>
+    <div class="plain">「平方」不是把人数自乘一次，而是把「一」按呼唤者的数目连续平方——十个人，就是连续平方十次，升到第十次平方。</div>
+    <div class="analogy"><b>像复利，不像单利：</b>单利只在本金上算，复利却把上一期的结果当作下一期的新本金再算一次——连续平方的放大速度远超直觉。</div>
+  </div>
+  <div class="card">
+    <h3>结果与「统计损失」</h3>
+    <div class="q">举个数：如果地球上只有十个实体需要你们的服务，按这个平方规则算出来会是多少？</div>
+    <div class="quote">
+      <p class="en">The result is difficult to transmit. It is one thousand and twelve [1,012], approximately.</p>
+      <p class="zh">这个结果难以传递。大约是一千零十二[1,012]。</p>
+      <span class="src">—— Session 007 · (7.5)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The entities who call are sometimes not totally unified in their calling, and thus the squaring is slightly less.</p>
+      <p class="zh">呼唤的实体有时并未完全统一于他们的呼唤，因此平方的结果会略少一些。</p>
+      <span class="src">—— Session 007 · (7.5)</span>
+    </div>
+    <div class="plain">Ra 说这个结果「难以传递」，给出的是统计修正后的近似值：约 1,012。关键在于呼唤者并不总是完全统一，所以平方会略少，一段呼唤期间还会累积统计损失。</div>
+    <div class="case"><b>同一个班里两种请愿：</b>家长群里一份联名请愿有 20 个人签名，但每人各写各的诉求，学校回复「意见不一致，再议」；另一份只有 8 个人签名，诉求完全一致还附了方案，学校当天受理。这正对应 (7.5)：呼唤者若未完全统一，平方的结果会「略少」。</div>
+    <div class="table-wrap">
+      <table class="nine">
+        <tr><th>术语</th><th>英文</th><th>通俗理解</th></tr>
+        <tr><td>平方法则</td><td>Law of Squares</td><td>呼唤不是按人数累加，而是把「一」连续平方地放大</td></tr>
+        <tr><td>统一度</td><td>not totally unified in their calling</td><td>呼唤者越整齐，放大越完整；彼此错开就产生统计损失</td></tr>
+        <tr><td>呼唤量级</td><td>352,000 / 632,000,000</td><td>Ra 个人被 35.2 万个实体呼唤；整个联邦被 6.32 亿个实体呼唤（(7.6)，数字已简化）</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <h3>量级与质地：数字之外的东西</h3>
+    <div class="q">目前大约有多少实体从地球呼唤你们的服务？把平方法则套上去，结果是多少？</div>
+    <div class="quote">
+      <p class="en">I am called personally by three hundred fifty-two thousand [352,000].</p>
+      <p class="zh">我个人被三十五万两千[352,000]个实体呼唤。</p>
+      <span class="src">—— Session 007 · (7.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The Confederation, in its entire spectrum of entity-complexes, is called by six hundred thirty-two millions [632,000,000] of your mind/body/spirit complexes.</p>
+      <p class="zh">联邦，在其全部实体复合体的范围内，被六亿三千两百万[632,000,000]个你们的心/身/灵复合体呼唤。</p>
+      <span class="src">—— Session 007 · (7.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The number is approximately meaningless in the finite sense as there are many, many digits.</p>
+      <p class="zh">这个数字在有限的意义上几乎没有意义，因为它有许多许多位数。</p>
+      <span class="src">—— Session 007 · (7.7)</span>
+    </div>
+    <div class="plain">呼唤的量级早已大得在有限意义上「没有意义」；对 Ra 来说它不是统计量，而是一次被整个造物感受到、并且要求他们提供服务的呼唤。</div>
+    <div class="case"><b>后台的阅读量 vs 一封私信：</b>你的文章有十万阅读量，你毫无感觉；某天收到一封「你这篇救了我」的私信，你整晚睡不着。量级与质地是两回事——Ra 说他们感受并听见的是后者；同一段他也说那些数字「已经简化」(7.6)。</div>
+  </div>
+  <div class="case"><b>众筹页面上的「已支持 12 人」：</b>一场重病众筹只有 12 个人捐钱，但每人都把链接发进自己所有的群、联系了媒体、盯着进度更新——最后到账金额远远超过「12 个人」该有的规模。本集的平方法则说的就是这种超线性的放大：少数人若在同一方向上完全统一，效果会被一层层垒起来。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>议会与隔离：公开降临要经过什么</h2></div>
+  <p class="sec-lead">顺着「服务能力的上限」，发问者问出更尖锐的问题：呼唤到什么程度，你们就能公开来到人类中间？Ra 把衡量标准从「数量」整体换成了「共识」，并第一次把这套程序摊开：提案要交到土星议会（Council of Saturn），批准了，隔离（quarantine）才解除。随后他从 Jim 的一个问题出发，讲清了议会的成员与运作。</p>
+  <div class="card">
+    <h3>不看人数，看共识</h3>
+    <div class="q">在什么时刻，这种呼唤足以让你们公开来到地球人类中间？地球上需要有多少实体呼唤联邦？</div>
+    <div class="quote">
+      <p class="en">We do not calculate the possibility of coming among your peoples by the numbers of calling, but by a consensus among an entire societal-memory complex which has become aware of the infinite consciousness of all things. This has been possible among your peoples only in isolated instances.</p>
+      <p class="zh">我们不用呼唤的数量来计算来到你们人类中间的可能性，而是看一个已经觉察到万物无限意识的整个社会记忆复合体之间的共识。这在你们人类中只在孤立的个案里成为过可能。</p>
+      <span class="src">—— Session 007 · (7.8)</span>
+    </div>
+    <div class="plain">判断依据不是呼唤的人数，而是「整个社会记忆复合体是否已经觉察万物的无限意识并达成共识」——Ra 说这在人类中只出现过孤立的个案。</div>
+    <div class="analogy"><b>像整支球队的共识：</b>是否换战术，不看场边有多少观众在喊，而看场上这 11 个人是不是在同一个意图里。人数可以很大，共识却可能为零。</div>
+  </div>
+  <div class="card">
+    <h3>程序：提案 → 土星议会 → 隔离解除</h3>
+    <div class="q">那么，公开接触到底走的是什么程序？</div>
+    <div class="quote">
+      <p class="en">In the case wherein a social memory complex which is servant of the Creator sees this situation and has an idea for the appropriate aid which can only be done among your peoples, the social memory complex desiring this project lays it before the Council of Saturn. If it is approved, quarantine is lifted.</p>
+      <p class="zh">在这样一种情况里：当一个服侍造物主的社会记忆复合体看到这个情境，并且有一个只能在你们人类中间进行的、适当的援助构想时，渴望这个计划的社会记忆复合体把它提交到土星议会面前。如果获得批准，隔离就被解除。</p>
+      <span class="src">—— Session 007 · (7.8)</span>
+    </div>
+    <div class="plain">援助不是想给就能给：必须先有「只能在人类中间完成」的方案，再提交土星议会，获准之后隔离才解除。</div>
+    <div class="case"><b>跨国医疗队进疫区：</b>一支民间医疗队不能自己买机票就进驻疫区——他们要先向东道国卫生部门提交方案，说明这件事只能由他们在当地做、并且符合当地此刻的需要，获批后才有准入资格。这正是 (7.8) 的「有需要 → 有提案 → 有批准 → 隔离解除」结构。</div>
+  </div>
+  <div class="card">
+    <h3>条件模拟器：隔离在什么情况下会被解除？</h3>
+    <p>按 (7.8)，公开降临不是靠人数堆出来的。拨动下面三个开关，看结果怎么变。</p>
+    <div class="cond-row"><div class="name">① 整个社会记忆复合体达成共识<small>已觉察万物的无限意识，而不是零散的个人呼唤</small></div><label class="switch"><input type="checkbox" id="c1"><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">② 有服侍造物主的社会记忆复合体提出方案<small>且这项援助只能在人类中间进行</small></div><label class="switch"><input type="checkbox" id="c2"><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">③ 土星议会批准该方案<small>获准后，隔离才被解除</small></div><label class="switch"><input type="checkbox" id="c3"><span class="slider"></span></label></div>
+    <div id="condResult"></div>
+    <div class="case"><b>小区加装电梯：</b>一栋楼想加装电梯，光有一半住户签名不够，必须全楼形成共识；有了共识还得有人提出具体方案、说明只能在本地施工；方案再送街道备案，批下来才能真正动工。三个环节少一个，工地就一直停着——这就是本集所说的隔离机制。</div>
+  </div>
+  <div class="card">
+    <h3>议会成员：没有名字，只有功能</h3>
+    <div class="q">（来自 Jim 的问题）那个议会的成员是谁？议会如何运作？</div>
+    <div class="quote">
+      <p class="en">The names are not important because there are no names. Your mind/body/spirit complexes request names, and so, in many cases, the vibratory sound complexes which are consonant with the vibratory distortions of each entity are used.</p>
+      <p class="zh">名字并不重要，因为根本没有名字。你们的心/身/灵复合体要求名字，因此在许多情况下，会使用与每个实体的振动变貌相协调的声音振动复合体。</p>
+      <span class="src">—— Session 007 · (7.9)</span>
+    </div>
+    <div class="quote">
+      <p class="en">In number, the Council that sits in constant session—though varying in its members by means of balancing which takes place, what you would call, irregularly—is nine. That is the Session Council.</p>
+      <p class="zh">就数量而言，持续开会的那个议会——尽管成员会通过你们所称的、不定期发生的平衡而变动——是九位。这就是会议议会。</p>
+      <span class="src">—— Session 007 · (7.9)</span>
+    </div>
+    <div class="quote">
+      <p class="en">To back up this Council, there are twenty-four entities which offer their services as requested. These entities faithfully watch and have been called the Guardians.</p>
+      <p class="zh">为了支持这个议会，还有二十四个实体按需要提供他们的服务。这些实体忠实地守望，被称为守护者。</p>
+      <span class="src">—— Session 007 · (7.9)</span>
+    </div>
+    <div class="plain">议会由联邦的代表与「对你们第三密度负有责任的内在层面振动层级」的代表组成，常设九位（成员会不定期变动以保持平衡），另有二十四位守护者随时支援。</div>
+    <div class="quote">
+      <p class="en">The Council operates by means of, what you would call, telepathic contact with the oneness or unity of the nine, the distortions blending harmoniously so that the Law of One prevails with ease.</p>
+      <p class="zh">议会通过你们所称的心灵感应接触，与九位的一体性或统一性沟通，其变貌和谐地融合，使一的法则得以轻松运行。</p>
+      <span class="src">—— Session 007 · (7.9)</span>
+    </div>
+    <p>点击下面的节点，逐条看 (7.9) 列出的议会职责。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="councilTrack"></div>
+      <div class="flow-detail" id="councilDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="councilPrev">← 上一步</button> <button class="tri-btn" id="councilNext">下一步 →</button></div>
+    </div>
+    <div class="case"><b>医院伦理审查委员会：</b>这个委员会不看病，只审「这个方案该不该做、以什么方式进行」；成员来自不同专业，靠讨论出共识而不是简单投票。对应 (7.9)：议会不是靠投票数运作，而是靠九位的变貌和谐融合，让一的法则得以轻松运行。</div>
+  </div>
+  <div class="card">
+    <h3>九人议会的「半未变貌」传承</h3>
+    <div class="q">九人议会，是否就是 Andrija (Henry) Puharich 那本《Uri》里提到的那个九人？</div>
+    <div class="quote">
+      <p class="en">The Council of Nine has been retained in semi-undistorted form by two main sources: that known in your naming as Mark, and that known in your naming as Henry.</p>
+      <p class="zh">九人议会以半未变貌的形式，被两个主要来源保留了下来：你们称之为 Mark 的那一位，以及你们称之为 Henry 的那一位。</p>
+      <span class="src">—— Session 007 · (7.10)</span>
+    </div>
+    <div class="quote">
+      <p class="en">In one case, the channel became the scribe. In the other, the channel was not the scribe. However, without the aid of the scribe, the energy would not have come to the channel.</p>
+      <p class="zh">在一个案例中，管道成为了抄写者；在另一个案例中，管道并不是抄写者。然而，没有抄写者的帮助，那股能量不会来到管道这里。</p>
+      <span class="src">—— Session 007 · (7.10)</span>
+    </div>
+    <div class="plain">是同一个，但只是被两个来源以「半未变貌」的形式保留下来；Ra 特意点出：无论管道与抄写者是不是同一个人，没有抄写者，能量就到不了管道。</div>
+    <div class="case"><b>播客与逐字稿：</b>一期纯口述的播客，如果没有人把它整理成逐字稿，嘉宾讲的内容就无法被检索、被引用、被后来的人找到。Ra 在这里给「抄写者」的地位，正是这个位置——管道可以不是抄写者，但缺了抄写者，能量就不会抵达管道。</div>
+  </div>
+  <div class="card">
+    <h3>术语卡：本集的七个关键词</h3>
+    <p>点击卡片翻看解释。这些词会在后半集反复出现，先在这里建立准确的直觉。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">平方法则</div><div class="sub">Law of Squares</div><span class="tap">点击展开</span></div><div class="back">本集引入的法则：呼唤的效应不按人数线性清点，而是把「一」按呼唤者的数目连续平方地放大；呼唤者越统一，放大越完整 (7.3)(7.5)。<em>比喻：像复利——每一期都拿上一期的结果当本金再算一次。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">社会记忆复合体</div><div class="sub">social memory complex</div><span class="tap">点击展开</span></div><div class="back">一群心/身/灵复合体在演化到某个阶段后融合成的整体心智；本集中联邦与猎户座集团都由这样的群体构成，而判断能否公开接触，看的正是这种整体是否达成共识 (7.8)。<em>案例：不是一群人凑在群里，而是这群人真的共用同一个判断。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">隔离</div><div class="sub">quarantine</div><span class="tap">点击展开</span></div><div class="back">地球在这个阶段处于被隔离的状态：外部实体不能随意在人群中间定居或干预，解除隔离需要土星议会批准 (7.8)(7.12)。<em>比喻：像保护区或疫区的边界——不是绝对进不来，而是必须走审批。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">土星议会</div><div class="sub">Council of Saturn</div><span class="tap">点击展开</span></div><div class="back">负责审核援助方案的议会，成员来自联邦与「对第三密度负有责任的内在层面振动层级」；本集中它批准方案，隔离才被解除 (7.9)。<em>案例：像跨机构的伦理审查委员会——审的不是能力，而是该不该做、该怎么做。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">守护者</div><div class="sub">Guardians</div><span class="tap">点击展开</span></div><div class="back">议会之外二十四位按需提供服务的实体，忠实守望；议会在有疑问时可以征询他们，由他们给出共识判断/思考 (7.9)。<em>比喻：像常设委员会背后的专家池，随时被叫来给出意见。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">思想形态</div><div class="sub">thought-form</div><span class="tap">点击展开</span></div><div class="back">不以肉身到场、而以心念构成的形式显现；本集说联邦获准的接触正是「以思想形态能力出现」，只有「有眼睛能看见的人」才看得见 (7.12)。<em>比喻：不是把实物送到你家，而是让你在屏幕上看见一个可被感知的形状。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">振动声音复合体</div><div class="sub">vibratory sound complex</div><span class="tap">点击展开</span></div><div class="back">Ra 对「名字/词语」的称呼——每个词都是一组振动。本集用它说明两件事：名字对议会并不重要 (7.9)；说出的话必须与想问的事相合，否则通讯无法进行 (7.13)。<em>案例：同一个音差一点，和弦就从和谐变成刺耳。</em></div></div>
+    </div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>UFO 接触的真相：思想形态、广告与自由意志</h2></div>
+  <p class="sec-lead">发问者提出一个相当聪明的假设：过去三十年议会多次解除隔离，那些 UFO 接触是不是一种「广告」，为了让更多人觉醒？Ra 说这个问法把几件事混在了一起，需要先梳理概念，然后给出三点澄清——最后一点确认了「广告」这个说法。</p>
+  <div class="card">
+    <h3>先把概念拆开</h3>
+    <div class="q">议会过去三十年多次解除隔离，让 UFO 接触发生——这在我看来是为我们正在做的事做广告，好让更多人被唤醒。我说得对吗？</div>
+    <div class="quote">
+      <p class="en">It will take a certain amount of untangling of conceptualization of your mental complex to reform your query into an appropriate response. Please bear with us.</p>
+      <p class="zh">要先把你们心智复合体的概念化梳理开一定分量，才能把你的询问重新表述为一个恰当的回应。请耐心等待。</p>
+      <span class="src">—— Session 007 · (7.12)</span>
+    </div>
+    <div class="plain">发问者的用词把几件事叠在了一起——「隔离」「降落」「广告」指的不是同一件事。Ra 先要求重述概念，再逐条回答。</div>
+    <div class="analogy"><b>像医生让你重新描述症状：</b>你说「我头晕」，医生会先问是转圈的那种晕，还是站起来发黑的晕——同一个词底下可能是完全不同的机制，不拆开就没法回答。</div>
+  </div>
+  <div class="card">
+    <h3>澄清一：隔离并没有被打破</h3>
+    <div class="quote">
+      <p class="en">The Council of Saturn has not allowed the breaking of quarantine in the time/space continuum you mentioned. There is a certain amount of landing taking place. Some of these landings are of your peoples. Some are of the entities known to you as the group of Orion.</p>
+      <p class="zh">土星议会并未允许在你所提及的那段时间/空间连续体中打破隔离。确实有一定数量的降落正在发生；其中一些是你们人类自己的，一些则是你们所知为猎户座集团的实体。</p>
+      <span class="src">—— Session 007 · (7.12)</span>
+    </div>
+    <div class="plain">在你说的这段时间里，议会没有批准打破隔离；确实有「降落」发生，但其中一部分是你们人类自己的，一部分来自猎户座集团。</div>
+    <div class="case"><b>自称官方的电话：</b>你接到一个电话，对方准确报出你的订单号、说话方式也像官方客服，于是你信了——但它既不是官方，也没有得到官方许可。本集这句话说的是同一件事：有「降落」不等于有许可，而其中一些降落甚至来自猎户座集团。</div>
+  </div>
+  <div class="card">
+    <h3>澄清二：可以显现，但不能居住</h3>
+    <div class="quote">
+      <p class="en">Secondly, there is permission granted, not to break quarantine by dwelling among you, but to appear in thought-form capacity for those who have eyes to see.</p>
+      <p class="zh">其次，被授予的许可并不是「以居住在你们中间的方式打破隔离」，而是「以思想形态的能力，出现在那些有眼睛能看见的人面前」。</p>
+      <span class="src">—— Session 007 · (7.12)</span>
+    </div>
+    <div class="plain">被允许的不是住进你们中间，而是以思想形态的形态显现——并且只有「有眼睛能看见的人」才看得见。</div>
+    <div class="analogy"><b>像远程投影参会：</b>与会者不以肉身进场，只以影像出现；能不能看见他，取决于你有没有打开那个窗口——在场并不等于可被看见。</div>
+  </div>
+  <div class="card">
+    <h3>澄清三：核装置之后，被允许「制造神秘」</h3>
+    <div class="quote">
+      <p class="en">Thirdly, you are correct in assuming that permission was granted at the time/space in which your first nuclear device was developed and used for Confederation members to minister unto your peoples in such a way as to cause mystery to occur.</p>
+      <p class="zh">第三，你假设得对：在你们第一个核装置被开发并使用的那个时间/空间里，许可被授予联邦成员，让他们以引起神秘事件发生的方式服务你们人类。</p>
+      <span class="src">—— Session 007 · (7.12)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The mystery and unknown quality of the occurrences we are allowed to offer have the hoped-for intention of making your peoples aware of infinite possibility.</p>
+      <p class="zh">我们被允许提供的事件所具有的奥秘与未知特质，承载着一个被期待的目的：让你们人类觉察到无限的可能性。</p>
+      <span class="src">—— Session 007 · (7.12)</span>
+    </div>
+    <div class="quote">
+      <p class="en">When your peoples grasp infinity, then, and only then, can the gateway be opened to the Law of One.</p>
+      <p class="zh">当你们人类领会了无限，那时——也只有那时——通往一的法则的门户才能被打开。</p>
+      <span class="src">—— Session 007 · (7.12)</span>
+    </div>
+    <div class="plain">「广告」这个说法成立，但目的不是给证据：核装置出现之后，联邦获准以「引发神秘」的方式服务，为的是让人意识到「无限」是可能的——只有领会了无限，通往一的法则的门户才会打开。</div>
+    <div class="case"><b>夜空里那道无法解释的光：</b>一个从没想过「人类之外还有别的」的会计师，某夜在城郊看到一道无法解释的光。他没有因此加入任何组织，但从此允许了「我可能不知道全部」这个念头。这正是 Ra 说的「使人们觉察无限的可能性」：不给证据，只撬开一道缝。</div>
+    <div class="case"><b>魔术师不解释机关：</b>一场好魔术的价值不在于最后揭秘，而在于那几分钟里你不得不承认「我看到的不是全部」。Ra 说这些事件的性质是「奥秘与未知」，只对「有眼睛能看见的人」显现——同一种不提供证明的做法。</div>
+  </div>
+  <div class="card">
+    <h3>拒答：当「想问的」与「说出的」不一致</h3>
+    <div class="q">（发问者想把「我们人类」和「猎户座」的降落放在一句里一起展开。）</div>
+    <div class="quote">
+      <p class="en">Your thought complexes did not match your vibratory sound complexes. We are unable to respond. Please restate your query.</p>
+      <p class="zh">你们的思想复合体与你们的声音振动复合体并不匹配。我们无法回应。请重新陈述你的询问。</p>
+      <span class="src">—— Session 007 · (7.13)</span>
+    </div>
+    <div class="plain">Ra 没有回答，而是指出「思想与声音不匹配」并要求重新表述——这不是敷衍，而是通讯机制本身的限制：说出口的必须与想问的一致。发问者随后只问猎户座，问题才接得上（(7.14)）。</div>
+    <div class="case"><b>答非所问的会议记录：</b>会上你已经想好要给某个方案挑刺，但开口问的是「这个方案排期怎么定的？」对方没接你的潜台词，只答了排期——你只好重问一次。Ra 在这里更直接：他知道你问的其实是另一件事，于是拒绝在一个错位的问题上作答。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>猎户座集团：同样的力量，不同的代价</h2></div>
+  <p class="sec-lead">重新表述之后，发问者只问猎户座（Orion）。Ra 用一个「Adolf」作为例子，说明这种意图的骨架，再回答密度、数量与力量的问题，并给出本集最锋利的一句：一的法则对光与黑暗都不眨眼。</p>
+  <div class="card">
+    <h3>意图的骨架：精英 / 非精英 / 帝国</h3>
+    <div class="q">你提到猎户座是某些 UFO 接触的来源。能告诉我这种接触的一些情况、以及它的目的吗？</div>
+    <div class="quote">
+      <p class="en">Consider, if you will, a simple example of intentions which are bad/good. This example is Adolf.</p>
+      <p class="zh">如果你愿意，请考虑一个关于坏/好意图的简单例子。这个例子是 Adolf。</p>
+      <span class="src">—— Session 007 · (7.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The intention is to presumably unify by choosing the distortion complex called elite from a social memory complex, and then enslaving, by various effects, those who are seen as the distortion of not-elite.</p>
+      <p class="zh">其意图大概是：通过从一个社会记忆复合体中选出被称为「精英」的变貌复合体来达成统一，然后通过各种手段奴役那些被视为「非精英」变貌的人。</p>
+      <span class="src">—— Session 007 · (7.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">There is then the concept of taking the social memory complex thus weeded and adding it to a distortion thought of by the so-called Orion group as an empire.</p>
+      <p class="zh">接着就有了这样一个概念：把如此筛选过的社会记忆复合体，加进所谓的猎户座集团所设想的一种「帝国」变貌之中。</p>
+      <span class="src">—— Session 007 · (7.14)</span>
+    </div>
+    <div class="plain">这种意图的骨架只有三步：先选出「精英」，再通过各种手段奴役被视为「非精英」的人，最后把筛选过的人群并入猎户座所构想的「帝国」。</div>
+    <div class="analogy"><b>像把公司改造成「嫡系 + 外包」：</b>先划出核心圈，再让圈外人只能依附核心圈存活，最后把整个组织并入更大的母集团——「精英/非精英/帝国」三步，一步都不缺。</div>
+  </div>
+  <div class="card">
+    <h3>他们的软肋：分离释放的随机能量</h3>
+    <div class="quote">
+      <p class="en">The problem facing them is that they face a great deal of random energy released by the concept of separation. This causes them to be vulnerable as the distortions amongst their own members are not harmonized.</p>
+      <p class="zh">他们面对的问题在于：他们面对由「分离」这个概念释放出来的大量随机能量。这使他们变得脆弱，因为他们自己成员之间的变貌并不和谐。</p>
+      <span class="src">—— Session 007 · (7.14)</span>
+    </div>
+    <div class="plain">这套结构的代价是内生的：分离的概念会释放大量随机能量，成员之间的变貌无法协调，于是这条路径自身变得脆弱。</div>
+    <div class="case"><b>靠排名淘汰驱动的销售团队：</b>一支以「末位淘汰」为荣的团队，前两个季度数字很漂亮，但成员开始互相藏客户、抢单、拆台；到了年度冲刺，谁也叫不动谁。分离概念释放的随机能量，最先吃掉的就是这套结构自己。</div>
+  </div>
+  <div class="card">
+    <h3>密度、数量与力量</h3>
+    <div class="q">猎户座集团的密度是什么？他们有多强？</div>
+    <div class="quote">
+      <p class="en">Like the Confederation, the densities of the mass consciousnesses which comprise that group are varied.</p>
+      <p class="zh">与联邦一样，构成那个集团的群体意识，其密度是各不相同的。</p>
+      <span class="src">—— Session 007 · (7.15)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Their numbers are perhaps one-tenth ours at any point in the space/time continuum as the problem of spiritual entropy causes them to experience constant disintegration of their social memory complexes.</p>
+      <p class="zh">在空间/时间连续体的任何一点上，他们的数量大约是我们的十分之一，因为灵性熵的问题使他们不断经历社会记忆复合体的解体。</p>
+      <span class="src">—— Session 007 · (7.15)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Their power is the same as ours. The Law of One blinks neither at the light or the darkness but is available for service to others and service to self.</p>
+      <p class="zh">他们的力量与我们相同。一的法则对光明或黑暗都不眨眼，它同等地可供服务他人与服务自我使用。</p>
+      <span class="src">—— Session 007 · (7.15)</span>
+    </div>
+    <div class="quote">
+      <p class="en">However, service to others results in service to self, thus preserving and further harmonizing the distortions of those entities seeking intelligent infinity through these disciplines.</p>
+      <p class="zh">然而，服务他人会带来服务自我的结果，从而使那些通过这些训练寻求智能无限的实体的变貌得以保存并进一步调和。</p>
+      <span class="src">—— Session 007 · (7.15)</span>
+    </div>
+    <div class="plain">猎户座集团在第三到第六密度都有成员（极少数第三密度、较多第四与第五密度、极少数第六密度），数量约是联邦的十分之一——因为「灵性熵」让他们的社会记忆复合体不断解体。但他们的力量大小与联邦相同：一的法则对光明与黑暗一视同仁。</div>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">服务他人 · service to others</span><h4>越走越稳</h4><p>力量与其他路径相同，但不把他人当成可以占有的对象；Ra 说这条路会「保存并进一步调和」实体的变貌——因为<b>服务他人会带来服务自我的结果</b> (7.15)。</p></div>
+      <div class="yuan-card"><span class="y-tag">服务自我 · service to self</span><h4>力量相同，代价持续</h4><p>通过支配他人的力量寻求智能无限，创造出的力量一样大，却因「分离」隐含在表现之中而持续遇到困难，<b>最终瓦解自己收集的能量</b> (7.15)。</p></div>
+      <div class="yuan-card"><span class="y-tag">法则的立场</span><h4>对光明与黑暗都不眨眼</h4><p>一的法则本身不偏向任何一边，它同等地可供两者使用；那些原初变貌会被投入运作，<b>空间/时间的幻象则成为发展自由选择之结果的媒介</b> (7.15)。</p></div>
+      <div class="yuan-card"><span class="y-tag">共同点</span><h4>都在学同样的东西</h4><p>「Thus all entities learn, no matter what they seek.」——无论选择哪条路，所有实体学的是同一件事，<b>只是有的快、有的慢</b> (7.15)。</p></div>
+    </div>
+    <div class="case"><b>两种加班：「交付」与「被看见」：</b>同一栋楼里两个团队都在赶项目。一个团队赶完就把成果交出去、散了；另一个团队加班是为了让领导看见自己还在。Ra 在 (7.15) 说，两种定向的实体都会学到同样的功课，区别只在速度和代价。</div>
+  </div>
+  <div class="card">
+    <h3>进展是连续的：先收割，再融合</h3>
+    <div class="q">以猎户座集团的一个第五密度群体为例，他们在成为第五密度之前是什么密度？</div>
+    <div class="quote">
+      <p class="en">The progress through densities is sequential.</p>
+      <p class="zh">穿越各密度的进展是连续的。</p>
+      <span class="src">—— Session 007 · (7.16)</span>
+    </div>
+    <div class="quote">
+      <p class="en">A fifth-density social memory complex would be comprised of mind/body/spirit complexes harvested from fourth density. Then the conglomerate or mass mind/body/spirit complex does its melding, and the results are due to the infinitely various possibilities of combination of distortions.</p>
+      <p class="zh">一个第五密度社会记忆复合体，将由从第四密度收割上来的心/身/灵复合体组成。然后这个聚合体、或群体心/身/灵复合体进行它的融合，结果取决于变貌组合的无限多种可能性。</p>
+      <span class="src">—— Session 007 · (7.16)</span>
+    </div>
+    <div class="plain">密度进展是连续的、跳不过去的：第五密度由第四密度收割上来的个体组成，之后整个群体进行「融合」，融合出什么，取决于变貌组合的无穷可能。</div>
+    <div class="case"><b>合唱团升部：</b>从初级合唱团升上来的团员，各自带着自己的音色进来；要经过很长时间的合练，最后磨出的声部音色不由任何一个人决定。Ra 说的「群体融合」就是这一段——成员是哪来的很清楚，融合出什么则没有公式。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>收官：服务自己与服务他人，是同一件事的两种说法</h2></div>
+  <p class="sec-lead">最后一个长问题问到了本集的核心：如果一个人朝向服务自我，他怎么从第三密度进展到第四密度，需要学什么？Ra 先声明这是器皿今天能承受的最后一个长问题，然后给出了全篇最反转的一句——在一的法则眼中，两种定向完全相同。</p>
+  <div class="card">
+    <h3>收割看的是「能否看见并享受光/爱」</h3>
+    <div class="q">如果一个人指向服务自我，他怎么可能从第三密度进展到第四密度？为此需要什么学习？</div>
+    <div class="quote">
+      <p class="en">You will recall that we went into some detail as to how those not oriented towards seeking service for others yet, nevertheless, found and could use the gateway to intelligent infinity. This is true at all densities in our octave.</p>
+      <p class="zh">你会记得，我们曾经相当详细地谈过：那些尚未定向于寻求服务他人者，仍然找到并且能够使用通往智能无限的门户。在我们这个八度音程的所有密度中，这都是真实的。</p>
+      <span class="src">—— Session 007 · (7.17)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The beings are harvested because they can see and enjoy the light/love of the appropriate density. Those who have found this light/love, love/light without benefit of a desire for service nevertheless, by the Law of Free Will, have the right to the use of that light/love for whatever purpose.</p>
+      <p class="zh">存有们被收割，是因为他们能够看见并享受相应密度的光/爱。那些在没有服务渴望的情况下找到这光/爱、爱/光的人，仍然依自由意志法则，有权为任何目的使用那光/爱。</p>
+      <span class="src">—— Session 007 · (7.17)</span>
+    </div>
+    <div class="plain">收割的条件不是「有没有服务他人的愿望」，而是「能不能看见并享受相应密度的光/爱」；找到了光/爱却没有服务渴望的实体，依自由意志法则仍有权为任何目的使用它。Ra 也明确划了界：他只能谈这个八度音程，不谈更上面的。</div>
+    <div class="quote">
+      <p class="en">We cannot speak for those above us, as you would say, in the next quantum, or octave, of beingness.</p>
+      <p class="zh">我们无法为我们之上的——如你们会说的——下一个量子、或八度音程的存在性发言。</p>
+      <span class="src">—— Session 007 · (7.17)</span>
+    </div>
+    <div class="analogy"><b>像驾照，不像道德证书：</b>拿到驾照的条件是你确实会开车、能看懂路况，而不是你人品高尚；拿到之后把车开去哪里，另有一套规则在管。</div>
+    <div class="case"><b>医生说「我只能负责这一步」：</b>病人问「手术之后十年的生活会怎样」，医生答：「我能负责的是这一步，再往后的规律我无法替你保证。」Ra 在本集划了同样的界：这个八度音程里的事可以说，其上的「下一个量子或八度」他不代表发言。</div>
+  </div>
+  <div class="card">
+    <h3>分离的寻求者，也有自己的学习系统</h3>
+    <div class="quote">
+      <p class="en">Also, it may be inserted that there are systems of study which enable the seeker of separation to gain these gateways.</p>
+      <p class="zh">另外还可以补充：存在一些学习系统，使「分离的寻求者」也能获得这些门户。</p>
+      <span class="src">—— Session 007 · (7.17)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This study is as difficult as the one which we have described to you, but there are those with the perseverance to pursue the study just as you desire to pursue the difficult path of seeking to know in order to serve.</p>
+      <p class="zh">这种学习与我们向你们描述的那种同样艰难，但确实有实体带着毅力去追求它，正如你们渴望追求「为了服务而求知」这条艰难的道路一样。</p>
+      <span class="src">—— Session 007 · (7.17)</span>
+    </div>
+    <div class="plain">服务自我的寻求者并不是「走后门」：他们有自己的一套学习系统，难度与正面路径相当；能走下去的，靠的也是毅力。</div>
+    <div class="case"><b>健身房里的两个人：</b>同一间健身房，两个人每天都是 5 点起床、练满两小时。一个想的是「我要成为这个房间里最强的人」，另一个想的是「我想有体力照顾生病的家人」。纪律一模一样，区别只在定向——Ra 说的是，两条路要求同等的付出。</div>
+  </div>
+  <div class="card">
+    <h3>反转：两种定向，同一件事</h3>
+    <div class="quote">
+      <p class="en">The distortion lies in the fact that those who seek to serve the self are seen by the Law of One as precisely the same as those who seek to serve others, for are all not one?</p>
+      <p class="zh">变貌就在于这一事实：在一的法则看来，那些寻求服务自我者，与那些寻求服务他人者完全一样——因为难道一切不都是一吗？</p>
+      <span class="src">—— Session 007 · (7.17)</span>
+    </div>
+    <div class="plain">差别之所以被称为「变貌」，正是因为在一的法则的视角里它并不成立：服务自我者与服务他人者被视为完全相同，因为一切本是一。</div>
+    <div class="analogy"><b>两只手互相搓暖：</b>你以为自己在暖对方那只手，但两只手长在同一具身体上——热最后都回到同一个身体里。这就是「服务他人会带来服务自我的结果」在 (7.15) 里已经埋下的伏笔。</div>
+  </div>
+  <div class="card">
+    <h3>归类练习：这是哪种定向？</h3>
+    <p>依据本集 (7.14)–(7.17) 的说法，判断下面每件事的定向。</p>
+    <div id="sorterArea"></div>
+  </div>
+  <div class="saying">
+    <p class="en">To serve yourself and to serve other is a dual method of saying the same thing, if you can understand the essence of the Law of One.</p>
+    <p class="zh">服务你自己与服务他人，是同一件事的两种说法——如果你能领会一的法则的精髓。</p>
+    <span class="src">—— Session 007 · (7.17)</span>
+  </div>
+  <div class="card">
+    <h3>这一集留下的位置</h3>
+    <p>Ra 在 (7.17) 开头就说明这是器皿今天能承受的最后一个长问题，答完之后只留了简短问答的空间；发问者随即表示下一场集会继续这个话题。所以这一集并没有把「服务自我者的进展」讲完，而是留下了一个明确的接续点。</p>
+    <div class="quote">
+      <p class="en">Thus all entities learn, no matter what they seek. All learn the same, some rapidly, some slowly.</p>
+      <p class="zh">因此，所有实体都在学习，无论他们寻求的是什么。所有人学的是同样的东西，有的快，有的慢。</p>
+      <span class="src">—— Session 007 · (7.15)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This is the last question of length for this instrument at this time.</p>
+      <p class="zh">这是此时这个器皿能承受的最后一个长问题。</p>
+      <span class="src">—— Session 007 · (7.17)</span>
+    </div>
+    <div class="quote">
+      <p class="en">There are small adjustments you may make. However, we are now able to use this instrument with minimal distortion and without depleting the instrument to any significant extent.</p>
+      <p class="zh">你们可以做一些小的调整。不过，我们现在能够以最小的变貌使用这个器皿，而不会在任何显著程度上耗尽她。</p>
+      <span class="src">—— Session 007 · (7.18)</span>
+    </div>
+    <div class="plain">下一集可以带着这个问题读：Ra 说「下一场集会继续讨论这一点」——服务自我者的学习系统、以及这种定向如何走完收割，还会有下文。</div>
+    <div class="case"><b>被交代「到此为止」的访谈：</b>你约了一小时的采访，问到第 50 分钟，受访者说「这是今天最后一个长问题，之后只能问短的」，随后你的提纲里还剩三页。本集就是这样收尾的——发问者没有硬撑，而是把剩余的问题留给下一次。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+<p>基于 The Ra Contact Session 007（split/Ra_Session_007.md）英文原文制作 · 交互式学习模块</p>
+<p>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文</p>
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra007-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+  {t:'(7.0) 开场',d:'<b>致意与开场。</b>Ra 以「在我们无限造物主的爱与光中向你们致意」开场，宣布本次通讯开始。'},
+  {t:'(7.1)–(7.2) 服务的定义',d:'<span class="qa-q">问：联邦成员有哪些服务途径？你们难以接触这颗星球，是因为这里人群混杂、有人未觉察一体吗？</span><b>答：</b>能给出的服务等同于呼唤的变貌/需求的平方，并受「尚未觉察一体者的自由意志」限定；「不能公开来」不是意愿，而是对「什么是可能的」的上限估算。'},
+  {t:'(7.3)–(7.5) 平方怎么算',d:'<span class="qa-q">问：十个人呼唤就算作一百个吗？按这个规则算出来是多少？</span><b>答：</b>不是自乘一次——是把「一」按人数连续平方；十个人即连续平方十次，统计修正后的结果约为 1,012。'},
+  {t:'(7.6)–(7.7) 呼唤的量级',d:'<span class="qa-q">问：目前有多少实体在呼唤你们？把平方法则套上去是多少？</span><b>答：</b>Ra 个人被 35.2 万实体呼唤，整个联邦被 6.32 亿呼唤（数字已简化）；结果在有限意义上已无意义，它构成一次被整个造物感受到、并要求服务的呼唤。'},
+  {t:'(7.8)–(7.11) 议会与隔离',d:'<span class="qa-q">问：呼唤到什么程度，你们就能公开来到地球？议会成员是谁、如何运作？</span><b>答：</b>不看数量，看整个社会记忆复合体是否达成共识；方案提交土星议会、获批后隔离才解除。议会常设九位，另有二十四位守护者。'},
+  {t:'(7.12)–(7.13) UFO 接触',d:'<span class="qa-q">问：议会多次解除隔离、UFO 接触频传，这是不是一种「广告」？</span><b>答：</b>先要拆开概念：隔离并未被批准打破；获准的是以思想形态显现；核装置之后获准以「引起神秘」的方式服务。发问者随后把两件事混在一句里问，Ra 要求重新表述。'},
+  {t:'(7.14)–(7.17) 猎户座与服务自我',d:'<span class="qa-q">问：猎户座集团接触的目的是什么？他们的密度与力量如何？朝向服务自我者如何从第三密度进展到第四密度？</span><b>答：</b>意图骨架是「精英/非精英/帝国」；力量与联邦相同，却因分离概念不断解体；收割看的是能否看见并享受光/爱——服务自己与服务他人，是同一件事的两种说法。'},
+  {t:'(7.18)–(7.19) 收尾',d:'<span class="qa-q">问：还能做什么让器皿更舒适？</span><b>答：</b>可以做些小调整，但现在已能以最小变貌使用器皿；发问者表示下集继续，Ra 以 Adonai 作结。'}
+]);
+
+initStepper('councilTrack','councilDetail','councilPrev','councilNext',[
+  {t:'职责一 · 准入',d:'<b>接纳社会记忆复合体加入联邦。</b>(7.9) 列出的第一项职责：一个群体是否被接纳入联邦，由议会处理。'},
+  {t:'职责二 · 援助',d:'<b>决定如何援助求助者。</b>方式必须同时与呼唤、法则、以及呼唤者的数量相称——原文特别补了一句：「也就是说，有时是呼唤的阻力」。'},
+  {t:'职责三 · 内部',d:'<b>裁定议会内部的问题。</b>涉及议会自身的事务，在议会内部决定。'},
+  {t:'疑难时 · 征询二十四位',d:'<b>如有任何疑问，议会可以联系那二十四位，由他们提供共识判断/思考；然后议会可以重新考虑任何问题。</b>'}
+]);
+
+const condNodes=['c1','c2','c3'].map(id=>document.getElementById(id));
+function updateQuarantine(){
+  const a=condNodes[0].checked,b=condNodes[1].checked,c=condNodes[2].checked;
+  const box=document.getElementById('condResult');
+  let msg='',fail=true;
+  if(a&&b&&c){
+    fail=false;
+    msg='<b>隔离解除。</b>三个环节齐备——共识、方案、批准。按 (7.8)，公开接触由此成为可能；Ra 同时提醒：这在人类中只出现过「孤立的个案」。';
+  }else if(!a){
+    msg='<b>呼唤人数再多也不构成条件。</b>Ra 说得很明确：判断依据不是呼唤的数量，而是一个已经觉察万物无限意识的整个社会记忆复合体之间的共识 (7.8)。';
+  }else if(!b){
+    msg='<b>没有可提交的提案。</b>程序需要有实体看到情境、并给出「只能在人类中间进行」的适当援助构想，才谈得上提交土星议会 (7.8)。';
+  }else{
+    msg='<b>方案未获批准，隔离维持原状。</b>Ra 在 (7.12) 说得很直接：在你所提及的那段时间/空间连续体中，土星议会并未允许打破隔离。';
+  }
+  box.className=fail?'fail':'';
+  box.innerHTML=msg;
+}
+condNodes.forEach(n=>n.addEventListener('change',updateQuarantine));
+updateQuarantine();
+
+document.querySelectorAll('.fn-card').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('open')));
+
+initSorter('sorterArea',[
+  {a:'急诊医生连做三台手术，只为病人能活下来，不计较回报',opts:['服务他人','服务自我'],ans:'服务他人',exp:'把自己当作通道、朝向他人——方向上属于服务他人。'},
+  {a:'团队负责人靠独占关键信息与奖惩权，让每个成员都离不开他的判断',opts:['服务他人','服务自我'],ans:'服务自我',exp:'(7.15) 说服务自我的表现涉及「对他人的权力」，这正是那种特征。'},
+  {a:'一个组织先划出「精英/非精英」，再把筛选过的人群并入更大的帝国版图',opts:['服务他人','服务自我'],ans:'服务自我',exp:'(7.14) 用 Adolf 作例子描述的意图结构：选出精英、奴役非精英、并入帝国。'},
+  {a:'把自己会的技能免费教给新同事，教完就退到一边，不以此换人情',opts:['服务他人','服务自我'],ans:'服务他人',exp:'服务的对象是他人，且不拿它当筹码——正向的极化。'},
+  {a:'一支靠末位淘汰驱动的销售团队，短期数字很高，成员却互相藏客户、抢单',opts:['服务他人','服务自我'],ans:'服务自我',exp:'分离概念会释放大量随机能量，成员变貌无法协调，结构因此脆弱 (7.14)。'}
+]);
+
+renderPath();
+</script>
+</body>
+</html>

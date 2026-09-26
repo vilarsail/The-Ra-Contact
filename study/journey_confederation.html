@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css">
+<title>星际联邦与守护 · 滚动星旅</title>
+<style>
+:root{
+  --amb:#f5efe2;          /* 当前场景氛围色，由 JS 实时插值 */
+  --ink:#efe9dd;
+  --ink-dim:rgba(239,233,221,.55);
+  --serif:"LXGW WenKai","霞鹜文楷","LXGW WenKai SC","Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:#070a12;color:var(--ink);font-family:var(--serif);
+  line-height:2;overflow-x:hidden;
+}
+canvas#sky{position:fixed;inset:0;width:100vw;height:100vh;z-index:0}
+
+/* ===== 进度轨道 ===== */
+#rail{
+  position:fixed;right:26px;top:50%;transform:translateY(-50%);z-index:8;
+  display:flex;flex-direction:column;gap:13px;align-items:flex-end;
+}
+#rail .r{display:flex;align-items:center;gap:10px;cursor:pointer}
+#rail .r i{
+  width:5px;height:5px;border-radius:50%;flex-shrink:0;
+  background:rgba(255,255,255,.16);transition:all .4s;
+}
+#rail .r.cur i{background:var(--amb);box-shadow:0 0 9px var(--amb);transform:scale(1.7)}
+#rail .lbl{
+  font-size:.72rem;letter-spacing:.12em;color:var(--ink);white-space:nowrap;
+  padding:3px 12px;border-radius:999px;background:rgba(7,10,18,.78);
+  border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(4px);
+  opacity:0;transform:translateX(10px);transition:all .35s ease;pointer-events:none;
+}
+#rail:hover .lbl{opacity:1;transform:none}
+#rail .r.cur .lbl{border-color:var(--amb);color:var(--amb)}
+
+main{position:relative;z-index:1}
+
+/* ===== 时刻场景（全屏居中） ===== */
+.scene{min-height:118vh;display:flex;align-items:center;justify-content:center;padding:14vh 22px}
+.stage{max-width:620px;text-align:center;opacity:0;transform:translateY(34px);filter:blur(6px);transition:opacity 1.6s ease,transform 1.6s ease,filter 1.6s ease}
+.scene.on .stage,.station.on .stage{opacity:1;transform:none;filter:blur(0)}
+.kicker{
+  font-size:.8rem;letter-spacing:.55em;text-indent:.55em;color:var(--amb);
+  margin-bottom:30px;opacity:.85;
+}
+.kicker::after{
+  content:"";display:block;width:34px;height:1px;margin:16px auto 0;
+  background:var(--amb);opacity:.5;
+}
+.narr{font-size:1.18rem;color:var(--ink);margin-bottom:38px;text-align:center}
+.en{
+  font-family:Georgia,"Times New Roman",serif;font-style:italic;
+  font-size:.98rem;line-height:1.9;color:var(--amb);opacity:.92;margin-bottom:16px;
+}
+.zh{font-size:.95rem;color:var(--ink-dim);margin-bottom:10px}
+.ref{font-size:.74rem;letter-spacing:.2em;color:rgba(239,233,221,.34)}
+
+/* ===== 站点（左钉住 · 右细节流） ===== */
+.station{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);align-items:stretch}
+.pin{
+  position:sticky;top:0;height:100vh;
+  display:flex;align-items:center;justify-content:center;padding:0 3vw;
+}
+.pin .stage{max-width:520px}
+.detail{
+  display:flex;flex-direction:column;justify-content:center;
+  padding:10vh 5vw 10vh 0;
+}
+.frag{
+  min-height:60vh;display:flex;flex-direction:column;justify-content:center;
+  max-width:440px;
+  opacity:0;transform:translateY(30px);
+  transition:opacity 1.3s ease,transform 1.3s ease;
+}
+.frag.on{opacity:1;transform:none}
+.f-k{
+  font-size:.78rem;letter-spacing:.4em;color:var(--amb);opacity:.85;margin-bottom:18px;
+}
+.f-en{
+  font-family:Georgia,"Times New Roman",serif;font-style:italic;
+  font-size:.92rem;line-height:1.9;color:var(--amb);opacity:.9;
+  border-left:2px solid rgba(255,255,255,.18);padding-left:16px;margin-bottom:14px;
+}
+.f-zh{font-size:.93rem;color:var(--ink-dim);margin-bottom:8px}
+.f-ref{font-size:.72rem;letter-spacing:.2em;color:rgba(239,233,221,.32)}
+
+/* 开场 */
+#s0 .narr{font-size:1.5rem;letter-spacing:.1em;line-height:2.3}
+.hint{
+  margin-top:60px;font-size:.8rem;letter-spacing:.4em;text-indent:.4em;
+  color:var(--ink-dim);animation:drift 2.6s ease-in-out infinite;
+}
+@keyframes drift{0%,100%{transform:translateY(0);opacity:.45}50%{transform:translateY(9px);opacity:.95}}
+
+/* 可选演示区（如棱镜 / 时间线 / 对比路径） */
+.demo{margin:8px auto 42px}
+.timeline{position:relative;max-width:460px;margin:0 auto 42px;text-align:left;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:rgba(255,255,255,.14)}
+.tl-item{position:relative;padding:2px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:11px;height:11px;border-radius:50%;
+  background:#070a12;border:3px solid var(--amb)}
+.tl-item .t{font-weight:700;color:var(--amb);letter-spacing:.1em}
+.tl-item .d{font-size:.9rem;color:var(--ink-dim)}
+.paths{display:flex;gap:26px;justify-content:center;margin-top:46px;flex-wrap:wrap}
+.path{
+  width:210px;padding:30px 22px 26px;border-radius:16px;cursor:pointer;
+  border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.02);
+  transition:all .7s ease;
+}
+.path h3{font-size:1.05rem;letter-spacing:.3em;text-indent:.3em;margin-bottom:12px}
+.path p{font-size:.86rem;color:var(--ink-dim);line-height:1.9}
+.paths.p-a .path:not(.a),.paths.p-b .path:not(.b){opacity:.28;transform:scale(.96)}
+.paths.p-a .path.a,.paths.p-b .path.b{transform:scale(1.04)}
+
+/* 终章 */
+#sLast .en{font-size:1.06rem;line-height:2.2}
+#sLast .zh{font-size:1rem}
+.again{
+  margin-top:56px;font-family:var(--serif);font-size:.85rem;letter-spacing:.35em;text-indent:.35em;
+  color:var(--ink-dim);background:none;border:1px solid rgba(255,255,255,.14);
+  border-radius:999px;padding:11px 30px;cursor:pointer;transition:all .4s;
+}
+.again:hover{color:var(--ink);border-color:var(--amb)}
+
+footer{
+  position:relative;z-index:1;text-align:center;padding:40px 20px 56px;
+  font-size:.76rem;color:rgba(239,233,221,.3);letter-spacing:.08em;line-height:2.2;
+}
+@media (max-width:900px){
+  .station{display:block}
+  .pin{position:static;height:auto;padding:12vh 22px 2vh}
+  .pin .stage{margin:0 auto}
+  .detail{padding:0 22px 6vh;align-items:center}
+  .frag{min-height:auto;margin-bottom:7vh}
+}
+@media (max-width:640px){
+  .narr{font-size:1.05rem}
+  #s0 .narr{font-size:1.2rem}
+  #rail{display:none}
+}
+
+/* ===== 本章定制：隔离的显影 ===== */
+.veiled{transition:filter 3.2s ease,opacity 3.2s ease}
+#s5 .veiled,#s5 .en,#s5 .zh{filter:blur(12px);opacity:.14}
+#s5.on .veiled,#s5.on .en,#s5.on .zh{filter:blur(0);opacity:1}
+</style>
+</head>
+<body>
+
+<canvas id="sky"></canvas>
+<div id="rail"></div>
+
+<main>
+
+<!-- 0 一道无声的光 -->
+<section class="scene" id="s0" data-c="#f5efe2">
+  <div class="stage">
+    <p class="narr">夜空偶尔有一道无声的光。<br>没有问候，没有降落，<br>也没有回答——<br>但有人听见了你。</p>
+    <p class="en">"There was no craft. There was a thought-form."</p>
+    <p class="zh">一个小组被接触时，没有飞行器，只有一个思想形态。应答的那一方，自称星际联邦。</p>
+    <p class="ref">—— SESSION 012 · (12.12)</p>
+    <p class="hint">向下滚动 · 走近那些守望者 ▾</p>
+  </div>
+</section>
+
+<!-- 1 盟约 -->
+<section class="scene" id="s1" data-c="#d8cdb8">
+  <div class="stage">
+    <p class="kicker">盟约</p>
+    <p class="narr">它不是帝国，<br>不是舰队，<br>甚至不是一群相似的存有。</p>
+    <p class="en">"It is a true Confederation in that its members are not alike, but allied in service according to the Law of One."</p>
+    <p class="zh">它是一个真正的联邦：成员彼此并不相同，只因一的法则，而在服务中结盟。</p>
+    <p class="ref">—— SESSION 006 · (6.24)</p>
+  </div>
+</section>
+
+<!-- 2 五十三个声音 -->
+<section class="station" id="s2" data-c="#b98a4f">
+  <div class="pin"><div class="stage">
+    <p class="kicker">五十三个声音</p>
+    <p class="narr">大约五十三个文明，<br>五百个行星意识复合体。<br>没有加盟的誓言，<br>只有同一个方向的渴望。</p>
+    <p class="en">"The desire to serve begins—in the dimension of love, or understanding—to be an overwhelming goal of the social memory complex."</p>
+    <p class="zh">服务的渴望——在爱或理解的维度里——开始成为社会记忆复合体压倒性的目标。联邦由这样的渴望聚拢而成。</p>
+    <p class="ref">—— SESSION 016 · (16.32)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">五十三个声音</p>
+      <p class="f-en">"There are approximately fifty-three civilizations comprising approximately five hundred planetary consciousness complexes in this Confederation."</p>
+      <p class="f-zh">大约五十三个文明，构成大约五百个行星意识复合体——这是这个联邦的规模。</p>
+      <p class="f-ref">—— SESSION 006 · (6.24)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">你的名字也在其中</p>
+      <p class="f-en">"This Confederation contains those from your own planet who have attained dimensions beyond your third."</p>
+      <p class="f-zh">联邦里也有来自地球、已抵达第三密度之上维度的存有。守望着你的，有你们自己人。</p>
+      <p class="f-ref">—— SESSION 006 · (6.24)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">不止一个联邦</p>
+      <p class="f-en">"There are many Confederations. This Confederation works with the planetary spheres of seven of your galaxies, if you will, and is responsible for the callings of the densities of these galaxies."</p>
+      <p class="f-zh">这样的联邦有很多。这一个与你们所称的七个星系协作，应答其中各个密度的呼唤。</p>
+      <p class="f-ref">—— SESSION 016 · (16.33)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">把思想放进中央</p>
+      <p class="f-en">"Thus, each voluntarily placed the social memory complex data in what you may consider a central thought complex available to all."</p>
+      <p class="f-zh">每个成员自愿把自己的数据放进一个人人可取用的中央思想复合体——各做各的服务，共用同一个大脑。</p>
+      <p class="f-ref">—— SESSION 016 · (16.32)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 3 土星的九位 -->
+<section class="station" id="s3" data-c="#7d9dbf">
+  <div class="pin"><div class="stage">
+    <p class="kicker">土星的九位</p>
+    <p class="narr">在你们太阳系最大的行星旁，<br>有一张常开的圆桌。<br>它不统治谁，<br>只负责平衡。</p>
+    <p class="en">"In number, the Council that sits in constant session—though varying in its members by means of balancing which takes place, what you would call, irregularly—is nine."</p>
+    <p class="zh">常设开会的议会——成员会因不定期发生的平衡而变动——在数量上是九位。</p>
+    <p class="ref">—— SESSION 007 · (7.9)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">没有名字的席位</p>
+      <p class="f-en">"The names are not important because there are no names."</p>
+      <p class="f-zh">议会成员来自联邦，以及内在层面上对第三密度负有责任的振动层级。名字并不重要——因为根本没有名字。</p>
+      <p class="f-ref">—— SESSION 007 · (7.9)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">二十四位守望者</p>
+      <p class="f-en">"To back up this Council, there are twenty-four entities which offer their services as requested. These entities faithfully watch and have been called the Guardians."</p>
+      <p class="f-zh">支持九位的，是二十四个按要求服务的实体。他们忠实地守望——「守护者」这个名字由此而来。</p>
+      <p class="f-ref">—— SESSION 007 · (7.9)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">九位如何合议</p>
+      <p class="f-en">"The Council operates by means of, what you would call, telepathic contact with the oneness or unity of the nine, the distortions blending harmoniously so that the Law of One prevails with ease."</p>
+      <p class="f-zh">议会以心电感应运作：九位融为一体，变貌和谐地交融，让一的法则轻松地占上风。</p>
+      <p class="f-ref">—— SESSION 007 · (7.9)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">一道申请的门</p>
+      <p class="f-en">"…the social memory complex desiring this project lays it before the Council of Saturn. If it is approved, quarantine is lifted."</p>
+      <p class="f-zh">想在你们中间行事的联邦成员，必须先把计划呈交土星议会。获批，隔离才会解除。</p>
+      <p class="f-ref">—— SESSION 007 · (7.8)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">半未变貌的传说</p>
+      <p class="f-en">"The Council of Nine has been retained in semi-undistorted form by two main sources: that known in your naming as Mark, and that known in your naming as Henry."</p>
+      <p class="f-zh">你们文化里流传的「九人议会」，经由两份半未走样的管道记录留存了下来。</p>
+      <p class="f-ref">—— SESSION 007 · (7.10)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 4 守护者 -->
+<section class="station" id="s4" data-c="#4f8fd9">
+  <div class="pin"><div class="stage">
+    <p class="kicker">守护者</p>
+    <p class="narr">网是看不见的，<br>但撒网的人一直在。<br>他们不锁门，<br>只守着你选择的自由。</p>
+    <p class="en">"The Guardians guard the free-will distortion of the mind/body/spirit complexes of third density on this planetary sphere."</p>
+    <p class="zh">守护者守护的，是这个行星上第三密度心/身/灵复合体的自由意志。</p>
+    <p class="ref">—— SESSION 016 · (16.1)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">园丁们</p>
+      <p class="f-en">"The light quarantine, which consists of the Guardians, or gardeners, as you may call them, which would have been in effect thus was intensified."</p>
+      <p class="f-zh">这道光之隔离由守护者——或如你们可称的，园丁们——组成；它原本就在，后来被加强了。</p>
+      <p class="f-ref">—— SESSION 021 · (21.8)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">一次心软的账单</p>
+      <p class="f-en">"…it is from this beginning action that the quarantine of this planet was instituted, for it was felt that the free will of those of the Red Planet had been abridged."</p>
+      <p class="f-zh">当初救援火星难民的那次心软，被看作对自由意志的削减——隔离因此设立。好意，也要记账。</p>
+      <p class="f-ref">—— SESSION 009 · (9.9)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">来自上一个八度</p>
+      <p class="f-en">"The third group watching over this process is that group you call the Guardians. This group is from the octave above our own and serves in this manner as light-bringers."</p>
+      <p class="f-zh">守望收割的第三组存有，就是你们称为守护者的那群——他们来自比我们高一个八度的地方，以光之携带者的方式服务。</p>
+      <p class="f-ref">—— SESSION 051 · (51.1)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">以太一之名点名</p>
+      <p class="f-en">"An entity which is approaching is hailed in the name of the One Creator. Any entity thus hailed is bathed in love/light and will of free will obey the quarantine due to the power of the Law of One."</p>
+      <p class="f-zh">靠近的实体会被以太一造物主之名呼唤，浸入爱/光——然后出于自由意志，服从隔离。</p>
+      <p class="f-ref">—— SESSION 012 · (12.5)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">一堵实心砖墙</p>
+      <p class="f-en">"To not obey quarantine after being hailed on the level of which we speak would be equivalent to your not stopping upon walking into a solid brick wall."</p>
+      <p class="f-zh">在那个层面被呼唤后仍不服从，就像你撞上一堵实心砖墙却不停步——不是惩罚，只是法则的形状。</p>
+      <p class="f-ref">—— SESSION 012 · (12.7)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 5 隔离 -->
+<section class="scene" id="s5" data-c="#2e6f9f">
+  <div class="stage">
+    <p class="kicker">隔离</p>
+    <p class="narr veiled">于是整颗星球被罩进一张光网。<br>不是囚笼——<br>是一道筛子：<br>外面的声音进得来，<br>但不能替你选。</p>
+    <p class="en">"Thus, in order to balance the dimensional variances in vibration, a quarantine was set up; this being a balancing situation whereby the free will of the Orion group is not stopped but given a challenge. Meanwhile, the third-density group is not hindered from free choice."</p>
+    <p class="zh">为平衡振动上的维度差异，隔离被设立：猎户座集团的自由意志没有被阻止，只是被给予了挑战；而第三密度的人群，也不被妨碍自由选择。</p>
+    <p class="ref">—— SESSION 016 · (16.2)</p>
+  </div>
+</section>
+
+<!-- 6 网上的窗 -->
+<section class="station" id="s6" data-c="#2e7d8f">
+  <div class="pin"><div class="stage">
+    <p class="kicker">网上的窗</p>
+    <p class="narr">网会漏吗？<br>会。但每一道缝<br>都不是疏忽：<br>有人以光/爱请求，网就应；<br>无人看守的窗，是平衡本身。</p>
+    <p class="en">"Every effort is made to quarantine this planet. However, the network of Guardians, much like any other pattern of patrols on whatever level, does not hinder each and every entity from penetrating quarantine, for if request is made in light/love, the Law of One will be met with acquiescence."</p>
+    <p class="zh">一切努力都用于隔离这颗行星；但若请求是在光/爱中发出，一的法则便以默许来回应。</p>
+    <p class="ref">—— SESSION 012 · (12.3)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">罕见的窗</p>
+      <p class="f-en">"The only beings who are able to penetrate the quarantine are those who discover windows or distortions in the space/time continua surrounding your planet’s energy fields. Through these windows they come. These windows are rare and unpredictable."</p>
+      <p class="f-zh">能穿网的，只有找到时空连续体中窗口或变貌的存有。他们从窗口进来。窗口罕见，且不可预测。</p>
+      <p class="f-ref">—— SESSION 012 · (12.7)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">没有钟的钟声</p>
+      <p class="f-en">"In the case of the windows, no entities have the clock. Therefore, it seems random. It is not random in the dimension which produces this balance."</p>
+      <p class="f-zh">没有任何一个实体握有窗口的钟，所以它显得随机——在产生平衡的那个维度里，它并不随机。</p>
+      <p class="f-ref">—— SESSION 016 · (16.5)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">十五与七</p>
+      <p class="f-en">"There have been as many as fifteen of the Confederation entities in your skies at any one time; the others available to you through thought."</p>
+      <p class="f-zh">你们天空中同时出现过的联邦实体最多达十五个；其余的，通过思想抵达你们。此刻以飞行器运作的是七个。</p>
+      <p class="f-ref">—— SESSION 006 · (6.25)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">为了让神秘发生</p>
+      <p class="f-en">"…permission was granted at the time/space in which your first nuclear device was developed and used for Confederation members to minister unto your peoples in such a way as to cause mystery to occur."</p>
+      <p class="f-zh">你们引爆第一颗核装置的那个时间/空间里，许可被授予联邦成员：以制造神秘的方式服务你们——这是唤醒的广告。</p>
+      <p class="f-ref">—— SESSION 007 · (7.12)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">以思想形态现身</p>
+      <p class="f-en">"Secondly, there is permission granted, not to break quarantine by dwelling among you, but to appear in thought-form capacity for those who have eyes to see."</p>
+      <p class="f-zh">另一种许可，不是住进你们中间打破隔离，而是以思想形态的能力，出现在那些有眼睛能看见的人面前。</p>
+      <p class="f-ref">—— SESSION 007 · (7.12)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 7 呼唤的算术 -->
+<section class="station" id="s7" data-c="#58b98a">
+  <div class="pin"><div class="stage">
+    <p class="kicker">呼唤的算术</p>
+    <p class="narr">一个人的呼唤会被听见吗？<br>会被平方。<br>一变二，二变四——<br>愿望的重量，按几何级数生长。</p>
+    <p class="en">"The service available for our offering to those who call us is equivalent to the square of the distortion/need of that calling divided by, or integrated with, the basic Law of One in its distortion indicating the free will of those who are not aware of the unity of creation."</p>
+    <p class="zh">可供向呼唤者给出的服务，等于那呼唤之变貌/需求的平方，再除以——或者说整合于——那指涉未觉察一体性者之自由意志的一的法则。</p>
+    <p class="ref">—— SESSION 007 · (7.1)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">平方是连续的</p>
+      <p class="f-en">"The square is sequential — one, two, three, four, each squared by the next number."</p>
+      <p class="f-zh">不是十个人算一百——是一、二、三、四，每一个数都被下一个数平方。</p>
+      <p class="f-ref">—— SESSION 007 · (7.3)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">一千零十二</p>
+      <p class="f-en">"The result is difficult to transmit. It is one thousand and twelve [1,012], approximately."</p>
+      <p class="f-zh">若地球上只有十个人呼唤，连续平方十次，大约是一千零十二——还带着统计上的损耗。</p>
+      <p class="f-ref">—— SESSION 007 · (7.5)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">六亿三千两百万</p>
+      <p class="f-en">"The Confederation, in its entire spectrum of entity-complexes, is called by six hundred thirty-two millions [632,000,000] of your mind/body/spirit complexes."</p>
+      <p class="f-zh">以整个联邦计，有六亿三千两百万个你们的心/身/灵复合体在呼唤。（Ra 个人被三十五万两千个呼唤。）</p>
+      <p class="f-ref">—— SESSION 007 · (7.6)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">听得见的悲伤</p>
+      <p class="f-en">"It, however, constitutes a great calling which we of all creation feel and hear as if our own entities were distorted towards a great and overwhelming sorrow."</p>
+      <p class="f-zh">这构成一场伟大的呼唤——全造物的我们听见它，仿佛自己也被卷入一场巨大而压倒性的悲伤。它要求服务。</p>
+      <p class="f-ref">—— SESSION 007 · (7.7)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">真诚，但很低</p>
+      <p class="f-en">"If the call, though sincere, is fairly low in consciousness of the, shall we say, system whereby spiritual evolution may be precipitated, then we may only offer that information useful to that particular caller."</p>
+      <p class="f-zh">呼唤即使真诚，若其意识水平较低，联邦也只能给出对那个呼唤者有用的信息——振动相称，才能听见更多。</p>
+      <p class="f-ref">—— SESSION 060 · (60.27)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 8 几次尝试 -->
+<section class="scene" id="s8" data-c="#8f7fd9">
+  <div class="stage">
+    <p class="kicker">几次尝试</p>
+    <p class="narr">联邦不缺意愿，<br>缺的是被理解的运气。<br>七万五千年来，<br>他们一次一次，把手递过来。</p>
+    <p class="en">"…there was a sufficient calling to attempt to walk among your peoples as brothers."</p>
+    <p class="zh">那时呼唤足够，足以尝试以兄弟的身份，行走在你们的人群之中。</p>
+    <p class="ref">—— SESSION 023 · (23.6)</p>
+    <div class="demo">
+      <div class="timeline">
+        <div class="tl-item"><p class="t">七万五千年前</p><p class="d">火星的第三密度提前终止；守护者以基因援助移来难民。隔离，却因这次「帮助」而收紧。</p></div>
+        <div class="tl-item"><p class="t">兄弟的漫步</p><p class="d">Ra 把计划呈交土星议会，以兄弟之形走在埃及人中——然后发现，每个词都换来三十种困惑。</p></div>
+        <div class="tl-item"><p class="t">金字塔与南美</p><p class="d">教导被记录，也被扭曲；另一个社会记忆复合体申请第二次尝试——再度获批，再度被扭曲。</p></div>
+        <div class="tl-item"><p class="t">亚特兰蒂斯</p><p class="d">呼唤的平方足以打开门，直接传递的信息却遇上了传递者自己的天真。</p></div>
+        <div class="tl-item"><p class="t">第一颗核弹</p><p class="d">议会在那个时间/空间批准联邦成员「制造神秘」，作为通往一的法则的广告。</p></div>
+        <div class="tl-item"><p class="t">一九八一年</p><p class="d">Ra 等到器皿被精确调音，才送出一段窄带的振动。</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 9 讯号如何降落 -->
+<section class="station" id="s9" data-c="#4f5f9f">
+  <div class="pin"><div class="stage">
+    <p class="kicker">讯号如何降落</p>
+    <p class="narr">大多数时候，<br>帮助不走飞船。<br>它顺着一条窄带落下来，<br>落进恰好调到那个频率的心智。</p>
+    <p class="en">"…when information is desired and those requesting it are of the proper vibratory level, the Confederation entity itself will then speak."</p>
+    <p class="zh">当信息被渴望、且请求者处于恰当的振动水平时，联邦实体自己就会开口。</p>
+    <p class="ref">—— SESSION 060 · (60.24)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">投影在天空</p>
+      <p class="f-en">"There are many thought-form entities in your skies which are of a positive nature and are the projections of the Confederation."</p>
+      <p class="f-zh">你们的天空中有许多正面的思想形态实体——那是联邦的投影。</p>
+      <p class="f-ref">—— SESSION 012 · (12.9)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">留给准备好的耳朵</p>
+      <p class="f-en">"Thus, some entities have had approved by the Council of Saturn the placement and maintenance of these message-givers for those whose needs are simple, thus reserving the abilities of the Confederation members for those already meditating and absorbing information, which are then ready for additional information."</p>
+      <p class="f-zh">对需求简单的人，议会批准投放自动的「信息传递者」；联邦成员真正的能力，留给那些已在冥想、吸收信息、准备好更多的人们。</p>
+      <p class="f-ref">—— SESSION 060 · (60.25)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">讲黎明，不讲末日</p>
+      <p class="f-en">"The characteristics of this type of contact include the non-painful nature of thoughts experienced and the message content which speaks not of doom, but of the new dawning age."</p>
+      <p class="f-zh">这一类接触的特征：经历的思想不带来痛苦，信息谈的不是末日，而是新的黎明时代。</p>
+      <p class="f-ref">—— SESSION 053 · (53.3)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">欢迎被考验的讯号</p>
+      <p class="f-en">"This is correct and is the reason that the questioning of all contacts is welcomed by the Confederation of Planets in the Service of the Infinite Creator."</p>
+      <p class="f-zh">正负两面的实体可以共用同一频率——所以，联邦欢迎你对每一条接触进行考验。</p>
+      <p class="f-ref">—— SESSION 089 · (89.6)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 10 为何常常失败 -->
+<section class="station" id="s10" data-c="#6f7f9f">
+  <div class="pin"><div class="stage">
+    <p class="kicker">为何常常失败</p>
+    <p class="narr">不是不够爱。<br>是每一次靠近，<br>都可能变成一次干扰——<br>而爱不能干扰。</p>
+    <p class="en">"We discovered that for each word we could utter, there were thirty impressions we gave by our very being which confused those entities we had come to serve."</p>
+    <p class="zh">Ra 发现：每说出一个词，他们的存在本身会送出三十种印象——把前来服务的人弄糊涂了。</p>
+    <p class="ref">—— SESSION 023 · (23.6)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">天真的好意</p>
+      <p class="f-en">"…the second requirement, the relative naïveté of those members of the Confederation who felt that direct transfer of information would necessarily be as helpful for Atlanteans as it had been for the Confederation entity."</p>
+      <p class="f-zh">亚特兰蒂斯那次，呼唤的平方够了，缺的是对天真的估计——直接传递的信息，未必有帮助。</p>
+      <p class="f-ref">—— SESSION 022 · (22.25)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">一块滚动的积木</p>
+      <p class="f-en">"Once this basic information is received it is not put into practice in the heart and in the life experience but, instead, rattles about within the mind-complex distortions as would a building block which has lost its place and simply rolls from side to side uselessly, yet still the entity calls."</p>
+      <p class="f-zh">基本信息被接收却不实践，就在心智里像一块失去位置的积木，无用地滚来滚去——实体仍在呼唤，同样的信息便再次落下。</p>
+      <p class="f-ref">—— SESSION 060 · (60.27)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">混进天空的另一群</p>
+      <p class="f-en">"Many of those seen in your skies are of the Orion group. They send out messages. Some are received by those who are oriented towards service to others."</p>
+      <p class="f-zh">你们天空中许多目击属于猎户座集团。他们发送的信息，有些被服务他人取向的人接收。</p>
+      <p class="f-ref">—— SESSION 012 · (12.9)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">不能盖章的名字</p>
+      <p class="f-en">"We cannot confirm the contact referred to by the questioner as pure Confederation contact."</p>
+      <p class="f-zh">连 Ra 也无法替一个流行的接触盖章确认——「混合接触」是这个时代信息混乱的常态。</p>
+      <p class="f-ref">—— SESSION 100 · (100.4)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 11 思想的战争 -->
+<section class="station" id="s11" data-c="#9f5f6f">
+  <div class="pin"><div class="stage">
+    <p class="kicker">思想的战争</p>
+    <p class="narr">在更高的层面，<br>战争不用炮。<br>只有思想，<br>和思想里那一点光。</p>
+    <p class="en">"This is the most difficult work of the Confederation. Only four planetary entities at any one time are asked to partake in this conflict."</p>
+    <p class="zh">这是联邦最艰难的工作——任何时刻，只有四个行星实体被请求参与这场冲突。</p>
+    <p class="ref">—— SESSION 025 · (25.7)</p>
+  </div></div>
+  <div class="detail">
+    <div class="frag">
+      <p class="f-k">思想的机器</p>
+      <p class="f-en">"Picture, if you will, your mind. Picture it then in total unity with all other minds of your society."</p>
+      <p class="f-zh">想象你的心智，再想象它与社会中所有心智完全合一——那时，思想可以作为事物被投射出去。</p>
+      <p class="f-ref">—— SESSION 025 · (25.5)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">用光冲击的军械</p>
+      <p class="f-en">"…the Orion group charges, or attacks, the Confederation arms with light."</p>
+      <p class="f-zh">在这场冲突里，猎户座集团用光冲击、攻击联邦的武装。</p>
+      <p class="f-ref">—— SESSION 025 · (25.5)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">两种疲惫</p>
+      <p class="f-en">"…the negative depleted through failure to manipulate, the positive depleted through failure to accept that which is given."</p>
+      <p class="f-zh">负面因操控失败而消耗，正面因未能接受所给予之物而消耗。僵局之后，双方都要重组。</p>
+      <p class="f-ref">—— SESSION 025 · (25.5)</p>
+    </div>
+    <div class="frag">
+      <p class="f-k">不能被踩在脚下</p>
+      <p class="f-en">"It is thus that those who deal with this thought-war must be defensive rather than accepting in order to preserve their usefulness in service to others."</p>
+      <p class="f-zh">为了保住服务他人的用处，打这场思想战争的存有必须防御而非接纳——纯到毫无作用，也是一种失败。</p>
+      <p class="f-ref">—— SESSION 025 · (25.6)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 12 唯一重要的声明 -->
+<section class="scene" id="sLast" data-c="#f5efe2">
+  <div class="stage">
+    <p class="kicker">唯一重要的声明</p>
+    <p class="narr">网与窗，呼唤与应答，<br>思想与战争——<br>这一切之上，<br>他们只被允许说一句话。</p>
+    <p class="en">"The Confederation of Planets in the Service of the Infinite Creator has only one important statement. That statement, my friends, as you know, is: “All things, all of life, all of the creation is part of One Original Thought.”"</p>
+    <p class="zh">服务于无限造物主的星际联邦，只有一个重要的声明：万物、所有生命、整个造物，都是太一原初思想的一部分。</p>
+    <p class="ref">—— SESSION 001 · (1.0)</p>
+    <p class="en">"We ask you to remember that we are of the Brothers and Sisters of Sorrow. When one has been rescued from that sorrow to a vision of the One Creator, then there is no concept of failure."</p>
+    <p class="zh">请记得，我们属于悲伤的兄弟姐妹。当一个人从那种悲伤中被救起、望见太一造物主——就没有失败这回事。</p>
+    <p class="ref">—— SESSION 023 · (23.10)</p>
+    <button class="again" id="again">回到夜空</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+星际联邦与守护 · 滚动星旅 · 内容取自《一的法则》中讨论星际联邦、土星议会、守护者与隔离的十余次集会<br>
+引文为英文原文逐字摘录；中文为本页面自拟 · 仅作沉浸学习实验
+</footer>
+
+<script>
+/* ===== 星空画布（固定，勿改） ===== */
+const cv=document.getElementById('sky'),cx=cv.getContext('2d');
+let W,H,stars=[];
+function size(){W=cv.width=innerWidth*devicePixelRatio;H=cv.height=innerHeight*devicePixelRatio;}
+size();addEventListener('resize',size);
+for(let i=0;i<230;i++)stars.push({x:Math.random(),y:Math.random(),z:.25+Math.random()*.75,p:Math.random()*6.28,s:Math.random()});
+
+/* ===== 氛围色插值（固定，勿改） ===== */
+function hex2rgb(h){h=h.replace('#','');if(h.length===3)h=h.split('').map(c=>c+c).join('');return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
+const scenes=[...document.querySelectorAll('.scene,.station')].map(s=>({el:s,c:hex2rgb(s.dataset.c)}));
+let amb=[245,239,226];
+function lerp(a,b,t){return a+(b-a)*t}
+function rgb2css(c,a){return `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${a})`}
+
+/* ===== 渲染循环（固定，勿改） ===== */
+let t=0;
+function frame(){
+  t+=.016;
+  const sy=scrollY,wh=innerHeight;
+  let target=scenes[0].c;
+  for(const s of scenes){
+    const r=s.el.getBoundingClientRect();
+    if(r.top<wh*.55&&r.bottom>wh*.45){target=s.c;break}
+  }
+  for(let i=0;i<3;i++)amb[i]=lerp(amb[i],target[i],.045);
+  const ac=amb;
+  document.documentElement.style.setProperty('--amb',rgb2css(ac,1));
+
+  cx.clearRect(0,0,W,H);
+  const g=cx.createRadialGradient(W/2,H*.86,0,W/2,H*.86,H*.75);
+  g.addColorStop(0,rgb2css(ac,.10));g.addColorStop(1,'rgba(0,0,0,0)');
+  cx.fillStyle=g;cx.fillRect(0,0,W,H);
+  const dark=1-Math.min(1,(Math.hypot(ac[0]-245,ac[1]-239))/200);
+  for(const st of stars){
+    const px=st.x*W,py=((st.y - sy*.00004*st.z)%1+1)%1*H;
+    const tw=.5+.5*Math.sin(t*1.3+st.p);
+    cx.globalAlpha=(0.12+0.5*tw*st.z)*(0.35+0.65*dark);
+    cx.fillStyle=rgb2css(ac,1);
+    const r=st.s*1.4*st.z*devicePixelRatio;
+    cx.beginPath();cx.arc(px,py,r,0,6.28);cx.fill();
+  }
+  const oy=H*.62+Math.sin(t*.8)*10*devicePixelRatio;
+  const og=cx.createRadialGradient(W/2,oy,0,W/2,oy,26*devicePixelRatio);
+  og.addColorStop(0,rgb2css(ac,.9));og.addColorStop(.35,rgb2css(ac,.25));og.addColorStop(1,'rgba(0,0,0,0)');
+  cx.globalAlpha=1;cx.fillStyle=og;
+  cx.beginPath();cx.arc(W/2,oy,26*devicePixelRatio,0,6.28);cx.fill();
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+/* ===== 场景显影（固定，勿改） ===== */
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>e.target.classList.toggle('on',e.isIntersecting));
+},{threshold:.01});
+document.querySelectorAll('.scene,.station').forEach(s=>io.observe(s));
+
+/* 细节片段显影（固定，勿改） */
+const ioFrag=new IntersectionObserver(es=>{
+  es.forEach(e=>e.target.classList.toggle('on',e.intersectionRatio>.15));
+},{threshold:[0,.35,.6]});
+document.querySelectorAll('.frag').forEach(f=>ioFrag.observe(f));
+
+/* ===== 进度轨道（固定，勿改） ===== */
+const rail=document.getElementById('rail');
+scenes.forEach((s,i)=>{
+  const row=document.createElement('div');row.className='r';
+  const lbl=document.createElement('span');lbl.className='lbl';
+  const k=s.el.querySelector('.kicker');
+  lbl.textContent=k?k.textContent.trim():(i===0?'开始':'终章');
+  const d=document.createElement('i');
+  row.appendChild(lbl);row.appendChild(d);
+  row.onclick=()=>s.el.scrollIntoView({behavior:'smooth'});
+  rail.appendChild(row);
+});
+setInterval(()=>{
+  const wh=innerHeight;
+  scenes.forEach((s,i)=>{
+    const r=s.el.getBoundingClientRect();
+    rail.children[i].classList.toggle('cur',r.top<wh*.55&&r.bottom>wh*.45);
+  });
+},200);
+
+/* ===== 本章定制交互：回到夜空 ===== */
+document.getElementById('again').onclick=()=>scrollTo({top:0,behavior:'smooth'});
+</script>
+</body>
+</html>

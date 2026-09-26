@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 083 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 083 · 交互式学习模块</h1>
+  <p class="sub">第 83 集把「遗忘面纱」当作一场已经生效的大实验来复盘：面纱前后，梦、性、疾病、疼痛与社会结构各自发生了怎样的质变？这层面纱如何被穿透、最初又是如何立起来的？</p>
+  <div class="tagline">「7 个主题 · 6 个学习步骤 · 24 组案例」</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本集地图</a>
+<a href="#s2">② 质变而非量变</a>
+<a href="#s3">③ 疾病与回顾</a>
+<a href="#s4">④ 社会与奴役</a>
+<a href="#s5">⑤ 穿透面纱</a>
+<a href="#s6">⑥ 面纱的机制</a>
+<a href="#s7">⑦ 收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>面纱实验的「验收会」：本集逐项核对哪些东西（第 1 章）</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>面纱前后：变的是质，不是量</b><span>两条前提、梦与高我、性能量转移的样板细读（第 2 章）</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>疾病与回顾：考试的价值</b><span>病的本质是什么、投生之间到底考什么（第 3 章）</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>社会与法律：善意奴役</b><span>面纱前后的社会分野、法典化的代价（第 4 章）</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>穿透面纱：倍增效应与精通者</b><span>半透的膜、极化者的相遇、精通者诞生的条件（第 5 章）</span></span></label></div>
+<div class="step-item" data-target="#s7"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官：机制复盘与「大板子」</b><span>读懂第一次面纱的机制（第 6 章），再以金句收束（第 7 章）</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ 第 1 章 · 本集地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本集地图：面纱实验的「验收会」</h2></div>
+  <p class="sec-lead">前几集 Ra 已交代遗忘面纱（veil of forgetting）的设计与意识结构；这一集像一场验收会——发问者拿着一张长清单，逐项核对「面纱生效之后，第三密度的日常到底哪里变了」，再追问这层面纱当初怎么立起来、又能怎么被穿透。</p>
+
+  <div class="card">
+    <h3>本集在全书中的位置</h3>
+    <p>发问者开场就说明动机：他想弄清「我们现在所体验的这些，如何被用来更好地极化（polarization，在服务他人或服务自我方向上不断累积的选择倾向）」。Ra 于是先给总纲，再选「性」作样板，随后一路讲到疾病、社会、面纱机制。</p>
+    <p><b>本集议题清单：</b>① 面纱前后体验对比的总纲（质变而非量变）② 疾病的本质与投生间的回顾 ③ 面纱前的社会与当下的「善意奴役」、法律的两面 ④ 面纱的半渗透性与穿透方法 ⑤ 第一次面纱的机制、身体功能的失守与疼痛的新角色 ⑥ 催化剂过载。</p>
+    <div class="quote">
+      <p class="en">I greet you in the love and in the light of the One Infinite Creator.</p>
+      <p class="zh">Ra 的每一次通讯都从同一句话开始——太一无限造物主的爱与光，是所有讯息的底色。</p>
+      <span class="src">—— Session 083 · (83.0)</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>问答脉络推进器 · 一集之内，对话怎么走</h3>
+    <p style="font-size:.9rem;color:var(--ink-soft)">从开场到收尾共九站，点击节点或用按钮推进，先看一遍全貌。</p>
+    <div id="qaTrack" class="flow-track"></div>
+    <div id="qaDetail" class="flow-detail"></div>
+    <div class="flow-ctrl"><button class="tri-btn" id="qaPrev">← 上一步</button> <button class="tri-btn" id="qaNext">下一步 →</button></div>
+  </div>
+
+  <div class="case"><b>回诊记录：</b>把本集读作一次复诊——前几集 Ra 开出了「面纱」这张处方并讲明设计意图；1982 年 4 月 5 日这天，发问者带着逐项清单回诊：梦、性、疾病、疼痛、社会，一样样问「服药之后哪里不一样了」。这正是本集的展开方式。</div>
+  <div class="case"><b>降噪耳机：</b>通勤戴上降噪耳机，地铁的轰鸣还在，只是隔了一层膜。面纱也是如此——本集要回答的不是「膜好不好」，而是「隔着这层膜，梦、疼痛、亲密与社会各自变成了什么」，以及一个转折：这层膜是半透的，可以被穿透。</div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 后勤</span></summary>
+  <div class="body">
+    <p><b>(83.1) 器皿状态：</b>Ra 只答「如前所述」，未作新评估。</p>
+    <p><b>(83.2) 体重之问：</b>体重增减与 Ra 接触无关——接触能量已改由能量转移支付，不再消耗器皿的物理物质；增重来自载具日益敏感（含过敏倾向）与对这些困难的赋能，且她幸运地没有过度进食的倾向。</p>
+    <p><b>(83.28) 单复数之趣：</b>Ra 这集开场说「I communicate now」而非惯常的「We」——他自嘲式地答「We am Ra」：语言的单复数之分，对 Ra 这样的社会记忆复合体并不适用。</p>
+    <p><b>(83.28) 器皿照料：</b>建议多摄入液体、信任器皿对食物日益增长的感知力、在渴望复杂蛋白质时选扭曲最少者；肯定语句与「静息密度之食物」的光也在滋养她。</p>
+  </div></details>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 2 章 · 质变而非量变 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>面纱前后：变的是质，不是量</h2></div>
+  <p class="sec-lead">发问者一次抛出十个体验项目——睡眠、梦、身体疼痛、心智痛苦、性、疾病、催化剂编程、随机催化剂、关系、与高我或心/身/灵全体的通讯——请求逐项对比面纱前后的显著差异。Ra 先立两条前提，再选「性」作样板细讲。</p>
+
+  <div class="card">
+    <h3>总纲：两条前提，两个例外</h3>
+    <div class="q">发问者其实预设了「差异」的方向：他想知道的是面纱拿走了什么、又留下了什么可以用——他的问题本身就是一份完整的体验清单。</div>
+    <div class="quote">
+      <p class="en">Firstly, let us establish that both before and after the veil the same conditions existed in time/space; that is, the veiling process is a space/time phenomenon.</p>
+      <p class="zh">先立一条边界：面纱发生在空间/时间这一侧；在时间/空间那一侧，条件从未变过。</p>
+      <span class="src">—— Session 083 · (83.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Secondly, the character of experience was altered drastically by the veiling process.</p>
+      <p class="zh">但体验的「性质」被彻底改变了——不是多了一点少了一点，而是换了一种东西。</p>
+      <span class="src">—— Session 083 · (83.3)</span>
+    </div>
+    <div class="plain">面纱改变的不是「发生了多少」，而是「发生的是什么」；仅有的两个数量级例外——梦与高我接触——恰恰是因为它们的价值本身就是面纱造出来的。</div>
+    <div class="quote">
+      <p class="en">In some cases, such as the dreaming and the contact with the higher self, the experience was quantitatively different due to the fact that the veiling is a primary cause of the value of dreams and is also the single door against which the higher self must stand awaiting entry.</p>
+      <p class="zh">做梦与高我接触这两样，在「数量」上也不同了：梦的价值本身就是面纱给的，而高我——只能站在那扇唯一的门外，等你开口。</p>
+      <span class="src">—— Session 083 · (83.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Before veiling, dreams were not for the purpose of using the so-called unconscious to further utilize catalyst but were used to learn/teach from teach/learners within the inner planes, as well as those of outer origin of higher density.</p>
+      <p class="zh">面纱前的梦不干「消化催化剂」这活儿——它是直接连线内在层面的教导/学习者（teach/learners，教学相长者）与更高密度来源的上课时间。</p>
+      <span class="src">—— Session 083 · (83.3)</span>
+    </div>
+    <div class="case"><b>夜班消化：</b>加完班的人夜里梦见白天没吵完的架，醒来忽然明白自己真正生气的是什么——现代人说的「梦在帮我消化情绪」，正是 Ra 所讲「利用无意识进一步利用催化剂」；面纱前的做梦者下了课就下课，不需要这个补丁。</div>
+    <div class="case"><b>门外的导师：</b>高我像站在门外的私人教师——面纱是那扇唯一的门，他等的是你自己的敲门。「指导何时到来、以何种方式到来」，这个设计本身就是面纱给的功课。</div>
+  </div>
+
+  <div class="card">
+    <h3>样板细讲：性能量转移</h3>
+    <div class="q">Ra 主动挑了一个例子：没有面纱的存有，性活动是什么样的？——答案是「每次都是转移」，却几乎练不出东西。</div>
+    <div class="quote">
+      <p class="en">If it can be seen that all are one being it becomes much more difficult for the undisciplined personality to choose one mate and, thereby, initiate itself into a program of service.</p>
+      <p class="zh">当一切存有显而易见为一体，散漫的人格很难「选一个人」去爱、去共同服务——随机消散反而成了常态。</p>
+      <span class="src">—— Session 083 · (83.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">It may be seen to be a more complex study but one far more efficient in crystallizing those who seek the green-ray energy center.</p>
+      <p class="zh">面纱后的性爱这门课更复杂、阻塞更多，却远更能把寻求绿光芒能量中心（green-ray energy center，通称心轮处「不求回报的爱」所在）的人练出结晶。</p>
+      <span class="src">—— Session 083 · (83.3)</span>
+    </div>
+    <div class="plain">面纱前的性几乎清一色是绿光芒转移，却因无面纱而强度被稀释、少有结晶；面纱后这门课更痛更复杂，却远更能把人练出来。</div>
+    <div class="case"><b>公共草坪：</b>在一个人人可见彼此为一体的社群里，亲密像把种子撒在公共草坪——谁都可以，也就谁都不特别；性能量随机消散，「无大喜亦无大悲」。选择一个伴侣、与之进入共同的服务计划，这个动作需要「界限」，而界限正是面纱的产物。</div>
+    <div class="case"><b>摩擦与和解：</b>一对共同生活的伴侣在一次次冲突与和好中被迫面对「我付出时是否要求回报」——这正是绿光芒的课题。大喜与大悲都是面纱后才有强度的生活材料，强度本身就是教材。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 3 章 · 疾病与回顾 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>疾病与回顾：生长的逆转与「考试」的价值</h2></div>
+  <p class="sec-lead">顺着性说到病：性病面纱前有吗？疾病的本质是什么？发问者递上自己的模型请 Ra 校正，随后又被一个问题绊住——没有面纱的实体本该觉知一切，投生之间的「回顾」凭什么还有帮助？</p>
+
+  <div class="card">
+    <h3>疾病的本质：心智造物与良性句点</h3>
+    <div class="q">性病这种与性紧密相连的病，面纱之前存在吗？——Ra 的回答分两层：病一直有，但性病这种「心智造物」几乎是新的。</div>
+    <div class="quote">
+      <p class="en">the venereal disease is almost entirely the product of mind/body/spirit complexes’ interaction after the veiling.</p>
+      <p class="zh">性病这东西，几乎全是面纱之后心/身/灵复合体（mind/body/spirit complex，心智、身体、灵性合一的存在结构）互动「想」出来的——它是思想形态的产物。</p>
+      <span class="src">—— Session 083 · (83.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The reversal of this is seen as disease and has the benign function of ending an incarnation at an appropriate space/time nexus.</p>
+      <p class="zh">面纱前的病是「生长的逆转」，功能是良性的：在该结束的地方，给一次投生一个句点。</p>
+      <span class="src">—— Session 083 · (83.5)</span>
+    </div>
+    <div class="plain">病在面纱前后都存在；面纱前的病随机、良性，是给该结束的投生的体面收尾——而性病这类「心智造物」几乎全是面纱后的新产物。</div>
+    <div class="case"><b>「良性，建议观察」：</b>体检报告上这六个字让人心惊；而在 Ra 的视角里，面纱前的疾病本就叫作「良性功能」——它不是敌人，是闹钟与句点，在合适的时空连接点把这一轮体验合上。</div>
+    <div class="case"><b>存档再开新档：</b>发问者随后给出自己的模型：逻各斯（Logos，为造物写下成长蓝图的创造原理）让心智持续成长，身体是心智的第三密度对应物；成长一旦停滞，疾病便终止这次物理体验，等投生间回顾完毕再开新的一局。像游戏卡关就存档退出、复盘后开新档——Ra 的回应是：「你的想法在这个主题上足够清晰。」（83.6）</div>
+  </div>
+
+  <div class="card">
+    <h3>回顾的价值：考试，而非复习</h3>
+    <div class="q">发问者的困惑很实在：面纱前的实体本来就觉知一切，那「投生之间的回顾」凭什么还有帮助？——Ra 换了一个视角回答。</div>
+    <div class="quote">
+      <p class="en">However, the value of review is that of the testing as opposed to the studying. At the testing, when the test is true, the distillations of all study are made clear.</p>
+      <p class="zh">回顾不是复习课，是考试——真实的考试才逼出你所学一切之精华。</p>
+      <span class="src">—— Session 083 · (83.7)</span>
+    </div>
+    <div class="quote">
+      <p class="en">In this observation one sees the sum of all the detailed study: that being an attitude, or complex of attitudes, which bias the consciousness of the mind/body/spirit.</p>
+      <p class="zh">考的不是知识点，是你整个人被细节养成的态度——那种让意识发生偏倚的、成套的态度。</p>
+      <span class="src">—— Session 083 · (83.7)</span>
+    </div>
+    <div class="plain">在时间/空间（time/space，与空间/时间互补的无形一侧）里，一生可如一本书被通读；但回顾考的不是记忆——是你带着哪种偏倚活了一生。</div>
+    <div class="case"><b>模拟器与真机：</b>飞行员在模拟器上练一百次迫降也不紧张——他知道机器拴在地上；真机进近时手心出汗，同样的操作因为「真的会摔」而完全不同。Ra 肯定这个类比合理，但补了一句边界：它说明的是面纱前后体验的差别，不是回顾的功能。（83.8）</div>
+    <div class="case"><b>不考名词解释的期末考：</b>这门考试不默写细节，只问一句「这学期的学习让你变成了什么样的人」——投生间的回顾就是这样的考试：自我观察自我（常有协助），照见所有细节累积成的总态度。</div>
+    <div class="case"><b>一次干脆的拒答：</b>发问者请 Ra 举例「面纱前的实体如何经历疾病、会怎么想」。Ra 拒绝：宇宙中实体无限多样，对同一刺激的反应也无限多样——要给「标准答案」，所需的过度概括太宽泛，无法希望做出任何真实陈述。不编造，本身就是对真实的忠实。（83.9）</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 4 章 · 社会与奴役 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>社会与法律：当「一体」不再自明</h2></div>
+  <p class="sec-lead">从个体的病与痛转向人群：面纱前的社会长什么样？发问者随即把镜头转回当下，问出一个扎心的问题——我们这些自认服务他人的人，是不是也在无意中奴役着别人？</p>
+
+  <div class="card">
+    <h3>面纱前的社会：没有那个选项</h3>
+    <div class="q">面纱之前，各社会的组织方式有没有统一性？——Ra 说结构照样五花八门，但有一条分水岭。</div>
+    <div class="quote">
+      <p class="en">However, the societies before veiling did not depend, in any case, upon the intentional enslavement of some for the benefit of others, this not being seen to be a possibility when all are seen as one.</p>
+      <p class="zh">面纱前没有人想得到「奴役一些人来造福另一些人」——当所有人被看作一体，这个选项根本不在菜单上。</p>
+      <span class="src">—— Session 083 · (83.10)</span>
+    </div>
+    <div class="plain">第三密度天然是社会性的——凡有实体觉知自我与其他自我、且智能足以看出「能量共同融合有益」之处就有社会；真正的分野只有一条：「把人当工具」在面纱前不可想象。</div>
+    <div class="case"><b>协作流程实验：</b>即便面纱前，社会也不是乌托邦——仍有必要数量的不和谐，催生各种政府与社会结构的实验，像不同的团队尝试不同的协作流程；差别在于没有人想到「牺牲一部分人成全另一部分人」这种做法。</div>
+    <div class="case"><b>一场被纠正的担忧：</b>一位热心公益的发起人忧虑：如今的奴役技巧演化太久，连服务他人（service-to-others）导向者恐怕也在无意识中使用。Ra 先答「不正确」，再澄清：那个问题问的是面纱之前——当时没有无意识的奴役；而当下的善意而无意的奴役，多到无法枚举。（83.11-83.12）</div>
+  </div>
+
+  <div class="card">
+    <h3>善意奴役与法律的两面</h3>
+    <div class="q">那这些「意想不到的奴役形式」对我们的极化有用吗？法律体系里的条条框框算不算？——Ra 对两问都给了肯定的回答，并补上重要的限定。</div>
+    <div class="quote">
+      <p class="en">At the present space/time the condition of well-meant and unintentional slavery are so numerous that it beggars our ability to enumerate them.</p>
+      <p class="zh">而在当下，「好意办成的、无意的奴役」多到 Ra 说数都数不过来。</p>
+      <span class="src">—— Session 083 · (83.12)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This is not to denigrate those who, in green- and blue-ray energies, sought to free a peaceable people from the bonds of chaos but only to point out the inevitable consequences of codification of response which does not recognize the uniqueness of each and every situation within your experience.</p>
+      <p class="zh">Ra 特意补一句：这不是贬低那些怀着绿、蓝光芒之心立法护民的人——只是「把回应写成法条、不认得每个情境的独特性」时，监禁的扭曲必然随之而来。</p>
+      <span class="src">—— Session 083 · (83.14)</span>
+    </div>
+    <div class="plain">对这类奴役形式做冥想确实有助于极化（83.13）；法律的保护意图必然附带同等的监禁扭曲——问题不在立法者的心，在「法典化」这件事本身不认得独特性。</div>
+    <div class="case"><b>「为你好」的监控：</b>公司以保护数据安全为名，要求所有沟通留痕、装上监控软件——初心是保护，落到每个人头上却是一张无形的网。这正是 Ra 所说的「善意而无意的奴役」。</div>
+    <div class="case"><b>深夜送医的司机：</b>一部为保护行人而设的严刑峻法，撞上那个深夜赶送病人、超速三公里的司机——保护与监禁在同一具文里并存。Ra 说这是法律意图的「必要平衡」，并特意声明这并非在否定那些以绿蓝光芒能量工作的人。</div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 5 章 · 穿透面纱 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>穿透面纱：半透的膜与极化者的相遇</h2></div>
+  <p class="sec-lead">面纱挡得住，就有人想穿过去。Ra 先确认面纱确是半渗透的，再给出一个漂亮的反转——穿透的方法从来没有人计划过，它们是从「想知道」的渴望里自己长出来的。</p>
+
+  <div class="card">
+    <h3>没有计划，只有想象</h3>
+    <div class="q">当初设计面纱时，计划了哪些穿透它的方法？后来又出现了哪些计划外的？——答案是：一个都没计划。</div>
+    <div class="quote">
+      <p class="en">There were none planned by the first great experiment. As all experiments, this rested upon the nakedness of hypothesis. The outcome was unknown.</p>
+      <p class="zh">第一个伟大实验没有预设任何穿透法——它立在假设的赤裸之上，结果无人知晓。</p>
+      <span class="src">—— Session 083 · (83.16)</span>
+    </div>
+    <div class="plain">穿透之道与心/身/灵复合体的想象力一样多：认识未知的渴望自己长出了梦、通向精通之路与教导者通讯；而最生动甚至最奢侈的穿透机会，来自极化实体之间的互动。</div>
+    <div class="case"><b>长夜里的自省：</b>一个从没学过冥想的照护者，在长夜陪护中自发地祷告、自省、与自己对话——Ra 说自我的各种「未显化活动」都在不同程度上助人穿透面纱；方法不是被教出来的，是从渴望里长出来的。</div>
+  </div>
+
+  <div class="card">
+    <h3>两个要点与一条路径</h3>
+    <div class="q">「极化实体的互动」具体指什么？两个极化实体——无论正负——到底靠什么穿透面纱？</div>
+    <div class="quote">
+      <p class="en">Secondly, we would note that effect which we have learned to call the doubling effect. Those of like mind which together seek shall far more surely find.</p>
+      <p class="zh">志同道合的人一起寻求，远比独自寻求更确定能找到——Ra 给这个现象起了名字：倍增效应（doubling effect）。</p>
+      <span class="src">—— Session 083 · (83.17)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The penetration of the veil may be seen to begin to have its roots in the gestation of green-ray activity, that all-compassionate love which demands no return.</p>
+      <p class="zh">穿透的根，扎在绿光芒活动的孕育里——那种不求任何回报的全然慈悲之爱。</p>
+      <span class="src">—— Session 083 · (83.18)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The other-self is primary catalyst in this particular path to the piercing of the veil, if you would call it that.</p>
+      <p class="zh">在这条路上，「其他自我」是主要催化剂——往往是别人，把你推向那扇门。</p>
+      <span class="src">—— Session 083 · (83.18)</span>
+    </div>
+    <div class="plain">两个要点：极化实体间的关系蕴含极端的极化潜能；同行者让寻求事半功倍。具体路径：不求回报的爱先扎根 → 更高能量中心被激活并结晶 → 精通者（adept，更高中心结晶化后诞生、有能力或大或小拆解面纱的修行者）诞生。</div>
+    <div class="case"><b>互为镜子的小组：</b>两个人约好每晚互相当镜子，轮流复述对方今天的情绪反应并直言不讳——比各自闭门冥想进步快得多。Ra 的「倍增效应」说的就是这个：一起寻求的人，更确定地找到。</div>
+    <div class="case"><b>不求回报的照护：</b>志愿者无偿照顾邻居家病童数月、从不指望回报，某天忽然发现自己与他人之间的「墙」变薄了——绿光芒的爱先扎根，更高中心随后结晶，这正是 Ra 描述的次第；而病童与家人，正是这条路上的「主要催化剂」。</div>
+  </div>
+
+  <div class="card">
+    <h3>条件模拟器 · 精通者是如何诞生的？</h3>
+    <p style="font-size:.9rem;color:var(--ink-soft)">83.18 给出一条完整的路径。拨动三个开关，看看面纱何时松动——也看看缺了哪一块时，Ra 会怎么说。</p>
+    <div class="cond-row"><div class="name">绿光芒之爱扎根<small>那种不求回报的全然慈悲（83.18）</small></div><label class="switch"><input type="checkbox" id="vc1" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">更高能量中心被激活并结晶化<small>沿此路走下去，直到精通者诞生（83.18）</small></div><label class="switch"><input type="checkbox" id="vc2" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">与其他自我的深度互动<small>其他自我是这条路的主要催化剂（83.16-83.18）</small></div><label class="switch"><input type="checkbox" id="vc3" checked><span class="slider"></span></label></div>
+    <div id="condResult">三条件齐备：绿光芒之爱扎根、更高中心结晶化、其他自我一路催化——Ra 说，精通者就此诞生，他内在拥有或大或小拆解面纱的潜能，让一切再次被看作一体。</div>
+  </div>
+
+  <div class="card">
+    <h3>本集术语卡 · 点击翻面</h3>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">面纱</div><div class="sub">veil · the veiling process</div><span class="tap">点击翻开</span></div><div class="back">竖在心智有意识与无意识部分之间的那层膜；本集确认它是半渗透的。<em>像半透膜：挡得住日常的答案，挡不住持续的渴望。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">极化</div><div class="sub">polarization</div><span class="tap">点击翻开</span></div><div class="back">实体在一次次选择中朝服务他人或服务自我方向累积的倾向，越选越「带电」。<em>像磁铁：每次充磁，都比上一次更强一点。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">催化剂</div><div class="sub">catalyst</div><span class="tap">点击翻开</span></div><div class="back">促成成长却不替你完成的体验；本集把疼痛正式纳入这一类。<em>像试剂：只让反应成为可能，不替你反应。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">绿光芒能量中心</div><div class="sub">green-ray energy center</div><span class="tap">点击翻开</span></div><div class="back">通称心轮的位置，「不求回报的爱」由此开启；本集性能量转移的样板就围绕它。<em>爱的第一间教室。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">精通者</div><div class="sub">adept</div><span class="tap">点击翻开</span></div><div class="back">更高能量中心被激活并结晶化后诞生的人，内在拥有或大或小拆解面纱的潜能。<em>把自己的几层膜亲手揭开的人。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">倍增效应</div><div class="sub">doubling effect</div><span class="tap">点击翻开</span></div><div class="back">志同道合者一起寻求，必远更确定地找到——Ra 说这是他们「学会称为」的效应。<em>两个人互为镜子，擦亮得比独自照快得多。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">时间/空间</div><div class="sub">time/space</div><span class="tap">点击翻开</span></div><div class="back">与我们所在的「空间/时间」互补的无形一侧；在那里，一生可如一本书被通读。Ra 特意先声明：面纱是空间/时间现象。<em>书架一侧 versus 正在书写的笔尖。</em></div></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 6 章 · 面纱的机制 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>面纱的机制：一纸宣告与身体的失守</h2></div>
+  <p class="sec-lead">最根本的问题来了：第一次面纱到底是怎么立起来的？Ra 的答案短得惊人；随后的追问则揭开身体为此付出的代价，以及疼痛如何从「随手可关的警报」变成「随手关不掉的催化剂」。</p>
+
+  <div class="card">
+    <h3>机制：一个宣告</h3>
+    <div class="q">第一次面纱过程的机制是什么？——发问者自己都没把握 Ra 能答，Ra 的回答却只有两句。</div>
+    <div class="quote">
+      <p class="en">The mechanism of the veiling between the conscious and unconscious portions of the mind was a declaration that the mind was complex. This, in turn, caused the body and the spirit to become complex.</p>
+      <p class="zh">没有手术刀，没有开关——只有一个宣告：心智是复杂的。身体与灵性，随之变得复杂。</p>
+      <span class="src">—— Session 083 · (83.19)</span>
+    </div>
+    <div class="plain">不是拆零件、不是动手术——是「宣告」：宣布心智不再自明为一，一切随之分层。</div>
+    <div class="analogy"><b>组织架构图：</b>像公司宣布「即日起研发与市场分属两个部门」——架构一变，所有流程（身体、灵性）都得跟着长出新接口。宣告即制度，制度即现实。</div>
+  </div>
+
+  <div class="card">
+    <h3>身体的失守与疼痛的新角色</h3>
+    <div class="q">面纱前的身体能做哪些「我们做不到」的事？逻各斯是不是精心挑了一张「哪些功能要藏起来」的清单？</div>
+    <div class="quote">
+      <p class="en">Prior to the great experiment a mind/body/spirit was capable of controlling the pressure of blood in the vein, the beating of the organ you call the heart, the intensity of the sensation known to you as pain, and all the functions now understood to be involuntary or unconscious.</p>
+      <p class="zh">面纱前的人能像调音台一样控制血压、心跳、疼痛的强度——一切我们今天称为「非自主」的功能。</p>
+      <span class="src">—— Session 083 · (83.20)</span>
+    </div>
+    <div class="quote">
+      <p class="en">A large number of these experiments resulted in nonviable body complexes, or those only marginally viable.</p>
+      <p class="zh">而发问者猜的「清单」并不存在——真相是大量试错，许多组合造出了活不成的身体。</p>
+      <span class="src">—— Session 083 · (83.22)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Your assumption is correct. The function of pain at that time was as the warning of the fire alarm to those not smelling the smoke.</p>
+      <p class="zh">那时疼痛只是一件报警器——对还没闻到烟味的人拉响警报。</p>
+      <span class="src">—— Session 083 · (83.23)</span>
+    </div>
+    <div class="plain">发问者猜逻各斯有一张功能清单、划分各有理由——Ra 只答了一个字：「不。」（83.21）大量实验里，许多身体组合直接不可存活；而面纱前的疼痛只是警报，响过即可由心智关掉。</div>
+    <div class="case"><b>感觉不到疼的人：</b>先天性无痛症患者感觉不到烫与骨折，常常伤痕累累而不自知——这正是 Ra 举的例子：「神经感受器无意识屏蔽一切疼痛，并非面向生存的机制」；面纱实验中大量类似配置直接被淘汰。（83.22）</div>
+    <div class="case"><b>火灾警报器：</b>它不管你嫌不嫌吵，只负责把「有烟」砸进意识。面纱前的人被烫到会立刻缩手，然后像关掉警报一样在心智里把疼痛关到痊愈——发问者的「烧伤手」场景得到 Ra 确认。（83.24）</div>
+    <div class="case"><b>停不下来的心跳：</b>今天的你无法用意念让心跳停半拍——那半权限已被移交给无意识管理。Ra 也确认：让疼痛不再那么容易控制，确实创造了一套先前无法使用的催化剂系统。（83.26）</div>
+    <div class="case"><b>态度是一道选择题：</b>Ra 同时提醒：对疼痛的态度因心/身/灵复合体而异——发问者「疼痛是可加速进化的催化剂」的表述是有益的变貌，但那是一种选择，不是人人默认的读法。（83.25）</div>
+  </div>
+
+  <div class="card">
+    <h3>归类练习 · 这件事发生在面纱前还是面纱后？</h3>
+    <p style="font-size:.9rem;color:var(--ink-soft)">五句话，判断它们描述的是面纱之前、之后，还是前后皆然——答案都藏在本集 Ra 的原话里。</p>
+    <div id="sortArea"></div>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+<!-- ============ 第 7 章 · 收官 ============ -->
+<section class="chapter" id="s7">
+  <div class="sec-head"><span class="num">07</span><h2>收官：失控的催化剂与「大板子」</h2></div>
+  <p class="sec-lead">全长度工作的最后一问答的是「催化剂太多怎么办」。Ra 描绘了一种奇特的实体，并留下本集最温柔也最锋利的一句话。</p>
+
+  <div class="card">
+    <h3>「大板子」实体</h3>
+    <div class="q">有些实体经历的痛苦多到自己用不完，近乎失控——这是系统故障吗？——Ra 的回答：那是他自己调大的剂量。</div>
+    <div class="quote">
+      <p class="en">You may see, in some cases, an entity which, either by pre-incarnative choice or by constant reprogramming while in incarnation, has developed an esurient program of catalyst.</p>
+      <p class="zh">有的实体给自己写了一个「贪求催化剂」的计划——投生前选定的，或投生中一次次重新编程加码的。</p>
+      <span class="src">—— Session 083 · (83.27)</span>
+    </div>
+    <div class="plain">那不是故障：他相当渴望使用催化剂，并自行决定需要拿「大板子」拍上额头，才能引起自我的注意。旁观者看见浪费与悲剧，Ra 却请我们祝愿他抓住那门功课。</div>
+    <div class="case"><b>同一个坑：</b>有人连续三年在同一个坑里跌倒——类似的失恋、类似的失业、类似的朋友翻脸。换上 Ra 的视角：这可能是一个「渴望催化剂」的计划在持续给自己加码，直到功课被看见。</div>
+    <div class="case"><b>想拦住朋友的人：</b>看着好友又一次跳进消耗型的关系，我们心疼、想拦。Ra 的提醒是：最好祝愿他抓住那件他费了不小功夫提供给自己的东西——拦得住一次疼痛，拦不住一份自己写给自己的计划。</div>
+  </div>
+
+  <div class="saying">
+    <p class="en">However, it is well to hope that the other-self is grasping that which it has gone to some trouble to offer itself; that is, the catalyst which it desires to use for the purpose of evolution.</p>
+    <p class="zh">然而，最好祝愿那其他自我正抓住它费了不小功夫、亲手递给自己的东西——那就是它渴望用于进化目的的催化剂。</p>
+    <span class="src">—— Session 083 · (83.27)</span>
+  </div>
+
+  <div class="card">
+    <h3>伏笔与告别</h3>
+    <div class="quote">
+      <p class="en">I leave you, my friends, in the love and in the light of the One Infinite Creator.</p>
+      <p class="zh">每一次通讯都以同一句话收尾：留在造物主的爱与光里——这句话本身，就是面纱另一侧传来的惦念。</p>
+      <span class="src">—— Session 083 · (83.28)</span>
+    </div>
+    <p><b>本集留下的线头：</b>疼痛被正式纳入催化剂体系（面纱创造的新系统）、面纱被确认半渗透且可穿透、精通者的诞生路径首次被完整描述——这些都是发问者后续集会继续追问的方向；本模块只讲到这一集为止。</p>
+    <p><b>收束方式：</b>Ra 在答完最后一问后预告「这将是本次全长度工作的最后一个问题」，随后在简短后勤问答（见第 1 章折叠区）中感谢小组的持续尽责、确认器具排列良好，以惯常的爱与光和 Adonai 告别。</p>
+  </div>
+
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 083（`split/Ra_Session_083.md`）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra083-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+/* 问答脉络推进器（第 1 章） */
+const qaData=[
+{t:'开场与器皿',d:'<span class="qa-q">问：器皿状况如何？为什么她现在会后体重增加而不是减少？（83.1-83.2）</span><b>答：</b>状况如前。体重增减与 Ra 接触无关——接触所需能量已改由能量转移支付，不再消耗器皿的物理物质；增重来自载具日益敏感（含过敏倾向）与对这些困难的赋能。'},
+{t:'一张大清单',d:'<span class="qa-q">问：睡眠、梦、疼痛、性、疾病、催化剂、关系、与高我的通讯……面纱前后有何显著差异？（83.3）</span><b>答：</b>面纱是空间/时间中的现象；各项目的差异是「质变」而非「量变」（梦与高我接触除外），并先以性能量转移为例细讲。'},
+{t:'疾病与回顾',d:'<span class="qa-q">问：性病面纱前存在吗？疾病的功能是什么？没有面纱为何还要回顾？（83.4-83.9）</span><b>答：</b>性病几乎全是面纱后心智互动的产物；面纱前的疾病是生长的良性逆转；回顾的价值在「考试」而非「学习」。Ra 拒绝举例「面纱前的人如何面对疾病」——过度概括做不出真实陈述。'},
+{t:'社会与奴役',d:'<span class="qa-q">问：面纱前的社会是否统一？如今服务他人者是否也在无意中奴役他人？（83.10-83.14）</span><b>答：</b>面纱前社会不依赖故意奴役——当所有人被看作一体，那不是可想象的选项；当下善意而无意的奴役多到无法枚举，对它们冥想有助于极化；法律的保护意图必然附带同等的监禁扭曲。'},
+{t:'半透的面纱',d:'<span class="qa-q">问：面纱是半渗透的吗？当初计划过哪些穿透方法？（83.15-83.16）</span><b>答：</b>确实是半渗透的。第一个伟大实验没有计划任何穿透方法——结果未知；穿透之道与想象力一样多，最生动的机会来自极化实体间的互动。'},
+{t:'倍增与精通',d:'<span class="qa-q">问：两个极化实体具体靠什么穿透面纱？（83.17-83.18）</span><b>答：</b>两个要点：极化实体间的关系蕴含极端的极化潜能；「倍增效应」——志同道合者同寻必更稳当地找到。路径扎根于不求回报的绿光芒之爱，更高中心结晶化，直到精通者诞生；其他自我是这条路的主要催化剂。'},
+{t:'面纱的机制',d:'<span class="qa-q">问：第一次面纱的机制是什么？逻各斯有一张功能清单吗？（83.19-83.22）</span><b>答：</b>机制是一个宣告——「心智是复杂的」，身体与灵性随之变复杂。没有清单：只有大量实验，许多身体组合直接不可存活，例如屏蔽一切疼痛的神经感受器并非生存机制。'},
+{t:'疼痛的去留',d:'<span class="qa-q">问：面纱前疼痛的功能是什么？遮蔽疼痛是否造出了新的催化剂系统？（83.23-83.26）</span><b>答：</b>疼痛如火灾警报，响过、撤离源头，即可由心智关掉直到痊愈；让疼痛不再容易控制，确实创造了一套先前无法使用的催化剂系统——Ra 明确答「是的」。'},
+{t:'失控与收尾',d:'<span class="qa-q">问：催化剂会不会多到用不完？（83.27-83.28）</span><b>答：</b>有的实体给自己编了「贪求催化剂」的计划，如同拿大板子拍额头求注意；最好祝愿他抓住自己递给自己的功课。随后以 I/We 通讯的语法趣谈与器皿照料叮嘱收尾，Adonai。'}
+];
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',qaData);
+
+/* 术语卡翻面（第 5 章） */
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+/* 条件模拟器（第 5 章）：精通者诞生的三条件 */
+function updateVeilCond(){
+  const a=document.getElementById('vc1').checked;
+  const b=document.getElementById('vc2').checked;
+  const c=document.getElementById('vc3').checked;
+  const r=document.getElementById('condResult');
+  if(a&&b&&c){
+    r.classList.remove('fail');
+    r.innerHTML='三条件齐备：绿光芒之爱扎根、更高中心结晶化、其他自我一路催化——Ra 说，精通者就此诞生，他内在拥有或大或小拆解面纱的潜能，让一切再次被看作一体。（83.18）';
+  }else if(!a){
+    r.classList.add('fail');
+    r.innerHTML='路径尚未生根。Ra 明确说穿透面纱「扎根于绿光芒活动的孕育」——没有那种不求回报的慈悲之爱，后面的开关拨不动真正的门。（83.18）';
+  }else if(!b){
+    r.classList.add('fail');
+    r.innerHTML='爱已发芽，但尚未结晶。按 83.18，更高能量中心需要被「激活并结晶化，直到精通者诞生」——结晶化是门槛本身。';
+  }else{
+    r.classList.add('fail');
+    r.innerHTML='独自寻求并非绝无可能（83.16：自我的各种未显化活动也有助穿透），但「最生动甚至最奢侈」的机会来自极化实体的互动——其他自我是这条路的主要催化剂。';
+  }
+}
+['vc1','vc2','vc3'].forEach(id=>document.getElementById(id).addEventListener('change',updateVeilCond));
+updateVeilCond();
+
+/* 归类练习（第 6 章） */
+initSorter('sortArea',[
+{a:'「用意念像关开关一样止住烧伤的疼痛，直到伤口愈合。」',opts:['面纱之前','面纱之后','面纱前后都有'],ans:'面纱之前',exp:'83.23-83.24：面纱前疼痛只是警报，响过、撤离源头，即可由心智关到痊愈。'},
+{a:'「性病主要源于与性能量阻塞相关的扭曲思想形态。」',opts:['面纱之前','面纱之后','面纱前后都有'],ans:'面纱之后',exp:'83.4：Ra 说性病几乎完全是面纱后心/身/灵复合体互动的产物。'},
+{a:'「疾病作为生长的逆转，在合适的连接点结束一次投生。」',opts:['面纱之前','面纱之后','面纱前后都有'],ans:'面纱前后都有',exp:'83.4-83.5：疾病在面纱前后皆存在，这种良性功能并非面纱新增。'},
+{a:'「社会依靠故意奴役一部分人，换取另一部分人的利益。」',opts:['面纱之前','面纱之后','面纱前后都有'],ans:'面纱之后',exp:'83.10：面纱前这根本不被视为可能——所有人被看作一体。'},
+{a:'「志同道合的两个人一起寻求，远比独自寻求更容易找到。」',opts:['面纱之前','面纱之后','面纱前后都有'],ans:'面纱之后',exp:'83.17：「倍增效应」是面纱后穿透面纱的效应之一。'}
+]);
+
+renderPath();
+</script>
+</body>
+</html>

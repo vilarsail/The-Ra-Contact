@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 095 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 095 · 交互式学习模块</h1>
+  <p class="sub">小组即将迁居，Ra 用一整段「搬家魔法」示范一个场所如何被充能、去充能、再重新充能；随后回到第四张牌「经验」，借白猫与随机催化剂讲透一件事——纯净不改变遭遇，却改变诠释。</p>
+  <div class="tagline">7 个主题 · 6 个学习步骤 · 20 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 告别旧所</a>
+<a href="#s3">③ 净宅三件套</a>
+<a href="#s4">④ 选址与漏斗</a>
+<a href="#s5">⑤ 梦与面纱</a>
+<a href="#s6">⑥ 第四张牌</a>
+<a href="#s7">⑦ 收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>用推进器走一遍问答链：搬家实务与第四张牌续讲怎么分段</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>掌握净宅三件套</b><span>盐、水、大蒜各自凭什么工作，流程怎么走</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>看懂大蒜漏斗</b><span>房子外面的负面思想集中区怎么处理</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>分辨梦的语言与面纱的放大效应</b><span>公共词汇、私人叠加层，以及面纱前后那场相遇</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>吃透白猫的守护</b><span>守护的是谁、守护到什么程度、「诠释被光保护」是什么意思</span></span></label></div>
+<div class="step-item" data-target="#s7"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官：直角的召唤与金句</b><span>直角、灵性的梭子，与整副原型牌的坡度</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ §1 本章地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：搬家实务与第四张牌的续讲</h2></div>
+  <p class="sec-lead">这一集分两截。前一大截是「搬家魔法」的实务课：小组即将迁居，Ra 从旧所的去圣化讲起，给出盐、祝福水、大蒜的净宅流程，再处理房子外围的负面思想集中区；后一小截回到原型研读——先谈梦的语言，再逐项校对第四张牌「经验」的图形细节。先顺着推进器把全程走一遍。</p>
+
+  <div class="card">
+    <h3>问答脉络推进器：八步走完这一集</h3>
+    <div class="demo-area">
+      <div class="flow-track" id="mapTrack"></div>
+      <div class="flow-detail" id="mapDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="mapPrev">上一步</button> <button class="tri-btn" id="mapNext">下一步</button></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>本集的气质：一半是管家，一半是学生</h3>
+    <p>前半段 Ra 像「房屋管家」：去圣化、撒盐、挂蒜、设计漏斗，事无巨细；后半段回到原型课堂，对第四张牌先反问、再确认、再放大。两截共享同一底色——<b>场所与心智一样需要洁净，而纯净本身就是一种保护。</b>Ra 谈论通讯地点时的一句话，恰好是全集的注脚：</p>
+    <div class="quote">
+      <p class="en">All places in which this group dwells in love and thanksgiving are acceptable to us.</p>
+      <p class="zh">凡这个小组在爱与感恩中居住的地方，我们都接受。</p>
+      <span class="src">—— Session 095 · (95.17)</span>
+    </div>
+    <p class="plain">真正决定场所有效性的不是坐标，而是居住其中之人的爱与感恩。</p>
+  </div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 后勤</span></summary>
+  <div class="body">
+    <p><b>(95.1) 器皿状态：</b>如先前所述，无新变化。</p>
+    <p><b>(95.2) 第五密度负面关联者：</b>该实体频出手段推进其服务，但未撼动小组对服务他人的奉献与对和谐互动的珍视，总体上略有去极化。</p>
+    <p><b>(95.28) 收尾照护：</b>背侧变貌因开始使用漩涡水而略加重，Ra 鼓励继续并完全浸泡；请支持小组帮器皿保存物理能量，别耗在打包与搬迁的动作上；校准极好，一切安好。</p>
+  </div></details>
+
+  <div class="case"><b>十年老屋的告别：</b>一户人家搬离住了十年的房子，交还钥匙前把每个房间打扫干净，还向留下来的老邻居逐户道别——人对场所的敬意自有其分量；Ra 让小组为旧集会房间做的第一件事，正是把这股「朝向神圣的充能」正式移除（对应 95.3）。</div>
+  <div class="case"><b>租屋开荒：</b>年轻人搬进出租屋，先彻底打扫、开窗通风三天，再按自己的喜好布置书桌与床的方向——本集前半段就是这件事的「魔法版」：小组为已选定的新住所做一轮由内到外的净化（对应 95.4-95.16）。</div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ §2 告别旧所 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>告别旧所：充能的房间怎么「退房」</h2></div>
+  <p class="sec-lead">搬家话题由一个具体问题开启：这个房间已经做了几年与 Ra 的工作，若不再用它，需要什么仪式来「关闭」？Ra 的回答不是「不必理会」，而是要正式退房——把充能卸下来，让空间回到中性。</p>
+
+  <div class="card">
+    <h3>退房仪式：去圣化</h3>
+    <div class="q">一个被长期用于灵性工作的房间，搬走时要对它做什么？</div>
+    <div class="quote">
+      <p class="en">It would be appropriate to remove from this room and, to a lesser extent, from the dwelling, the charging of what you might call the distortion towards sanctity.</p>
+      <p class="zh">从这个房间（在较小程度上也从整个住所）移除那可以称为「朝向神圣之变貌」的充能，是适当的。</p>
+      <span class="src">—— Session 095 · (95.3)</span>
+    </div>
+    <p class="plain">长期用作灵性工作场所的空间会带上「神圣」的充能；搬家时要主动把这充能卸下——写一段自己的去圣化文字，或借用为神圣场所（如教堂）去圣化的现成仪式。</p>
+    <div class="case"><b>教堂的告别礼拜：</b>一座百年教堂停用前举行最后一次聚会，会众郑重地把「此处为圣地」的心念收回、把建筑还给它自己——这正是 Ra 所说的「使用现有仪式为神圣场所去圣化」（95.3）。</div>
+  </div>
+
+  <div class="card">
+    <h3>新居的起点：处女住所</h3>
+    <div class="q">那新住处选定之后，从哪里开始？</div>
+    <div class="quote">
+      <p class="en">When you have finished with your work the dwelling shall be as a virgin dwelling in the magical sense.</p>
+      <p class="zh">当你们完成你们的工作，这个住所在魔法意义上将如同一个处女住所。</p>
+      <span class="src">—— Session 095 · (95.10)</span>
+    </div>
+    <p class="plain">全部清理完成后，住所如同「未被书写过的纸」——小组自行选定合适的部分作为新集会处，再按在旧处已经熟悉的方式重新准备即可。</p>
+    <div class="case"><b>工位交接：</b>离职者把用了三年的工位清空、擦净，绿萝留给接手的同事——「用完归零」让下一个人不被上一任的气场绑住；净宅完成后的新住所，就是这样一个从零开始的工位（95.10）。</div>
+  </div>
+
+  <div class="card">
+    <h3>先把本集的关键词收进卡组</h3>
+    <p>接下来的操作流程会反复用到这几个词，先点开看一眼（每张卡正面是译名，背面是白话解释）：</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">去圣化</div><div class="sub">deconsecration</div><div class="tap">点看背面</div></div><div class="back">把一个被刻意充能为「神圣」的场所的充能移除，让空间回到中性、可供新的开始。Ra 允许自写文字，或借用教堂的现成仪式（95.3）。<em>比喻：退房前把房间恢复原样——不是否认住过，而是不把上一段使用「过户」给下一段。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">思想形态</div><div class="sub">thought-form</div><div class="tap">点看背面</div></div><div class="back">由强烈情绪与互动动态凝聚而成的准独立精神造物。住所内不够和谐的互动「强到足以吸引一个较小的思想形态」（95.4）——这正是净宅的起因。<em>比喻：反复争吵的房间里「气氛凝重得能切开」，思想形态就是那团被凝住的气氛长出了存在感。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">低层星光界</div><div class="sub">lower astral</div><div class="tap">点看背面</div></div><div class="back">比物质层面更精微、振动较低的星光层存在；本集中被礼貌「送走」的对象——告别之词、挂蒜与烧蒜的封印都是对它们说的（95.4、95.7）。<em>比喻：合租屋里赖着不走的旧住客——流程的目标是请其体面搬离，而非宣战。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">由意图祝福</div><div class="sub">blessed by intention</div><div class="tap">点看背面</div></div><div class="back">水的效力不取决于取自哪座教堂，而取决于祝福的意图本身；小组可以自己祝福水（95.5）。<em>比喻：手写的贺卡未必比烫金的贵重——心意才是内容。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">化身前的选择</div><div class="sub">pre-incarnative choice</div><div class="tap">点看背面</div></div><div class="back">投生之前为自己人生剧本所作的设定。若曾约定「不以夺命的方式服务其文化群体」，事件会以保护性的方式落下——这是强极性者免于随机催化剂的两种情形之一（95.25）。<em>比喻：出厂设置——有些「好运」是你进场前就写好的保护条款。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">黄光载具</div><div class="sub">yellow-ray vehicle</div><div class="tap">点看背面</div></div><div class="back">第三密度的化学肉体。对能完全居住于合一的实体，唯一的「伤害」是死亡——把黄光载具换成更充满光的心/身/灵复合体载具（95.25）。<em>比喻：换车不换司机——行程继续，只是换了辆更轻的车。</em></div></div>
+    </div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ §3 净宅三件套 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>净宅三件套：盐、水、大蒜凭什么干活</h2></div>
+  <p class="sec-lead">Ra 扫描发问者的近期记忆后，先交代了净宅的缘由——住所内曾有不够和谐的互动，其动态强到吸引了一个较小的思想形态（95.4）——然后给出一张奇怪的购物清单：盐、祝福水、切开的大蒜、一把没用过的扫帚。发问者逐项追问，Ra 逐项讲清「为什么是它们」。</p>
+
+  <div class="card">
+    <h3>盐与水：吸收与促成</h3>
+    <div class="q">盐撒在窗台门槛上、水从手指洒下——它们到底在做什么？</div>
+    <div class="quote">
+      <p class="en">Firstly, you may bless the water yourselves or may request so-called holy water from any blessed place; that is, blessed by intention.</p>
+      <p class="zh">首先，你们可以自己祝福水，或从任何受祝福的地方取用所谓的圣水——所谓受祝福，即由意图所祝福。</p>
+      <span class="src">—— Session 095 · (95.5)</span>
+    </div>
+    <p class="plain">盐吸走「被请求移入」的振动，水促成这种吸收；祝福的关键不在水的出处而在意图。操作分寸：盐沿窗台门槛成直线撒放、留 36-48 小时，再洒水，最后扫出——只撒外门、不撒内门（95.6），而洒水建议扩及通向屋内别处的门，好让实体明白住所内其他地方也不受欢迎（95.8）。</p>
+    <div class="case"><b>冰箱里的小苏打：</b>打开久置的冰箱放一盒小苏打吸味，几天后异味消失——盐与水的搭配在 Ra 的描述里就是这种「吸收」：盐被请求吸走振动，水的魔法本质则促成这件事（95.6）。</div>
+  </div>
+
+  <div class="card">
+    <h3>大蒜：负吸引力的逐客令</h3>
+    <div class="q">为什么偏偏是大蒜？</div>
+    <div class="quote">
+      <p class="en">The attractiveness is negative, and no service-to-self astral form will accept coexistence with the cut garlic.</p>
+      <p class="zh">这吸引力是负面的，没有任何服务自我的星光界形态会接受与切开的大蒜共存。</p>
+      <span class="src">—— Session 095 · (95.6)</span>
+    </div>
+    <p class="plain">大蒜对低层星光形态是一种「负吸引力」——它们宁可搬走也不与它共处；挂在湿吧台区域与近厨房、通向车棚的卧室（那里容纳过「享乐转为更黑暗情绪」的人），约 36 小时后取下烧掉（95.4、95.9）。</p>
+    <div class="case"><b>绝对不进门的气味：</b>有人对榴莲味避之不及，闻到就转身改道——切开的大蒜对低层星光形态就是这种「负吸引力」：不下驱逐令，只是让它们自己不想待（95.6）。</div>
+  </div>
+
+  <div class="card">
+    <h3>处女扫帚与仪式之词</h3>
+    <div class="q">扫帚有讲究吗？每个动作要配什么话？</div>
+    <div class="quote">
+      <p class="en">We praise the One Creator which gave to salt the ability to enable those friends, to which we wish to bid farewell, to find a new home.</p>
+      <p class="zh">我们赞美太一造物主，祂赐予盐能力，使那些我们想要告别的朋友们能够找到新家。</p>
+      <span class="src">—— Session 095 · (95.7)</span>
+    </div>
+    <p class="plain">扫帚必须干净且从未使用——「处女扫帚」的处女性极其有效（95.6）；洒水、挂蒜、扫盐、烧蒜各配一句赞美并感谢太一造物主的话语，语言为每个动作定调（95.7）。</p>
+    <div class="case"><b>崭新的笔签合同：</b>重要文件人们坚持用没写过的笔签——「未被使用」意味着不被旧印记污染；Ra 特意嘱咐扫帚要干净、且是处女扫帚，其处女性极其有效（95.6）。</div>
+  </div>
+
+  <div class="card">
+    <h3>净宅流程推进器：六步走完</h3>
+    <div class="demo-area">
+      <div class="flow-track" id="ritTrack"></div>
+      <div class="flow-detail" id="ritDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="ritPrev">上一步</button> <button class="tri-btn" id="ritNext">下一步</button></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>条件模拟器：这份净宅工作何时成立</h3>
+    <p>Ra 在不同问答里散落了几条「分寸」，拨动开关看看缺一条会怎样：</p>
+    <div id="saltBox">
+      <div class="cond-row"><div class="name">盐成直线无缝撒放<small>盐须沿窗台门槛以直线撒放、没有缺口，放置 36-48 小时（95.5、95.7）</small></div><label class="switch"><input type="checkbox" id="cLine" checked><span class="slider"></span></label></div>
+      <div class="cond-row"><div class="name">水已受祝福<small>自己祝福，或取用由意图祝福的圣水（95.5）</small></div><label class="switch"><input type="checkbox" id="cWater" checked><span class="slider"></span></label></div>
+      <div class="cond-row"><div class="name">扫帚干净且从未使用<small>「处女扫帚」的处女性极其有效（95.6）</small></div><label class="switch"><input type="checkbox" id="cBroom" checked><span class="slider"></span></label></div>
+      <div class="cond-row"><div class="name">大蒜在告别期后烧掉<small>以火的消耗封印离去者的离开（95.6）</small></div><label class="switch"><input type="checkbox" id="cBurn" checked><span class="slider"></span></label></div>
+    </div>
+    <div id="condResult"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ §4 选址与漏斗 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>选址与漏斗：把净化做到院墙之外</h2></div>
+  <p class="sec-lead">屋内净完，发问者把追问推向房子外部与整片地亩——由此引出本集最「工程学」的一段：一个挂在北方的大蒜漏斗。</p>
+
+  <div class="card">
+    <h3>外围：树木、田野与马厩</h3>
+    <div class="q">房子外部、曾是马厩的那一端，要不要特别处理？</div>
+    <div class="quote">
+      <p class="en">There is much of blessing in the gardening and the care of surroundings, for when this is accomplished in love of the creation the second-density flowers, plants, and small animals are aware of this service and return it.</p>
+      <p class="zh">在对造物的爱中完成的园艺与对周围环境的照料中有许多祝福——第二密度的花草、植物与小动物会察觉这份服务并回报它。</p>
+      <span class="src">—— Session 095 · (95.11)</span>
+    </div>
+    <p class="plain">树木田野环绕即可接受；马厩没有储存负面能量，物理清洁就行（95.12）；Ra 给的是总原则——以各人觉得合适的美装点环境各部分，照料本身就是双向的服务。</p>
+    <div class="case"><b>阳台上的回报：</b>每天给阳台花草浇水的人，渐渐引来鸟雀歇脚、绿植疯长——Ra 说的正是这种双向性：在对造物的爱中照料环境，第二密度的生命会察觉并回报这份服务（95.11）。</div>
+  </div>
+
+  <div class="card">
+    <h3>隐藏发现：负面思想集中区与大蒜漏斗</h3>
+    <div class="q">发问者只是例行问了句「还有没有别的」，问出了什么？</div>
+    <div class="quote">
+      <p class="en">However, the exact distance is not important due to the generalized nature of the astral leavings.</p>
+      <p class="zh">然而，由于星光残留的泛化性质，精确距离并不重要。</p>
+      <span class="src">—— Session 095 · (95.14)</span>
+    </div>
+    <p class="plain">正是这一问让 Ra 得以指出：北偏东约 10 度、约 45 码处有一团负面思想模式的集中（95.13）。对策是在其远端之外 60-70 英尺挂大蒜漏斗——小端朝南吸入能量、导向北方远离住所；方位不必绝对精确，但漏斗必须能被风吹动：纸板锥被否，两柱间串蒜或鸡网锥形获认可（95.14-95.15）。</p>
+    <div class="case"><b>在下游建闸：</b>污水不该等流进家门再过滤，而是在下游修一道单向闸把水引走——大蒜漏斗挂在负面集中区远端之外，小端朝南把能量吸入、导向北方远离住所，等于给整片地亩做一次「引流净化」（95.13-95.15）。</div>
+    <div class="case"><b>绕地界走一圈：</b>搬进带院子的新家，主人沿院墙散步一周，边走边向每棵树打招呼——对应 Ra 建议的补充工序：手持切开的蒜瓣绕行地界边界，无需言语，除非想默念或念出先前给蒜的那些话（95.15）。</div>
+  </div>
+
+  <div class="card">
+    <h3>三个总原则</h3>
+    <div class="q">有没有比具体操作更根本的建议？</div>
+    <div class="quote">
+      <p class="en">In general, the cleanliness is most helpful. The removal from the mind complex of those thoughts not of harmony is most helpful.</p>
+      <p class="zh">一般而言，清洁最有帮助；从心智复合体中移除那些不和谐的想法最有帮助。</p>
+      <span class="src">—— Session 095 · (95.16)</span>
+    </div>
+    <p class="plain">清洁、清心、增信愿——清洁环境、清走心中不和谐之念、做增加信仰与意志的实践让灵性做工，这三条比任何具体布置都根本；至于通讯效率，Ra 只以一句话作答：凡这个小组在爱与感恩中居住之处，我们都接受（95.17，见第 1 章）。</p>
+    <div class="case"><b>大扫除的心法：</b>年前大扫除，有人边擦窗边在心里抱怨，有人边擦边哼歌——Ra 把「从心智复合体移除不和谐之念」与物理清洁并列为最有帮助的事：打扫时的内心状态本身就是工序的一部分（95.16）。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ §5 梦与面纱 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>梦的语言与面纱前的相遇：催化剂如何被放大</h2></div>
+  <p class="sec-lead">场所议题收尾后，发问者带回两个衔接性问题：解梦有没有通用语法？以及上集谈过的「不成熟男女相遇」在面纱之前是什么样。两问最后落在同一个词上——催化剂。</p>
+
+  <div class="card">
+    <h3>梦的词汇：公共底座与私人叠加</h3>
+    <div class="q">有没有一套所有人通用的潜意识语言，可以拿来解梦？</div>
+    <div class="quote">
+      <p class="en">There is what might be called a partial vocabulary of the dreams due to the common heritage of all mind/body/spirit complexes.</p>
+      <p class="zh">由于所有心/身/灵复合体的共同传承，存在可以称为梦的「部分词汇」。</p>
+      <span class="src">—— Session 095 · (95.18)</span>
+    </div>
+    <p class="plain">梦的语言只有底座是公共的——每个实体独特的化身经验还会长出一个叠加层，而且随经验积累，这个私人部分在梦词汇中占比越来越大（95.18）。解梦终究要学「这个人自己的词典」。</p>
+    <div class="case"><b>普通话与家庭暗语：</b>全国人共用的普通话像梦的「部分词汇」，人人能懂；而一对双胞胎自创的暗语只有彼此懂——梦的私人叠加层就是这种暗语，且越是阅历深的人暗语越多（95.18）。</div>
+  </div>
+
+  <div class="card">
+    <h3>面纱前的那场相遇</h3>
+    <div class="q">上集说面纱让那次相遇的信息交换大不相同——面纱之前是什么样？</div>
+    <div class="quote">
+      <p class="en">Given this same case—that is, the random red-ray sexual arousal being activated in both male and female—the communication would far more likely have been to the subject of the satisfying of that red-ray, sexual impulse.</p>
+      <p class="zh">在同一案例中——即随机的红光性唤起在男女双方都被激活——交流将远更可能直奔满足那红光性能冲动的主题。</p>
+      <span class="src">—— Session 095 · (95.19)</span>
+    </div>
+    <div class="quote">
+      <p class="en">It is to be noted that the catalyst which may be processed by the pre-veil experience is insignificant compared to the catalyst offered to the thoroughly bemused male and female after the veil.</p>
+      <p class="zh">值得注意的是，面纱前经验所能处理的催化剂，与面纱后被彻底弄糊涂的男女所获得的相比微不足道。</p>
+      <span class="src">—— Session 095 · (95.19)</span>
+    </div>
+    <p class="plain">面纱前：直奔满足，随后清晰地彼此「命名」；面纱后：彼此看不透，每个误读都变成催化剂——困惑不是缺陷，而是催化过程扩大化的效率。发问者顺势推论：面纱后每个实体按先前偏见（即第四张牌「经验」）选择应对方式，沿所选极化道途为自己制造更多催化剂；Ra 确认此陈述正确（95.20）。</p>
+    <div class="case"><b>去掉剧本的即兴剧场：</b>照本宣科的演员只需念台词，信息交换直奔主题；去掉剧本的即兴演出逼着演员现编，反而逼出更多创造——面纱的「混淆」正像撤掉剧本：催化剂被大大放大了（95.19）。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ §6 第四张牌 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>第四张牌「经验」：白猫守护的到底是什么</h2></div>
+  <p class="sec-lead">从裙摆到黑方块再到白猫，发问者对第四张牌的图形逐项校对。Ra 的回应方式本身就是教学：先反问、待修正、再确认、再放大。</p>
+
+  <div class="card">
+    <h3>裙摆的方向：分离的图形化</h3>
+    <div class="q">裙摆向左延伸，是否表示走左手道途会让其他自我无法靠近、分离更大；走右手道途则分离小得多？</div>
+    <div class="quote">
+      <p class="en">The student is perceptive.</p>
+      <p class="zh">学生是敏锐的。</p>
+      <span class="src">—— Session 095 · (95.21)</span>
+    </div>
+    <p class="plain">短短一句确认分量不轻：裙摆的延伸正是「与他我的距离」的图形化——左手道途把其他自我隔得更远，右手道途则让分离更小。</p>
+    <div class="case"><b>转出圆圈的椅子：</b>开会时有人把椅子转出圆圈、背对大家——身体语言先于言语宣告了「我要离你们远一点」；裙摆的延展就是原型语言里的这种姿态（95.21）。</div>
+  </div>
+
+  <div class="card">
+    <h3>黑方块与白猫：反问、修正、确认</h3>
+    <div class="q">黑方块是物质幻象、白猫在守护已与左手分离的右手道途——这个读法对吗？</div>
+    <div class="quote">
+      <p class="en">However, the polarities need no guardians. What, then, O student, needs the guard?</p>
+      <p class="zh">然而，极性不需要守护者。那么，哦学生，什么需要守护？</p>
+      <span class="src">—— Session 095 · (95.22)</span>
+    </div>
+    <p class="plain">Ra 先反问再放行：发问者把说法修正为「被守护的是已选定右手道途的实体，免受负面极性的物质幻象之影响」，Ra 确认这是对其意图的准确感知，并补上一条比例律（95.23）。</p>
+    <div class="quote">
+      <p class="en">We may note that the great cat guards in direct proportion to the purity of the manifestations of intention and the purity of inner work done along this path.</p>
+      <p class="zh">我们可以注意到，大猫的守护与意图显化的纯净度、以及沿此道途所完成内在工作的纯净度成正比。</p>
+      <span class="src">—— Session 095 · (95.23)</span>
+    </div>
+    <div class="case"><b>教练的保护绳：</b>体操教练不能替运动员挡下所有摔倒，只能在他动作越纯净时把保护绳收得越紧——白猫守护的不是「道途」本身，而是行走道途者的纯净程度（95.23）。</div>
+  </div>
+
+  <div class="card">
+    <h3>纯净者与催化剂：没有外在庇护</h3>
+    <div class="q">越接近完全纯净，是否就越接近对左手催化剂影响的完全免疫？</div>
+    <div class="quote">
+      <p class="en">There is no outward shelter in your illusion from the gusts, flurries, and blizzards of quick and cruel catalyst.</p>
+      <p class="zh">在你们的幻象中，没有外在的庇护能抵御快速而残酷的催化剂之阵风、风雪与暴风雪。</p>
+      <span class="src">—— Session 095 · (95.24)</span>
+    </div>
+    <div class="quote">
+      <p class="en">However, to the pure, all that is encountered speaks of the love and the light of the One Infinite Creator.</p>
+      <p class="zh">然而，对纯净者而言，所遇到的一切都诉说着太一无限造物主的爱与光。</p>
+      <span class="src">—— Session 095 · (95.24)</span>
+    </div>
+    <p class="plain">外在境遇毫无不同——纯粹选择服务他人道途的寻求者不会有「表面上不同的化身经验」；被改变的是「诠释」：对纯净者，最残酷的打击也带着挑战与机会的氛围（金句见收官章）。</p>
+    <div class="case"><b>诚实者的暴风雪：</b>一位一贯诚恳待人的人照样遭遇失业、疾病与堵车——Ra 说得直白：没有挡风的外墙；但对他而言，一切遭遇都在诉说造物主的爱与光（95.24）。</div>
+  </div>
+
+  <div class="card">
+    <h3>随机催化剂：仅有的两种保护</h3>
+    <div class="q">天灾、战争这类随机催化剂，强极性者能否在很大程度上幸免？</div>
+    <div class="quote">
+      <p class="en">Secondly, if any entity is able to dwell completely in unity, the only harm that may occur to it is the changing of the outward physical, yellow-ray vehicle into the more light-filled mind/body/spirit complex’s vehicle by the process of death. All other suffering and pain is as nothing to one such as this.</p>
+      <p class="zh">第二，若任何实体能够完全居住于合一，可能发生在它身上的唯一「伤害」，是死亡过程把外在的物理黄光载具换成更充满光的心/身/灵复合体载具；其余一切痛苦对这样的人如同虚无。</p>
+      <span class="src">—— Session 095 · (95.25)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This is due to the lack of protection when service to self is invoked.</p>
+      <p class="zh">这是由于当服务自我被召唤时缺乏保护。</p>
+      <span class="src">—— Session 095 · (95.26)</span>
+    </div>
+    <p class="plain">仅两种情形例外：其一，化身前的选择（如约定不以夺命的方式服务其文化群体）使事件以保护性的方式落下；其二，完全居住于合一——那时死亡是唯一的「伤害」。负面道途则完全无保护：Ra 点出，此刻寻求「生存之地」的人群正是这一原理的写照（95.25-95.26）。</p>
+    <div class="case"><b>地堡里的安全感：</b>有人囤积物资、挖掘地堡、迁往「安全地带」，只为在动荡中求生——Ra 指出这正是服务自我道途缺乏保护的写照：随机催化剂按其统计性质落下，无人代挡（95.26）。</div>
+    <div class="case"><b>出生前的约定：</b>一位救援队员总觉得大灾之中「总有贵人相助」、屡次化险为夷——按 Ra 的说法，若化身前已约定「不以夺命的方式服务群体」，事件会以保护性的方式落下（95.25）。</div>
+  </div>
+
+  <div class="card">
+    <h3>归类练习：谁受保护？</h3>
+    <p>把每个情境归到正确的保护类型上（点选答案）：</p>
+    <div id="sortArea"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ §7 收官 ============ -->
+<section class="chapter" id="s7">
+  <div class="sec-head"><span class="num">07</span><h2>收官：直角的召唤与灵性的梭子</h2></div>
+  <p class="sec-lead">最后一问把图形细节推向形而上：双腿的直角。Ra 宣告这是本集最后一问（转移的能量渐弱），却给出一段总纲式的回答，把整副原型牌研读的意义一次说尽。</p>
+
+  <div class="card">
+    <h3>直角：一声比一声急切的召唤</h3>
+    <div class="q">双腿的直角，是否与四维立方体（从空间/时间转向时间/空间的转化方向）及安萨特十字架有关？</div>
+    <div class="quote">
+      <p class="en">The observation of the right angles and their transformational meaning is most perceptive, O student.</p>
+      <p class="zh">对直角及其转化意义的观察是非常敏锐的，哦，学生。</p>
+      <span class="src">—— Session 095 · (95.27)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Each of the images leading to the Transformations of Mind, Body, and Spirit—and ultimately to the great transformative Choice—has the increasing intensity of increasing articulation of concept; that is to say, each image in which you find this angle may increasingly be seen to be a more and more stridently calling voice of opportunity to use each resource—be it Experience as you now observe, or further images—for the grand work of the adept which builds towards transformation using the spirit’s bountiful shuttle to intelligent infinity.</p>
+      <p class="zh">每一张通向心智、身体与灵性之转化——并最终通向那伟大的转化性选择——的图像，都具有概念表述日益增强的强度；也就是说，你在其中发现这个角度的每一张图像，都可以越来越被看成一个越来越急切地召唤机会的声音——催促行家动用一切资源，为那借灵性慷慨的梭子通向智能无限的转化伟工服务。</p>
+      <span class="src">—— Session 095 · (95.27)</span>
+    </div>
+    <p class="plain">整副原型牌因此有了一条可见的坡度：越往后走，图像对行家的催促越响——动用一切资源，借灵性的梭子通向智能无限。</p>
+    <div class="case"><b>越学越密的课表：</b>从小学到大学，课本一章比一章厚、进度一次比一次急——通向转化的每一张图像正是如此：概念的表述强度递增，像一声比一声更急切的召唤（95.27）。</div>
+  </div>
+
+  <div class="card">
+    <h3>本集伏笔与收尾</h3>
+    <p>发问者对直角的追问，已把目光投向「转化」这个更大的主题——第四张牌的图形研读至此告一段落，转化之路的图景开始显形。收尾照护（95.28）已收进第 1 章折叠区，其中 Ra 的叮嘱值得单独一看：</p>
+    <div class="case"><b>把力气留给要紧事：</b>搬家那天，家人让体力最差的成员只做清点与指挥、不搬重物——支持小组也被 Ra 叮嘱：帮器皿保存物理能量，别把它耗在打包与两地奔波的动作上；漩涡水要继续用，完全浸泡更有效（95.28）。</div>
+  </div>
+
+  <div class="saying">
+    <p class="en">Thusly, the great pitch of light is held high above such an one so that all interpretation may be seen to be protected by light.</p>
+    <p class="zh">因此，那伟大的光之高度被高举在这样的一个人之上，使得一切诠释都可以被视为受光保护。</p>
+    <span class="src">—— Session 095 · (95.24)</span>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 095（`split/Ra_Session_095.md`）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra095-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+
+/* 术语卡翻转 */
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+/* 问答脉络推进器（本章地图） */
+initStepper('mapTrack','mapDetail','mapPrev','mapNext',[
+ {t:'开场照旧',d:'<span class="qa-q">问：器皿今天状态如何？</span><b>答：</b>如先前所述（95.1）。第五密度负面关联者频出手段推进其服务，但未撼动小组对服务他人的奉献与和谐互动的珍视，总体上略有去极化（95.2）。'},
+ {t:'旧所怎么退',d:'<span class="qa-q">问：即将搬离，如何魔法上得当地关闭这个工作场所？</span><b>答：</b>移除这个房间（较小程度上也是整个住所）「朝向神圣之变貌」的充能——写下自己的去圣化文字，或借用教堂等神圣场所的现成仪式（95.3）。'},
+ {t:'新居净化',d:'<span class="qa-q">问：新住所需做哪些准备？</span><b>答：</b>住所内有不够和谐的互动，曾吸引较小的思想形态——盐与祝福水清洁所有门窗；湿吧台与近厨房的卧室挂蒜；向低层星光界道别；最后请求这个「有生命的住所」欢迎并吸收和谐、爱与感恩（95.4-95.7）。'},
+ {t:'房外漏斗',d:'<span class="qa-q">问：房子外面还有隐患吗？</span><b>答：</b>北偏东约 45 码处有一团负面思想模式集中；在其远端之外挂大蒜漏斗，小端朝南吸入、导向北方远离住所；再手持蒜瓣绕行地界（95.13-95.15）。'},
+ {t:'梦的语言',d:'<span class="qa-q">问：解梦有没有一套通用的潜意识语言？</span><b>答：</b>只有「部分词汇」来自所有心/身/灵复合体的共同传承；个人化身经验的叠加层随经验增长越占越大（95.18）。'},
+ {t:'面纱前后',d:'<span class="qa-q">问：面纱之前，那场不成熟的相遇如何交换信息？</span><b>答：</b>直奔红光性冲动的满足，之后才清晰地「命名」彼此；面纱后的困惑正代表催化过程扩大化的效率（95.19-95.20）。'},
+ {t:'白猫与守护',d:'<span class="qa-q">问：黑方块与白猫是什么意思？</span><b>答：</b>极性无需守护者——被守护的是已选定右手道途的实体；守护程度与意图显化及内在工作的纯净度成正比（95.22-95.24）。'},
+ {t:'收束',d:'<span class="qa-q">问：双腿的直角与四维立方体有关吗？</span><b>答：</b>观察极其敏锐——通向转化的每张图像都在更急切地召唤行家动用一切资源，借灵性慷慨的梭子通向智能无限（95.27）。'}
+]);
+
+/* 净宅流程推进器 */
+initStepper('ritTrack','ritDetail','ritPrev','ritNext',[
+ {t:'挂蒜',d:'在湿吧台区域与近厨房、通向车棚的卧室悬挂新鲜切开的蒜瓣，约 36 小时；挂蒜时说出为大蒜所给的话语——赞美太一造物主，祝福大蒜成为指向出口之路的箭（95.4、95.7、95.9）。'},
+ {t:'撒盐',d:'盐沿所有窗台与外墙门的门槛成直线撒放、不留缺口，放置 36-48 小时；只撒外门、不撒内门；撒盐时赞美那赐盐以能力的太一造物主（95.5-95.7）。'},
+ {t:'洒水',d:'从手指把祝福过的水小心洒在所有已撒盐的窗台与门槛上；内门也洒——好让实体明白住所内其他地方并不欢迎它们（95.5、95.8）。'},
+ {t:'扫盐',d:'用干净且从未用过的「处女扫帚」把盐仪式性地扫出门外——每扫一下，带走住所内那些难以与小组共存的较不幸振动；扫毕为住所的灵性清洁献上感恩（95.5、95.7）。'},
+ {t:'烧蒜',d:'大蒜必须烧掉——以火的消耗封印所有经由出口离开者的离去；扫帚要干净，其「处女性」极其有效（95.6、95.7）。'},
+ {t:'发出邀请',d:'最后请求这个有生命的实体（住所）变得欢迎并吸收和谐、爱与感恩的振动——这些正是小组日后将向住所献上的（95.4）。'}
+]);
+
+/* 净宅条件模拟器 */
+function simSalt(){
+  const line=document.getElementById('cLine').checked;
+  const water=document.getElementById('cWater').checked;
+  const broom=document.getElementById('cBroom').checked;
+  const burn=document.getElementById('cBurn').checked;
+  const box=document.getElementById('condResult');
+  const miss=[];
+  if(!line)miss.push('盐未成直线无缝撒放');
+  if(!water)miss.push('水未经祝福');
+  if(!broom)miss.push('扫帚不干净或已被使用');
+  if(!burn)miss.push('大蒜未烧掉');
+  let html;
+  if(miss.length===0){
+    html='<b>四项齐备。</b>盐沿窗台门槛成直线撒放、无缝放置后被扫出，受祝福的水促成吸收，处女扫帚每扫一下带走较不幸的振动，烧蒜以火的消耗封印离去——净宅按 Ra 所述成立（95.5-95.7）。';
+    box.classList.remove('fail');
+  }else{
+    html='<b>尚缺：'+miss.join('、')+'。</b>';
+    if(!line)html+='Ra 特别叮嘱盐须以直线撒放、没有缺口（95.7）。';
+    if(!water)html+='祝福不靠出处靠意图——可以自己祝福，或取用由意图祝福的圣水（95.5）。';
+    if(!broom)html+='「处女扫帚」的处女性极其有效，用过的扫帚带着旧的印记（95.6）。';
+    if(!burn)html+='须以火的消耗封印所有经由出口离开者的离去（95.6）。';
+    box.classList.add('fail');
+  }
+  box.innerHTML=html;
+}
+document.querySelectorAll('#saltBox input').forEach(el=>el.addEventListener('change',simSalt));
+simSalt();
+
+/* 归类练习：谁受保护 */
+initSorter('sortArea',[
+ {a:'一位志愿者出生前已约定「不以夺命的方式服务其文化群体」，此后在危险中屡次化险为夷。',opts:['化身前的约定','完全居于合一','诠释被光保护','并无保护'],ans:'化身前的约定',exp:'Ra 列出的第一种情形：化身前的选择使事件以保护性的方式落下（95.25）。'},
+ {a:'一位修行者已能完全居住在合一之中，除死亡外，一切痛苦于他「如同虚无」。',opts:['化身前的约定','完全居于合一','诠释被光保护','并无保护'],ans:'完全居于合一',exp:'第二种情形：唯一的「伤害」只是黄光载具被换成更充满光的载具；这种完满配置在第三密度极其罕见（95.25）。'},
+ {a:'纯粹选择服务他人道途的寻求者同样遭遇失业与疾病，外在境遇并无不同，但他把每次打击都读成挑战与机会。',opts:['化身前的约定','完全居于合一','诠释被光保护','并无保护'],ans:'诠释被光保护',exp:'没有挡风的外墙；但对纯净者，一切遭遇都诉说造物主的爱与光，诠释被高举的光保护（95.24）。'},
+ {a:'一心求生的负面极化者囤积物资、迁往「安全地带」，仍被随机灾难按统计规律波及。',opts:['化身前的约定','完全居于合一','诠释被光保护','并无保护'],ans:'并无保护',exp:'服务自我被召唤时缺乏保护；随机催化剂按其统计性质落下（95.26）。'},
+ {a:'某人希望强极化能让台风绕开自家屋顶。',opts:['化身前的约定','完全居于合一','诠释被光保护','并无保护'],ans:'并无保护',exp:'极化本身不是挡箭牌——只有化身前约定与完全居于合一两种例外情形（95.25）。'}
+]);
+
+renderPath();
+</script>
+</body>
+</html>

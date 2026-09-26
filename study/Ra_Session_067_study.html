@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 067 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 067 · 交互式学习模块</h1>
+  <p class="sub">这一集自始至终在和一位看不见的访客打交道：发问者想弄清第五密度猎户实体「心灵攻击」的来路、机制与用意——它如何以无载具之光穿透隔离、借器皿的耳部旧伤制造眩晕；Ra 借题解开「同一造物主提出两个相反请求」的悖论，劝小组在幽默中放手；末尾一段原型心智长陈述只起了个头，留待下次。</p>
+  <div class="tagline">8 个主题 · 6 个学习步骤 · 33 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 攻击的真相</a>
+<a href="#s3">③ 来路与信标</a>
+<a href="#s4">④ 服务的悖论</a>
+<a href="#s5">⑤ 光之魔法</a>
+<a href="#s6">⑥ 窗口效应</a>
+<a href="#s7">⑦ 三份服务</a>
+<a href="#s8">⑧ 原型心智与收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>用问答脉络推进器走一遍 32 段对话的骨架，顺手收下 6 张术语卡</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>攻击的真相</b><span>恒定水平与机会性加强；「感谢攻击」的视角为什么有力量</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>来路与信标</b><span>实体用哪个身体来；小组的极化为何成了信标</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>服务的悖论</b><span>同一个造物主的两个相反请求如何毫无矛盾地两全——本集义理的心脏</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>光之魔法与窗口效应</b><span>眩晕借什么制造；用模拟器拨一拨攻击得逞的条件（第⑥章窗口效应可顺读）</span></span></label></div>
+<div class="step-item" data-target="#s7"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>三份服务与收官</b><span>三个人各自被提供什么、拒答与幽默（第⑦章），再到原型心智的纠正与告别金句（第⑧章）</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<!-- ============ ① 本章地图 ============ -->
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：这一集 Ra 与发问者到底谈了什么</h2></div>
+  <p class="sec-lead">1981 年 8 月 15 日的这场集会，承接前几集已铺垫的话题——Ra 两次提到「先前已讨论过」的那位猎户实体与移除小组的威胁。整集几乎都在与这位看不见的第五密度访客打交道：它从哪里来、怎样穿透隔离、如何借器皿的耳部旧伤制造眩晕；Ra 借题解开「服务的悖论」，劝小组在幽默中放手。末尾一段原型心智长陈述只起了个头，Ra 明确要求下次集会重述问题再继续——那是下一集的入口。</p>
+
+  <div class="card">
+    <h3>本集议题清单</h3>
+    <p>这场集会共 32 段问答，围绕六条主线展开：</p>
+    <div class="table-wrap"><table class="nine">
+      <tr><th>主线</th><th>问答区间</th><th>一句话概括</th></tr>
+      <tr><td>攻击的现状</td><td>(67.1)–(67.3)</td><td>恒定水平的攻击为何此刻格外强；「感谢攻击」的视角</td></tr>
+      <tr><td>来路与信标</td><td>(67.4)–(67.7)</td><td>实体用哪个身体来；小组的极化如何成为信标</td></tr>
+      <tr><td>服务的悖论</td><td>(67.8)–(67.11)</td><td>同一个造物主的两个相反请求如何毫无矛盾地两全</td></tr>
+      <tr><td>光之魔法</td><td>(67.12)–(67.15)</td><td>眩晕借耳部旧伤制造；无载具之光与暗示的机制</td></tr>
+      <tr><td>窗口与旧书</td><td>(67.16)–(67.21)</td><td>十二年前的一本书；随机窗口效应与第一变貌的平衡</td></tr>
+      <tr><td>三份服务与原型心智</td><td>(67.22)–(67.31)</td><td>三个人各自被提供什么；拒答与幽默；长陈述只开个头</td></tr>
+    </table></div>
+    <div class="case"><b>恒定的骚扰与机会的窗口：</b>一位店主长期被职业差评师盯上——差评的总量恒定，但每逢店里缺货、人手吃紧（弱点暴露），差评就突然密集起来——「强度的变化来自弱点呈现的机会」，正是 (67.2) 的结构。</div>
+    <div class="case"><b>只推虚掩的门：</b>某推销员专挑防盗门没锁死的住户下手，锁得牢的人家他从不多费工夫——攻击并非随时全力输出，而是在任何弱点处捕捉机会；器皿因疼痛而削弱的精力，就是那扇虚掩的门。</div>
+  </div>
+
+  <div class="card">
+    <h3>问答脉络推进器</h3>
+    <p>按顺序点一遍，看看 32 段对话是怎么一步步展开的。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="mapTrack"></div>
+      <div class="flow-detail" id="mapDetail"></div>
+      <div class="flow-ctrl">
+        <button class="tri-btn" id="mapPrev">← 上一问</button>
+        <button class="tri-btn" id="mapNext">下一问 →</button>
+      </div>
+    </div>
+    <div class="quote">
+      <p class="en">I am Ra and I greet you in the love and in the light of the One Infinite Creator. I communicate now.</p>
+      <p class="zh">我是 Ra，我在太一无限造物主的爱与光中向你们致意。我现在开始通讯。</p>
+      <span class="src">—— Session 067 · (67.0)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The psychic attack component is exceptionally strong at this particular nexus.</p>
+      <p class="zh">在这个特定连接点上，心灵攻击的成分异常强烈——器皿状态的例行汇报里，本集的主题就此登场。</p>
+      <span class="src">—— Session 067 · (67.1)</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>本集术语预览（点击卡片翻面）</h3>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">心灵攻击</div><div class="sub">psychic attack</div><div class="tap">点击翻面</div></div><div class="back">负面导向实体对正面个体或群体施加的持续施压——以消耗、诱惑或暗示使其偏离服务他人的极化。<em>像打不完的骚扰电话：未必骗得到你，但持续耗你的电。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">猎户集团</div><div class="sub">Orion group</div><div class="tap">点击翻面</div></div><div class="back">Ra 资料中负面导向实体的联合体。本集的主角是其中一位第五密度成员，常规的打手则是其第四密度的仆从。<em>像亲自下场的高管——脏活累活平时都外包给手下的销售团队。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">窗口</div><div class="sub">window</div><div class="tap">点击翻面</div></div><div class="back">行星隔离网上的随机开口：为平衡第一变貌（自由意志），正负两方同样智慧的实体获得对称的进出机会。<em>像机场对高信誉旅客随机开放的快速通道——规则一视同仁，不看立场。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">第一变貌</div><div class="sub">First Distortion</div><div class="tap">点击翻面</div></div><div class="back">自由意志法则：一切教导与干预的边界。本集里，它既表现为「窗口」的存在，也表现为 Ra 面对某些问题时的拒答。<em>像图书馆的借阅规则：馆员可以指引书架，但不能替你决定读哪本。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">光之载具</div><div class="sub">light vehicle</div><div class="tap">点击翻面</div></div><div class="back">该实体以光精心创造的「身体」：意识置于其中，用光的工具做工；而意志与临在始终属于实体本身。<em>像潜水员的水下装备：在水里工作的是那身衣服，但里面的意志是真人。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">原型心智</div><div class="sub">archetypical mind</div><div class="tap">点击翻面</div></div><div class="back">太一无限造物主各面向的呈现（如父亲、母亲、愚者、魔法师）；寻求者经由直觉接触它，收获因人而异。<em>像一座巨大的雕塑馆：展品恒定，每位观众带走的感动却各不相同。</em></div></div>
+    </div>
+  </div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 集会安排</span></summary>
+  <div class="body">
+    <p><b>(67.1) 器皿状态：</b>生命能比先前询问更接近她的常态，身体能量却稍弱；心灵攻击成分在这个连接点异常强烈——展开讨论见第②章。</p>
+    <p><b>(67.5) 一次澄清：</b>Ra 说「未感知到更进一步的询问」，请发问者重新提问——追问要先说清问的是什么。</p>
+    <p><b>(67.29) 下次集会安排：</b>发问者提议下次集会先续答原型心智的问题；Ra 答「能量一如既往已被分配，选择一如既往是你们的」。</p>
+  </div></details>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ ② 攻击的真相 ============ -->
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>心灵攻击：恒定的压力为何在此刻最强</h2></div>
+  <p class="sec-lead">例行汇报抛出本集主角后，发问者连追两步：这场所谓「攻击」到底是什么？为何偏偏此刻格外强？Ra 先给出攻击的「基准线」，再接住发问者那个漂亮的重新定性——把它称作服务并致谢。</p>
+
+  <div class="card">
+    <h3>基准线：恒定水平，机会性加强</h3>
+    <div class="q">发问者请 Ra 描述所谓「心灵攻击成分」，并解释它为何在这个特定时刻格外强烈。</div>
+    <div class="quote">
+      <p class="en">Variations towards the distortion of intensity of attack occur due to the opportunities presented by the entity in any weakness. At this particular nexus the entity has been dealing with the distortion which you call pain for some time, as you call this measurement, and this has a cumulatively weakening effect upon physical energy levels. This creates a particularly favorable target of opportunity, and the entity of which we have previously spoken has taken this opportunity to attempt to be of service in its own way.</p>
+      <p class="zh">攻击强度的变化，来自这个实体在任何弱点处呈现的机会；在这个连接点上，器皿已与疼痛共处一段时间，身体能量被累积削弱——这造出一个特别有利的机会目标，那位先前谈过的实体便抓住机会，以它自己的方式试图提供服务。</p>
+      <span class="src">—— Session 067 · (67.2)</span>
+    </div>
+    <div class="plain">攻击不是间歇性发作，而是恒定存在；起伏只随「弱点呈现的机会」而来——器皿与疼痛共处已久，身体能量被累积削弱，成了特别有利的机会目标。</div>
+    <div class="case"><b>熬夜后的感冒：</b>病毒常年「待机」，但连续加班一周、免疫力下滑，它立刻抓住机会发作——「累积性削弱创造机会目标」，与器皿的疼痛削弱身体能量同构。</div>
+    <div class="case"><b>为什么没有败退：</b>Ra 补充了另一面：幸而器皿意志坚强、极少有「歇斯底里」的倾向，眩晕已持续干扰了好几天，她却适应良好、未生过度恐惧——攻击未成功，只留下一些消耗。(67.2)</div>
+  </div>
+
+  <div class="card">
+    <h3>「感谢攻击」：一个能削弱对方的视角</h3>
+    <div class="q">发问者做了一个大胆的重新定性：这不是攻击，而是该实体的一次服务提供——它让我们更完整地领会极性，值得感谢。这个分析对吗？</div>
+    <div class="quote">
+      <p class="en">There is no correctness or incorrectness to your statement. It is an expression of a positively polarized and balanced view of negatively polarized actions which has the effect of debilitating the strength of the negatively polarized actions.</p>
+      <p class="zh">你的陈述没有对错可言：它是一种以正面极化且平衡的视角看待负面行动的表达——而这恰恰具有削弱负面行动力量的效果。</p>
+      <span class="src">—— Session 067 · (67.3)</span>
+    </div>
+    <div class="plain">Ra 不判对错，只点出这份心态的实际效力：正面、平衡的视角本身，就是削弱负面行动的力量。</div>
+    <div class="case"><b>把恶评写进致谢：</b>一位作家把网络黑子的多年攻击写进新书致谢——「感谢你们让我学会不回应」。这份平静的致谢让攻击失去了着力点，对应 Ra 说的「削弱负面行动的力量」。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ ③ 来路与信标 ============ -->
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>来路与信标：这位实体是谁、为何盯上这个小组</h2></div>
+  <p class="sec-lead">摸清了攻击的「行情」，发问者开始查「户口」：这位一直随行的实体从哪里来、用什么身体来到这里、又为什么偏偏盯上一个通灵小组？他先自陈一整套猜想再求证，Ra 逐条确认。</p>
+
+  <div class="card">
+    <h3>发问者的猜想：大体正确</h3>
+    <div class="q">发问者自陈一长串猜想求证：该实体是猎户集团成员、第五密度、凭心智训练把（部分）意识投射到我们的坐标、用的可能是构成其心/身/灵复合体的七个身体之一。</div>
+    <div class="quote">
+      <p class="en">I am guessing that this particular entity is a member of the Orion Confederation and is possibly, or possibly not, incarnate in a body of the appropriate density, which I assume is the fifth…</p>
+      <p class="zh">我猜测这个特定实体是猎户集团的成员，可能——也可能没有——化生于适当密度的身体，我假设是第五密度……</p>
+      <span class="src">—— Session 067 · (67.4)</span>
+    </div>
+    <div class="plain">Ra 的评语只有一句：「该陈述大体正确。」随后发问者追问：就颜色而言，他用的是哪个身体？</div>
+    <div class="case"><b>七件外套：</b>「可能是七个身体之一」——像一个人备着七套出席不同场合的衣服：西装上班、泳装下水，出场的是衣服，作主的始终是本人。</div>
+  </div>
+
+  <div class="card">
+    <h3>用哪个身体来：留在原地的肉身与出发的光体</h3>
+    <div class="q">就颜色（能量中心）而言，这位实体用哪个身体旅行到我们这里？Ra 提醒这是个跨维度的问题——不仅跨空间/时间与时间/空间，还跨密度。</div>
+    <div class="quote">
+      <p class="en">The time/space light or fifth-density body is used while the space/time fifth-density body remains in fifth density. The assumption that the consciousness is projected thereby is correct.</p>
+      <p class="zh">被使用的是时间/空间的光体、即第五密度身体，而空间/时间的第五密度身体仍留在第五密度——意识由此投射，这个假设是正确的。</p>
+      <span class="src">—— Session 067 · (67.6)</span>
+    </div>
+    <div class="plain">「人」没挪窝，来的是一束带着他意志的意识：肉身留在第五密度，来我们这里的是时间/空间一侧的光体。</div>
+    <div class="case"><b>远程会话：</b>人坐在总部办公室，登录的会话却出现在另一座城市的会议室——屏幕那头作主的仍是本人，但「到场」的只是一段带着他权限与意图的连接。</div>
+  </div>
+
+  <div class="card">
+    <h3>信标：小组的极化为何招来捕食者</h3>
+    <div class="q">发问者问：第五密度实体是不是被我们小组的极化吸引，如同被信标指引？Ra 确认其实质正确，随即给出攻击的「标准剧本」。</div>
+    <div class="quote">
+      <p class="en">The normal gambit of such fourth-density attack is the tempting of the entity or group of entities away from total polarization towards service to others and toward the aggrandizement of self, or of social organizations with which the self identifies.</p>
+      <p class="zh">这类第四密度攻击的惯常策略，是引诱实体或实体群体偏离对服务他人的完全极化，转向自我膨胀，或转向自我所认同的社会组织的膨胀。</p>
+      <span class="src">—— Session 067 · (67.7)</span>
+    </div>
+    <div class="plain">通常出手的是第五密度猎户领导者的第四密度仆从，手段是诱惑；而本小组每个成员都被给过全方位的诱惑、都拒绝了——于是一位监督「失谐过程」的第五密度实体决定用仪式魔法终结小组，最脆弱的目标是器皿（因投生前的身体变貌）。</div>
+    <div class="case"><b>灯下必聚虫：</b>小区里唯一亮灯的窗口必然招虫——小组的极化之光是信标，吸引来的不只有盟友，也有捕食者。</div>
+    <div class="case"><b>被拒绝的高薪挖角：</b>团队每个成员都收到过猎头的高价邀请——「别再互相服务了，来为我打工」，全员拒绝；于是对方升级手段、亲自下场——对应仆从的诱惑失败后，第五密度监督者的登场。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ ④ 服务的悖论 ============ -->
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>服务的悖论：如何毫无矛盾地服务太一造物主</h2></div>
+  <p class="sec-lead">这是本集义理的心脏。发问者的推理很认真：既然这位第五密度实体也是造物主，小组就该设法服务它——可它的「渴望」与小组的使命恰恰相反。同一个造物主，两个相反的请求，这个矛盾能解吗？Ra 说：完全可以。</p>
+
+  <div class="card">
+    <h3>该实体的两个渴望</h3>
+    <div class="q">发问者问：既然认得这位实体也是造物主，我们该设法服务它——除了停止接收与传播 Ra 的信息之外，它还有什么渴望？</div>
+    <div class="quote">
+      <p class="en">This entity has two desires. The first, and foremost, is to, shall we say, misplace one or more of this group in a negative orientation so that it may choose to be of service along the path of service to self.</p>
+      <p class="zh">这个实体有两个渴望。首要的一个，是把小组中的一个或多个成员「错置」进负面导向，使其选择沿服务自我的道路去服务。</p>
+      <span class="src">—— Session 067 · (67.8)</span>
+    </div>
+    <div class="plain">在首要渴望之前还有一步：先在心/身/灵复合体处于可控配置时，终结小组一员身体复合体的存活力——这份「服务」的报价单，读起来并不像一份礼物。</div>
+    <div class="case"><b>「帮你升级账户」的邮件：</b>诈骗邮件声称替你升级安全设置，真实目标却是先拿到账号控制权、再把你的资产「错置」进它的口袋——先终止存活力、再错置导向，正是那两步渴望的顺序。</div>
+  </div>
+
+  <div class="card">
+    <h3>小组能给的最好回应：爱与光</h3>
+    <div class="q">面对这样一个「服务者」，小组能做什么？Ra 给出的建议出乎意料地简单。</div>
+    <div class="quote">
+      <p class="en">May we say that although we of Ra have limited understanding, it is our belief that sending this entity love and light, which each of the group is doing, is the most helpful catalyst which the group may offer to this entity.</p>
+      <p class="zh">我们可以说：尽管我们 Ra 的理解有限，但我们相信，向该实体发送爱与光——小组每位成员正在做的——是小组能提供给它的最有帮助的催化剂。</p>
+      <span class="src">—— Session 067 · (67.8)</span>
+    </div>
+    <div class="plain">这份爱的奉献已把该实体「尽可能中和」；它的持续在场，是两种极性各自能向对方提供的服务的可以理解的限度。(67.9)</div>
+    <div class="case"><b>说「祝您顺利」的前台：</b>被无理取闹者纠缠多年的前台，坚持每次都平静道一声「祝您顺利」——对方后来不再来了；爱与光「尽可能中和」了攻击，正是 (67.9) 的写照。</div>
+  </div>
+
+  <div class="card">
+    <h3>悖论与它的解：无穷的请求，一个频率</h3>
+    <div class="q">发问者把矛盾摆上台面：这个密度里受服务者请求 Ra 的信息（他刚接到一个电话请求），另一个密度却请求不要传播——造物主要求这个小组做两件看似相反的事，能解决吗？</div>
+    <div class="quote">
+      <p class="en">Consider, if you will, that you have no ability not to serve the Creator since all is the Creator.</p>
+      <p class="zh">请这样想：你们没有能力不服务造物主，因为一切皆是造物主。</p>
+      <span class="src">—— Session 067 · (67.11)</span>
+    </div>
+    <div class="plain">Ra 的拆解：矛盾的请求并非只有两个，而是无穷阵列——全部是同一个声音；你们在某个频率上与之共振，这频率决定你们的服务选择（小组与 Ra 的振动模式兼容，这是自由意志的功能）。对不共振者，能做的是祝愿爱、光、和平与喜悦，仅此而已；献出器皿的生命不会是「真正的服务」。</div>
+    <div class="quote">
+      <p class="en">Thus you may see, in many cases, the loving balance being achieved: the love being offered, light being sent, and the service of the service-to-self oriented entity gratefully acknowledged while being rejected as not being useful in your journey at this time. Thus you serve One Creator without paradox.</p>
+      <p class="zh">于是你们可以在许多情况中看到爱的平衡得以达成：爱被奉献，光被送出，服务自我导向实体的服务被感激地承认、又被拒绝，因为它在你们此刻的旅程中没有用处——如此，你们毫无矛盾地服务太一造物主。</p>
+      <span class="src">—— Session 067 · (67.11)</span>
+    </div>
+    <div class="case"><b>同一家餐厅的两张差评：</b>有人嫌太辣、有人嫌太淡——餐厅不必同时满足两者，只需做好自己的味道；面对「无穷矛盾的请求」，小组也只按自己的频率回应。</div>
+    <div class="case"><b>只有一个旋钮的收音机：</b>空气中有无数电台同时在播、内容互相矛盾——你只能调到一个频率；「这全部是同一个声音，你们在某个频率上与之共振」说的正是这种选择。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ ⑤ 光之魔法 ============ -->
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>光之魔法：眩晕是怎么制造出来的</h2></div>
+  <p class="sec-lead">义理讲完，回到最具体的症状：器皿的眩晕。Ra 顺着发问者的追问，把一次「心灵攻击」拆解成三件套——旧伤、无载具之光、暗示——并顺手纠正了一个对「光的符号学」的误解。</p>
+
+  <div class="card">
+    <h3>攻击借什么下手：无法制造的弱点，只能利用的旧伤</h3>
+    <div class="q">该实体能对器皿制造眩晕效应，请描述这种服务的机制。Ra 的答案从器皿的幼年说起。</div>
+    <div class="quote">
+      <p class="en">The scars of these distortions remain, and, indeed, that which you call the sinus system remains distorted. Thus the entity works with these distortions to produce a loss of the balance and a slight lack of ability to use the optic apparatus.</p>
+      <p class="zh">这些变貌的疤痕仍在，你们所称的鼻窦系统也仍然处于变貌状态——该实体便利用这些变貌，制造平衡感的丧失与视觉器官使用能力的轻微缺损。</p>
+      <span class="src">—— Session 067 · (67.12)</span>
+    </div>
+    <div class="plain">攻击无法凭空制造症状，只能借既有的疤痕放大——耳部旧伤与鼻窦变貌就是它抓住的把手。</div>
+    <div class="case"><b>试出旧密保问题的黑客：</b>系统防火墙攻不动，却试出了你十年前设的密保问题——攻击者造不出弱点，只能利用既有疤痕，对应 (67.12) 的机制。</div>
+    <div class="case"><b>收银台旁的零食：</b>超市把你最爱的零食摆在收银台旁，专等你又饿又累时结账——「把先天倾向的利用最大化」的商业版；该实体加重眩晕，正是盼着她摔倒或走到车流前。(67.13)</div>
+  </div>
+
+  <div class="card">
+    <h3>无载具之光与暗示的机制</h3>
+    <div class="q">从哲学或魔法的观点看，他凭什么能利用这些特定的身体变貌？Ra 揭出这种魔法运作的「巨大优点」。</div>
+    <div class="quote">
+      <p class="en">This is the great virtue of the magical working whereby consciousness is sent forth, essentially without vehicle, as light. The light would work instantly upon an untuned individual by suggestion; that is, the stepping out in front of the traffic because the suggestion is that there is no traffic. This entity, as each in this group, is enough disciplined in the ways of love and light that it is not suggestible to any great extent.</p>
+      <p class="zh">这正是魔法运作的巨大优点：意识本质上不带载具、作为光被发送出去。光会借暗示即时作用于一个未调谐的个体——也就是「走到车流前，因为暗示说那里没有车」。而这个实体，如同小组中的每一位，在爱与光之道上足够训练有素，不会在很大程度上被暗示。</p>
+      <span class="src">—— Session 067 · (67.13)</span>
+    </div>
+    <div class="plain">不带载具的光能穿过隔离网、躲开守护者的侦测；它对「未调谐」的人是致命的暗示，对训练有素的人却近乎无效——于是攻击只剩下借旧伤消耗这一条路。</div>
+    <div class="case"><b>清醒的人不会照做：</b>深夜街上有人朝路人喊「前面没车，快过去」——多数人不会听；但极度困倦、意识涣散的人可能照做——「光会即时作用于未调谐个体」的暗示机制，成立与否取决于接收者的调谐。</div>
+  </div>
+
+  <div class="card">
+    <h3>符号、光与一个纠正：载具不是符号拼出来的</h3>
+    <div class="q">发问者顺着「观想符号」追问：那么该实体是把光配置成符号——一种我们所说的物理存在——对吗？Ra 纠正了这个前提。（此前 Ra 已确认：这些符号确实存在，持续使用会带有力量与充能，因为在第五密度，光像铅笔的字迹一样是可见的工具。）</div>
+    <div class="quote">
+      <p class="en">The light is used to create a sufficient purity of environment for the entity to place its consciousness in a carefully created light vehicle which then uses the tools of light to do its working. The will and presence are those of the entity doing the working.</p>
+      <p class="zh">光被用来创造一个足够纯净的环境，使该实体得以把意识置入一个精心创造的光之载具中，再由载具使用光的工具进行工作——而意志与临在，属于进行工作的实体本身。</p>
+      <span class="src">—— Session 067 · (67.15)</span>
+    </div>
+    <div class="plain">光的符号可被观想、可被充能，但光之载具不是符号拼成的「分身」——做事的意志始终是那位实体自己的。</div>
+    <div class="case"><b>绿幕演播室：</b>主持人站在绿幕前，身后的场景由灯光与抠像生成——先造出纯净的工作环境，再「穿上」载具开工；屏幕里的形象千变万化，里面的意志是同一位真人。</div>
+  </div>
+
+  <div class="card">
+    <h3>条件模拟器：心灵攻击何时得逞</h3>
+    <p>把 Ra 在本集给出的线索拼成三个开关，拨一拨，看看攻击的成败取决于什么。</p>
+    <div class="cond-row"><div class="name">目标存在可利用的弱点<small>耳部旧伤、疼痛削弱身体能量</small></div><label class="switch"><input type="checkbox" id="atkWeak" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">目标未受爱与光的训练<small>未调谐者会被暗示即时左右</small></div><label class="switch"><input type="checkbox" id="atkTrain" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><div class="name">目标对攻击毫无觉察<small>觉察使渗透性大大降低</small></div><label class="switch"><input type="checkbox" id="atkAware" checked><span class="slider"></span></label></div>
+    <div id="condResult">…</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ ⑥ 窗口效应 ============ -->
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>窗口效应：一本旧书、一次穿透与第一变貌的平衡</h2></div>
+  <p class="sec-lead">话题先拐进一段个人往事——小组约十二年前合写的一本书，再拐回攻击的路线问题：他穿透隔离走的是窗口，还是魔法能力？Ra 的回答把这件「倒霉事」放进第一变貌（自由意志法则）的大框架里，并比发问者走得更远。</p>
+
+  <div class="card">
+    <h3>十二年前的一本书与两个角色的训练量</h3>
+    <div class="q">发问者问 Ra 是否熟悉他们约十二年前合写的《埃斯梅拉达·斯威特沃特的受难》，尤其是其中把实体带到地球的驱逐仪式；又问书里对「怎么做」的描写有没有不准确之处。</div>
+    <div class="quote">
+      <p class="en">The incorrectnesses occurred only due to the difficulty an author would have in describing the length of training necessary to enable the ones known in that particular writing as Theodore and Pablo in the necessary disciplines.</p>
+      <p class="zh">不准确之处只在于：作者很难描述出——要让书中那两位「西奥多与巴勃罗」具备必要的修炼，所需的训练长度有多久。</p>
+      <span class="src">—— Session 067 · (67.17)</span>
+    </div>
+    <div class="plain">书里缺的不是知识，而是「练了多久」；而且那本书整体上确实是一个链接——连着他们后来遇到的许多人与经历的许多事（其中时间机制的困惑，发问者留到以后的集会再问）。(67.16-67.19)</div>
+    <div class="case"><b>旧作是名片：</b>作家十年前一本冷门的小说，多年后被同好逐个找上门来——那本书成了链接人与事的「频段」，对应 (67.18)「这本书整体上是链接」。</div>
+  </div>
+
+  <div class="card">
+    <h3>走的是窗口：随机窗口效应的对称性</h3>
+    <div class="q">第五密度实体穿透隔离来到这里，靠的是某个「窗口」，还是他的魔法能力？这个问题直接指向第一变貌。</div>
+    <div class="quote">
+      <p class="en">This was done through a very slight window which less magically oriented entities or groups could not have used to advantage.</p>
+      <p class="zh">这是通过一个非常微小的窗口完成的——魔法导向较弱的实体或群体，无法利用这个窗口占到便宜。</p>
+      <span class="src">—— Session 067 · (67.19)</span>
+    </div>
+    <div class="plain">发问者追问：这是不是随机窗口效应的一部分——我们承受的平衡，与行星整体因窗口效应承受的相同？Ra 确认「完全正确」：随着行星接受更多高度进化的正面实体或群体及其信息，同样的机会也必须提供给类似智慧的负面导向实体或群体。(67.20)</div>
+    <div class="case"><b>一视同仁的快速通道：</b>海关对高信誉旅客随机开放快速通道，但规则对合格者不分立场——正面实体获得通讯机会，同样智慧的负面实体也获得对等机会，这正是 (67.20) 的对称性。</div>
+    <div class="case"><b>不设门槛的论坛：</b>公开论坛没法只让好人发帖——开放本身必然双向；这正是不设防的自由意志的代价与智慧。</div>
+  </div>
+
+  <div class="card">
+    <h3>Ra 走得更远：把攻击读作密集的机会</h3>
+    <div class="q">发问者说出自己的个人观点：我们在这种看似的困难中体验到的，是第一变貌之智慧的效应，因此必须完全接受所经验之事的智慧——这与 Ra 的观点一致吗？</div>
+    <div class="quote">
+      <p class="en">This is an intensive opportunity in that it is quite markèd in its effects, both actual and potential, and as it affects the instrument’s distortions towards pain and other difficulties, such as the dizziness, it enables the instrument to continuously choose to serve others and to serve the Creator.</p>
+      <p class="zh">这是一个密集的机会：它的效果——无论实际还是潜在——都相当显著；当它影响器皿朝向疼痛与眩晕等困难的变貌时，它使器皿能够持续地选择服务他人、服务造物主。</p>
+      <span class="src">—— Session 067 · (67.21)</span>
+    </div>
+    <div class="plain">Ra 说「我们或许会走得更远」：攻击也让小组每位成员在困难中表达支持、展示无限造物主的爱与光，并一次又一次地选择继续做这信息的信使——机会与困难同样显著。</div>
+    <div class="case"><b>带伤上阵的老将：</b>一场恶战让老将旧伤复发，却也逼出全队的救援与配合——「攻击使器皿能持续选择服务，也让小组在困难中表达支持」，Ra 把困难读作密集的机会。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ ⑦ 三份服务 ============ -->
+<section class="chapter" id="s7">
+  <div class="sec-head"><span class="num">07</span><h2>三份不同的「服务」：拒答与放手中的幽默</h2></div>
+  <p class="sec-lead">攻击并不只对着器皿一个人。Ra 逐一交代三个人各自「被提供」了什么、各自如何回应；随后是一声干脆的拒答、一段关于「向相反极性提供服务」的劝导——幽默是这一章的关键词。</p>
+
+  <div class="card">
+    <h3>三个人，三份被提供的服务</h3>
+    <div class="q">发问者确认：这场攻击也提供给他和 Jim 吗？——是的。可他本人毫无感觉，那么服务是怎么「提供」给每个人的？(67.22-67.23)</div>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">发问者</span><h4>怀疑自我</h4><p><b>被提供的：</b>怀疑自我、为各种个人性质的变貌灰心。<b>他的回应：</b>没有选用这些机会；猎户实体也基本失去了持续监视他的兴趣。</p></div>
+      <div class="yuan-card"><span class="y-tag">抄写员</span><h4>心智/情感的强化</h4><p><b>被提供的：</b>大量强化心智/情感变貌、及其与身体对应部分连接矩阵的机会。<b>他的回应：</b>仍在持续监视之下，但「随着觉察，渗透性已大大降低」。</p></div>
+      <div class="yuan-card"><span class="y-tag">器皿</span><h4>眩晕与失衡</h4><p><b>被提供的：</b>借耳部旧伤与鼻窦变貌制造失衡、视觉受损。<b>她的回应：</b>意志坚强、不生恐惧、适应良好——攻击未成功，但有消耗。她是「薄弱环节」，因为投生中有超出她控制的因素。(67.23)</p></div>
+    </div>
+    <div class="plain">同一场攻击按每个人的薄弱处选择入口；器皿之所以被「重点照顾」，不是因为谁的罪过，只是因为薄弱环节在那里。</div>
+    <div class="case"><b>同一间办公室的三种压力：</b>裁员传闻下，爱自我怀疑的人被「我不行」纠缠，敏感的人被情绪起伏折磨，身体弱的人直接病倒——同一场风暴按各自的薄弱处选择入口，对应三份不同的「服务」。</div>
+    <div class="case"><b>觉察后的脱敏：</b>有人发现自己一开社交软件就情绪失控，于是每次打开前先深呼吸三秒——「随着该实体意识到这些攻击，它对它们的可渗透性已大大降低」，抄写员的处境正是如此。</div>
+  </div>
+
+  <div class="card">
+    <h3>一声拒答：早年的困难为什么不讲</h3>
+    <div class="q">发问者先问：在第一变貌的范围内，能否告诉我们器皿早年为何经历那么多身体困难？——Ra 答「这是正确的」，即确认：回答就会打破困惑之道。他再追问一次，Ra 才把话挑明。(67.24-67.25)</div>
+    <div class="quote">
+      <p class="en">It is not appropriate for such answers to be laid out as a table spread for dinner. It is appropriate that the complexes of opportunity involved be contemplated.</p>
+      <p class="zh">把这类答案像摆上餐桌的菜肴一样摊开，并不合适；合适的是，对其中所涉及的机会复合体加以沉思。</p>
+      <span class="src">—— Session 067 · (67.25)</span>
+    </div>
+    <div class="plain">拒答不是信息缺口，而是自由意志法则的行使：每个人的功课属于本人，旁观者拿到「答案」也无济于事。</div>
+    <div class="case"><b>不代读的课程表：</b>同学问老师「她为什么被分到这么难的一门课」，老师说「这门课是她自己的选择——你该想的是你自己的课表」；困惑之道保护的，是每个人功课的完整性。</div>
+  </div>
+
+  <div class="card">
+    <h3>向相反极性提供服务：幽默与放手</h3>
+    <div class="q">发问者仍想「为它做点什么」：若它将来提出我们能力范围内的请求，我们至少会考虑——这样安排可以吗？Ra 说：我们没能让你们看清你们的服务与它想要的服务之间的区别。(67.26)</div>
+    <div class="quote">
+      <p class="en">There is great humor in your attempt to be of polarized service to the opposite polarity.</p>
+      <p class="zh">你们试图向相反极性提供极化的服务——这其中有着巨大的幽默。</p>
+      <span class="src">—— Session 067 · (67.26)</span>
+    </div>
+    <div class="plain">你们认为是服务的东西，它认为是非服务：爱与光让它失去极性、需要重组；而若允许它以「移除器皿」来服务，你们又不会觉得那是服务——两种服务相互提供、相互拒绝，自由意志得以保存，各自走自己的路。</div>
+    <div class="quote">
+      <p class="en">Glory in the strength of your polarization, and allow others of opposite polarity to similarly do so, seeing the great humor of this polarity and its complications in view of the unification in sixth density of these two paths.</p>
+      <p class="zh">以你们极化的力量为荣，也允许相反极性的其他实体同样如此——看着这极性及其种种纠葛的巨大幽默吧，要知道这两条道路在第六密度终将统一。</p>
+      <span class="src">—— Session 067 · (67.27)</span>
+    </div>
+    <div class="case"><b>给素食者寄牛排：</b>你满心诚意给素食的朋友寄去顶级牛排，对方哭笑不得——「你们认为是服务的东西，该实体却认为是非服务」；磁铁会吸引或排斥，各按各的极性。(67.27)</div>
+    <div class="case"><b>劝和的旁观者：</b>两位棋手对弈正酣，旁观者非要拉双方「握手言和」——他没看到，这场对局正是双方要的体验；「允许相反极性同样以自己的极化为荣」，是对局得以继续的前提。</div>
+  </div>
+
+  <div class="card">
+    <h3>归类练习：辨认 Ra 的回应方式</h3>
+    <p>这一集里 Ra 展示了多种回应姿态——直答、纠正前提、拒答守护、幽默点破。给下面每个问题贴上 Ra 实际采用的那一种：</p>
+    <div id="sorterArea"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<!-- ============ ⑧ 原型心智与收官 ============ -->
+<section class="chapter" id="s8">
+  <div class="sec-head"><span class="num">08</span><h2>原型心智与收官：一段长陈述、一个纠正、一句告别</h2></div>
+  <p class="sec-lead">集会最后，发问者读出一段准备已久的关于原型心智的长陈述，请 Ra 评论对错。Ra 开了个头，只完成一处纠正，就因器皿能量耗竭而收束——并把答案正式预约到下一次。随后是惯常的告别叮嘱。</p>
+
+  <div class="card">
+    <h3>长陈述与能量告急</h3>
+    <div class="q">发问者一口气读出六张「原型对应表」：父亲—主动如太阳，母亲—接纳如大地，浪子/愚者—偏离合一的每个实体，魔鬼—催化剂的提供者，魔法师/圣者/医者/精通者—高我，死亡—从黄光体到绿光体的过渡；并主张教导经由直觉进行、灵性作穿梭器，按层级接触潜意识、行星心智、指导灵、高我、原型心智、宇宙心智。(67.28)</div>
+    <div class="plain">Ra 先坦白处境：器皿因身体水平耗竭，本次集会大部分时间都在使用转移的能量——这个「相当复杂而有趣」的回答不要期望在本集完成，未回应的部分请在未来集会中再问；关于是否下次先答，「能量一如既往被分配，选择一如既往是你们的」。(67.28-67.29)</div>
+    <div class="case"><b>超时的主讲嘉宾：</b>演讲正到精彩处，主办方举牌提醒「时间到」——再好的回答也得下台，未尽的题目预约下一场；Ra 的处理是同一个职业动作。</div>
+    <div class="case"><b>电量见底的手机：</b>身体能量耗竭时靠「转移的能量」续命——如同手机低电量时接上充电宝，能撑，但撑不久；Ra 因此预先声明「不要期望完成它」。</div>
+  </div>
+
+  <div class="card">
+    <h3>第一个纠正：穿梭器的位置放错了</h3>
+    <div class="q">Ra 只来得及处理第一项：发问者主张「灵性在心智的根与干之间充当穿梭器」——Ra 直说这是误解，并请他自己再想想灵性的功能。</div>
+    <div class="quote">
+      <p class="en">Perhaps the first item which we shall address is the concept of the spirit used as a shuttle between the roots and the trunk of mind. This is a misapprehension…</p>
+      <p class="zh">也许我们要处理的第一项，就是「灵性在心智的根与干之间被用作穿梭器」这个概念——这是一个误解……</p>
+      <span class="src">—— Session 067 · (67.30)</span>
+    </div>
+    <div class="plain">理由是：与心智工作时，我们仍在同一个复合体之内，尚未尝试穿透智能无限——把灵性安放在「根与干之间」，位置就放错了。</div>
+    <div class="case"><b>被写成「决策者」的传译员：</b>会议纪要把传译员写成「决策核心」——灵性是穿梭、传译的角色，把它说成心智结构中的枢纽，就是越界描述；Ra 请发问者进一步思考灵性的功能。</div>
+  </div>
+
+  <div class="card">
+    <h3>原型恒定，收获各异：愚者未被看见的一面</h3>
+    <div class="q">说原型是太一无限造物主的部分或其面容的面向——Ra 评「说得很好」，随即补上更关键的一层。</div>
+    <div class="quote">
+      <p class="en">It is, however, far better to realize that the archetypes, while constant in the complex of generative energies offered, do not give the same yield of these complexes to any two seekers.</p>
+      <p class="zh">然而，更好的理解是：原型虽然在所提供的生成能量复合体中恒定，却不对任何两个寻求者给出相同的产出。</p>
+      <span class="src">—— Session 067 · (67.30)</span>
+    </div>
+    <div class="plain">每个寻求者体验到的，都是原型复合体中对自己最重要的特征；以愚者为例——它的重要面向是「信念」，不顾接下来会发生什么走入空间，看似愚蠢，却是灵性初学者的特征；这一面向未被看到，Ra 请发问者沉思。随后 Ra 正式要求：该问题于下次集会重述。(67.30)</div>
+    <div class="case"><b>同一部电影的不同泪点：</b>一百个人看同一部电影，哭的桥段各不相同——原型恒定，产出却因人而异，对应「不对任何两个寻求者给出相同的产出」。</div>
+    <div class="case"><b>押上全部积蓄的新手：</b>新手把全部积蓄投入看好的事业，旁人笑他傻——「不顾接下来会发生什么走入空间」的信念面向，正是灵性初学者（spiritual neophyte）的特征。</div>
+  </div>
+
+  <div class="card">
+    <h3>收官：在和谐、爱与光中继续</h3>
+    <div class="q">最后照例问一句：有没有什么能让我们做得更好——让器皿更舒适、让接触更好？Ra 的回答不是再添一道工序，而是一句叮嘱。(67.31)</div>
+    <div class="quote">
+      <p class="en">Continue, my friends, in the strength of harmony, love, and light. All is well. The alignments are appreciated for their careful placement.</p>
+      <p class="zh">继续前进吧，我的朋友们，在和谐、爱与光的力量之中。一切都好。这些校准因其摆放的精心而受到赞赏。</p>
+      <span class="src">—— Session 067 · (67.31)</span>
+    </div>
+    <div class="plain">对「还能做什么」的答案是：保持和谐，继续前进——力量的来源被点名为和谐、爱与光，而非任何新增的技巧。</div>
+    <div class="case"><b>演出成功后的指挥：</b>合唱团演出成功，指挥不说「你们可以松口气了」，而说「在和谐中继续」——把力量的来源点名为和谐本身，与 Ra 的收尾叮嘱同构。</div>
+    <div class="case"><b>上线当日的一句「都很好」：</b>系统上线当日状况不断，负责人散会前只说「一切都好，设备摆放得很用心」——先肯定细致，再嘱托继续，与 Ra 的告别顺序如出一辙。</div>
+  </div>
+
+  <div class="saying">
+    <p class="en">I leave you now, my friends, in the glory of the love and the light of the Infinite Creator. Go forth, then, rejoicing in the power and the peace of the One Infinite Creator.</p>
+    <p class="zh">我现在离开你们了，我的朋友们，在无限造物主爱与光的荣耀之中。那么，向前去吧，在太一无限造物主的力量与平安中欢欣鼓舞。</p>
+    <span class="src">—— Session 067 · (67.31)</span>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 067（<code>split/Ra_Session_067.md</code>）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra067-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+/* ===== 术语卡翻面 ===== */
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+/* ===== 问答脉络推进器：本章地图 ===== */
+initStepper('mapTrack','mapDetail','mapPrev','mapNext',[
+  {t:'器皿状态',d:'<span class="qa-q">问：器皿今天状况如何？</span><b>答：</b>生命能更接近她的常态，身体能量却稍弱；心灵攻击成分在这个连接点异常强烈——本集的主题就此登场。(67.1)'},
+  {t:'攻击为何此刻强',d:'<span class="qa-q">问：所谓「心灵攻击成分」是什么？为何此刻格外强？</span><b>答：</b>只要这项服务继续，攻击就处于恒定水平；强度起伏只因弱点呈现的机会——器皿与疼痛共处已久，身体能量被累积削弱。(67.2)'},
+  {t:'「感谢攻击」',d:'<span class="qa-q">问：能否把这场攻击看作该实体的一次服务，并向它致谢？</span><b>答：</b>这个说法没有对错——它是用正面极化的平衡视角看待负面行动，效果恰恰是削弱负面行动的力量。(67.3)'},
+  {t:'实体从哪里来',d:'<span class="qa-q">问：他是不是猎户集团的第五密度成员、靠心智训练投射意识过来？</span><b>答：</b>猜想大体正确；他用时间/空间的光体前来，空间/时间的第五密度身体留在第五密度。(67.4-67.6)'},
+  {t:'小组是信标',d:'<span class="qa-q">问：小组的极化是不是像信标一样吸引了它？</span><b>答：</b>实质正确，但它的努力只是勉强做出的——通常出手的是第四密度仆从、靠诱惑偏离正道；本组全员拒绝了诱惑，于是第五密度监督者决定用仪式魔法终结小组。(67.7)'},
+  {t:'服务的悖论',d:'<span class="qa-q">问：同一造物主要求我们传播信息、又（借该实体）要求停止，如何两全？</span><b>答：</b>矛盾的请求有无穷之多，全部是同一个声音；你们在某个频率上与之共振，这频率决定你们的服务——如此服务太一造物主而无悖论。(67.8-67.11)'},
+  {t:'眩晕与光之魔法',d:'<span class="qa-q">问：眩晕是怎么制造出来的？</span><b>答：</b>该实体不带载具穿越隔离，借器皿耳部旧伤与鼻窦变貌制造失衡；光在第五密度是可见的工具，对训练有素者却难以得逞。(67.12-67.15)'},
+  {t:'窗口、旧书与平衡',d:'<span class="qa-q">问：他穿透隔离走的是窗口，还是魔法能力？</span><b>答：</b>一个非常微小的窗口——行星接受更进化的正面实体，就必须给同样智慧的负面实体对等机会；Ra 更进一步，把攻击读作密集的机会。(67.16-67.21)'},
+  {t:'三份服务与拒答',d:'<span class="qa-q">问：攻击也针对发问者和抄写员吗？还能为该实体做什么？</span><b>答：</b>三个人被提供的服务各不同；早年的身体困难属于困惑之道、不可摊开作答；向相反极性提供服务——看看其中的幽默，磁铁会吸引或排斥。(67.22-67.27)'},
+  {t:'原型心智与收束',d:'<span class="qa-q">问：（长陈述）原型心智是造物主各面向的呈现……</span><b>答：</b>答案只起了个头：「灵性是根与干之间的穿梭器」是误解；原型恒定，收获却因人而异——问题留待下次重述。(67.28-67.31)'}
+]);
+
+/* ===== 归类练习：辨认 Ra 的回应方式 ===== */
+initSorter('sorterArea',[
+  {a:'「该实体使用哪个身体旅行到我们这里？」',opts:['直答','纠正前提','拒答守护','幽默点破'],ans:'直答',exp:'跨维度的问题不好答，但 Ra 照直给出：时间/空间的光体前来，空间/时间的身体留在第五密度。(67.6)'},
+  {a:'「该实体把光配置成符号，就是我们所说的物理存在吗？」',opts:['直答','纠正前提','拒答守护','幽默点破'],ans:'纠正前提',exp:'Ra 直说这不对：光是营造足够纯净的环境，供意识进入精心创造的光之载具去工作。(67.15)'},
+  {a:'「器皿早年为何经历那么多身体困难？」',opts:['直答','纠正前提','拒答守护','幽默点破'],ans:'拒答守护',exp:'确认回答即打破困惑之道——答案不该像摆上餐桌一样摊开，合适的是沉思机会复合体。(67.24-67.25)'},
+  {a:'「我们还能为这位猎户实体做点什么？」',opts:['直答','纠正前提','拒答守护','幽默点破'],ans:'幽默点破',exp:'你们认为是服务的东西，它视为非服务；磁铁会吸引或排斥——先看到处境的幽默。(67.26-67.27)'},
+  {a:'「灵性是在心智的根与干之间来回的穿梭器吗？」',opts:['直答','纠正前提','拒答守护','幽默点破'],ans:'纠正前提',exp:'这是误解——与心智工作时仍在同一复合体内，尚未尝试穿透智能无限。(67.30)'}
+]);
+
+/* ===== 条件模拟器：心灵攻击何时得逞 ===== */
+function updateAttack(){
+  const weak=document.getElementById('atkWeak').checked;
+  const trained=document.getElementById('atkTrain').checked;
+  const aware=document.getElementById('atkAware').checked;
+  const box=document.getElementById('condResult');
+  let html='';
+  if(!weak){
+    html='没有可利用的弱点，机会就无从谈起——攻击强度的起伏「来自该实体在任何弱点中呈现的机会」；没有弱点呈现，冲击便无从加强。(67.2)';
+    box.classList.remove('fail');
+  }else if(!trained&&!aware){
+    html='危险区：可利用的弱点，加上未受训练与毫无觉察——对一个「未调谐」的个体，光的暗示会即时生效；这正是攻击最希望遇到的目标。(67.13)';
+    box.classList.add('fail');
+  }else if(!trained){
+    html='训练未足但心存觉察：抄写员的处境——监视仍在持续，但「随着该实体意识到这些攻击，它对它们的可渗透性已大大降低」。(67.23)';
+    box.classList.remove('fail');
+  }else if(!aware){
+    html='训练有素但未觉察：暗示难以奏效——器皿与小组「在爱与光之道上足够训练有素」，不会在很大程度上被暗示；但不觉察会让消耗悄悄累积。(67.13)';
+    box.classList.remove('fail');
+  }else{
+    html='本集的实际局面：弱点仍被利用（眩晕、失衡），却「未产生朝向恐惧的过度变貌」——攻击未成功，只留下一些消耗。(67.2)';
+    box.classList.remove('fail');
+  }
+  box.innerHTML=html;
+}
+['atkWeak','atkTrain','atkAware'].forEach(id=>{document.getElementById(id).addEventListener('change',updateAttack);});
+updateAttack();
+
+renderPath();
+</script>
+</body>
+</html>

@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 042 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 042 · 交互式学习模块</h1>
+  <p class="sub">这一集把上一集的「平衡」重新讲了一遍：平衡不是无情绪地旁观，而是被爱充满到不再需要回应；随后 Ra 给出注意力与信心这门唯一的编程技巧，并以父母与孩子的关系收尾。</p>
+  <div class="tagline">8 个主题 · 5 个学习步骤 · 28 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本集地图</a>
+<a href="#s2">② 平衡的真义</a>
+<a href="#s3">③ 被攻击时的回应</a>
+<a href="#s4">④ 悲悯与智慧</a>
+<a href="#s5">⑤ 压抑与自查</a>
+<a href="#s6">⑥ 注意力技巧</a>
+<a href="#s7">⑦ 启蒙体验</a>
+<a href="#s8">⑧ 收官·父母与孩子</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>三条主线（平衡纠偏 / 注意力技巧 / 亲子接纳）与一条留到下次的伏笔</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>修正对「平衡」的误解</b><span>从「无情绪地旁观」到「被爱充满」——看 Ra 如何纠正一段准备入书的陈述</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>读懂悲悯与智慧的分工</b><span>Ra 的第五密度功课，与非洲饥荒之问的一记纠正</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>学会自查能量中心</b><span>路标是思想与情绪，最后才是行为；分清压抑、表达与平衡</span></span></label></div>
+<div class="step-item" data-target="#s8"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>收官</b><span>启蒙体验为何不可重现、父母如何接纳孩子，与本集金句</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：这一集在讲什么</h2></div>
+  <p class="sec-lead">第 42 集（1981 年 3 月 22 日）紧接上一集的禁食与身体重新编程话题，却把镜头转向一个更日常的词——「平衡」。发问者带来一段准备随书出版的长陈述，Ra 借它把平衡的定义整个重讲了一遍；随后话题经过悲悯与智慧、能量中心自查、注意力练习与启蒙体验，最后落在父母与孩子的关系上。</p>
+
+  <div class="card">
+    <h3>本集的位置与三条主线</h3>
+    <div class="quote">
+      <p class="en">I greet you in the love and in the light of the One Infinite Creator.</p>
+      <p class="zh">我在太一无限造物主的爱与光中向你们致意。</p>
+      <span class="src">—— Session 042 · (42.0)</span>
+    </div>
+    <p><b>承接与收束：</b>本集两处回指上一次集会——Ra 曾说自己「在第五密度平衡第四密度的强烈悲悯」（42.6），以及「禁食催化剂与重新编程」（42.12）；本集则以「孩子不是可以被弹奏的乐器」的亲子教导收尾，并把牛只肢解之问留到下一次工作（42.21）。</p>
+    <p><b>三条主线：</b></p>
+    <p>① <b>平衡纠偏</b>（42.2-42.10）：平衡的目标不是管理情绪，而是「变得不为所动」；② <b>技巧</b>（42.11-42.15）：自查能量中心的路标，加上唯一的编程技巧——聚焦注意力；③ <b>修行生态</b>（42.16-42.20）：启蒙体验不可重现、正面极化者别独自修行、父母如何接纳孩子。</p>
+    <div class="case"><b>上集的线头：</b>上一集谈禁食如何为身体复合体重新编程；本集 (42.12) 发问者据此追问——若自我对催化剂的运作足够觉察，能否不经禁食、饮食等身体纪律就完成重新编程？Ra 的回答（聚焦注意力）成了本集后半的主角。</div>
+    <div class="case"><b>先看第 2 章的理由：</b>如果你曾被「修行要保持无情绪」这类说法打动，本集 (42.2) 正是对它的当面纠正——Ra 称之为「不正确的应用」。带着这个疑问往下读，本集的许多细节会各归其位。</div>
+  </div>
+
+  <div class="card">
+    <h3>问答脉络推进器：对话是怎么展开的</h3>
+    <p>从一段长陈述到一句「Adonai」，本集共 22 个问答块。按下面的顺序走一遍关键追问，再进入各章精读。</p>
+    <div class="flow-track" id="flowTrack1"></div>
+    <div class="flow-detail" id="flowDetail1"></div>
+    <div class="flow-ctrl"><button class="tri-btn" id="flowPrev1">← 上一步</button> <button class="tri-btn" id="flowNext1">下一步 →</button></div>
+  </div>
+
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">出版规则 · 器皿状态 · 改期</span></summary>
+  <div class="body">
+    <p><b>(42.1) 出版规则：</b>发问者想不读出长问题、让 Ra 直接作答并把问答照原样抄进书里；Ra 说明：若回答的是心智上请求的询问，该询问将不会被出版——发问者于是改为当堂快速朗读。</p>
+    <p><b>(42.20) 收尾告知：</b>Ra 宣布这是「本次工作的最后一个完整询问」——器皿的体力预算由 Ra 主动管理。</p>
+    <p><b>(42.21) 器皿状态与改期：</b>牛只肢解问题被留待另一次工作回应；Ra 说器皿状态良好，随后以爱与光告别。</p>
+  </div></details>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>平衡的真义：不是「管理情绪」，而是「变得不为所动」</h2></div>
+  <p class="sec-lead">发问者读出一段仔细准备的长陈述：他把平衡理解为「情绪流过而不停留，从而不被任何情境带动」，像客观观看者看电视电影。Ra 的回答出乎意料——这不是平衡练习的正确应用。</p>
+
+  <div class="card">
+    <h3>发问者的预设 vs Ra 的纠正</h3>
+    <div class="q">发问者的假设分三步：平衡的实体不被任何情境摆向正面或负面情绪；情绪被有意识地观察后顺畅流过、不留色彩；练平衡练习就能做到在任何情境中保持无情绪——像客观观看者看电视剧。这样理解对吗？</div>
+    <div class="quote">
+      <p class="en">The exercise of first experiencing feelings and then consciously discovering their antitheses within the being has as its objective not the smooth flow of feelings, both positive and negative, while remaining unswayed, but rather the objective of becoming unswayed.</p>
+      <p class="zh">那个「先体验感受、再有意识地在存有内发现其对立面」的练习，目标不是让正面与负面感受顺畅流动而同时不被带动——而是变得不被带动。</p>
+      <span class="src">—— Session 042 · (42.2)</span>
+    </div>
+    <div class="plain">平衡的终点不是「情绪管理做得好」，而是「情绪根本没被点着」——从管理反应，走到无需反应。</div>
+    <div class="case"><b>深夜刷手机：</b>你刷到一条令人愤怒的新闻，按学过的练习「让情绪流过身体、不保留色彩」，自觉做得很标准——Ra 会说：存有中仍被看见一个「回应」，你就仍在使用催化剂（42.2）。目标更简单也更难：变得不为所动。</div>
+  </div>
+
+  <div class="card">
+    <h3>为什么连「被观察到的回应」也算数</h3>
+    <div class="q">既然我已经不发作了，为什么「只是观察到了回应」仍算在使用催化剂？</div>
+    <div class="quote">
+      <p class="en">However, if there is seen in the being a response, even if it is simply observed, the entity is still using the catalyst for learn/teaching.</p>
+      <p class="zh">然而，只要存有中看得见一个回应——哪怕它仅仅是被观察到的——实体就仍在利用催化剂进行学习/教导。</p>
+      <span class="src">—— Session 042 · (42.2)</span>
+    </div>
+    <p>Ra 随后给出一个惊人的推论：催化剂是为了让这个密度的学习/教导而运作的；当催化剂不再被需要，<b>这个密度也不再被需要</b>。平衡练习的尽头不是毕业证书，而是毕业本身。</p>
+    <div class="case"><b>急诊室的老护士：</b>新人进抢救室会心跳加速，靠多年练习做到「情绪流过而不停留」；Ra 描述的终点在另一处——在她眼里，抢救室与茶水间不再是「需要不同情绪的两类房间」。</div>
+    <div class="quote">
+      <p class="en">This is not indifference or objectivity but a finely tuned compassion and love which sees all things as love.</p>
+      <p class="zh">这不是冷漠或客观，而是一种精细调谐的悲悯与爱——它把万物都看作爱。</p>
+      <span class="src">—— Session 042 · (42.2)</span>
+    </div>
+    <div class="case"><b>「客观观看者」这个比喻为何被退回：</b>发问者以「电视电影的客观观看者」自比，Ra 没有接受——观看者仍在看别人的故事、与画面保持距离；而真实的平衡者能成为体验性事件的共同造物主，因看见处处是爱而无需再回应（42.2）。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>被攻击时：回应是爱，且维持到底</h2></div>
+  <p class="sec-lead">发问者用一个类比继续检验刚才的结论：被动物攻击与被「另一个自我」攻击，反应有何不同？把两者都看作造物主并爱两者，就算平衡了吗？Ra 给出一串短而重的确认。</p>
+
+  <div class="card">
+    <h3>公牛与其他自我</h3>
+    <div class="q">误入围栏被公牛攻击——迅速躲开、不责怪、除恐惧外几乎没有情绪；被其他自我在「他的领地」攻击——情绪与身体反应都被激起。若我对两者都视之为造物主、爱之，并理解攻击出于对方的自由意志，就算正确地平衡了？</div>
+    <div class="quote">
+      <p class="en">However, the balanced entity will see in the seeming attack of an other-self the causes of this action which are, in most cases, of a more complex nature than the cause of the attack of the second-density bull, as was your example. Thus, this balanced entity would be open to many more opportunities for service to a third-density other-self.</p>
+      <p class="zh">然而，平衡的实体会在这个其他自我「表面的攻击」中看见该行动的原因——多数情况下，这原因比第二密度公牛攻击的原因复杂得多。因此，平衡的实体会向第三密度的其他自我敞开多得多的服务机会。</p>
+      <span class="src">—— Session 042 · (42.3)</span>
+    </div>
+    <div class="plain">看穿攻击背后复杂的原因，不是为了原谅，而是为了服务——每一次攻击都是一扇服务之门。</div>
+    <div class="case"><b>邻居的狗 vs 会上抢功的同事：</b>狗冲你狂吠，你侧身让开，不怪它也不难过——你理解那是天性与领地；同事当众攻击你，你却很难「让开」。Ra 的补充是：看见同事行为背后更复杂的原因（恐惧、自保、习惯），服务的机会就出现了。</div>
+    <div class="case"><b>「基本正确」之后：</b>Ra 确认发问者的框架（视之为造物主、爱之、理解自由意志），但补上「看见原因→敞开服务」这一笔——平衡不只是内在的定性，还向外打开行动。</div>
+  </div>
+
+  <div class="card">
+    <h3>完美平衡者的情绪：唯一的内容是爱</h3>
+    <div class="q">一个完美平衡的实体，被其他自我攻击时还会感到情绪吗？若攻击带来剧痛甚至死亡，这回应还要维持吗？</div>
+    <div class="quote">
+      <p class="en">This is correct. The response is love.</p>
+      <p class="zh">会感到——那个回应是爱。</p>
+      <span class="src">—— Session 042 · (42.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Balance is not indifference but rather the observer not blinded by any feelings of separation but rather fully imbued with love.</p>
+      <p class="zh">平衡不是冷漠，而是观察者不被任何分离感蒙蔽，而是完全充满爱。</p>
+      <span class="src">—— Session 042 · (42.5)</span>
+    </div>
+    <div class="plain">爱不是「没有情绪」，而是情绪的唯一内容；它没有止损点。</div>
+    <div class="case"><b>极限检验：</b>发问者问：即使攻击导致身体剧痛、甚至失去生命，这回应也要维持吗？Ra 说是——并称这是理解平衡法则的「首要之事」。这不是叫人主动找打，而是说爱的回应不设止损线。</div>
+    <div class="case"><b>对照日常：</b>地铁上被人踩了一脚，你的第一反应是「他不是故意的」还是「他没长眼」？平衡的方向是前者——看见对方处境的复杂成因，分离感松开，爱才有位置。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>悲悯与智慧：Ra 的第五密度功课与非洲饥荒</h2></div>
+  <p class="sec-lead">话题从个人扩到行星尺度：Ra 自己如何平衡第四密度的强烈悲悯？发问者接着以 1981 年的非洲饥荒发问——救助灾民与「让他们学习催化剂」哪个更平衡？Ra 给出一记干脆的纠正。</p>
+
+  <div class="card">
+    <h3>Ra 的第五密度功课：给悲悯装上智慧</h3>
+    <div class="q">上集 Ra 说自己「在第五密度花大量时间/空间平衡第四密度获得的强烈悲悯」——这对我们刚谈的平衡意味着什么？</div>
+    <div class="quote">
+      <p class="en">This compassion is folly when seen through the eyes of wisdom. It is the salvation of third density but creates a mismatch in the ultimate balance of the entity.</p>
+      <p class="zh">这种悲悯透过智慧之眼来看是愚蠢；它是第三密度的救赎，却在实体的终极平衡中造成一种不匹配。</p>
+      <span class="src">—— Session 042 · (42.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">We spent much time/space in contemplation of those ways of the Creator which imbue love with wisdom.</p>
+      <p class="zh">我们花了大量时间/空间，沉思造物主那些把智慧注入爱的方式。</p>
+      <span class="src">—— Session 042 · (42.6)</span>
+    </div>
+    <div class="plain">悲悯让人冲上去，智慧让人看得准——两者都要有，先悲悯，后智慧。</div>
+    <div class="case"><b>Ra 自己的账单：</b>作为第四密度的社会记忆复合体，Ra 曾悲悯到「为帮助其他自我而走向殉道」；达成第五密度收割后才发现这种不打折的悲悯在效力上有缺陷——这是用整个文明的时间付的学费。</div>
+    <div class="case"><b>今天的对照：</b>见人就捐、有求必应的老好人，和懂得「授人以渔」的公益组织——后者不是不爱，而是让爱多了一层「怎么给才真的有用」的智慧。</div>
+  </div>
+
+  <div class="card">
+    <h3>非洲饥荒之问：先喂饱，再谈精炼</h3>
+    <div class="q">许多实体无私地给饥饿者送食物、送药品——这创造绿芒（第四密度）式的极化；是否「提供学习」比「满足身体需求」更平衡？</div>
+    <div class="quote">
+      <p class="en">To a mind/body/spirit complex which is starving, the appropriate response is the feeding of the body. You may extrapolate from this.</p>
+      <p class="zh">对一个正在挨饿的心/身/灵复合体，适当的回应就是喂养身体。你可以由此推演。</p>
+      <span class="src">—— Session 042 · (42.7)</span>
+    </div>
+    <div class="plain">饿的人先给饭——智慧不能用来推迟悲悯。</div>
+    <div class="case"><b>Ra 的两层回答：</b>其一，纠正——别拿「人家在体验催化剂」当不伸手的理由；其二，肯定——发问者对了一半：绿芒回应确实不如被智慧浸染的回应精炼，智慧让你以存有的品质做贡献，而不依赖看得见的结果（42.7）。</div>
+    <div class="case"><b>饥荒本身有原因吗：</b>发问者问非洲的极端饥饿是形而上的原因还是随机事件；Ra 确认它有催化作用——但回应与否、如何回应，在实体的自由意志之内；送粮食正是你们当下「对其他自我日益增长的爱与服务」这一学习框架内的适当回应（42.8）。</div>
+  </div>
+
+  <div class="yuan-grid">
+    <div class="yuan-card"><span class="y-tag">绿芒回应</span><h4>无私地给予</h4><p><b>喂饱、救治、送药。</b>第三密度的主要功课，Ra 明确肯定其正当——对挨饿者，喂饱就是答案。</p></div>
+    <div class="yuan-card"><span class="y-tag">智慧调音的爱</span><h4>多看一层的给予</h4><p><b>绿芒之外再加一分：</b>看见对方正在体验什么催化剂，以存有的品质而非可见结果衡量贡献。</p></div>
+    <div class="yuan-card"><span class="y-tag">殉道的教训</span><h4>悲悯的失衡态</h4><p><b>Ra 亲历的教训：</b>悲悯到殉道而不自知其限——无智慧调和的悲悯，在终极平衡中造成不匹配。</p></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>压抑、极化与自查：能量中心怎么读</h2></div>
+  <p class="sec-lead">平衡既然如此之高，日常怎么下手？发问者连问三题：压抑者与平衡者在能量中心激活上有何区别？我怎么知道自己是哪一种？哪些中心需要立即关注？</p>
+
+  <div class="card">
+    <h3>压抑的代价：中心变暗</h3>
+    <div class="q">就能量中心激活而言，「压抑情绪反应的人」与「平衡而不被情绪情境带动的人」有什么区别？</div>
+    <div class="quote">
+      <p class="en">The repression of emotions depolarizes the entity insofar as it then chooses not to use the catalytic action of the space/time present in a spontaneous manner, thus dimming the energy centers.</p>
+      <p class="zh">压抑情绪会使实体去极化——它因此选择不自发地使用空间/时间当下的催化作用，从而使能量中心变暗。</p>
+      <span class="src">—— Session 042 · (42.9)</span>
+    </div>
+    <div class="plain">压不是修行，是倒退：拒绝使用催化剂，极化就往回退。</div>
+    <div class="quote">
+      <p class="en">The entity which has worked long enough with the catalyst to be able to feel the catalyst but not find it necessary to express reactions is not yet balanced but suffers no depolarization due to the transparency of its experiential continuum.</p>
+      <p class="zh">与催化剂工作得够久、能感受到它却不觉得有必要表达反应的实体，尚未平衡——但由于其体验连续体的透明性，不会因此去极化。</p>
+      <span class="src">—— Session 042 · (42.9)</span>
+    </div>
+    <div class="case"><b>挨训的两个版本：</b>版本一把火压回肚里、表面如常——去极化，中心变暗；版本二清楚感到怒气升起、只是觉得此刻爆发没有意义——不去极化，但也还没到平衡。Ra 请你耐心：你们层面的催化剂很强烈（42.9）。</div>
+    <div class="case"><b>压火给家人看：</b>如果压住情绪是为了不把火泼给家人——Ra 补充：这种出于体谅其他自我的压抑，仍有些许朝向正面的极化。动机让同一个动作有了不同的分量（42.9）。</div>
+  </div>
+
+  <div class="card">
+    <h3>自查的路标：思想与情绪，最后才是行为</h3>
+    <div class="q">我怎么知道自己是在压抑、在平衡、还是已经不被情绪带动？哪些能量中心需要立即关注？</div>
+    <div class="quote">
+      <p class="en">The thoughts of an entity, its feelings or emotions, and least of all its behavior are the signposts for the teaching/learning of self by self.</p>
+      <p class="zh">实体的思想、感觉或情绪——最不重要的是行为——是「自我以自身为教材」的路标。</p>
+      <span class="src">—— Session 042 · (42.11)</span>
+    </div>
+    <div class="quote">
+      <p class="en">to the balanced entity no situation has an emotional charge but is simply a situation like any other in which the entity may or may not observe an opportunity to be of service. The closer an entity comes to this attitude, the closer an entity is to balance.</p>
+      <p class="zh">对平衡的实体，没有任何情境带有情绪电荷——它只是又一个情境，实体在其中可能、也可能不观察到服务的机会。越接近这种态度，就越接近平衡。</p>
+      <span class="src">—— Session 042 · (42.10)</span>
+    </div>
+    <div class="plain">别只看一个人做什么，先看他想什么、感受什么；复盘一天的体验，把不适当的念头与情绪归到对应的光芒上，就知道哪里需要工作（42.11）。</div>
+    <div class="case"><b>一把可操作的尺：</b>堵车、被插队、方案被否——问自己「这件事在我这里还带电吗？」若它们已只是「又一件可能服务的事」，你就在接近平衡；Ra 同时提醒：不建议压抑反应，除非它会成为其他自我的绊脚石（42.10）。</div>
+    <div class="case"><b>睡前五分钟：</b>把今天冒出的不当念头、情绪与行为各归到红到紫的光芒上——比如对同事的轻蔑归绿芒、对截止日期的恐慌归橙芒——Ra 给的自查法朴素到可以在日历本上做（42.11）。</div>
+  </div>
+
+  <div class="card">
+    <h3>归类练习：压抑、表达，还是平衡？</h3>
+    <p>Ra 在 (42.9)-(42.10) 分出了三种状态：压抑（去极化）、感受而不表达（不去极化但未平衡）、平衡（根本没有情绪电荷）。给下面每个场景分类。</p>
+    <div id="sortArea1"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>注意力的技巧：意志与信心如何生长</h2></div>
+  <p class="sec-lead">引用上集「无需禁食也能重新编程」这句话，发问者追问技巧本身——高我怎么编程？有什么练习？Ra 给出唯一的一门技巧，以及两种观想传统。</p>
+
+  <div class="card">
+    <h3>唯一的技巧：聚焦注意力</h3>
+    <div class="q">高我用什么编程技巧，确保第三密度的自我在转世实验室里学习（或至少尝试学习）该学的课？</div>
+    <div class="quote">
+      <p class="en">There is but one technique for this growing, or nurturing, of will and faith, and that is the focusing of the attention.</p>
+      <p class="zh">对于意志与信心的这种增长或培育，只有一门技巧：聚焦注意力。</p>
+      <span class="src">—— Session 042 · (42.12)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This, when continued, strengthens the will. The entire activity can only occur when there exists faith that an outcome of this discipline is possible.</p>
+      <p class="zh">这，当持续下去时，便强化意志；而整个活动只有在存在信心——相信这纪律的结果可能发生——时才会进行。</p>
+      <span class="src">—— Session 042 · (42.12)</span>
+    </div>
+    <div class="plain">没有复杂的口诀：把注意力收回来、按住不放，意志就长；前提是相信这么做有用。</div>
+    <div class="case"><b>第三天的失败：</b>你计划每天十分钟观想，第三天就刷手机去了——Ra 毫不意外：你们大多数人的灵性注意力持续时间「如同孩童」（42.12）。这不是坏消息，而是起点：练习本来就是给这只乱跑的小狗拴绳。</div>
+  </div>
+
+  <div class="card">
+    <h3>两种观想传统：玫瑰还是圆形</h3>
+    <div class="q">有什么练习可以增加注意力的持续时间？</div>
+    <div class="quote">
+      <p class="en">Whether you image the rose or the circle is not important. However, it is suggested that one or the other path towards visualization be chosen in order to exercise this faculty.</p>
+      <p class="zh">你观想的是玫瑰还是圆形并不重要；但建议从两条路径中选定一条，来锻炼这种能力。</p>
+      <span class="src">—— Session 042 · (42.13)</span>
+    </div>
+    <div class="plain">宗教传统观「有个人启发意义的图像」，魔法传统观「无内在意义的简单几何」——选一条，练下去。</div>
+    <div class="case"><b>祖母的念珠与学生的圆规：</b>祖母每天拨珠观想圣像——有个人启发意义的形状与颜色，是「宗教面向」的核心；制图的学生临摹纯粹的圆——无内在启发意义的简单形状，是「魔法传统」的基础（42.13）。</div>
+    <div class="case"><b>发问者的工程训练：</b>Don 年轻时受过三维制图训练，习惯在脑中旋转零件——Ra 说这个经验对「你，发问者」有价值，但对较不敏感的实体未必带来专注能量的增长；后者应选真正打动自己的图像：完美之美的玫瑰、完美牺牲的十字架、万有合一于一的佛陀，或任何能启发他的东西（42.14-42.15）。</div>
+  </div>
+
+  <div class="card">
+    <h3>条件模拟：不用禁食，也能重新编程吗？</h3>
+    <p>上集 Ra 说，自我若对催化剂的运作足够觉察，可单凭意志的专注与信心重新编程。拨动开关，看这三个条件缺一不可的样子。</p>
+    <div id="condSim">
+      <div class="cond-row">
+        <div class="name">看清催化剂的运作<small>充分觉察禁食这类催化剂如何在身体复合体上起作用</small></div>
+        <label class="switch"><input type="checkbox" id="cond1" checked><span class="slider"></span></label>
+      </div>
+      <div class="cond-row">
+        <div class="name">聚焦并持续注意力<small>把注意力收集起来，按住在所选的编程上</small></div>
+        <label class="switch"><input type="checkbox" id="cond2" checked><span class="slider"></span></label>
+      </div>
+      <div class="cond-row">
+        <div class="name">相信结果可能<small>存在信心：这种纪律能带来结果</small></div>
+        <label class="switch"><input type="checkbox" id="cond3" checked><span class="slider"></span></label>
+      </div>
+    </div>
+    <div id="condResult"></div>
+  </div>
+
+  <div class="card">
+    <h3>本集术语卡：点开看白话解释</h3>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">去极化</div><div class="sub">depolarization</div><div class="tap">点开</div></div><div class="back">因拒绝使用当下的催化剂（典型如压抑情绪）而使极化倒退、能量中心变暗的过程；Ra 说压抑就会去极化，除非压抑出于对其他自我的考虑，而带一点正面极化（42.9）。<em>好比停止锻炼，练出的肌肉会慢慢退化。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">能量中心与光芒</div><div class="sub">energy center / ray</div><div class="tap">点开</div></div><div class="back">从红到紫的七个能量枢纽（类似脉轮），对应不同层级的意识与行为；「光芒（ray）」指它们的振动色调。自查时把不当念头与情绪「放进相应的光芒」，就知道哪里需要工作（42.11）。<em>像调音台上的七路推子：哪路没推起来，整段就缺一块。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">观想</div><div class="sub">visualization</div><div class="tap">点开</div></div><div class="back">在心中稳定持住一个形状与颜色的练习，用来锻炼注意力的持续；Ra 建议在「宗教式」（有个人启发意义的图像）与「魔法式」（无内在意义的简单几何）两条路径中选一条（42.13）。<em>像训练一只乱跑的小狗反复回到同一块垫子上。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">仪式魔法</div><div class="sub">ceremonial magic</div><div class="tap">点开</div></div><div class="back">用精心安排的形状、颜色与器物进行观想的训练传统；Ra 认为发问者那次深刻体验最好从这条立场去接近（42.16）。<em>像用整套仪式感把状态「搭」出来——道具是脚手架，不是目的。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">启蒙体验</div><div class="sub">initiatory experience</div><div class="tap">点开</div></div><div class="back">一次触及宇宙意识根源的原型性体验；Ra 确认发问者约二十年前那次冥想属于此类，并说试图重现它是「向后移动」（42.18-42.19）。<em>像初见大海的震撼——你无法靠翻看照片把它找回来。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">流浪者</div><div class="sub">wanderer</div><div class="tap">点开</div></div><div class="back">自愿降生到较低密度、参与收割帮助的较高密度实体；Ra 说流浪者或行家（adept）对原型性体验有远为更大的潜力（42.16）。<em>像回母校监考的学长——记得考题，也更容易看清全局。</em></div></div>
+    </div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s7">
+  <div class="sec-head"><span class="num">07</span><h2>启蒙体验：为什么无法「重现」</h2></div>
+  <p class="sec-lead">发问者说起自己约二十年前一次非常深刻的冥想体验，想找最能「重新创造它」的修习。Ra 的回答里有一记温柔的否定。</p>
+
+  <div class="card">
+    <h3>可以接近，不可以预约</h3>
+    <div class="q">二十年前那次非常深刻的冥想体验，什么修习最能重新创造这种情境与体验？它与金色黎明会的仪式魔法有关吗？我该照它的练习去重现吗？</div>
+    <div class="quote">
+      <p class="en">Your experience would best be approached from the ceremonial magical stance. However, the wanderer or adept shall have the far greater potential for this type of experience which, as you have undoubtedly analyzed to be the case, is one of an archetypal nature, one belonging to the roots of cosmic consciousness.</p>
+      <p class="zh">你的体验最好从仪式魔法的立场去接近；不过，流浪者或行家对这类体验有远为更大的潜力——它属于原型性质，属于宇宙意识的根源。</p>
+      <span class="src">—— Session 042 · (42.16)</span>
+    </div>
+    <div class="plain">体验可以接近，不可以预约：它是被给予的，不是被复刻的。</div>
+    <div class="case"><b>「复刻」的陷阱：</b>像有人想把初读一本改变人生的书时的震撼再经历一遍，于是反复重读——Ra 说，试图重现一个启蒙体验是「向后移动」（42.18）；那扇门是从这一侧推开的，不是从记忆那一侧。</div>
+    <div class="case"><b>金色黎明会：</b>发问者问那次体验是否与金色黎明会的仪式魔法有关，Ra 答得极简：关系是「契合一致」（congruency）——同一扇门，钥匙孔彼此相合；但 Ra 仍否决「照它的练习去重现」，只肯定这类服务他人的实践适合发问者与同伴一起做（42.17-42.18）。</div>
+  </div>
+
+  <div class="card">
+    <h3>别独自修行</h3>
+    <div class="q">那么那次体验是一种启蒙吗？</div>
+    <div class="quote">
+      <p class="en">To attempt to reproduce an initiatory experience is to move, shall we say, backwards. However, the practice of this form of service to others is appropriate in your case, working with your associates. It is not well for positively polarized entities to work singly.</p>
+      <p class="zh">试图重现一个启蒙体验，是向后移动。不过，在你这里，与同伴一起进行这种服务他人的实践是适当的。正面极化的实体独自工作是不好的。</p>
+      <span class="src">—— Session 042 · (42.18)</span>
+    </div>
+    <div class="plain">确认「那是启蒙」，但别试图重演；正面极化的路，结伴走。</div>
+    <div class="case"><b>今天的版本：</b>报一个有同伴的共修班、和朋友固定每周一起冥想，都比独自闭关更合乎 Ra 对正面极化实体的叮嘱——「原因显而易见」：独自工作时，没有人做你的镜子。</div>
+    <div class="case"><b>四问一答的节奏：</b>发问者连追四问（用什么修习→与金色黎明有关吗→照它练习吗→那是启蒙吗），Ra 的回答越来越短，最后只剩一个「Yes」——重要的确认，常常不需要长篇。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s8">
+  <div class="sec-head"><span class="num">08</span><h2>收官：父母与孩子——接纳，而非弹奏</h2></div>
+  <p class="sec-lead">最后一个完整询问把话题带回每个人都能上手的现场：养育孩子。发问者想为每个能量中心找一套「展示激活」的行为清单，Ra 把问题整个换掉了。</p>
+
+  <div class="card">
+    <h3>孩子不是可以被弹奏的乐器</h3>
+    <div class="q">以父母对孩子的教导/学习关系为例，哪些类型的行为会依次展示从红到紫每个能量中心的激活？</div>
+    <div class="quote">
+      <p class="en">The entity, child or adult, as you call it, is not an instrument to be played. The appropriate teach/learning device of parent to child is the open-hearted beingness of the parent and the total acceptance of the beingness of the child.</p>
+      <p class="zh">实体——无论你们称之为孩子还是成人——不是一件可以被弹奏的乐器。父母对孩子适当的教导/学习手段，是父母敞开心扉的存有状态，加上对孩子存有状态的完全接纳。</p>
+      <span class="src">—— Session 042 · (42.20)</span>
+    </div>
+    <div class="quote">
+      <p class="en">the child entity shall learn the biases of service to others or service to self from the parental other-self.</p>
+      <p class="zh">孩子实体将从父母这个其他自我那里，学到服务他人或服务自我的偏向。</p>
+      <span class="src">—— Session 042 · (42.20)</span>
+    </div>
+    <div class="plain">没有「按中心开发孩子」的清单；你是谁，比你设计什么活动更能塑造孩子。</div>
+    <div class="case"><b>两条可上手的家规：</b>其一，父母敬拜、感谢造物主的方式（哪怕只是饭前一声感谢），若可能应每天与孩子分享；其二，悲悯要有纪律调和——不是对孩子严苛，而是明白孩子正从你身上学「往哪个方向极化」（42.20）。</div>
+    <div class="case"><b>为什么没有逐中心的清单：</b>Ra 解释：每个实体独特，每段与自我和其他自我的关系更是「双重独特」——给出的指导方针只能是一般性的。把通用清单硬套在孩子身上，恰恰违背了这一点。</div>
+  </div>
+
+  <div class="saying">
+    <p class="en">This is not indifference or objectivity but a finely tuned compassion and love which sees all things as love. This seeing elicits no response due to catalytic reactions. Thus the entity is now able to become co-Creator of experiential occurrences. This is the truer balance.</p>
+    <p class="zh">这不是冷漠或客观，而是一种精细调谐的悲悯与爱，它把万物都看作爱。这种看见不会因催化反应而引发回应。于是该实体现在能够成为体验性事件的共同造物主。这是更真实的平衡。</p>
+    <span class="src">—— Session 042 · (42.2)</span>
+  </div>
+
+  <div class="card">
+    <h3>伏笔与告别</h3>
+    <div class="case"><b>留到下次的问题：</b>牛只肢解事件——是否总被取走相同的部位、是否与能量中心有关、为什么是这些特定部位——Ra 说在另一次工作中回应会是好的；器皿状态良好（42.21）。想看 Ra 怎么答，去下一集。</div>
+    <div class="case"><b>一场集会的收束方式：</b>本集从「一段准备入书的长问题」开始，以「一个被留到下次的问题」结束——中间是环环相扣的追问。问答实录的形状本身就是教导：问题与问题之间，藏着发问者的学习路径。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 042（`split/Ra_Session_042.md`）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra042-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本集定制交互 ===== */
+/* 问答脉络推进器（第 1 章） */
+initStepper('flowTrack1','flowDetail1','flowPrev1','flowNext1',[
+  {t:'开场与出版规则',d:'<span class="qa-q">问：我有个很长的平衡问题，能不读出来直接回答、把问答照原样抄进书里吗？</span><b>答：</b>Ra 说明：若回答的是「心智上请求」的询问，该询问将不会被出版；想随书出版，就把问题当堂读出来。（42.1）'},
+  {t:'一段长陈述',d:'<span class="qa-q">问：平衡的实体是否对任何情境都保持无情绪，让情绪流过而不留色彩，像电视电影的客观观看者？</span><b>答：</b>这是不正确的应用——练习的目标不是「流动而不被带动」，而是「变得不为所动」。（42.2）'},
+  {t:'公牛与攻击',d:'<span class="qa-q">问：把公牛的攻击与其他自我的攻击都看作造物主的行动并爱两者，就算平衡了吗？</span><b>答：</b>基本正确；但平衡者会看见其他自我攻击背后更复杂的原因，并向他敞开更多服务机会。完美平衡者仍有情绪——回应是爱。（42.3-42.5）'},
+  {t:'悲悯遇上智慧',d:'<span class="qa-q">问：Ra 在第五密度如何平衡第四密度的强烈悲悯？非洲饥荒呢？</span><b>答：</b>不缓解的悲悯透过智慧之眼看是愚蠢；Ra 花大量时间/空间沉思把智慧注入爱的方式。对挨饿者，恰当的回应就是喂养身体。（42.6-42.8）'},
+  {t:'压抑还是平衡',d:'<span class="qa-q">问：压抑情绪的人与真正平衡的人，在能量中心上有什么区别？我怎么知道自己是哪种？</span><b>答：</b>压抑使能量中心变暗；对真正平衡者，任何情境都没有情绪电荷。自查的路标：思想与情绪，最其次才是行为。（42.9-42.11）'},
+  {t:'注意力的技巧',d:'<span class="qa-q">问：高我用什么编程技巧确保课程被学习？有什么练习？</span><b>答：</b>只有一门：聚焦注意力；持续下去就强化意志，前提是相信结果可能。观想有个人启发意义的图像（宗教）或简单形状（魔法）皆可。（42.12-42.15）'},
+  {t:'启蒙与重现',d:'<span class="qa-q">问：我二十年前那次深刻体验，能靠练习重现吗？</span><b>答：</b>最好从仪式魔法的立场接近，但试图重现启蒙体验是向后移动；正面极化的实体不宜独自工作。（42.16-42.19）'},
+  {t:'收束：父母与孩子',d:'<span class="qa-q">问：哪些行为依次展示红到紫能量中心的激活？</span><b>答：</b>Ra 否掉「逐中心演示」：孩子不是可弹奏的乐器；父母的敞开心扉与完全接纳才是教导/学习手段。牛只肢解之问留待下次。（42.20-42.21）'}
+]);
+
+/* 归类练习：压抑、表达还是平衡（第 5 章） */
+initSorter('sortArea1',[
+  {a:'开会时你的方案被同事当众抢功，你怒气上头，却咬紧牙关把火压下去，会后也不再看这股火。',opts:['压抑或压制','让体验表达','视为服务机会'],ans:'压抑或压制',exp:'Ra 不建议：压抑使实体去极化、能量中心变暗（42.9）；让体验表达出来，才能更充分地利用这个催化剂（42.10）。'},
+  {a:'同样被抢功，你直面这股愤怒，承认它的存在、看着它升起又落下，只是此刻选择不发作。',opts:['压抑或压制','让体验表达','视为服务机会'],ans:'让体验表达',exp:'感受得到催化剂、却不觉得必须表达反应——虽尚未平衡，但体验连续体是透明的，不会因此去极化（42.9）。'},
+  {a:'项目被砍的通知传来，你心里没有点着任何情绪，只看了看：这里有没有我能帮上忙的地方。',opts:['压抑或压制','让体验表达','视为服务机会'],ans:'视为服务机会',exp:'对平衡的实体，任何情境都没有情绪电荷，只是又一个可能观察到服务机会的情境；越接近这种态度越接近平衡（42.10）。'},
+  {a:'为不让重病的老母亲担心，你把自己的崩溃收起来，笑着陪她去复查。',opts:['压抑或压制','让体验表达','视为服务机会'],ans:'压抑或压制',exp:'这是 Ra 认可的例外：当反应会成为其他自我那道与一的法则不和谐的绊脚石时，压制是允许的（42.10）；且因体谅他人，仍有些许正面极化（42.9）。'},
+  {a:'被陌生网友的留言激怒，你决定「眼不见心不烦」，把手机一扔，事后也绝口不提。',opts:['压抑或压制','让体验表达','视为服务机会'],ans:'压抑或压制',exp:'回避与否认同属压抑——拒绝自发地使用当下的催化作用，能量中心因此变暗（42.9）；更好的做法是让体验表达并观察它。'}
+]);
+
+/* 条件模拟器：重新编程的三个条件（第 6 章） */
+function updateReprogram(){
+  const miss=[];
+  if(!document.getElementById('cond1').checked)miss.push('没有充分觉察催化剂（如禁食）如何运作——重新编程便没有着力点');
+  if(!document.getElementById('cond2').checked)miss.push('注意力像孩子一样收不住——Ra 说多数人的灵性注意力持续时间如同孩童，需要练习收集并按住');
+  if(!document.getElementById('cond3').checked)miss.push('没有信心——Ra 说整个活动只有在相信这纪律的结果可能时才会发生');
+  const box=document.getElementById('condResult');
+  if(miss.length===0){
+    box.classList.remove('fail');
+    box.innerHTML='<b>三灯全绿：</b>注意力被收集并持续按住在所选编程上，信心在场，催化剂的运作已被看清——Ra 说此时无需禁食、饮食或其他身体纪律，意志的专注与信心本身就足以重新编程（42.12）。';
+  }else{
+    box.classList.add('fail');
+    box.innerHTML='<b>条件未齐：</b>'+miss.join('；')+'。';
+  }
+}
+document.querySelectorAll('#condSim input').forEach(i=>i.addEventListener('change',updateReprogram));
+updateReprogram();
+
+/* 术语卡翻转（第 6 章） */
+document.querySelectorAll('.fn-card').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('open')));
+
+renderPath();
+</script>
+</body>
+</html>

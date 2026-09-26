@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 027 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 027 · 交互式学习模块</h1>
+  <p class="sub">第二卷从这一集开工：Ra 先把术语的定义给出来——智能无限是统一性的潜能，取用潜能产生功（智能能量），自由意志与爱是它的第一与第二变貌，而光与七色由此成形。</p>
+  <div class="tagline">6 个主题 · 6 个学习步骤 · 12 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 金字塔建造者插曲</a>
+<a href="#s3">③ 定义之难</a>
+<a href="#s4">④ 统一性·潜能·功</a>
+<a href="#s5">⑤ 自由意志与爱</a>
+<a href="#s6">⑥ 爱进入光与收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>第二卷怎么开场、Ra 为什么先请他重述问题；例行问答可跳过</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>金字塔建造者的两世角色</b><span>一个第三方转来的提问，带出「思想如何短暂显形」的机制</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>定义之难：语言只是近似</b><span>为什么「智能」与「无限」不能分开定义</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>统一性：潜能怎么变成功</b><span>智能无限、智能能量，以及那颗巨大心脏的节奏</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>两个变貌：自由意志与爱</b><span>第一变貌的内容，以及 Ra 那句「既正确又不正确」</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>爱进入光与收官</b><span>振动、光子、七色，以及本集留下的三处伏笔</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：第二卷从「定义」开始</h2></div>
+  <p class="sec-lead">上一集还在处理疗愈与个人的细节，这一集发问者宣布《一的法则》第二卷开工：不再谈短暂的事物，而是从造物的开端讲起，先建立「我们自己在造物中的位置」这个概览。于是他先递交了两个第三方转来的问题（见下一章），然后请 Ra 从「智能无限」这个词开始定义——而 Ra 的第一句回应竟是请他重述。</p>
+  <div class="card">
+    <h3>问答脉络：九问一收尾</h3>
+    <p>本集的问题层层递进：从两个插曲提问，到定义智能无限，再到两个变貌与光的颜色。点击节点，看每一段在做什么。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="qaTrack"></div>
+      <div class="flow-detail" id="qaDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="qaPrev">← 上一步</button> <button class="tri-btn" id="qaNext">下一步 →</button></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>为什么第二卷要从「定义」开始</h3>
+    <div class="q">发问者开场自陈：这个密度里大多数实体把心智放在短暂的状态或活动上，很少把它当成看清造物真实本质的工具。所以他要从造物开端讲起。</div>
+    <div class="quote">
+      <p class="en">Most entities in this density focus their minds on some transient condition or activity with little regard to its value as a tool, or an aid, to their growth and understanding of the true, or undistorted, essence of the creation of which they are an integral part.</p>
+      <p class="zh">这个密度里大多数实体把心智聚焦在某种短暂的状态或活动上，很少顾到它作为一件工具或助力的价值——用来帮助自己成长，并理解那个自己也是其中一部分的造物所具有的真实、未变貌的本质。</p>
+      <span class="src">—— Session 027 · (27.3)</span>
+    </div>
+    <div class="plain">第二卷的路线是由源及流：先看造物是如何开始的，再回头检视我们所谓的「现实」，这样才知道该往哪里走。</div>
+    <div class="analogy"><b>像先看地图再走路：</b>日常事务像沿街的招牌，一块块看得清楚却拼不出方位；先看清整张地图，再回到街上，招牌的位置才有意义。发问者说第二卷要做的，就是这张地图。</div>
+    <p>他也提前向 Ra 打了招呼：自己会时常委缩回「部分短暂的问题」，并会尽力把没有价值的内容剔除。Ra 没有就这段自白作评，直接进入了提问。</p>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">开场 · 转问 · 器皿照料</span></summary>
+  <div class="body">
+    <p><b>(27.0) 开场：</b>Ra 以「在太一无限造物主的爱与光中致意」开场，宣布本次通讯开始。</p>
+    <p><b>(27.1)–(27.2) 转问：</b>Jim 受托转来 Paul Shockley 的两个问题，摆在第二卷正题之前；Ra 照答了，内容见下一章。</p>
+    <p><b>(27.17)–(27.18) 器皿照料：</b>Ra 说这是本集最后一个完整问题，因为器皿生命能量低；并说器皿略有不适，考虑到她身体复合体状况正在改善，建议把身体姿势简化一些。随后以爱与光、力量与和平、Adonai 收尾。</p>
+  </div></details>
+  <div class="case"><b>开工前先对术语：</b>周一上午，产品组与研发组要合作一个项目，第一件事不是排期，而是把「留资」「激活」「留存」各写一行定义贴在墙上——争执往往不是方案不同，而是同一个词指的不是同一件事。本集发问者做得更彻底：整个第二卷的第一步，就是把「智能无限」这个词先定义清楚。</div>
+  <div class="case"><b>把别人的问题插在正题之前：</b>朋友托你在见医生时带两个私人问题，你在开场前先递上去，医生答完才谈你自己的事。本集开头 Jim 就是这么做的：Paul Shockley 的两个问题被放在第二卷正题之前，Ra 也真的先答了它们。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>金字塔插曲：两世人生与「只显形到腰部」的建造者</h2></div>
+  <p class="sec-lead">本集正题之前，Jim 受托转来两个与埃及金字塔有关的问题。它们看着像私人询问，Ra 的回答却给出了一段关于记忆、渴望与「思想如何变成物质」的机制——所以值得单独一章。注意 Ra 并没有回避：他照答了，而且答得很具体。</p>
+  <div class="card">
+    <h3>两世人生：亚特兰蒂斯的水晶，埃及的祭司</h3>
+    <div class="q">Paul 说自己收到信息，他曾参与埃及金字塔的设计与建造。他在那件事里的角色是什么？</div>
+    <div class="quote">
+      <p class="en">The first of a physical nature working with Confederation entities in what you know of as Atlantis, this approximately thirteen thousand [13,000] of your years ago.</p>
+      <p class="zh">第一次是物理性质的：在你们所知为亚特兰蒂斯的地方，与星际联邦的实体们一起工作，时间大约是你们的一万三千[13,000]年前。</p>
+      <span class="src">—— Session 027 · (27.1)</span>
+    </div>
+    <div class="plain">Ra 给出的是两世顺序：先在一万三千年前的亚特兰蒂斯，与联邦实体合作，涉及「水晶 + 充能治疗师」所能实现的疗愈与极化；约一千年后在埃及以祭司与教导的身份，准备人心，使人们能发出那个让社会记忆复合体得以行走人间的呼唤。</div>
+    <p>Ra 还补上这段记忆为什么会被记住：因为该实体极度渴望回忆起「通过水晶与充能治疗师机制所能实现的疗愈与极化服务」，这段记忆被整合进了他的心/身/灵复合体的无意识。到了埃及那一世，他以半变貌的形式记起了亚特兰蒂斯的金字塔学/教，于是成了「带有疗愈变貌的《一的法则》原型思想」的建造者——Ra 说这帮助了他们的人民在更晚的时期把这件事带入物理显化。</p>
+    <div class="analogy"><b>像老校区的教学笔记：</b>一位老师先在老校区带过实验班，后来到新校区任教；他记不住全部细节，只留下半套方法（半变貌），却正是这半套方法成了后来正式建校时的原型图纸。</div>
+    <p>时间关系要看清：Ra 说的是「第一次在一万三千年前」，第二次是「在那之后约一千年」——并不是两次相隔一万三千年。这也是 Ra 一贯的风格：给出量级，不给可考据的年表。</p>
+  </div>
+  <div class="card">
+    <h3>「腰部以上显形」的机制：思想-形态的短暂可见</h3>
+    <div class="q">Paul 还收到信息说，有些协助建造的存有并未在第三密度完全物质化，只从腰部以上显形。这样的实体存在吗？他们是谁？</div>
+    <div class="quote">
+      <p class="en">The release and use of intelligent infinity for a brief period begins to absorb all the consecutive, or interlocking, dimensions, thus offering brief glimpses of those projecting to the material their thought.</p>
+      <p class="zh">智能无限被短暂地释放与使用时，开始吸收所有连续的、也即相互咬合的维度，于是那些把思想投射到物质之中的存有，得以被短暂地瞥见。</p>
+      <span class="src">—— Session 027 · (27.2)</span>
+    </div>
+    <div class="quote">
+      <p class="en">These beings were the thought-form, or third-density-visible, manifestation of our social memory complex as we offered contact from our intelligent infinity to the intelligent infinity of the stone.</p>
+      <p class="zh">这些存有是我们社会记忆复合体的思想-形态、也即第三密度可见的显化——当时我们把接触从我们的智能无限，提供给石头的智能无限。</p>
+      <span class="src">—— Session 027 · (27.2)</span>
+    </div>
+    <div class="plain">所谓「只显形一半」，不是缺了下半身，而是思想-形态在物质层面短暂可见、随即不再可见；而他们真正做的事，是让智能无限与石头的智能无限相接。</div>
+    <div class="analogy"><b>像投影，不像雕塑：</b>投在幕布上的影像确实看得见、也能被拍摄，但它不是一块可以搬走的实体；光源一撤，影像就不再停留在幕上。Ra 描述的正是这种「可见但不驻留」的显化。</div>
+  </div>
+  <div class="case"><b>园艺师不「造」花：</b>周六清晨，园艺师给一盆兰花换介质、调光照、控湿度，然后就走开了。他没有把花开出来——他做的是提供条件，让植株自己长成新的形态。Ra 描述埃及那一世的合作方式正是如此：把智能无限与石头的智能无限相接，协助「活石」进入新的存在性形态，而不是硬凿出一个形状。</div>
+  <div class="case"><b>视频会议的「半截人」：</b>视频会议网络抖动的那三秒里，同事只有上半身清晰、下半身糊成一片甚至消失；抖动过去，人又完整了。Ra 说的「开始物质化但没有保持可见」正是这种现象的义理版：在维度被短暂交错吸收的时刻，思想-形态被瞥见，却不驻留。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>定义之难：为什么 Ra 先让他把问题重说一遍</h2></div>
+  <p class="sec-lead">发问者宣布第二卷从「定义智能无限」开始。但他一口气问了两个东西——「智能」与「无限」，还要「它们组合的定义」。Ra 没有回答，而是先请他重述。这不是刁难：Ra 说他的声音振动里已经藏着一个偏好。</p>
+  <div class="card">
+    <h3>Ra 的回应：请重述</h3>
+    <div class="q">他请求 Ra 分别定义「智能」与「无限」，再给出它们组合起来的定义。</div>
+    <div class="quote">
+      <p class="en">Your vibrations of mind complex indicate a query. However, your vibrational sound complex indicate a preference. Please restate.</p>
+      <p class="zh">你的心智复合体的振动表明的是询问；然而你的声音振动复合体表明的是偏好。请重述。</p>
+      <span class="src">—— Session 027 · (27.3)</span>
+    </div>
+    <div class="plain">Ra 分得清「真想问」与「其实已想好、只想被确认」：前者答，后者请他自己先把话说清楚。</div>
+    <div class="analogy"><b>像教练听出你已有答案：</b>你问教练「我是不是该加有氧？」其实你心里已经打算每天跑步，只是想要一个背书。好教练会说：「你先说清楚你真正想要的是什么。」</div>
+  </div>
+  <div class="card">
+    <h3>语言只是近似，而「智能」与「无限」本是一个概念</h3>
+    <div class="q">他改问：请定义智能无限这个概念里的「智能」。</div>
+    <div class="quote">
+      <p class="en">Your language, using vibrational sound complexes, can be at best an approximation of that which is closer to an understanding, if you will, of the nature of conscious thought.</p>
+      <p class="zh">你们的语言使用声音振动复合体，充其量只能是一种近似——近似那个更接近「理解意识思想本质」的东西。</p>
+      <span class="src">—— Session 027 · (27.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">To define intelligent apart from infinity is difficult, for these two vibration complexes equal one concept. It is much like attempting to divide your sound vibration concept, faith, into two parts.</p>
+      <p class="zh">脱离「无限」去定义「智能」是困难的，因为这两个振动复合体等于同一个概念。这很像试图把你们的声音振动概念「信念」切成两半。</p>
+      <span class="src">—— Session 027 · (27.4)</span>
+    </div>
+    <div class="plain">「智能」与「无限」不是两个零件、可以分别贴上标签——Ra 说它们等于一个概念。所以第二卷的第一步不是拆词，而是整体地去理解。</div>
+    <div class="analogy"><b>像想单独定义「咸」：</b>你可以描述咸味在舌头上的感觉，但一旦要「脱离盐来定义咸」，就会发现那其实是同一个东西的两种说法。Ra 说「智能 / 无限」就是这种关系。</div>
+    <p>Ra 也坦白这条路有上限：他先说明自己会「先处理这个问题的整个范围」再给定义；并指出感知（perceptions）与声音振动复合体并不是同一回事，所以「定义」对发问者而言注定令人沮丧，尽管他们愿意在语言的限制之内尽力协助。</p>
+  </div>
+  <div class="case"><b>评审会上的那句「你觉得呢」：</b>周四下午的评审会，领导问「你觉得这个方案行不行？」——他其实已经决定了，问是想听你的判断与他是否一致。本集开头发问者的情形一样：嘴上要求「定义两个词，再给我它们的组合定义」，Ra 却听出他已有偏好，于是请他先重述。</div>
+  <div class="case"><b>HR 想拆开「敬业」与「投入」：</b>年度问卷设计时，HR 坚持把「敬业度」与「投入度」分成两栏统计，试了两轮发现员工填出来的其实是同一件事。这正是 Ra 说「智能与无限等于一个概念」的日常版本：有些东西一旦拆开，就都没法定义了。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>统一性：潜能怎么变成功</h2></div>
+  <p class="sec-lead">发问者退了一步：不必分开定义，那就整体定义「智能无限」。于是 Ra 给出本集最像「本体骨架」的一段答案——统一性、潜能、动能、功、智能能量，以及一颗从中央太阳开始的巨大心脏。</p>
+  <div class="card">
+    <h3>骨架：潜能是智能无限，取用潜能产生功</h3>
+    <div class="q">请定义智能无限。</div>
+    <div class="quote">
+      <p class="en">There is unity. This unity is all that there is. This unity has a potential and kinetic. The potential is intelligent infinity. Tapping this potential will yield work. This work has been called by us, intelligent energy.</p>
+      <p class="zh">存在统一性。这个统一性就是存在的一切。这个统一性具有潜能与动能。潜能就是智能无限。取用这个潜能将会产生功。这个功，我们称之为智能能量。</p>
+      <span class="src">—— Session 027 · (27.5)</span>
+    </div>
+    <div class="plain">一切只有一个统一性；它像一块电池一样有「潜能」那一侧。潜能是智能无限；当你去取用它，就产生了功——那就是智能能量。</div>
+    <p>Ra 紧接着说明了「功」为什么会有不同的性质：这股功的性质取决于自由意志的特定变貌；反过来说，自由意志正是那个统一性潜能的某个「智能能量 / 动能焦点」所具有的性质。功不是均质地流出来的，取用的方式决定了它是哪一种功。</p>
+    <div class="analogy"><b>像水库与水电站：</b>水蓄在水库里只是潜能，本身不发电；一旦经过某道闸门放出，才成为可用的电（功）。闸门开在哪、开多大，决定了这股电的性质——这就是 Ra 说的「功的性质取决于自由意志的变貌」。</div>
+  </div>
+  <div class="card">
+    <h3>这颗「功」是宇宙性的：一颗巨大的心跳</h3>
+    <div class="q">牛顿物理学里功＝力 × 距离；你说的功是不是更宽，可能包括意识中的功？</div>
+    <div class="quote">
+      <p class="en">Intelligent infinity has a rhythm, or flow, as of a giant heart beginning with the Central Sun, as you would think or conceive of this; the presence of the flow inevitable as a tide of beingness without polarity, without finity…</p>
+      <p class="zh">智能无限有一种节奏、或者说流动，如同一颗从中央太阳开始的巨大心脏——如你们会设想的那样；这股流动的存在是不可避免的，像一股没有极性、也没有有限性的存在之潮……</p>
+      <span class="src">—— Session 027 · (27.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">There is no difference, potential or kinetic, in unity. The basic rhythms of intelligent infinity are totally without distortion of any kind. The rhythms are clothed in mystery, for they are being itself.</p>
+      <p class="zh">在统一性之中，不存在差异，无论是潜能还是动能。智能无限的基本节奏完全不带任何种类的变貌。这些节奏披着神秘的外衣，因为它们就是存在本身。</p>
+      <span class="src">—— Session 027 · (27.7)</span>
+    </div>
+    <div class="plain">这里的「功」不限于机械位移，而是宇宙性的：智能无限的流动像心跳，向外搏动、又向内聚焦，直到焦点完成、一切凝聚；而在统一性内部根本没有势能与动能的分别——「潜能」这个说法，是相对智能能量而言才出现的。</div>
+    <div class="analogy"><b>像潮汐：</b>涨潮与退潮不是两股互相较劲的力，而是同一个节律的两半：没有极性、没有边界，只是必然的涌动。Ra 用它说明「功」为什么不必然需要势差。</div>
+  </div>
+  <div class="card">
+    <h3>条件模拟器：智能能量需要哪些条件才成形</h3>
+    <p>把 Ra 在 (27.5) 给出的三个要素拨一拨——缺任何一条，那股「功」都成不了他所说的样子。</p>
+    <div class="demo-area">
+      <div style="text-align:left">
+        <div class="cond-row"><div class="name">统一性的潜能<small>智能无限：一份尚未被取用的可能</small></div><label class="switch"><input type="checkbox" id="cond1" checked><span class="slider"></span></label></div>
+        <div class="cond-row"><div class="name">取用潜能的动作<small>真的去取用它，而不是让它继续躺着</small></div><label class="switch"><input type="checkbox" id="cond2" checked><span class="slider"></span></label></div>
+        <div class="cond-row"><div class="name">自由意志的变貌<small>决定这股功的性质的那个不被强制的选择</small></div><label class="switch"><input type="checkbox" id="cond3" checked><span class="slider"></span></label></div>
+      </div>
+      <div id="condResult"></div>
+      <div class="obstacle-tags" id="condTags"></div>
+    </div>
+  </div>
+  <div class="case"><b>周二早上的健身房：</b>小林办了年卡想增肌。他身上的训练潜力一直躺在那儿（潜能），直到他选定「这三个月主攻力量」并真的开始练，那一刻潜能才变成实际的力量增长（功）。同样这一身潜力，若改成主攻耐力，长出来的东西就不一样——功的性质，取决于他做的那个选择。</div>
+  <div class="case"><b>一笔闲置的团队预算：</b>公司账上有一笔还没定用途的钱（潜能）。放着不动，什么也不会发生；一旦决定「全投在客服体验上」，就产出具体的服务改版（功）。若换个方向投在投放上，同一笔钱产生的效果完全不同——对应 Ra 说的「功的性质取决于自由意志的特定变貌」。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>两个变貌：自由意志，以及「既正确又不正确」</h2></div>
+  <p class="sec-lead">骨架搭好之后，发问者开始按顺序追问「变貌」。第一步是自由意志——Ra 给的「定义」短得反常，全部内容只有一句话。第二步是发问者自己顺着推下去的，Ra 确认「这完全正确」。但当他推到一个全称结论时，Ra 的回答变成本集最值得玩味的一句。</p>
+  <div class="card">
+    <h3>第一变貌的定义：「造物主将认识祂自己」</h3>
+    <div class="q">第一变貌就是我们所说的自由意志。请给它一个定义。</div>
+    <div class="quote">
+      <p class="en">In this distortion of the Law of One it is recognized that the Creator will know Itself.</p>
+      <p class="zh">在《一的法则》的这个变貌里，被认识到的是：造物主将认识祂自己。</p>
+      <span class="src">—— Session 027 · (27.8)</span>
+    </div>
+    <div class="plain">自由意志这个变貌的全部内容只有一句：造物主将认识祂自己。发问者接着推断，那么造物主是不是为了这个「认识」而授予了在认识方式上的完全选择自由——Ra 回答「这完全正确」。</div>
+    <div class="analogy"><b>像只给目的、不给方法的任务：</b>目标写死了（认识自己），路径完全开放。正因为路径不被规定，走出来的每一条路才真的算是「祂自己的认识」。</div>
+  </div>
+  <div class="card">
+    <h3>「既正确又不正确」：经验不是「从变貌产生」，而更可能是「就是这个变貌」</h3>
+    <div class="q">那么所有其他变貌、也就是造物的全部经验，都从第一变貌产生，对吗？</div>
+    <div class="quote">
+      <p class="en">This is both correct and incorrect. In your illusion all experience springs from the Law of Free Will, or the Way of Confusion. In another sense, which we are learning, the experiences are this distortion.</p>
+      <p class="zh">这既正确又不正确。在你们的幻象中，所有经验都源自自由意志法则，或者混淆之道；而在另一种意义上——这种意义是我们正在学习的——这些经验就是这一个变貌本身。</p>
+      <span class="src">—— Session 027 · (27.10)</span>
+    </div>
+    <div class="plain">在我们这个幻象里，「所有经验源自自由意志法则」是对的；但 Ra 说还有另一层：经验并不是变貌的产物，经验就是变貌本身。Ra 特意说这层意义他们仍在学习——连 Ra 也还在学，这是本集留下的一处伏笔。</div>
+    <div class="analogy"><b>像树枝与树干：</b>说「树枝从树干长出来」是对的；但更完整地说，树枝就是树干往外延伸的那一部分。同一件事实，两种说法各自落在一个层面上，互不取消。</div>
+  </div>
+  <div class="card">
+    <h3>术语卡：这一集的骨架词</h3>
+    <p>点击卡片看解释。这几个词是全书的骨架，而本集正是它们第一次被正式定义的地方。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">智能无限</div><div class="sub">Intelligent Infinity</div><span class="tap">点击展开</span></div><div class="back">统一性之中「潜能」的那一侧，指的是存在中尚未被取用的一切可能；Ra 也用它来指涉太一无限造物主。本集说它的基本节奏完全不带任何变貌，像一颗巨大心脏从中央太阳开始搏动。<em>比喻：一座蓄满水、闸门还没开的水库——下游所有的可能都在里面。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">智能能量</div><div class="sub">Intelligent Energy</div><span class="tap">点击展开</span></div><div class="back">潜能被取用之后产生的「功」（work）；Ra 说它的性质取决于自由意志的特定变貌。<em>比喻：水库开闸之后流出来、真正推动涡轮的那股水。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">功</div><div class="sub">work</div><span class="tap">点击展开</span></div><div class="back">这里不是力学意义上的「力 × 距离」。Ra 说这个术语的应用是宇宙性的：智能无限的流动本身就是功，它向外搏动、又向内聚焦，直到一切凝聚。<em>比喻：心跳没有「移动」某个物体，却持续做着一切生命赖以发生的事。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">自由意志 · 第一变貌</div><div class="sub">Free Will, the first distortion</div><span class="tap">点击展开</span></div><div class="back">《一的法则》的第一个变貌，内容就是「造物主将认识祂自己」；为了这个认识，造物主授予了在认识方式上的完全选择自由。它也被称作混淆之道（the Way of Confusion）。<em>比喻：一份只规定目标、不规定路径的任务书。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">爱 · 第二变貌</div><div class="sub">Love, the second distortion</div><span class="tap">点击展开</span></div><div class="back">本集把它定义为「焦点、方向的选择、一种极高秩序的能量类型」——它使智能能量以如此这般的方式从智能无限的潜能中形成。注意它是一个焦点与活动，不是一件可以被当作物件来崇拜的东西。<em>案例：透镜聚焦阳光——方向与焦点决定点燃哪里。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">变貌</div><div class="sub">distortion</div><span class="tap">点击展开</span></div><div class="back">对统一性的任何偏离或偏移，本身不含贬义。本集所说的「第一变貌」「第二变貌」都是中性称呼：它们是造物得以展开的必要形式。<em>比喻：同一束白光透过棱镜分成七色——颜色不是错，只是分开了。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">振动 / 密度</div><div class="sub">vibration / density</div><span class="tap">点击展开</span></div><div class="back">本集用两个词区分了两件事：作为变貌的爱（造物的激活者），以及作为振动或密度的爱（已经学会无变貌地去爱的那个存在层次）。「密度」就是存在的层次，光在其中以颜色表现。<em>比喻：同一股信号在屏幕上呈现出的不同层次。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">混淆之道</div><div class="sub">the Way of Confusion</div><span class="tap">点击展开</span></div><div class="back">自由意志法则的另一个名字。之所以叫「混淆」，是因为选择不被规定、结果也不被预先指定——而这正是「认识自己」得以发生的条件：如果答案已经给定，认识就无从谈起。<em>案例：开卷考试只给题目，不给答案。</em></div></div>
+    </div>
+  </div>
+  <div class="case"><b>给孩子选兴趣班：</b>你把目标说清楚——「希望你长成一个能自己判断的人」——然后不再替他挑班，只在旁边陪着。你给了目的、没给路径，因为路径一旦被规定，那个「他自己长出来的样子」就不存在了。Ra 说的「造物主为此授予完全选择自由」，是同一件事的放大版。</div>
+  <div class="case"><b>「是不是因为市场差？」：</b>季度复盘会上老板问：业绩下滑是不是因为市场差？你答：既对也不对——市场差确实是触发条件；但更完整的说法是，这次下滑本身就是市场变化在这个团队里的具体形态。这正是 Ra 对那个全称问题的回答方式：同一个事实，两层说法都成立。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>爱进入光：振动、光子与七色</h2></div>
+  <p class="sec-lead">发问者从「爱」往下推：爱有没有「振动」形式的显化？Ra 先划清语义——作为变貌的「爱」与作为振动/密度的「爱」不是一回事。接着发问者拿 Dewey Larson 的物理学做类比，得到本集难得的一句干脆确认；最后问到光的七色，Ra 给出一句原理，然后宣布器皿能量不足，本集到此收束。</p>
+  <div class="card">
+    <h3>两种「爱」：变貌的爱与振动的爱</h3>
+    <div class="q">爱有没有一种我们可以称为「振动」的显化？</div>
+    <div class="quote">
+      <p class="en">The vibration, or density, of love, or understanding, is not a term used in the same sense as the Second Distortion, Love…</p>
+      <p class="zh">爱的振动（或密度），或者说「理解」，与第二变貌「爱」并不是在同一个意义上使用的词……</p>
+      <span class="src">—— Session 027 · (27.13)</span>
+    </div>
+    <div class="plain">Ra 说这里遇到语义困难：第二变貌的爱，是使用智能无限的各种造物的「伟大激活者」与原始共同造物主；而振动/密度意义上的爱，指的是这样一个层次——已经学会在很大程度上无变貌地去做「爱」这项活动的存有，随后去寻求光或智慧之道。</div>
+    <div class="analogy"><b>像「写作」与「作品」：</b>「写作」是那个动力与动作（变貌的爱：激活、聚焦）；「作品」是已经写成的那个层次（振动的爱：一个可被进入的密度）。同一个词，指的不是同一件事。</div>
+  </div>
+  <div class="card">
+    <h3>爱与光的双向关系：爱进入光，爱也使用光</h3>
+    <div class="quote">
+      <p class="en">Thus in vibratory sense love comes into light. In the sense of the activity of unity in its free will, love uses light and has the power to direct light in its distortions.</p>
+      <p class="zh">因此，在振动的意义上，爱进入光；而在统一性依其自由意志活动的意义上，爱使用光，并且有能力在光的各种变貌中引导光。</p>
+      <span class="src">—— Session 027 · (27.13)</span>
+    </div>
+    <div class="plain">两个方向都要保留：振动意义上，爱「进入」光（成为那个层次）；活动意义上，爱「使用」光、并能引导光。所以爱与光不是谁先谁后的问题，而是同一个关系的两种说法。</div>
+    <p>Ra 还补了一句与前面呼应的话：振动复合体会「以反向的方式」重演统一性中的造物，从而显示出那颗伟大心跳的节奏与流动。发问者随即用 Dewey Larson 的模型来核对——「一切都是运动，振动的第一个产物是光子」——Ra 的直接回答是「你是正确的」。此后 Ra 又强调：每一个「爱」（原始推动者）都来自同一个频率，那就是统一性；与其说是频率，不如说是一种强度——强度是无限的，有限的品质则由那个原始运动的特定性质来选取。</p>
+    <div class="analogy"><b>像同一个白色光源加不同滤片：</b>源头强度不变，出来的「颜色 / 品质」由滤片决定。Ra 说爱与光的关系就是这种「同一强度、不同样式」的关系。</div>
+  </div>
+  <div class="card">
+    <h3>七色之谜：颜色是「爱」施加在光上的配置</h3>
+    <div class="q">形成密度的光带有颜色，且分为七类；这些颜色类别有什么原因或解释吗？</div>
+    <div class="quote">
+      <p class="en">The nature of the vibratory patterns of your universe is dependent upon the configurations placed upon the original material, or Light, by the focus, or Love, using Its intelligent energy to create a certain pattern of illusions, or densities, in order to satisfy Its own intelligent estimate of a method of knowing Itself.</p>
+      <p class="zh">你们这个宇宙的振动模式的性质，取决于那个焦点（也就是爱）施加在原始材料（也就是光）之上的配置——爱使用它的智能能量，去创造某种幻象或密度的模式，以满足它自己对「认识自身的方法」所做的智能评估。</p>
+      <span class="src">—— Session 027 · (27.17)</span>
+    </div>
+    <div class="plain">颜色的成因不在「光自己」，而在爱对光所施加的配置：七色是为了满足「认识自己」这个目的所选出的一种样式，Ra 说它是「在爱的意志下，尽可能严格、狭窄、必要」的表达。</div>
+    <p>Ra 在这里明确了限度：这是本集最后一个完整问题，因为器皿生命能量低；他简要作答，其余留待后续集会再问。也就是说，七色与密度之间的细节，本集只给了原理，没有展开。</p>
+  </div>
+  <div class="card">
+    <h3>归类练习：这份「可能」停在哪一层？</h3>
+    <p>判断下面每个情形落在哪一层：只是潜能、已经被取用成为功，还是那个决定能量往哪成形的焦点。</p>
+    <div id="sorterArea"></div>
+  </div>
+  <div class="saying">
+    <p class="en">Thus vibratory complexes recapitulate in reverse the creation in its unity, thus showing the rhythm, or flow, of the great heartbeat, if you will use this analogy.</p>
+    <p class="zh">如此，振动复合体以反向的方式重演了统一性中的造物，从而显示出那颗伟大心跳的节奏与流动——如果你愿意使用这个类比的话。</p>
+    <span class="src">—— Session 027 · (27.13)</span>
+  </div>
+  <div class="card">
+    <h3>收官：本集留下的三处伏笔</h3>
+    <p>本集把「变貌」体系讲到了第二步：第一变貌是自由意志，第二变貌是爱；而这个爱使用光、并能在光的变貌中引导光，于是有了密度与七色。三处留白值得记下：</p>
+    <p><b>① 经验的另一层意义：</b>Ra 说「经验就是这个变貌本身」这层意义，他们仍在学习；发问者当场表示要留到下次集会再问。</p>
+    <p><b>② 七色的更多信息：</b>Ra 说这只是本集最后一个完整问题，因为器皿生命能量低，其余留待后续集会提问。</p>
+    <p><b>③ 器皿与身体姿势：</b>Ra 说器皿略有不适，建议把身体姿势简化一些，并说明她的身体复合体状况正在改善——这是本集唯一一条后勤性质的回答。</p>
+    <p>收尾则是本集一贯的格式：Ra 说「你们在努力中是尽责的」，在太一无限造物主的爱与光中离开，并请他们在力量与和平中欢欣鼓舞，最后以 Adonai 作结。</p>
+    <div class="plain">读下一集时可以带着这个问题：Ra 会怎么继续讲光、密度与颜色之间的联系？</div>
+  </div>
+  <div class="case"><b>剪辑师的两小时：</b>同一批两小时的素材，剪辑师若把焦点放在「他为什么离开」，成片像一部悬疑；若放在「他离开之后谁留下来了」，成片像一部家庭片。素材（光）没变，变的只是焦点（爱）——这正是 Ra 说「颜色取决于爱施加在光上的配置」的日常版本。</div>
+  <div class="case"><b>简历里的同一段经历：</b>同一段实习经历，投技术岗时你写「优化了接口响应」，投运营岗时你写「串联了三方需求」——内容都是真的，但呈现的「样式」由你选定的焦点决定。Ra 说七色是「依爱的意志所能表达的最严格、必要的样式」，讲的也是同一件事：样式服务于目的。</div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+<p>基于 The Ra Contact Session 027（split/Ra_Session_027.md）英文原文制作 · 交互式学习模块</p>
+<p>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文</p>
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra027-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+  {t:'(27.1) 转问一',d:'<span class="qa-q">问：Paul Shockley 在埃及金字塔的设计与建造中扮演了什么角色？</span><b>答：</b>两世人生。第一次约一万三千年前，在亚特兰蒂斯与星际联邦实体合作，涉及水晶与「充能治疗师」所能实现的疗愈与极化；第二次在其后约一千年，他在埃及以祭司与教导的身份准备人心，使人们能发出呼唤，让社会记忆复合体的成员得以行走人间。'},
+  {t:'(27.2) 转问二',d:'<span class="qa-q">问：那些「腰部以上显形、腰部以下没有」的协助建造者真的存在吗？</span><b>答：</b>智能无限被短暂释放与使用时，会吸收所有连续、相互咬合的维度，于是那些把思想投射到物质中的存有被短暂瞥见——他们开始物质化，但没有保持可见；那是社会记忆复合体的思想-形态显化。'},
+  {t:'(27.3) 第二卷开场',d:'<span class="qa-q">问：（发问者宣告）第二卷要从造物开端讲起，先定义「智能无限」。</span><b>答：</b>你的心智振动表明一个询问，你的声音振动却表明一个偏好——请重述。'},
+  {t:'(27.4) 定义「智能」',d:'<span class="qa-q">问：请定义智能无限概念里的「智能」。</span><b>答：</b>语言充其量只是近似，感知与声音振动复合体并不相同；而且脱离无限去定义智能几乎做不到——这两个振动复合体等于一个概念，就像把「信念」切成两半。'},
+  {t:'(27.5) 定义智能无限',d:'<span class="qa-q">问：那不必分开，请直接定义智能无限。</span><b>答：</b>存在统一性，它就是存在的一切；它有潜能与动能；潜能是智能无限，取用潜能会产生功，而这个功就是智能能量。功的性质取决于自由意志的特定变貌。'},
+  {t:'(27.6)–(27.7) 功与节奏',d:'<span class="qa-q">问：牛顿的功是力乘以距离，你说的功是不是更广，包含意识中的功？</span><b>答：</b>这个术语在这里的应用是宇宙性的：智能无限有一种节奏，如同一颗从中央太阳开始的巨大心脏，是一股没有极性、没有有限性的存在之潮；而在统一性内部，并不存在势能与动能之差。'},
+  {t:'(27.8)–(27.12) 两个变貌',d:'<span class="qa-q">问：第一变貌是自由意志，第二变貌是爱，对吗？</span><b>答：</b>对。在自由意志这个变貌中，造物主将认识祂自己，并为此授予完全的选择自由；爱则是那个焦点、方向的选择、一种极高秩序的能量类型——它使智能能量以如此这般的方式由智能无限的潜能形成。'},
+  {t:'(27.13)–(27.17) 爱进入光',d:'<span class="qa-q">问：爱有没有可以称为「振动」的显化？形成密度的光为什么分七色？</span><b>答：</b>这里有语义困难：变貌的爱是造物的激活者，振动的爱是一个密度。振动意义上爱进入光；在自由意志的活动意义上，爱使用光并能引导光。至于颜色，它取决于爱这个焦点施加在原始材料（光）之上的配置。'},
+  {t:'(27.17)–(27.18) 收尾',d:'<b>收束：</b>Ra 说这是本集最后一个完整问题（器皿生命能量低），并建议把器皿的身体姿势简化一些；随后在爱与光中离开，以力量与和平、Adonai 收尾。'}
+]);
+
+const condNames={1:'统一性的潜能（智能无限）',2:'取用潜能的动作',3:'自由意志的变貌'};
+const condWhy={
+  1:'缺「统一性的潜能」：没有可被取用的东西——Ra 说潜能就是智能无限，功必须从它而来。',
+  2:'缺「取用潜能的动作」：潜能仍停在潜能那一侧——Ra 说取用潜能才会产生功。',
+  3:'缺「自由意志的变貌」：这股功失去了性质之分——Ra 说功的性质取决于自由意志的特定变貌。'
+};
+function condRender(){
+  const off=[1,2,3].filter(n=>!document.getElementById('cond'+n).checked);
+  const box=document.getElementById('condResult'),tags=document.getElementById('condTags');
+  tags.innerHTML=off.length?off.map(n=>'<span>缺：'+condNames[n]+'</span>').join(''):'';
+  if(off.length===0){
+    box.classList.remove('fail');
+    box.innerHTML='<b>智能能量成形。</b>统一性的潜能被取用而成为功，而这股功的性质由自由意志的特定变貌决定——Ra 说这正是它之所以「以如此这般的方式」出现的原因。本集后段还会补上另一半：那个决定能量往哪里成形的焦点，就是爱。';
+  }else if(off.length===3){
+    box.classList.add('fail');
+    box.innerHTML='<b>什么都不发生。</b>三个条件都缺：没有被取用的潜能，没有取用的动作，也没有决定性质的那个变貌。在 Ra 的骨架里，这三者缺一不可。';
+  }else{
+    box.classList.add('fail');
+    box.innerHTML='<b>还不成形。</b>'+off.map(n=>condWhy[n]).join(' ')+' 把缺的那一项补上，再看结果。';
+  }
+}
+[1,2,3].forEach(n=>document.getElementById('cond'+n).addEventListener('change',condRender));
+condRender();
+
+document.querySelectorAll('.fn-card').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('open')));
+
+initSorter('sorterArea',[
+  {a:'毕业后脑子里的各种可能：还没被用过的专业、人脉与时间',opts:['潜能（智能无限）','功（智能能量）','焦点（爱的选择）'],ans:'潜能（智能无限）',exp:'Ra 说潜能就是智能无限——尚未被取用的那份可能。'},
+  {a:'他把这些可能投入一个具体的实习项目，做出可交付的成果',opts:['潜能（智能无限）','功（智能能量）','焦点（爱的选择）'],ans:'功（智能能量）',exp:'取用潜能会产生功；Ra 把这个功称为智能能量。'},
+  {a:'公司账上有一笔还没决定用途的预算',opts:['潜能（智能无限）','功（智能能量）','焦点（爱的选择）'],ans:'潜能（智能无限）',exp:'用途未定的资源还停在潜能那一侧，尚未成为功。'},
+  {a:'同样这笔预算，团队决定全数投在「客服体验」这一件事上，其余一律不碰',opts:['潜能（智能无限）','功（智能能量）','焦点（爱的选择）'],ans:'焦点（爱的选择）',exp:'Ra 把爱定义为焦点、方向的选择——它决定智能能量以哪种方式成形。'},
+  {a:'一家小公司把那笔钱变成一套真实运行的服务系统',opts:['潜能（智能无限）','功（智能能量）','焦点（爱的选择）'],ans:'功（智能能量）',exp:'潜能被取用并成形为实际运作的东西，这就是功。'}
+]);
+
+renderPath();
+</script>
+</body>
+</html>

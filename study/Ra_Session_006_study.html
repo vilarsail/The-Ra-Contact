@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 006 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 006 · 交互式学习模块</h1>
+  <p class="sub">本集先补完疗愈的第三个领域——灵性；随后发问者把镜头转向 Ra 的来处，牵出金星、守护行星的议会、被自己毁掉的马尔德克，以及收割周期的运作方式。</p>
+  <div class="tagline">6 个主题 · 6 个学习步骤 · 24 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 灵性领域</a>
+<a href="#s3">③ 金星先行者</a>
+<a href="#s4">④ 议会与马尔德克</a>
+<a href="#s5">⑤ 收割机制</a>
+<a href="#s6">⑥ 联邦与收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>先看这一集从「修炼」跳到「身世与历史」的整条问答脉络，例行问答可跳过</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>灵性领域与风火通道</b><span>疗愈三领域的最后一块：灵性是一条双向通道，随机打开与谨慎打开差别极大</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>金星先行者</b><span>Ra 自述出身：金色形体、以思想航行、为何只做短暂停留</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>议会与马尔德克</b><span>谁允许他们前来，以及一颗被自己毁掉的行星如何变成了地球的居民</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>收割机制的运作</b><span>一的法则的定义、光/爱之线、25,000 年周期，以及地球此刻的位置</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>星际联邦与收官</b><span>联邦的规模与性质、隔离原则、Ra 如何决定「什么重要」，以及本集金句</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：从「怎么修炼」跳到「你们是谁」</h2></div>
+  <p class="sec-lead">上一集把疗愈的前两个领域（心智、身体）讲完，本集开篇直接补齐第三个领域——灵性。但只用了不长的一段，Ra 就把话头收住，说这些练习「对起步已经足够」。接下来发问者换了方向：先问一句参会许可，随即问出更大的问题——在参与地球事务之前，你们来自哪里？于是本集后半段变成了一段罕见的身世与历史叙述。</p>
+  <div class="card">
+    <h3>问答脉络：六段推进</h3>
+    <p>本集有 29 个问答块，但真正换层次只有六次：补完修炼 → 处理来客 → 自述出身 → 交代议会与马尔德克 → 讲收割机制 → 自我介绍并收尾。点击节点看每一段在做什么。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="qaTrack"></div>
+      <div class="flow-detail" id="qaDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="qaPrev">← 上一步</button> <button class="tri-btn" id="qaNext">下一步 →</button></div>
+    </div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">参会许可 · 器皿状态 · 人选与收尾</span></summary>
+  <div class="body">
+    <p><b>(6.2)–(6.4) 参会许可：</b>发问者代问 Tom Flaherty 能否参加明天的集会；Ra 说这个心/身/灵复合体是可接受的，但必须先仔细教他必要的心智框架与各种附属物。发问者承诺会完全告知后再让他到场。</p>
+    <p><b>(6.3) 附属物是什么：</b>指那些触发器皿朝向爱/光的变貌的象征性物品；所有在场者对这些物品的放置与充满爱的接纳，本身就在滋养器皿。Ra 说这些物品必须被描述，并由你们用自己的教导/学习话语向新来者解释。</p>
+    <p><b>(6.27)–(6.28) 器皿状态：</b>Ra 说由于在场者的照顾，器皿是平衡的，但她的物理载具正在变得僵硬；发问者随即决定改日再续，Ra 同意，并说除非有简短的问题就准备离开。</p>
+    <p><b>(6.29) 人选与收尾：</b>发问者问 Leonard 是否与 Tom 同样合适；Ra 说正确，并说这补全了当时能够前来且适合的人数，再次提醒为 Tom 做准备。</p>
+    <p><b>(6.0)/(6.29) 开场与收尾：</b>以「在无限造物主的爱与光中致意」开场，以「在太一造物主的大能与和平中欢欣前行」作结（Adonai）。</p>
+  </div></details>
+  <div class="case"><b>新同事旁听敏感会议：</b>团队要开一场涉及人事的复盘会，负责人没有直接让新同事进来，而是先花十分钟交代「这场会的规则、桌上那份材料是什么、为什么不能外传」——这正是 Ra 对 Tom 参会请求的回应：人可以来，但必须先被教清必要的心智框架与附属物，到场者的接纳本身就是照顾的一部分。</div>
+  <div class="case"><b>力量区第一课：</b>新学员第一次进健身房力量区，教练不会直接让他上器械，而是先讲清楚杠铃片怎么放、垫子摆哪儿、为什么这些细节决定安全。对应 (6.3)：那些看似琐碎的「附属物」不是仪式感，它们直接决定器皿是否被妥善滋养。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>灵性领域：风与火的工作，一条双向通道</h2></div>
+  <p class="sec-lead">(6.1) 是上一集的直接续篇。Ra 补上第三个领域：灵性复合体（spirit complex）——心/身/灵中变貌最少的一层，也是最漫长、最精微的一层。它的运作方式被比喻成「风与火」，而疗愈能力正是经由这条通道进入智能无限（intelligent infinity，Ra 体系中一切存在的源头与基质）。</p>
+  <div class="card">
+    <h3>前提：心智如树，身体舒适，才谈得上「伟大的工作」</h3>
+    <div class="q">昨天的三部分教导/学习还没讲完，第三个领域是什么？</div>
+    <div class="quote">
+      <p class="en">The third area is the spiritual complex which embodies the fields of force and consciousness which are the least distorted of your mind/body/spirit complex.</p>
+      <p class="zh">第三个领域是灵性复合体，它包含了你们心/身/灵复合体中最少变貌的力场与意识。</p>
+      <span class="src">—— Session 006 · (6.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">We have considered the mind as a tree. The mind controls the body.</p>
+      <p class="zh">我们把心智视为一棵树。心智控制着身体。</p>
+      <span class="src">—— Session 006 · (6.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">With the mind single-pointed, balanced, and aware, the body comfortable in whatever biases and distortions make it appropriately balanced for that instrument, the instrument is then ready to proceed with the great work.</p>
+      <p class="zh">当心智是专一、平衡且觉知的，而身体在那些使它为这个器皿恰当平衡的偏好与变貌中感到舒适，那么这个器皿就准备好进行那件伟大的工作了。</p>
+      <span class="src">—— Session 006 · (6.1)</span>
+    </div>
+    <div class="plain">灵性排第三，不是因为不重要，而是因为它要等前两块立住：心智如树、由心智支配身体；两者调顺了，器皿才够格进入那件「伟大的工作」。</div>
+    <div class="analogy"><b>像发射塔：</b>塔基（身体）必须稳固、天线（心智）必须对准且稳定，信号才发得出去。灵性是那条被发出去的信号，它不能替代塔。</div>
+    <div class="case"><b>开播前的十分钟：</b>主播开播前要调灯、试麦、把手机静音、坐正——这些动作不产生内容，但内容只在做完这些之后才稳定地出来。对应 Ra 的次第：身体层面先安定，注意力单一且觉知，那种「讲得出东西」的状态才有可能出现。</div>
+  </div>
+  <div class="card">
+    <h3>通道与穿梭器：意志向上，火与风向下</h3>
+    <div class="q">那灵性本身究竟怎么「运作」？</div>
+    <div class="quote">
+      <p class="en">That is the work of wind and fire. The spiritual body energy field is a pathway, or channel.</p>
+      <p class="zh">那就是风与火的工作。灵性身体的能量场是一条路径，或者说一条通道。</p>
+      <span class="src">—— Session 006 · (6.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">When body and mind are receptive and open, then the spirit can become a functioning shuttle, or communicator, from the entity's individual energy of will upwards and from the streamings of the creative fire and wind downwards.</p>
+      <p class="zh">当身体与心智是接纳而敞开的，灵性便能成为一个运作中的穿梭器、一个沟通者——把该实体个体的意志能量向上输送，也把创造性的火与风之流向下带入。</p>
+      <span class="src">—— Session 006 · (6.1)</span>
+    </div>
+    <div class="plain">灵性场是一条通道；身与心敞开时，它就变成双向的穿梭器——个体意志往上走，创造性的火与风往下走。两个方向同时通，才叫通道。</div>
+    <div class="analogy"><b>像双向电梯：</b>只有上行或只有下行都不是通道，而是堵塞。Ra 特意用「穿梭器」这个词，强调来回往复本身就是它的功能。</div>
+    <div class="case"><b>夜班护士的「接得住」：</b>值夜班最难的不是操作，而是在连续被打断的状态下依然稳定：身体不慌、注意力不散。这份稳定不是技巧，而是让家属的情绪有地方进来、自己的判断也有地方出去。Ra 说的「接纳而敞开」正是这种可被穿透而不失控的状态。</div>
+  </div>
+  <div class="card">
+    <h3>条件模拟器：这条通道要靠什么才算「打开」</h3>
+    <p>(6.1) 把两种情形放在一起对照：一种是有意识打开的通道，一种是灵性场里随机出现的破洞。拨动开关，看这两种结果如何分化。</p>
+    <div class="cond-row"><span class="name">身体与心智接纳而敞开<small>身体在自己偏好处舒适，心智不设防</small></span><label class="switch"><input type="checkbox" id="cond1"><span class="slider"></span></label></div>
+    <div class="cond-row"><span class="name">心智专一、平衡、觉知<small>树先立住，身体才稳，灵性才谈得上运作</small></span><label class="switch"><input type="checkbox" id="cond2"><span class="slider"></span></label></div>
+    <div class="cond-row"><span class="name">谨慎而有意识地打开<small>而非靠化学物质造成的随机破口接入</small></span><label class="switch"><input type="checkbox" id="cond3"><span class="slider"></span></label></div>
+    <div id="condResult">正在计算……</div>
+  </div>
+  <div class="card">
+    <h3>随机之门与谨慎之门：差别在「可靠」</h3>
+    <p>Ra 并不否定那些偶发的通道，他只是指出它们不可依赖。这一点值得单独摊开看。</p>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">随机出现的门</span><h4>灵性场上的破口</h4><p>有些人灵性场中有「随机的洞或门户」，有时由摄入化学物质（Ra 以 LSD 为例）造成。他们<b>随机且不受控制地</b>接入能量源——而且这些实体<b>可能是、也可能不是</b>想要服务的实体。</p></div>
+      <div class="yuan-card"><span class="y-tag">谨慎打开的门</span><h4>通往智能无限的通道</h4><p>目的在于以<b>更可靠</b>的方式、一种从疗愈者自己的变貌复合体看来<b>更平常、更寻常</b>的方式去服务。</p></div>
+      <div class="yuan-card"><span class="y-tag">旁观者视角</span><h4>看似奇迹</h4><p>对他人而言，这可能看起来是奇迹；但对那个谨慎打开了通往智能无限之门的人，这只是<b>寻常</b>、<b>平常</b>，是它应有的样子。</p></div>
+      <div class="yuan-card"><span class="y-tag">代价与后续</span><h4>生命有所转变</h4><p>Ra 的总结很克制：生命体验在某种程度上被转变了，而那件伟大的工作仍在继续。</p></div>
+    </div>
+    <div class="quote">
+      <p class="en">To others there may appear to be miracles. To the one who has carefully opened the door to intelligent infinity this is ordinary; this is commonplace; this is as it should be.</p>
+      <p class="zh">对他人而言，这可能显得像是奇迹；而对那个谨慎地打开了通往智能无限之门的人来说，这是寻常的、平常的，是它本该如此的样子。</p>
+      <span class="src">—— Session 006 · (6.1)</span>
+    </div>
+    <div class="plain">两种通道的差别不在「有没有能量」，而在「能不能被稳定地、有意识地使用」。</div>
+    <div class="case"><b>偶然爆红与稳定输出：</b>有人因一条视频偶然爆红，流量来得毫无准备，也复制不出来，甚至不知道自己说了什么打动了人——对应 Ra 说的「随机且不受控制地接入能量源」。另一位创作者每天固定更新、把选题与流程搭成一套系统，热度不高，却随时能用——对应「谨慎打开，以更可靠、更平常的方式服务」。</div>
+    <div class="case"><b>止痛针与康复训练：</b>一针止痛针立刻不疼，但你不知道它为什么有效，也不知道下次是否还有效；康复训练枯燥缓慢，却让身体真的变强，而且你自己知道每一步在做什么。Ra 把差别落在「可靠性」上，正是这个意思。</div>
+  </div>
+  <div class="card">
+    <h3>Ra 主动收住：起步够用，深入留待将来</h3>
+    <div class="quote">
+      <p class="en">At this time we feel these exercises suffice for your beginning.</p>
+      <p class="zh">此时，我们觉得这些练习对你们的起步已经足够。</p>
+      <span class="src">—— Session 006 · (6.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">We will, at a future time, when you feel you have accomplished that which is set before you, begin to guide you into a more precise understanding of the functions and uses of this gateway in the experience of healing.</p>
+      <p class="zh">在将来，当你们感到已经完成了摆在你们面前的任务时，我们将开始引导你们更精确地理解这个门户在疗愈体验中的功能与用途。</p>
+      <span class="src">—— Session 006 · (6.1)</span>
+    </div>
+    <div class="plain">灵性这一块本集只到「打地基」：更精确的功能与用途，要等你们先完成当前功课，Ra 才会讲。</div>
+    <div class="case"><b>教练只给前三周的计划：</b>你问教练「整套训练周期怎么排」，他只给你前三周的动作，说「先把这三周做完，我们再谈后面」。这不是藏私，而是因为动作正确与否会改变后续计划——Ra 对「门户的功能与用途」也是这样处理。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>金星先行者：金色形体与一次短暂访问</h2></div>
+  <p class="sec-lead">处理完参会许可，发问者在 (6.4) 提出一个大问题：能不能谈谈你们自己的历史背景，特别是参与地球事务之前来自哪里？Ra 给出了一段罕见的身世自述——从太阳系内的另一颗行星向外航行而来。</p>
+  <div class="card">
+    <h3>出身自述：一段金色的形体</h3>
+    <div class="q">你们在参与地球事务之前，来自哪里？</div>
+    <div class="quote">
+      <p class="en">I am, with the social memory complex of which I am a part, one of those who voyaged outward from another planet within your own solar system, as this entity would call it.</p>
+      <p class="zh">我，连同我所属于的那个社会记忆复合体，是那些从你们自己太阳系内的另一颗行星向外航行而来的存有之一——用这个实体的说法。</p>
+      <span class="src">—— Session 006 · (6.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The planetary influence was that you call Venus. We are a race old in your measures.</p>
+      <p class="zh">那颗行星的影响，就是你们称为金星的那一颗。以你们的尺度衡量，我们是一个古老的种族。</p>
+      <span class="src">—— Session 006 · (6.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">When we were at the sixth dimension our physical beings were what you would call golden. We were tall and somewhat delicate. Our physical body complex covering, which you call the integument, had a golden luster.</p>
+      <p class="zh">当我们在第六维度时，我们的物理存有是你们会称为金色的。我们很高，也颇为纤细。我们的物理身体复合体的覆盖物——你们称为外皮——带有金色的光泽。</p>
+      <span class="src">—— Session 006 · (6.4)</span>
+    </div>
+    <div class="plain">Ra 属于一个社会记忆复合体（social memory complex，一群共享整套记忆与思想的存有），从金星向外航行而来；在第六维度时，他们的形体是金色、高而纤细，外皮带金色光泽。</div>
+    <div class="analogy"><b>密度不是地名，是楼层：</b>同一栋楼里，三楼与六楼不是「好」与「坏」，而是课业不同。Ra 说他们的金色形体是「第六维度」时的样貌，强调的正是所在层次，而不是审美偏好。</div>
+  </div>
+  <div class="card">
+    <h3>为何只做短暂停留：一个「伪善的位置」</h3>
+    <div class="q">那你们后来为什么没有长期留在我们中间？</div>
+    <div class="quote">
+      <p class="en">We, thus, did not mix well with the population and were obviously other than they.</p>
+      <p class="zh">因此，我们并未能很好地与人群相融，而且显然与他们不同。</p>
+      <span class="src">—— Session 006 · (6.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Thus, our visit was relatively short, for we found ourselves in the hypocritical position of being acclaimed as other than your other-selves.</p>
+      <p class="zh">因此，我们的访问相对短暂，因为我们发现自己处在一个伪善的位置上：被称颂为不同于你们的其他自我。</p>
+      <span class="src">—— Session 006 · (6.4)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This was the time during which we built the structures in which you show interest.</p>
+      <p class="zh">正是在那段时期，我们建造了你们如今感兴趣的那些建筑。</p>
+      <span class="src">—— Session 006 · (6.4)</span>
+    </div>
+    <div class="plain">外形差异太大、无法融入，反而被当成「非我族类」来崇拜——Ra 把这种处境称为伪善的，因此停留很短。而你们现在感兴趣的那些建筑，就是那段时期留下的。</div>
+    <div class="analogy"><b>像空降的高管：</b>带着最好的方案进团队，却先被当成「救世主」。一旦位置被抬高，平等就没了，想教的东西反而传不下去——所以只能短住。</div>
+    <div class="case"><b>明星支教两周：</b>一位公众人物到乡村学校支教两周，媒体报道把他捧成「改变乡村的人」，本地的老师反倒成了背景。他的善意是真实的，但「被崇拜」的副作用让原本想要的平等交流没有发生——与 Ra 说的「被称颂为不同于你们的其他自我」是同一种结构。</div>
+    <div class="case"><b>总部空降改造流程：</b>总部派人来改造分公司流程，因为语言、习惯、职级差太大，来的人被当成「上面的人」而不是同事，方案还没落地，距离感已经把讨论关掉了。善意加层级，就会自动生产出 Ra 所说的那个「伪善的位置」。</div>
+  </div>
+  <div class="card">
+    <h3>怎么来的：思想；以及金星现在不适合你们</h3>
+    <div class="q">你们是怎么从金星到这里的？我们能去金星吗？</div>
+    <div class="quote">
+      <p class="en">We used thought.</p>
+      <p class="zh">我们使用了思想。</p>
+      <span class="src">—— Session 006 · (6.5)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The third-density conditions are not hospitable to the life-forms of your peoples. The fifth and sixth dimensions of that planetary sphere are quite conducive to growing/learning/teaching.</p>
+      <p class="zh">第三密度的条件，对你们人群的生命形态并不友善。那颗行星领域的第五与第六维度，则非常有利于成长/学习/教导。</p>
+      <span class="src">—— Session 006 · (6.6)</span>
+    </div>
+    <div class="plain">移动的方式是思想——不是造一艘船穿越空间。而金星现在适合第五、第六维度的成长学习，第三密度的生命形态在那里并不宜居。</div>
+    <div class="case"><b>共享屏幕代替出差：</b>有些协作根本不需要身体到场，一次远程连线就把事情办完。Ra 的「我们使用了思想」是同一个直觉的极端版本：在他们的层次上，空间距离不构成障碍，运输工具这个问题本身不成立。</div>
+    <div class="case"><b>换个城市不是换个自己：</b>有人以为搬到另一座城市就能重新开始，结果换掉的只是地图，处境、习惯、关系一件没少。Ra 说的是更彻底的一层：金星不是「条件差一点的地球」，而是第三密度生命在那里根本不成立——它现在是第五、第六维度成长的场所。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>议会与马尔德克：谁在看守这颗星球</h2></div>
+  <p class="sec-lead">发问者顺着「你们怎么来的」继续追问：你们到达时是可见的吗？是否必须改变维度才能在地球上行走？Ra 的回答带出两件关键的事——他们以复制品行走，而且这件事需要许可；随后话题转向太阳系里其他的第三密度居民。</p>
+  <div class="card">
+    <h3>以复制品行走，需要守护行星的议会允许</h3>
+    <div class="q">你们的维度与这里不同，那你们到达时是可见的吗？是不是必须改变维度才能在地球上行走？</div>
+    <div class="quote">
+      <p class="en">The dissolution into nothingness is the dissolution into unity, for there is no nothingness.</p>
+      <p class="zh">消融于虚无，就是消融于合一，因为虚无并不存在。</p>
+      <span class="src">—— Session 006 · (6.7)</span>
+    </div>
+    <div class="quote">
+      <p class="en">From the sixth dimension, we are capable of manipulating, by thought, the intelligent infinity present in each particle of light, or distorted light, so that we were able to clothe ourselves in a replica visible in the third density of our mind/body/spirit complexes in the sixth density.</p>
+      <p class="zh">从第六维度，我们能够以思想操控存在于每一光粒子——或变貌之光——中的智能无限，因此得以为我们第六密度的心/身/灵复合体，披上一具在第三密度中可见的复制品。</p>
+      <span class="src">—— Session 006 · (6.7)</span>
+    </div>
+    <div class="quote">
+      <p class="en">We were allowed this experiment by the Council which guards this planet.</p>
+      <p class="zh">我们被守护这颗行星的议会允许进行这个实验。</p>
+      <span class="src">—— Session 006 · (6.7)</span>
+    </div>
+    <div class="plain">他们不是把自己搬进来，而是以思想操控光粒子中的智能无限，为自己「穿」上一具在第三密度可见的复制身体；而这件事，需要守护这颗行星的议会批准。</div>
+    <div class="analogy"><b>像给游戏角色建模：</b>你不是把自己塞进游戏，而是照游戏的规则生成一个在游戏里看得见、能行动的角色。Ra 说的「复制品」正是这个意思，人不在里面，形象在里面。</div>
+    <div class="analogy"><b>Unity 与 nothingness：</b>Ra 特意把「消融于无」解释为「消融于合一」——因为在他们的框架里，无这个东西根本不存在。这句话是理解他们「以思想成形」的前提。</div>
+  </div>
+  <div class="card">
+    <h3>议会在哪里：土星的第八维度</h3>
+    <div class="q">这个议会位于何处？</div>
+    <div class="quote">
+      <p class="en">This Council is located in the octave, or eight[h] dimension, of the planet Saturn, taking its place in an area which you understand in third-dimensional terms as the rings.</p>
+      <p class="zh">这个议会位于土星这颗行星的第八度音程——或者说第八维度——占据着你们以第三维度术语会理解为「环」的那个区域。</p>
+      <span class="src">—— Session 006 · (6.8)</span>
+    </div>
+    <div class="plain">议会位于土星的第八度音程（第八维度），在你们用三维术语会称为「环」的区域。</div>
+    <div class="analogy"><b>「度音程」是 Ra 的习惯说法：</b>同一个词既指音阶的第八度，也指维度。像音阶回到同名音却高了一层——不是换了另一个世界，而是升到了更高一层的同一个位置。</div>
+    <div class="case"><b>小区里搭东西要先报备：</b>你想在公共绿地装一个给孩子们用的秋千，得先跟业委会报备、说明用途，等它同意。这不是谁权力更大的问题，而是这块空间本来就有看护者与既定规则——Ra 说的「守护这颗行星的议会」在同一逻辑上：跨层次的介入要先请求。</div>
+  </div>
+  <div class="card">
+    <h3>马尔德克：一颗被自己毁掉的行星</h3>
+    <div class="q">这个太阳系的其他行星上，也有像地球上这样的人吗？</div>
+    <div class="quote">
+      <p class="en">Do you request space/time present information or space/time continuum information?</p>
+      <p class="zh">你们请求的是空间/时间当下的信息，还是空间/时间连续体的信息？</p>
+      <span class="src">—— Session 006 · (6.9)</span>
+    </div>
+    <p>发问者答「两者都要」，Ra 于是从过去讲起。这个反问本身值得留意：Ra 会先把问题切开，让提问者自己选定范围，而不是替他决定该谈什么。</p>
+    <div class="quote">
+      <p class="en">At one time/space, in what is your past, there was a population of third-density beings upon a planet which dwelt within your solar system.</p>
+      <p class="zh">在某个时间/空间——你们的过去中——曾有一群第三密度存有，居住在你们太阳系内的一颗行星上。</p>
+      <span class="src">—— Session 006 · (6.10)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The vibratory sound complex most usually used by your peoples is Maldek.</p>
+      <p class="zh">你们人群最常使用的声音振动复合体是马尔德克。</p>
+      <span class="src">—— Session 006 · (6.10)</span>
+    </div>
+    <div class="quote">
+      <p class="en">These entities, destroying their planetary sphere, thus were forced to find room for themselves upon this third density, which is the only one in your solar system at their time/space present which was hospitable and capable of offering the lessons necessary to decrease their mind/body/spirit distortions with respect to the Law of One.</p>
+      <p class="zh">这些实体毁掉了自己的行星领域，因此被迫在第三密度上为自己寻找容身之处——在它们当时的时间/空间里，这是你们太阳系中唯一既宜居、又能提供必要功课、以减少它们关于一的法则之心/身/灵变貌的地方。</p>
+      <span class="src">—— Session 006 · (6.10)</span>
+    </div>
+    <div class="quote">
+      <p class="en">They came through the process of harvest and were incarnated through the processes of incarnation from your higher spheres within this density.</p>
+      <p class="zh">他们是经由收割的过程而来，并经由这个密度中更高领域的投生过程而投生。</p>
+      <span class="src">—— Session 006 · (6.11)</span>
+    </div>
+    <div class="plain">太阳系过去有一颗叫马尔德克的行星，住着第三密度存有；他们毁掉了自己的星球，只能迁到当时唯一宜居、且能提供所需功课的地球，方式是经由收割与投生。</div>
+    <div class="case"><b>把家烧了只能借住：</b>因自己的疏忽引发火灾，你不得不搬进亲戚家。住处换了，但带着的问题——债务、习惯、关系——一件也没少。Ra 说马尔德克实体来地球，正是为了「减少关于一的法则的变貌」：课业跟着人走，搬家不算过关。</div>
+  </div>
+  <div class="card">
+    <h3>时间与来源的问题，Ra 给了明确的限定</h3>
+    <div class="q">那是多久以前？地球上所有人都是从马尔德克来的吗？</div>
+    <div class="quote">
+      <p class="en">This occurred approximately five hundred thousand [500,000] of your years ago.</p>
+      <p class="zh">这发生在大约五十万（500,000）个你们的年之前。</p>
+      <span class="src">—— Session 006 · (6.12)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This is a new line of questioning and deserves a place of its own.</p>
+      <p class="zh">这是一个新的提问方向，值得拥有它自己的位置。</p>
+      <span class="src">—— Session 006 · (6.13)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The population of your planet contains many various groups harvested from other second-dimension and cycled third-dimension spheres. You are not all one race or background of beginning.</p>
+      <p class="zh">你们星球的人口包含许多不同的群体，他们是从其他第二维度领域与循环中的第三维度领域收割来的。你们并非全都属于同一种族或同一个起源背景。</p>
+      <span class="src">—— Session 006 · (6.13)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The experience you share is unique to this time/space continuum.</p>
+      <p class="zh">你们所共享的这个体验，对这个时间/空间连续体而言是独一无二的。</p>
+      <span class="src">—— Session 006 · (6.13)</span>
+    </div>
+    <div class="plain">马尔德克一事约在五十万年前；但地球人口并非同源——包含从其他第二维度与循环中的第三维度领域收割来的许多群体。而你们共同经历的这一切，是独一份的。</div>
+    <div class="case"><b>团建时猜老家：</b>你本以为同事都来自同一个地方，一问才发现五湖四海，各自的口音、家庭习惯、吃辣程度全不一样。Ra 在 (6.13) 说的正是这件事的放大版：地球人口包含来自不同起源背景的许多群体，「你们并非全都属于同一种族或起源背景」。</div>
+  </div>
+  <div class="card">
+    <h3>归类练习：这些话是谁说的？</h3>
+    <p>判断下面每段描述属于哪一方：金星的 Ra、被毁的马尔德克，还是守护行星的土星议会。</p>
+    <div id="sorterArea"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>收割机制：光/爱之线、周期与此刻的位置</h2></div>
+  <p class="sec-lead">发问者问出本集的理论核心：一的法则如何在「把存有转移到我们星球」与「收割」这两件事上运作？Ra 先给出最简洁的定义，再描述收割的机制——它不是审判，而是一次按各自舒适度自动完成的分流。</p>
+  <div class="card">
+    <h3>一的法则的定义，与「按自己的选择」分流</h3>
+    <div class="q">一的法则到底是怎么运作的？</div>
+    <div class="quote">
+      <p class="en">The Law of One states simply that all things are one, that all beings are one.</p>
+      <p class="zh">一的法则只是简单地说：所有事物都是一，所有存有都是一。</p>
+      <span class="src">—— Session 006 · (6.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">There are certain behaviors and thought-forms consonant with the understanding and practice of this law.</p>
+      <p class="zh">有某些行为与思想形态，与对这个法则的理解和实践是相合的。</p>
+      <span class="src">—— Session 006 · (6.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Those who, finishing a cycle of experience, demonstrate various grades of distortion of that understanding of thought and action will be separated by their own choice into the vibratory distortion most comfortable to their mind/body/spirit complexes.</p>
+      <p class="zh">那些完成了一个体验周期、并展现出对那思想与行动之理解的不同等级变貌的存有，将按他们自己的选择，被分离到对他们的心/身/灵复合体而言最舒适的振动变貌之中。</p>
+      <span class="src">—— Session 006 · (6.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This process is guarded, or watched, by those nurturing beings who, being very close to the Law of One in their distortions, nevertheless have the distortion towards active service.</p>
+      <p class="zh">这个过程由那些养育性的存有守护、或者说看顾——他们在变貌上非常接近一的法则，然而仍带有朝向主动服务的变貌。</p>
+      <span class="src">—— Session 006 · (6.14)</span>
+    </div>
+    <div class="plain">收割不是外部审判，而是「按自己的选择」分流到最舒适的振动里；看顾者不是判官，而是接近一的法则、却仍选择主动服务的养育性存有。</div>
+    <div class="analogy"><b>像调到自己能久留的音量：</b>不是你被别人挑出来，而是你自己停在那档你能承受的强度上。分流的依据是舒适度，不是评分。</div>
+  </div>
+  <div class="card">
+    <h3>收割的意象：一条强度递增的光/爱之线</h3>
+    <div class="quote">
+      <p class="en">Thus, the illusion is created of Light, or more properly but less understandably, light/love. This is in varying degrees of intensity.</p>
+      <p class="zh">于是，光这个幻象被造出来——或者更准确、但更不易理解地说，光/爱。它有着不同等级的强度。</p>
+      <span class="src">—— Session 006 · (6.14)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The spirit complex of each harvested entity moves along the line of light until the light grows too glaring, at which time the entity stops.</p>
+      <p class="zh">每个被收割实体的灵性复合体沿着光之线移动，直到光变得过于刺眼，这时该实体便停下来。</p>
+      <span class="src">—— Session 006 · (6.14)</span>
+    </div>
+    <div class="plain">每个实体的灵性复合体沿着一条强度递增的光之线前行，直到光刺眼到无法再走，就在那里停下——停在哪里，就落在哪个振动层次。</div>
+    <div class="analogy"><b>像走进越来越亮的隧道：</b>你在还能看清的亮度处停下，那处就是你的位置。没有人推你，也没有人拦你，只有亮度与承受力的匹配。</div>
+    <div class="case"><b>音乐节现场找位置：</b>你走进一个露天音乐节，前排音量与人群密度让你受不了，你就自然停在中间那片区域——不是保安安排的，而是你自己停下来的。Ra 描述的光/爱之线就是这个机制：沿强度前行，停在能久留的地方。</div>
+  </div>
+  <div class="card">
+    <h3>周期与此刻：三个 25,000 年，与三十年的不便</h3>
+    <div class="q">这些周期有多长？这个星球现在处在什么位置？</div>
+    <div class="quote">
+      <p class="en">One major cycle is approximately twenty-five thousand [25,000] of your years.</p>
+      <p class="zh">一个主要周期大约是两万五千（25,000）个你们的年。</p>
+      <span class="src">—— Session 006 · (6.15)</span>
+    </div>
+    <div class="quote">
+      <p class="en">At the end of three major cycles—that is, approximately between seventy-five and seventy-six thousand [75–76,000] of your years—all are harvested regardless of their progress, for during that time the planet itself has moved through the useful part of that dimension and begins to cease being useful for the lower levels of vibration within that density.</p>
+      <p class="zh">在三个主要周期结束时——也就是大约在七万五千到七万六千（75–76,000）个你们的年之间——所有人都会被收割，不论其进展如何，因为那时行星本身已经走完了那个维度的有用部分，并开始不再适合该密度中较低振动层次的使用。</p>
+      <span class="src">—— Session 006 · (6.15)</span>
+    </div>
+    <div class="timeline">
+      <div class="tl-item"><div class="t">约 50 万年前</div><div class="d">马尔德克实体毁掉自己的行星后，经由收割与投生过程来到地球。(6.10)–(6.12)</div></div>
+      <div class="tl-item"><div class="t">一个主要周期 ≈ 25,000 年</div><div class="d">这是进步者可以被收割的常规窗口；这样的周期一共有三个。(6.15)</div></div>
+      <div class="tl-item"><div class="t">三个周期走完 ≈ 75,000–76,000 年</div><div class="d">不论进度全部收割——原因是行星本身已经走完那个维度的有用部分，开始不再适合该密度中较低振动的使用。(6.15)</div></div>
+      <div class="tl-item"><div class="t">提问当时：已经开始，将持续约 30 年</div><div class="d">这个领域此时已处在第四维度振动，但因意识中嵌入的社会记忆复合体而使物质相当混乱，尚未轻松过渡，因此「将被带着一些不便地接走」；不和谐的振动复合体已在数年前开始，将持续约三十年。(6.16)–(6.17)</div></div>
+      <div class="tl-item"><div class="t">三十年后</div><div class="d">发问者问「之后我们就是第四密度星球了吗」，Ra 的回答只有一句：「正是如此。」(6.18)</div></div>
+    </div>
+    <div class="plain">三个 25,000 年周期是常规收割窗口；三次走完（约 7.5 万年）则不论进度全部收割，因为行星本身已经用完了那个维度的有效部分。</div>
+    <div class="case"><b>补考与校舍到期：</b>一门课每学期都有补考机会（三个周期），谁能过就过；但学制一到，所有学生都得离校（第三次周期结束时全部收割）。后者与你的成绩无关，是这栋楼的使用期限到了——Ra 说这是「行星本身走完了那个维度的有用部分」。</div>
+  </div>
+  <div class="card">
+    <h3>术语卡：本集的核心词</h3>
+    <p>点击卡片翻看解释。这几个词在全书反复出现，先在这里建立准确的直觉。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">密度</div><div class="sub">density</div><span class="tap">点击展开</span></div><div class="back">存有与学习所处的层级，按振动频率划分；每一密度有自己的一套课业。本集说地球此刻已处于第四维度振动，而你们居住的仍是第三密度的条件。<em>比喻：同一栋楼的不同楼层——不是「更好」，而是「课业不同」。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">维度 / 度音程</div><div class="sub">dimension / octave</div><span class="tap">点击展开</span></div><div class="back">Ra 常把「维度」与「度音程」混用，指的是同一层次结构的不同说法。本集中，Ra 的第六维度、以及土星议会的第八度音程，都属这个用法。<em>比喻：音阶的第八度回到同名音却高了一层——同一个位置，更高一层。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">收割</div><div class="sub">harvest</div><span class="tap">点击展开</span></div><div class="back">一个周期结束时，完成体验周期的存有按自身变貌的「舒适度」被分流到相应振动层次；Ra 明确说这是<b>按自己的选择</b>，由养育性存有守护而非审判。<em>案例：音乐节上，你自己停在了能久留的那片区域。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">光/爱</div><div class="sub">light/love</div><span class="tap">点击展开</span></div><div class="back">收割幻象所用的介质，强度分为不同等级；Ra 说这是「更准确但更不易理解」的说法。每个实体的灵性复合体沿这条光之线前行，直到光刺眼而停下。<em>比喻：一条越走越亮的隧道，你在还看得清的地方停下。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">一的法则</div><div class="sub">the Law of One</div><span class="tap">点击展开</span></div><div class="back">本集给出的最简定义是：所有事物都是一，所有存有都是一。有某些行为与思想形态与这个理解相合；对这些理解和实践的不同等级，就是各自的「变貌」。<em>本集 Ra 明说：一的法则是我们在此要表达的东西。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">社会记忆复合体</div><div class="sub">social memory complex</div><span class="tap">点击展开</span></div><div class="back">一群存有共享整套记忆与思想的集合体；Ra 自己就属于一个这样的复合体（金星来源）。本集还说，地球的意识里嵌入了若干社会记忆复合体，正是它们让物质的过渡变得混乱。<em>案例：一个团队共用同一套档案与记忆，做事风格自然趋同。</em></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>「多少人能通过」这个问题，Ra 的拒答本身就是教导</h3>
+    <div class="quote">
+      <p class="en">The harvesting is not yet, thus estimation is meaningless.</p>
+      <p class="zh">收割尚未到来，因此估计是没有意义的。</p>
+      <span class="src">—— Session 006 · (6.19)</span>
+    </div>
+    <div class="quote">
+      <p class="en">We have walked among your people. We remember. We remember sorrow. We have seen much.</p>
+      <p class="zh">我们曾在你们人群中行走。我们记得。我们记得悲伤。我们见过许多。</p>
+      <span class="src">—— Session 006 · (6.20)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The answer, in short, is yes. However, we wished you to know that in our memory we thank you.</p>
+      <p class="zh">简而言之，答案是肯定的。然而，我们希望你们知道：在我们的记忆里，我们感谢你们。</p>
+      <span class="src">—— Session 006 · (6.20)</span>
+    </div>
+    <div class="plain">收割尚未发生，估算比例没有意义；而 Ra 说他们此刻给出信息，确实与这个过渡期有关，并且他们记得、见过许多——最后一句是感谢，不是总结。</div>
+    <div class="case"><b>面试前别算录取率：</b>面试还没开始，你反复推算「今年录取率多少」，除了让自己紧张没有任何作用。Ra 的回答一模一样：收割尚未到来，因此估计是没有意义的。这句话不是推托，而是不提供无用且容易被误用的数字。</div>
+    <div class="case"><b>老员工记得：</b>一位在公司待了二十年的老员工，看着一波波人来去，他给新人的建议往往只有一句「我见过，也记得」。Ra 说「我们曾在你们人群中行走。我们记得。我们记得悲伤」——这不是修辞，而是他们对自己在此刻开口的理由的说明。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>星际联邦：什么不重要，什么重要</h2></div>
+  <p class="sec-lead">最后一段问答从 UFO 的来历问起，Ra 借机交代了自己所属的星际联邦、隔离原则，以及他如何决定一个问题值不值得回答。也正是这段解说，让本集从一个「历史与身世」的集会，落回到「什么才是这里真正要表达的东西」。</p>
+  <div class="card">
+    <h3>水晶、钟形载具，与两次没有降落的访问</h3>
+    <div class="q">那些据说来自金星的碟形飞行器，是你们的吗？</div>
+    <div class="quote">
+      <p class="en">We have used crystals for many purposes. The craft of which you speak have not been used by us in your space/time present memory complex. However, we have used crystals and the bell shape in the past of your illusion.</p>
+      <p class="zh">我们曾将水晶用于许多目的。你们所说的那些飞行器，在你们当下这个空间/时间的记忆复合体中，并未被我们使用过。然而，在你们幻象的过去，我们确实使用过水晶与钟形。</p>
+      <span class="src">—— Session 006 · (6.21)</span>
+    </div>
+    <div class="quote">
+      <p class="en">We visited your peoples eighteen thousand [18,000] of your years ago and did not land; again, eleven thousand [11,000] years ago.</p>
+      <p class="zh">我们在一万八千（18,000）个你们的年之前访问过你们的人群，并且没有降落；此后在一万一千（11,000）年前又曾访问。</p>
+      <span class="src">—— Session 006 · (6.22)</span>
+    </div>
+    <div class="plain">现在被看到的那些飞行器不是他们的；但过去他们确实用过水晶与钟形载具——一万八千年前、一万一千年前两次访问地球，都没有降落。</div>
+    <div class="case"><b>老照片与现在的门面：</b>你翻到一张二十年前的老店照片，按地址找去却是一片写字楼。这不是骗局，只是「当时确实在那里」。Ra 对钟形载具的处理也是如此：照片是真的，但对应的是很久以前的访问，而且 Ra 说「我们已不再是金星」。</div>
+  </div>
+  <div class="card">
+    <h3>那些「金星接触」报告从哪来：集体意识重演</h3>
+    <div class="q">不到三十年前就有钟形载具的照片和来自金星的接触报告，你知道这些吗？</div>
+    <div class="quote">
+      <p class="en">We have knowledge of Oneness with these forays of your time/space present. We are no longer of Venus.</p>
+      <p class="zh">对你们当下时间/空间中的这些突袭行动，我们拥有合一的知识。我们已经不再属于金星。</p>
+      <span class="src">—— Session 006 · (6.23)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This mass consciousness, as you may call it, creates the experience once more for those who request such experience. The present Venus population is no longer sixth-density.</p>
+      <p class="zh">这种集体意识——你们可能会这样称呼它——会为那些请求这类体验的人，再一次创造出那种体验。当前的金星人口已不再是第六密度。</p>
+      <span class="src">—— Session 006 · (6.23)</span>
+    </div>
+    <div class="plain">现代那些接触报告并非新来的访客：当年行走人间留下的记忆与思想形态，已成你们社会记忆复合体的一部分，集体意识会为「请求这种体验」的人把它重演一遍。</div>
+    <div class="analogy"><b>像老电影的翻拍：</b>原班人马早已不在，但剧本与胶片还在，后来的人照着档案把场景重新搭出来。演得再真，也不是当年的剧组回来了。</div>
+    <div class="case"><b>城市传说自己会生长：</b>某个老校区一直流传「深夜琴房有人弹琴」，一代代学生都声称听过。故事的素材来自很久以前的一个人，但每一次「听到」都是后来者自己补齐的。Ra 说的「为请求这种体验的人再次创造该体验」，正是这个结构。</div>
+  </div>
+  <div class="card">
+    <h3>星际联邦：五十三个文明，五百个行星意识复合体</h3>
+    <div class="q">目前被报告的 UFO 里，有来自其他行星的吗？</div>
+    <div class="quote">
+      <p class="en">I am one of the members of the Confederation of Planets in the Service of the Infinite Creator.</p>
+      <p class="zh">我是服务于无限造物主的行星联邦的成员之一。</p>
+      <span class="src">—— Session 006 · (6.24)</span>
+    </div>
+    <div class="quote">
+      <p class="en">There are approximately fifty-three civilizations comprising approximately five hundred planetary consciousness complexes in this Confederation.</p>
+      <p class="zh">这个联邦中大约有五十三个文明，构成大约五百个行星意识复合体。</p>
+      <span class="src">—— Session 006 · (6.24)</span>
+    </div>
+    <div class="quote">
+      <p class="en">It is a true Confederation in that its members are not alike, but allied in service according to the Law of One.</p>
+      <p class="zh">它是一个真正的联邦：其成员并不相同，但依照一的法则在服务中结盟。</p>
+      <span class="src">—— Session 006 · (6.24)</span>
+    </div>
+    <div class="plain">联邦不是一个统一的帝国，而是「成员各不相同、却按一的法则在服务中结盟」的联盟；它包含地球本土已超越第三密度的实体、太阳系内的行星实体，以及其他星系的实体。</div>
+    <div class="case"><b>开源社区：</b>一个大型开源项目里，参与者来自不同公司、各有各的风格与利益，唯一的共同点是遵守同一套许可协议、并认可「让项目对使用者更有用」这件事。Ra 所说的「真正的联邦」正是这样：成员并不相同，但在服务中结盟。</div>
+  </div>
+  <div class="card">
+    <h3>隔离，与 Ra 对「重要性」的加权</h3>
+    <div class="q">那现在有谁以飞船来到这里？过去三十年里呢？</div>
+    <div class="quote">
+      <p class="en">We must state that this information is unimportant. If you will understand this, we feel that the information may be acceptably offered. The Law of One is what we are here to express.</p>
+      <p class="zh">我们必须声明，这个信息是不重要的。如果你们能理解这一点，我们觉得这个信息可以被接受地提供。一的法则是我们在此要表达的东西。</p>
+      <span class="src">—— Session 006 · (6.25)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Each planetary entity which wishes to appear within your third-dimensional space/time-distortion requests permission to break quarantine, as you may call it, and appear to your peoples.</p>
+      <p class="zh">每一个希望出现在你们第三维度空间/时间变貌中的行星实体，都要请求许可去打破你们可能称之为「隔离」的状态，从而向你们的人群显现。</p>
+      <span class="src">—— Session 006 · (6.25)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Their purposes are very simple: to allow those entities of your planet to become aware of infinity which is often best expressed to the uninformed as the mysterious or unknown.</p>
+      <p class="zh">它们的目的非常简单：让你们星球的那些实体意识到无限——而对未受启蒙者，这往往最好被表述为「神秘」或「未知」。</p>
+      <span class="src">—— Session 006 · (6.25)</span>
+    </div>
+    <div class="quote">
+      <p class="en">We wish you to proceed as you deem proper. That is your place.</p>
+      <p class="zh">我们希望你们按你们认为合适的方式继续。那是你们的位置。</p>
+      <span class="src">—— Session 006 · (6.26)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Nevertheless, unless the question contains the potential for answer-giving which may infringe upon free will, we offer our answers.</p>
+      <p class="zh">尽管如此，除非某个问题含有可能侵犯自由意志的「给予答案」的潜力，我们都会提供我们的答案。</p>
+      <span class="src">—— Session 006 · (6.26)</span>
+    </div>
+    <div class="plain">任何实体要出现，都得先请求打破隔离；Ra 会明说某个问题「不重要」——那不是拒答，而是按他们对相对重要性的理解加权；真正会让他们闭口的只有一种情形：答案可能侵犯自由意志。</div>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">Ra 的做法一</span><h4>明说「不重要」，然后照答</h4><p>本集 (6.21)–(6.25) 的飞行器问题就是这样处理的：Ra 先声明这类信息不重要，接着说「然而，我们将谈论这个主题」，随后如实回答。</p></div>
+      <div class="yuan-card"><span class="y-tag">Ra 的做法二</span><h4>唯一会拒答的理由</h4><p>只有当问题含有「给予答案」的潜力、可能<b>侵犯自由意志</b>时，Ra 才不提供答案——这是本集给出的唯一一条明确的拒答界线。</p></div>
+      <div class="yuan-card"><span class="y-tag">提问者的位置</span><h4>由你们决定问什么</h4><p>发问者担心自己问 UFO 之类的问题会偏离主题，Ra 说这个判断只有轻微变貌，并说「我们希望你们按你们认为合适的方式继续。那是你们的位置。」</p></div>
+      <div class="yuan-card"><span class="y-tag">显现的目的</span><h4>让人意识到无限</h4><p>联邦实体以飞行器出现，目的不是提供天文或技术信息，而是让你们意识到无限——而对未受启蒙者，这最好被表述为「神秘」或「未知」。</p></div>
+    </div>
+    <div class="case"><b>小区访客登记：</b>外人想进小区，得先在门口登记、说明来意，物业再决定是否放行。这不是刁难，而是这块空间有既定的规则与看护者。Ra 说的「请求许可打破隔离」正是同一套逻辑，只不过范围是一整颗行星。</div>
+    <div class="case"><b>导航 App 不告诉你附近有几家奶茶店：</b>你打开地图是为了找到要去的那一家，不是为了统计商业密度。联邦飞行器出现在天空，目的也不是提供天文知识，而是让人「意识到无限」——它的用途是提问，不是答案。</div>
+  </div>
+  <div class="saying">
+    <p class="en">The Law of One states simply that all things are one, that all beings are one.</p>
+    <p class="zh">一的法则只是简单地说：所有事物都是一，所有存有都是一。</p>
+    <span class="src">—— Session 006 · (6.14)</span>
+  </div>
+  <div class="card">
+    <h3>收官：本集留下的位置</h3>
+    <p>本集把疗愈的第三个领域补齐后立即收住，随后用大半篇幅交代了 Ra 的来处、守护行星的议会、马尔德克与收割机制。Ra 在收尾处只留了一句关于未来工作的承诺，以及一段告别。</p>
+    <div class="quote">
+      <p class="en">I am Ra. I leave you in the love and the light of the One Infinite Creator. Go forth rejoicing in the power and the peace of the One Creator. Adonai.</p>
+      <p class="zh">我是 Ra。我在太一无限造物主的爱与光中离开你们。在太一造物主的大能与和平中欢欣前行。Adonai。</p>
+      <span class="src">—— Session 006 · (6.29)</span>
+    </div>
+    <div class="plain">下一集可以带着这两个问题读：那个「门户」在疗愈体验中的功能与用途，Ra 何时开始细讲？以及，说好的第一次收割窗口，具体会在什么条件下开启？</div>
+    <div class="case"><b>把「以后再说」记进待办：</b>会议最后，负责人说「这件事等先把眼前这版做完再谈」，你在待办里记下这条——不追问、也不忘掉。Ra 在 (6.1) 留下的正是这样一条待办：更精确地理解那个门户的功能与用途，要等当前功课完成之后。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+<p>基于 The Ra Contact Session 006（split/Ra_Session_006.md）英文原文制作 · 交互式学习模块</p>
+<p>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文</p>
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra006-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+  {t:'(6.0) 开场',d:'<b>致意。</b>Ra 以「在无限造物主的爱与光中致意」开场，宣布通讯开始。'},
+  {t:'(6.1) 补齐灵性领域',d:'<span class="qa-q">问：我们想继续昨天的内容。</span><b>答：</b>补上教导/学习的第三个领域——灵性复合体。它是心/身/灵中变貌最少的一层，也是最漫长、最精微的一层。心智如树、心智控制身体；当心智专一、平衡、觉知，身体在自身偏好处舒适，器皿才准备好进入那件「伟大的工作」。灵性场是一条通道：身心敞开时，它成为双向的穿梭器，把个体意志向上送、把创造性的火与风向下引。'},
+  {t:'(6.2)–(6.4) 来客与出身',d:'<span class="qa-q">问：Tom Flaherty 明天可以来参加吗？你说的「附属物」指什么？</span><b>答：</b>可以，但要先仔细教他必要的心智框架与各种附属物。附属物指那些触发器皿朝向爱/光的变貌的象征性物品，它们的放置与在场者的接纳本身就在滋养器皿。随后发问者转向更大的问题：你们在参与地球事务之前来自哪里？'},
+  {t:'(6.5)–(6.13) 金星 · 议会 · 马尔德克',d:'<span class="qa-q">问：你们从哪来、怎么来的？太阳系其他行星上有人吗？</span><b>答：</b>来自金星，以思想航行；第六维度时形体金色、高而纤细。以在第三密度可见的复制品前来，需守护行星的议会允许（议会位于土星第八维度）。太阳系过去另有第三密度居民：马尔德克，他们毁掉自己的行星后，约五十万年前经收割投生地球。地球人口并非同源，包含许多不同起源背景的群体。'},
+  {t:'(6.14)–(6.20) 收割机制',d:'<span class="qa-q">问：一的法则如何在迁移与收割中运作？周期多长？我们现在在哪？</span><b>答：</b>收割是存有「按自己的选择」分流到最舒适的振动；机制是一条强度递增的光/爱之线，灵性复合体沿它前行，直到光刺眼而停下。一个主要周期约 25,000 年，三个周期走完（约 7.5 万年）则不论进度全部收割。地球此时已处于第四维度振动，但不和谐的过渡已经开始，将持续约三十年。'},
+  {t:'(6.21)–(6.29) 联邦与收尾',d:'<span class="qa-q">问：那些 UFO 是你们的吗？现在有谁以飞船来到这里？</span><b>答：</b>现在被看到的飞行器不是 Ra 的，但过去他们用过水晶与钟形载具（一万八千年前、一万一千年前两次访问未降落）；现代的接触报告来自当时留下的思想形态在集体意识中的重演。Ra 自称星际联邦成员：约五十三个文明、约五百个行星意识复合体，成员各不相同、按一的法则结盟；要出现必须先请求打破隔离，目前有七个以飞行器运作。Ra 明说这类信息「不重要」却照样回答，唯一会让他闭口的是可能侵犯自由意志的问题。'}
+]);
+
+function updateCond(){
+  const a=document.getElementById('cond1').checked,
+        b=document.getElementById('cond2').checked,
+        c=document.getElementById('cond3').checked;
+  const box=document.getElementById('condResult');
+  const miss=[];
+  if(!a)miss.push('身体与心智接纳而敞开');
+  if(!b)miss.push('心智专一、平衡、觉知');
+  if(!c)miss.push('谨慎而有意识地打开');
+  if(!miss.length){
+    box.classList.remove('fail');
+    box.innerHTML='<b>三项齐备：灵性成为运作中的穿梭器。</b>个体的意志能量向上输送，创造性的火与风之流向下带入——通道双向打通。Ra 说这样打开的目的是以更可靠、更平常的方式去服务：对旁人可能像奇迹，对开门的人却只是「它应有的样子」，而生命体验会在某种程度上被转变，伟大的工作继续。';
+    return;
+  }
+  const detail=[];
+  if(!a)detail.push('身体或心智尚未敞开时，灵性场仍然是一条通道，却没有来回的流动——风与火进不来，个体的意志也上不去，剩下的只是形式。');
+  if(!b)detail.push('心智未专一、未平衡、未觉知时，器皿还没准备好进入那件「伟大的工作」：Ra 的次第是心智先立住（树），身体才谈得上舒适，灵性才谈得上运作。');
+  if(!c)detail.push('若只有随机形成的破口（例如化学物质造成的灵性场门户），接入就是随机且不受控制的：能量可能进来，却无法选择何时、为何、给谁，也无从据此稳定地服务——而且这样的实体可能是、也可能不是想要服务的存有。');
+  box.classList.add('fail');
+  box.innerHTML='<b>还缺 '+miss.length+' 项：'+miss.join('、')+'。</b>'+detail.join('');
+}
+['cond1','cond2','cond3'].forEach(function(id){
+  document.getElementById(id).addEventListener('change',updateCond);
+});
+updateCond();
+
+document.querySelectorAll('.fn-card').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('open')));
+
+initSorter('sorterArea',[
+  {a:'第六维度时形体是金色的、高而纤细，外皮带有金色光泽',opts:['金星','马尔德克','土星议会'],ans:'金星',exp:'这是 Ra 对自己所属社会记忆复合体的描述——从金星向外航行而来的一支 (6.4)。'},
+  {a:'毁掉了自己的行星领域，被迫为自己寻找容身之处',opts:['金星','马尔德克','土星议会'],ans:'马尔德克',exp:'马尔德克实体毁掉自己的星球后，只能迁往当时唯一宜居、且能提供必要功课的地球 (6.10)。'},
+  {a:'位于第八度音程，占据你们以三维术语理解为「环」的区域',opts:['金星','马尔德克','土星议会'],ans:'土星议会',exp:'守护这颗行星的议会位于土星的第八维度，也就是你们理解为「环」的区域 (6.8)。'},
+  {a:'一万八千年前与一万一千年前两度访问地球，都没有降落',opts:['金星','马尔德克','土星议会'],ans:'金星',exp:'这是来自金星时期的 Ra 以钟形载具的两次访问，两次都没有降落 (6.22)。'},
+  {a:'许多实体投生在地球表面之内而非其上',opts:['金星','马尔德克','土星议会'],ans:'马尔德克',exp:'从马尔德克收割来的实体，许多投生在地表之内而不是地表之上 (6.13)。'},
+  {a:'允许 Ra 以在第三密度可见的复制品前来，作为一次实验',opts:['金星','马尔德克','土星议会'],ans:'土星议会',exp:'Ra 说这个实验是被守护这颗行星的议会允许的 (6.7)。'}
+]);
+
+renderPath();
+</script>
+</body>
+</html>

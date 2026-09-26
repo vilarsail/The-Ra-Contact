@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 063 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 063 · 交互式学习模块</h1>
+  <p class="sub">第三密度的周期临近换挡时刻：这一集把「过渡」拆到最小零件——谁毕业、谁提前到来、双重激活的身体如何工作、新球体怎样从黄绿混合的环境中成形，以及行星发热的真正病灶在哪里。</p>
+  <div class="tagline">6 个主题 · 6 个学习步骤 · 20 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本集地图</a>
+<a href="#s2">② 生命能量与意志</a>
+<a href="#s3">③ 三种去向与来客</a>
+<a href="#s4">④ 双重激活的身体</a>
+<a href="#s5">⑤ 新球体的诞生</a>
+<a href="#s6">⑥ 收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>一场问答在问什么：第三密度如何「换挡」进入第四密度</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>生命能量与意志</b><span>什么让一个受损的身体继续运转，爱如何充当保护者</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>三种去向与两批来客</b><span>收割前的地球人口构成：谁留下、谁离开、谁到来</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>双重激活的身体</b><span>会意念弯金属的孩子从哪里来，流浪者为何反而做不到</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>新球体的诞生</b><span>部分激活与完全激活之间，身体如何一步步变成第四密度载具</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官：钟面与金句</b><span>星系的钟面、被「自由允许」的发热，以及本集最核心的一句话</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本集地图：第三密度如何「换挡」进入第四密度</h2></div>
+  <p class="sec-lead">上一集的讨论停在「绿色能量已被激活 45 年」，本集发问者顺着这条线，把过渡的每一个环节都问到底：得失之辨、人口构成、身体机制、球体诞生，最后落到「这一切是谁安排的」。开场与收尾的器皿照护问答已收进折叠区。</p>
+  <div class="card">
+    <h3>本集的四条主线</h3>
+    <div class="q">发问者带着上一集的尾巴回来：绿色已激活、黄色将退场，这个「换挡期」到底会怎么发生？</div>
+    <p>本集议题沿四条线推进：<b>① 生命能量与意志</b>——什么在支撑受损的器皿；<b>② 人口的去向</b>——三分毕业与两批来客；<b>③ 身体的机制</b>——双重激活的身体如何承载过渡；<b>④ 球体与星系</b>——新球体如何诞生、理则计划了什么。Ra 全程用同一句话校准发问者的坐标系：<b>太一造物中没有损失</b>。</p>
+    <div class="quote">
+      <p class="en">It is misleading to speak of gains and losses when dealing with the subject of the cycle's ending and the green-ray cycle beginning upon your sphere.</p>
+      <p class="zh">在谈论你们的星球周期结束、绿色光芒周期开始这个话题时，谈「得」与「失」是有误导性的。</p>
+      <span class="src">—— Session 063 · (63.8)</span>
+    </div>
+    <div class="plain">整集都在讲「过渡」，而 Ra 先把坐标系摆正：这不是一场有输赢的替换，而是一个造物内部的换挡。</div>
+    <div class="case"><b>校园里的新教学楼：</b>一所老小学旁建起一座新教学楼，新旧两楼共用同一个校园：高年级学生分批搬入新楼上课，老楼并未拆除，翻新后还会迎来新一届低年级。这正对应 Ra 描述的格局——第四密度球体与第一、二、三密度并存，正面收割者仍在这个「校园」（行星影响范围）里，只是不再住旧宿舍（不在这一层面），而第三密度未来还可能在这颗星球再次开班。</div>
+    <div class="case"><b>应用的静默升级：</b>一款用了几十年的软件切换新版本时，并不是半夜瞬间替换，而是新旧版本并行运行、数据逐批迁移、等新版完全稳定才让旧版下线。本集讲「密度过渡」也是如此：Ra 拒绝把过渡讲成瞬间的毁灭与重生，它是一个渐进、并行的过程——全集问答正是围绕这一点层层展开。</div>
+  </div>
+  <div class="card">
+    <h3>问答脉络推进器</h3>
+    <p>按 Ra 与发问者的实际推进顺序走一遍本集对话，共八步。</p>
+    <div class="flow-track" id="flow1"></div>
+    <div class="flow-detail" id="detail1"></div>
+    <div class="flow-ctrl"><button class="tri-btn" id="prev1">← 上一问</button> <button class="tri-btn" id="next1">下一问 →</button></div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 后勤</span></summary>
+  <div class="body">
+    <p><b>(63.1) 器皿状态：</b>生命能量处于正常水平；身体因肾与泌尿道区域的通灵攻击以及关节炎而受扰，且这类攻击将持续，因为器皿已被负面导向力量观察了一段时间。</p>
+    <p><b>(63.4) 集会前频繁去洗手间：</b>一般而言并非通灵攻击所致，而是器皿在排除接触所用材料的变貌残留物，时间点可前可后。</p>
+    <p><b>(63.32) 收尾时的器皿评估：</b>Ra 宣布这是本集最后一个完整询问——器皿因能量转移尚有余力，但有不适，Ra 不愿耗尽她；并评价她虽受攻击、状态却比以往几次工作更好。</p>
+    <p><b>(63.33) 后勤：</b>问还需做什么——Ra 答「你们是尽责的，一切都好」，随即以爱与光作别。</p>
+  </div></details>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>生命能量与意志：什么在支撑一个受损的身体</h2></div>
+  <p class="sec-lead">例行问答本可以到此为止，但发问者追问「25 年前的肾危机是不是通灵攻击干的」，把话题引向一个普适的道理：身体这台机器的电源不是热量，而是意志与对生命之爱。</p>
+  <div class="card">
+    <h3>意志的两次出手</h3>
+    <div class="q">发问者想知道：那次几乎夺命的肾病，罪魁是负面力量的攻击吗？——他预设了「外敌所致」的解释。</div>
+    <div class="quote">
+      <p class="en">The will of the instrument, when it found that there was, indeed, work to be done in service, was again the guiding factor…</p>
+      <p class="zh">当这个器皿的意志发现确实有服务工作要做时，意志再一次成为主导因素……</p>
+      <span class="src">—— Session 063 · (63.3)</span>
+    </div>
+    <p>Ra 的回答分两半：攻击确实存在，但<b>起主导作用的是器皿自己的意志</b>——当年她因为觉得无法服务而渴望离开这个层面，这渴望削弱了本已虚弱身体的防御，让一场过敏反应加剧到危及存活的程度；后来发现仍有工作要做，又是同一个意志把身体从瓦解边缘拉了回来。外力只提供成分，开关在自己手里。</p>
+    <div class="plain">同一个意志既能让身体垮掉，也能把身体保住——方向取决于它朝向「离开」还是朝向「服务」。</div>
+    <div class="case"><b>垮掉的年轻人：</b>一位体检指标没大问题的年轻人，因为觉得工作毫无意义，半年内小病不断；辞职去做他真正认同的事之后，同样的作息下病却不药而愈。这正是 (63.3) 的机制——「想离开」的渴望会降低身体的防御，把原本潜伏的弱点放大成疾。</div>
+  </div>
+  <div class="card">
+    <h3>生命能量：心智、身体、灵性的复合电量</h3>
+    <div class="q">发问者先要定义（生命能量是什么），再猜测来源（它是不是与实体对极性、与造物主合一的觉察有关）——他想把这个词接进整个体系。</div>
+    <div class="quote">
+      <p class="en">Vital energy is the complex of energy levels of mind, body, and spirit.</p>
+      <p class="zh">生命能量是心智、身体与灵性能量水平的复合体。</p>
+      <span class="src">—— Session 063 · (63.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Without this vital energy the least distorted physical complex will fail and perish. With this love, or vital energy, or élan, the entity may continue though the physical complex is greatly distorted.</p>
+      <p class="zh">缺了这种生命能量，连最不受扭曲的物理复合体也会崩溃而亡；有了它——这种爱、这股生命力——即便身体千疮百孔，实体也仍能继续存在。</p>
+      <span class="src">—— Session 063 · (63.7)</span>
+    </div>
+    <p>Ra 在非特定的意义上确认了发问者的猜测，随后把它落到可触摸的东西上：<b>生命能量就是对生命与生命体验的深层之爱</b>——造物之美、对其他自我的欣赏。它不是卡路里：物理能量不足时，意志可以顶替一阵（Ra 明确说不推荐这么用）；但这份爱若熄灭了，再健康的身体也会枯竭。</p>
+    <div class="plain">身体是硬件，生命能量是对生命本身的爱——硬件再好，没了它也开不了机；硬件再破，有它就还能运转。</div>
+    <div class="case"><b>病床上的盼头：</b>一位住院半年的老人，各项指标都很糟，却每天记得给窗台的茉莉浇水、等孙女周末来念课文。医生口中说的「求生意志」，正对应 Ra 讲的生命能量：对生命体验的深层之爱，让严重受损的身体继续运转。</div>
+    <div class="case"><b>硬撑的上线夜：</b>一位连续加班数周的技术负责人，靠「团队需要我」这一个念头撑过凌晨三点的系统上线。意志确实能在一定程度上替代缺失的生命能量——但 Ra 特意补了一句：不建议这样使用，透支是要还的。</div>
+  </div>
+  <div class="card">
+    <h3>爱是伟大的保护者</h3>
+    <div class="q">发问者每次集会都会例行追问：面对持续的通灵攻击，我们还能多做点什么？——他其实早已得到答案，只是不敢相信答案这么简单。</div>
+    <div class="quote">
+      <p class="en">Continue in love, and praise, and thanksgiving to the Creator. Examine previous material. Love is the great protector.</p>
+      <p class="zh">继续在爱、赞美与感恩之中朝向造物主。检视先前的材料。爱是伟大的保护者。</p>
+      <span class="src">—— Session 063 · (63.5)</span>
+    </div>
+    <div class="plain">面对负面攻击，Ra 没有给防御工事，只指回同一个方向：爱与感恩本身就是护盾。</div>
+    <div class="case"><b>被网暴的博主：</b>一位做乡村教育记录的博主遭到有组织的网络攻击，她不去对骂，照常更新课程视频，把支持者的感谢一条条读给团队听。几个月后攻击者换了目标——围绕她的爱与感谢，正是 Ra 说的那道「伟大的保护」。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>三种去向与两批来客：收割前的地球人口构成</h2></div>
+  <p class="sec-lead">讲清了支撑系统的原理，发问者回到主线：当绿色周期真正接管这颗星球，谁会毕业、谁会离开、又有谁会提前赶来？这一段 Ra 给出了整个「收割人口学」的框架。</p>
+  <div class="card">
+    <h3>先纠正问题本身：空置不是失去</h3>
+    <div class="q">发问者问：黄色退场我们会「失去」什么，绿色全开我们会「得到」什么？——预设这是一场有盈亏的交接。</div>
+    <div class="quote">
+      <p class="en">As the green-ray cycle or the density of love and understanding begins to take shape the yellow-ray plane or Earth, which you now enjoy in your dance, will cease to be inhabited for some period of your space/time…</p>
+      <p class="zh">当绿色光芒周期——即爱与理解的密度——开始成形，你们此刻在其中起舞的黄色光芒层面（地球）将有一段空间/时间无人居住……</p>
+      <span class="src">—— Session 063 · (63.8)</span>
+    </div>
+    <p>Ra 拒绝在「得失」的框架里作答，只描述机制：地球将空置一段时期，供第四密度实体学会屏蔽自己的密度不被第三密度感知；此后第三密度还可能回到这颗黄色光芒球体再度循环。与此同时，一个与黄色射线高度一致、材料因原子核心旋转属性而更稠密的第四密度球体正在形成，与第一、二、三密度<b>并存</b>；提前投生的第四密度实体以较不稠密的载具而来，渴望体验并协助第四密度在此诞生——他们带着极丰富的慈悲。</p>
+    <div class="plain">没有得也没有失，只有同一个造物里周期的轮转：旧教室会空置，然后重开；新教室已经在隔壁动工。</div>
+    <div class="case"><b>搬家的周转房：</b>一家人搬新居时先租半年周转房：旧居腾空一段时间（对应地球的空置期），家具分两批搬（实体分批过渡），等新居彻底布置好、散净了甲醛才退租（完全激活）。Ra 描述的正是这种「轮转」——空置不等于报废，退租也不等于失去。</div>
+  </div>
+  <div class="card">
+    <h3>毕业的三种去向</h3>
+    <div class="q">发问者自己先列出盘点：地球实体按极性三分——正面的留在本层面、负面的去另一星球、其余去另一个第三密度星球——再补上两批外来者，请 Ra 核对。</div>
+    <div class="quote">
+      <p class="en">The positively oriented harvested entities will remain in this planetary influence but not upon this plane.</p>
+      <p class="zh">正面导向的收割实体将留在这个行星的影响范围内，但不在这个层面上。</p>
+      <span class="src">—— Session 063 · (63.9)</span>
+    </div>
+    <p>盘点大体正确，Ra 只修了一处：正面收割者<b>留在行星的影响范围里，却不在这颗行星的层面上</b>。再加上两批外来者——约六亿的流浪者（此数不含外来收割实体，63.10-63.11），以及近期才到来、不超过三万五千名的其他星球收割实体（63.12）——收割前地球的人口构成就齐了。下面的归类练习可以帮你把框架记牢。</p>
+    <div class="plain">毕业不是全体离场：有人升学、有人转学、有人复读，还有一批外校学生与插班生早已到岗。</div>
+    <div class="case"><b>毕业季的三条路：</b>毕业班散伙饭后的分流——有人保研本校（正面收割者：仍在同一个校园系统里，但不再住本科宿舍，对应「留在行星影响范围、不在这一层面」）；有人转学到外地院校（负面收割者去另一个星球）；有人复读一年再考（不可收割者去另一个第三密度星球，重新走一遍周期）。</div>
+    <div class="case"><b>提前批的交换生：</b>一所新学院创办前夕，只录取那些已在别处证明过自己、且真心想来参与创办的学生提前入学——名额少、门槛高。这对应那批不超过三万五千名的实体：只有展现出大量服务他人倾向的已收割者才获准提前投生，Ra 称之为特权，因为收割期的服务他人自带大量体验性催化剂（63.15）。</div>
+  </div>
+  <div class="card">
+    <h3>归类练习：谁是谁</h3>
+    <p>五张「人口快照」，判断每张对应哪一类去向或身份。</p>
+    <div id="sorter1"></div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>双重激活的身体：会弯金属的孩子从哪里来</h2></div>
+  <p class="sec-lead">人口盘点之后是最难啃的机制问题：过渡要在一个个实体身上发生，身体凭什么承受另一个密度的振动？Ra 的答案是「双重激活的身体」，而现实中那些会意念弯金属的孩子，就是这套机制的活样本。</p>
+  <div class="fn-grid">
+    <div class="fn-card"><div class="front"><div class="cn">双重激活的身体</div><div class="sub">double body in activation</div><div class="tap">点击翻转</div></div>
+      <div class="back">一个身体里同时激活第三与第四密度的振动，好比双卡双待的手机能同时接收两代网络的信号。它让实体能随流入的增加逐渐感知第四密度，而不烧毁第三密度的电路。<em>案例：那个能随手弯勺子的七岁孩子，用的就是这套双系统。</em></div></div>
+    <div class="fn-card"><div class="front"><div class="cn">流浪者</div><div class="sub">wanderer</div><div class="tap">点击翻转</div></div>
+      <div class="back">从更高密度自愿投生到第三密度帮忙的灵魂。他们以第三密度的心/身/灵激活，影响力不小，却同样罩在遗忘之下。<em>比喻：主动隐去自己资历的支教老师——得先想起自己是谁，才能真正开始上课。</em></div></div>
+    <div class="fn-card"><div class="front"><div class="cn">遗忘</div><div class="sub">the forgetting</div><div class="tap">点击翻转</div></div>
+      <div class="back">第三密度投生时罩上的面纱：高密度的理解无法被记起。它守护自由意志，也限制了流浪者的发挥——只能靠有纪律的冥想与工作来穿透。<em>这正是流浪者与双身孩子最关键的差别。</em></div></div>
+    <div class="fn-card"><div class="front"><div class="cn">收割</div><div class="sub">harvest</div><div class="tap">点击翻转</div></div>
+      <div class="back">周期结束时的「毕业筛选」：按极性强度与可服务性决定各实体的去向。可收割的正面实体能提前来地球参与过渡——这是挣来的资格，不是抽签。<em>案例：提前批录取只看平时成绩与志愿，不看运气。</em></div></div>
+    <div class="fn-card"><div class="front"><div class="cn">智能能量的门户</div><div class="sub">intelligent energy's gateway</div><div class="tap">点击翻转</div></div>
+      <div class="back">智能能量（被理则赋形、按各密度秩序流动的无限智能之能量）的入口；任何实体偶然或精心设计地穿透它，就能使用这种能量的塑造力量——如意念弯金属。<em>这是双身之外的第二条路。</em></div></div>
+    <div class="fn-card"><div class="front"><div class="cn">第一变貌</div><div class="sub">First Distortion</div><div class="tap">点击翻转</div></div>
+      <div class="back">自由意志——造物的第一变貌。教导与服务都不得越过它：双身孩子来得晚、年纪小，过渡深入之前不会影响极化；流浪者影响大，故必须以穿透遗忘为前提才能施加影响——两批人都在这条界线之内。<em>案例：调解员可以递资料，但不能替人做决定。</em></div></div>
+  </div>
+  <div class="card">
+    <h3>过渡身体：为什么必须「双系统」</h3>
+    <div class="q">发问者拿一个具体实体举例：他会在第三密度身体里老去，然后必须死一次、再投生第四密度身体吗？——他默认两种身体不能共用。</div>
+    <div class="quote">
+      <p class="en">If a third-density entity were, shall we say, electrically aware of fourth-density in full, the third-density electrical fields would fail due to incompatibility.</p>
+      <p class="zh">假如一个第三密度实体在电性上完全感知第四密度，其电场会因彼此不兼容而当场失效。</p>
+      <span class="src">—— Session 063 · (63.13)</span>
+    </div>
+    <p>Ra 换了一个图景：这些实体带着<b>双重身体</b>投生，孕育他们的母亲在孕期就会体验到强烈的连接感与灵性能量的使用。这样的过渡身体能随流入的增加逐渐感知第四密度，而不破坏第三密度的结构；但死亡这道程序并未豁免——这些身体仍按第三密度的必要性死去。Ra 还点出设计意图：双身让实体<b>有意识地记得</b>第三密度因遗忘而记不住的第四密度理解，于是他们甘愿住进这个困扰重重的世界，只为奉献爱与慈悲。</p>
+    <div class="plain">双重身体是给过渡期定制的兼容模式：能接收新信号，又不必先报废旧机身。</div>
+    <div class="case"><b>天生双语的孩子：</b>在双语家庭长大的孩子不背单词就能在两种语言间自由切换，而成年后才移居的移民要苦学多年。双身实体对第四密度理解是「母语级」的觉察；流浪者则是「外语级」的——得先付穿透遗忘那道昂贵的翻译工序。</div>
+  </div>
+  <div class="card">
+    <h3>孩子做得到，流浪者做不到</h3>
+    <div class="q">发问者抓住一个刺眼的对比：为什么新来的孩子能意念弯金属，而第五、六密度的流浪者反而不能？——这看起来完全违反资历。</div>
+    <div class="quote">
+      <p class="en">Wanderers are third-density activated in mind/body/spirit and are subject to the forgetting which can only be penetrated with disciplined meditation and working.</p>
+      <p class="zh">流浪者以第三密度的心/身/灵激活，并受遗忘的约束——这遗忘只能靠有纪律的冥想与工作来穿透。</p>
+      <span class="src">—— Session 063 · (63.17)</span>
+    </div>
+    <p>原因不在灵魂的资历，而在<b>硬件配置</b>：孩子有第四密度身体处于激活状态，弯金属是第四密度现象；流浪者只有第三密度激活，且被遗忘罩住。Ra 进一步认可发问者的推论——这正是自由意志的分寸（63.18）：孩子来得晚、年纪小，过渡深入之前不会影响极化；流浪者影响大，就必须以穿透遗忘的能力为前提，才能名正言顺地施加影响。</p>
+    <div class="plain">弯金属拼的不是修为而是装备：双身孩子出厂自带第四密度接口，流浪者要先想起自己是谁。</div>
+    <div class="case"><b>会弯勺子的七岁孩子：</b>饭桌上一个七岁孩子随手把勺子捏弯了，全桌大人轮流试了个遍都做不到——大家默认「修为越深能力越强」，而 Ra 的答案恰好相反：这不是修为赛，是配置赛。孩子的双身已激活第四密度，成年流浪者却还罩着遗忘的面纱。</div>
+  </div>
+  <div class="card">
+    <h3>第二条路：穿透门户的人</h3>
+    <div class="q">发问者据理反驳：他认识的能弯金属的人里有五十多岁、三十多岁的，并非都是孩子——是否存在双身之外的解释？</div>
+    <div class="quote">
+      <p class="en">Any entity who, by accident or by careful design, penetrates intelligent energy's gateway may use the shaping powers of this energy.</p>
+      <p class="zh">任何实体——无论出于偶然还是精心设计——只要穿透智能能量的门户，就可以使用这种能量的塑造力量。</p>
+      <span class="src">—— Session 063 · (63.19)</span>
+    </div>
+    <div class="plain">双身不是唯一的门票：把智能能量的门户撞开或修通，任何实体都能借到这种能量的塑造之力。</div>
+    <div class="case"><b>入定后弯金属的老工程师：</b>一位五十多岁、练习冥想二十年的工程师，在某个深夜的深度静默中意外「穿透门户」，指尖的勺子软了下来。他没换身体，走的是 Ra 说的另一条路——偶然地（或经年累月地精心设计）打开了智能能量的入口。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>新球体的诞生：部分激活与完全激活之间</h2></div>
+  <p class="sec-lead">机制讲完，镜头拉回球体本身：新地球现在处于什么状态、离「完全激活」还差什么、身体如何一代代变成第四密度载具？Ra 用「真实颜色绿」与时间/空间两个概念，把一颗行星的出生讲成了胚胎学。</p>
+  <div class="card">
+    <h3>问答脉络：从死亡到新球体的诞生</h3>
+    <p>这一段的问答层层递进，用推进器走一遍。</p>
+    <div class="flow-track" id="flow5"></div>
+    <div class="flow-detail" id="detail5"></div>
+    <div class="flow-ctrl"><button class="tri-btn" id="prev5">← 上一步</button> <button class="tri-btn" id="next5">下一步 →</button></div>
+  </div>
+  <div class="card">
+    <h3>热量只属于第三密度</h3>
+    <div class="q">发问者自嘲问得很笨，但他抓到一个要害：过渡期产生的热，究竟生成在哪一层？——若两层都在发热，「并存」的图景就乱了。</div>
+    <div class="quote">
+      <p class="en">This is quite correct. The experiential distortions of each dimension are discrete.</p>
+      <p class="zh">这非常正确。每个维度的体验性变貌是离散的。</p>
+      <span class="src">—— Session 063 · (63.24)</span>
+    </div>
+    <p>发热只发生在第三密度球体。这句简短确认背后是一条通用原则：<b>各维度的体验互不串线</b>——新球体不会替旧球体挨痛，旧球体也感知不到新球体的振动，两层世界各记各的账。</p>
+    <div class="plain">两个密度并存却互不渗透：各自的体验各归各的账户，谁也不替谁买单。</div>
+    <div class="case"><b>准妈妈的梦境：</b>一位准妈妈在孕晚期总梦见「肚子里通着光」，直觉也变得异常敏锐，连产检医生都说她状态奇特。她孕育的若是一个双身实体，这份体验正对应 Ra 的描述：出于显化双重身体的必要，母亲会在孕期强烈地连接并使用灵性能量（63.13）。</div>
+  </div>
+  <div class="card">
+    <h3>部分激活 vs 完全激活</h3>
+    <div class="q">发问者问：球体「部分激活」与「完全激活」到底差在哪？——他想知道这条过渡线的终点长什么样。</div>
+    <div class="quote">
+      <p class="en">At full activation of the true-color green density of love, the planetary sphere will be solid and inhabitable upon its own…</p>
+      <p class="zh">当真实颜色绿色的爱的密度完全激活时，行星球体将成为坚固的、可自行居住的球体……</p>
+      <span class="src">—— Session 063 · (63.25)</span>
+    </div>
+    <p>现在的状态是<b>混合</b>：宇宙流入正促成真实颜色绿色的核心粒子形成，但黄色与绿色两种环境叠在一起，因此必须诞生「过渡型」的心/身/灵复合体——那些双身孩子正是这个混合期的产物。到完全激活时，球体坚固、可自行居住，新诞生的载具也已完成转换。Ra 还给了一个关键坐标：此刻的绿色环境<b>更多存在于时间/空间</b>（他给发问者的工作定义是「内在层面」，63.26），尚未完全落到空间/时间——先在后台成形，再显现到前台。</p>
+    <div class="plain">部分激活是黄绿两层环境叠加的施工期，完全激活是新球体竣工、独立供电交付使用的那天。</div>
+    <div class="case"><b>前台与后台：</b>把一款应用想成两层：用户看得见、点得着的前台界面是空间/时间；用户永远看不见、却决定一切的后台数据库是时间/空间——Ra 给它的工作定义是「内在层面」。绿色环境此刻更多写在后台，等前台逐屏刷新后，用户才会看见新版界面。</div>
+  </div>
+  <div class="card">
+    <h3>身体如何一步步变成第四密度</h3>
+    <div class="q">发问者把星系旋转想象成「直接造出」绿色的身体复合体——Ra 纠正：新身体不是按一下按钮就能生成的。</div>
+    <div class="quote">
+      <p class="en">This creation will be gradual and will take place beginning with your third-density type of physical vehicle and, through the means of bisexual reproduction, become, by evolutionary processes, the fourth-density body complexes.</p>
+      <p class="zh">这个创造将是渐进的：从你们第三密度类型的物理载具开始，经由两性生殖的手段，通过进化的过程，成为第四密度的身体复合体。</p>
+      <span class="src">—— Session 063 · (63.27)</span>
+    </div>
+    <p>驱动力是<b>真实颜色绿色的流入</b>：它越来越多地创造出条件，使身体细胞的原子结构成为「爱的密度」；住进这些载具的，正是那些提前到来的实体与本行星的收割者（63.28）。发问者还有一个漂亮的追问被 Ra 顺带纠正：第三密度并不只有活着的实体——<b>工艺品、思想形态与情感</b>同样是第三密度（63.32）。</p>
+    <div class="plain">没有一键换装：绿色流入改变环境，环境孕育载具，载具经由一代代生育与进化长成第四密度的身体。</div>
+    <div class="case"><b>两代服务器并行：</b>一家银行把用了四十年的核心系统迁往新平台：新系统先承载一部分新业务（对应双身孩子），老系统照常运转，两套并行数年；等新系统独立稳定才整体切换，老机器退役。从部分激活到完全激活，正是不停机的渐进迁移。</div>
+    <div class="case"><b>老屋里的旧藤椅：</b>外婆留下的藤椅、写着批注的旧信、推门瞬间熟悉的气味，能把人瞬间拽回童年——器物、念头与情绪都在「生产第三密度」。Ra 对发问者的纠正正对应这幅画面：第三密度不只是活着的身体，还包括共同造物者们生产的工艺品、思想形态与情感。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>收官：星系的钟面、行星的病与本集金句</h2></div>
+  <p class="sec-lead">收尾三问把镜头拉到最大：把整个主星系看作一块表——谁设计、谁上弦、哪些故障在设计之外？最后以本集最核心的宣告收官。</p>
+  <div class="card">
+    <h3>三维钟面：设计、允许与自由意志</h3>
+    <div class="q">发问者提出一个大胆的图景：几十亿颗恒星组成的主星系像一块钟面，旋转着把所有恒星与行星系统带过一次又一次密度过渡——是这么运作的吗？</div>
+    <div class="quote">
+      <p class="en">You may see a three-dimensional clock face, or spiral of endlessness, which is planned by the Logos for this purpose.</p>
+      <p class="zh">你可以看到一个三维的钟面，或无尽的螺旋，它由理则为这个目的而计划。</p>
+      <span class="src">—— Session 063 · (63.29)</span>
+    </div>
+    <p>Ra 称他「很有洞察力」。发问者接着追问：行星过渡时产生的加热效应，是否不在理则的计划之内？Ra 给出一个精妙的区分：理则本身是自由意志的造物，<b>自由意志这个条件是计划内的</b>；于是无限多的事件都可能发生——不能说是理则计划的，只能说是<b>被自由允许的</b>。</p>
+    <div class="quote">
+      <p class="en">They cannot be said to be planned by the Logos but can be said to have been freely allowed.</p>
+      <p class="zh">它们不能说是理则计划的，但可以说是被自由允许的。</p>
+      <span class="src">—— Session 063 · (63.30)</span>
+    </div>
+    <div class="plain">钟面与齿轮是设计，潮热天气里的异响不是——但设计者允许机械在自由中发出任何声音。</div>
+    <div class="case"><b>制钟师与异响：</b>一位制钟师画好了钟面、校准了每个齿轮的转速；但在潮湿的梅雨季，钟发出计划之外的沙沙声。他没有「计划」这声音，却允许了自己的机械在真实环境中自由运转——设计图纸之外的一切，属于「被自由允许」的范畴，正如行星的发热不属于理则的图纸，却属于自由意志的气候。</div>
+  </div>
+  <div class="card">
+    <h3>行星的病：根在灵性与心智</h3>
+    <div class="q">发问者提出一个类比：行星的加热效应就像身体的疾病，病根是某种「心智配置」——他想为环境危机找病理学。</div>
+    <div class="quote">
+      <p class="en">This is correct except that the spiritual configuration as well as mental biases of your peoples has been responsible for these distortions of the body complex of your planetary sphere.</p>
+      <p class="zh">这是正确的，只是你们族群的灵性配置以及心智偏见，对这些行星球体身体复合体的变貌同样负有责任。</p>
+      <span class="src">—— Session 063 · (63.31)</span>
+    </div>
+    <p>Ra 确认了类比，但把诊断范围扩大：不只是心智偏见，<b>灵性配置同样参与发病</b>。行星发烧不是天灾而是症候——这与本集开头相映成趣：器皿的身体症状同样连着她的心态与意志。</p>
+    <div class="plain">地球的体温是集体心态的体温计：治行星的病，处方要开给灵性与心智，而不是只开给技术。</div>
+    <div class="case"><b>过劳的办公室：</b>一家长期靠焦虑驱动冲业绩的公司，绿植接连枯死、设备故障率莫名上升、墙面提前开裂——整栋楼像被同一种情绪浸透。把「公司」放大成「行星」，就是 (63.31) 的诊断：环境的病与群体的心智——以及 Ra 补上的灵性配置——写在同一张病理报告上。</div>
+  </div>
+  <div class="saying">
+    <p class="en">It is to be kept in the forefront of the faculties of intelligence that there is One Creation in which there is no loss.</p>
+    <p class="zh">应当置于智力官能最前沿的是：只有一个造物，其中没有损失。</p>
+    <span class="src">—— Session 063 · (63.8)</span>
+  </div>
+  <div class="card">
+    <h3>伏笔与留白</h3>
+    <p>本集留下了几扇没关的门：Ra 对「时间/空间」只给了「内在层面」这个工作定义，并特意声明这个词承载着大量精妙之处（63.26）；双身的孩子要等过渡深入到什么程度、以何种方式影响极化，全集并未展开；而地球空置期之后「第三密度可能再次在黄色光芒球体上循环」的图景，也只画了一笔。这些留白不是疏漏——在自由意志的气候里，理则不预告剧本，只提供钟面。想检验自己，可回到第三章末尾重做那五张人口快照，或把第一章的八步脉络再走一遍。</p>
+    <div class="case"><b>发布会上的「暂不置评」：</b>上市前发布会上记者追问三年后的具体营收规划，发言人只答「方向已定，细节交给市场」——不是隐瞒，而是尊重不确定性。Ra 对空置期之后的种种可能保持沉默，与这句话是同一种克制：自由意志之下，剧本不由设计者写死。</div>
+    <div class="case"><b>深夜复盘的小组长：</b>项目复盘会的最后，组长问大家还有什么要改进的，成员们纷纷认领问题，导师只笑着说：你们已经很尽责了，回去休息吧。这正对应 Ra 的收尾（63.33）——没有挑错，只有「你们是尽责的，一切都好」，然后以爱与光送别。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+基于 The Ra Contact Session 063（`split/Ra_Session_063.md`）英文原文制作 · 交互式学习模块<br>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra063-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+document.querySelectorAll('.fn-card').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
+
+initStepper('flow1','detail1','prev1','next1',[
+  {t:'器皿近况',d:'<span class="qa-q">问：这个器皿现在的状况如何？(63.1)</span><b>答：</b>生命能量处于正常水平；身体受肾区通灵攻击与关节炎困扰，且攻击将持续——她已被负面导向力量观察了一段时间。'},
+  {t:'生命能量',d:'<span class="qa-q">问：生命能量是什么？它从哪来？(63.6-63.7)</span><b>答：</b>心智、身体、灵性能量水平的复合体；本质是对生命与生命体验的深层之爱——没有它，再不变貌的身体也会衰竭消亡。'},
+  {t:'意志的角色',d:'<span class="qa-q">问：25 年前的肾危机是通灵攻击造成的吗？(63.2-63.3)</span><b>答：</b>攻击只是成分之一，主导的是器皿自己的意志：想离开时防御崩塌，决意留下服务后，又是意志保住了身体。'},
+  {t:'得失之辨',d:'<span class="qa-q">问：绿色完全激活时我们会失去什么、得到什么？(63.8)</span><b>答：</b>这个提法本身有误导——只有一个造物，其中没有损失，只有供体验使用的渐进周期。'},
+  {t:'人口盘点',d:'<span class="qa-q">问：收割前的地球上都有谁？(63.9-63.12)</span><b>答：</b>三种毕业去向，外加约 6 亿流浪者，以及近期到来、不超过 3.5 万名来自其他星球的已收割实体。'},
+  {t:'双身与孩子',d:'<span class="qa-q">问：过渡如何在一个实体身上发生？(63.13-63.19)</span><b>答：</b>以双重激活的身体投生：孩子因此能意念弯金属；流浪者则受遗忘约束，须靠有纪律的冥想与工作穿透。'},
+  {t:'新球体诞生',d:'<span class="qa-q">问：第四密度球体如何从部分激活走到完全激活？(63.20-63.28)</span><b>答：</b>所有第三密度身体都须经死亡过渡；绿色流入渐增，载具经两性生殖与进化逐步变成第四密度身体。'},
+  {t:'钟面与金句',d:'<span class="qa-q">问：这一切是谁安排的？(63.29-63.31)</span><b>答：</b>主星系是理则设计的三维钟面；行星的加热效应不在计划中，而是自由意志之下「被自由允许」的。'}
+]);
+
+initStepper('flow5','detail5','prev5','next5',[
+  {t:'死亡程序',d:'<span class="qa-q">问：所有第三密度身体都要经历死亡才能住进第四密度球体吗？(63.20)</span><b>答：</b>是的——这道程序没有豁免，双身实体也按第三密度的必要性死去。'},
+  {t:'新球体已有住户',d:'<span class="qa-q">问：第四密度球体现在有人住吗？(63.21-63.23)</span><b>答：</b>直到最近才有——居民来自已完成收割的其他星球，此刻以双重身体存在。'},
+  {t:'热量归第三密度',d:'<span class="qa-q">问：过渡产生的热生成在哪一层？(63.24)</span><b>答：</b>只在第三密度球体——每个维度的体验性变貌是离散的。'},
+  {t:'混合的施工期',d:'<span class="qa-q">问：部分激活与完全激活差在哪？(63.25)</span><b>答：</b>现在是黄绿环境混合的施工期，必须诞生过渡型实体；完全激活后球体坚固、可自行居住。'},
+  {t:'载具的进化',d:'<span class="qa-q">问：第四密度的身体怎么来？(63.27-63.28)</span><b>答：</b>不是一键生成——从第三密度载具开始，经两性生殖与进化，绿色流入使细胞原子的结构逐渐成为爱的密度。'}
+]);
+
+initSorter('sorter1',[
+  {a:'一位毕生以服务他人为主、已达可收割标准的地球实体',opts:['正面收割者','负面收割者','再来一轮','流浪者','双身新客'],ans:'正面收割者',exp:'将留在行星影响范围内、参与第四密度体验，但不在这个层面上（63.9）。'},
+  {a:'一位已达可收割标准、却主要服务自我的实体',opts:['正面收割者','负面收割者','再来一轮','流浪者','双身新客'],ans:'负面收割者',exp:'将前往另一个星球，继续负向极化的周期（63.9）。'},
+  {a:'一位投生多次、尚未做出足够极化选择的地球人',opts:['正面收割者','负面收割者','再来一轮','流浪者','双身新客'],ans:'再来一轮',exp:'将去另一个第三密度星球，重新走一遍第三密度周期（63.9）。'},
+  {a:'一位从第六密度自愿投生、却完全记不得来意的成熟灵魂',opts:['正面收割者','负面收割者','再来一轮','流浪者','双身新客'],ans:'流浪者',exp:'以第三密度心/身/灵激活，受遗忘约束，须靠有纪律的冥想与工作穿透（63.17）。'},
+  {a:'一个能意念弯金属的几岁孩子',opts:['正面收割者','负面收割者','再来一轮','流浪者','双身新客'],ans:'双身新客',exp:'来自其他第三密度星球的已收割实体（不超过 3.5 万名），以双重激活的身体提前投生（63.12、63.16）。'}
+]);
+
+renderPath();
+</script>
+</body>
+</html>

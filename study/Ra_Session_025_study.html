@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ra Session 025 · 交互式学习模块</title>
+<style>
+:root{
+  --ink:#2b2620;
+  --ink-soft:#5c5348;
+  --paper:#f7f3ec;
+  --card:#fffdf8;
+  --accent:#9a3b2e;      /* 朱红 */
+  --accent-soft:#f3e2dd;
+  --blue:#2e4a62;        /* 藏青 */
+  --blue-soft:#e2eaf1;
+  --gold:#8a6d1f;
+  --gold-soft:#f4ecd4;
+  --green:#3d6b4f;
+  --green-soft:#e0eee5;
+  --line:#e4dccc;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Songti SC","Noto Serif SC","Source Han Serif SC",serif;
+  background:var(--paper);color:var(--ink);line-height:1.85;
+}
+a{color:var(--blue)}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px 120px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  background:linear-gradient(135deg,#16203c 0%,#2b3560 55%,#4a3a5e 100%);
+  color:#f2eee6;text-align:center;padding:64px 20px 56px;
+}
+header.hero .kicker{letter-spacing:.35em;font-size:.85rem;opacity:.75;margin-bottom:14px}
+header.hero h1{font-size:2rem;font-weight:600;letter-spacing:.08em;margin-bottom:14px}
+header.hero p.sub{max-width:660px;margin:0 auto;opacity:.88;font-size:1.02rem}
+header.hero .tagline{
+  display:inline-block;margin-top:26px;padding:10px 26px;border:1px solid rgba(242,238,230,.4);
+  border-radius:999px;font-size:.95rem;letter-spacing:.12em;
+}
+
+/* ===== 导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:50;background:rgba(247,243,236,.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(6px);
+  overflow-x:auto;white-space:nowrap;padding:10px 12px;
+}
+nav.toc a{
+  display:inline-block;padding:4px 12px;margin:0 3px;border-radius:999px;
+  font-size:.86rem;color:var(--ink-soft);text-decoration:none;
+}
+nav.toc a:hover{background:var(--accent-soft);color:var(--accent)}
+nav.toc a.done{color:var(--green)}
+
+/* ===== 学习路径 ===== */
+.path-box{
+  margin:34px 0 10px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:24px 26px;
+}
+.path-box h2{font-size:1.15rem;margin-bottom:6px;color:var(--blue)}
+.path-box p.hint{font-size:.88rem;color:var(--ink-soft);margin-bottom:14px}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:9px 0;border-top:1px dashed var(--line)}
+.step-item:first-of-type{border-top:none}
+.step-item label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;flex:1}
+.step-item input{margin-top:8px;accent-color:var(--green);width:17px;height:17px;flex-shrink:0}
+.step-item .no{
+  flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--blue-soft);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-top:4px;
+}
+.step-item.completed .no{background:var(--green);color:#fff}
+.step-item .txt b{font-size:1rem}
+.step-item .txt span{display:block;font-size:.87rem;color:var(--ink-soft)}
+.progress-bar{height:8px;background:var(--blue-soft);border-radius:99px;overflow:hidden;margin-top:14px}
+.progress-bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--green),#6fa585);transition:width .4s}
+.progress-text{font-size:.82rem;color:var(--ink-soft);text-align:right;margin-top:4px}
+
+/* ===== 章节 ===== */
+section.chapter{margin-top:64px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.sec-head .num{
+  font-size:2.4rem;font-weight:700;color:var(--accent);opacity:.25;line-height:1;
+}
+.sec-head h2{font-size:1.5rem;color:var(--ink)}
+.sec-lead{color:var(--ink-soft);font-size:.98rem;margin-bottom:22px;max-width:740px}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin-top:18px}
+
+/* ===== 卡片 ===== */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px;margin-bottom:18px;
+}
+.card h3{font-size:1.08rem;color:var(--blue);margin-bottom:10px}
+.card .q{
+  background:var(--paper);border-left:3px solid var(--line);
+  padding:9px 16px;border-radius:0 10px 10px 0;font-size:.93rem;color:var(--ink-soft);margin:8px 0;
+}
+.card .q::before{content:"问 · ";font-weight:700;color:var(--ink-soft);opacity:.75;font-size:.82rem;letter-spacing:.08em}
+.card .q b{color:var(--ink)}
+.card .quote{
+  background:var(--blue-soft);border-left:3px solid var(--blue);
+  padding:12px 16px;border-radius:0 10px 10px 0;margin:10px 0;
+}
+.card .quote .en{font-size:.92rem;color:var(--blue);font-style:italic;line-height:1.75}
+.card .quote .zh{font-size:.88rem;color:var(--ink-soft);margin-top:8px;
+  border-top:1px dashed rgba(46,74,98,.28);padding-top:7px}
+.card .quote .zh::before{content:"译 ";font-weight:700;opacity:.7;font-size:.82rem}
+.card .quote .src{display:block;text-align:right;font-size:.78rem;color:var(--blue);opacity:.6;margin-top:5px}
+.analogy{
+  background:var(--gold-soft);border-left:3px solid var(--gold);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.93rem;margin:10px 0;
+}
+.analogy b{color:var(--gold)}
+.plain{background:var(--green-soft);border-left:3px solid var(--green);
+  padding:10px 16px;border-radius:0 10px 10px 0;font-size:.95rem;margin:10px 0}
+.plain::before{content:"一句话 ";font-weight:700;color:var(--green);font-size:.82rem;letter-spacing:.1em}
+.case{
+  background:var(--accent-soft);border:1px dashed var(--accent);
+  padding:10px 16px;border-radius:10px;font-size:.93rem;margin:10px 0;
+}
+.case::before{content:"案例 · ";font-weight:700;color:var(--accent);font-size:.82rem;letter-spacing:.1em}
+
+/* 翻转卡片（术语卡） */
+.fn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.fn-card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+}
+.fn-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(60,50,30,.1)}
+.fn-card .front .cn{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.fn-card .front .sub{font-size:.82rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+.fn-card .front .tap{position:absolute;right:16px;bottom:12px;font-size:.75rem;color:#b7ab98}
+.fn-card.open{background:var(--blue-soft);border-color:var(--blue)}
+.fn-card .back{display:none;font-size:.9rem;margin-top:12px;border-top:1px dashed var(--blue);padding-top:12px}
+.fn-card.open .back{display:block}
+.fn-card .back em{display:block;color:var(--blue);font-size:.85rem;margin-top:8px}
+
+/* 演示区 */
+.demo-area{text-align:center;padding:10px 0}
+
+/* 流程推演 / 问答推进 */
+.flow-track{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 10px;justify-content:center}
+.flow-node{
+  padding:8px 18px;border-radius:999px;border:1.5px solid var(--line);
+  font-size:.9rem;color:var(--ink-soft);transition:all .25s;cursor:pointer;
+}
+.flow-node.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.flow-node.past{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.flow-detail{
+  min-height:96px;background:var(--card);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:18px 22px;font-size:.97rem;text-align:left;
+}
+.flow-detail b{color:var(--accent)}
+.flow-detail .qa-q{display:block;color:var(--ink-soft);font-size:.88rem;margin-bottom:8px}
+.flow-ctrl{text-align:center;margin-top:12px}
+
+/* 条件模拟器 */
+.cond-row{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:13px 6px;border-top:1px dashed var(--line)}
+.cond-row:first-of-type{border-top:none}
+.cond-row .name{font-weight:700}
+.cond-row .name small{display:block;font-weight:400;color:var(--ink-soft);font-size:.84rem}
+.switch{position:relative;width:52px;height:28px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#cfc4b2;border-radius:99px;cursor:pointer;transition:.2s}
+.slider::before{content:"";position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#fff;top:3px;left:3px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch input:checked + .slider{background:var(--green)}
+.switch input:checked + .slider::before{transform:translateX(24px)}
+#condResult{
+  margin-top:16px;padding:16px 20px;border-radius:var(--radius);
+  background:var(--blue-soft);color:var(--blue);font-size:.98rem;
+}
+#condResult.fail{background:var(--accent-soft);color:var(--accent)}
+.obstacle-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.obstacle-tags span{font-size:.83rem;background:var(--paper);border:1px solid var(--line);
+  border-radius:999px;padding:3px 12px;color:var(--ink-soft)}
+
+/* 时间轴 */
+.timeline{position:relative;margin:22px 0 6px;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding:6px 0 20px}
+.tl-item::before{content:"";position:absolute;left:-25px;top:14px;width:12px;height:12px;border-radius:50%;
+  background:var(--paper);border:3px solid var(--accent)}
+.tl-item .t{font-weight:700;color:var(--accent)}
+.tl-item .d{font-size:.92rem;color:var(--ink-soft)}
+
+/* 对比卡片 */
+.yuan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.yuan-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.yuan-card h4{color:var(--blue);font-size:1.02rem;margin-bottom:6px}
+.yuan-card .y-tag{display:inline-block;font-size:.75rem;background:var(--blue-soft);color:var(--blue);
+  border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.yuan-card p{font-size:.9rem;color:var(--ink-soft)}
+.yuan-card p b{color:var(--ink)}
+
+/* 归类练习 */
+.tri-row{display:flex;gap:10px;align-items:center;justify-content:space-between;
+  padding:10px 6px;border-top:1px dashed var(--line);flex-wrap:wrap}
+.tri-row:first-of-type{border-top:none}
+.tri-row .acts{display:flex;gap:8px}
+.tri-btn{font-family:inherit;font-size:.85rem;padding:5px 16px;border-radius:99px;cursor:pointer;
+  border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);transition:all .15s}
+.tri-btn.correct{background:var(--green);border-color:var(--green);color:#fff}
+.tri-btn.wrong{background:var(--accent);border-color:var(--accent);color:#fff}
+.tri-exp{width:100%;font-size:.86rem;color:var(--green);display:none;padding-top:4px}
+.tri-exp.show{display:block}
+
+/* 折叠区（例行问答 / 枚举清单） */
+details.dict{border:1px solid var(--line);border-radius:var(--radius);background:var(--card);
+  margin-bottom:10px;overflow:hidden}
+details.dict summary{cursor:pointer;padding:15px 20px;font-weight:700;color:var(--blue);
+  list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+details.dict summary::after{content:"展开 ▾";font-size:.8rem;color:var(--ink-soft);font-weight:400;flex-shrink:0}
+details.dict[open] summary::after{content:"收起 ▴"}
+details.dict summary .hint{font-size:.8rem;font-weight:400;color:var(--ink-soft);margin-left:10px}
+details.dict .body{padding:0 20px 18px;font-size:.92rem;color:var(--ink-soft)}
+details.dict .body p{margin-bottom:8px}
+details.dict .body p b{color:var(--ink)}
+details.dict .body ul{margin:6px 0 10px 20px}
+
+/* 表格 */
+.table-wrap{overflow-x:auto}
+table.nine{width:100%;border-collapse:collapse;font-size:.9rem;background:var(--card);
+  border-radius:var(--radius);overflow:hidden}
+table.nine th,table.nine td{border:1px solid var(--line);padding:10px 14px;text-align:left}
+table.nine th{background:var(--blue);color:#fff;font-weight:600}
+table.nine td:nth-child(2){color:var(--accent);font-weight:600;white-space:nowrap}
+
+/* 金句卡（本集 Ra 的核心宣告） */
+.saying{
+  text-align:center;background:linear-gradient(135deg,#16203c,#4a3a5e);
+  color:#f2eee6;border-radius:var(--radius);padding:36px 24px;margin:26px 0;
+}
+.saying .en{font-size:1.1rem;line-height:1.95;letter-spacing:.02em;font-style:italic}
+.saying .zh{margin-top:16px;font-size:.94rem;opacity:.86;line-height:1.8}
+.saying .src{display:block;margin-top:14px;font-size:.78rem;opacity:.6;letter-spacing:.1em}
+
+footer{text-align:center;padding:40px 20px;color:var(--ink-soft);font-size:.84rem}
+footer p{margin-bottom:6px}
+@media (max-width:640px){
+  .sec-head .num{font-size:1.8rem}
+  header.hero h1{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="kicker">The Ra Contact · 一的法则</div>
+  <h1>Ra Session 025 · 交互式学习模块</h1>
+  <p class="sub">器皿的胸部感冒牵出一条被安排好的攻击链；Ra 顺势讲出星际联邦与猎户座之间那场在你们之上的层面进行、至今未停的思想之战——以及有资格上场的只有谁。</p>
+  <div class="tagline">6 个主题 · 6 个学习步骤 · 15 组案例</div>
+</header>
+
+<nav class="toc" id="toc">
+<a href="#s1">① 本章地图</a>
+<a href="#s2">② 器皿的病与三步棋</a>
+<a href="#s3">③ 恢复活力的处方</a>
+<a href="#s4">④ 思想之战怎么打</a>
+<a href="#s5">⑤ 谁能参战</a>
+<a href="#s6">⑥ 收官</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 学习路径 ============ -->
+<div class="path-box">
+  <h2>学习路径（由易到难）</h2>
+  <p class="hint">按顺序勾选，进度会自动保存在浏览器里。每一步对应下方一个章节。</p>
+  <div id="steps">
+<div class="step-item" data-target="#s1"><label><input type="checkbox" data-step="1"><span class="no">1</span><span class="txt"><b>看懂本集地图</b><span>这一集从一句「她为什么感冒」开始，最后落在「上方的战斗」上——先看清路线与可跳过的例行问答</span></span></label></div>
+<div class="step-item" data-target="#s2"><label><input type="checkbox" data-step="2"><span class="no">2</span><span class="txt"><b>器皿的病与三步棋</b><span>一次自愿的物质摄入，背后被安排了三个目的，只有最后一个得手</span></span></label></div>
+<div class="step-item" data-target="#s3"><label><input type="checkbox" data-step="3"><span class="no">3</span><span class="txt"><b>恢复活力的处方</b><span>冥想、接受限制、与树木接触……以及 Ra 拒绝回答的那一问</span></span></label></div>
+<div class="step-item" data-target="#s4"><label><input type="checkbox" data-step="4"><span class="no">4</span><span class="txt"><b>思想之战怎么打</b><span>战场在你们之上，武器是合一的心智；以及为什么「只是爱」不够</span></span></label></div>
+<div class="step-item" data-target="#s5"><label><input type="checkbox" data-step="5"><span class="no">5</span><span class="txt"><b>谁有资格参战</b><span>四个行星实体、两种导向的第四密度，以及第五密度的退出</span></span></label></div>
+<div class="step-item" data-target="#s6"><label><input type="checkbox" data-step="6"><span class="no">6</span><span class="txt"><b>收官：金句与伏笔</b><span>肘部的神经阻塞、本集的核心宣告，以及 Ra 没问完就收场的地方</span></span></label></div>
+  </div>
+  <div class="progress-bar"><div id="pathBar"></div></div>
+  <div class="progress-text" id="pathText">0 / 0</div>
+</div>
+
+<section class="chapter" id="s1">
+  <div class="sec-head"><span class="num">01</span><h2>本章地图：从一句「她为什么感冒」到「上方的战斗」</h2></div>
+  <p class="sec-lead">发问者开口第一句是「我们现在继续昨天的话题」，把上一集留下的线索接了下来：猎户座集团约三千年前因大流散离开之后，星际联邦有没有取得进展。Ra 的回答把本集主线定在一句话上——离开地球层面，不等于停战。不过这一集真正的入口是一件很小的事：器皿为什么会感冒。本集要谈的议题有五块：器皿的病因、恢复活力的处方、地球之上的战局、思想之战的打法，以及谁有资格上场。全篇大都是教导内容，只有开场致意、收尾照护和一句被拒答的私人问题属于例行范畴，已收进下方折叠区。</p>
+  <div class="card">
+    <h3>问答脉络：十二个问答块，四次转向</h3>
+    <p>本集的对话转了四次方向：从器皿的身体，转到恢复方法，再转到地球之上的历史与战局，最后落到参战者的密度条件。点击节点看每一段在做什么。</p>
+    <div class="demo-area">
+      <div class="flow-track" id="qaTrack"></div>
+      <div class="flow-detail" id="qaDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="qaPrev">← 上一步</button> <button class="tri-btn" id="qaNext">下一步 →</button></div>
+    </div>
+  </div>
+  <details class="dict"><summary>本章例行问答（可跳过）<span class="hint">器皿状态 · 后勤 · 收尾</span></summary>
+  <div class="body">
+    <p><b>(25.0) 开场：</b>Ra 以「我在无限造物主的爱与光中向你们致意」开场，宣布本次通讯开始。</p>
+    <p><b>(25.3) 私人问答：</b>「Don 和 Jim 如何帮助我恢复活力」被 Ra 判定为不适合完整回答，只说这两个实体极为尽责——这句拒答的教导部分已收入第 3 章。</p>
+    <p><b>(25.10) 收束：</b>Ra 主动声明这是最后一个完整问题，因为器皿能量偏低，此后只接受几个简短问题。</p>
+    <p><b>(25.12) 器皿照料：</b>留意器皿更直立的姿势所采取的角度——它在身体复合体被称为肘部的部位造成了一些神经阻塞。</p>
+    <p><b>(25.12) 收尾：</b>以「我在太一无限造物主的爱与光中离开你们……Adonai」作结。</p>
+  </div></details>
+  <div class="case"><b>接力跑的交棒：</b>上一棒不是跑完就停下，而是把棒递出去。本集的问答正是这样接力的——发问者开口就说「我们继续昨天的话题」，从上一集留下的线索（猎户座约三千年前因大流散离开）接着往下跑，而不是重新起跑。</div>
+  <div class="case"><b>入院先摊开一张流程图：</b>新病人进病房，护士先摊出一张表：问病因 → 给处置 → 交代照护。本集的结构也是这张表：先问清器皿的病是怎么来的，再问怎么恢复，再转入战局与参战者，最后收尾。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="sec-head"><span class="num">02</span><h2>器皿的病：猎户座的三步棋，为什么只赢了一步</h2></div>
+  <p class="sec-lead">第一个问题是「是什么原因或复合原因导致了器皿的胸部感冒」。Ra 没有把它当成一次普通受凉，而是拆成两层：器皿自己开的那扇门，和门后有人早已排好的三步棋。第三步踩中的不是她做错了什么，而是一个她自己也正在努力改掉的习性。</p>
+  <div class="card">
+    <h3>病因的第一层：自由意志开的门</h3>
+    <div class="q">是什么原因或复合原因，导致器皿得了所谓胸部感冒？</div>
+    <div class="quote">
+      <p class="en">This distortion towards illness was caused by the free will of the instrument in accepting a chemical substance which you call LSD.</p>
+      <p class="zh">这个朝向疾病的变貌，起因是器皿行使自由意志，接下了一种你们称作 LSD 的化学物质。</p>
+      <span class="src">—— Session 025 · (25.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">This was carefully planned by those entities which do not desire this instrument to remain viable.</p>
+      <p class="zh">这件事是被那些不希望这个器皿继续保持活力的实体精心安排过的。</p>
+      <span class="src">—— Session 025 · (25.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The substance has within it the facility of removing large stores of vital energy from the ingestor.</p>
+      <p class="zh">这种物质本身带有一种能力：把摄取者体内大量储存的生命能量抽走。</p>
+      <span class="src">—— Session 025 · (25.1)</span>
+    </div>
+    <div class="plain">病不是随机的，也不是惩罚：它是「器皿自由意志的选择」加上「一次被安排的消耗」，两层叠在一起才成立。</div>
+    <div class="analogy"><b>别人递来的一杯特调：</b>杯子是你自己伸手接的，配方却是对方早调好的——目的就是让你接下来几天睡不好。入口在你手上，动因在别人手里，这两件事可以同时为真。</div>
+  </div>
+  <div class="card">
+    <h3>三步棋：对手原本想要什么</h3>
+    <p>Ra 把对方的计划拆成三条，前两条先试，最后一条兜底。逐条看它原本指望什么、又是怎么落空的。</p>
+    <div class="quote">
+      <p class="en">The first hope of the Orion entity which arranged this opportunity was that this instrument would become less polarized towards what you call the positive.</p>
+      <p class="zh">安排这次机会的猎户座实体，第一个指望是：器皿会变得不那么朝向你们所说的正面极化。</p>
+      <span class="src">—— Session 025 · (25.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Due to conscious efforts upon the part of this instrument, using the substance as a programmer for service to others and for thankfulness, this instrument was spared this distortion and there was no result satisfactory to the Orion group.</p>
+      <p class="zh">由于器皿这一方有意识的努力——她把这种物质当作一个编程者，用来设定服务他人与感恩——她免于这种变貌，猎户座集团没有得到满意的结果。</p>
+      <span class="src">—— Session 025 · (25.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The second hope lay in the possible misuse of the most powerful means of transmission of energy between your peoples in the area of body-complex distortions.</p>
+      <p class="zh">第二个指望，落在你们人群之间最强大的能量传输方式于身体复合体变貌领域被误用的可能上。</p>
+      <span class="src">—— Session 025 · (25.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Thus this particular plan was not effected either, as the entity continued to give of itself in this context in an open, or green-ray, manner rather than attempting to receive…</p>
+      <p class="zh">于是这个特定的计划同样没有得逞：该实体在这个情境中继续以开放的、也就是绿光的方式给出自己，而不是试图接收……</p>
+      <span class="src">—— Session 025 · (25.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The only remaining distortion available, since this entity would not detune and would not cease sharing love universally under this chemical substance, was simply to drain this entity of as much energy as possible.</p>
+      <p class="zh">既然她不会失谐、也不会在这种化学物质之下停止普世地分享爱，那么剩下的唯一一条变貌就只是：尽可能把她身上的能量抽干。</p>
+      <span class="src">—— Session 025 · (25.1)</span>
+    </div>
+    <div class="plain">三条路里，前两条被器皿自己的选择堵死了；第三条却踩中了她一个尚未改掉的习性——忙碌。这就是她此刻异常容易被感染的原因。</div>
+    <div class="quote">
+      <p class="en">This entity has a strong distortion towards busyness which it has been attempting to overcome for some time, realizing it not to be the appropriate attitude for this work.</p>
+      <p class="zh">这个实体对「忙碌」有很强的变貌，她已经试着克服有一阵子了，因为她明白那并不是这项工作的合宜态度。</p>
+      <span class="src">—— Session 025 · (25.1)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Thus much vital energy was lost, making this instrument unusually susceptible to infections such as it now experiences.</p>
+      <p class="zh">于是大量生命能量流失，使这个器皿异常容易受到感染——就像她现在所遭遇的这一种。</p>
+      <span class="src">—— Session 025 · (25.1)</span>
+    </div>
+  </div>
+  <div class="card">
+    <h3>条件模拟器：三步棋在什么条件下会得手</h3>
+    <p>下面四个开关都取自 (25.1) 的原文，初始状态就是本集实际发生的情况：她自愿接下了物质，但用意识挡住了前两条路，第三条却踩中了忙碌。逐条拨动，看结果怎么变。</p>
+    <div class="cond-row"><span class="name">器皿自愿接受这种物质<small>自由意志是唯一的入口；门不打开，后面的路都无从谈起</small></span><label class="switch"><input type="checkbox" id="cond1" checked><span class="slider"></span></label></div>
+    <div class="cond-row"><span class="name">器皿未把它编程为服务他人与感恩<small>若她的意识不介入，第一个指望就有机会成立</small></span><label class="switch"><input type="checkbox" id="cond2"><span class="slider"></span></label></div>
+    <div class="cond-row"><span class="name">器皿在该情境中试图接收或操控其他自我<small>滥用最强的能量传输方式，第二个指望就有机会成立</small></span><label class="switch"><input type="checkbox" id="cond3"><span class="slider"></span></label></div>
+    <div class="cond-row"><span class="name">器皿延续忙碌的变貌、不肯休息<small>这是最后一条，也是本集唯一得手的一条</small></span><label class="switch"><input type="checkbox" id="cond4" checked><span class="slider"></span></label></div>
+    <div id="condResult"></div>
+  </div>
+  <div class="case"><b>年会后半场的那杯酒：</b>同事举着杯子说「就一杯」。你喝下去的决定是你自己做的，对方只是等在那里——第二天宿醉，你怪不到他头上。这正对应 Ra 的说明：这条病的路径，入口是器皿自己的自由意志。</div>
+  <div class="case"><b>连续三晚只睡三小时的上线夜：</b>产品经理连着三晚睡三小时交付版本，交付当天下午就发烧倒下。忙碌是她自愿的，可她没意识到「保持清醒远超适当范围」恰好是对手唯一还能得手的那一步。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="sec-head"><span class="num">03</span><h2>恢复活力的处方：六件朴素的事，和一个被拒绝的问题</h2></div>
+  <p class="sec-lead">器皿托发问者转达了两个问题：我怎样才能最好地恢复活力（现在以及将来）？Don 和 Jim 又该怎么帮我？前者得到一份看似平淡的清单；后者被 Ra 明确挡了回去——而那道「不回答」本身，也是这一集要读的内容。</p>
+  <div class="card">
+    <h3>处方的六项：从「接受限制」开始</h3>
+    <div class="q">器皿想问：我怎样才能最好地恢复活力，不只是现在，也包括将来？</div>
+    <div class="quote">
+      <p class="en">meditation, acceptance of limitations, experiences of joy through association with others and with the beauty as of the singing; and the exercising with great contact, whenever possible, with the life forces of second density, especially those of trees…</p>
+      <p class="zh">冥想；接受种种限制；在与他人往来、以及像歌唱那样的美之中体验喜悦；并在可能时，与第二密度的生命力量深度接触——尤其是树木……</p>
+      <span class="src">—— Session 025 · (25.2)</span>
+    </div>
+    <div class="quote">
+      <p class="en">this entity also needing to be aware of the moderate but steady intake of foodstuffs, exercise being suggested at a fairly early portion of the day and at a later portion of the day before the resting.</p>
+      <p class="zh">这个实体还需要留意适量而稳定的食物摄入；建议在一天较早的时段运动一次，并在一天较晚的、临休息前的时段再运动一次。</p>
+      <span class="src">—— Session 025 · (25.2)</span>
+    </div>
+    <div class="plain">Ra 说这些本来就是「该器皿体质的根本需求」——处方不是外加的疗法，而是把本来就欠着的几项补回来。</div>
+    <div class="analogy"><b>手机续航：</b>真正决定电量的是后台那些一直开着的程序。冥想与「接受限制」就是关掉最耗电的那个后台——不先关它，充电宝插得再多也撑不过半天。</div>
+  </div>
+  <div class="card">
+    <h3>被拒绝的那一问：拒答本身是教导</h3>
+    <div class="q">Don 和 Jim 怎样才能帮助我恢复活力？</div>
+    <div class="quote">
+      <p class="en">This is not an appropriate question for full answer. We can say only that these entities are most conscientious.</p>
+      <p class="zh">这个问题不适合给予完整的回答。我们只能说，这两个实体极为尽责。</p>
+      <span class="src">—— Session 025 · (25.3)</span>
+    </div>
+    <div class="quote">
+      <p class="en">We may add that due to this instrument's distortion towards imbalance in the space/time nexus, it would be well were this entity accompanied during exercise.</p>
+      <p class="zh">我们可以补充一点：由于该器皿在空间/时间连结中有朝向不平衡的变貌，她在锻炼时有人陪伴会比较好。</p>
+      <span class="src">—— Session 025 · (25.3)</span>
+    </div>
+    <div class="plain">Ra 拒绝的从来不是「关心」，而是替另一个人的自由意志与平衡做决定；它只肯给出一条落在操作层面的建议——锻炼时有人陪。</div>
+    <div class="analogy"><b>咨询师不替你的伴侣做决定：</b>他可以把关系里的动力讲得很清楚，但绝不会说「你该怎么管住她」。知道得再多，也不能替另一个人的意志落笔——这道界线就是本集那句「不适合完整回答」。</div>
+  </div>
+  <div class="case"><b>把闹钟设成「提醒我休息」：</b>医生说要多休息，你设了五个闹钟催自己歇一会儿，手上却还在每小时回一次消息。Ra 的处方把冥想与接受限制放在最前面：不先停下忙碌，后面的进食、运动、与树木接触都补不回来。</div>
+  <div class="case"><b>午休绕进公园那二十分钟：</b>程序员退掉了午间的外卖团购，改成去街对面的公园走一圈，顺手摸一摸老树皮再回工位。这正是 Ra 说的「尽可能与第二密度的生命力量深度接触，尤其是树木」。</div>
+  <div class="case"><b>陪朋友在小区里走一圈：</b>朋友处在情绪低谷，你替他做不了任何决定，能做的只是每天下班陪他在小区走一圈。这对应 (25.3)：Ra 唯一愿意给出的那种帮助，就是「锻炼时有人陪伴」。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s4">
+  <div class="sec-head"><span class="num">04</span><h2>思想之战：战场在你们之上，武器是合一的心智</h2></div>
+  <p class="sec-lead">从器皿的身体转开，发问者回到昨天那条线索：猎户座离开之后，星际联邦有没有进展？Ra 的回答分三段：先说战斗转移到了更高的层面；再说地球层面这段时间的实际情况（只有零星的呼求，例如希腊）；最后才解释这场仗究竟怎么打、为什么正面一方不能只靠「爱」。</p>
+  <div class="card">
+    <h3>离开不等于停战：战场升到「你们之上」</h3>
+    <div class="q">约三千年前猎户座集团因大流散离开。那之后，星际联邦有没有取得任何进展？</div>
+    <div class="quote">
+      <p class="en">For many of your centuries, both the Confederation and the Orion Confederation busied themselves with each other upon planes above your own, shall we say, planes in time/space whereby machinations were conceived and the armor of light girded on. Battles have been and are continuing to be fought upon these levels.</p>
+      <p class="zh">在你们的许多个世纪里，星际联邦与猎户座联邦都在高于你们的层面上忙于彼此——容我们说，那是时间/空间中的层面，各种计谋在那里被构想出来，光之盔甲在那里被披挂上。战斗曾在这些层面发生，并且仍在继续。</p>
+      <span class="src">—— Session 025 · (25.4)</span>
+    </div>
+    <div class="plain">猎户座从地球层面撤走，只是换了战场：冲突移到你们之上的时间/空间层面，而且「仍在继续」。</div>
+    <div class="timeline">
+      <div class="tl-item"><span class="t">约三千年前</span><div class="d">猎户座集团因大流散离开——这是发问者转述上一集、并为本集设下的追问起点。</div></div>
+      <div class="tl-item"><span class="t">其后许多个世纪</span><div class="d">双方在你们之上、时间/空间中的层面上彼此较量：构想计谋、披挂光之盔甲。这些层面上的战斗至今未停。</div></div>
+      <div class="tl-item"><span class="t">约两千六百年前</span><div class="d">地球上出现孤立的呼求，其中一次始于此时你们称为希腊的地方，产生了关于一的法则某些面向的著作与理解。</div></div>
+      <div class="tl-item"><span class="t">同一时期</span><div class="d">星际联邦只被允许以心灵感应印入「有限数量」的洞见信息——不是大举介入。</div></div>
+      <div class="tl-item"><span class="t">这段时间的大部分</span><div class="d">帝国依久远前启动的态度与能量兴衰，没有产生强烈的极化，而是正面与好战（负面）的混合——Ra 说这是你们存在性最后一个小周期的特征。</div></div>
+    </div>
+    <div class="case"><b>门店撤了，博弈没停：</b>两家奶茶店面对面开了三年，其中一家撤店了，但它没有消失——补贴战被搬进了外卖平台的算法里。你只感到「最近奶茶便宜了」，看不到后台正在打的仗。这正是本集所说：离开地球层面，不等于战斗结束。</div>
+    <div class="case"><b>市集边那两句「万物源于水」：</b>约两千六百年前，一位老师站在希腊的市集边对学生说万物源于水，另一位说一切都在流动、人不能两次踏进同一条河。本集 Ra 点名泰勒斯与赫拉克利特，说那时关于一的法则某些面向的理解就是这样长出来的。</div>
+  </div>
+  <div class="card">
+    <h3>打法：把整个社会的心智合成一台机器</h3>
+    <div class="q">这场星际联邦与猎户座联邦之间的战斗，究竟如何进行？</div>
+    <div class="quote">
+      <p class="en">Picture, if you will, your mind. Picture it then in total unity with all other minds of your society.</p>
+      <p class="zh">如果你愿意，先想象你的心智；然后想象它与你们社会中所有其他心智完全合一。</p>
+      <span class="src">—— Session 025 · (25.5)</span>
+    </div>
+    <div class="quote">
+      <p class="en">You are then single-minded, and that which is a weak electrical charge in your physical illusion is now an enormously powerful machine whereby thoughts may be projected as things.</p>
+      <p class="zh">那时你们便是同心一意的；而在你们的物理幻象中只是一道微弱电荷的东西，此刻成了一台极其强大的机器——思想可以借它被投射为事物。</p>
+      <span class="src">—— Session 025 · (25.5)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The result, a standoff, as you would call it, both energies being somewhat depleted by this and needing to regroup; the negative depleted through failure to manipulate, the positive depleted through failure to accept that which is given.</p>
+      <p class="zh">结果就是你们所说的僵局：双方的能量都因此有所折损、都需要重新集结——负面一方因操控失败而折损，正面一方则因未能接受所给予之物而折损。</p>
+      <span class="src">—— Session 025 · (25.5)</span>
+    </div>
+    <div class="plain">「思想之战」不是修辞：当一整个社会的心智合一，它就成了能把思想投射为事物的装置。这场仗打的是投射，而结果是谁也占不到便宜。</div>
+    <div class="demo-area">
+      <div class="flow-track" id="warTrack"></div>
+      <div class="flow-detail" id="warDetail"></div>
+      <div class="flow-ctrl"><button class="tri-btn" id="warPrev">← 上一步</button> <button class="tri-btn" id="warNext">下一步 →</button></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>为什么「只是爱」不够：防御的义务</h3>
+    <div class="q">「未能接受所给予之物」是什么意思？</div>
+    <div class="quote">
+      <p class="en">the most accepting and loving energy would be to so love those who wished to manipulate that those entities were surrounded, engulfed, and transformed by positive energies.</p>
+      <p class="zh">最具接纳性与爱心的能量，会是如此深爱那些意图操控的实体，以至于它们被正面能量包围、吞没并转化。</p>
+      <span class="src">—— Session 025 · (25.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">the Confederation is aware that it cannot, on equal footing, allow itself to be manipulated in order to remain purely positive, for then, though pure, it would not be of any consequence, having been placed by the so-called powers of darkness under the heel, as you may say.</p>
+      <p class="zh">但星际联邦清楚：在势均力敌的前提下，它不能为了保持纯粹的正面而任自己被操控——因为那样一来，虽然纯粹，却不会产生任何影响，如你们所说，会被那些所谓的黑暗力量踩在脚下。</p>
+      <span class="src">—— Session 025 · (25.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">It is thus that those who deal with this thought-war must be defensive rather than accepting in order to preserve their usefulness in service to others.</p>
+      <p class="zh">正因如此，处理这场思想之战的实体必须采取防御而非一味接纳，才能保住自己在服务他人中的用处。</p>
+      <span class="src">—— Session 025 · (25.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Thusly, they cannot accept fully what the Orion Confederation wishes to give, that being enslavement.</p>
+      <p class="zh">所以，它们无法完全接受猎户座联邦想要给予的东西——那东西就是奴役。</p>
+      <span class="src">—— Session 025 · (25.6)</span>
+    </div>
+    <div class="plain">理想中的「用爱包围操控者」是真的，但它需要力量对等之外的余裕；在势均力敌时，一味接纳等于先丢阵地——防御是为了还能继续服务。</div>
+    <div class="analogy"><b>一直站在原地接球：</b>对方一直朝你身上砸球，你若每次都站在原地接住、笑着说「我不生气」，换来的只会是更多的球。退开一步、把球挡回去，你才能继续留在场上——这就是 Ra 说的「必须防御而非接纳」。</div>
+    <div class="quote">
+      <p class="en">Thusly, some polarity is lost due to this friction, and both sides, if you will, must then regroup.</p>
+      <p class="zh">因此，这种摩擦让双方都失去了一些极性；如果你愿意这样说的话，两边都得重新集结。</p>
+      <span class="src">—— Session 025 · (25.6)</span>
+    </div>
+    <div class="quote">
+      <p class="en">It has not been fruitful for either side. The only consequence which has been helpful is a balancing of the energies available to this planet so that these energies have less necessity to be balanced in this space/time, thus lessening the chances of planetary annihilation.</p>
+      <p class="zh">这对双方都不曾有过成果。唯一有帮助的结果，是可供这个行星使用的能量得到了平衡——这些能量于是在这个空间/时间中较少需要被平衡，行星毁灭的可能性也因而降低。</p>
+      <span class="src">—— Session 025 · (25.6)</span>
+    </div>
+    <div class="plain">这场仗谁也没赢，只留下一个副产品：行星层面的能量被平衡，行星毁灭的概率因此下降。</div>
+    <div class="case"><b>反诈民警的对照实验：</b>他常让居民想象两段对话——一段是你认真回答骗子的每一个问题、想靠耐心感化他；一段是你直接挂断、拉黑、报警。前者听起来更「善良」，但在力量对等的博弈里，它先耗尽的是你自己的资源。这正对应 Ra 的说明：正面一方必须防御而非接纳，才能保住服务他人的用处。</div>
+    <div class="case"><b>谈判桌上不能签的那一页：</b>对方把条款推过来说「签了大家都有好处」，而那一页要求你牺牲第三方的客户。你拒绝签字并说明底线。这正是 Ra 的那句话：不能完全接受对方要给你的东西——那实质是奴役；也正因为这种摩擦，双方都损失了一些极性，都得回去重新集结。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s5">
+  <div class="sec-head"><span class="num">05</span><h2>谁能参战：四个行星实体，与一道智慧的门槛</h2></div>
+  <p class="sec-lead">知道了打法，发问者接着追问「谁来打」：星际联邦有多少比例投入这场思想战斗？Ra 的答案小得惊人——四个行星实体。接下来五个问答块都在解这道门槛：为什么是第四密度，为什么第五、第六密度的正面不参与，为什么第五密度的负面也退出。</p>
+  <div class="card">
+    <h3>只有四个：这是联邦最困难的工作</h3>
+    <div class="q">那么，星际联邦是否有一部分参与这场思想战斗？参与的比例是多少？</div>
+    <div class="quote">
+      <p class="en">This is the most difficult work of the Confederation. Only four planetary entities at any one time are asked to partake in this conflict.</p>
+      <p class="zh">这是星际联邦最困难的工作。任何时候，被要求参与这场冲突的行星实体只有四个。</p>
+      <span class="src">—— Session 025 · (25.7)</span>
+    </div>
+    <div class="quote">
+      <p class="en">These entities are of the density of love, numbering four.</p>
+      <p class="zh">这些实体属于爱的密度，数目是四个。</p>
+      <span class="src">—— Session 025 · (25.8)</span>
+    </div>
+    <div class="plain">不是「越多越好」：这道防线上只放四个实体，而 Ra 把它称为联邦最困难的工作。</div>
+    <div class="analogy"><b>山顶唯一的信号塔：</b>覆盖整片山谷的，常常不是一群中继站，而是一座位置恰当的塔——这件事的关键从来不是人数，而是层级与位置。</div>
+  </div>
+  <div class="card">
+    <h3>为什么是第四密度：缺一份「不战的智慧」</h3>
+    <div class="q">我猜这是最适合这项工作的密度——第四密度的实体会比第五或第六密度的实体更有效吗？</div>
+    <div class="quote">
+      <p class="en">The fourth density is the only density besides your own which, lacking the wisdom to refrain from battle, sees the necessity of the battle. Thus it is necessary that fourth-density social memory complexes be used.</p>
+      <p class="zh">第四密度是除你们自身密度之外，唯一一个因为缺乏「不去战斗」的智慧、从而看见战斗之必要性的密度。因此必须动用第四密度的社会记忆复合体。</p>
+      <span class="src">—— Session 025 · (25.9)</span>
+    </div>
+    <div class="quote">
+      <p class="en">It is partially correct. Fifth- and sixth-density entities positive would not take part in this battle. Fifth-density negative would not take part in this battle. Thus, the fourth density of both orientations join in this conflict.</p>
+      <p class="zh">这部分对。第五与第六密度的正面实体不会参与这场战斗；第五密度的负面实体也不会参与。于是，两种导向的第四密度都加入了这场冲突。</p>
+      <span class="src">—— Session 025 · (25.10)</span>
+    </div>
+    <div class="plain">参战的资格不是「更强」，而是「还把这场仗当成必须打的仗」：正面与负面的第四密度都上场，因为两边都缺那份「不必战」的智慧。</div>
+    <div class="yuan-grid">
+      <div class="yuan-card"><span class="y-tag">参战</span><h4>第四密度 · 爱的密度</h4><p>两种导向都加入。Ra 说它是除你们自身密度之外，唯一<b>缺乏抑制战斗的智慧</b>、因而看见战斗之必要性的密度。</p></div>
+      <div class="yuan-card"><span class="y-tag">不参战</span><h4>第五密度 · 光／智慧的密度</h4><p>正面实体不参与这场战斗。Ra 在回答中直接给出这个密度的名字：光，或者说智慧。</p></div>
+      <div class="yuan-card"><span class="y-tag">不参战</span><h4>第五密度负面 · 服务自我</h4><p>处于极高的觉知与智慧水平，<b>除思想之外已停止活动</b>；极其致密化，并与其余一切分离。</p></div>
+      <div class="yuan-card"><span class="y-tag">不参战</span><h4>第六密度 · 正面</h4><p>Ra 明言第五与第六密度的正面实体都不会参与——这一句在本集里只作为「否定的范围」出现，没有展开理由。</p></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>第五密度负面为何退出：已停止行动，只以思想行事</h3>
+    <div class="q">我很想知道第五密度负面不参与这场战斗，是出于什么导向。</div>
+    <div class="quote">
+      <p class="en">The fifth density is the density of light, or wisdom.</p>
+      <p class="zh">第五密度是光、或者说智慧的密度。</p>
+      <span class="src">—— Session 025 · (25.11)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The so-called negative service-to-self entity in this density is at an high level of awareness and wisdom and has ceased activity except by thought.</p>
+      <p class="zh">在这个密度中，所谓负面的服务自我实体处于很高的觉知与智慧水平，除了以思想行事之外，已经停止了一切活动。</p>
+      <span class="src">—— Session 025 · (25.11)</span>
+    </div>
+    <div class="quote">
+      <p class="en">The fifth-density negative is extraordinarily compacted and separated from all else.</p>
+      <p class="zh">第五密度的负面实体极端致密化，并与其余一切相分离。</p>
+      <span class="src">—— Session 025 · (25.11)</span>
+    </div>
+    <div class="plain">退出不是因为弱，而是因为它的活动形态变了：外在行动全部停止，只剩思想，并且愈发向内收拢、与万物分离。</div>
+    <div class="analogy"><b>封笔的老棋手：</b>他不再参加任何公开对局，只在脑内推演千局，也约不动他。你无法在棋盘上与他交手，因为他的战场已经收进自己内部——这就是 Ra 描述的第五密度负面。</div>
+  </div>
+  <div class="card">
+    <h3>术语卡：读懂这一集需要的几个词</h3>
+    <p>点击卡片展开解释。每个词都先给一句白话定义，不预设你读过前面的集会。</p>
+    <div class="fn-grid">
+      <div class="fn-card"><div class="front"><div class="cn">变貌</div><div class="sub">distortion</div><span class="tap">点击展开</span></div><div class="back">指对统一性的任何偏离状态，本身不带贬义。本集里「朝向疾病的变貌」「朝向忙碌的变貌」都只是「偏向某一侧」的意思。<em>比喻：一束白光经过棱镜分成七色——颜色不是错，只是分开了。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">生命能量</div><div class="sub">vital energy</div><span class="tap">点击展开</span></div><div class="back">Ra 用来描述一个存有可动用的能量储备。本集说那种物质本身会把摄取者身上大量储存的生命能量抽走；能量流失之后，人就异常容易被感染。<em>案例：像手机掉到 5% 电量，随便一件事都能让它关机。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">极化</div><div class="sub">polarization</div><span class="tap">点击展开</span></div><div class="back">指一个存有或群体在「服务他人／服务自我」这条轴上的偏向强度。本集说猎户座的第一个指望就是让器皿「不那么朝向正面极化」，而思想之战的摩擦会让双方都损失一些极性。<em>比喻：像磁铁的充磁方向——可以很强，也可以被削弱。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">思想之战</div><div class="sub">thought-war</div><span class="tap">点击展开</span></div><div class="back">本集引入的称谓，指在时间/空间层面上进行的冲突：猎户座以冲击、或者说攻击推进，星际联邦以光为武装，双方以投射的思想交锋，结果多为僵局。<em>这不是比喻——Ra 直接把它当作这场冲突的名字来用。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">时间/空间</div><div class="sub">time/space</div><span class="tap">点击展开</span></div><div class="back">Ra 用来指称与「空间/时间」相对的那一侧。本集说战斗发生在「高于你们的层面，容我们说，时间/空间中的层面」，也就是并非发生在你们这个物理世界里的层面。<em>案例：白天的会议室和夜里各自做的那个梦——两件事同时存在，但不在同一层。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">社会记忆复合体</div><div class="sub">social memory complex</div><span class="tap">点击展开</span></div><div class="back">一群存有共享同一份记忆与心智、从而能以整体行事的形态。本集说必须动用「第四密度的社会记忆复合体」参战，正呼应 Ra 描述的那种「与所有其他心智完全合一」的打法。<em>比喻：不是一群各自拿手机的人，而是一台共享同一份内存的机器。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">服务自我</div><div class="sub">service-to-self</div><span class="tap">点击展开</span></div><div class="back">朝向负面极化的道路，核心是操控与索取而非给予；本集也称其为「所谓负面的」导向。Ra 说第五密度的服务自我实体已达极高的觉知与智慧，只以思想行事。<em>提醒：「负面」在 Ra 的用法里指方向，不是道德判决词。</em></div></div>
+      <div class="fn-card"><div class="front"><div class="cn">器皿</div><div class="sub">instrument</div><span class="tap">点击展开</span></div><div class="back">出神通讯中承载 Ra 言语的人，本集里指 Carla。本集的起点是她的身体状态，收尾也是对她的照护建议。<em>案例：麦克风不制造声音，只把声音传出去——所以它的状态值得被照料。</em></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>归类练习：哪一种做法更接近本集的指示？</h3>
+    <p>按 (25.6) 的说法，判断下面每种做法更接近「纯粹的接纳」还是「必要的防御」。</p>
+    <div id="sorterArea"></div>
+  </div>
+  <div class="case"><b>平均年龄二十四岁的新人组：</b>刚成立的创业小组一碰上竞争对手就兴奋，因为他们还没长出那套「不必打就不打」的智慧。Ra 说第四密度正是这样的密度——所以才必须由第四密度的社会记忆复合体去打这场仗。</div>
+  <div class="case"><b>一封写着「这类仗我不参与」的邮件：</b>公司陷入舆论危机，市场部和公关部都被叫进会议室，没人问「该不该打」；法务总监只回了一封邮件，说他不参与。本集的分工就是这么分的：第四密度（两种导向）进场，第五、第六密度的正面实体留在场外。</div>
+  <div class="divider"></div>
+</section>
+
+<section class="chapter" id="s6">
+  <div class="sec-head"><span class="num">06</span><h2>收官：一句照护建议，和本集真正的宣告</h2></div>
+  <p class="sec-lead">在能量偏低的状态下，本集最后只剩两个简短问题：一个是第五密度负面为何退出（已收入上一章），另一个是照护。Ra 给的答案只有一条：留意器皿更直立的姿势在肘部造成的神经阻塞。然后便是告别。</p>
+  <div class="card">
+    <h3>最后一条具体建议：肘部的角度</h3>
+    <div class="q">我们不想耗尽器皿，有没有什么能让她更舒适？</div>
+    <div class="quote">
+      <p class="en">As we requested previously, it would be well to observe the angles taken by the more upright posture of the entity. It is causing some nerve blockage in the portion of the body complex called the elbows.</p>
+      <p class="zh">正如我们先前所请求的，最好留意该实体更直立姿势下所采取的角度。它正在身体复合体中被称为肘部的部位造成一些神经阻塞。</p>
+      <span class="src">—— Session 025 · (25.12)</span>
+    </div>
+    <div class="plain">整个思想之战讲得那么高远，收尾却落在两个手肘的角度上——在 Ra 的系统里这不是反差，而是同一件事：通道的状态决定了教导还能不能继续。</div>
+    <div class="analogy"><b>乐手先调琴再上台：</b>再重要的曲目，也要先确认琴没问题。Ra 每次集会结尾问「器皿舒适吗」，问的就是这件事。</div>
+  </div>
+  <div class="saying">
+    <p class="en">It is thus that those who deal with this thought-war must be defensive rather than accepting in order to preserve their usefulness in service to others.</p>
+    <p class="zh">正因如此，处理这场思想之战的实体必须采取防御而非一味接纳，才能保住自己在服务他人中的用处。</p>
+    <span class="src">—— Session 025 · (25.6)</span>
+  </div>
+  <div class="card">
+    <h3>本集留下的位置：为什么它是在「没问完」的状态下结束的</h3>
+    <div class="quote">
+      <p class="en">This will be the last full question as this entity's energies are low.</p>
+      <p class="zh">这将是最后一个完整的问题，因为这个实体的能量已经偏低。</p>
+      <span class="src">—— Session 025 · (25.10)</span>
+    </div>
+    <div class="quote">
+      <p class="en">May we ask for a few short questions before we close?</p>
+      <p class="zh">在我们结束之前，我们可以请求几个简短的问题吗？</p>
+      <span class="src">—— Session 025 · (25.10)</span>
+    </div>
+    <div class="quote">
+      <p class="en">Go forth, then, rejoicing in the power and the peace of the One Creator. Adonai.</p>
+      <p class="zh">那么，向前去吧，在太一造物主的大能与和平中欢庆。Adonai。</p>
+      <span class="src">—— Session 025 · (25.12)</span>
+    </div>
+    <div class="plain">Ra 让「讲完」让位给了「让通道还能用」：宣布这是最后一个完整问题之后，只接了三个简短问答便收场。本集的思想之战，是在框架刚搭好、细节还没问的状态下停住的。</div>
+    <div class="case"><b>嗓子哑了就下播：</b>连播五小时之后声音开始发哑，主播选择下播而不是硬撑到榜单第一——嗓子一废，之后一周都播不了。本集 Ra 在 (25.10) 做的就是同一个判断：能量已低，只接简短问题。</div>
+    <div class="case"><b>同一姿势压出来的肘部发麻：</b>程序员把右肘长期压在同一角度打字，某天小指开始发麻，检查才知道是尺神经被压住了。本集 Ra 给出的唯一具体建议，正是调整器皿更直立姿势下的角度——因为它在肘部造成了神经阻塞。</div>
+  </div>
+  <div class="divider"></div>
+</section>
+
+</div>
+
+<footer>
+<p>基于 The Ra Contact Session 025（split/Ra_Session_025.md）英文原文制作 · 交互式学习模块</p>
+<p>引文为英文原文逐字摘录；中文释义与讲解为本模块自拟，不构成正文译文</p>
+</footer>
+
+<script>
+/* ===== 学习路径进度（固定，勿改） ===== */
+const STUDY_KEY='ra025-study-progress';
+function loadProgress(){try{return JSON.parse(localStorage.getItem(STUDY_KEY))||{}}catch(e){return{}}}
+function saveProgress(p){localStorage.setItem(STUDY_KEY,JSON.stringify(p))}
+function renderPath(){
+  const p=loadProgress();
+  const steps=document.querySelectorAll('#steps input');
+  let done=0;
+  steps.forEach(cb=>{
+    cb.checked=!!p[cb.dataset.step];
+    cb.closest('.step-item').classList.toggle('completed',cb.checked);
+    if(cb.checked)done++;
+    const item=cb.closest('.step-item');
+    const target=item.dataset.target;
+    if(target){
+      const link=document.querySelector('#toc a[href="'+target+'"]');
+      if(link)link.classList.toggle('done',cb.checked);
+    }
+  });
+  document.getElementById('pathBar').style.width=(steps.length?done/steps.length*100:0)+'%';
+  document.getElementById('pathText').textContent=done+' / '+steps.length;
+}
+document.querySelectorAll('#steps input').forEach(cb=>{
+  cb.addEventListener('change',()=>{
+    const p=loadProgress();p[cb.dataset.step]=cb.checked;saveProgress(p);renderPath();
+  });
+});
+
+/* ===== 流程推演 / 问答推进组件（通用，勿改） ===== */
+function initStepper(trackId,detailId,prevId,nextId,data){
+  let idx=0;
+  const track=document.getElementById(trackId),detail=document.getElementById(detailId);
+  function render(){
+    track.innerHTML=data.map((c,i)=>'<div class="flow-node '+(i===idx?'active':i<idx?'past':'')+'">'+c.t+'</div>').join('');
+    track.querySelectorAll('.flow-node').forEach((n,i)=>n.onclick=()=>{idx=i;render();});
+    detail.innerHTML=data[idx].d;
+  }
+  if(prevId)document.getElementById(prevId).onclick=()=>{idx=Math.max(0,idx-1);render();};
+  if(nextId)document.getElementById(nextId).onclick=()=>{idx=Math.min(data.length-1,idx+1);render();};
+  render();
+}
+
+/* ===== 归类练习组件（通用，勿改） ===== */
+function initSorter(areaId,items){
+  const area=document.getElementById(areaId);
+  area.innerHTML=items.map((t,i)=>
+    '<div class="tri-row"><div style="flex:1;min-width:200px;font-size:.95rem">'+t.a+'</div>'+
+    '<div class="acts">'+t.opts.map(o=>'<button class="tri-btn" data-i="'+i+'" data-v="'+o+'">'+o+'</button>').join('')+'</div>'+
+    '<div class="tri-exp" id="triExp'+i+'">✓ 正确答案：'+t.ans+' —— '+t.exp+'</div></div>'
+  ).join('');
+  area.querySelectorAll('.tri-btn').forEach(b=>{
+    b.onclick=()=>{
+      const i=+b.dataset.i,v=b.dataset.v,t=items[i];
+      b.closest('.tri-row').querySelectorAll('.tri-btn').forEach(x=>{
+        x.classList.remove('correct','wrong');
+        if(x.dataset.v===t.ans)x.classList.add('correct');
+        else if(x===b)x.classList.add('wrong');
+      });
+      document.getElementById('triExp'+i).classList.add('show');
+    };
+  });
+}
+
+/* ===== 本章定制交互 ===== */
+/* 本集：问答脉络推进器 */
+initStepper('qaTrack','qaDetail','qaPrev','qaNext',[
+  {t:'(25.0) 开场',d:'<b>致意与开场。</b>Ra 以「我在无限造物主的爱与光中向你们致意」宣布本次通讯开始。'},
+  {t:'(25.1) 感冒的成因',d:'<span class="qa-q">问：是什么原因或复合原因导致了器皿的胸部感冒？</span><b>答：</b>她行使自由意志接受了 LSD，而这被不希望她保持活力的实体精心安排：先指望她不再偏正面，再指望滥用最强的能量传输方式——两条都落空，最后只剩抽干能量一条路，踩中的是她尚未改掉的忙碌习性。'},
+  {t:'(25.2)-(25.3) 恢复与照护',d:'<span class="qa-q">问：我怎样才能最好地恢复活力？Don 和 Jim 又该如何帮我？</span><b>答：</b>冥想、接受限制、在人际与美之中体验喜悦、尽可能与第二密度生命（尤其树木）深度接触、适量而稳定地进食、早晚各运动一次。第三个问题被拒答——只说两人极为尽责，锻炼时有人陪伴会更好。'},
+  {t:'(25.4) 昨天的话题',d:'<span class="qa-q">问：约三千年前猎户座因大流散离开之后，联邦有进展吗？</span><b>答：</b>双方在高于地球的时间/空间层面上继续较量、至今未停；地球层面只有孤立的呼求，例如约两千六百年前希腊的泰勒斯、赫拉克利特与伯里克利，联邦只被允许印入有限数量的洞见信息。'},
+  {t:'(25.5)-(25.6) 打法与底线',d:'<span class="qa-q">问：这场战斗如何进行？「未能接受所给予之物」是什么意思？</span><b>答：</b>合一的心智能把思想投射为事物；猎户座冲击，联邦以光为武装，结果僵局，双方都耗尽而需重组。理想要用爱包围操控者，但势均力敌时不能任自己被操控，否则虽纯而无影响力——所以必须防御，不能接受对方要给的那份奴役。'},
+  {t:'(25.7)-(25.11) 谁参战',d:'<span class="qa-q">问：联邦有多少比例参与？是什么密度？</span><b>答：</b>任何时刻只有四个行星实体被要求参与，属爱的密度（第四密度）——它是除你们自身密度之外，唯一缺乏「不战之智慧」的密度。两种导向的第四密度都参战；第五、第六密度的正面实体不参战，第五密度负面也不参战，因为它已停止外在活动，只以思想行事。'},
+  {t:'(25.12) 收尾',d:'<span class="qa-q">问：有什么能让器皿更舒适？</span><b>答：</b>留意她更直立姿势下所采取的角度，它在肘部造成神经阻塞。随后以「在爱与光中离开……Adonai」作结。'}
+]);
+
+/* 本集：思想之战的机制推演 */
+initStepper('warTrack','warDetail','warPrev','warNext',[
+  {t:'合一的心智',d:'<b>第一步是想象。</b>Ra 让发问者先想象自己的心智，再想象它与社会中所有其他心智完全合一——单独一颗心智没有这个能力。'},
+  {t:'投射的机器',d:'<b>单一心智成为装置。</b>物理幻象里只是一道微弱电荷的东西，此刻成了一台极其强大的机器，思想可以借它被投射为「事物」。'},
+  {t:'冲击与武装',d:'<b>双方的动作。</b>猎户座以光冲击、或者说攻击星际联邦的武装；联邦的武装也是光。Ra 用一句话并列了攻与守。'},
+  {t:'僵局',d:'<b>结果是谁也占不到便宜。</b>双方能量都折损、都需要重组：负面因操控失败而折损，正面因未能接受所给予之物而折损。'},
+  {t:'理想的答案与它的前提',d:'<b>最具爱的应对</b>是深爱到让操控者被正面能量包围、吞没、转化——但 Ra 说这在势均力敌时行不通：联邦若任自己被操控，虽纯却毫无影响力，会被黑暗力量踩在脚下。'},
+  {t:'防御的义务',d:'<b>结论。</b>处理思想之战的实体必须防御而非接纳，才能保住服务他人的用处；它们无法完全接受猎户座要给的东西——那就是奴役。摩擦让双方都失去极性，而唯一有益的结果是行星能量被平衡，行星毁灭的可能性因此降低。'}
+]);
+
+/* 本集：三步棋条件模拟器 */
+const condInputs=['cond1','cond2','cond3','cond4'].map(id=>document.getElementById(id));
+function updateCond(){
+  const v=condInputs.map(c=>c.checked);
+  const box=document.getElementById('condResult');
+  if(!v[0]){
+    box.className='';
+    box.innerHTML='<b>门是关着的。</b>猎户座必须先等到器皿自己说「我接受」——自由意志是唯一的入口。这一步不成立，两条希望与兜底方案都无从谈起，也就不会有由这条路径而来的病。';
+    return;
+  }
+  let msg='<b>入口：</b>器皿自愿接受了这种物质，攻击有了立足点。';
+  msg+=(v[1]?'<br><b>第一个希望成立</b>——她没把它编程为服务他人与感恩，这次经历可能让她变得不那么朝向正面极化。':'<br>第一个希望落空——她用有意识的努力把它编程为服务他人与感恩。');
+  msg+=(v[2]?'<br><b>第二个希望成立</b>——她在该情境中试图接收或操控其他自我，最强的能量传输方式成了泄漏口。':'<br>第二个希望落空——她继续以开放的绿光方式给出自己，而非试图接收或操控。');
+  msg+=(v[3]?'<br><b>兜底方案得手</b>——忙碌的变貌让她在物质影响下保持清醒远超适当范围，大量生命能量流失，于是异常容易被像现在这样的感染击中（本集实况）。':'<br>兜底方案也难走——若她推翻忙碌、充分休息，对方就只剩「抽干能量」这个收效有限的手段。');
+  box.className=(v[1]||v[2]||v[3])?'fail':'';
+  box.innerHTML=msg;
+}
+condInputs.forEach(c=>c.addEventListener('change',updateCond));
+updateCond();
+
+/* 本集：术语卡展开 */
+document.querySelectorAll('.fn-card').forEach(c=>c.addEventListener('click',()=>c.classList.toggle('open')));
+
+/* 本集：归类练习 */
+initSorter('sorterArea',[
+  {a:'队友连续三次把自己的失误记在你名下，你不再默认认领，而是在复盘会上把事实讲清楚',opts:['纯粹的接纳','必要的防御'],ans:'必要的防御',exp:'Ra 说处理思想之战的实体必须防御而非接纳，才能保住自己在服务他人中的用处。'},
+  {a:'你决定不回应任何挑衅，让对方在你身上「自行融化」，哪怕手上的工作因此被拖垮',opts:['纯粹的接纳','必要的防御'],ans:'纯粹的接纳',exp:'这是「最具接纳性与爱心的能量」的理想版，但 Ra 指出在势均力敌时，它虽纯粹却不会产生任何影响。'},
+  {a:'面对不断索取的朋友，你继续无条件付出，并期待他总有一天会因此改变',opts:['纯粹的接纳','必要的防御'],ans:'纯粹的接纳',exp:'把「用自己的好去转化对方」当成策略，正是 Ra 说的那种在力量对等时会失效的做法。'},
+  {a:'谈判中对方要求你签下明显损害第三方客户的条款，你拒绝签字并说明底线',opts:['纯粹的接纳','必要的防御'],ans:'必要的防御',exp:'Ra 说不能完全接受猎户座想给的东西——那就是奴役；守住界线正是「保住用处」的做法。'},
+  {a:'有人在网上反复骚扰你，你保存证据、拉黑并举报，而不是逐条温柔回复',opts:['纯粹的接纳','必要的防御'],ans:'必要的防御',exp:'防御不是失去爱，而是不让摩擦先把你的能量耗光——这正是本集对「未能接受所给予之物」的说明。'},
+  {a:'团队里有人一直推卸责任，你把他每一句抱怨都接下来，并对他说「我理解你」',opts:['纯粹的接纳','必要的防御'],ans:'纯粹的接纳',exp:'一直接住对方抛来的东西，等于在势均力敌的对局里任自己被操控，最终连服务他人的用处都失去。'}
+]);
+
+renderPath();
+</script>
+</body>
+</html>
