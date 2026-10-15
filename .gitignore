@@ -10,3 +10,4 @@ __pycache__/
 !.claude/skills/**
 .claude/**/__pycache__/
 .claude/**/.DS_Store
+study/_demo_*
